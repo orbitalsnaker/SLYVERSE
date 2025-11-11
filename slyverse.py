@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import os
+import json
+import subprocess
 from datetime import datetime
 import pytz
 
@@ -20,8 +22,7 @@ tz = pytz.timezone('Europe/Madrid')
 now = datetime.now(tz)
 LOCAL_TIME = now.strftime("%d %b %Y %H:%M") + (" CEST" if now.dst() else " CET")
 
-FIRESTORE_RULES = """
-rules_version = '2';
+FIRESTORE_RULES = """rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /scores/{doc} {
@@ -53,13 +54,11 @@ HTML = f"""<!DOCTYPE html>
 <meta name="description" content="SLYVERSE v1 – Juego WebXR de serpiente con VR, leaderboard y lore. 100% gratuito, seguro y legal en España."/>
 <title>SLYVERSE v1 — WebXR VR (ES)</title>
 <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
-<script type="importmap">
-{{"imports":{{"three":"https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"}}}}
-</script>
+<script type="importmap">{{"imports":{{"three":"https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"}}}}</script>
 <script type="module">
 import {{initializeApp}} from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js';
 import {{getFirestore,collection,addDoc,onSnapshot,query,orderBy,limit}} from 'https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js';
-const firebaseConfig={dict(FIREBASE_CONFIG)};
+const firebaseConfig={json.dumps(FIREBASE_CONFIG, separators=(',', ':'))};
 const app=initializeApp(firebaseConfig);const db=getFirestore(app);
 window.lb={{update:async(s,p)=>{if(typeof s!='number'||s<0||s>10000)return;if(typeof p!='string'||!/^[a-zA-Z0-9_]+$/.test(p)||p.length<1||p.length>20)return;try{{await addDoc(collection(db,'scores'),{{score:Math.floor(s),player:p.trim(),timestamp:new Date()}})}}catch(e){{console.warn(e)}}},listen:cb=>{{const q=query(collection(db,'scores'),orderBy('score','desc'),limit(10));return onSnapshot(q,s=>cb(s.docs.map(d=>d.data())),e=>console.error(e))}}}};
 </script>
@@ -130,7 +129,7 @@ function reset(){{snake.forEach(s=>scene.remove(s));snake.length=0;head=new THRE
 renderer.xr.addEventListener('sessionstart',()=>vrStatus.innerText='VR: ACTIVE');
 renderer.xr.addEventListener('sessionend',()=>vrStatus.innerText='VR: READY');
 function checkLore(){{lore.forEach((l,i)=>{{if(score>=l.score&&i>=unlockedLore){{unlockedLore++;showLore(l);document.getElementById('lore-progress').innerText=`LORE: ${{unlockedLore}}/7`}}}})}}
-function showLore(l){{alert(`LORE DESBLOQUEADO: ${{l.title}}\\n\\n${{l.text}}`)}}
+function showLore(l){{const m=document.createElement('div');m.style.position='fixed';m.style.top='50%';m.style.left='50%';m.style.transform='translate(-50%,-50%)';m.style.background='rgba(0,8,20,0.9)';m.style.border='2px solid var(--neon)';m.style.padding='24px';m.style.borderRadius='16px';m.style.maxWidth='80%';m.style.zIndex='9999';m.style.fontFamily='var(--font)';m.style.color='var(--neon)';m.innerHTML=`<strong style="font-size:1.4em;color:var(--yellow)">${{l.title}}</strong><br><br>${{l.text}}<br><br><button onclick="this.parentElement.remove()" style="background:var(--neon);color:#000;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-weight:600">CERRAR</button>`;document.body.appendChild(m)}}
 function exportSnakeSVG(){{let svg=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="-30 -30 60 60" style="background:#000">`;snake.forEach((s,i)=>{{const[x,z]=[s.position.x,s.position.z];const h=120+(i*5)%240;svg+=`<rect x="${{x-0.5}}" y="${{z-0.5}}" width="1" height="1" fill="hsl(${{h}},100%,50%)"/>`}});svg+=`</svg>`;const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([svg],{{type:'image/svg+xml'}}));a.download=`slyverse_${{playerName}}_${{score}}.svg`;a.click()}}
 function sendChat(){{const i=document.getElementById('chat-input'),m=i.value.trim();if(m&&m.length<=100){{const c=document.getElementById('chat-list');c.innerHTML+=`<div style="margin:4px 0;opacity:.9"><strong>${{playerName}}:</strong> ${{m}}</div>`;c.scrollTop=c.scrollHeight;i.value=''}}}}
 if(window.lb)window.lb.listen(s=>document.getElementById('lb-list').innerHTML=s.map(p=>`<div style="margin:3px 0">${{p.player}}: <strong>${{p.score}}</strong></div>`).join('')||'<div style="opacity:.6">Sin datos</div>');
@@ -144,10 +143,16 @@ function showTerms(){{alert('TÉRMINOS DE USO\\n\\n100% gratuito.\\nProhibido: t
 </body>
 </html>"""
 
-with open(OUTPUT_FILE,'w',encoding='utf-8') as f:f.write(HTML)
+with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
+    f.write(HTML)
 
-print(f"Generado: {OUTPUT_FILE}")
-print(f"Hora local: {LOCAL_TIME}")
+subprocess.run(['git', 'add', OUTPUT_FILE], check=False)
+subprocess.run(['git', 'commit', '-m', 'Deploy SLYVERSE v1: HTML + modal lore'], check=False)
+subprocess.run(['git', 'push'], check=False)
+
+print(f"Deployed: {OUTPUT_FILE}")
+print(f"URL: https://orbitalsnaker.github.io/SLYVERSE/{OUTPUT_FILE}")
+print(f"Time: {LOCAL_TIME}")
 print(f"Wallet: {WALLET_ADDRESS}")
-print("\nReglas Firestore:")
+print("\nFirestore Rules:")
 print(FIRESTORE_RULES)

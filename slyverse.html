@@ -1,10 +1,254 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SLYVERSE SNAKE v1.0 - Ascended Fork</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>%F0%9F%90%8D</text></svg>">
     <style>
-        body { background: #000; color: #0f0; font-family: monospace; text-align: center; margin: 0; padding: 20px; }
-        canvas { border: 2px solid #f0f; background: #111; image-rendering: pixelated; }
-        #status { font-size: 20px; margin: 10px; }
-        #modes { margin: 10px; }
-        button { background: #333; color: #0f0; border: 1px solid #0f0
+        /* ==== RESET & BASE ==== */
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { 
+            background:#000; 
+            color:#0f0; 
+            font-family:monospace; 
+            text-align:center; 
+            padding:20px; 
+            min-height:100vh;
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+        }
+
+        /* ==== CANVAS ==== */
+        canvas { 
+            border:2px solid #f0f; 
+            background:#111; 
+            image-rendering:pixelated; 
+            max-width:100%;
+        }
+
+        /* ==== UI ==== */
+        h1 { margin-bottom:10px; font-size:1.8rem; }
+        #status { font-size:20px; margin:15px 0; }
+        #modes { margin:15px 0; }
+        button { 
+            background:#333; 
+            color:#0f0; 
+            border:1px solid #0f0; 
+            padding:10px 20px; 
+            margin:5px; 
+            font-family:monospace; 
+            cursor:pointer;
+            transition:all .2s;
+        }
+        button:hover { 
+            background:#0f0; 
+            color:#000; 
+            animation:glitch 0.3s infinite;
+        }
+
+        /* ==== GLITCH EFFECT ==== */
+        @keyframes glitch {
+            0%   { text-shadow: 2px 0 #f0f, -2px 0 #0ff; }
+            50%  { text-shadow:-2px 0 #f0f,  2px 0 #0ff; }
+            100% { text-shadow: 2px 0 #f0f, -2px 0 #0ff; }
+        }
+
+        /* ==== RESPONSIVE ==== */
+        @media (max-width:600px) {
+            canvas { width:300px; height:300px; }
+            button { padding:8px 16px; font-size:0.9rem; }
+        }
+    </style>
+</head>
+<body>
+    <h1>SLYVERSE SNAKE v1.0</h1>
+    <p>Ascended Fork – by <strong>You</strong></p>
+    
+    <canvas id="game" width="600" height="600"></canvas>
+    
+    <div id="status">Presiona <kbd>ESPACIO</kbd> para empezar</div>
+    
+    <div id="modes">
+        <button onclick="setMode('classic')">Clásico</button>
+        <button onclick="setMode('portal')">Portal</button>
+        <button onclick="setMode('ai')">IA Demo</button>
+    </div>
+
+    <script>
+        // ==== CONFIG ==== 
+        const canvas = document.getElementById('game');
+        const ctx = canvas.getContext('2d');
+        const grid = 20;
+        const size = canvas.width / grid;
+
+        let snake, food, dx, dy, score, mode, interval;
+        let portalA = null, portalB = null;
+
+        // ==== MODES ====
+        function setMode(m) {
+            mode = m;
+            reset();
+            document.getElementById('status').textContent = `Modo: ${m.toUpperCase()} – ¡Juega!`;
+        }
+
+        // ==== INIT ====
+        function reset() {
+            clearInterval(interval);
+            snake = [{x:10, y:10}];
+            spawnFood();
+            dx = dy = 0;
+            score = 0;
+            updateScore();
+            if (mode === 'portal') spawnPortals();
+            interval = setInterval(loop, 100);
+        }
+
+        function spawnFood() {
+            do {
+                food = {
+                    x: Math.floor(Math.random()*grid),
+                    y: Math.floor(Math.random()*grid)
+                };
+            } while (snake.some(s => s.x===food.x && s.y===food.y));
+        }
+
+        function spawnPortals() {
+            do {
+                portalA = {x:Math.floor(Math.random()*grid), y:Math.floor(Math.random()*grid)};
+                portalB = {x:Math.floor(Math.random()*grid), y:Math.floor(Math.random()*grid)};
+            } while (
+                portalA.x===portalB.x && portalA.y===portalB.y ||
+                snake.some(s=>s.x===portalA.x && s.y===portalA.y) ||
+                snake.some(s=>s.x===portalB.x && s.y===portalB.y)
+            );
+        }
+
+        // ==== INPUT ====
+        document.addEventListener('keydown', e => {
+            if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight',' '].includes(e.key)) e.preventDefault();
+
+            if (e.key === ' ') { if (!interval) reset(); return; }
+
+            const key = e.key.replace('Arrow','');
+            if (['Up','Down','Left','Right'].includes(key)) {
+                const opposites = {Up:'Down', Down:'Up', Left:'Right', Right:'Left'};
+                if (opposites[key] !== {Up:dy===-1, Down:dy===1, Left:dx===-1, Right:dx===1}[key]) {
+                    [dx, dy] = {Up:[0,-1], Down:[0,1], Left:[-1,0], Right:[1,0]}[key];
+                }
+            }
+        });
+
+        // ==== LOOP ====
+        function loop() {
+            if (dx===0 && dy===0) return;
+
+            const head = {x: snake[0].x + dx, y: snake[0].y + dy};
+
+            // ==== PORTAL MODE ====
+            if (mode==='portal' && portalA && portalB) {
+                if (head.x===portalA.x && head.y===portalA.y) { head.x=portalB.x; head.y=portalB.y; }
+                else if (head.x===portalB.x && head.y===portalB.y) { head.x=portalA.x; head.y=portalA.y; }
+            }
+
+            // ==== WALLS ====
+            if (head.x<0 || head.x>=grid || head.y<0 || head.y>=grid) {
+                if (mode!=='portal') gameOver();
+                else { head.x = (head.x+grid)%grid; head.y = (head.y+grid)%grid; }
+            }
+
+            // ==== SELF COLLISION ====
+            if (snake.some((s,i) => i>0 && s.x===head.x && s.y===head.y)) gameOver();
+
+            snake.unshift(head);
+
+            // ==== EAT FOOD ====
+            if (head.x===food.x && head.y===food.y) {
+                score++;
+                updateScore();
+                spawnFood();
+                if (mode==='portal' && Math.random()<0.15) spawnPortals();
+                beep();
+            } else {
+                snake.pop();
+            }
+
+            draw();
+        }
+
+        function draw() {
+            ctx.fillStyle = '#111';
+            ctx.fillRect(0,0,canvas.width,canvas.height);
+
+            // Grid (subtle)
+            ctx.strokeStyle = '#222';
+            for (let i=0;i<grid;i++) {
+                ctx.beginPath();
+                ctx.moveTo(i*size,0); ctx.lineTo(i*size,canvas.height);
+                ctx.moveTo(0,i*size); ctx.lineTo(canvas.width,i*size);
+                ctx.stroke();
+            }
+
+            // Food
+            ctx.fillStyle = '#f0f';
+            ctx.fillRect(food.x*size+2, food.y*size+2, size-4, size-4);
+
+            // Portals
+            if (mode==='portal' && portalA && portalB) {
+                ctx.fillStyle = '#0ff';
+                ctx.fillRect(portalA.x*size+2, portalA.y*size+2, size-4, size-4);
+                ctx.fillStyle = '#ff0';
+                ctx.fillRect(portalB.x*size+2, portalB.y*size+2, size-4, size-4);
+            }
+
+            // Snake
+            snake.forEach((s,i) => {
+                ctx.fillStyle = i===0 ? '#0f0' : '#0a0';
+                ctx.fillRect(s.x*size+2, s.y*size+2, size-4, size-4);
+            });
+        }
+
+        function updateScore() {
+            document.getElementById('status').innerHTML = `Puntos: <strong>${score}</strong> | Modo: <em>${mode.toUpperCase()}</em>`;
+        }
+
+        function gameOver() {
+            clearInterval(interval);
+            interval = null;
+            document.getElementById('status').innerHTML = `¡GAME OVER! Puntos: <strong>${score}</strong> — <kbd>ESPACIO</kbd> para reiniciar`;
+        }
+
+        function beep() {
+            const audio = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YViFhwCKhYqFbF1fdJivrJBhNjV');
+            audio.play();
+        }
+
+        // ==== AI DEMO MODE ====
+        function aiMove() {
+            if (mode!=='ai' || dx===0 && dy===0) return;
+
+            const head = snake[0];
+            const dist = (a,b) => Math.abs(a.x-b.x) + Math.abs(a.y-b.y);
+            const safe = dir => {
+                const nx = head.x + dir[0], ny = head.y + dir[1];
+                return nx>=0 && nx<grid && ny>=0 && ny<grid && !snake.some(s=>s.x===nx && s.y===ny);
+            };
+
+            const dirs = [[0,-1],[1,0],[0,1],[-1,0]].filter(d=>safe(d));
+            if (dirs.length===0) return;
+
+            const best = dirs.reduce((a,b) => dist({x:head.x+b[0],y:head.y+b[1]}, food) < dist({x:head.x+a[0],y:head.y+a[1]}, food) ? b : a);
+            [dx, dy] = best;
+        }
+
+        // Override loop for AI
+        const oldLoop = loop;
+        loop = () => { if (mode==='ai') aiMove(); oldLoop(); };
+
+        // ==== START ====
+        setMode('classic');
+    </script>
+</body>
+</html>

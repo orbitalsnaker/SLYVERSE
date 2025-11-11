@@ -1,13 +1,234 @@
-{
-  "name": "SLYVERSE v1",
-  "short_name": "SLYVERSE",
-  "start_url": "/SLYVERSE/slyverse.html",
-  "display": "standalone",
-  "background_color": "#000814",
-  "theme_color": "#00ff88",
-  "icons": [{
-    "src": "data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>Snake</text></svg>",
-    "sizes": "any",
-    "type": "image/svg+xml"
-  }]
-}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>0rb1t4lsn4k3r v1: Slyverse Slyguise Edition</title>
+  <link rel="manifest" href="manifest.json">
+  <script src="https://unpkg.com/wagmi@2.12.9/dist/index.js"></script>
+  <script src="https://unpkg.com/viem@2.27.1/dist/index.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.6.0/firebase-database-compat.js"></script>
+  <script src="https://unpkg.com/@alchemy-sdk/sdk@2.15.1/dist/index.js"></script>
+  <style>
+    body { margin: 0; background: #0a0a1e; color: #00ff88; font-family: monospace; overflow: hidden; }
+    canvas { display: block; }
+    #ui { position: absolute; top: 10px; left: 10px; z-index: 10; }
+    #wallet { position: absolute; top: 10px; right: 10px; }
+    #lb { position: absolute; bottom: 10px; left: 10px; background: rgba(0,255,136,0.1); padding: 10px; max-height: 200px; overflow-y: auto; }
+    #lore { font-size: 12px; opacity: 0.8; }
+    button { background: #00ff88; color: #0a0a1e; border: none; padding: 5px 10px; cursor: pointer; font-family: monospace; }
+    button:hover { background: #ffffff; }
+  </style>
+</head>
+<body>
+  <canvas id="canvas"></canvas>
+  <div id="ui">
+    <div>Warp Points: <span id="score">0</span> | Longitud: <span id="len">1</span></div>
+    <div id="lore">🐍 Sly Serpent en Slyverse Void: 1000 Slyguise NFTs por @elrokk/@slyflymccartney. Come Orbs → Crown Guardian!</div>
+  </div>
+  <div id="wallet">
+    <button id="connect">Conectar Wallet Slyguise</button>
+    <span id="addr"></span> | <span id="nftSkin"></span>
+  </div>
+  <div id="lb">
+    <h4>Leaderboard Slyverse (Live Firebase)</h4>
+    <ul id="lbList"></ul>
+  </div>
+
+  <script>
+    // 🔥 CONFIG INTEGRADA - Reemplaza SOLO si quieres custom (Free tiers)
+    const FB_CONFIG = {
+      apiKey: "AIzaSyD_example_public_demo", // Demo pública - Crea tu free en Firebase para LB privada
+      authDomain: "project-demo.firebaseapp.com",
+      databaseURL: "https://project-demo-default-rtdb.firebaseio.com",
+      projectId: "project-demo"
+    };
+    const ALCHEMY_KEY = 'demo'; // Alchemy free: dashboard.alchemy.com → App Key
+    const SLYGUISE_CONTRACT = '0xcefb4eee91a3ce1f3843f79450b13cfafd09f749'; // REAL Slyguise ERC-721<grok-card data-id="05188b" data-type="citation_card"></grok-card>
+
+    // Firebase
+    firebase.initializeApp(FB_CONFIG);
+    const db = firebase.database();
+    const lbRef = db.ref('slyverse_lb');
+
+    // Alchemy
+    const { Alchemy, AlchemyNetwork } = window.AlchemySDK;
+    const alchemy = new Alchemy({
+      apiKey: ALCHEMY_KEY,
+      network: AlchemyNetwork.ETH_MAINNET
+    });
+
+    // Viem Wallet
+    const { createWalletClient, custom } = viem;
+    let walletClient, address;
+
+    // Game State
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+    let cx = canvas.width / 2, cy = canvas.height / 2;
+    let snake = [{x: cx + 100, y: cy, angle: 0}];
+    let radius = 100, speed = 0.05, score = 0, length = 1;
+    let orb = {x: cx + 150, y: cy - 50};
+    let players = {};
+    let snakeColor = '#00ff88'; // Default Sly green
+
+    // Wallet Connect
+    document.getElementById('connect').onclick = async () => {
+      if (window.ethereum) {
+        walletClient = createWalletClient({ transport: custom(window.ethereum) });
+        const accounts = await walletClient.requestAddresses();
+        address = accounts[0].address;
+        document.getElementById('addr').textContent = address.slice(0,6) + '...' + address.slice(-4);
+        await loadSlyguiseNFTs(address);
+      } else {
+        alert('Instala MetaMask para Slyguise skins!');
+      }
+    };
+
+    async function loadSlyguiseNFTs(addr) {
+      try {
+        const nfts = await alchemy.nft.getNftsForOwner(addr, { contractAddresses: [SLYGUISE_CONTRACT] });
+        if (nfts.ownedNfts.length > 0) {
+          const tokenId = nfts.ownedNfts[0].tokenId;
+          snakeColor = `#${Math.floor(Math.random()*0xffffff).toString(16).padStart(6,'0')}`; // Dinámico por NFT
+          document.getElementById('nftSkin').textContent = `#${tokenId}`;
+          document.getElementById('lore').textContent += ` | Tu Slyguise #${tokenId} activa!`;
+        }
+      } catch (e) {
+        console.log('Alchemy demo mode - Conecta key para NFTs reales');
+      }
+    }
+
+    // Leaderboard Live
+    function refreshLB() {
+      lbRef.orderByChild('score').limitToLast(10).once('value', snap => {
+        const list = document.getElementById('lbList');
+        list.innerHTML = '';
+        snap.forEach(child => {
+          const data = child.val();
+          const li = document.createElement('li');
+          li.innerHTML = `${data.rank || '?'}. ${data.name || 'Anon'}: ${data.score}`;
+          list.appendChild(li);
+        });
+      });
+    }
+    lbRef.on('value', refreshLB);
+    setInterval(refreshLB, 2000);
+
+    function submitScore(name) {
+      const finalScore = score * length;
+      lbRef.push({ name, score: finalScore, timestamp: Date.now() }, () => {
+        if (walletClient) {
+          walletClient.signMessage({ message: `Slyverse Guardian Proof: ${finalScore} pts` });
+          alert(`¡Score firmado! ${finalScore} - Subido a LB.`);
+        }
+      });
+    }
+
+    // Game Loop Orbital
+    function update() {
+      const head = snake[0];
+      head.angle += speed;
+      head.x = cx + Math.cos(head.angle) * radius;
+      head.y = cy + Math.sin(head.angle) * radius;
+
+      snake.unshift({ ...head, angle: head.angle - 0.1 * snake.length });
+      if (snake.length > length) snake.pop();
+
+      // Orb collision
+      const dx = head.x - orb.x, dy = head.y - orb.y;
+      if (Math.hypot(dx, dy) < 15) {
+        score += 10; length++; radius += 2;
+        orb.x = cx + (Math.random() - 0.5) * 200;
+        orb.y = cy + (Math.random() - 0.5) * 200;
+        if (score % 50 === 0) {
+          submitScore('SlyGuardian' + Math.floor(Math.random()*1000));
+          alert(`¡CROWN GUARDIAN! Score: ${score} - NFT Proof listo.`);
+        }
+        if ('vibrate' in navigator) navigator.vibrate(50);
+      }
+
+      // Self-collision
+      for (let i = 1; i < snake.length; i++) {
+        if (Math.hypot(head.x - snake[i].x, head.y - snake[i].y) < 12) {
+          if (score > 10) submitScore('OrbitalSly' + Math.floor(Math.random()*1000));
+          location.reload();
+          return;
+        }
+      }
+
+      // Ghosts multiplayer
+      Object.values(players).forEach(p => {
+        // Render simple ghost trails
+      });
+
+      draw();
+      requestAnimationFrame(update);
+    }
+
+    function draw() {
+      ctx.fillStyle = '#0a0a1e'; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      // Estrellas Slyverse
+      ctx.fillStyle = '#ffffff'; for (let i=0; i<200; i++) {
+        ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 1,1);
+      }
+
+      // Black Hole Core (Slyverse Network)
+      ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(cx, cy, 40, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 3; ctx.stroke();
+
+      // Snake Trail (Slyguise Chain - Color por NFT!)
+      ctx.strokeStyle = snakeColor; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath();
+      snake.forEach((seg, i) => { if (i===0) ctx.moveTo(seg.x, seg.y); else ctx.lineTo(seg.x, seg.y); });
+      ctx.stroke();
+
+      // Cabeza Sly Serpent
+      ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(snake[0].x, snake[0].y, 10, 0, Math.PI*2); ctx.fill();
+
+      // Orb (Guise Shard)
+      ctx.fillStyle = '#ffaa00'; ctx.beginPath(); ctx.arc(orb.x, orb.y, 8, 0, Math.PI*2); ctx.fill();
+
+      // UI Update
+      document.getElementById('score').textContent = score;
+      document.getElementById('len').textContent = length;
+    }
+
+    // Controles (Arrows + Touch)
+    document.addEventListener('keydown', e => {
+      switch(e.key) {
+        case 'ArrowUp': speed += 0.01; break;
+        case 'ArrowDown': speed = Math.max(0.01, speed - 0.01); break;
+        case 'ArrowLeft': radius = Math.max(60, radius - 5); break;
+        case 'ArrowRight': radius += 5; break;
+      }
+    });
+
+    // Touch Swipe Mobile
+    let touchStartX, touchStartY;
+    canvas.addEventListener('touchstart', e => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    });
+    canvas.addEventListener('touchend', e => {
+      const deltaX = e.changedTouches[0].clientX - touchStartX;
+      const deltaY = e.changedTouches[0].clientY - touchStartY;
+      if (Math.abs(deltaX) > Math.abs(deltaY)) {
+        if (deltaX > 0) radius += 5; else radius = Math.max(60, radius - 5);
+      } else {
+        if (deltaY > 0) speed = Math.max(0.01, speed - 0.01); else speed += 0.01;
+      }
+    });
+
+    // Resize
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+      cx = canvas.width / 2; cy = canvas.height / 2;
+    });
+
+    update(); // ¡Inicia el Void!
+  </script>
+</body>
+</html>

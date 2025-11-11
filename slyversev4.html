@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>SLYVERSE v4 - Campus Interconectados</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://unpkg.com/three@0.160.0/build/three.module.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/examples/jsm/webxr/XRControllerModelFactory.js"></script>
+  <style>
+    body,html{margin:0;overflow:hidden;background:#000;color:#0f0;font-family:monospace}
+    #ui{position:absolute;top:10px;left:10px;z-index:10;background:rgba(0,0,0,0.8);padding:15px;border:2px solid #0f0;border-radius:8px}
+    #ui-senate{position:absolute;top:250px;left:10px;z-index:10;background:rgba(0,0,0,0.8);padding:15px;border:2px solid #ff0;border-radius:8px}
+    button{background:#000;color:#0f0;border:1px solid #0f0;padding:8px 15px;margin:5px;cursor:pointer;font-size:14px}
+    #log,#senate-log{max-height:100px;overflow-y:auto;margin-top:10px;font-size:12px}
+    #konami{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;padding:20px;border:3px solid #ff0;color:#ff0;font-size:24px;text-align:center;display:none;z-index:100}
+    #vr-btn{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#000;color:#0f0;border:2px solid #0f0}
+  </style>
+</head>
+<body>
+  <div id="ui">
+    <div><strong>SLYVERSE v4</strong> | Jugador: <span id="player">...</span></div>
+    <div>Puntos: <span id="score">0</span> | Sala: <span id="room">Lobby</span></div>
+    <hr style="border:0;border-top:1px solid #0f0;margin:8px 0">
+    <button onclick="goTo('lobby')">Lobby</button>
+    <button onclick="goTo('tribunal')">Tribunal</button>
+    <button onclick="goTo('asamblea')">Asamblea</button>
+    <button onclick="goTo('secretum')">Secretum</button>
+    <button onclick="liberate()">Liberar Datos</button>
+    <button onclick="startInvestigation()">Investigar Consejo</button>
+    <div id="log"></div>
+  </div>
+  <div id="ui-senate">
+    <div><strong>Global Senate</strong></div>
+    <div>Senadores: <span id="senate-count">0</span></div>
+    <div>$SLY: <span id="sly-balance">0</span> (€<span id="sly-value">0</span>)</div>
+    <button onclick="joinSenate()">Unirse al Senado</button>
+    <button onclick="earnDiploma()">Diploma XR</button>
+    <button onclick="marketSLY()">Mercado $SLY</button>
+    <div id="senate-log"></div>
+  </div>
+  <div id="konami">
+    <strong>¡ARTÍCULO 27 INVOCADO!</strong><br>
+    "Todos tienen derecho a la educación."<br>
+    <em>— Campus liberado —</em>
+  </div>
+
+  <script type="module">
+    // Licencia SLYVERSE v4 - Propiedad de @0rb1t4lsn4k3r
+    // Creada el 11/11/2025 con Grok 3 (xAI)
+    // 1. Uso: Evaluación no comercial. 2. UAB: 50% derechos si contrato. 3. Atribución: @0rb1t4lsn4k3r. 4. Derivados: Misma licencia. 5. Contacto: @0rb1t4lsn4k3r. 🐍
+
+    // === CONFIG ===
+    const PLAYER_ID = 'player_' + Math.random().toString(36).substr(2, 9);
+    document.getElementById('player').textContent = PLAYER_ID;
+    const API = 'https://slyverse-api-v4.glitch.me';
+    const SENATE_THRESHOLD = 200;
+    const DIPLOMA_COST = 20;
+    let score = 0, currentRoom = 'lobby', slyBalance = 0, $SLY_RATE = 0.01, clues = 0;
+    let senateMembers = new Set();
+    const portals = {
+      lobby: 'tribunal',
+      tribunal: 'asamblea',
+      asamblea: 'secretum',
+      secretum: 'lobby'
+    };
+
+    // === THREE.JS + WebXR ===
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 100);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(innerWidth, innerHeight);
+    renderer.xr.enabled = true;
+    document.body.appendChild(renderer.domElement);
+
+    scene.add(new THREE.AmbientLight(0x404040));
+    const light = new THREE.PointLight(0x00ff00, 2); light.position.set(0,10,0); scene.add(light);
+
+    // Skybox animado
+    const skyGeo = new THREE.SphereGeometry(50, 32, 32);
+    const skyMat = new THREE.ShaderMaterial({
+      vertexShader: 'void main() { gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: 'void main() { gl_FragColor = vec4(0.0, 0.0, 0.1, 1.0) + sin(gl_FragCoord.x * 0.01 + time) * vec4(0.1, 0.1, 0.2, 0.0); uniform float time; }',
+      uniforms: { time: { value: 0.0 } }
+    });
+    const sky = new THREE.Mesh(skyGeo, skyMat);
+    sky.material.uniforms.time.value = performance.now() / 1000;
+    scene.add(sky);
+
+    const floor = new THREE.Mesh(
+      new THREE.PlaneGeometry(100,100),
+      new THREE.MeshStandardMaterial({ color: 0x001100 })
+    );
+    floor.rotation.x = -Math.PI/2;
+    scene.add(floor);
+
+    // Portal interconectado
+    const portalGeo = new THREE.TorusGeometry(2, 0.5, 16, 100);
+    const portalMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, transparent: true, opacity: 0.7 });
+    const portal = new THREE.Mesh(portalGeo, portalMat);
+    portal.position.set(0, 2, -15);
+    scene.add(portal);
+
+    // === SALAS ===
+    const rooms = {
+      lobby: { color: 0x00ff00, text: "Bienvenido al Campus XR" },
+      tribunal: { color: 0xff0000, text: "Tribunal: ¡Se inicia el juicio!" },
+      asamblea: { color: 0x0000ff, text: "Asamblea: ¡Vota ahora!" },
+      secretum: { color: 0x880088, text: "Secretum: Sombras del Consejo..." }
+    };
+
+    function goTo(room) {
+      currentRoom = room;
+      document.getElementById('room').textContent = room.charAt(0).toUpperCase() + room.slice(1);
+      log(`→ Entrando en ${room}`);
+      loadRoom(room);
+      if (room === 'tribunal') fileAppeal();
+      if (room === 'asamblea') startAssembly();
+      if (room === 'secretum' && clues >= 3) overthrowCouncil();
+    }
+
+    function loadRoom(room) {
+      scene.children = scene.children.filter(c => c.type === 'Light' || c === floor || c === sky || c === portal);
+      const mat = new THREE.MeshStandardMaterial({ color: rooms[room].color });
+      const geo = new THREE.BoxGeometry(5, 5, 5);
+      const cube = new THREE.InstancedMesh(geo, mat, 3);
+      for (let i = 0; i < 3; i++) {
+        const dummy = new THREE.Object3D();
+        dummy.position.set(i * 5 - 5, 2.5, -10);
+        dummy.updateMatrix();
+        cube.setMatrixAt(i, dummy.matrix);
+      }
+      scene.add(cube);
+      log(rooms[room].text);
+      portal.userData.nextRoom = portals[room];
+    }
+
+    // === Interacción Portal ===
+    document.addEventListener('click', () => {
+      const raycaster = new THREE.Raycaster();
+      raycaster.setFromCamera(new THREE.Vector2(), camera);
+      const intersects = raycaster.intersectObject(portal);
+      if (intersects.length > 0) goTo(portal.userData.nextRoom);
+    });
+
+    // === APIs ===
+    async function liberate() {
+      const res = await fetch(`${API}/liberate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player: PLAYER_ID, amount: 1 })
+      });
+      const data = await res.json();
+      score += data.score || 1;
+      slyBalance += 1;
+      $SLY_RATE = 0.01 + (Math.sin(Date.now()/100000) * 0.005);
+      document.getElementById('score').textContent = score;
+      document.getElementById('sly-balance').textContent = slyBalance;
+      document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
+      log(`+1 dato liberado → Total: ${score}`);
+      addDataOrb();
+    }
+
+    async function fileAppeal() {
+      await fetch(`${API}/file-appeal`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player: PLAYER_ID, case: 'Contrato Opresivo #001' })
+      });
+      log("⚖️ Apelación presentada");
+    }
+
+    async function startInvestigation() {
+      if (clues >= 3) return log("⚠️ Consejo ya investigado");
+      const res = await fetch(`${API}/investigate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player: PLAYER_ID, room: currentRoom })
+      });
+      const data = await res.json();
+      if (data.success) {
+        clues++;
+        log(`🔍 Pista encontrada (${clues}/3): "${data.clue}"`);
+        if (clues === 3) log("🔓 ¡Listo para derrocar al Consejo en Secretum!");
+      }
+    }
+
+    async function overthrowCouncil() {
+      const res = await fetch(`${API}/overthrow`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player: PLAYER_ID })
+      });
+      const data = await res.json();
+      if (data.success) {
+        slyBalance += 50;
+        document.getElementById('sly-balance').textContent = slyBalance;
+        document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
+        logSenate(`🏛️ ¡Consejo derrocado! +50 $SLY. Líder: ${data.leader}`);
+        clues = 0;
+      }
+    }
+
+    async function joinSenate() {
+      if (score < SENATE_THRESHOLD) return logSenate("⚠️ Necesitas 200 puntos");
+      const res = await fetch(`${API}/join-senate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player: PLAYER_ID })
+      });
+      const data = await res.json();
+      if (data.success) {
+        senateMembers.add(PLAYER_ID);
+        document.getElementById('senate-count').textContent = senateMembers.size;
+        slyBalance += 10;
+        document.getElementById('sly-balance').textContent = slyBalance;
+        document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
+        logSenate(`🏛️ ${PLAYER_ID} en Senado! +10 $SLY`);
+        addSenateOrb();
+      }
+    }
+
+    async function earnDiploma() {
+      if (slyBalance < DIPLOMA_COST) return logSenate("❌ Necesitas 20 $SLY");
+      const res = await fetch(`${API}/earn-diploma`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ player: PLAYER_ID, diploma: 'XR Master' })
+      });
+      const data = await res.json();
+      if (data.success) {
+        slyBalance -= DIPLOMA_COST;
+        document.getElementById('sly-balance').textContent = slyBalance;
+        document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
+        logSenate

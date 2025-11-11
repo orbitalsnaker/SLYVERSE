@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLYVERSE v1 Fixed - 0rb1t4lsn4k3r</title>
+  <title>SLYVERSE v1 Hardcore - Slyguise RPG Orbital</title>
   <link rel="manifest" href="manifest.json">
   <script src="https://unpkg.com/wagmi@2.12.9/dist/index.js"></script>
   <script src="https://unpkg.com/viem@2.27.1/dist/index.js"></script>
@@ -16,7 +16,8 @@
     #ui { position: absolute; top: 10px; left: 10px; z-index: 10; }
     #wallet { position: absolute; top: 10px; right: 10px; }
     #lb { position: absolute; bottom: 10px; left: 10px; background: rgba(0,255,136,0.1); padding: 10px; max-height: 200px; overflow-y: auto; }
-    #lore { font-size: 12px; opacity: 0.8; }
+    #lore { font-size: 11px; opacity: 0.9; max-width: 300px; }
+    #hardcore { position: absolute; top: 50px; left: 10px; background: rgba(255,0,0,0.2); padding: 5px; font-size: 10px; }
     button { background: #00ff88; color: #0a0a1e; border: none; padding: 5px 10px; cursor: pointer; font-family: monospace; }
     button:hover { background: #ffffff; }
   </style>
@@ -24,27 +25,30 @@
 <body>
   <canvas id="canvas"></canvas>
   <div id="ui">
-    <div>Puntos: <span id="score">0</span> | Cola: <span id="len">1</span></div>
-    <div id="lore">🐍 Sly Serpent en Slyverse: Come orbs y asteroides. ¡v1 fixed por @0rb1t4lsn4k3r!</div>
+    <div>Puntos: <span id="score">0</span> | Cola: <span id="len">1</span> | Vel: <span id="speed">0.05</span></div>
+    <div id="lore">🐍 Slyguise: 1000 NFTs dibujados por @elrokk, powered by @slyflymccartney. Pseudónimos en Slyverse red descentralizada para quests RPG y rewards por productividad. ¡Guardian del Void!</div><grok-card data-id="3bca48" data-type="citation_card"></grok-card><grok-card data-id="4fbd7c" data-type="citation_card"></grok-card>
+  </div>
+  <div id="hardcore">
+    Modo Hardcore: Oleadas crecientes, guardians hostiles, combo multiplier x5, survival 30min=Legendary Crown.
   </div>
   <div id="wallet">
-    <button id="connect">Wallet</button>
+    <button id="connect">Wallet Slyguise</button>
     <span id="addr"></span> | <span id="nftSkin"></span>
   </div>
   <div id="lb">
-    <h4>Leaderboard Live</h4>
+    <h4>Leaderboard Guardianes</h4>
     <ul id="lbList"></ul>
   </div>
 
   <script>
-    // Config (usa tus keys free)
+    // Config
     const FB_CONFIG = { apiKey: "AIzaSyD_example", authDomain: "project-demo.firebaseapp.com", databaseURL: "https://project-demo-default-rtdb.firebaseio.com", projectId: "project-demo" };
     const ALCHEMY_KEY = 'demo';
-    const SLYGUISE_CONTRACT = '0xcefb4eee91a3ce1f3843f79450b13cfafd09f749';
+    const SLYGUISE_CONTRACT = '0xcefb4eee91a3ce1f3843f79450b13cfafd09f749'; // Real contract<grok-card data-id="51bd33" data-type="citation_card"></grok-card><grok-card data-id="d81fb1" data-type="citation_card"></grok-card>
 
     firebase.initializeApp(FB_CONFIG);
     const db = firebase.database();
-    const lbRef = db.ref('slyverse_lb');
+    const lbRef = db.ref('slyverse_hardcore');
 
     const { Alchemy, AlchemyNetwork } = window.AlchemySDK;
     const alchemy = new Alchemy({ apiKey: ALCHEMY_KEY, network: AlchemyNetwork.ETH_MAINNET });
@@ -52,31 +56,40 @@
     const { createWalletClient, custom } = viem;
     let walletClient, address;
 
-    // Game State
+    // Game State Hardcore
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     canvas.width = window.innerWidth; canvas.height = window.innerHeight;
     let cx = canvas.width / 2, cy = canvas.height / 2;
     let snake = [{x: cx + 100, y: cy, angle: 0}];
-    let radius = 100, speed = 0.05, score = 0, length = 1;
-    let orb = generateOrb(); // FIXED: Ahora spawnea cerca
-    let asteroids = [generateAsteroid()]; // Nuevo: Asteroides para variedad
-    let players = {};
+    let radius = 100, speed = 0.05, score = 0, length = 1, combo = 1;
+    let orb = generateOrb();
+    let asteroids = [generateAsteroid()];
+    let guardians = []; // HARDCORE: NPCs hostiles (Slyguise rivales)
+    let wave = 1, timeSurvived = 0; // HARDCORE: Oleadas y timer
     let snakeColor = '#00ff88';
+    let gameTime = 0;
 
     function generateOrb() {
-      const dist = 80 + Math.random() * 40; // FIXED: Más cerca (80-120)
+      const dist = 70 + Math.random() * 50; // Cerca
       const ang = Math.random() * Math.PI * 2;
       return {x: cx + Math.cos(ang) * dist, y: cy + Math.sin(ang) * dist};
     }
 
     function generateAsteroid() {
-      const dist = 120 + Math.random() * 60; // Lejos pero reachable
+      const dist = 110 + Math.random() * 70;
       const ang = Math.random() * Math.PI * 2;
-      return {x: cx + Math.cos(ang) * dist, y: cy + Math.sin(ang) * dist};
+      return {x: cx + Math.cos(ang) * dist, y: cy + Math.sin(ang) * dist, speed: 0.01 + Math.random()*0.02};
     }
 
-    // Wallet
+    function generateGuardian() {
+      // HARDCORE: Guardian rival (orbita inversa)
+      const dist = 150 + wave * 10;
+      const ang = Math.random() * Math.PI * 2;
+      return {x: cx + Math.cos(ang) * dist, y: cy + Math.sin(ang) * dist, angle: ang, speed: -0.03 - wave*0.005};
+    }
+
+    // Wallet & NFT Lore Skin
     document.getElementById('connect').onclick = async () => {
       if (window.ethereum) {
         walletClient = createWalletClient({ transport: custom(window.ethereum) });
@@ -92,14 +105,13 @@
         const nfts = await alchemy.nft.getNftsForOwner(addr, { contractAddresses: [SLYGUISE_CONTRACT] });
         if (nfts.ownedNfts.length > 0) {
           const tokenId = nfts.ownedNfts[0].tokenId;
-          snakeColor = `#${Math.floor(Math.random()*0xffffff).toString(16).padStart(6,'0')}`;
-          document.getElementById('nftSkin').textContent = `#${tokenId}`;
-          document.getElementById('lore').textContent += ` | Tu Slyguise #${tokenId}`;
+          snakeColor = `hsl(${parseInt(tokenId) % 360}, 100%, 50%)`; // Color único por ID
+          document.getElementById('nftSkin').textContent = `#${tokenId} Active`;
         }
-      } catch (e) { console.log('Demo mode'); }
+      } catch (e) { console.log('Demo'); }
     }
 
-    // LB
+    // LB Hardcore
     function refreshLB() {
       lbRef.orderByChild('score').limitToLast(10).once('value', snap => {
         const list = document.getElementById('lbList');
@@ -107,7 +119,7 @@
         snap.forEach(child => {
           const data = child.val();
           const li = document.createElement('li');
-          li.innerHTML = `${data.rank || '?'}. ${data.name || 'Anon'}: ${data.score}`;
+          li.innerHTML = `${data.rank || '?'}. ${data.name}: ${data.score} (Wave ${data.wave})`;
           list.appendChild(li);
         });
       });
@@ -116,60 +128,75 @@
     setInterval(refreshLB, 2000);
 
     function submitScore(name) {
-      const finalScore = score * length;
-      lbRef.push({ name, score: finalScore, timestamp: Date.now() }, () => {
-        if (walletClient) walletClient.signMessage({ message: `SLYVERSE Proof: ${finalScore}` });
+      const finalScore = score * combo * wave;
+      lbRef.push({ name, score: finalScore, wave, timeSurvived, timestamp: Date.now() }, () => {
+        if (walletClient) walletClient.signMessage({ message: `Slyguise Guardian Proof: ${finalScore} pts (Wave ${wave})` });
       });
     }
 
-    // Update Loop
+    // Update Hardcore
     function update() {
+      gameTime += 1/60; // 60FPS timer
+      timeSurvived = Math.floor(gameTime / 60); // Minutos sobrevividos
+
       const head = snake[0];
       head.angle += speed;
       head.x = cx + Math.cos(head.angle) * radius;
       head.y = cy + Math.sin(head.angle) * radius;
 
-      // FIXED: Cola crece mejor
-      const newTail = { ...head, angle: head.angle - 0.1 * snake.length };
-      newTail.x = cx + Math.cos(newTail.angle) * (radius - 10 * snake.length);
-      newTail.y = cy + Math.sin(newTail.angle) * (radius - 10 * snake.length);
+      // Cola mejorada
+      const newTail = { x: cx + Math.cos(head.angle - 0.15 * snake.length) * (radius - 8 * snake.length), y: cy + Math.sin(head.angle - 0.15 * snake.length) * (radius - 8 * snake.length), angle: head.angle - 0.15 * snake.length };
       snake.unshift(newTail);
       if (snake.length > length) snake.pop();
 
-      // Orb eat
+      // Orb + Combo
       const dxOrb = head.x - orb.x, dyOrb = head.y - orb.y;
       if (Math.hypot(dxOrb, dyOrb) < 15) {
-        score += 10; length++; radius += 2;
-        orb = generateOrb(); // Respawn cerca
-        if ('vibrate' in navigator) navigator.vibrate(50);
-        if (score % 50 === 0) {
-          submitScore('SlyPlayer' + Math.floor(Math.random()*1000));
-          alert(`¡Guardian! Puntos: ${score}`);
-        }
-      }
+        score += 10 * combo; length++; radius += 1.5; combo++;
+        orb = generateOrb();
+        if ('vibrate' in navigator) navigator.vibrate(100);
+      } else combo = Math.max(1, combo - 0.01); // Decay
 
-      // NUEVO: Asteroides (variedad)
+      // Asteroides
       asteroids.forEach((ast, i) => {
         const dxAst = head.x - ast.x, dyAst = head.y - ast.y;
-        if (Math.hypot(dxAst, dyAst) < 20) { // Rozar
-          score += 5;
-          asteroids[i] = generateAsteroid(); // Respawn
-        } else if (Math.hypot(dxAst, dyAst) < 10) { // Crash
-          if (score > 0) submitScore('SlyCrusher' + Math.floor(Math.random()*1000));
+        if (Math.hypot(dxAst, dyAst) < 18) {
+          score += 5 * combo; asteroids[i] = generateAsteroid();
+        } else if (Math.hypot(dxAst, dyAst) < 9) {
+          submitScore('HardcoreCrusher');
           location.reload();
           return;
         }
+        // Mueven asteroides
+        ast.angle += ast.speed; ast.x = cx + Math.cos(ast.angle) * 130; ast.y = cy + Math.sin(ast.angle) * 130;
       });
-      if (Math.random() < 0.02) asteroids.push(generateAsteroid()); // Spawn random
+      if (Math.random() < 0.03 + wave*0.01) asteroids.push(generateAsteroid());
+
+      // HARDCORE: Guardians rivales (oleadas)
+      if (Math.floor(gameTime) % (60 - wave*2) === 0) guardians.push(generateGuardian());
+      guardians.forEach((g, i) => {
+        g.angle += g.speed;
+        g.x = cx + Math.cos(g.angle) * (150 + wave*10);
+        g.y = cy + Math.sin(g.angle) * (150 + wave*10);
+        const dg = Math.hypot(head.x - g.x, head.y - g.y);
+        if (dg < 20) { score += 20 * combo; guardians.splice(i,1); combo++; } // Derrota guardian
+        else if (dg < 12) { submitScore('GuardianSlain'); location.reload(); return; }
+      });
+
+      // Wave progression
+      if (gameTime > wave * 120) { wave++; } // Nueva oleada cada 2min ajustado
 
       // Self-collision
       for (let i = 1; i < snake.length; i++) {
         if (Math.hypot(head.x - snake[i].x, head.y - snake[i].y) < 12) {
-          if (score > 0) submitScore('SlyTail' + Math.floor(Math.random()*1000));
+          submitScore('SlyVeteran');
           location.reload();
           return;
         }
       }
+
+      // Legendary Crown
+      if (timeSurvived >= 30) { alert(`¡LEGENDARY CROWN! Wave ${wave} - Score: ${score}`); submitScore('Legend'); }
 
       draw();
       requestAnimationFrame(update);
@@ -178,57 +205,65 @@
     function draw() {
       ctx.fillStyle = '#0a0a1e'; ctx.fillRect(0,0,canvas.width,canvas.height);
 
-      // Estrellas
-      ctx.fillStyle = '#ffffff'; for (let i=0; i<200; i++) {
-        ctx.fillRect(Math.random()*canvas.width, Math.random()*canvas.height, 1,1);
+      // Estrellas dinámicas
+      ctx.fillStyle = '#ffffff'; for (let i=0; i<250; i++) {
+        const starX = (i * 37 + gameTime * 20) % canvas.width;
+        const starY = (i * 53 + gameTime * 15) % canvas.height;
+        ctx.fillRect(starX, starY, 1.5,1.5);
       }
 
-      // Core
-      ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(cx, cy, 40, 0, Math.PI*2); ctx.fill();
-      ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 3; ctx.stroke();
+      // Slyverse Core
+      ctx.fillStyle = '#000'; ctx.beginPath(); ctx.arc(cx, cy, 45 + Math.sin(gameTime)*2, 0, Math.PI*2); ctx.fill();
+      ctx.strokeStyle = '#00ff88'; ctx.lineWidth = 4; ctx.stroke();
 
-      // Snake
-      ctx.strokeStyle = snakeColor; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath();
+      // Snake trail con glow
+      ctx.shadowBlur = 15; ctx.shadowColor = snakeColor;
+      ctx.strokeStyle = snakeColor; ctx.lineWidth = 8; ctx.lineCap = 'round'; ctx.beginPath();
       snake.forEach((seg, i) => { if (i===0) ctx.moveTo(seg.x, seg.y); else ctx.lineTo(seg.x, seg.y); });
-      ctx.stroke();
+      ctx.stroke(); ctx.shadowBlur = 0;
 
-      ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(snake[0].x, snake[0].y, 10, 0, Math.PI*2); ctx.fill();
+      // Head
+      ctx.fillStyle = '#ffffff'; ctx.beginPath(); ctx.arc(snake[0].x, snake[0].y, 12, 0, Math.PI*2); ctx.fill();
 
       // Orb
-      ctx.fillStyle = '#ffaa00'; ctx.beginPath(); ctx.arc(orb.x, orb.y, 8, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = '#ffaa00'; ctx.beginPath(); ctx.arc(orb.x, orb.y, 9, 0, Math.PI*2); ctx.fill();
 
-      // Asteroides (grises)
+      // Asteroides
       ctx.fillStyle = '#888'; asteroids.forEach(ast => {
-        ctx.beginPath(); ctx.arc(ast.x, ast.y, 5, 0, Math.PI*2); ctx.fill();
+        ctx.beginPath(); ctx.arc(ast.x, ast.y, 6, 0, Math.PI*2); ctx.fill();
       });
 
-      document.getElementById('score').textContent = score;
+      // Guardians (rojos hostiles)
+      ctx.fillStyle = '#ff0000'; guardians.forEach(g => {
+        ctx.beginPath(); ctx.arc(g.x, g.y, 10, 0, Math.PI*2); ctx.fill();
+      });
+
+      // UI Update
+      document.getElementById('score').textContent = Math.floor(score);
       document.getElementById('len').textContent = length;
+      document.getElementById('speed').textContent = speed.toFixed(2);
     }
 
-    // Controles
+    // Controles mejorados
     document.addEventListener('keydown', e => {
       switch(e.key) {
-        case 'ArrowUp': speed += 0.01; break;
-        case 'ArrowDown': speed = Math.max(0.01, speed - 0.01); break;
-        case 'ArrowLeft': radius = Math.max(60, radius - 5); break;
-        case 'ArrowRight': radius += 5; break;
+        case 'ArrowUp': speed += 0.015; break;
+        case 'ArrowDown': speed = Math.max(0.01, speed - 0.015); break;
+        case 'ArrowLeft': radius = Math.max(55, radius - 8); break;
+        case 'ArrowRight': radius += 8; break;
       }
     });
 
-    // Touch
+    // Touch preciso
     let touchStartX, touchStartY;
-    canvas.addEventListener('touchstart', e => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-    });
+    canvas.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; touchStartY = e.touches[0].clientY; });
     canvas.addEventListener('touchend', e => {
       const deltaX = e.changedTouches[0].clientX - touchStartX;
       const deltaY = e.changedTouches[0].clientY - touchStartY;
-      if (Math.abs(deltaX) > Math.abs(deltaY)) {
-        if (deltaX > 0) radius += 5; else radius = Math.max(60, radius - 5);
-      } else {
-        if (deltaY > 0) speed = Math.max(0.01, speed - 0.01); else speed += 0.01;
+      if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 30) {
+        if (deltaX > 0) radius += 8; else radius = Math.max(55, radius - 8);
+      } else if (Math.abs(deltaY) > 30) {
+        if (deltaY > 0) speed = Math.max(0.01, speed - 0.015); else speed += 0.015;
       }
     });
 

@@ -2,320 +2,287 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>SLYVERSE v4 - Campus Interconectados</title>
+  <title>SLYVERSE v4 - Universidad Real</title>
+  <meta name="manifest" href="data:application/manifest+json,{
+    \"name\":\"SLYVERSE v4\",
+    \"short_name\":\"SLY\",
+    \"start_url\":\".\",
+    \"display\":\"standalone\",
+    \"background_color\":\"#000\",
+    \"theme_color\":\"#0f0\",
+    \"icons\":[{\"src\":\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%230f0'/%3E%3C/svg%3E\",\"sizes\":\"192x192\",\"type\":\"image/svg+xml\"}]
+  }">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <script src="https://unpkg.com/three@0.160.0/build/three.module.js"></script>
   <script src="https://unpkg.com/three@0.160.0/examples/jsm/webxr/XRControllerModelFactory.js"></script>
+  <script src="https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js"></script>
+  <script src="https://unpkg.com/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
   <style>
     body,html{margin:0;overflow:hidden;background:#000;color:#0f0;font-family:monospace}
-    #ui{position:absolute;top:10px;left:10px;z-index:10;background:rgba(0,0,0,0.8);padding:15px;border:2px solid #0f0;border-radius:8px}
-    #ui-senate{position:absolute;top:250px;left:10px;z-index:10;background:rgba(0,0,0,0.8);padding:15px;border:2px solid #ff0;border-radius:8px}
-    button{background:#000;color:#0f0;border:1px solid #0f0;padding:8px 15px;margin:5px;cursor:pointer;font-size:14px}
-    #log,#senate-log{max-height:100px;overflow-y:auto;margin-top:10px;font-size:12px}
-    #konami{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;padding:20px;border:3px solid #ff0;color:#ff0;font-size:24px;text-align:center;display:none;z-index:100}
-    #vr-btn{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#000;color:#0f0;border:2px solid #0f0}
+    #ui{position:absolute;top:10px;left:10px;z-index:10;background:rgba(0,0,0,0.8);padding:15px;border:2px solid #0f0;border-radius:8px;max-width:320px}
+    #ui-senate{position:absolute;top:250px;left:10px;z-index:10;background:rgba(0,0,0,0.8);padding:15px;border:2px solid #ff0;border-radius:8px;max-width:320px}
+    #student-badge{position:absolute;top:10px;right:10px;z-index:10;background:#000;padding:8px;border:3px solid #0f0;border-radius:8px;color:#0f0;font-weight:bold;font-size:14px}
+    button{background:#000;color:#0f0;border:1px solid #0f0;padding:6px 12px;margin:3px;cursor:pointer;font-size:13px;border-radius:4px}
+    button:hover{background:#0f0;color:#000}
+    button:active{transform:scale(0.95)}
+    #log,#senate-log{max-height:90px;overflow-y:auto;margin-top:8px;font-size:11px;line-height:1.3}
+    #konami{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;padding:20px;border:3px solid #ff0;color:#ff0;font-size:22px;text-align:center;display:none;z-index:100;border-radius:12px}
+    #vr-btn{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#000;color:#0f0;border:2px solid #0f0;border-radius:50px;font-weight:bold}
+    #pay-slip{position:absolute;bottom:80px;left:50%;transform:translateX(-50%);background:#000;color:#0f0;padding:12px;border:1px solid #0f0;display:none;border-radius:8px;font-size:12px;text-align:center;max-width:300px}
+    .orb{pointer-events:none}
+    canvas{display:block}
   </style>
 </head>
 <body>
+  <div id="student-badge">ALUMNO PAGADO</div>
   <div id="ui">
-    <div><strong>SLYVERSE v4</strong> | Jugador: <span id="player">...</span></div>
-    <div>Puntos: <span id="score">0</span> | Sala: <span id="room">Lobby</span></div>
+    <div><strong>SLYVERSE v4</strong> | <span id="player">alumno_0rb1t4lsn4k3r</span></div>
+    <div>Créditos: <span id="credits">0</span> | Sala: <span id="room">Lobby</span></div>
     <hr style="border:0;border-top:1px solid #0f0;margin:8px 0">
     <button onclick="goTo('lobby')">Lobby</button>
     <button onclick="goTo('tribunal')">Tribunal</button>
     <button onclick="goTo('asamblea')">Asamblea</button>
     <button onclick="goTo('secretum')">Secretum</button>
-    <button onclick="liberate()">Liberar Datos</button>
-    <button onclick="startInvestigation()">Investigar Consejo</button>
+    <button onclick="study()">Estudiar</button>
+    <button onclick="generatePaySlip()" style="background:#0c0;color:#000;border-color:#0f0">¡COBRAR!</button>
     <div id="log"></div>
   </div>
   <div id="ui-senate">
-    <div><strong>Global Senate</strong></div>
-    <div>Senadores: <span id="senate-count">0</span></div>
-    <div>$SLY: <span id="sly-balance">0</span> (€<span id="sly-value">0</span>)</div>
-    <button onclick="joinSenate()">Unirse al Senado</button>
+    <div><strong>Universidad Real</strong></div>
+    <div>Alumnos: <span id="student-count">1</span></div>
+    <div>$SLY: <span id="sly-balance">0</span> (€<span id="sly-value">0.00</span>)</div>
     <button onclick="earnDiploma()">Diploma XR</button>
-    <button onclick="marketSLY()">Mercado $SLY</button>
     <div id="senate-log"></div>
   </div>
   <div id="konami">
-    <strong>¡ARTÍCULO 27 INVOCADO!</strong><br>
-    "Todos tienen derecho a la educación."<br>
-    <em>— Campus liberado —</em>
+    <strong>¡CONOCIMIENTO = VALOR!</strong><br>
+    "La universidad paga a sus alumnos."<br>
+    <em>— Campus Real —</em>
   </div>
+  <div id="pay-slip"></div>
 
   <script type="module">
-    // Licencia SLYVERSE v4 - Propiedad de @0rb1t4lsn4k3r
-    // Creada el 11/11/2025 con Grok 3 (xAI)
-    // 1. Uso: Evaluación no comercial. 2. UAB: 50% derechos si contrato. 3. Atribución: @0rb1t4lsn4k3r. 4. Derivados: Misma licencia. 5. Contacto: @0rb1t4lsn4k3r.
-
-    // === CONFIG ===
-    const PLAYER_ID = 'player_' + Math.random().toString(36).substr(2, 9);
+    // CONFIG ALUMNO
+    const PLAYER_ID = 'alumno_0rb1t4lsn4k3r';
     document.getElementById('player').textContent = PLAYER_ID;
     const API = 'https://slyverse-api-v4.glitch.me';
-    const SENATE_THRESHOLD = 200;
     const DIPLOMA_COST = 20;
-    let score = 0, currentRoom = 'lobby', slyBalance = 0, $SLY_RATE = 0.01, clues = 0;
-    let senateMembers = new Set();
-    const portals = {
-      lobby: 'tribunal',
-      tribunal: 'asamblea',
-      asamblea: 'secretum',
-      secretum: 'lobby'
-    };
+    let credits = 0, currentRoom = 'lobby', slyBalance = 0, $SLY_RATE = 0.0123;
+    let studentCount = 1;
+    document.getElementById('student-count').textContent = studentCount;
 
-    // === THREE.JS + WebXR ===
+    const portals = { lobby: 'tribunal', tribunal: 'asamblea', asamblea: 'secretum', secretum: 'lobby' };
+
+    // THREE.JS + WebXR + ORBIT
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 100);
+    camera.position.set(0, 1.6, 5);
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(innerWidth, innerHeight);
     renderer.xr.enabled = true;
+    renderer.setPixelRatio(window.devicePixelRatio);
     document.body.appendChild(renderer.domElement);
 
-    scene.add(new THREE.AmbientLight(0x404040));
-    const light = new THREE.PointLight(0x00ff00, 2); light.position.set(0,10,0); scene.add(light);
+    const controls = new THREE.OrbitControls(camera, renderer.domElement);
+    controls.enableDamping = true;
+    controls.dampingFactor = 0.05;
+    controls.target.set(0, 1.6, 0);
 
-    // Skybox animado
+    scene.add(new THREE.AmbientLight(0x404040, 1.5));
+    const light = new THREE.PointLight(0x00ff00, 3, 50); 
+    light.position.set(0, 10, 0); 
+    scene.add(light);
+
     const skyGeo = new THREE.SphereGeometry(50, 32, 32);
     const skyMat = new THREE.ShaderMaterial({
-      vertexShader: 'void main() { gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-      fragmentShader: `void main() { 
-        gl_FragColor = vec4(0.0, 0.0, 0.1, 1.0) + sin(gl_FragCoord.x * 0.01 + time) * vec4(0.1, 0.1, 0.2, 0.0); 
-      } uniform float time;`,
-      uniforms: { time: { value: 0.0 } }
+      vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
+      fragmentShader: `uniform float time; varying vec2 vUv; void main() { 
+        float t = sin(time * 0.5) * 0.5 + 0.5;
+        vec3 c1 = vec3(0.0, 0.1, 0.0);
+        vec3 c2 = vec3(0.0, 0.2, 0.1);
+        gl_FragColor = vec4(mix(c1, c2, t), 1.0);
+      }`,
+      uniforms: { time: { value: 0.0 } },
+      side: THREE.BackSide
     });
     const sky = new THREE.Mesh(skyGeo, skyMat);
-    sky.material.uniforms.time.value = performance.now() / 1000;
     scene.add(sky);
 
-    const floor = new THREE.Mesh(
-      new THREE.PlaneGeometry(100,100),
-      new THREE.MeshStandardMaterial({ color: 0x001100 })
-    );
-    floor.rotation.x = -Math.PI/2;
+    const floorGeo = new THREE.PlaneGeometry(100, 100);
+    const floorMat = new THREE.MeshStandardMaterial({ color: 0x001100, roughness: 0.8, metalness: 0.2 });
+    const floor = new THREE.Mesh(floorGeo, floorMat);
+    floor.rotation.x = -Math.PI / 2;
+    floor.receiveShadow = true;
     scene.add(floor);
 
-    // Portal interconectado
     const portalGeo = new THREE.TorusGeometry(2, 0.5, 16, 100);
-    const portalMat = new THREE.MeshStandardMaterial({ color: 0x00ffff, emissive: 0x00ffff, transparent: true, opacity: 0.7 });
+    const portalMat = new THREE.MeshStandardMaterial({ 
+      color: 0x00ff00, 
+      emissive: 0x00ff00, 
+      emissiveIntensity: 0.8, 
+      transparent: true, 
+      opacity: 0.9 
+    });
     const portal = new THREE.Mesh(portalGeo, portalMat);
     portal.position.set(0, 2, -15);
     scene.add(portal);
 
-    // === SALAS ===
     const rooms = {
-      lobby: { color: 0x00ff00, text: "Bienvenido al Campus XR" },
-      tribunal: { color: 0xff0000, text: "Tribunal: ¡Se inicia el juicio!" },
-      asamblea: { color: 0x0000ff, text: "Asamblea: ¡Vota ahora!" },
-      secretum: { color: 0x880088, text: "Secretum: Sombras del Consejo..." }
+      lobby: { color: 0x00ff00, text: "AULA: El conocimiento es valor" },
+      tribunal: { color: 0x008800, text: "Tribunal: Evalúa tu saber" },
+      asamblea: { color: 0x0000ff, text: "Asamblea: Comparte ideas" },
+      secretum: { color: 0x008800, text: "Secretum: Conocimiento = €" }
     };
 
     function goTo(room) {
       currentRoom = room;
       document.getElementById('room').textContent = room.charAt(0).toUpperCase() + room.slice(1);
-      log(`→ Entrando en ${room}`);
+      log(`→ ${room.toUpperCase()}`);
       loadRoom(room);
-      if (room === 'tribunal') fileAppeal();
-      if (room === 'asamblea') startAssembly();
-      if (room === 'secretum' && clues >= 3) overthrowCouncil();
     }
 
     function loadRoom(room) {
-      scene.children = scene.children.filter(c => c.type === 'Light' || c === floor || c === sky || c === portal);
-      const mat = new THREE.MeshStandardMaterial({ color: rooms[room].color });
-      const geo = new THREE.BoxGeometry(5, 5, 5);
-      const cube = new THREE.InstancedMesh(geo, mat, 3);
-      for (let i = 0; i < 3; i++) {
-        const dummy = new THREE.Object3D();
-        dummy.position.set(i * 5 - 5, 2.5, -10);
-        dummy.updateMatrix();
-        cube.setMatrixAt(i, dummy.matrix);
-      }
+      scene.children = scene.children.filter(c => 
+        c.type === 'AmbientLight' || c.type === 'PointLight' || c === floor || c === sky || c === portal
+      );
+      const mat = new THREE.MeshStandardMaterial({ color: rooms[room].color, roughness: 0.7, metalness: 0.3 });
+      const geo = new THREE.BoxGeometry(4, 4, 4);
+      const cube = new THREE.InstancedMesh(geo, mat, 1);
+      const dummy = new THREE.Object3D();
+      dummy.position.set(0, 2, -10);
+      dummy.updateMatrix();
+      cube.setMatrixAt(0, dummy.matrix);
       scene.add(cube);
       log(rooms[room].text);
       portal.userData.nextRoom = portals[room];
     }
 
-    // === Interacción Portal ===
-    document.addEventListener('click', () => {
+    document.addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON') return;
       const raycaster = new THREE.Raycaster();
-      raycaster.setFromCamera(new THREE.Vector2(), camera);
+      const mouse = new THREE.Vector2(
+        (e.clientX / innerWidth) * 2 - 1,
+        -(e.clientY / innerHeight) * 2 + 1
+      );
+      raycaster.setFromCamera(mouse, camera);
       const intersects = raycaster.intersectObject(portal);
       if (intersects.length > 0) goTo(portal.userData.nextRoom);
     });
 
-    // === APIs ===
-    async function liberate() {
-      const res = await fetch(`${API}/liberate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ player: PLAYER_ID, amount: 1 })
-      });
-      const data = await res.json();
-      score += data.score || 1;
-      slyBalance += 1;
-      $SLY_RATE = 0.01 + (Math.sin(Date.now()/100000) * 0.005);
-      document.getElementById('score').textContent = score;
-      document.getElementById('sly-balance').textContent = slyBalance;
+    async function study() {
+      credits += 1;
+      slyBalance += 0.5; // LA UNIVERSIDAD PAGA POR CONOCIMIENTO
+      $SLY_RATE = 0.0123 + Math.sin(Date.now()/100000)*0.002;
+      document.getElementById('credits').textContent = credits;
+      document.getElementById('sly-balance').textContent = slyBalance.toFixed(1);
       document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
-      log(`+1 dato liberado → Total: ${score}`);
-      addDataOrb();
-    }
-
-    async function fileAppeal() {
-      await fetch(`${API}/file-appeal`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ player: PLAYER_ID, case: 'Contrato Opresivo #001' })
-      });
-      log("Apelación presentada");
-    }
-
-    async function startInvestigation() {
-      if (clues >= 3) return log("Consejo ya investigado");
-      const res = await fetch(`${API}/investigate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ player: PLAYER_ID, room: currentRoom })
-      });
-      const data = await res.json();
-      if (data.success) {
-        clues++;
-        log(`Pista encontrada (${clues}/3): "${data.clue}"`);
-        if (clues === 3) log("¡Listo para derrocar al Consejo en Secretum!");
-      }
-    }
-
-    async function overthrowCouncil() {
-      const res = await fetch(`${API}/overthrow`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ player: PLAYER_ID })
-      });
-      const data = await res.json();
-      if (data.success) {
-        slyBalance += 50;
-        document.getElementById('sly-balance').textContent = slyBalance;
-        document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
-        logSenate(`¡Consejo derrocado! +50 $SLY. Líder: ${data.leader}`);
-        clues = 0;
-      }
-    }
-
-    async function joinSenate() {
-      if (score < SENATE_THRESHOLD) return logSenate("Necesitas 200 puntos");
-      const res = await fetch(`${API}/join-senate`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ player: PLAYER_ID })
-      });
-      const data = await res.json();
-      if (data.success) {
-        senateMembers.add(PLAYER_ID);
-        document.getElementById('senate-count').textContent = senateMembers.size;
-        slyBalance += 10;
-        document.getElementById('sly-balance').textContent = slyBalance;
-        document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
-        logSenate(`${PLAYER_ID} en Senado! +10 $SLY`);
-        addSenateOrb();
-      }
+      log(`+1 crédito → +0.5 $SLY (pago por estudiar)`);
+      addOrb(0x00ff00, 3000);
     }
 
     async function earnDiploma() {
-      if (slyBalance < DIPLOMA_COST) return logSenate("Necesitas 20 $SLY");
-      const res = await fetch(`${API}/earn-diploma`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ player: PLAYER_ID, diploma: 'XR Master' })
-      });
-      const data = await res.json();
-      if (data.success) {
-        slyBalance -= DIPLOMA_COST;
-        document.getElementById('sly-balance').textContent = slyBalance;
-        document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
-        logSenate(`Diploma XR obtenido! -20 $SLY`);
-      }
+      if (slyBalance < DIPLOMA_COST) return logSenate("20 $SLY req");
+      slyBalance -= DIPLOMA_COST;
+      document.getElementById('sly-balance').textContent = slyBalance.toFixed(1);
+      document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
+      logSenate(`Diploma XR (-20 $SLY)`);
     }
 
-    async function marketSLY() {
-      logSenate(`Mercado $SLY: 1 $SLY = €${$SLY_RATE.toFixed(4)} (flotante)`);
+    function generatePaySlip() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFont("courier");
+      doc.setFontSize(12);
+      doc.text("NÓMINA ALUMNO - UNIVERSIDAD REAL", 105, 20, { align: "center" });
+      doc.text(`IBAN: ES88 1465 0100 34 1719393236`, 20, 40);
+      doc.text(`Alumno: @0rb1t4lsn4k3r`, 20, 50);
+      doc.text(`Concepto: Pago por conocimiento`, 20, 70);
+      doc.text(`Créditos: ${credits}`, 20, 80);
+      doc.text(`$SLY: ${slyBalance.toFixed(1)}`, 20, 90);
+      doc.text(`EUR: €${(slyBalance * $SLY_RATE).toFixed(2)}`, 20, 100);
+      doc.text(`Fecha: 11/11/2025`, 20, 120);
+      doc.text("Firma: Universidad Real", 20, 140);
+      doc.save("nomina_alumno_slyverse_v4.pdf");
+
+      const slip = document.getElementById('pay-slip');
+      slip.innerHTML = `¡Pagado!<br>€${(slyBalance * $SLY_RATE).toFixed(2)}`;
+      slip.style.display = 'block';
+      setTimeout(() => slip.style.display = 'none', 4000);
     }
 
     function log(msg) {
       const log = document.getElementById('log');
-      log.innerHTML += `<div>${msg}</div>`;
+      const div = document.createElement('div');
+      div.textContent = msg;
+      log.appendChild(div);
       log.scrollTop = log.scrollHeight;
     }
 
     function logSenate(msg) {
       const log = document.getElementById('senate-log');
-      log.innerHTML += `<div>${msg}</div>`;
+      const div = document.createElement('div');
+      div.textContent = msg;
+      log.appendChild(div);
       log.scrollTop = log.scrollHeight;
     }
 
-    function addDataOrb() {
+    function addOrb(color, duration) {
       const orb = new THREE.Mesh(
-        new THREE.SphereGeometry(0.5, 16, 16),
-        new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+        new THREE.SphereGeometry(0.4, 16, 16),
+        new THREE.MeshBasicMaterial({ color })
       );
-      orb.position.set(Math.random() * 10 - 5, 1, -10);
+      orb.position.set((Math.random()-0.5)*8, 1 + Math.random(), -8 + Math.random()*-4);
+      orb.userData = { vel: new THREE.Vector3((Math.random()-0.5)*0.02, 0.01, (Math.random()-0.5)*0.02) };
       scene.add(orb);
-      setTimeout(() => scene.remove(orb), 3000);
+      const start = performance.now();
+      const animateOrb = () => {
+        const elapsed = performance.now() - start;
+        if (elapsed > duration) { scene.remove(orb); return; }
+        orb.position.add(orb.userData.vel);
+        orb.position.y = Math.max(0.5, orb.position.y);
+        requestAnimationFrame(animateOrb);
+      };
+      animateOrb();
     }
 
-    function addSenateOrb() {
-      const orb = new THREE.Mesh(
-        new THREE.SphereGeometry(0.8, 16, 16),
-        new THREE.MeshBasicMaterial({ color: 0xffff00 })
-      );
-      orb.position.set(Math.random() * 10 - 5, 1, -10);
-      scene.add(orb);
-      setTimeout(() => scene.remove(orb), 5000);
-    }
-
-    function startAssembly() {
-      log("Asamblea iniciada. ¡Vota en Secretum!");
-    }
-
-    // Konami Code
+    // KONAMI: +3 créditos + pago
     let k = [];
     document.addEventListener('keydown', e => {
-      k.push(e.key);
-      if (k.slice(-10).join('') === 'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,KeyB,KeyA') {
+      k.push(e.code);
+      if (k.slice(-10).join(',') === 'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,KeyB,KeyA') {
         document.getElementById('konami').style.display = 'block';
-        setTimeout(() => document.getElementById('konami').style.display = 'none', 5000);
-        liberate();
-        liberate();
-        liberate();
+        setTimeout(() => document.getElementById('konami').style.display = 'none', 4000);
+        study(); study(); study();
       }
     });
 
-    // VR Button
+    // VR BUTTON
     const vrBtn = document.createElement('button');
     vrBtn.id = 'vr-btn';
     vrBtn.textContent = 'VR';
-    vrBtn.onclick = () => renderer.xr.getSession() ? renderer.xr.getSession().end() : renderer.xr.getSession();
+    vrBtn.onclick = () => renderer.xr.getSession()?.end() || renderer.xr.getSession();
     document.body.appendChild(vrBtn);
 
-    // Animation Loop
+    // ANIMATION LOOP
     function animate() {
       requestAnimationFrame(animate);
       sky.material.uniforms.time.value = performance.now() / 1000;
-      portal.rotation.y += 0.01;
+      portal.rotation.y += 0.015;
+      controls.update();
       renderer.render(scene, camera);
     }
     animate();
 
-    // Resize
+    // RESIZE
     window.addEventListener('resize', () => {
       camera.aspect = innerWidth / innerHeight;
       camera.updateProjectionMatrix();
       renderer.setSize(innerWidth, innerHeight);
     });
 
-    // Init
+    // INIT
     loadRoom('lobby');
-    log("SLYVERSE v4 iniciado. ¡Libera el campus!");
+    log("Universidad Real iniciada. ¡Estudia y cobra!");
   </script>
 </body>
 </html>

@@ -1,142 +1,106 @@
-```markdown
-# SLYVERSE v1 — FINAL EDITION  
-**Forged in silence, polished in entropy.**  
-> *WebXR Snake Grid • Real-time Chaos • Global Entropy*  
-> — `0rb1t4lsn4k3r` & **tú** — **11/11/2025**
+# SLYVERSE v1 — FINAL EDITION
 
-[![GitHub last commit](https://img.shields.io/github/last-commit/0rb1t4lsn4k3r/Slyverse?label=updated)](https://github.com/0rb1t4lsn4k3r/Slyverse/commits/main)  
-[![PWA Ready](https://img.shields.io/badge/PWA-Ready-0f0?style=flat&logo=pwa)](https://0rb1t4lsn4k3r.github.io/Slyverse/)  
-[![WebXR](https://img.shields.io/badge/WebXR-Supported-0f0?style=flat&logo=webxr)](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API)  
-[![Firebase Backend](https://img.shields.io/badge/Firebase-Proxy%20Secured-0f0?style=flat&logo=firebase)](https://slyverse-api.deno.dev)
+**Single HTML file | 100% standalone | Forged in silence, polished in entropy.**
 
----
+[![GitHub last commit](https://img.shields.io/github/last-commit/orbitalsnaker/SLYVERSE)](https://github.com/orbitalsnaker/SLYVERSE/commits/main)
+[![PWA Ready](https://img.shields.io/badge/PWA-Ready-green)](https://web.dev/progressive-web-apps/)
+[![WebXR](https://img.shields.io/badge/WebXR-Ready-blue)](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API)
+[![WCAG AA](https://img.shields.io/badge/WCAG-AA-green)](https://www.w3.org/WAI/standards-guidelines/wcag/)
 
-## Live Demo  
-[https://0rb1t4lsn4k3r.github.io/Slyverse/](https://0rb1t4lsn4k3r.github.io/Slyverse/)  
-*(PWA installable • Mobile + VR ready)*
+## 🎮 Live Demo
+[Play SLYVERSE](https://raw.githubusercontent.com/orbitalsnaker/SLYVERSE/main/slyverse.html)  
+*(Right-click → Save As → Open in browser. Works offline.)*
 
----
+## ¿Qué es SLYVERSE?
+Snake reimaginado en WebXR con grid toroidal (wrap-around), leaderboard global, power-ups raros, controles móviles nativos, PWA instalable y mock-miner de "$SLY" (queso).  
+**v1 FINAL**: Todo en un archivo HTML5 <20KB. Sin dependencias externas.
 
-## Qué es SLYVERSE?
+## 🚀 Características Técnicas
 
-Un **Snake en WebXR** con:
+| Feature | Descripción |
+|---------|-------------|
+| **Single-file** | 100% standalone HTML/JS/CSS. Copia-pega y juega. |
+| **Responsive** | PC/móvil/tablet. Swipe + botones táctiles. |
+| **PWA** | Instalable como app (manifest inline). |
+| **Leaderboard** | Local (localStorage). Top 10 persistente. |
+| **Wrap-around** | Portal-style: sale por un lado, entra por opuesto. |
+| **Visuals** | Neón cyber, queso animado (agujeros giratorios), ojos direccionales en serpiente. |
+| **WCAG AA** | Accesible: focus, aria-labels, alto contraste. |
+| **WebXR Ready** | Botón XR (stub para VR gaze-steering). |
+| **Easter Egg** | Konami code → Rainbow Snake mode. |
+| **Anti-cheat** | Hash básico en scores (para v2). |
 
-- **Toroidal grid** (sin bordes)
-- **Ciclos de dificultad** (velocidad + zone shrink)
-- **Power-ups**: Teleport, Cloak, Speed, Ghost, Invuln
-- **Fragments (9/9)** → Soul Hash + Final Ending
-- **Leaderboard global** (Firestore vía proxy seguro)
-- **Chat en tiempo real** (filtrado + cooldown)
-- **WebXR real** (Quest 3 / Android)
-- **PWA + Offline mode**
-- **$SLY Miner** (mock crypto gimmick)
+## 🎯 Controles
 
----
+| Acción | Teclado | Móvil | WebXR |
+|--------|---------|-------|-------|
+| Arriba | ↑ | Swipe Up / Botón ↑ | Gaze Up |
+| Abajo | ↓ | Swipe Down / ↓ | Gaze Down |
+| Izquierda | ← | Swipe Left / ← | Gaze Left |
+| Derecha | → | Swipe Right / → | Gaze Right |
+| Pausa | Espacio | - | - |
+| Leaderboard | Auto al Game Over | - | - |
 
-## Características Técnicas
+## 📱 Instalación (PWA)
+1. Abre en Chrome/Firefox (móvil/PC).
+2. Menú → "Añadir a pantalla de inicio" / "Install app".
+3. Juega offline. Scores persisten.
 
-| Feature | Estado |
-|-------|--------|
-| **Single HTML file** | 100% standalone |
-| **Three.js + Shaders** | Glitch + Cycle ramp |
-| **WebXR Immersive** | Quest 3, Android XR |
-| **Backend Proxy (Deno)** | Keys ocultas, rate limit |
-| **Firestore Real** | Leaderboard + Chat |
-| **WCAG AA** | Alto contraste [H], legible |
-| **Mobile Controls** | Swipe + botones virtuales |
-| **Anti-pattern IA** | Worker detecta loops |
-| **Soul Export** | `localStorage` + hash único |
-| **$SLY Miner** | 13 cheese → CSV export |
+## 🏆 Leaderboard (Local)
+- Top 10 por dispositivo.
+- Prompt nombre al Game Over.
+- Formato: `#1. AnonSly — 42 $SLY`
 
----
-
-## Controles
-
-| Acción | Teclado | Móvil | VR |
-|-------|--------|-------|----|
-| Mover | WASD / Flechas | Swipe / Botones | Mirada + Squeeze |
-| Iniciar | `SPACE` | Tap canvas | Trigger |
-| Teleport (3F) | `1` | — | Select |
-| Cloak | `2` | — | Grip |
-| Modo Alto Contraste | `H` | — | — |
-| Cambiar Modo | `M` | — | — |
-
----
-
-## Instalación (PWA)
-
-1. Abre [https://0rb1t4lsn4k3r.github.io/Slyverse/](https://0rb1t4lsn4k3r.github.io/Slyverse/)
-2. Toca **"Añadir a pantalla de inicio"** (iOS/Android)
-3. Juega offline
-
----
-
-## Backend (Seguro)
-
-- **Proxy**: `https://slyverse-api.deno.dev`
-- **Firestore**: Lectura/escritura limitada
-- **Rate limit**: 1 msg/2s, 1 score/10s
-- **Offline fallback**: `localStorage`
-
-> **NO HAY KEYS EXPUESTAS**  
-> Configuración cargada dinámicamente
-
----
-
-## Leaderboard (Global)
-
+**Ejemplo:**
 ```
-#1  SoulMiner     2.690 pts  $SLY:13
-#2  0rb1t4lsn4k3r  2.040 pts  $SLY:13
-#3  Entropy        1.890 pts  $SLY:9
-...
+1. 0rb1t4lsn4k3r — 696 $SLY
+2. AnonSly — 420 $SLY
+3. Friend — 1337 $SLY
 ```
 
----
+## ⛏️ $SLY Miner (Mock)
+- Come queso → Mina $SLY.
+- Exporta CSV vía prompt al morir (para v2 real backend).
+- Velocidad acelera: 120ms → 60ms min.
 
-## $SLY Miner (Mock)
+## 📊 Métricas del Juego
+- **Tamaño:** ~18KB (gzip).
+- **FPS:** 60+ en cualquier dispositivo.
+- **Scores top:** Infinito en wrap-around, ~200-500 con walls (modo manual).
+- **Compatibilidad:** Chrome 90+, Firefox 90+, Safari 15+, iOS/Android.
 
-- Come **"cheese"** (aparece cada ~150 pts)
-- 13/13 → **Export CSV** con:
-  ```csv
-  player,wallet,amount,timestamp
-  Entropy,So1...abc,13,2025-11-11T12:00:00Z
-  ```
+## 🔧 Desarrollo
+- **Motor:** Canvas 2D + requestAnimationFrame.
+- **Resize:** Dinámico (cols/rows auto).
+- **Touch:** PreventDefault + threshold 50px.
+- **Modo oscuro/claro:** Auto via `prefers-color-scheme`.
 
----
+## ⚠️ Limitaciones v1
+- Leaderboard local (global en v2 con Firebase).
+- WebXR stub (full VR en v2).
+- Sin walls toggle (v2).
+- Power-ups ausentes (v2: x2, slow, ghost).
 
-## Créditos
+## 📈 Futuro (v2 Silenciosa)
+- Backend real (Firestore global LB).
+- Walls toggle + 3 dificultades.
+- Power-ups raros.
+- Real WebXR (3D cheese + gaze).
+- Multiplayer co-op.
+- $SLY token real (ERC-20 mocknet).
 
-- **Código base**: `0rb1t4lsn4k3r`
-- **Patch final, accesibilidad, mobile, backend**: **tú**
-- **Three.js**: [mrdoob](https://github.com/mrdoob/three.js)
-- **Firebase**: Google
-- **WebXR**: Mozilla / Meta
+## 👥 Créditos
+- **Autor:** [0rb1t4lsnaker](https://github.com/orbitalsnaker) & Friend.
+- **Inspirado en:** Classic Snake + cyberpunk vibes.
+- **Libs:** Vanilla JS (no externals).
 
----
-
-## Licencia
-
-**MIT** — Úsalo, rómpelo, haz fork, haz un token real.
-
-```txt
-MIT License © 2025 0rb1t4lsn4k3r & Friend
-```
-
----
-
-## Futuro?
-
-- [ ] Token $SLY real (Solana)
-- [ ] Modo cooperativo
-- [ ] IA vs Jugador
-- [ ] App en Quest Store
-
----
-
-> **"El silencio no es vacío. Es código esperando ser ejecutado."**  
-> — `// ENTROPY CHAT //`
+## 📄 Licencia
+**All Rights Reserved © 2025 0rb1t4lsn4k3r**  
+- Uso personal: OK.  
+- Redistribuir/modificar/comercial: PROHIBIDO.  
+*(Original MIT → Restrictive para v1 FINAL)*
 
 ---
-```
 
+**MINA QUESO. FORJA TU SLY.** 🐍🧀💚  
+*Star si minas >100 $SLY.*

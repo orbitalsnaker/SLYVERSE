@@ -140,5 +140,3 @@ MIT License © 2025 0rb1t4lsn4k3r & Friend
 ---
 ```
 
-**Copia y pega este README en tu repo → `README.md`**  
-¡Listo para GitHub, itch.io o compartir en X!

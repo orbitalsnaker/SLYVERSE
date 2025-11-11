@@ -1,264 +1,405 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>SLYVERSE v4 - Universidad Real</title>
-  <meta name="manifest" href="data:application/manifest+json,{
-    \"name\":\"SLYVERSE v4 - Universidad Real\",
-    \"short_name\":\"SLY Edu\",
-    \"start_url\":\".\",
-    \"display\":\"standalone\",
-    \"background_color\":\"#000\",
-    \"theme_color\":\"#0f0\",
-    \"icons\":[{\"src\":\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='%230f0'/%3E%3C/svg%3E\",\"sizes\":\"192x192\",\"type\":\"image/svg+xml\"}]
-  }">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://unpkg.com/three@0.160.0/build/three.module.js"></script>
-  <script src="https://unpkg.com/three@0.160.0/examples/jsm/webxr/XRControllerModelFactory.js"></script>
-  <script src="https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js"></script>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SLYVERSE v4 – Versión Educativa</title>
   <style>
-    body,html{margin:0;overflow:hidden;background:#000;color:#0f0;font-family:monospace}
-    #ui{position:absolute;top:10px;left:10px;z-index:10;background:rgba(0,0,0,0.8);padding:15px;border:2px solid #0f0;border-radius:8px;max-width:320px}
-    #ui-senate{position:absolute;top:250px;left:10px;z-index:10;background:rgba(0,0,0,0.8);padding:15px;border:2px solid #ff0;border-radius:8px;max-width:320px}
-    #student-badge{position:absolute;top:10px;right:10px;z-index:10;background:#000;padding:8px;border:3px solid #0f0;border-radius:8px;color:#0f0;font-weight:bold;font-size:14px}
-    button{background:#000;color:#0f0;border:1px solid #0f0;padding:6px 12px;margin:3px;cursor:pointer;font-size:13px;border-radius:4px}
-    button:hover{background:#0f0;color:#000}
-    button:active{transform:scale(0.95)}
-    #log,#senate-log{max-height:90px;overflow-y:auto;margin-top:8px;font-size:11px;line-height:1.3}
-    #konami{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;padding:20px;border:3px solid #ff0;color:#ff0;font-size:22px;text-align:center;display:none;z-index:100;border-radius:12px}
-    #vr-btn{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);padding:10px 20px;background:#000;color:#0f0;border:2px solid #0f0;border-radius:50px;font-weight:bold}
-    .orb{pointer-events:none}
-    canvas{display:block}
+    /* ==== ESTILOS BÁSICOS ==== */
+    body { margin:0; padding:0; font-family:Arial, sans-serif; background:#111; color:#eee; }
+    header, footer { background:#222; padding:1rem; text-align:center; }
+    nav { background:#333; padding:0.5rem; display:flex; justify-content:center; flex-wrap:wrap; }
+    nav a { color:#0f0; margin:0 1rem; text-decoration:none; font-weight:bold; }
+    nav a:hover { text-decoration:underline; }
+    main { padding:2rem; max-width:960px; margin:auto; }
+    section { margin-bottom:3rem; }
+    h1, h2, h3 { color:#0f0; }
+    pre { background:#222; padding:1rem; overflow:auto; border-left:4px solid #0f0; border-radius:4px; }
+    .explicacion { background:#1a1a1a; padding:1rem; border-radius:8px; margin-top:1rem; }
+    .comentario { color:#888; font-style:italic; }
+    footer { font-size:0.8rem; color:#666; margin-top:2rem; }
+    canvas { display:block; width:100%; height:100vh; background:#000; }
+    /* ==== ANIMACIONES DIDÁCTICAS ==== */
+    @keyframes pulse { 0%{opacity:0.6} 50%{opacity:1} 100%{opacity:0.6} }
+    .destacado { animation:pulse 2s infinite; }
+    /* ==== RESPONSIVE ==== */
+    @media (max-width:600px) {
+      nav { flex-direction:column; text-align:center; }
+      nav a { margin:0.5rem 0; }
+    }
   </style>
 </head>
 <body>
-  <div id="student-badge">ALUMNO ACTIVO</div>
-  <div id="ui">
-    <div><strong>SLYVERSE v4 - Universidad Real</strong> | <span id="player">alumno_0rb1t4lsn4k3r</span></div>
-    <div>Progreso: <span id="credits">0</span> | Sala: <span id="room">Lobby</span></div>
-    <hr style="border:0;border-top:1px solid #0f0;margin:8px 0">
-    <button onclick="goTo('lobby')">Lobby</button>
-    <button onclick="goTo('tribunal')">Tribunal</button>
-    <button onclick="goTo('asamblea')">Asamblea</button>
-    <button onclick="goTo('secretum')">Secretum</button>
-    <button onclick="study()">Estudiar</button>
-    <button onclick="earnDiploma()">Diploma XR</button>
-    <div id="log"></div>
+
+<header>
+  <h1>SLYVERSE v4 – <span class="destacado">Versión Educativa</span></h1>
+  <p>Aprende HTML, CSS y JavaScript paso a paso con comentarios explicativos.</p>
+</header>
+
+<nav>
+  <a href="#intro">Introducción</a>
+  <a href="#estructura">Estructura HTML</a>
+  <a href="#estilos">CSS Básico</a>
+  <a href="#interactividad">JavaScript</a>
+  <a href="#canvas">Canvas 3D</a>
+  <a href="#ejercicios">Ejercicios</a>
+</nav>
+
+<main>
+
+<!-- ============================================= -->
+<!-- 1. INTRODUCCIÓN                               -->
+<!-- ============================================= -->
+<section id="intro">
+  <h2>1. ¿Qué es SLYVERSE?</h2>
+  <p>
+    SLYVERSE es una <strong>demostración interactiva</strong> de gráficos 3D en el navegador usando únicamente
+    <code>&lt;canvas&gt;</code>, HTML, CSS y JavaScript <strong>sin librerías externas</strong>.
+  </p>
+  <div class="explicacion">
+    <p><strong>Objetivo educativo:</strong> Entender cómo se renderiza un mundo 3D en 2D sin WebGL.</p>
+    <ul>
+      <li>Proyección perspectiva</li>
+      <li>Transformaciones de coordenadas</li>
+      <li>Renderizado de polígonos (triángulos)</li>
+      <li>Control de cámara con ratón</li>
+    </ul>
   </div>
-  <div id="ui-senate">
-    <div><strong>Universidad Real</strong></div>
-    <div>Alumnos: <span id="student-count">1</span></div>
-    <div>Progreso global: <span id="progress">0</span></div>
-    <div id="senate-log"></div>
+</section>
+
+<!-- ============================================= -->
+<!-- 2. ESTRUCTURA HTML BÁSICA                     -->
+<!-- ============================================= -->
+<section id="estructura">
+  <h2>2. Estructura HTML</h2>
+  <p>Todo documento HTML comienza con <code>&lt;!DOCTYPE html&gt;</code> y la etiqueta raíz <code>&lt;html&gt;</code>.</p>
+
+  <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="es"&gt;
+  &lt;head&gt; ... &lt;/head&gt;
+  &lt;body&gt; ... &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+
+  <div class="explicacion">
+    <p><code>lang="es"</code> indica que el contenido está en español → mejora accesibilidad y SEO.
+    <br><code>&lt;meta charset="UTF-8"&gt;</code> permite caracteres especiales (ñ, á, etc.).
   </div>
-  <div id="konami">
-    <strong>¡CONOCIMIENTO ES PODER!</strong><br>
-    "Explora, aprende y crece."<br>
-    <em>— Universidad Real —</em>
+
+  <h3>Nuestra estructura</h3>
+  <pre><code>&lt;header&gt;...&lt;/header&gt;
+&lt;nav&gt;...&lt;/nav&gt;
+&lt;main&gt;
+  &lt;section id="intro"&gt;...&lt;/section&gt;
+  ...
+&lt;/main&gt;
+&lt;canvas id="c"&gt;&lt;/canvas&gt;</code></pre>
+
+  <div class="explicacion">
+    <p><strong>Semántica HTML5:</strong></p>
+    <ul>
+      <li><code>&lt;header&gt;</code>: cabecera de página o sección.</li>
+      <li><code>&lt;nav&gt;</code>: menú de navegación.</li>
+      <li><code>&lt;main&gt;</code>: contenido principal (accesible con lectores de pantalla).</li>
+      <li><code>&lt;section&gt;</code>: bloque temático con <code>id</code> para enlaces internos.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============================================= -->
+<!-- 3. ESTILOS CSS BÁSICOS                        -->
+<!-- ============================================= -->
+<section id="estilos">
+  <h2>3. CSS: Haciéndolo bonito y responsive</h2>
+  <p>Los estilos se colocan dentro de <code>&lt;style&gt;</code> en el <code>&lt;head&gt;</code>.</p>
+
+  <pre><code>body { margin:0; background:#111; color:#eee; font-family:Arial; }
+canvas { display:block; width:100%; height:100vh; }</code></pre>
+
+  <div class="explicacion">
+    <ul>
+      <li><code>margin:0; padding:0;</code> → elimina márgenes por defecto del navegador.</li>
+      <li><code>height:100vh;</code> → el canvas ocupa toda la altura de la ventana (<strong>vh</strong> = viewport height).</li>
+      <li><code>display:block;</code> → evita espacios extra debajo del canvas.</li>
+    </ul>
   </div>
 
-  <script type="module">
-    // CONFIG ALUMNO
-    const PLAYER_ID = 'alumno_0rb1t4lsn4k3r';
-    document.getElementById('player').textContent = PLAYER_ID;
-    let credits = 0, currentRoom = 'lobby', studentCount = 1;
-    document.getElementById('student-count').textContent = studentCount;
+  <h3>Responsive con <code>@media</code></h3>
+  <pre><code>@media (max-width:600px) {
+  nav { flex-direction:column; }
+}</code></pre>
 
-    const portals = { lobby: 'tribunal', tribunal: 'asamblea', asamblea: 'secretum', secretum: 'lobby' };
+  <div class="explicacion">
+    Cuando la pantalla es menor a 600 px, el menú pasa a columna. ¡Adapta tu web a móviles!
+  </div>
+</section>
 
-    // THREE.JS + WebXR + ORBIT
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 100);
-    camera.position.set(0, 1.6, 5);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(innerWidth, innerHeight);
-    renderer.xr.enabled = true;
-    renderer.setPixelRatio(window.devicePixelRatio);
-    document.body.appendChild(renderer.domElement);
+<!-- ============================================= -->
+<!-- 4. INTERACTIVIDAD CON JAVASCRIPT              -->
+<!-- ============================================= -->
+<section id="interactividad">
+  <h2>4. JavaScript: El cerebro del proyecto</h2>
+  <p>Obtenemos el canvas y su contexto 2D:</p>
+  <pre><code>const c = document.getElementById('c');
+const ctx = c.getContext('2d');</code></pre>
 
-    const controls = new THREE.OrbitControls(camera, renderer.domElement);
-    controls.enableDamping = true;
-    controls.dampingFactor = 0.05;
-    controls.target.set(0, 1.6, 0);
+  <div class="explicacion">
+    <ul>
+      <li><code>getElementById</code> → selecciona el elemento con <code>id="c"</code>.</li>
+      <li><code>getContext('2d')</code> → nos da un lienzo para dibujar píxeles.</li>
+    </ul>
+  </div>
 
-    scene.add(new THREE.AmbientLight(0x404040, 1.5));
-    const light = new THREE.PointLight(0x00ff00, 3, 50); 
-    light.position.set(0, 10, 0); 
-    scene.add(light);
+  <h3>Redimensionar el canvas</h3>
+  <pre><code>function resize() {
+  c.width = innerWidth;
+  c.height = innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();</code></pre>
 
-    const skyGeo = new THREE.SphereGeometry(50, 32, 32);
-    const skyMat = new THREE.ShaderMaterial({
-      vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-      fragmentShader: `uniform float time; varying vec2 vUv; void main() { 
-        float t = sin(time * 0.5) * 0.5 + 0.5;
-        vec3 c1 = vec3(0.0, 0.1, 0.0);
-        vec3 c2 = vec3(0.0, 0.2, 0.1);
-        gl_FragColor = vec4(mix(c1, c2, t), 1.0);
-      }`,
-      uniforms: { time: { value: 0.0 } },
-      side: THREE.BackSide
+  <div class="explicacion">
+    <p>El evento <code>resize</code> se dispara cada vez que cambias el tamaño de la ventana. Llamamos a <code>resize()</code> al inicio para establecer el tamaño correcto.</p>
+  </div>
+</section>
+
+<!-- ============================================= -->
+<!-- 5. RENDERIZADO 3D EN CANVAS                   -->
+<!-- ============================================= -->
+<section id="canvas">
+  <h2>5. Renderizado 3D sin WebGL</h2>
+  <p>Convertimos coordenadas 3D → 2D mediante <strong>proyección perspectiva</strong>.</p>
+
+  <pre><code>function project(p) {
+  const fov = 500;
+  const dist = cam.z - p.z;
+  if (dist <= 0) return null;
+  const scale = fov / dist;
+  return {
+    x: (p.x - cam.x) * scale + cw/2,
+    y: (p.y - cam.y) * scale + ch/2
+  };
+}</code></pre>
+
+  <div class="explicacion">
+    <p><strong>Fórmula de proyección:</strong></p>
+    <p class="comentario">x' = (x - cam.x) × (fov / (cam.z - z)) + centroX</p>
+    <p>Cuanto más lejos está un punto (<code>dist</code> grande), más pequeño aparece (<code>scale</code> pequeño).</p>
+  </div>
+
+  <h3>Dibujar triángulos</h3>
+  <pre><code>function drawTriangle(a, b, c, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(b.x, b.y);
+  ctx.lineTo(c.x, c.y);
+  ctx.closePath();
+  ctx.fill();
+}</code></pre>
+
+  <div class="explicacion">
+    <p>Usamos el <strong>painter’s algorithm</strong>: dibujamos triángulos de atrás hacia adelante para simular profundidad.</p>
+  </div>
+</section>
+
+<!-- ============================================= -->
+<!-- 6. EJERCICIOS PRÁCTICOS                       -->
+<!-- ============================================= -->
+<section id="ejercicios">
+  <h2>6. ¡Manos a la obra! Ejercicios</h2>
+  <ol>
+    <li><strong>Cambia el FOV:</strong> Modifica la variable <code>fov</code> en la función <code>project</code>. ¿Qué pasa con el campo visual?</li>
+    <li><strong>Añade un nuevo cubo:</strong> Duplica el array <code>cubes</code> con distintas coordenadas y colores.</li>
+    <li><strong>Rotación automática:</strong> En el bucle de animación, incrementa <code>cube.rotation.y += 0.01;</code>.</li>
+    <li><strong>Control con teclado:</strong> Usa <code>keydown</code> para mover la cámara (WASD + QE para subir/bajar).</li>
+  </ol>
+
+  <div class="explicacion">
+    <p>¡Copia este código en <a href="https://jsfiddle.net" target="_blank">JSFiddle</a> o <a href="https://codepen.io" target="_blank">CodePen</a> y experimenta!</p>
+  </div>
+</section>
+
+</main>
+
+<canvas id="c"></canvas>
+
+<script>
+// ===============================================
+// 1. CONFIGURACIÓN INICIAL
+// ===============================================
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+let cw, ch;
+
+// Redimensionamiento
+function resize() {
+  c.width = cw = innerWidth;
+  c.height = ch = innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+// ===============================================
+// 2. CÁMARA
+// ===============================================
+const cam = { x:0, y:0, z:-5, rotX:0, rotY:0 };
+let mouseDown = false, lastX, lastY;
+
+// Control con ratón
+c.addEventListener('mousedown', e => { mouseDown = true; lastX = e.clientX; lastY = e.clientY; });
+c.addEventListener('mouseup', () => { mouseDown = false; });
+c.addEventListener('mousemove', e => {
+  if (!mouseDown) return;
+  const dx = e.clientX - lastX;
+  const dy = e.clientY - lastY;
+  cam.rotY += dx * 0.005;
+  cam.rotX += dy * 0.005;
+  lastX = e.clientX;
+  lastY = e.clientY;
+});
+
+// ===============================================
+// 3. PROYECCIÓN PERSPECTIVA
+// ===============================================
+function project(p) {
+  const fov = 500;
+  const cosY = Math.cos(cam.rotY), sinY = Math.sin(cam.rotY);
+  const cosX = Math.cos(cam.rotX), sinX = Math.sin(cam.rotX);
+
+  let dx = p.x - cam.x;
+  let dy = p.y - cam.y;
+  let dz = p.z - cam.z;
+
+  // Rotación Y
+  let tempX = dx * cosY + dz * sinY;
+  dz = dz * cosY - dx * sinY;
+  dx = tempX;
+
+  // Rotación X
+  let tempY = dy * cosX - dz * sinX;
+  dz = dy * sinX + dz * cosX;
+  dy = tempY;
+
+  if (dz <= 0) return null;
+
+  const scale = fov / dz;
+  return {
+    x: dx * scale + cw/2,
+    y: dy * scale + ch/2
+  };
+}
+
+// ===============================================
+// 4. DEFINICIÓN DE CUBOS
+// ===============================================
+const cubes = [
+  { pos:{x:0,y:0,z:5}, size:1, rotation:{x:0,y:0,z:0}, color:'#0f0' },
+  { pos:{x:3,y:-1,z:7}, size:0.8, rotation:{x:0.5,y:0.8,z:0}, color:'#0ff' },
+  { pos:{x:-4,y:1,z:6}, size:1.2, rotation:{x:0,y:1.5,z:0}, color:'#f0f' }
+];
+
+const cubeVertices = [
+  [-1,-1,-1],[ 1,-1,-1],[ 1, 1,-1],[-1, 1,-1],
+  [-1,-1, 1],[ 1,-1, 1],[ 1, 1, 1],[-1, 1, 1]
+];
+
+const cubeFaces = [
+  [0,1,2],[0,2,3], [5,4,7],[5,7,6],
+  [4,0,3],[4,3,7], [1,5,6],[1,6,2],
+  [4,5,1],[4,1,0], [3,2,6],[3,6,7]
+];
+
+// ===============================================
+// 5. ROTACIÓN DE PUNTOS
+// ===============================================
+function rotatePoint(p, rot) {
+  let {x, y, z} = p;
+  // X
+  let cos = Math.cos(rot.x), sin = Math.sin(rot.x);
+  let ty = y * cos - z * sin;
+  let tz = y * sin + z * cos;
+  y = ty; z = tz;
+  // Y
+  cos = Math.cos(rot.y); sin = Math.sin(rot.y);
+  let tx = x * cos + z * sin;
+  z = z * cos - x * sin;
+  x = tx;
+  // Z
+  cos = Math.cos(rot.z); sin = Math.sin(rot.z);
+  let txx = x * cos - y * sin;
+  y = x * sin + y * cos;
+  x = txx;
+  return {x, y, z};
+}
+
+// ===============================================
+// 6. DIBUJAR TRIÁNGULO
+// ===============================================
+function drawTriangle(a, b, c, color) {
+  if (!a || !b || !c) return;
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.moveTo(a.x, a.y);
+  ctx.lineTo(b.x, b.y);
+  ctx.lineTo(c.x, c.y);
+  ctx.closePath();
+  ctx.fill();
+}
+
+// ===============================================
+// 7. BUCLE DE ANIMACIÓN
+// ===============================================
+function animate() {
+  ctx.fillStyle = '#111';
+  ctx.fillRect(0, 0, cw, ch);
+
+  const sortedCubes = [...cubes].sort((a, b) => {
+    const da = Math.hypot(a.pos.x - cam.x, a.pos.y - cam.y, a.pos.z - cam.z);
+    const db = Math.hypot(b.pos.x - cam.x, b.pos.y - cam.y, b.pos.z - cam.z);
+    return db - da;
+  });
+
+  sortedCubes.forEach((cube, cubeIndex) => {
+    const s = cube.size;
+    const r = cube.rotation;
+
+    // Rotación automática (ejercicio)
+    cube.rotation.y += 0.01;
+    cube.rotation.x += 0.005;
+
+    const verts = cubeVertices.map(v => {
+      let p = { x: v[0] * s + cube.pos.x, y: v[1] * s + cube.pos.y, z: v[2] * s + cube.pos.z };
+      p = rotatePoint(p, r);
+      return project(p);
     });
-    const sky = new THREE.Mesh(skyGeo, skyMat);
-    scene.add(sky);
 
-    const floorGeo = new THREE.PlaneGeometry(100, 100);
-    const floorMat = new THREE.MeshStandardMaterial({ color: 0x001100, roughness: 0.8, metalness: 0.2 });
-    const floor = new THREE.Mesh(floorGeo, floorMat);
-    floor.rotation.x = -Math.PI / 2;
-    floor.receiveShadow = true;
-    scene.add(floor);
+    cubeFaces.forEach((face, i) => {
+      const [i1, i2, i3] = face;
+      const p1 = verts[i1], p2 = verts[i2], p3 = verts[i3];
+      if (!p1 || !p2 || !p3) return;
 
-    const portalGeo = new THREE.TorusGeometry(2, 0.5, 16, 100);
-    const portalMat = new THREE.MeshStandardMaterial({ 
-      color: 0x00ff00, 
-      emissive: 0x00ff00, 
-      emissiveIntensity: 0.8, 
-      transparent: true, 
-      opacity: 0.9 
+      // Sombras simples por cara
+      const shade = 0.5 + 0.5 * Math.abs((i % 6) - 3) / 3;
+      const color = cube.color;
+      const r = parseInt(color.slice(1,3), 16) * shade;
+      const g = parseInt(color.slice(3,5), 16) * shade;
+      const b = parseInt(color.slice(5,7), 16) * shade;
+      const shadedColor = `rgb(${r|0},${g|0},${b|0})`;
+
+      drawTriangle(p1, p2, p3, shadedColor);
     });
-    const portal = new THREE.Mesh(portalGeo, portalMat);
-    portal.position.set(0, 2, -15);
-    scene.add(portal);
+  });
 
-    const rooms = {
-      lobby: { color: 0x00ff00, text: "AULA: El conocimiento es poder" },
-      tribunal: { color: 0x008800, text: "Tribunal: Evalúa tu aprendizaje" },
-      asamblea: { color: 0x0000ff, text: "Asamblea: Debate y comparte" },
-      secretum: { color: 0x008800, text: "Secretum: Explora nuevos temas" }
-    };
+  requestAnimationFrame(animate);
+}
 
-    function goTo(room) {
-      currentRoom = room;
-      document.getElementById('room').textContent = room.charAt(0).toUpperCase() + room.slice(1);
-      log(`→ ${room.toUpperCase()}`);
-      loadRoom(room);
-    }
+animate();
 
-    function loadRoom(room) {
-      scene.children = scene.children.filter(c => 
-        c.type === 'AmbientLight' || c.type === 'PointLight' || c === floor || c === sky || c === portal
-      );
-      const mat = new THREE.MeshStandardMaterial({ color: rooms[room].color, roughness: 0.7, metalness: 0.3 });
-      const geo = new THREE.BoxGeometry(4, 4, 4);
-      const cube = new THREE.InstancedMesh(geo, mat, 1);
-      const dummy = new THREE.Object3D();
-      dummy.position.set(0, 2, -10);
-      dummy.updateMatrix();
-      cube.setMatrixAt(0, dummy.matrix);
-      scene.add(cube);
-      log(rooms[room].text);
-      portal.userData.nextRoom = portals[room];
-    }
+</script>
 
-    document.addEventListener('click', (e) => {
-      if (e.target.tagName === 'BUTTON') return;
-      const raycaster = new THREE.Raycaster();
-      const mouse = new THREE.Vector2(
-        (e.clientX / innerWidth) * 2 - 1,
-        -(e.clientY / innerHeight) * 2 + 1
-      );
-      raycaster.setFromCamera(mouse, camera);
-      const intersects = raycaster.intersectObject(portal);
-      if (intersects.length > 0) goTo(portal.userData.nextRoom);
-    });
+<footer>
+  <p>© 2025 SLYVERSE Educativo – Hecho con HTML, CSS y JavaScript puro.</p>
+</footer>
 
-    async function study() {
-      credits += 1;
-      document.getElementById('credits').textContent = credits;
-      log(`+1 crédito - ¡Aprendiste algo nuevo!`);
-      addOrb(0x00ff00, 3000);
-      updateProgress();
-    }
-
-    async function earnDiploma() {
-      if (credits < 10) return logSenate("Necesitas 10 créditos para diploma");
-      credits -= 10;
-      document.getElementById('credits').textContent = credits;
-      logSenate(`¡Diploma XR obtenido!`);
-      log(`Felicidades, obtuviste un Diploma XR`);
-      addOrb(0xff0, 5000); // Orbe dorado por diploma
-    }
-
-    function updateProgress() {
-      const progress = document.getElementById('progress');
-      const totalProgress = credits * studentCount;
-      progress.textContent = totalProgress;
-      logSenate(`Progreso global: ${totalProgress}`);
-    }
-
-    function log(msg) {
-      const log = document.getElementById('log');
-      const div = document.createElement('div');
-      div.textContent = msg;
-      log.appendChild(div);
-      log.scrollTop = log.scrollHeight;
-    }
-
-    function logSenate(msg) {
-      const log = document.getElementById('senate-log');
-      const div = document.createElement('div');
-      div.textContent = msg;
-      log.appendChild(div);
-      log.scrollTop = log.scrollHeight;
-    }
-
-    function addOrb(color, duration) {
-      const orb = new THREE.Mesh(
-        new THREE.SphereGeometry(0.4, 16, 16),
-        new THREE.MeshBasicMaterial({ color })
-      );
-      orb.position.set((Math.random()-0.5)*8, 1 + Math.random(), -8 + Math.random()*-4);
-      orb.userData = { vel: new THREE.Vector3((Math.random()-0.5)*0.02, 0.01, (Math.random()-0.5)*0.02) };
-      scene.add(orb);
-      const start = performance.now();
-      const animateOrb = () => {
-        const elapsed = performance.now() - start;
-        if (elapsed > duration) { scene.remove(orb); return; }
-        orb.position.add(orb.userData.vel);
-        orb.position.y = Math.max(0.5, orb.position.y);
-        requestAnimationFrame(animateOrb);
-      };
-      animateOrb();
-    }
-
-    // KONAMI: +3 créditos
-    let k = [];
-    document.addEventListener('keydown', e => {
-      k.push(e.code);
-      if (k.slice(-10).join(',') === 'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,KeyB,KeyA') {
-        document.getElementById('konami').style.display = 'block';
-        setTimeout(() => document.getElementById('konami').style.display = 'none', 4000);
-        study(); study(); study();
-      }
-    });
-
-    // VR BUTTON
-    const vrBtn = document.createElement('button');
-    vrBtn.id = 'vr-btn';
-    vrBtn.textContent = 'VR';
-    vrBtn.onclick = () => renderer.xr.getSession()?.end() || renderer.xr.getSession();
-    document.body.appendChild(vrBtn);
-
-    // ANIMATION LOOP
-    function animate() {
-      requestAnimationFrame(animate);
-      sky.material.uniforms.time.value = performance.now() / 1000;
-      portal.rotation.y += 0.015;
-      controls.update();
-      renderer.render(scene, camera);
-    }
-    animate();
-
-    // RESIZE
-    window.addEventListener('resize', () => {
-      camera.aspect = innerWidth / innerHeight;
-      camera.updateProjectionMatrix();
-      renderer.setSize(innerWidth, innerHeight);
-    });
-
-    // INIT
-    loadRoom('lobby');
-    log("Universidad Real iniciada. ¡Explora y aprende gratis!");
-  </script>
 </body>
 </html>

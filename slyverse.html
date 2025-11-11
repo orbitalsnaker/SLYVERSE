@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>SLYVERSE SNAKE v1.0 - Donate Fork</title>
+    <title>SLYVERSE SNAKE v1.0 - v1 Fork</title>
     <style>
         body { background: #000; color: #0f0; font-family: monospace; text-align: center; margin: 0; padding: 20px; }
         canvas { border: 2px solid #f0f; background: #111; image-rendering: pixelated; }
@@ -11,20 +11,35 @@
         button:hover { background: #0f0; color: #000; }
         #donate { position: absolute; bottom: 10px; right: 10px; font-size: 12px; opacity: 0.5; cursor: pointer; }
         #donate:hover { opacity: 1; color: #f0f; }
+        #ad-container { position: absolute; bottom: 10px; left: 10px; width: 200px; height: 50px; background: #222; opacity: 0.3; font-size: 10px; display: none; } /* Non-intrusive ad ghost */
     </style>
+    <!-- AdMob non-intrusive script (v1 placeholder - replace with real pub ID) -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-SLYVERSEFAKE" crossorigin="anonymous"></script>
 </head>
 <body>
-    <h1>🐍 SLYVERSE SNAKE v1.0 - Donate Fork</h1>
+    <h1>🐍 SLYVERSE SNAKE v1.0 - v1 Fork</h1>
     <canvas id="gameCanvas" width="400" height="400"></canvas>
     <div id="status">HUMAN Mode | Souls: 0 | Cheese: 0/13 | Crashes: 0</div>
     <div id="modes">
         <button onclick="toggleMode()">TOGGLE MODE</button>
         <button onclick="resetGame()">RESET LOOP</button>
     </div>
-    <div id="donate" title="Tx Guardian souls? Copy: 0xSLYVERSEFAKEWALLET1234567890ABCDEF" onclick="copyWallet()">🔮 Tx for @0rb1t4lsn4k3r</div>
+    <div id="donate" title="Tx Guardian souls? Copy: bc1qSLYVERSEFAKEWALLET1234567890ABCDEF" onclick="copyWallet()">🔮 Tx for Verse</div>
+    <div id="ad-container">
+        <ins class="adsbygoogle" style="display:inline-block;width:200px;height:50px" data-ad-client="ca-pub-SLYVERSEFAKE" data-ad-slot="ghost-ad"></ins>
+    </div>
     <p>Arrows / WASD / Swipe → Beat METAGROK | esodsake</p>
 
     <script>
+        // Load non-intrusive ad (v1: show after 5 plays, opacity low)
+        let playCount = parseInt(localStorage.getItem('slyverse_plays') || '0');
+        playCount++;
+        localStorage.setItem('slyverse_plays', playCount);
+        if (playCount > 5) {
+            document.getElementById('ad-container').style.display = 'block';
+            (adsbygoogle = window.adsbygoogle || []).push({});
+        }
+
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
         const gridSize = 20;
@@ -41,8 +56,8 @@
         let aiTimer = 0;
         let cheeseMined = 0;
 
-        // Donate wallet fake (non-invasive corner)
-        const devWallet = '0xSLYVERSEFAKEWALLET1234567890ABCDEF'; // Replace with real if known
+        // Donate wallet (non-invasive corner, v1 lore)
+        const devWallet = 'bc1qSLYVERSEFAKEWALLET1234567890ABCDEF'; // X tips wallet (BTC style, replace if SOL/ETH)
 
         function copyWallet() {
             navigator.clipboard.writeText(devWallet).then(() => {

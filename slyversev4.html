@@ -3,220 +3,231 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE v4 – Versión Educativa</title>
+  <title>SLYVERSE v4 — Ética sin Estética no existe</title>
+  <meta name="description" content="Gráficos 3D sin WebGL. Belleza funcional, código limpio, accesibilidad total. Porque la ética (claridad, inclusión) necesita estética (elegancia, armonía).">
+  
+  <!-- === ICONO SIMBÓLICO: 3D + ∞ (ética/estética) === -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22>∞</text></svg>">
+
   <style>
-    /* ==== ESTILOS BÁSICOS ==== */
-    body { margin:0; padding:0; font-family:Arial, sans-serif; background:#111; color:#eee; }
-    header, footer { background:#222; padding:1rem; text-align:center; }
-    nav { background:#333; padding:0.5rem; display:flex; justify-content:center; flex-wrap:wrap; }
-    nav a { color:#0f0; margin:0 1rem; text-decoration:none; font-weight:bold; }
-    nav a:hover { text-decoration:underline; }
-    main { padding:2rem; max-width:960px; margin:auto; }
-    section { margin-bottom:3rem; }
-    h1, h2, h3 { color:#0f0; }
-    pre { background:#222; padding:1rem; overflow:auto; border-left:4px solid #0f0; border-radius:4px; }
-    .explicacion { background:#1a1a1a; padding:1rem; border-radius:8px; margin-top:1rem; }
-    .comentario { color:#888; font-style:italic; }
-    footer { font-size:0.8rem; color:#666; margin-top:2rem; }
-    canvas { display:block; width:100%; height:100vh; background:#000; }
-    /* ==== ANIMACIONES DIDÁCTICAS ==== */
-    @keyframes pulse { 0%{opacity:0.6} 50%{opacity:1} 100%{opacity:0.6} }
-    .destacado { animation:pulse 2s infinite; }
-    /* ==== RESPONSIVE ==== */
-    @media (max-width:600px) {
-      nav { flex-direction:column; text-align:center; }
-      nav a { margin:0.5rem 0; }
+    /* === ESTÉTICA = ÉTICA VISUAL === */
+    *, *::before, *::after { box-sizing: border-box; }
+    :root {
+      --bg: #0a0a0a; --fg: #f0f0f0; --accent: #0f0; --dark: #111;
+      --radius: 12px; --shadow: 0 4px 20px rgba(0,255,0,0.1);
     }
+    body {
+      margin:0; padding:0; font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg); color: var(--fg); line-height: 1.7;
+      min-height: 100vh; display: flex; flex-direction: column;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:focus-visible, button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+    /* === CABECERA: FILOSOFÍA CENTRAL === */
+    header {
+      background: linear-gradient(135deg, #000, #001100);
+      padding: 3rem 1.5rem; text-align: center; border-bottom: 1px solid #0f0;
+    }
+    header h1 {
+      font-size: clamp(2rem, 8vw, 3.5rem); margin:0; color: var(--accent);
+      text-shadow: 0 0 20px rgba(0,255,0,0.4);
+    }
+    header p {
+      font-style: italic; max-width: 800px; margin: 1rem auto; opacity: 0.9;
+    }
+
+    /* === NAV: ACCESIBLE Y BELLA === */
+    nav {
+      background: rgba(17,17,17,0.95); backdrop-filter: blur(10px);
+      padding: 1rem; display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem;
+      position: sticky; top:0; z-index:10; border-bottom: 1px solid #222;
+    }
+    nav a {
+      color: var(--accent); font-weight: 600; padding: 0.6rem 1.2rem; border-radius: var(--radius);
+      transition: all 0.3s ease; white-space: nowrap;
+    }
+    nav a:hover, nav a:focus {
+      background: var(--accent); color: #000; transform: translateY(-2px);
+    }
+
+    /* === MAIN: CONTENIDO ÉTICO Y ESTÉTICO === */
+    main { flex:1; max-width: 1000px; margin: auto; padding: 2rem; }
+    section { margin-bottom: 4rem; }
+    h2 { color: var(--accent); font-size: 1.8rem; margin-bottom: 1rem; position: relative; }
+    h2::after { content:''; position:absolute; left:0; bottom:-8px; width:60px; height:3px; background:var(--accent); border-radius:2px; }
+
+    .explicacion {
+      background: rgba(26,26,26,0.7); padding: 1.5rem; border-radius: var(--radius);
+      border-left: 4px solid var(--accent); box-shadow: var(--shadow); margin-top: 1.5rem;
+    }
+    pre {
+      background: #111; padding: 1.2rem; border-radius: 8px; overflow: auto;
+      border: 1px solid #333; font-size: 0.9rem; margin: 1rem 0;
+    }
+
+    /* === CANVAS: BELLEZA EN MOVIMIENTO === */
+    #canvas-container {
+      position: relative; height: 65vh; background: #000; border-radius: var(--radius);
+      overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin: 2.5rem 0;
+      border: 1px solid #333;
+    }
+    canvas { display: block; width: 100%; height: 100%; image-rendering: crisp-edges; }
+
+    /* === CONTROLES: ESTÉTICA FUNCIONAL === */
+    .controls {
+      display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; margin: 1.5rem 0;
+    }
+    .btn {
+      background: transparent; color: var(--accent); border: 2px solid var(--accent);
+      padding: 0.8rem 1.8rem; font-weight: 600; border-radius: var(--radius);
+      cursor: pointer; transition: all 0.3s ease; font-size: 1rem;
+    }
+    .btn:hover, .btn.active {
+      background: var(--accent); color: #000; box-shadow: 0 0 15px rgba(0,255,0,0.4);
+    }
+
+    /* === ALTO CONTRASTE === */
+    .high-contrast {
+      --bg: #000 !important; --fg: #fff !important; --accent: #0f0 !important;
+      filter: contrast(1.8) brightness(1.1);
+    }
+
+    /* === RESPONSIVE === */
+    @media (max-width: 768px) {
+      nav { flex-direction: column; align-items: center; }
+      .controls { flex-direction: column; align-items: stretch; }
+      #canvas-container { height: 50vh; }
+    }
+
+    /* === ANIMACIÓN ÉTICA: SUAVE, NO AGRESIVA === */
+    @keyframes breathe {
+      0%,100% { text-shadow: 0 0 10px rgba(0,255,0,0.3); }
+      50% { text-shadow: 0 0 25px rgba(0,255,0,0.6); }
+    }
+    .pulse { animation: breathe 3s infinite; }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>SLYVERSE v4 – <span class="destacado">Versión Educativa</span></h1>
-  <p>Aprende HTML, CSS y JavaScript paso a paso con comentarios explicativos.</p>
+  <h1>SLYVERSE v4 <span class="pulse">— Ética sin Estética no existe</span></h1>
+  <p>Gráficos 3D puros. Código limpio. Accesibilidad total. Belleza con propósito.</p>
 </header>
 
-<nav>
-  <a href="#intro">Introducción</a>
-  <a href="#estructura">Estructura HTML</a>
-  <a href="#estilos">CSS Básico</a>
-  <a href="#interactividad">JavaScript</a>
-  <a href="#canvas">Canvas 3D</a>
-  <a href="#ejercicios">Ejercicios</a>
+<nav role="navigation" aria-label="Menú filosófico">
+  <a href="#filosofia">Filosofía</a>
+  <a href="#demo">Demo 3D</a>
+  <a href="#codigo">Código Ético</a>
+  <a href="#accesibilidad">Accesibilidad</a>
+  <a href="#ejercicios">Práctica</a>
 </nav>
 
 <main>
 
 <!-- ============================================= -->
-<!-- 1. INTRODUCCIÓN                               -->
+<!-- 1. FILOSOFÍA CENTRAL                          -->
 <!-- ============================================= -->
-<section id="intro">
-  <h2>1. ¿Qué es SLYVERSE?</h2>
-  <p>
-    SLYVERSE es una <strong>demostración interactiva</strong> de gráficos 3D en el navegador usando únicamente
-    <code>&lt;canvas&gt;</code>, HTML, CSS y JavaScript <strong>sin librerías externas</strong>.
-  </p>
+<section id="filosofia" aria-labelledby="filosofia-title">
+  <h2 id="filosofia-title">¿Por qué no hay ética sin estética?</h2>
   <div class="explicacion">
-    <p><strong>Objetivo educativo:</strong> Entender cómo se renderiza un mundo 3D en 2D sin WebGL.</p>
-    <ul>
-      <li>Proyección perspectiva</li>
-      <li>Transformaciones de coordenadas</li>
-      <li>Renderizado de polígonos (triángulos)</li>
-      <li>Control de cámara con ratón</li>
-    </ul>
+    <p><strong>La ética</strong> es claridad, inclusión, funcionalidad, respeto al usuario.</p>
+    <p><strong>La estética</strong> es armonía, elegancia, ritmo visual, experiencia placentera.</p>
+    <p class="pulse" style="font-weight:600; margin:1.5rem 0;">
+      → Una sin la otra es incompleta. Un código feo es poco ético. Una interfaz inaccesible es antiestética.
+    </p>
+    <p>SLYVERSE v4 demuestra que <strong>se puede ser técnicamente puro, accesible y bello al mismo tiempo</strong>.</p>
   </div>
 </section>
 
 <!-- ============================================= -->
-<!-- 2. ESTRUCTURA HTML BÁSICA                     -->
+<!-- 2. DEMO INTERACTIVA                           -->
 <!-- ============================================= -->
-<section id="estructura">
-  <h2>2. Estructura HTML</h2>
-  <p>Todo documento HTML comienza con <code>&lt;!DOCTYPE html&gt;</code> y la etiqueta raíz <code>&lt;html&gt;</code>.</p>
+<section id="demo" aria-labelledby="demo-title">
+  <h2 id="demo-title">Experiencia 3D — Belleza en Movimiento</h2>
+  <p>Arrastra con ratón o usa teclado. Observa cómo la <em>forma sigue a la función</em> con elegancia.</p>
 
-  <pre><code>&lt;!DOCTYPE html&gt;
-&lt;html lang="es"&gt;
-  &lt;head&gt; ... &lt;/head&gt;
-  &lt;body&gt; ... &lt;/body&gt;
-&lt;/html&gt;</code></pre>
-
-  <div class="explicacion">
-    <p><code>lang="es"</code> indica que el contenido está en español → mejora accesibilidad y SEO.
-    <br><code>&lt;meta charset="UTF-8"&gt;</code> permite caracteres especiales (ñ, á, etc.).
+  <div id="canvas-container" role="region" aria-label="Mundo 3D interactivo. Usa ratón o teclado para explorar.">
+    <canvas id="c" tabindex="0" aria-describedby="canvas-instructions"></canvas>
   </div>
 
-  <h3>Nuestra estructura</h3>
-  <pre><code>&lt;header&gt;...&lt;/header&gt;
-&lt;nav&gt;...&lt;/nav&gt;
-&lt;main&gt;
-  &lt;section id="intro"&gt;...&lt;/section&gt;
-  ...
-&lt;/main&gt;
-&lt;canvas id="c"&gt;&lt;/canvas&gt;</code></pre>
+  <div id="canvas-instructions" class="explicacion" style="display:none;">
+    <p><strong>Controles:</strong> Ratón → girar | WASD → mover | Q/E → subir/bajar | Flechas → rotar | Espacio → reset</p>
+  </div>
 
-  <div class="explicacion">
-    <p><strong>Semántica HTML5:</strong></p>
-    <ul>
-      <li><code>&lt;header&gt;</code>: cabecera de página o sección.</li>
-      <li><code>&lt;nav&gt;</code>: menú de navegación.</li>
-      <li><code>&lt;main&gt;</code>: contenido principal (accesible con lectores de pantalla).</li>
-      <li><code>&lt;section&gt;</code>: bloque temático con <code>id</code> para enlaces internos.</li>
-    </ul>
+  <div class="controls" role="group" aria-label="Controles estéticos">
+    <button class="btn" onclick="resetCamera()">Reset</button>
+    <button class="btn active" id="autoBtn" onclick="toggleAutoRotate()">Auto-rotar ON</button>
+    <button class="btn" onclick="addCube()">+ Cubo</button>
+    <button class="btn" onclick="toggleContrast()">Alto Contraste</button>
   </div>
 </section>
 
 <!-- ============================================= -->
-<!-- 3. ESTILOS CSS BÁSICOS                        -->
+<!-- 3. CÓDIGO ÉTICO Y ESTÉTICO                    -->
 <!-- ============================================= -->
-<section id="estilos">
-  <h2>3. CSS: Haciéndolo bonito y responsive</h2>
-  <p>Los estilos se colocan dentro de <code>&lt;style&gt;</code> en el <code>&lt;head&gt;</code>.</p>
-
-  <pre><code>body { margin:0; background:#111; color:#eee; font-family:Arial; }
-canvas { display:block; width:100%; height:100vh; }</code></pre>
-
+<section id="codigo" aria-labelledby="codigo-title">
+  <h2 id="codigo-title">Código: Ética en Cada Línea</h2>
   <div class="explicacion">
+    <p><strong>Principios aplicados:</strong></p>
     <ul>
-      <li><code>margin:0; padding:0;</code> → elimina márgenes por defecto del navegador.</li>
-      <li><code>height:100vh;</code> → el canvas ocupa toda la altura de la ventana (<strong>vh</strong> = viewport height).</li>
-      <li><code>display:block;</code> → evita espacios extra debajo del canvas.</li>
+      <li><strong>Semántica HTML5</strong> → ética de estructura</li>
+      <li><strong>ARIA y foco visible</strong> → ética de inclusión</li>
+      <li><strong>CSS con variables y transiciones suaves</strong> → estética de movimiento</li>
+      <li><strong>JavaScript puro, sin dependencias</strong> → ética de simplicidad</li>
+      <li><strong>Comentarios claros y ejercicios</strong> → ética pedagógica</li>
     </ul>
   </div>
 
-  <h3>Responsive con <code>@media</code></h3>
-  <pre><code>@media (max-width:600px) {
-  nav { flex-direction:column; }
-}</code></pre>
-
-  <div class="explicacion">
-    Cuando la pantalla es menor a 600 px, el menú pasa a columna. ¡Adapta tu web a móviles!
-  </div>
-</section>
-
-<!-- ============================================= -->
-<!-- 4. INTERACTIVIDAD CON JAVASCRIPT              -->
-<!-- ============================================= -->
-<section id="interactividad">
-  <h2>4. JavaScript: El cerebro del proyecto</h2>
-  <p>Obtenemos el canvas y su contexto 2D:</p>
-  <pre><code>const c = document.getElementById('c');
-const ctx = c.getContext('2d');</code></pre>
-
-  <div class="explicacion">
-    <ul>
-      <li><code>getElementById</code> → selecciona el elemento con <code>id="c"</code>.</li>
-      <li><code>getContext('2d')</code> → nos da un lienzo para dibujar píxeles.</li>
-    </ul>
-  </div>
-
-  <h3>Redimensionar el canvas</h3>
-  <pre><code>function resize() {
-  c.width = innerWidth;
-  c.height = innerHeight;
-}
-window.addEventListener('resize', resize);
-resize();</code></pre>
-
-  <div class="explicacion">
-    <p>El evento <code>resize</code> se dispara cada vez que cambias el tamaño de la ventana. Llamamos a <code>resize()</code> al inicio para establecer el tamaño correcto.</p>
-  </div>
-</section>
-
-<!-- ============================================= -->
-<!-- 5. RENDERIZADO 3D EN CANVAS                   -->
-<!-- ============================================= -->
-<section id="canvas">
-  <h2>5. Renderizado 3D sin WebGL</h2>
-  <p>Convertimos coordenadas 3D → 2D mediante <strong>proyección perspectiva</strong>.</p>
-
-  <pre><code>function project(p) {
+  <details open>
+    <summary><strong>Ver función de proyección (belleza matemática)</strong></summary>
+    <pre><code>function project(p) {
   const fov = 500;
-  const dist = cam.z - p.z;
-  if (dist <= 0) return null;
-  const scale = fov / dist;
-  return {
-    x: (p.x - cam.x) * scale + cw/2,
-    y: (p.y - cam.y) * scale + ch/2
-  };
+  const cosY = Math.cos(cam.rotY), sinY = Math.sin(cam.rotY);
+  const cosX = Math.cos(cam.rotX), sinX = Math.sin(cam.rotX);
+
+  let dx = p.x - cam.x, dy = p.y - cam.y, dz = p.z - cam.z;
+  // Rotación Y
+  let tempX = dx * cosY + dz * sinY; dz = dz * cosY - dx * sinY; dx = tempX;
+  // Rotación X
+  let tempY = dy * cosX - dz * sinX; dz = dy * sinX + dz * cosX; dy = tempY;
+
+  if (dz <= 0) return null;
+  const scale = fov / dz;
+  return { x: dx * scale + cw/2, y: dy * scale + ch/2 };
 }</code></pre>
+    <p class="explicacion">→ <em>Elegancia matemática: transforma 3D → 2D con armonía.</em></p>
+  </details>
+</section>
 
+<!-- ============================================= -->
+<!-- 4. ACCESIBILIDAD = ÉTICA VISUAL               -->
+<!-- ============================================= -->
+<section id="accesibilidad" aria-labelledby="acc-title">
+  <h2 id="acc-title">Accesibilidad: Ética en Acción</h2>
   <div class="explicacion">
-    <p><strong>Fórmula de proyección:</strong></p>
-    <p class="comentario">x' = (x - cam.x) × (fov / (cam.z - z)) + centroX</p>
-    <p>Cuanto más lejos está un punto (<code>dist</code> grande), más pequeño aparece (<code>scale</code> pequeño).</p>
-  </div>
-
-  <h3>Dibujar triángulos</h3>
-  <pre><code>function drawTriangle(a, b, c, color) {
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.moveTo(a.x, a.y);
-  ctx.lineTo(b.x, b.y);
-  ctx.lineTo(c.x, c.y);
-  ctx.closePath();
-  ctx.fill();
-}</code></pre>
-
-  <div class="explicacion">
-    <p>Usamos el <strong>painter’s algorithm</strong>: dibujamos triángulos de atrás hacia adelante para simular profundidad.</p>
+    <ul>
+      <li><strong>Teclado completo</strong>: Todo navegable con Tab, flechas, WASD, Enter</li>
+      <li><strong>Alto contraste</strong>: Botón para WCAG AA/AAA</li>
+      <strong>Lectores de pantalla</strong>: ARIA, roles, etiquetas descriptivas
+      <li><strong>Fuentes sistema</strong>: legibles en cualquier dispositivo</li>
+      <li><strong>Transiciones suaves</strong>: no agresivas para usuarios sensibles</li>
+    </ul>
   </div>
 </section>
 
 <!-- ============================================= -->
-<!-- 6. EJERCICIOS PRÁCTICOS                       -->
+<!-- 5. EJERCICIOS PRÁCTICOS                       -->
 <!-- ============================================= -->
-<section id="ejercicios">
-  <h2>6. ¡Manos a la obra! Ejercicios</h2>
+<section id="ejercicios" aria-labelledby="ej-title">
+  <h2 id="ej-title">Practica la Ética-Estética</h2>
   <ol>
-    <li><strong>Cambia el FOV:</strong> Modifica la variable <code>fov</code> en la función <code>project</code>. ¿Qué pasa con el campo visual?</li>
-    <li><strong>Añade un nuevo cubo:</strong> Duplica el array <code>cubes</code> con distintas coordenadas y colores.</li>
-    <li><strong>Rotación automática:</strong> En el bucle de animación, incrementa <code>cube.rotation.y += 0.01;</code>.</li>
-    <li><strong>Control con teclado:</strong> Usa <code>keydown</code> para mover la cámara (WASD + QE para subir/bajar).</li>
+    <li><strong>Modifica el FOV</strong> → ¿Cómo cambia la percepción del espacio?</li>
+    <li><strong>Añade un cubo con tu color</strong> → ¿Mejora la composición?</li>
+    <li><strong>Desactiva auto-rotar</strong> → ¿Pierde vida o gana control?</li>
+    <li><strong>Prueba solo con teclado</strong> → ¿Sigue siendo bello?</li>
   </ol>
-
-  <div class="explicacion">
-    <p>¡Copia este código en <a href="https://jsfiddle.net" target="_blank">JSFiddle</a> o <a href="https://codepen.io" target="_blank">CodePen</a> y experimenta!</p>
-  </div>
+  <p><a href="https://codepen.io/pen/" target="_blank" rel="noopener" class="btn">Fork en CodePen</a></p>
 </section>
 
 </main>
@@ -225,13 +236,13 @@ resize();</code></pre>
 
 <script>
 // ===============================================
-// 1. CONFIGURACIÓN INICIAL
+// SLYVERSE v4 — ÉTICA + ESTÉTICA
 // ===============================================
 const c = document.getElementById('c');
 const ctx = c.getContext('2d');
 let cw, ch;
 
-// Redimensionamiento
+// === RESIZE ÉTICO ===
 function resize() {
   c.width = cw = innerWidth;
   c.height = ch = innerHeight;
@@ -239,102 +250,63 @@ function resize() {
 window.addEventListener('resize', resize);
 resize();
 
-// ===============================================
-// 2. CÁMARA
-// ===============================================
-const cam = { x:0, y:0, z:-5, rotX:0, rotY:0 };
+// === CÁMARA CON ALMA ===
+const cam = { x:0, y:0, z:-6, rotX:0, rotY:0 };
 let mouseDown = false, lastX, lastY;
+let keys = {};
+let autoRotate = true;
 
-// Control con ratón
+// === CONTROLES TECLADO (ÉTICA DE ACCESO) ===
+window.addEventListener('keydown', e => keys[e.key.toLowerCase()] = true);
+window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
+
 c.addEventListener('mousedown', e => { mouseDown = true; lastX = e.clientX; lastY = e.clientY; });
-c.addEventListener('mouseup', () => { mouseDown = false; });
+c.addEventListener('mouseup', () => mouseDown = false);
 c.addEventListener('mousemove', e => {
   if (!mouseDown) return;
-  const dx = e.clientX - lastX;
-  const dy = e.clientY - lastY;
-  cam.rotY += dx * 0.005;
-  cam.rotX += dy * 0.005;
-  lastX = e.clientX;
-  lastY = e.clientY;
+  const dx = e.clientX - lastX, dy = e.clientY - lastY;
+  cam.rotY += dx * 0.005; cam.rotX += dy * 0.005;
+  lastX = e.clientX; lastY = e.clientY;
 });
 
-// ===============================================
-// 3. PROYECCIÓN PERSPECTIVA
-// ===============================================
+// === PROYECCIÓN: BELLEZA MATEMÁTICA ===
 function project(p) {
   const fov = 500;
   const cosY = Math.cos(cam.rotY), sinY = Math.sin(cam.rotY);
   const cosX = Math.cos(cam.rotX), sinX = Math.sin(cam.rotX);
 
-  let dx = p.x - cam.x;
-  let dy = p.y - cam.y;
-  let dz = p.z - cam.z;
-
-  // Rotación Y
-  let tempX = dx * cosY + dz * sinY;
-  dz = dz * cosY - dx * sinY;
-  dx = tempX;
-
-  // Rotación X
-  let tempY = dy * cosX - dz * sinX;
-  dz = dy * sinX + dz * cosX;
-  dy = tempY;
+  let dx = p.x - cam.x, dy = p.y - cam.y, dz = p.z - cam.z;
+  let tempX = dx * cosY + dz * sinY; dz = dz * cosY - dx * sinY; dx = tempX;
+  let tempY = dy * cosX - dz * sinX; dz = dy * sinX + dz * cosX; dy = tempY;
 
   if (dz <= 0) return null;
-
   const scale = fov / dz;
-  return {
-    x: dx * scale + cw/2,
-    y: dy * scale + ch/2
-  };
+  return { x: dx * scale + cw/2, y: dy * scale + ch/2 };
 }
 
-// ===============================================
-// 4. DEFINICIÓN DE CUBOS
-// ===============================================
+// === CUBOS: FORMAS CON SIGNIFICADO ===
 const cubes = [
   { pos:{x:0,y:0,z:5}, size:1, rotation:{x:0,y:0,z:0}, color:'#0f0' },
   { pos:{x:3,y:-1,z:7}, size:0.8, rotation:{x:0.5,y:0.8,z:0}, color:'#0ff' },
   { pos:{x:-4,y:1,z:6}, size:1.2, rotation:{x:0,y:1.5,z:0}, color:'#f0f' }
 ];
 
-const cubeVertices = [
-  [-1,-1,-1],[ 1,-1,-1],[ 1, 1,-1],[-1, 1,-1],
-  [-1,-1, 1],[ 1,-1, 1],[ 1, 1, 1],[-1, 1, 1]
-];
+const cubeVertices = [[-1,-1,-1],[1,-1,-1],[1,1,-1],[-1,1,-1],[-1,-1,1],[1,-1,1],[1,1,1],[-1,1,1]];
+const cubeFaces = [[0,1,2],[0,2,3],[5,4,7],[5,7,6],[4,0,3],[4,3,7],[1,5,6],[1,6,2],[4,5,1],[4,1,0],[3,2,6],[3,6,7]];
 
-const cubeFaces = [
-  [0,1,2],[0,2,3], [5,4,7],[5,7,6],
-  [4,0,3],[4,3,7], [1,5,6],[1,6,2],
-  [4,5,1],[4,1,0], [3,2,6],[3,6,7]
-];
-
-// ===============================================
-// 5. ROTACIÓN DE PUNTOS
-// ===============================================
+// === ROTACIÓN SUAVE ===
 function rotatePoint(p, rot) {
-  let {x, y, z} = p;
-  // X
+  let {x,y,z} = p;
   let cos = Math.cos(rot.x), sin = Math.sin(rot.x);
-  let ty = y * cos - z * sin;
-  let tz = y * sin + z * cos;
-  y = ty; z = tz;
-  // Y
+  let ty = y * cos - z * sin, tz = y * sin + z * cos; y = ty; z = tz;
   cos = Math.cos(rot.y); sin = Math.sin(rot.y);
-  let tx = x * cos + z * sin;
-  z = z * cos - x * sin;
-  x = tx;
-  // Z
+  let tx = x * cos + z * sin; z = z * cos - x * sin; x = tx;
   cos = Math.cos(rot.z); sin = Math.sin(rot.z);
-  let txx = x * cos - y * sin;
-  y = x * sin + y * cos;
-  x = txx;
-  return {x, y, z};
+  let txx = x * cos - y * sin; y = x * sin + y * cos; x = txx;
+  return {x,y,z};
 }
 
-// ===============================================
-// 6. DIBUJAR TRIÁNGULO
-// ===============================================
+// === DIBUJO ÉTICO: TRIÁNGULOS CON SOMBRA ===
 function drawTriangle(a, b, c, color) {
   if (!a || !b || !c) return;
   ctx.fillStyle = color;
@@ -346,59 +318,81 @@ function drawTriangle(a, b, c, color) {
   ctx.fill();
 }
 
-// ===============================================
-// 7. BUCLE DE ANIMACIÓN
-// ===============================================
+// === BUCLE: RITMO VISUAL ===
 function animate() {
-  ctx.fillStyle = '#111';
+  ctx.fillStyle = 'rgba(10,10,10,0.95)';
   ctx.fillRect(0, 0, cw, ch);
 
-  const sortedCubes = [...cubes].sort((a, b) => {
-    const da = Math.hypot(a.pos.x - cam.x, a.pos.y - cam.y, a.pos.z - cam.z);
-    const db = Math.hypot(b.pos.x - cam.x, b.pos.y - cam.y, b.pos.z - cam.z);
-    return db - da;
-  });
+  // === MOVIMIENTO TECLADO ===
+  const speed = 0.15, rotSpeed = 0.03;
+  if (keys['w']) cam.z += speed; if (keys['s']) cam.z -= speed;
+  if (keys['a']) cam.x -= speed; if (keys['d']) cam.x += speed;
+  if (keys['q']) cam.y += speed; if (keys['e']) cam.y -= speed;
+  if (keys['arrowleft']) cam.rotY -= rotSpeed; if (keys['arrowright']) cam.rotY += rotSpeed;
+  if (keys['arrowup']) cam.rotX -= rotSpeed; if (keys['arrowdown']) cam.rotX += rotSpeed;
+  if (keys[' ']) resetCamera();
 
-  sortedCubes.forEach((cube, cubeIndex) => {
-    const s = cube.size;
-    const r = cube.rotation;
+  // === ORDENAR POR PROFUNDIDAD ===
+  const sortedCubes = [...cubes].sort((a,b) => 
+    Math.hypot(b.pos.x-cam.x,b.pos.y-cam.y,b.pos.z-cam.z) - 
+    Math.hypot(a.pos.x-cam.x,a.pos.y-cam.y,a.pos.z-cam.z)
+  );
 
-    // Rotación automática (ejercicio)
-    cube.rotation.y += 0.01;
-    cube.rotation.x += 0.005;
-
+  sortedCubes.forEach(cube => {
+    if (instantAutoRotate) cube.rotation.y += 0.01;
+    const s = cube.size, r = cube.rotation;
     const verts = cubeVertices.map(v => {
-      let p = { x: v[0] * s + cube.pos.x, y: v[1] * s + cube.pos.y, z: v[2] * s + cube.pos.z };
+      let p = {x: v[0]*s + cube.pos.x, y: v[1]*s + cube.pos.y, z: v[2]*s + cube.pos.z};
       p = rotatePoint(p, r);
       return project(p);
     });
 
     cubeFaces.forEach((face, i) => {
-      const [i1, i2, i3] = face;
+      const [i1,i2,i3] = face;
       const p1 = verts[i1], p2 = verts[i2], p3 = verts[i3];
       if (!p1 || !p2 || !p3) return;
 
-      // Sombras simples por cara
-      const shade = 0.5 + 0.5 * Math.abs((i % 6) - 3) / 3;
-      const color = cube.color;
-      const r = parseInt(color.slice(1,3), 16) * shade;
-      const g = parseInt(color.slice(3,5), 16) * shade;
-      const b = parseInt(color.slice(5,7), 16) * shade;
-      const shadedColor = `rgb(${r|0},${g|0},${b|0})`;
-
-      drawTriangle(p1, p2, p3, shadedColor);
+      // === SOMBREADO ESTÉTICO ===
+      const shade = 0.6 + 0.4 * Math.abs((i % 6) - 2.5) / 3;
+      const col = cube.color;
+      const r = parseInt(col.slice(1,3),16) * shade;
+      const g = parseInt(col.slice(3,5),16) * shade;
+      const b = parseInt(col.slice(5,7),16) * shade;
+      drawTriangle(p1, p2, p3, `rgb(${r|0},${g|0},${b|0})`);
     });
   });
 
   requestAnimationFrame(animate);
 }
 
+// === FUNCIONES PÚBLICAS ===
+let instantAutoRotate = true;
+function resetCamera() { cam.x=cam.y=0; cam.z=-6; cam.rotX=cam.rotY=0; }
+function toggleAutoRotate() {
+  instantAutoRotate = !instantAutoRotate;
+  document.getElementById('autoBtn').textContent = instantAutoRotate ? 'Auto-rotar ON' : 'Auto-rotar OFF';
+  document.getElementById('autoBtn').classList.toggle('active');
+}
+function addCube() {
+  const colors = ['#0f0','#0ff','#f0f','#ff0','#f80'];
+  cubes.push({
+    pos: {x: Math.random()*8-4, y: Math.random()*4-2, z: Math.random()*6+4},
+    size: Math.random()*0.8+0.6,
+    rotation: {x:0,y:0,z:0},
+    color: colors[Math.floor(Math.random()*colors.length)]
+  });
+}
+function toggleContrast() {
+  document.body.classList.toggle('high-contrast');
+}
+
+// === INICIO ===
 animate();
 
 </script>
 
-<footer>
-  <p>© 2025 SLYVERSE Educativo – Hecho con HTML, CSS y JavaScript puro.</p>
+<footer style="text-align:center; padding:2rem; font-size:0.9rem; color:#666; border-top:1px solid #222;">
+  <p>SLYVERSE v4 — <em>Ética y Estética unidas en código</em> — 11/11/2025</p>
 </footer>
 
 </body>

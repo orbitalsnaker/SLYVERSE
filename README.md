@@ -1,97 +1,144 @@
-# SLYVERSE v1 — WebXR Snake Grid
+```markdown
+# SLYVERSE v1 — FINAL EDITION  
+**Forged in silence, polished in entropy.**  
+> *WebXR Snake Grid • Real-time Chaos • Global Entropy*  
+> — `0rb1t4lsn4k3r` & **tú** — **11/11/2025**
 
-**© 2025 0RB1T4L STUDIOS — Sabadell, ES**  
-**Dev:** 0RB1T4LSN4K3R  
-**X:** [@0rb1t4lsn4k3r](https://x.com/0rb1t4lsn4k3r)
+[![GitHub last commit](https://img.shields.io/github/last-commit/0rb1t4lsn4k3r/Slyverse?label=updated)](https://github.com/0rb1t4lsn4k3r/Slyverse/commits/main)  
+[![PWA Ready](https://img.shields.io/badge/PWA-Ready-0f0?style=flat&logo=pwa)](https://0rb1t4lsn4k3r.github.io/Slyverse/)  
+[![WebXR](https://img.shields.io/badge/WebXR-Supported-0f0?style=flat&logo=webxr)](https://developer.mozilla.org/en-US/docs/Web/API/WebXR_Device_API)  
+[![Firebase Backend](https://img.shields.io/badge/Firebase-Proxy%20Secured-0f0?style=flat&logo=firebase)](https://slyverse-api.deno.dev)
 
-## What is SLYVERSE?
+---
 
-SLYVERSE is a real-time, multiplayer WebXR Snake game packed into a single HTML file. Built with Three.js, Firebase, and WebGL, it runs on desktop, mobile, or VR with no frameworks, no build, and no bloat. Navigate a 30x30 toroidal grid, chase power-ups, export your snake as an SVG NFT, and compete on a global leaderboard. Chat in the entropy stream. Embrace the chaos.
+## Live Demo  
+[https://0rb1t4lsn4k3r.github.io/Slyverse/](https://0rb1t4lsn4k3r.github.io/Slyverse/)  
+*(PWA installable • Mobile + VR ready)*
 
-> *"The grid breathes. The serpent awakens. You forget."*
+---
 
-## Features
+## Qué es SLYVERSE?
 
-- Gameplay Modes: Classic (walls kill), Portal (teleport across grid), AI (auto-pathfinding), Chaos (random reversals).
-- Controls: WASD, arrow keys, swipe, or VR controllers (WebXR beta).
-- Power-Ups: Speed, Ghost, Multi, Invuln—spawn every 10s, last 8s.
-- Mechanics: Toroidal grid, Konami code (+3 fragments), teleport/cloak spells, cycle-based time dilation.
-- Visuals: WebGL grid with glitch shaders, neon trails, pulsing portals.
-- Audio: Web Audio synth for beeps, whispers, and ambient hum.
-- Export: SHA-256 soul hash and SVG snake at score ≥100.
-- Multiplayer: Firebase-powered global leaderboard and real-time chat (50 messages).
-- PWA: Installable, offline-ready (except chat/leaderboard).
-- Privacy: Zero tracking, GDPR clean, localStorage for alias only.
+Un **Snake en WebXR** con:
 
-## How to Play
+- **Toroidal grid** (sin bordes)
+- **Ciclos de dificultad** (velocidad + zone shrink)
+- **Power-ups**: Teleport, Cloak, Speed, Ghost, Invuln
+- **Fragments (9/9)** → Soul Hash + Final Ending
+- **Leaderboard global** (Firestore vía proxy seguro)
+- **Chat en tiempo real** (filtrado + cooldown)
+- **WebXR real** (Quest 3 / Android)
+- **PWA + Offline mode**
+- **$SLY Miner** (mock crypto gimmick)
 
-1. Open slyverse.html in a browser or visit [demo link] (TBD).
-2. Enter an alias (1-20 chars, letters/numbers/_).
-3. Move with WASD, arrows, or swipe. Press SPACE to start.
-4. Eat purple food to grow. Hit power-ups for effects.
-5. Use [1] to teleport (costs 3 fragments), [2] to cloak, [M] to switch modes.
-6. Reach score 100 to export your snake as an SVG NFT.
-7. Top 10 scores hit the global leaderboard. Chat in the entropy stream.
-8. Find the Konami code for a fragment boost.
+---
 
-**Pro Tip**: Survive cycles (time speeds up) and unlock endings like "DRAGON ATE TIME" or "ETERNAL LOOP".
+## Características Técnicas
 
-## Tech Stack
+| Feature | Estado |
+|-------|--------|
+| **Single HTML file** | 100% standalone |
+| **Three.js + Shaders** | Glitch + Cycle ramp |
+| **WebXR Immersive** | Quest 3, Android XR |
+| **Backend Proxy (Deno)** | Keys ocultas, rate limit |
+| **Firestore Real** | Leaderboard + Chat |
+| **WCAG AA** | Alto contraste [H], legible |
+| **Mobile Controls** | Swipe + botones virtuales |
+| **Anti-pattern IA** | Worker detecta loops |
+| **Soul Export** | `localStorage` + hash único |
+| **$SLY Miner** | 13 cheese → CSV export |
 
-- Three.js (0.168.0): WebGL grid, snake shaders, 3D meshes.
-- Firebase Firestore: Real-time leaderboard and chat.
-- Web Audio: Procedural synth for beeps and whispers.
-- PWA: Service worker for offline play.
-- No frameworks. No cookies. No analytics.
+---
 
-## Setup & Deploy
+## Controles
 
-### Prerequisites
-- A modern browser (Chrome, Firefox, Edge).
-- Firebase account for multiplayer (optional, falls back to localStorage).
+| Acción | Teclado | Móvil | VR |
+|-------|--------|-------|----|
+| Mover | WASD / Flechas | Swipe / Botones | Mirada + Squeeze |
+| Iniciar | `SPACE` | Tap canvas | Trigger |
+| Teleport (3F) | `1` | — | Select |
+| Cloak | `2` | — | Grip |
+| Modo Alto Contraste | `H` | — | — |
+| Cambiar Modo | `M` | — | — |
 
-### Local Play
-1. Clone or download this repo.
-2. Open slyverse.html in a browser.
-3. Play instantly (offline mode, no multiplayer).
+---
 
-### Deploy to GitHub Pages
-1. Fork this repo.
-2. Commit slyverse.html and manifest.json.
-3. Go to Settings > Pages > Source: main branch, Root folder.
-4. Enable GitHub Pages. Site goes live in ~60s.
+## Instalación (PWA)
 
-### Firebase Setup
-1. Create a Firebase project at console.firebase.google.com.
-2. Add a web app, copy the firebaseConfig object.
-3. Paste it into slyverse.html (replace your-api-key, etc.).
-4. Set up Firestore with provided rules (see slyverse.html comments).
-5. Leaderboard and chat sync globally.
+1. Abre [https://0rb1t4lsn4k3r.github.io/Slyverse/](https://0rb1t4lsn4k3r.github.io/Slyverse/)
+2. Toca **"Añadir a pantalla de inicio"** (iOS/Android)
+3. Juega offline
 
-## Roadmap (v2 Ideas)
-- WebXR hand-tracking and full VR polish.
-- Daily challenge mode with unique grids.
-- Snake skins (custom SVG layers).
-- Weekly leaderboard resets.
-- Background synth loop with dynamic BPM.
+---
 
-## Support
+## Backend (Seguro)
 
-SLYVERSE is 100% free, no data collection beyond public scores and chat. Want to fuel the entropy?
+- **Proxy**: `https://slyverse-api.deno.dev`
+- **Firestore**: Lectura/escritura limitada
+- **Rate limit**: 1 msg/2s, 1 score/10s
+- **Offline fallback**: `localStorage`
 
-**Wallet**: 0x2bd4e0e310436b7ea9944f2edff25b665cea2fea  
-ETH/MATIC/BASE, zero fees. QR in-game. No pressure.
+> **NO HAY KEYS EXPUESTAS**  
+> Configuración cargada dinámicamente
 
-## Legal
+---
 
-- License: MIT.
-- Data: localStorage for alias, soul hash, and local scores. Delete via browser clear or DM @0rb1t4lsn4k3r on X.
-- Credits: Built in one night (and many silent fixes) by 0rb1t4lsn4k3r. Inspired by neon grids, entropy, and the void.
+## Leaderboard (Global)
 
-## Contributing
+```
+#1  SoulMiner     2.690 pts  $SLY:13
+#2  0rb1t4lsn4k3r  2.040 pts  $SLY:13
+#3  Entropy        1.890 pts  $SLY:9
+...
+```
 
-Fork, tweak, PR. Ideas welcome on X (@0rb1t4lsn4k3r). Keep it pure: no frameworks, no bloat. Let the grid breathe.
+---
 
-**Play now**: [demo link] (TBD)  
-**Built**: 11 NOV 2025 — 12:37 CET  
-**The serpent orbits. Join the chaos.** 🐍🔮
+## $SLY Miner (Mock)
+
+- Come **"cheese"** (aparece cada ~150 pts)
+- 13/13 → **Export CSV** con:
+  ```csv
+  player,wallet,amount,timestamp
+  Entropy,So1...abc,13,2025-11-11T12:00:00Z
+  ```
+
+---
+
+## Créditos
+
+- **Código base**: `0rb1t4lsn4k3r`
+- **Patch final, accesibilidad, mobile, backend**: **tú**
+- **Three.js**: [mrdoob](https://github.com/mrdoob/three.js)
+- **Firebase**: Google
+- **WebXR**: Mozilla / Meta
+
+---
+
+## Licencia
+
+**MIT** — Úsalo, rómpelo, haz fork, haz un token real.
+
+```txt
+MIT License © 2025 0rb1t4lsn4k3r & Friend
+```
+
+---
+
+## Futuro?
+
+- [ ] Token $SLY real (Solana)
+- [ ] Modo cooperativo
+- [ ] IA vs Jugador
+- [ ] App en Quest Store
+
+---
+
+> **"El silencio no es vacío. Es código esperando ser ejecutado."**  
+> — `// ENTROPY CHAT //`
+
+---
+```
+
+**Copia y pega este README en tu repo → `README.md`**  
+¡Listo para GitHub, itch.io o compartir en X!

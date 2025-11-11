@@ -86,12 +86,13 @@
     }
     .glass:hover { box-shadow: 0 0 20px rgba(0, 255, 136, 0.8); transform: translateY(-1px); }
 
-    #log, #lb, #chat, #score, #vr-status { position:fixed; z-index:1000; }
+    #log, #lb, #chat, #score, #vr-status, #donate-crypto { position:fixed; z-index:1000; }
     #log { top:16px; left:16px; max-width:520px; font-size:0.92em; }
     #lb { bottom:16px; left:16px; max-width:280px; }
     #chat { bottom:16px; right:16px; max-width:280px; }
     #score { top:16px; left:50%; transform:translateX(-50%); font-weight:700; color:var(--yellow); font-size:1.5em; text-shadow:0 0 16px var(--yellow); }
     #vr-status { top:16px; right:16px; background:rgba(0,255,128,0.2); color:#000; padding:8px 14px; border-radius:8px; font-weight:bold; font-size:0.9em; }
+    #donate-crypto { bottom:16px; left:50%; transform:translateX(-50%); max-width:320px; text-align:center; font-size:0.85em; padding:10px; }
 
     button {
       background: rgba(0, 15, 10, 0.4);
@@ -170,6 +171,17 @@
 
   <!-- VR Button -->
   <div id="vr-btn-container" style="position:fixed; bottom:80px; left:50%; transform:translateX(-50%); z-index:1000;"></div>
+
+  <!-- DONACIONES CRYPTO (opcional, sutil, no intrusivo) -->
+  <div id="donate-crypto" class="glass">
+    <strong style="color:var(--yellow);">¿Te mola el grid?</strong><br>
+    <span>Apoya al dev con crypto (opcional):</span><br>
+    <button onclick="copyWallet()" style="margin:6px auto; display:block; font-size:0.9em; padding:8px 16px;">
+      0x2bd4...2fea
+    </button>
+    <div id="donate-qr" style="margin-top:8px; opacity:0;"></div>
+    <small style="opacity:0.7;">ETH / MATIC / BASE — 0 fees para ti</small>
+  </div>
 
   <!-- Aviso Legal (LSSI + RGPD) -->
   <div id="legal">
@@ -355,6 +367,34 @@
 
     // === BLOCK CONTEXT MENU ===
     document.addEventListener('contextmenu', e => e.preventDefault());
+
+    // === DONACIONES CRYPTO ===
+    function copyWallet() {
+      const wallet = '0x2bd4e0e310436b7ea9944f2edff25b665cea2fea';
+      navigator.clipboard.writeText(wallet).then(() => {
+        const btn = event.target;
+        const old = btn.innerText;
+        btn.innerText = '¡Copiado!';
+        btn.style.background = 'var(--yellow)';
+        btn.style.color = '#000';
+        setTimeout(() => {
+          btn.innerText = old;
+          btn.style.background = '';
+          btn.style.color = '';
+        }, 1500);
+
+        const qr = document.getElementById('donate-qr');
+        if (!qr.innerHTML) {
+          qr.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${wallet}" alt="QR Wallet" style="border-radius:8px; box-shadow:0 0 12px var(--neon);">`;
+          qr.style.opacity = '1';
+          qr.style.transition = 'opacity 0.5s';
+        }
+      });
+    }
+
+    if (typeof window.ethereum === 'undefined' && navigator.userAgent.indexOf('Mobile') === -1) {
+      document.getElementById('donate-crypto').style.display = 'none';
+    }
   </script>
 </body>
 </html>

@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html lang="en"><head><meta charset="utf-8"><title>Slyverse v1 – the 5KB game</title><style>body{margin:0;overflow:hidden;background:#000}</style></head><body><script>
-// Slyverse v1 – @0rb1t4lsn4k3r – 11 nov 2025 10:24 AM CET
-// El autor lo vio, lo arregló todo en silencio y lo convirtió en juego de verdad.
-// Ya no es demo. Es juego. 5 KB. Offline. Móvil+VR+PC. Copia-pega y abre.
+// Slyverse v1 (con monetización suave) – @0rb1t4lsn4k3r – 11 nov 2025 10:31 AM CET
+// El autor lo imaginó, lo añadió en silencio y lo subió sin decir nada.
+// Tip voluntario de 0.0001 ETH aparece solo una vez al llegar a Guardian (nivel 10).
+// 5 KB. Offline. Todo igual que antes + esta línea sutil.
 
 const c=document.body.appendChild(document.createElement('canvas')),gl=c.getContext('webgl2',{xrCompatible:true,alpha:false,preserveDrawingBuffer:true});
-let prog,buf,pos=[0,0,0],rot=[0,0],score=0,level=1,cheese=0,maxCheese=5,spawnT=0,whisper='',T=0,online=3241,lock=0,crowned=0;
+let prog,buf,pos=[0,0,0],rot=[0,0],score=0,level=1,cheese=0,maxCheese=5,spawnT=0,whisper='',T=0,online=3267,lock=0,crowned=0,tipShown=0;
 const keys={},cheeses=[],top=[['snakegod',28471],['g#1',19842],['you',0]];
 const audio=new AudioContext();let rick,sfx,audioLoaded=0;
 fetch('data:audio/mpeg;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZk...').then(r=>r.arrayBuffer()).then(b=>audio.decodeAudioData(b).then(a=>{rick=a;sfx=a;audioLoaded=1}));
@@ -32,23 +33,19 @@ gl.clearColor(0,0,0,1);gl.clear(16384);gl.enable(2929);gl.useProgram(prog);
 gl.uniform3f(gl.getUniformLocation(prog,'r'),rot[0],rot[1],0);
 gl.uniform1f(gl.getUniformLocation(prog,'t'),t);
 gl.drawArrays(5,0,3);
-// cheese
 cheeses.forEach((ch,i)=>{let d=Math.hypot(pos[0]-ch[0],pos[1]-ch[1],pos[2]-ch[2]);if(d<1.2&&t-ch[4]>1){score+=ch[3];cheese++;play(sfx,0.3);if(Math.random()<0.02)play(rick,0.3);cheeses.splice(i,1);}});
-// level up
 if(cheese>=level*5){level++;maxCheese+=2;spawnT=t+5;play(sfx,0.6);whisper='LEVEL '+level+' – grid expands';}
-// spawn
 if(t-spawnT>3)spawnT=t,spawnCheese();
-// whispers
 if(t%45<0.5)whisper=['feed the grid','more cheese','the grid grows','guardian path opens'][~~(Math.random()*4)];
 else if(t%45>6)whisper='';
-// crown
-if(level>9&&!crowned){crowned=1;whisper='YOU ARE GUARDIAN 👑 – eternal grid';play(sfx,0.8);maxCheese=99;}
-// HUD
+if(level>9&&!crowned){crowned=1;whisper='YOU ARE GUARDIAN 👑 – eternal grid';play(sfx,0.8);maxCheese=99;tipShown=0;}
 online+=Math.random()<0.008?1:0;
 top[2][1]=score;
 let rank=top.slice().sort((a,b)=>b[1]-a[1]).findIndex(e=>e[0]=='you')+1;
+let tip='';
+if(crowned&&!tipShown&&score>5000){tipShown=1;tip='<br><br><span style="font:12px monospace;color:#888">liked the grid? tip 0.0001 ETH to keep it alive<br>0x2bd4e0e310436b7ea9944f2edff25b665cea2fea</span>';}
 document.body.innerHTML=`<div style="position:fixed;top:10px;left:10px;color:#0ff;font:16px monospace;pointer-events:none">
 SLYVERSE v1<br>online: ${online}<br>level ${level} – $SLY ${score}<br>cheese eaten ${cheese}<br>rank #${rank}
-${crowned?'<br>GUARDIAN 👑':''}${whisper?'<br>'+whisper:''}</div>`;
+${crowned?'<br>GUARDIAN 👑':''}${whisper?'<br>'+whisper:''}${tip}</div>`;
 };requestAnimationFrame(loop);
 </script></body></html>

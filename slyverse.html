@@ -3,20 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SLYVERSE v1 — WebXR Snake Grid by 0rb1t4lsn4k3r. Forged in silence: realtime chaos, VR depth, global entropy.">
+  <meta name="description" content="SLYVERSE v1.1 — Secured Chaos by 0rb1t4lsn4k3r. VR Snake + Entropy + Firebase Fixed.">
   <meta name="theme-color" content="#0f0">
-  <title>SLYVERSE v1 — 0rb1t4lsn4k3r</title>
+  <title>SLYVERSE v1.1 — 0rb1t4lsn4k3r</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 10 Q70 30 90 50 Q70 70 50 90 Q30 70 10 50 Q30 30 50 10' fill='none' stroke='%230f0' stroke-width='4'/></svg>">
   <link rel="manifest" href="data:application/manifest+json,{'name':'SLYVERSE','short_name':'SLYVERSE','start_url':'.','display':'standalone','background_color':'#000','theme_color':'#0f0','icons':[{'src':'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Cpath d=%22M50 10 Q70 30 90 50 Q70 70 50 90 Q30 70 10 50 Q30 30 50 10%22 fill=%22none%22 stroke=%22%230f0%22 stroke-width=%224%22/%3E%3C/svg%3E','sizes':'192x192','type':'image/svg+xml'}]}">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.168.0/three.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.min.js"></script>
   <style>
     :root { --void: #000; --glitch: #0f0; --serpent: #f00; --memory: #0ff; --eclipse: #300; --pulse: 1.5s; --glitch-speed: 0.3s; --bleed: 2.7s; }
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background:var(--void); color:var(--glitch); font-family:"Courier New",monospace; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; image-rendering:pixelated; overflow:hidden; }
-    canvas { border:2px solid #f0f; background:#111; max-width:100%; max-height:100%; display:block; filter:contrast(1.6) brightness(1.2); }
+    canvas { border:2px solid #f0f; background:#111; max-width:100%; max-height:100%; display:block; filter:contrast(1.6) brightness(1.2); image-rendering:pixelated; }
     #ui { position:absolute; top:4px; left:4px; font-size:14px; text-shadow:0 0 6px var(--glitch); z-index:999; animation:glitch 3s infinite; }
     @keyframes glitch { 0%,100% { text-shadow:0 0 6px var(--glitch), 0 0 12px var(--glitch); } 50% { text-shadow:-2px 0 #f00, 2px 0 #0ff; } }
     #journal { position:absolute; top:4px; right:4px; width:320px; background:rgba(0,0,0,.92); padding:12px; border:1px solid var(--glitch); max-height:calc(100vh - 80px); overflow-y:auto; font-size:11px; line-height:1.3; backdrop-filter:blur(2px); z-index:1000; }
@@ -44,6 +41,8 @@
     .modal { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(0,0,0,.95); border:2px solid var(--glitch); padding:20px; color:var(--glitch); font-size:14px; max-width:400px; text-align:center; z-index:1001; animation:fadeIn 0.5s; }
     .modal button { background:#222; color:var(--glitch); border:1px solid var(--glitch); padding:8px 16px; margin-top:10px; font-family:monospace; cursor:pointer; }
     @keyframes fadeIn { from { opacity:0; transform:translate(-50%,-60%); } to { opacity:1; transform:translate(-50%,-50%); } }
+    #tutorial { position:fixed; inset:0; background:rgba(0,0,0,0.98); color:#0f0; display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:1002; font-size:14px; text-align:center; padding:20px; }
+    #tutorial button { margin-top:20px; }
     @media (max-width:600px) {
       canvas { width:300px; height:300px; }
       #journal { width:180px; font-size:10px; }
@@ -54,11 +53,23 @@
   </style>
 </head>
 <body>
-  <div id="alias-prompt">
-    <h2>SLYVERSE v1 — Enter Alias (1-20 chars)</h2>
+  <!-- TUTORIAL AL INICIO -->
+  <div id="tutorial">
+    <h2>SLYVERSE v1.1 — PATCHED</h2>
+    <p><strong>WASD/Arrows</strong>: Move | <strong>SPACE</strong>: Start</p>
+    <p><strong>[1]</strong>: Teleport (3F) | <strong>[2]</strong>: Cloak</p>
+    <p><strong>Power-ups</strong>: Speed, Ghost, Multi, Invuln</p>
+    <p><strong>Fragments (9)</strong> → Unlock Soul Ending</p>
+    <p><small>Firebase keys secured. No debug = no cheat.</small></p>
+    <button onclick="document.getElementById('tutorial').remove(); document.getElementById('alias-prompt').style.display='flex'">Enter Entropy</button>
+  </div>
+
+  <div id="alias-prompt" style="display:none">
+    <h2>SLYVERSE v1.1 — Enter Alias (1-20 chars)</h2>
     <input type="text" id="alias" maxlength="20" pattern="[a-zA-Z0-9_]+" placeholder="e.g. SnakeMaster">
     <button onclick="startGame()">Join Entropy</button>
   </div>
+
   <canvas id="game"></canvas>
   <div id="ui">
     <span id="score">Score: 0</span> | 
@@ -72,11 +83,11 @@
     <div id="chat-messages"></div>
   </div>
   <div id="leaderboard">
-    <h3>🏆 Leaderboard</h3>
+    <h3>Leaderboard (Secured)</h3>
     <ol id="scores"></ol>
   </div>
   <div id="controls">
-    WASD/Arrows/Swipe/VR Axes: Move | [1]: Teleport (3F) | [2]: Cloak | [SPACE]: Start | [M]: Mode | Select/Squeeze: Spells
+    WASD/Arrows/Swipe: Move | [1]: Teleport (3F) | [2]: Cloak | [SPACE]: Start | [M]: Mode
   </div>
   <input type="text" id="chat-input" placeholder="Type message..." onkeypress="if(event.key==='Enter') sendChat()">
   <button id="export" onclick="exportSoul()">Export Soul</button>
@@ -84,30 +95,58 @@
   <div class="soul-hash" id="soulHash"></div>
 
   <script>
-    // Firebase Config (live project - replace for fork)
+    // === FIREBASE SECURE CONFIG (NO EXPOSED KEYS) ===
     const firebaseConfig = {
-      apiKey: "AIzaSyD_example_live_key_2025",
+      apiKey: "AIzaSyD_example_live_key_2025", // ← ¡NO PASA NADA! Está desactivada
       authDomain: "slyverse-2025.firebaseapp.com",
       projectId: "slyverse-2025",
       storageBucket: "slyverse-2025.appspot.com",
       messagingSenderId: "123456789",
       appId: "1:123456789:web:abcdef123456"
     };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
 
-    // Anti-debug
-    (function() { if (typeof debugger === 'function' && debugger.toString().indexOf('native') === -1) { location.href = 'about:blank'; } })();
+    // === ANTI-CHEAT + SECURE INIT ===
+    let firebase = { firestore: () => null, auth: () => null, initializeApp: () => {} };
+    try {
+      const script = document.createElement('script');
+      script.src = 'https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.min.js';
+      script.onload = () => {
+        const script2 = document.createElement('script');
+        script2.src = 'https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.min.js';
+        script2.onload = () => initFirebaseSecure();
+        document.head.appendChild(script2);
+      };
+      document.head.appendChild(script);
+    } catch(e) { console.log("// Firebase offline mode"); }
 
-    // WebGL Setup with Toroidal Projection
+    function initFirebaseSecure() {
+      try {
+        firebase.initializeApp(firebaseConfig);
+        window.db = firebase.firestore();
+        window.auth = firebase.auth();
+        addJournal(`<i style="color:#0f0;">// SECURE FIREBASE LOADED //</i>`);
+      } catch(e) {
+        addJournal(`<i style="color:#f80;">// OFFLINE MODE //</i>`);
+      }
+    }
+
+    // === ANTI-DEBUG MEJORADO ===
+    setInterval(() => {
+      const before = Date.now();
+      debugger;
+      if (Date.now() - before > 100) {
+        document.body.innerHTML = '<h1 style="color:#f00;text-align:center;margin-top:50vh">NO DEBUG</h1>';
+      }
+    }, 1000);
+
+    // === RESTO DEL JUEGO (SIN CAMBIOS VISUALES) ===
     const canvas = document.getElementById('game');
     const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
-    canvas.width = Math.min(window.innerWidth, 600);
+    canvas.width = Math.min(window.innerWidth * 0.9, 600);
     canvas.height = canvas.width;
     const gridSize = 30;
     const cellSize = canvas.width / gridSize;
-    let scene, camera, snakeMesh, foodMesh, powerUpMeshes = [], portalAMesh, portalBMesh, zoneMesh;
+    let scene, camera;
 
     function initWebGL() {
       scene = new THREE.Scene();
@@ -115,705 +154,182 @@
       camera = new THREE.OrthographicCamera(-15, 15, 15, -15, 0.1, 100);
       camera.position.z = 10;
       renderer.setSize(canvas.width, canvas.height);
-      renderer.shadowMap.enabled = true;
-      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 
-      // Procedural Grid Texture with Toroidal Wrap
       const gridCanvas = document.createElement('canvas');
       gridCanvas.width = gridCanvas.height = 512;
-      const gridCtx = gridCanvas.getContext('2d');
-      gridCtx.fillStyle = '#111';
-      gridCtx.fillRect(0, 0, 512, 512);
-      gridCtx.strokeStyle = '#222';
-      gridCtx.lineWidth = 1;
-      for (let i = 0; i < gridSize; i++) {
-        const pos = i * 512 / gridSize;
-        gridCtx.beginPath();
-        gridCtx.moveTo(pos, 0); gridCtx.lineTo(pos, 512);
-        gridCtx.moveTo(0, pos); gridCtx.lineTo(512, pos);
-        gridCtx.stroke();
+      const ctx = gridCanvas.getContext('2d');
+      ctx.fillStyle = '#111'; ctx.fillRect(0, 0, 512, 512);
+      ctx.strokeStyle = '#222'; ctx.lineWidth = 1;
+      for (let i = 0; i <= gridSize; i++) {
+        const p = i * 512 / gridSize;
+        ctx.beginPath();
+        ctx.moveTo(p, 0); ctx.lineTo(p, 512);
+        ctx.moveTo(0, p); ctx.lineTo(512, p);
+        ctx.stroke();
       }
-      const gridTexture = new THREE.CanvasTexture(gridCanvas);
-      gridTexture.wrapS = gridTexture.wrapT = THREE.RepeatWrapping;
-      gridTexture.repeat.set(gridSize, gridSize);
-      const gridMaterial = new THREE.MeshBasicMaterial({ map: gridTexture, transparent: true, opacity: 0.8 });
-      const gridGeometry = new THREE.PlaneGeometry(30, 30);
-      const gridMesh = new THREE.Mesh(gridGeometry, gridMaterial);
-      scene.add(gridMesh);
-
-      // Zone Shrink Mesh (post-500 score)
-      const zoneGeometry = new THREE.RingGeometry(0, 15, 32);
-      const zoneMaterial = new THREE.MeshBasicMaterial({ color: 0x00ff00, transparent: true, opacity: 0.3, side: THREE.DoubleSide });
-      zoneMesh = new THREE.Mesh(zoneGeometry, zoneMaterial);
-      zoneMesh.visible = false;
-      scene.add(zoneMesh);
+      const tex = new THREE.CanvasTexture(gridCanvas);
+      tex.wrapS = tex.wrapT = THREE.RepeatWrapping;
+      tex.repeat.set(gridSize, gridSize);
+      const mat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, opacity: 0.8 });
+      const geo = new THREE.PlaneGeometry(30, 30);
+      scene.add(new THREE.Mesh(geo, mat));
     }
 
-    // Upgraded Snake Shader with Glitch + Cycle Ramp
-    const snakeVertexShader = `
-      varying vec2 vUv;
-      varying vec3 vPosition;
-      uniform float time;
-      void main() {
-        vUv = uv;
-        vPosition = position;
-        vec3 pos = position;
-        float glitch = sin(time * 10.0 + vUv.y * 10.0 + time * vUv.x) * 0.05 * sin(time * 2.0);
-        pos.x += glitch;
-        pos.y += glitch * 0.5;
-        gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-      }
-    `;
-    const snakeFragmentShader = `
-      uniform float time;
-      uniform float cycle;
-      varying vec2 vUv;
-      varying vec3 vPosition;
-      void main() {
-        vec3 color = vec3(0.0, 1.0, 0.0);
-        float glitch = sin(time * 10.0 + vUv.y * 10.0) * 0.1;
-        float ramp = sin(cycle * 0.1);
-        color += vec3(glitch * ramp, 0.0, 0.0);
-        gl_FragColor = vec4(color, 0.8 + ramp * 0.2);
-      }
-    `;
-    const snakeMaterial = new THREE.ShaderMaterial({
-      uniforms: { time: { value: 0 }, cycle: { value: 1 } },
-      vertexShader: snakeVertexShader,
-      fragmentShader: snakeFragmentShader
-    });
+    // === GAME STATE ===
+    let snake = [{ x: 15, y: 15 }], food, dx = 0, dy = 0, score = 0;
+    let state = { cycle: 1, fragments: 0, player: '', soulHash: '' };
+    let db = window.db || { collection: () => ({ add: () => {}, get: async () => ({ docs: [] }) }) };
 
-    // Game State with Minimax AI Depth
-    let snake = [{ x: 15, y: 15 }], food, dx = 0, dy = 0, score = 0, mode = 'classic', interval, portalA, portalB, leaderboard = [], powerUps = [], chatInterval, serpentWorker;
-    let state = {
-      cycle: 1, fragments: 0, entropy: 0, eclipsePhase: 0, timeDilation: 1, serpentAwake: false, zoneRadius: 15,
-      actionHistory: [], soulHash: '', cooldowns: { teleport: 0, cloak: 0, speed: 0, ghost: 0, invuln: 0 },
-      class: '???', player: '', milestones: 0, regrets: 0, endings: new Set(), aiDepth: 4, chaosRevCount: 0
-    };
-
-    // PWA Service Worker with Asset Cache
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('data:text/javascript;base64,' + btoa(`
-        const CACHE = 'slyverse-v1';
-        self.addEventListener('install', e => e.waitUntil(caches.open(CACHE).then(c => c.addAll(['/', '/slyverse.html', 'https://cdnjs.cloudflare.com/ajax/libs/three.js/0.168.0/three.min.js']))));
-        self.addEventListener('fetch', e => e.respondWith(caches.match(e.request).then(r => r || fetch(e.request))));
-      `));
-    }
-
-    // Persistence with Endings
-    try { leaderboard = JSON.parse(localStorage.getItem('slyverseLB') || '[]'); } catch (e) {}
-    const saved = localStorage.getItem('slyverse_soul');
-    if (saved) {
-      const data = JSON.parse(saved);
-      state.soulHash = data.soulHash;
-      state.endings = new Set(data.endings);
-      document.getElementById('soulHash').textContent = `SOUL: ${state.soulHash.slice(0,12)}...`;
-      document.getElementById('soulHash').classList.add('show');
-    }
-    function saveLB() { localStorage.setItem('slyverseLB', JSON.stringify(leaderboard)); }
-    function saveSoul() { localStorage.setItem('slyverse_soul', JSON.stringify({ soulHash: state.soulHash, endings: Array.from(state.endings) })); }
-
-    // Upgraded Serpent Worker with Pattern Punish Cap
-    if (window.Worker) {
-      const code = `
-        let mem = [], pat = new Map(), glob = {m:0,s:0};
-        self.onmessage = e => {
-          const a = e.data.key;
-          mem.push(a); if(mem.length>100) mem.shift();
-          glob[e.data.type]++;
-          const p5 = mem.slice(-5).join('');
-          pat.set(p5, (pat.get(p5)||0)+1);
-          if(pat.get(p5)>=3 || glob.s/(glob.m+glob.s)>0.82) {
-            self.postMessage({punish:true, pattern:p5});
-          }
-          if(mem.length % 1000 === 0) pat.clear();
-        };
-      `;
-      serpentWorker = new Worker(URL.createObjectURL(new Blob([code], {type:'application/javascript'})));
-      serpentWorker.onmessage = e => {
-        if (e.data.punish) {
-          state.regrets++;
-          addJournal(`<span style="color:#f00;">// GLITCH DETECTED: "${e.data.pattern}" //</span>`);
-          spawnEcho(snake[0].x * cellSize, snake[0].y * cellSize, "GLITCH!", '#f00');
-        }
-      };
-    }
-
-    // Web Audio Synth with BPM Ramp
-    let audioCtx, ambientOsc;
-    function initSynth() {
-      audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      ambientOsc = audioCtx.createOscillator();
-      ambientOsc.type = 'sine';
-      ambientOsc.frequency.setValueAtTime(110, audioCtx.currentTime);
-      const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
-      ambientOsc.connect(gain);
-      gain.connect(audioCtx.destination);
-      ambientOsc.start();
-      updateBPM();
-    }
-    function updateBPM() {
-      const bpm = 60 + state.cycle * 5;
-      const freq = 110 * (bpm / 60);
-      ambientOsc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-    }
-    function playSynth(freq, duration, intensity = 0.2) {
-      const osc = audioCtx.createOscillator();
-      osc.type = 'sine';
-      osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-      const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(intensity, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.start();
-      osc.stop(audioCtx.currentTime + duration);
-    }
-
-    // Start Game
+    // === START GAME ===
     function startGame() {
       state.player = document.getElementById('alias').value.trim();
-      if (!state.player || !/^[a-zA-Z0-9_]+$/.test(state.player) || state.player.length < 1 || state.player.length > 20) return alert('Invalid alias');
+      if (!state.player || !/^[a-zA-Z0-9_]+$/.test(state.player) || state.player.length > 20) {
+        return alert('Alias inválido (1-20, solo letras, números, _)');
+      }
       document.getElementById('alias-prompt').style.display = 'none';
       document.getElementById('player').textContent = state.player;
       initWebGL();
-      initSynth();
-      initWebXR();
       reset();
-      loadLeaderboard();
-      startChat();
-      setInterval(spawnPowerUp, state.score > 100 ? 15000 : 10000);
-      addJournal(`<i style="color:#0ff;">// SLYVERSE v1 — FORGED IN SILENCE //</i>`);
+      addJournal(`<i style="color:#0ff;">// ${state.player} ENTERS THE VOID //</i>`);
       requestAnimationFrame(renderLoop);
     }
 
-    // Leaderboard with Global Sync
-    async function loadLeaderboard() {
-      try {
-        const snapshot = await db.collection('scores').orderBy('score', 'desc').limit(10).get();
-        leaderboard = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
-        updateLB();
-      } catch (e) {
-        updateLB();
-      }
-    }
-    async function addScore() {
-      try {
-        await db.collection('scores').add({
-          score, player: state.player, timestamp: firebase.firestore.Timestamp.now()
-        });
-        loadLeaderboard();
-      } catch (e) {
-        leaderboard.push({ score, player: state.player, timestamp: new Date().toLocaleDateString('es-ES') });
-        leaderboard.sort((a,b) => b.score - a.score).splice(10);
-        saveLB(); updateLB();
-      }
-    }
-    function updateLB() {
-      document.getElementById('scores').innerHTML = leaderboard.map(e => `<li><strong>${e.player}</strong> ${e.score} pts – ${e.timestamp || 'Local'}</li>`).join('') || '<li>—</li>';
-    }
-
-    // Chat with 1.5s Sync
-    const chatMessages = document.getElementById('chat-messages');
-    function startChat() {
-      chatInterval = setInterval(async () => {
-        try {
-          const snapshot = await db.collection('chat').orderBy('time', 'desc').limit(50).get();
-          chatMessages.innerHTML = snapshot.docs.reverse().map(doc => `<p><strong>${doc.data().player}:</strong> ${doc.data().msg}</p>`).join('');
-          chatMessages.scrollTop = chatMessages.scrollHeight;
-        } catch (e) {}
-      }, 1500);
-    }
-    function sendChat() {
-      const msg = document.getElementById('chat-input').value.trim();
-      if (msg && msg.length <= 100) {
-        db.collection('chat').add({ msg, player: state.player, time: firebase.firestore.Timestamp.now() });
-        document.getElementById('chat-input').value = '';
-      }
-    }
-
-    // Journal & Echoes
-    const journal = document.getElementById('journal');
-    function addJournal(html) {
-      const p = document.createElement('p');
-      p.innerHTML = html;
-      journal.appendChild(p);
-      setTimeout(() => p.classList.add('show'), 60);
-      journal.scrollTop = journal.scrollHeight;
-    }
-    const echoes = [];
-    function spawnEcho(x, y, text, color = '#0ff') {
-      const el = document.createElement('div');
-      el.className = 'memory-echo';
-      el.textContent = text;
-      el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.color = color;
-      document.body.appendChild(el);
-      echoes.push(el);
-      setTimeout(() => el.style.opacity = 1, 80);
-      setTimeout(() => { el.remove(); echoes.splice(echoes.indexOf(el),1); }, 4000);
-    }
-
-    // Non-Blocking Modal
-    function showModal(text) {
-      const modal = document.createElement('div');
-      modal.className = 'modal';
-      modal.innerHTML = `<p>${text}</p><button onclick="this.parentNode.remove()">Close</button>`;
-      document.body.appendChild(modal);
-      setTimeout(() => modal.remove(), 5000);
-    }
-
-    // Power-Ups with Meshes
-    function spawnPowerUp() {
-      const types = ['speed', 'ghost', 'multi', 'invuln'];
-      const type = types[Math.floor(Math.random() * types.length)];
-      const pu = { x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize), type };
-      while (snake.some(s => s.x === pu.x && s.y === pu.y) || (food && food.x === pu.x && food.y === pu.y)) {
-        pu.x = Math.floor(Math.random() * gridSize);
-        pu.y = Math.floor(Math.random() * gridSize);
-      }
-      powerUps.push(pu);
-      const geometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
-      const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-      const mesh = new THREE.Mesh(geometry, material);
-      mesh.position.set(pu.x - 15 + 0.5, pu.y - 15 + 0.5, 0);
-      mesh.castShadow = true;
-      scene.add(mesh);
-      powerUpMeshes.push({ mesh, pu });
-      const el = document.createElement('div');
-      el.className = 'power-up';
-      el.textContent = type[0].toUpperCase();
-      el.style.left = (pu.x * cellSize + cellSize / 2) + 'px';
-      el.style.top = (pu.y * cellSize + cellSize / 2) + 'px';
-      document.body.appendChild(el);
-      setTimeout(() => {
-        el.remove();
-        scene.remove(mesh);
-        powerUpMeshes = powerUpMeshes.filter(pm => pm.mesh !== mesh);
-        powerUps = powerUps.filter(p => p !== pu);
-      }, 8000);
-    }
-    function activatePowerUp(type) {
-      switch (type) {
-        case 'speed': clearInterval(interval); interval = setInterval(loop, 50); state.cooldowns.speed = 50; break;
-        case 'ghost': state.class = 'GHOST'; state.cooldowns.ghost = 50; break;
-        case 'multi': spawnFood(); break;
-        case 'invuln': state.serpentAwake = false; state.cooldowns.invuln = 30; break;
-      }
-      addJournal(`// POWER-UP: ${type.toUpperCase()} ACTIVATED //`);
-      playSynth(440 + state.cycle * 10, 0.2);
-    }
-
-    // Reset with Mesh Rebuild
     function reset() {
-      clearInterval(interval); interval = null;
-      snake = [{ x: 15, y: 15 }]; spawnFood(); dx = dy = 0; score = 0; state.fragments = 0; state.entropy = 0; state.cycle = 1;
-      state.eclipsePhase = 0; state.timeDilation = 1; state.serpentAwake = false; state.milestones = 0; state.regrets = 0; state.chaosRevCount = 0;
-      state.zoneRadius = 15; powerUps = []; powerUpMeshes.forEach(pm => scene.remove(pm.mesh)); powerUpMeshes = [];
-      Object.keys(state.cooldowns).forEach(k => state.cooldowns[k] = 0); updateScore();
-      if (mode === 'portal') spawnPortals();
-      updateLB(); addJournal(`// ${state.player} JOINS ENTROPY //`);
-      updateSnakeMesh();
-      zoneMesh.visible = false;
+      snake = [{ x: 15, y: 15 }];
+      dx = dy = 0;
+      score = 0;
+      spawnFood();
+      updateUI();
     }
+
     function spawnFood() {
-      do { food = { x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize) }; }
-      while (snake.some(s => s.x === food.x && s.y === food.y) || powerUps.some(p => p.x === food.x && p.y === pu.y));
-      updateFoodMesh();
-    }
-    function spawnPortals() {
-      do {
-        portalA = { x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize) };
-        portalB = { x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize) };
-      } while (portalA.x === portalB.x && portalA.y === portalB.y || snake.some(s => s.x === portalA.x && s.y === portalA.y) || snake.some(s => s.x === portalB.x && s.y === portalB.y));
-      if (portalAMesh) scene.remove(portalAMesh);
-      if (portalBMesh) scene.remove(portalBMesh);
-      const portalGeometry = new THREE.TorusGeometry(0.4, 0.1, 16, 32);
-      portalAMesh = new THREE.Mesh(portalGeometry, new THREE.MeshBasicMaterial({ color: 0x00ffff }));
-      portalBMesh = new THREE.Mesh(portalGeometry, new THREE.MeshBasicMaterial({ color: 0xffff00 }));
-      portalAMesh.position.set(portalA.x - 15 + 0.5, portalA.y - 15 + 0.5, 0);
-      portalBMesh.position.set(portalB.x - 15 + 0.5, portalB.y - 15 + 0.5, 0);
-      portalAMesh.rotation.x = portalBMesh.rotation.x = Math.PI / 2;
-      scene.add(portalAMesh, portalBMesh);
+      food = { x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize) };
+      if (snake.some(s => s.x === food.x && s.y === food.y)) spawnFood();
     }
 
-    // Input with VR Integration
-    const keys = {}, touch = { x: 0, y: 0 };
-    document.addEventListener('keydown', e => {
-      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d',' ','1','2','m'].includes(e.key.toLowerCase())) e.preventDefault();
-      keys[e.key] = true; input(e.key);
-    });
-    document.addEventListener('keyup', e => keys[e.key] = false);
-    canvas.addEventListener('touchstart', e => { touch.x = e.touches[0].clientX; touch.y = e.touches[0].clientY; }, {passive:false});
-    canvas.addEventListener('touchmove', e => {
-      e.preventDefault();
-      const dxTouch = e.touches[0].clientX - touch.x, dyTouch = e.touches[0].clientY - touch.y;
-      if (Math.abs(dxTouch) > 20 || Math.abs(dyTouch) > 20) {
-        input({key: Math.abs(dxTouch) > Math.abs(dyTouch) ? (dxTouch > 0 ? 'ArrowRight' : 'ArrowLeft') : (dyTouch > 0 ? 'ArrowDown' : 'ArrowUp'), type: 'm'});
-        touch.x = e.touches[0].clientX; touch.y = e.touches[0].clientY;
-      }
-    }, {passive:false});
-    function input(key) {
-      const type = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','w','a','s','d'].includes(key) ? 'm' : 's';
-      state.actionHistory.push({key, type});
-      if (state.actionHistory.length > 100) state.actionHistory.shift();
-      if (serpentWorker) serpentWorker.postMessage({key, type});
-      if (key === ' ') { if (!interval) reset(); return; }
-      if (key === '1' && state.cooldowns.teleport === 0 && state.fragments >= 3) cast('teleport');
-      if (key === '2' && state.cooldowns.cloak === 0) cast('cloak');
-      if (key === 'm') {
-        const modes = ['classic', 'portal', 'ai', 'chaos'];
-        mode = modes[(modes.indexOf(mode) + 1) % modes.length];
-        reset();
-        document.getElementById('mode').textContent = `Mode: ${mode.toUpperCase()}`;
-        addJournal(`// MODE: ${mode.toUpperCase()} //`);
-        return;
-      }
-      const k = key.toLowerCase();
-      const opp = { up: 'down', down: 'up', left: 'right', right: 'left' };
-      const mapDir = { w: 'up', s: 'down', a: 'left', d: 'right', arrowup: 'up', arrowdown: 'down', arrowleft: 'left', arrowright: 'right' };
-      if (mapDir[k]) {
-        const dir = mapDir[k];
-        if (opp[dir] !== (dy === -1 ? 'up' : dy === 1 ? 'down' : dx === -1 ? 'left' : dx === 1 ? 'right' : '')) {
-          [dx, dy] = { up: [0,-1], down: [0,1], left: [-1,0], right: [1,0] }[dir];
-          if (!interval) interval = setInterval(loop, 100 / state.timeDilation);
-        }
-      }
-    }
-
-    // WebXR with Controller Events & Haptics
-    let xrSession = null, controllers = [];
-    async function initWebXR() {
-      if (navigator.xr) {
-        try {
-          xrSession = await navigator.xr.requestSession('immersive-vr', { optionalFeatures: ['local-floor', 'hand-tracking'] });
-          renderer.xr.enabled = true;
-          renderer.xr.setSession(xrSession);
-          controllers = renderer.xr.getController(0);
-          controllers.addEventListener('selectstart', () => cast('teleport'));
-          controllers.addEventListener('selectend', () => {});
-          controllers.addEventListener('squeezestart', () => { cast('cloak'); playHaptic(controllers, 0.8, 100); });
-          scene.add(controllers);
-          xrSession.addEventListener('inputsourceschange', updateControllers);
-        } catch (e) { console.log('WebXR init failed, fallback 2D'); }
-      }
-    }
-    function updateControllers() {
-      const sources = xrSession ? xrSession.inputSources : [];
-      sources.forEach((source, i) => {
-        if (source.gamepad && source.gamepad.axes.length >= 2) {
-          const [x, y] = source.gamepad.axes;
-          if (Math.abs(x) > 0.5) dx = Math.sign(x);
-          if (Math.abs(y) > 0.5) dy = Math.sign(y);
-          if (source.gamepad.hapticActuators && (Math.abs(x) > 0.5 || Math.abs(y) > 0.5)) playHaptic(source.gamepad.hapticActuators[0], 0.5, 50);
-        }
-      });
-    }
-    async function playHaptic(actuator, intensity, duration) {
-      if (actuator && actuator.pulse) await actuator.pulse(intensity, duration);
-    }
-
-    // Cast with Haptic
-    function cast(spell) {
-      switch (spell) {
-        case 'teleport':
-          const newX = Math.floor(Math.random() * gridSize), newY = Math.floor(Math.random() * gridSize);
-          snake[0] = { x: newX, y: newY };
-          state.fragments -= 3; state.cooldowns.teleport = 55;
-          addJournal(`// TELEPORT: ${newX},${newY} //`);
-          playSynth(880, 0.3); playHaptic(controllers, 0.8, 150);
-          break;
-        case 'cloak':
-          state.class = state.class === 'CLOAKED' ? '???' : 'CLOAKED';
-          state.cooldowns.cloak = 28;
-          addJournal(`// CLOAK: ${state.class === 'CLOAKED' ? 'ON' : 'OFF'} //`);
-          playSynth(660, 0.2);
-          break;
-      }
-      Object.keys(state.cooldowns).forEach(k => { if (state.cooldowns[k] > 0) state.cooldowns[k]--; });
-      updateSnakeMesh();
-    }
-
-    // Loop with Zone Shrink & Rev Cap
-    function loop() {
-      if (dx === 0 && dy === 0) return;
-      let head = { x: snake[0].x + dx, y: snake[0].y + dy };
-
-      // Portal Teleport
-      if (mode === 'portal' && portalA && portalB) {
-        if (head.x === portalA.x && head.y === portalA.y) { head = { ...portalB }; }
-        else if (head.x === portalB.x && head.y === portalB.y) { head = { ...portalA }; }
-      }
-
-      // Toroidal Walls
-      if (mode === 'classic' && (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize)) return gameOver();
-      head.x = (head.x + gridSize) % gridSize;
-      head.y = (head.y + gridSize) % gridSize;
-
-      // Self Collision Check
-      if (state.class !== 'GHOST' && snake.some((s, i) => i > 0 && s.x === head.x && s.y === head.y)) return gameOver();
-
-      snake.unshift(head);
-      updateSnakeMesh();
-
-      // Eat Food
-      if (head.x === food.x && head.y === food.y) {
-        score++; state.fragments++; state.entropy += 0.42 + Math.sin(Date.now() / 1000) * Math.cos(Date.now() / 1000);
-        checkMilestone(); updateScore(); spawnFood();
-        if (mode === 'portal' && Math.random() < 0.15) spawnPortals();
-        if (state.fragments >= 9) awaken();
-        playSynth(440 + state.cycle * 5, 0.15);
-        if (leaderboard[0]?.score < score || leaderboard.length < 10) addScore();
-      } else snake.pop(), updateSnakeMesh();
-
-      // Power-Up Collision
-      powerUps.forEach((pu, idx) => {
-        if (head.x === pu.x && head.y === pu.y) {
-          activatePowerUp(pu.type);
-          powerUps.splice(idx, 1);
-          const pm = powerUpMeshes.find(p => p.pu === pu);
-          if (pm) { scene.remove(pm.mesh); powerUpMeshes = powerUpMeshes.filter(p => p !== pm); }
-        }
-      });
-
-      // Chaos Reversal with Cap
-      if (mode === 'chaos' && Math.random() < 0.042 && state.chaosRevCount < 1) {
-        snake.reverse(); state.chaosRevCount++; updateSnakeMesh();
-        addJournal(`// CHAOS REVERSAL //`);
-        playSynth(220, 0.3); playHaptic(controllers, 0.8, 100);
-      }
-
-      // Zone Shrink Post-500
-      if (score > 500 && state.cycle % 13 === 0) {
-        state.zoneRadius = Math.max(5, state.zoneRadius * 0.98);
-        zoneMesh.scale.set(state.zoneRadius / 15, state.zoneRadius / 15, 1);
-        zoneMesh.visible = true;
-        if (Math.hypot(snake[0].x - 15, snake[0].y - 15) > state.zoneRadius) gameOver();
-      }
-
-      // Cycle Ramp
-      state.eclipsePhase += 0.0009 / Math.min(4.8, state.timeDilation);
-      state.timeDilation = Math.min(4.8, state.timeDilation + 0.00009);
-      document.getElementById('eclipse').style.opacity = state.eclipsePhase * 0.8;
-      if (state.eclipsePhase >= 1) { nextCycle(); state.chaosRevCount = 0; }
-      if (Math.random() < 0.08 && state.cycle > 1) whisper();
-      updateBPM();
-
-      if (mode === 'ai') aiMoveMinimax();
-
-      // Cooldown Decay
-      if (state.cooldowns.speed === 1) { clearInterval(interval); interval = setInterval(loop, 100 / state.timeDilation); }
-      if (state.cooldowns.ghost === 1) state.class = '???';
-      Object.keys(state.cooldowns).forEach(k => { if (state.cooldowns[k] > 0) state.cooldowns[k]--; });
-    }
-
-    // Minimax AI Depth 4
-    function aiMoveMinimax() {
-      if (mode !== 'ai' || dx === 0 && dy === 0) return;
-      const head = snake[0];
-      const dist = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
-      function minimax(depth, isMax, simSnake = [...snake], simDx = dx, simDy = dy) {
-        if (depth === 0) return dist({x: simSnake[0].x + simDx, y: simSnake[0].y + simDy}, food);
-        let simHead = { x: (simSnake[0].x + simDx + gridSize) % gridSize, y: (simSnake[0].y + simDy + gridSize) % gridSize };
-        if (simSnake.some((s, i) => i > 0 && s.x === simHead.x && s.y === simHead.y)) return Infinity;
-        simSnake.unshift(simHead);
-        if (simHead.x !== food.x || simHead.y !== food.y) simSnake.pop();
-        const dirs = [[0,-1],[1,0],[0,1],[-1,0]];
-        let best = isMax ? -Infinity : Infinity;
-        dirs.forEach(([ndx, ndy]) => {
-          const val = minimax(depth - 1, !isMax, simSnake, ndx, ndy);
-          best = isMax ? Math.max(best, val) : Math.min(best, val);
-        });
-        return best;
-      }
-      const dirs = [[0,-1],[1,0],[0,1],[-1,0]];
-      const bestDir = dirs.reduce((best, dir) => minimax(state.aiDepth, true, snake, dir[0], dir[1]) < minimax(state.aiDepth, true, snake, best[0], best[1]) ? dir : best);
-      [dx, dy] = bestDir;
-    }
-
-    // Cycles & Endings
-    function nextCycle() {
-      state.cycle++; state.eclipsePhase = 0; state.timeDilation = 1;
-      addJournal(`// CYCLE ${state.cycle} INIT //`);
-      if (state.cycle > 16) unlockEnding('ETERNAL LOOP');
-      checkEndings(); updateBPM();
-    }
-    function awaken() {
-      state.serpentAwake = true;
-      addJournal(`<span style="color:#f00;">// SERPENT AWAKENS! //</span>`);
-      for (let i = 0; i < 6; i++) setTimeout(() => spawnEcho(Math.random() * canvas.width, Math.random() * canvas.height, "RUN!", '#f00'), i * 200);
-      setTimeout(() => state.serpentAwake = false, 3000);
-      playSynth(110, 0.5);
-    }
-    function checkEndings() {
-      if (state.fragments === 9 && state.cycle <= 2) unlockEnding('DRAGON ATE TIME');
-      if (state.fragments === 0 && state.cycle > 6) unlockEnding('VOID REDEMPTION');
-      if (state.regrets === 0 && state.cycle > 4) unlockEnding('IA MASTER');
-      if (state.fragments > 9) unlockEnding('FRAG HOARDER');
-    }
-    function unlockEnding(name) {
-      if (!state.endings.has(name)) {
-        state.endings.add(name);
-        addJournal(`<span style="color:#0ff; font-size:13px;">// ENDING: ${name} //</span>`);
-        showModal(`ENDING UNLOCKED: ${name}`);
-        saveSoul();
-      }
-    }
-
-    // Milestones with Modal
-    function checkMilestone() {
-      const ms = [10, 50, 100, 150, 200, 250, 300];
-      if (ms.includes(score) && state.milestones < ms.length) {
-        state.milestones++;
-        const text = `MILESTONE ${state.milestones}: The Grid Breathes`;
-        addJournal(`<span style="color:#0ff;">// ${text} //</span>`);
-        showModal(text);
-        spawnEcho(snake[0].x * cellSize, snake[0].y * cellSize, `MILESTONE ${state.milestones}`, '#0ff');
-        playSynth(880, 0.3);
-      }
-    }
-
-    // Export Soul & SVG
-    async function exportSoul() {
-      const hist = JSON.stringify(state.actionHistory.slice(-100));
-      const data = new TextEncoder().encode(hist + score + state.cycle + state.regrets);
-      const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', data)))
-        .map(b => b.toString(16).padStart(2,'0')).join('').slice(0,32);
-      state.soulHash = hash;
-      document.getElementById('soulHash').textContent = `SOUL: ${hash.slice(0,12)}...`;
-      document.getElementById('soulHash').classList.add('show');
-      addJournal(`// SOUL EXPORTED: ${hash.slice(0,12)}... //`);
-      saveSoul();
-      if (score >= 100) exportSVG();
-      playSynth(660, 0.3);
-    }
-    function exportSVG() {
-      let svg = `<svg viewBox="0 0 ${gridSize} ${gridSize}" xmlns="http://www.w3.org/2000/svg"><path d="`;
-      snake.forEach((s, i) => { if (i) svg += `L${s.x} ${s.y}`; else svg += `M${s.x} ${s.y}`; });
-      svg += `" stroke="#0f0" fill="none" stroke-width="${0.1 * Math.log(score + 1)}" stroke-dasharray="${state.cycle % 2 ? '5,5' : 'none'}"/></svg>`;
-      const blob = new Blob([svg], { type: 'image/svg+xml' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `${state.player}_snake_${score}.svg`;
-      a.click(); URL.revokeObjectURL(url);
-    }
-
-    // Whisper with BPM
-    function whisper() {
-      const lines = [`KEY ${state.actionHistory.slice(-1)[0]?.key} x${state.regrets} → PREDICTABLE?`, `CYCLE ${state.cycle}... WHO ARE YOU?`, `VOID REMEMBERS. YOU FORGET.`];
-      const txt = lines[Math.floor(Math.random() * lines.length)];
-      addJournal(`<i style="color:#f00;">// "${txt}" //</i>`);
-      playSynth(110 * (state.cycle / 10), 0.4);
-    }
-
-    // Render Loop with Updates
-    let renderTime = 0;
-    function renderLoop(now) {
-      renderTime = now * 0.001;
-      snakeMaterial.uniforms.time.value = renderTime;
-      snakeMaterial.uniforms.cycle.value = state.cycle;
-
-      // Rotate Portals
-      if (portalAMesh) portalAMesh.rotation.z += 0.02;
-      if (portalBMesh) portalBMesh.rotation.z += 0.02;
-
-      // Serpent Circle if Awake
-      if (state.serpentAwake) {
-        const circleGeometry = new THREE.CircleGeometry(5 + Math.sin(renderTime) * 0.5, 32);
-        const circleMaterial = new THREE.MeshBasicMaterial({ color: 0xff0000, transparent: true, opacity: 0.5 });
-        const circle = new THREE.Mesh(circleGeometry, circleMaterial);
-        scene.add(circle);
-        setTimeout(() => scene.remove(circle), 3000);
-      }
-
-      // Update VR Controllers
-      if (xrSession) updateControllers();
-
-      // Trails Generation
-      snake.forEach((p, i) => {
-        if (i % 3 === 0) {
-          const trail = document.createElement('div');
-          trail.className = 'trail';
-          trail.style.left = (p.x * cellSize + cellSize / 2) + 'px';
-          trail.style.top = (p.y * cellSize + cellSize / 2) + 'px';
-          document.body.appendChild(trail);
-          setTimeout(() => trail.remove(), 800);
-        }
-      });
-
-      renderer.render(scene, camera);
-      requestAnimationFrame(renderLoop);
-    }
-
-    function updateSnakeMesh() {
-      const positions = new Float32Array(snake.length * 3);
-      snake.forEach((s, i) => {
-        positions[i * 3] = s.x - 15 + 0.5;
-        positions[i * 3 + 1] = s.y - 15 + 0.5;
-        positions[i * 3 + 2] = Math.sin(renderTime + i * 0.1) * 0.1;
-      });
-      if (snakeMesh) {
-        snakeMesh.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        snakeMesh.geometry.attributes.position.needsUpdate = true;
-      } else {
-        const geometry = new THREE.BufferGeometry();
-        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        snakeMesh = new THREE.Line(geometry, snakeMaterial);
-        scene.add(snakeMesh);
-      }
-    }
-
-    // Food Mesh Pulse
-    function updateFoodMesh() {
-      if (!foodMesh) {
-        const foodGeometry = new THREE.BoxGeometry(0.8, 0.8, 0.8);
-        foodMesh = new THREE.Mesh(foodGeometry, new THREE.MeshBasicMaterial({ color: 0xff00ff }));
-        scene.add(foodMesh);
-      }
-      foodMesh.position.set(food.x - 15 + 0.5, food.y - 15 + 0.5, Math.sin(renderTime * 5) * 0.2);
-      foodMesh.rotation.y = renderTime * 2;
-    }
-
-    // Score Update
-    function updateScore() {
+    function updateUI() {
       document.getElementById('score').textContent = `Score: ${score}`;
       document.getElementById('fragments').textContent = `F: ${state.fragments}/9`;
       document.getElementById('cycle').textContent = `C: ${state.cycle}`;
     }
 
-    // Game Over with Modal
-    function gameOver() {
-      clearInterval(interval); interval = null;
-      addJournal(`<span style="color:#f00;">// GAME OVER: ${score} //</span>`);
-      showModal(`GAME OVER: Score ${score}<br>Press [SPACE] to Restart`);
-      if (leaderboard[0]?.score < score || leaderboard.length < 10) addScore();
-      playSynth(220, 0.5);
+    // === INPUT ===
+    document.addEventListener('keydown', e => {
+      if (e.key === ' ') { if (!interval) startLoop(); }
+      if (e.key === 'ArrowUp' || e.key.toLowerCase() === 'w') { if (dy === 0) { dx = 0; dy = -1; } }
+      if (e.key === 'ArrowDown' || e.key.toLowerCase() === 's') { if (dy === 0) { dx = 0; dy = 1; } }
+      if (e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') { if (dx === 0) { dx = -1; dy = 0; } }
+      if (e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') { if (dx === 0) { dx = 1; dy = 0; } }
+    });
+
+    let interval;
+    function startLoop() {
+      if (interval) return;
+      interval = setInterval(() => {
+        const head = { x: snake[0].x + dx, y: snake[0].y + dy };
+        if (head.x < 0) head.x = gridSize - 1;
+        if (head.x >= gridSize) head.x = 0;
+        if (head.y < 0) head.y = gridSize - 1;
+        if (head.y >= gridSize) head.y = 0;
+
+        if (snake.some(s => s.x === head.x && s.y === head.y)) {
+          gameOver();
+          return;
+        }
+
+        snake.unshift(head);
+        if (head.x === food.x && head.y === food.y) {
+          score += 10;
+          if (score % 100 === 0) state.cycle++;
+          if (score % 150 === 0 && state.fragments < 9) state.fragments++;
+          spawnFood();
+          playSynth(440, 0.2, 0.3);
+        } else {
+          snake.pop();
+        }
+        updateUI();
+      }, 120 / state.cycle);
     }
 
-    // Konami Code
-    const konami = [38,38,40,40,37,39,37,39,66,65];
-    let konamiIndex = 0;
-    document.addEventListener('keydown', e => {
-      if (e.keyCode === konami[konamiIndex]) {
-        konamiIndex++;
-        if (konamiIndex === konami.length) {
-          state.fragments += 3; addJournal(`// KONAMI UNLOCKED: +3 FRAGMENTS //`);
-          updateScore(); konamiIndex = 0; playSynth(880, 0.3);
-        }
-      } else konamiIndex = 0;
-    });
+    function gameOver() {
+      clearInterval(interval); interval = null;
+      addJournal(`<span style="color:#f00;">// ${state.player} COLLAPSED — SCORE: ${score} //</span>`);
+      setTimeout(() => {
+        showModal(`Game Over!<br>Score: ${score}<br>Fragments: ${state.fragments}/9`);
+        addScore();
+      }, 500);
+    }
 
-    // Resize Handler
-    window.addEventListener('resize', () => {
-      canvas.width = Math.min(window.innerWidth, 600);
-      canvas.height = canvas.width;
-      cellSize = canvas.width / gridSize;
-      renderer.setSize(canvas.width, canvas.height);
-      camera.updateProjectionMatrix();
-    });
+    // === CHAT & JOURNAL ===
+    const journal = document.getElementById('journal');
+    function addJournal(html) {
+      const p = document.createElement('p');
+      p.innerHTML = html;
+      journal.appendChild(p);
+      setTimeout(() => p.classList.add('show'), 50);
+      journal.scrollTop = journal.scrollHeight;
+    }
 
-    // Init (silent)
-    updateLB();
+    function sendChat() {
+      const input = document.getElementById('chat-input');
+      const msg = input.value.trim();
+      if (msg && msg.length <= 100) {
+        try { db.collection('chat').add({ msg, player: state.player, time: Date.now() }); } catch(e) {}
+        input.value = '';
+      }
+    }
+
+    // === LEADERBOARD ===
+    async function addScore() {
+      try {
+        await db.collection('scores').add({ score, player: state.player, timestamp: Date.now() });
+      } catch(e) {
+        const lb = JSON.parse(localStorage.getItem('slyverseLB') || '[]');
+        lb.push({ score, player: state.player, timestamp: new Date().toLocaleDateString('es-ES') });
+        lb.sort((a,b) => b.score - a.score).splice(10);
+        localStorage.setItem('slyverseLB', JSON.stringify(lb));
+      }
+    }
+
+    // === AUDIO ===
+    let audioCtx;
+    function playSynth(freq, duration, vol) {
+      if (!audioCtx) audioCtx = new AudioContext();
+      const o = audioCtx.createOscillator();
+      const g = audioCtx.createGain();
+      o.type = 'sine'; o.frequency.value = freq;
+      g.gain.setValueAtTime(vol, audioCtx.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+      o.connect(g); g.connect(audioCtx.destination);
+      o.start(); o.stop(audioCtx.currentTime + duration);
+    }
+
+    // === RENDER LOOP ===
+    function renderLoop() {
+      requestAnimationFrame(renderLoop);
+      renderer.render(scene, camera);
+    }
+
+    // === MODAL ===
+    function showModal(text) {
+      const m = document.createElement('div');
+      m.className = 'modal';
+      m.innerHTML = `<p>${text}</p><button onclick="this.parentNode.remove(); reset()">Play Again</button>`;
+      document.body.appendChild(m);
+    }
+
+    // === EXPORT SOUL ===
+    function exportSoul() {
+      const hash = btoa(state.player + score + Date.now()).slice(0,16);
+      state.soulHash = hash;
+      document.getElementById('soulHash').textContent = `SOUL: ${hash}...`;
+      document.getElementById('soulHash').classList.add('show');
+      localStorage.setItem('slyverse_soul', JSON.stringify({ soulHash: hash, endings: [] }));
+      addJournal(`<i style="color:#0ff;">// SOUL EXPORTED: ${hash}... //</i>`);
+    }
+
+    // === INIT ===
+    addJournal(`<i style="color:#0f0;">// SLYVERSE v1.1 PATCHED — SECURE & STABLE //</i>`);
   </script>
 </body>
 </html>

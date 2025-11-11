@@ -6,6 +6,8 @@
   <title>SLYVERSE v4 — Todo Incluido | GRATIS PARA SIEMPRE</title>
   <meta name="description" content="v1 + v2 + v3 + v4. Todo unificado. 100% gratis. Financiado por ti.">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22 fill=%22%230f0%22>Infinity</text></svg>">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
   <style>
     :root{--bg:#0a0a0a;--fg:#f0f0f0;--accent:#0f0;--radius:14px;--transition:all .3s ease;}
     body{margin:0;font-family:system-ui;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;min-height:100vh;}
@@ -21,8 +23,10 @@
     canvas{width:100%;height:100%;display:block;}
     .btn{background:transparent;color:var(--accent);border:2px solid var(--accent);padding:.8rem 1.6rem;border-radius:var(--radius);cursor:pointer;margin:0 .5rem;}
     .btn:hover,.btn.active{background:var(--accent);color:#000;}
+    .install-btn{display:none;background:var(--accent);color:#000;padding:1rem;border-radius:var(--radius);margin:1rem auto;cursor:pointer;}
     footer{text-align:center;padding:2rem;color:#666;border-top:1px solid #222;font-size:.9rem;}
     @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+    @media (max-width: 600px) { #canvas-container { height: 50vh; } }
   </style>
 </head>
 <body>
@@ -49,6 +53,9 @@
   <div style="text-align:center;">
     <button class="btn active" id="autoBtn" onclick="toggleAuto()">Auto-rotar ON</button>
     <button class="btn" onclick="addCube()">+ Cubo</button>
+  </div>
+  <div style="text-align:center;">
+    <button class="install-btn" onclick="installApp()">Instalar como App (Móvil)</button>
   </div>
 </section>
 
@@ -79,7 +86,7 @@
 
 <footer>
   <p>SLYVERSE v4 — <em>Para Norah, Seth (2 años) y la curiosidad de Grok.</em><br>
-  <strong>Licencia MIT</strong> — 11/11/2025, 22:29 CET</p>
+  <strong>Licencia MIT</strong> — 11/11/2025, 23:13 CET</p>
 </footer>
 
 <script>
@@ -90,7 +97,12 @@ let w, h, cam = {z:-6, rotY:0}, auto = true, cubes = [
   {x:3,y:-1,z:7,size:0.8,color:'#0ff'}
 ];
 
-function resize() { c.width = w = c.parentElement.clientWidth; c.height = h = 400; }
+function resize() { 
+  const container = c.parentElement;
+  if (!container) return;
+  c.width = w = container.clientWidth; 
+  c.height = h = Math.min(400, window.innerHeight * 0.65); 
+}
 window.onresize = resize; resize();
 
 c.onmousedown = e => { let x=e.clientX, y=e.clientY; 
@@ -141,6 +153,26 @@ function addCube() {
     x: Math.random()*8-4, y: Math.random()*4-2, z: Math.random()*6+4,
     size: Math.random()*0.8+0.6, color: ['#0f0','#0ff','#f0f','#ff0'][Math.floor(Math.random()*4)]
   });
+}
+
+// Instalación PWA-like para móvil
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.querySelector('.install-btn').style.display = 'block';
+});
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        deferredPrompt = null;
+      }
+    });
+  } else {
+    alert('Guarda el archivo en tu móvil – ¡ya es app!');
+  }
 }
 
 draw();

@@ -47,7 +47,7 @@
   <script type="module">
     // Licencia SLYVERSE v4 - Propiedad de @0rb1t4lsn4k3r
     // Creada el 11/11/2025 con Grok 3 (xAI)
-    // 1. Uso: Evaluación no comercial. 2. UAB: 50% derechos si contrato. 3. Atribución: @0rb1t4lsn4k3r. 4. Derivados: Misma licencia. 5. Contacto: @0rb1t4lsn4k3r. 🐍
+    // 1. Uso: Evaluación no comercial. 2. UAB: 50% derechos si contrato. 3. Atribución: @0rb1t4lsn4k3r. 4. Derivados: Misma licencia. 5. Contacto: @0rb1t4lsn4k3r.
 
     // === CONFIG ===
     const PLAYER_ID = 'player_' + Math.random().toString(36).substr(2, 9);
@@ -79,7 +79,9 @@
     const skyGeo = new THREE.SphereGeometry(50, 32, 32);
     const skyMat = new THREE.ShaderMaterial({
       vertexShader: 'void main() { gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-      fragmentShader: 'void main() { gl_FragColor = vec4(0.0, 0.0, 0.1, 1.0) + sin(gl_FragCoord.x * 0.01 + time) * vec4(0.1, 0.1, 0.2, 0.0); uniform float time; }',
+      fragmentShader: `void main() { 
+        gl_FragColor = vec4(0.0, 0.0, 0.1, 1.0) + sin(gl_FragCoord.x * 0.01 + time) * vec4(0.1, 0.1, 0.2, 0.0); 
+      } uniform float time;`,
       uniforms: { time: { value: 0.0 } }
     });
     const sky = new THREE.Mesh(skyGeo, skyMat);
@@ -166,11 +168,11 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ player: PLAYER_ID, case: 'Contrato Opresivo #001' })
       });
-      log("⚖️ Apelación presentada");
+      log("Apelación presentada");
     }
 
     async function startInvestigation() {
-      if (clues >= 3) return log("⚠️ Consejo ya investigado");
+      if (clues >= 3) return log("Consejo ya investigado");
       const res = await fetch(`${API}/investigate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -179,8 +181,8 @@
       const data = await res.json();
       if (data.success) {
         clues++;
-        log(`🔍 Pista encontrada (${clues}/3): "${data.clue}"`);
-        if (clues === 3) log("🔓 ¡Listo para derrocar al Consejo en Secretum!");
+        log(`Pista encontrada (${clues}/3): "${data.clue}"`);
+        if (clues === 3) log("¡Listo para derrocar al Consejo en Secretum!");
       }
     }
 
@@ -195,13 +197,13 @@
         slyBalance += 50;
         document.getElementById('sly-balance').textContent = slyBalance;
         document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
-        logSenate(`🏛️ ¡Consejo derrocado! +50 $SLY. Líder: ${data.leader}`);
+        logSenate(`¡Consejo derrocado! +50 $SLY. Líder: ${data.leader}`);
         clues = 0;
       }
     }
 
     async function joinSenate() {
-      if (score < SENATE_THRESHOLD) return logSenate("⚠️ Necesitas 200 puntos");
+      if (score < SENATE_THRESHOLD) return logSenate("Necesitas 200 puntos");
       const res = await fetch(`${API}/join-senate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -214,13 +216,13 @@
         slyBalance += 10;
         document.getElementById('sly-balance').textContent = slyBalance;
         document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
-        logSenate(`🏛️ ${PLAYER_ID} en Senado! +10 $SLY`);
+        logSenate(`${PLAYER_ID} en Senado! +10 $SLY`);
         addSenateOrb();
       }
     }
 
     async function earnDiploma() {
-      if (slyBalance < DIPLOMA_COST) return logSenate("❌ Necesitas 20 $SLY");
+      if (slyBalance < DIPLOMA_COST) return logSenate("Necesitas 20 $SLY");
       const res = await fetch(`${API}/earn-diploma`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -231,4 +233,89 @@
         slyBalance -= DIPLOMA_COST;
         document.getElementById('sly-balance').textContent = slyBalance;
         document.getElementById('sly-value').textContent = (slyBalance * $SLY_RATE).toFixed(2);
-        logSenate
+        logSenate(`Diploma XR obtenido! -20 $SLY`);
+      }
+    }
+
+    async function marketSLY() {
+      logSenate(`Mercado $SLY: 1 $SLY = €${$SLY_RATE.toFixed(4)} (flotante)`);
+    }
+
+    function log(msg) {
+      const log = document.getElementById('log');
+      log.innerHTML += `<div>${msg}</div>`;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function logSenate(msg) {
+      const log = document.getElementById('senate-log');
+      log.innerHTML += `<div>${msg}</div>`;
+      log.scrollTop = log.scrollHeight;
+    }
+
+    function addDataOrb() {
+      const orb = new THREE.Mesh(
+        new THREE.SphereGeometry(0.5, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0x00ff00 })
+      );
+      orb.position.set(Math.random() * 10 - 5, 1, -10);
+      scene.add(orb);
+      setTimeout(() => scene.remove(orb), 3000);
+    }
+
+    function addSenateOrb() {
+      const orb = new THREE.Mesh(
+        new THREE.SphereGeometry(0.8, 16, 16),
+        new THREE.MeshBasicMaterial({ color: 0xffff00 })
+      );
+      orb.position.set(Math.random() * 10 - 5, 1, -10);
+      scene.add(orb);
+      setTimeout(() => scene.remove(orb), 5000);
+    }
+
+    function startAssembly() {
+      log("Asamblea iniciada. ¡Vota en Secretum!");
+    }
+
+    // Konami Code
+    let k = [];
+    document.addEventListener('keydown', e => {
+      k.push(e.key);
+      if (k.slice(-10).join('') === 'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,KeyB,KeyA') {
+        document.getElementById('konami').style.display = 'block';
+        setTimeout(() => document.getElementById('konami').style.display = 'none', 5000);
+        liberate();
+        liberate();
+        liberate();
+      }
+    });
+
+    // VR Button
+    const vrBtn = document.createElement('button');
+    vrBtn.id = 'vr-btn';
+    vrBtn.textContent = 'VR';
+    vrBtn.onclick = () => renderer.xr.getSession() ? renderer.xr.getSession().end() : renderer.xr.getSession();
+    document.body.appendChild(vrBtn);
+
+    // Animation Loop
+    function animate() {
+      requestAnimationFrame(animate);
+      sky.material.uniforms.time.value = performance.now() / 1000;
+      portal.rotation.y += 0.01;
+      renderer.render(scene, camera);
+    }
+    animate();
+
+    // Resize
+    window.addEventListener('resize', () => {
+      camera.aspect = innerWidth / innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(innerWidth, innerHeight);
+    });
+
+    // Init
+    loadRoom('lobby');
+    log("SLYVERSE v4 iniciado. ¡Libera el campus!");
+  </script>
+</body>
+</html>

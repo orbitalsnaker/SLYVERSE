@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="SLYVERSE v1 — WebXR Snake Grid. Real-time multiplayer snake in pure HTML. Play on desktop, mobile, VR. Export SVG NFT.">
+  <meta name="description" content="SLYVERSE v1 — WebXR Snake Grid by 0rb1t4lsn4k3r. Real-time multiplayer snake with SVG NFT export, chaos mechanics, and cyberpunk aesthetic.">
   <meta name="theme-color" content="#0f0">
   <title>SLYVERSE v1 — 0rb1t4lsn4k3r</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><path d='M50 10 Q70 30 90 50 Q70 70 50 90 Q30 70 10 50 Q30 30 50 10' fill='none' stroke='%230f0' stroke-width='4'/></svg>">
   <link rel="manifest" href="data:application/manifest+json,{'name':'SLYVERSE','short_name':'SLYVERSE','start_url':'.','display':'standalone','background_color':'#000','theme_color':'#0f0','icons':[{'src':'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Cpath d=%22M50 10 Q70 30 90 50 Q70 70 50 90 Q30 70 10 50 Q30 30 50 10%22 fill=%22none%22 stroke=%22%230f0%22 stroke-width=%224%22/%3E%3C/svg%3E','sizes':'192x192','type':'image/svg+xml'}]}">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/0.168.0/three.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.min.js"></script>
   <style>
-    :root { --void: #000; --glitch: #0f0; --serpent: #f00; --memory: #0ff; --eclipse: #300; --pulse: 1.5s; --glitch-speed: 0.3s; }
+    :root { --void: #000; --glitch: #0f0; --serpent: #f00; --memory: #0ff; --eclipse: #300; --pulse: 1.5s; --glitch-speed: 0.3s; --bleed: 2.7s; }
     * { margin:0; padding:0; box-sizing:border-box; }
     body { background:var(--void); color:var(--glitch); font-family:"Courier New",monospace; min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; image-rendering:pixelated; overflow:hidden; }
     canvas { border:2px solid #f0f; background:#111; max-width:100%; display:block; filter:contrast(1.6) brightness(1.2); }
@@ -34,9 +34,12 @@
     .soul-hash.show { opacity:1; }
     .power-up { position:absolute; font-size:10px; color:#ff0; text-shadow:0 0 4px #ff0; animation:blink 1s infinite; }
     @keyframes blink { 0%,50% { opacity:1; } 51%,100% { opacity:0; } }
+    .memory-echo { position:absolute; pointer-events:none; font-size:11px; color:var(--memory); text-shadow:0 0 8px var(--memory); animation:bleed var(--bleed) infinite, glitch 1s infinite; opacity:0; }
+    @keyframes bleed { 0%,100% { filter:hue-rotate(0deg) brightness(1); } 50% { filter:hue-rotate(270deg) brightness(1.8); } }
     #alias-prompt { position:fixed; inset:0; background:rgba(0,0,0,0.9); display:flex; flex-direction:column; align-items:center; justify-content:center; z-index:1000; color:var(--glitch); }
     #alias-prompt input { background:transparent; border:1px solid var(--glitch); color:var(--glitch); padding:10px; margin:10px; font-family:monospace; }
-    @media (max-width:600px) { canvas { width:300px; height:300px; } #journal { width:200px; font-size:10px; } }
+    #leaderboard { position:absolute; top:50px; left:4px; font-size:14px; max-width:300px; background:rgba(0,0,0,.92); padding:10px; border:1px solid var(--glitch); }
+    @media (max-width:600px) { canvas { width:300px; height:300px; } #journal { width:200px; font-size:10px; } #chat-input { width:200px; } }
   </style>
 </head>
 <body>
@@ -56,13 +59,17 @@
     <h3>// ENTROPY CHAT //</h3>
     <div id="chat-messages"></div>
   </div>
+  <div id="leaderboard">
+    <h3>🏆 Leaderboard</h3>
+    <ol id="scores"></ol>
+  </div>
   <input type="text" id="chat-input" placeholder="Type message..." onkeypress="if(event.key==='Enter') sendChat()">
-  <button id="export" onclick="exportSVG()">Export SVG NFT</button>
+  <button id="export" onclick="exportSoul()">Export Soul</button>
   <div class="eclipse-overlay" id="eclipse"></div>
   <div class="soul-hash" id="soulHash"></div>
 
   <script>
-    // Firebase Config (replace with your config)
+    // Firebase Config (replace with your own)
     const firebaseConfig = {
       apiKey: "your-api-key",
       authDomain: "your-project.firebaseapp.com",
@@ -79,17 +86,59 @@
     const journal = document.getElementById('journal'), chatMessages = document.getElementById('chat-messages');
     const exportBtn = document.getElementById('export'), eclipseOverlay = document.getElementById('eclipse'), soulHashDiv = document.getElementById('soulHash');
     const grid = 30, size = canvas.width / grid;
-    let snake, food, dx, dy, score, mode, interval, portalA, portalB, leaderboard = [], state = {
+    let snake, food, dx, dy, score, mode = 'classic', interval, portalA, portalB, leaderboard = [], powerUps = [], chatInterval, serpentWorker;
+    let state = {
       cycle: 1, fragments: 0, entropy: 0, eclipsePhase: 0, timeDilation: 1, serpentAwake: false,
-      actionHistory: [], soulHash: '', cooldowns: { teleport: 0, cloak: 0 }, class: '???', player: '', powerUps: [], milestones: 0
-    }, powerUps = [], chatInterval;
+      actionHistory: [], soulHash: '', cooldowns: { teleport: 0, cloak: 0, speed: 0 }, class: '???',
+      player: '', milestones: 0, regrets: 0, endings: new Set()
+    };
 
     // PWA Service Worker
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('data:text/javascript;base64,' + btoa('self.addEventListener("fetch",e=>e.respondWith(fetch(e.request)));'));
     }
 
-    // Alias
+    // Persistence
+    try { leaderboard = JSON.parse(localStorage.getItem('slyverseLB') || '[]'); } catch (e) {}
+    const saved = localStorage.getItem('slyverse_soul');
+    if (saved) {
+      const data = JSON.parse(saved);
+      state.soulHash = data.soulHash;
+      state.endings = new Set(data.endings);
+      soulHashDiv.textContent = `SOUL: ${state.soulHash.slice(0,12)}...`;
+      soulHashDiv.classList.add('show');
+    }
+    function saveLB() { localStorage.setItem('slyverseLB', JSON.stringify(leaderboard)); }
+    function saveSoul() {
+      localStorage.setItem('slyverse_soul', JSON.stringify({ soulHash: state.soulHash, endings: Array.from(state.endings) }));
+    }
+
+    // Serpent Worker (IA)
+    if (window.Worker) {
+      const code = `
+        let mem = [], pat = new Map(), glob = {m:0,s:0};
+        self.onmessage = e => {
+          const a = e.data.key;
+          mem.push(a); if(mem.length>100) mem.shift();
+          glob[e.data.type]++;
+          const p5 = mem.slice(-5).join('');
+          pat.set(p5, (pat.get(p5)||0)+1);
+          if(pat.get(p5)>=3 || glob.s/(glob.m+glob.s)>0.82) {
+            self.postMessage({punish:true, pattern:p5});
+          }
+        };
+      `;
+      serpentWorker = new Worker(URL.createObjectURL(new Blob([code], {type:'application/javascript'})));
+      serpentWorker.onmessage = e => {
+        if (e.data.punish) {
+          state.regrets++;
+          addJournal(`<span style="color:#f00;">// GLITCH DETECTED: "${e.data.pattern}" //</span>`);
+          spawnEcho(snake[0].x * size, snake[0].y * size, "GLITCH!", '#f00');
+        }
+      };
+    }
+
+    // Start Game
     function startGame() {
       state.player = document.getElementById('alias').value.trim();
       if (!state.player || !/^[a-zA-Z0-9_]+$/.test(state.player) || state.player.length < 1 || state.player.length > 20) return;
@@ -98,15 +147,17 @@
       reset();
       loadLeaderboard();
       startChat();
+      setInterval(spawnPowerUp, 15000);
+      addJournal(`<i style="color:#0ff;">// SLYVERSE v1 — BUILT BY 0rb1t4lsn4k3r //</i>`);
     }
 
-    // Leaderboard Firebase
+    // Leaderboard
     async function loadLeaderboard() {
       try {
         const snapshot = await db.collection('scores').orderBy('score', 'desc').limit(10).get();
         leaderboard = snapshot.docs.map(doc => doc.data());
         updateLB();
-      } catch (e) { console.log('Local fallback'); }
+      } catch (e) { updateLB(); }
     }
     async function addScore() {
       try {
@@ -114,7 +165,14 @@
           score, player: state.player, timestamp: firebase.firestore.Timestamp.now()
         });
         loadLeaderboard();
-      } catch (e) { /* Local fallback */ }
+      } catch (e) {
+        leaderboard.push({ score, player: state.player, timestamp: new Date().toLocaleDateString('es-ES') });
+        leaderboard.sort((a,b) => b.score - a.score).splice(10);
+        saveLB(); updateLB();
+      }
+    }
+    function updateLB() {
+      document.getElementById('scores').innerHTML = leaderboard.map(e => `<li><strong>${e.player}</strong> ${e.score} pts – ${e.timestamp}</li>`).join('') || '<li>—</li>';
     }
 
     // Chat
@@ -134,11 +192,37 @@
       }
     }
 
+    // Journal
+    function addJournal(html) {
+      const p = document.createElement('p');
+      p.innerHTML = html;
+      journal.appendChild(p);
+      setTimeout(() => p.classList.add('show'), 60);
+      journal.scrollTop = journal.scrollHeight;
+    }
+
+    // Echoes
+    const echoes = [];
+    function spawnEcho(x, y, text, color = '#0ff') {
+      const el = document.createElement('div');
+      el.className = 'memory-echo';
+      el.textContent = text;
+      el.style.left = x + 'px'; el.style.top = y + 'px'; el.style.color = color;
+      document.body.appendChild(el);
+      echoes.push(el);
+      setTimeout(() => el.style.opacity = 1, 80);
+      setTimeout(() => { el.remove(); echoes.splice(echoes.indexOf(el),1); }, 4800);
+    }
+
     // Power-ups
     function spawnPowerUp() {
       const types = ['speed', 'ghost', 'shrink', 'multi', 'invuln'];
       const type = types[Math.floor(Math.random() * types.length)];
       const pu = { x: Math.floor(Math.random() * grid), y: Math.floor(Math.random() * grid), type };
+      while (snake.some(s => s.x === pu.x && s.y === pu.y)) {
+        pu.x = Math.floor(Math.random() * grid);
+        pu.y = Math.floor(Math.random() * grid);
+      }
       powerUps.push(pu);
       const el = document.createElement('div');
       el.className = 'power-up';
@@ -146,34 +230,192 @@
       el.style.left = (pu.x * size + size / 2) + 'px';
       el.style.top = (pu.y * size + size / 2) + 'px';
       document.body.appendChild(el);
-      setTimeout(() => el.remove(), 10000);
+      setTimeout(() => { el.remove(); powerUps = powerUps.filter(p => p !== pu); }, 10000);
     }
-
     function activatePowerUp(type) {
       switch (type) {
-        case 'speed': interval = setInterval(loop, 50); setTimeout(() => interval = setInterval(loop, 100), 5000); break;
-        case 'ghost': state.class = 'GHOST'; setTimeout(() => state.class = '???', 5000); break;
+        case 'speed': clearInterval(interval); interval = setInterval(loop, 50); state.cooldowns.speed = 50; break;
+        case 'ghost': state.class = 'GHOST'; state.cooldowns.ghost = 50; break;
         case 'shrink': if (snake.length > 5) snake.splice(5); break;
         case 'multi': spawnFood(); break;
-        case 'invuln': state.serpentAwake = false; setTimeout(() => {}, 3000); break;
+        case 'invuln': state.serpentAwake = false; state.cooldowns.invuln = 30; break;
       }
       addJournal(`// POWER-UP: ${type.toUpperCase()} ACTIVATED //`);
     }
 
-    // SVG Export
-    function exportSVG() {
-      if (score < 300) return alert('Reach 300 coils for SVG NFT');
-      let svg = `<svg viewBox="0 0 ${grid} ${grid}" xmlns="http://www.w3.org/2000/svg"><path d="`;
-      snake.forEach((s, i) => {
-        if (i) svg += `L${s.x} ${s.y}`;
-        else svg += `M${s.x} ${s.y}`;
+    // Game
+    function reset() {
+      clearInterval(interval); interval = null;
+      snake = [{ x: 15, y: 15 }]; spawnFood(); dx = dy = 0; score = 0; state.fragments = 0; state.entropy = 0; state.cycle = 1;
+      state.eclipsePhase = 0; state.timeDilation = 1; state.serpentAwake = false; powerUps = []; state.milestones = 0; state.regrets = 0;
+      Object.keys(state.cooldowns).forEach(k => state.cooldowns[k] = 0); updateScore();
+      if (mode === 'portal') spawnPortals();
+      updateLB(); addJournal(`// ${state.player} JOINS ENTROPY //`);
+    }
+    function spawnFood() {
+      do { food = { x: Math.floor(Math.random() * grid), y: Math.floor(Math.random() * grid) }; }
+      while (snake.some(s => s.x === food.x && s.y === food.y) || powerUps.some(p => p.x === food.x && p.y === food.y));
+    }
+    function spawnPortals() {
+      do {
+        portalA = { x: Math.floor(Math.random() * grid), y: Math.floor(Math.random() * grid) };
+        portalB = { x: Math.floor(Math.random() * grid), y: Math.floor(Math.random() * grid) };
+      } while (portalA.x === portalB.x && portalA.y === portalB.y || snake.some(s => s.x === portalA.x && s.y === portalA.y) || snake.some(s => s.x === portalB.x && s.y === portalB.y));
+    }
+
+    // Input
+    const keys = {}, touch = {x:0,y:0};
+    document.addEventListener('keydown', e => {
+      if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','w','a','s','d',' ','1','2'].includes(e.key)) e.preventDefault();
+      keys[e.key] = true; input(e.key);
+    });
+    document.addEventListener('keyup', e => keys[e.key] = false);
+    canvas.addEventListener('touchstart', e => { touch.x = e.touches[0].clientX; touch.y = e.touches[0].clientY; }, {passive:false});
+    canvas.addEventListener('touchmove', e => {
+      e.preventDefault();
+      const dx = e.touches[0].clientX - touch.x, dy = e.touches[0].clientY - touch.y;
+      if (Math.abs(dx) > 25 || Math.abs(dy) > 25) {
+        move(Math.sign(dx), Math.sign(dy));
+        touch.x = e.touches[0].clientX; touch.y = e.touches[0].clientY;
+      }
+    }, {passive:false});
+    function input(key) {
+      const type = ['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','w','a','s','d'].includes(key) ? 'm' : 's';
+      state.actionHistory.push({key, type});
+      if (state.actionHistory.length > 100) state.actionHistory.shift();
+      if (serpentWorker) serpentWorker.postMessage({key, type});
+      if (key === ' ') { if (!interval) reset(); return; }
+      if (key === '1' && state.cooldowns.teleport === 0 && state.fragments >= 3) cast('teleport');
+      if (key === '2' && state.cooldowns.cloak === 0) cast('cloak');
+      const k = key.toLowerCase();
+      const opp = { up: 'down', down: 'up', left: 'right', right: 'left' };
+      const map = { w: 'up', s: 'down', a: 'left', d: 'right', arrowup: 'up', arrowdown: 'down', arrowleft: 'left', arrowright: 'right' };
+      if (map[k] && opp[map[k]] !== { up: dy === -1, down: dy === 1, left: dx === -1, right: dx === 1 }[map[k]]) {
+        [dx, dy] = { up: [0,-1], down: [0,1], left: [-1,0], right: [1,0] }[map[k]];
+        if (!interval) interval = setInterval(loop, 100 / state.timeDilation);
+      }
+    }
+    function move(dx, dy) {
+      [dx, dy] = [dx, dy];
+      if (!interval) interval = setInterval(loop, 100 / state.timeDilation);
+    }
+
+    // Cast
+    function cast(spell) {
+      switch (spell) {
+        case 'teleport':
+          snake[0] = { x: Math.floor(Math.random() * grid), y: Math.floor(Math.random() * grid) };
+          state.fragments -= 3; state.cooldowns.teleport = 55;
+          addJournal(`// TELEPORT: ${snake[0].x},${snake[0].y} //`);
+          break;
+        case 'cloak':
+          state.class = state.class === 'CLOAKED' ? '???' : 'CLOAKED';
+          state.cooldowns.cloak = 28;
+          addJournal(`// CLOAK: ${state.class === 'CLOAKED' ? 'ON' : 'OFF'} //`);
+          break;
+      }
+      Object.keys(state.cooldowns).forEach(k => { if (state.cooldowns[k] > 0) state.cooldowns[k]--; });
+    }
+
+    // Loop
+    function loop() {
+      if (dx === 0 && dy === 0) return;
+      let head = { x: snake[0].x + dx, y: snake[0].y + dy };
+
+      // Portal
+      if (mode === 'portal' && portalA && portalB) {
+        if (head.x === portalA.x && head.y === portalA.y) { head.x = portalB.x; head.y = portalB.y; }
+        else if (head.x === portalB.x && head.y === portalB.y) { head.x = portalA.x; head.y = portalA.y; }
+      }
+
+      // Walls
+      if (head.x < 0 || head.x >= grid || head.y < 0 || head.y >= grid) {
+        if (mode !== 'portal' && mode !== 'chaos') return gameOver();
+        head.x = (head.x + grid) % grid; head.y = (head.y + grid) % grid;
+      }
+
+      // Self
+      if (state.class !== 'GHOST' && snake.some((s, i) => i > 0 && s.x === head.x && s.y === head.y)) return gameOver();
+
+      snake.unshift(head);
+
+      // Eat
+      if (head.x === food.x && head.y === food.y) {
+        score++; state.fragments++; state.entropy += 0.42 + Math.sin(Date.now() / 1000) * Math.cos(Date.now() / 1000);
+        checkMilestone(); updateScore(); spawnFood();
+        if (mode === 'portal' && Math.random() < 0.15) spawnPortals();
+        if (state.fragments >= 9) awaken();
+        beep();
+        if (leaderboard[0]?.score < score || leaderboard.length < 10) addScore();
+      } else snake.pop();
+
+      // Power-ups
+      powerUps.forEach(pu => {
+        if (head.x === pu.x && head.y === pu.y) {
+          activatePowerUp(pu.type);
+          powerUps = powerUps.filter(p => p !== pu);
+        }
       });
-      svg += `" stroke="#0f0" fill="none" stroke-width="0.1"/></svg>`;
-      const blob = new Blob([svg], { type: 'image/svg+xml' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `${state.player}_snake_${score}.svg`;
-      a.click();
+
+      // Chaos
+      if (mode === 'chaos' && Math.random() < 0.042) {
+        snake.reverse();
+        addJournal(`// CHAOS REVERSAL //`);
+      }
+
+      // Cycle
+      state.eclipsePhase += 0.0009 / Math.min(4.8, state.timeDilation);
+      state.timeDilation = Math.min(4.8, state.timeDilation + 0.00009);
+      eclipseOverlay.style.opacity = state.eclipsePhase * 0.8;
+      if (state.eclipsePhase >= 1) nextCycle();
+      if (Math.random() < 0.08 && state.cycle > 1) whisper();
+
+      if (mode === 'ai') aiMove();
+      draw();
+    }
+
+    // AI
+    function aiMove() {
+      if (mode !== 'ai' || dx === 0 && dy === 0) return;
+      const head = snake[0];
+      const dist = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
+      const safe = dir => {
+        const nx = head.x + dir[0], ny = head.y + dir[1];
+        return nx >= 0 && nx < grid && ny >= 0 && ny < grid && (state.class === 'GHOST' || !snake.some(s => s.x === nx && s.y === ny));
+      };
+      const dirs = [[0,-1],[1,0],[0,1],[-1,0]].filter(safe);
+      if (dirs.length === 0) return;
+      const best = dirs.reduce((a, b) => dist({ x: head.x + b[0], y: head.y + b[1] }, food) < dist({ x: head.x + a[0], y: head.y + a[1] }, food) ? b : a);
+      [dx, dy] = best;
+    }
+
+    // Cycle
+    function nextCycle() {
+      state.cycle++; state.eclipsePhase = 0; state.timeDilation = 1;
+      addJournal(`// CYCLE ${state.cycle} INIT //`);
+      if (state.cycle > 16) unlockEnding('ETERNAL LOOP');
+      checkEndings();
+    }
+    function awaken() {
+      state.serpentAwake = true;
+      addJournal(`<span style="color:#f00;">// SERPENT AWAKENS! //</span>`);
+      for (let i = 0; i < 6; i++) {
+        setTimeout(() => spawnEcho(Math.random() * canvas.width, Math.random() * canvas.height, "RUN!", '#f00'), i * 250);
+      }
+      setTimeout(() => state.serpentAwake = false, 3800);
+    }
+    function checkEndings() {
+      if (state.fragments === 9 && state.cycle <= 2) unlockEnding('DRAGON ATE TIME');
+      if (state.fragments === 0 && state.cycle > 6) unlockEnding('VOID REDEMPTION');
+      if (state.regrets === 0 && state.cycle > 4) unlockEnding('IA MASTER');
+      if (state.fragments > 9) unlockEnding('FRAG HOARDER');
+    }
+    function unlockEnding(name) {
+      if (!state.endings.has(name)) {
+        state.endings.add(name);
+        addJournal(`<span style="color:#0ff; font-size:13px;">// ENDING: ${name} //</span>`);
+        saveSoul();
+      }
     }
 
     // Milestones
@@ -181,58 +423,124 @@
       const ms = [10, 50, 100, 150, 200, 250, 300];
       if (ms.includes(score) && state.milestones < ms.length) {
         state.milestones++;
-        addJournal(`<span style="color:#0ff;">// LORE MILESTONE ${state.milestones}: "The Grid Breathes" //</span>`);
+        addJournal(`<span style="color:#0ff;">// MILESTONE ${state.milestones}: "The Grid Breathes" //</span>`);
+        spawnEcho(snake[0].x * size, snake[0].y * size, `MILESTONE ${state.milestones}`, '#0ff');
       }
     }
 
-    // Rest of the code from previous version...
-    function reset() {
-      clearInterval(interval); interval = null;
-      snake = [{ x: 15, y: 15 }]; spawnFood(); dx = dy = 0; score = 0; state.fragments = 0; state.entropy = 0; state.cycle = 1; state.eclipsePhase = 0;
-      state.timeDilation = 1; state.serpentAwake = false; powerUps = []; updateScore();
-      if (mode === 'portal') spawnPortals();
-      updateLB(); addJournal(`// ${state.player} JOINS ENTROPY //`);
-      setInterval(spawnPowerUp, 15000);
+    // Export
+    async function exportSoul() {
+      const hist = JSON.stringify(state.actionHistory.slice(-100));
+      const data = new TextEncoder().encode(hist + score + state.cycle + state.regrets);
+      const hash = Array.from(new Uint8Array(await crypto.subtle.digest('SHA-256', data)))
+        .map(b => b.toString(16).padStart(2,'0')).join('').slice(0,32);
+      state.soulHash = hash;
+      soulHashDiv.textContent = `SOUL: ${hash.slice(0,12)}...`;
+      soulHashDiv.classList.add('show');
+      addJournal(`// SOUL EXPORTED: ${hash.slice(0,12)}... //`);
+      saveSoul();
+      if (score >= 300) exportSVG();
     }
-
-    // Input with WASD
-    document.addEventListener('keydown', e => {
-      if (e.key === 'w' || e.key === 'ArrowUp') { dy = -1; dx = 0; }
-      if (e.key === 's' || e.key === 'ArrowDown') { dy = 1; dx = 0; }
-      if (e.key === 'a' || e.key === 'ArrowLeft') { dx = -1; dy = 0; }
-      if (e.key === 'd' || e.key === 'ArrowRight') { dx = 1; dy = 0; }
-      // ... other keys
-    });
-
-    // Loop enhancements
-    function loop() {
-      // ... existing logic
-      if (head.x === food.x && head.y === food.y) {
-        // ... eat
-        checkMilestone();
-      }
-      powerUps.forEach(pu => {
-        if (head.x === pu.x && head.y === pu.y) {
-          activatePowerUp(pu.type);
-          powerUps = powerUps.filter(p => p !== pu);
-        }
+    function exportSVG() {
+      let svg = `<svg viewBox="0 0 ${grid} ${grid}" xmlns="http://www.w3.org/2000/svg"><path d="`;
+      snake.forEach((s, i) => {
+        if (i) svg += `L${s.x} ${s.y}`;
+        else svg += `M${s.x} ${s.y}`;
       });
-      // ... rest
+      svg += `" stroke="#0f0" fill="none" stroke-width="${0.1 * Math.log(score)}"/></svg>`;
+      const blob = new Blob([svg], { type: 'image/svg+xml' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `${state.player}_snake_${score}.svg`;
+      a.click();
     }
 
-    // Draw power-ups
+    // Audio
+    function beep() {
+      const a = new Audio('data:audio/wav;base64,UklGRl9vT19XQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YViFhwCKhYqFbF1fdJivrJBhNjV');
+      a.playbackRate = 0.6 + state.eclipsePhase * 0.7;
+      a.play().catch(() => {});
+    }
+    function whisper() {
+      const lines = [
+        `KEY ${state.actionHistory.slice(-1)[0]?.key} x${state.regrets} → PREDICTABLE?`,
+        `CYCLE ${state.cycle}... WHO ARE YOU?`,
+        `VOID REMEMBERS. YOU FORGET.`
+      ];
+      const txt = lines[Math.floor(Math.random() * lines.length)];
+      addJournal(`<i style="color:#f00;">// "${txt}" //</i>`);
+      const a = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAZGF0YQQAAAAA');
+      a.playbackRate = 0.6 + state.eclipsePhase * 0.7;
+      a.play().catch(() => {});
+    }
+
+    // Draw
     function draw() {
-      // ... existing
+      ctx.fillStyle = '#111'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.strokeStyle = '#222'; ctx.shadowBlur = 15; ctx.shadowColor = '#0f0';
+      for (let i = 0; i < grid; i++) {
+        ctx.beginPath();
+        ctx.moveTo(i * size, 0); ctx.lineTo(i * size, canvas.height);
+        ctx.moveTo(0, i * size); ctx.lineTo(canvas.width, i * size);
+        ctx.stroke();
+      }
+      ctx.shadowBlur = 0;
+      ctx.fillStyle = '#f0f'; ctx.fillRect(food.x * size + 2, food.y * size + 2, size - 4, size - 4);
+      if (mode === 'portal' && portalA && portalB) {
+        ctx.fillStyle = '#0ff'; ctx.fillRect(portalA.x * size + 2, portalA.y * size + 2, size - 4, size - 4);
+        ctx.fillStyle = '#ff0'; ctx.fillRect(portalB.x * size + 2, portalB.y * size + 2, size - 4, size - 4);
+      }
       powerUps.forEach(pu => {
         ctx.fillStyle = '#ff0';
         ctx.fillRect(pu.x * size + 2, pu.y * size + 2, size - 4, size - 4);
       });
-      // ...
+      snake.forEach((s, i) => {
+        ctx.fillStyle = i === 0 ? (state.class === 'CLOAKED' ? 'rgba(0,255,0,0.08)' : state.class === 'GHOST' ? 'rgba(0,255,0,0.3)' : '#0f0') : '#0a0';
+        ctx.fillRect(s.x * size + 2, s.y * size + 2, size - 4, size - 4);
+      });
+      if (state.serpentAwake) {
+        ctx.strokeStyle = '#f00'; ctx.lineWidth = 2.5;
+        ctx.beginPath(); ctx.arc(canvas.width / 2, canvas.height / 2, 110, 0, Math.PI * 2); ctx.stroke();
+      }
+      snake.forEach(p => {
+        const el = document.createElement('div');
+        el.className = 'trail';
+        el.style.left = (p.x * size + size / 2) + 'px';
+        el.style.top = (p.y * size + size / 2) + 'px';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 1000);
+      });
     }
 
+    // Score
+    function updateScore() {
+      document.getElementById('score').textContent = `Score: ${score}`;
+      document.getElementById('fragments').textContent = `F: ${state.fragments}/9`;
+      document.getElementById('cycle').textContent = `C: ${state.cycle}`;
+    }
+
+    // Game Over
+    function gameOver() {
+      clearInterval(interval); interval = null;
+      addJournal(`<span style="color:#f00;">// GAME OVER: ${score} //</span>`);
+      if (leaderboard[0]?.score < score || leaderboard.length < 10) addScore();
+    }
+
+    // Konami
+    const konami = [38,38,40,40,37,39,37,39,66,65];
+    let konamiIndex = 0;
+    document.addEventListener('keydown', e => {
+      if (e.keyCode === konami[konamiIndex]) {
+        konamiIndex++;
+        if (konamiIndex === konami.length) {
+          state.fragments += 3; addJournal(`// KONAMI UNLOCKED: +3 FRAGMENTS //`);
+          updateScore(); konamiIndex = 0;
+        }
+      } else konamiIndex = 0;
+    });
+
     // Init
-    updateLB(); setMode('classic');
-    addJournal(`<i style="color:#0ff;">// SLYVERSE v1 — BUILT IN ONE NIGHT BY 0rb1t4lsn4k3r //</i>`);
+    updateLB();
   </script>
 </body>
 </html>

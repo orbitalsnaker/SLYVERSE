@@ -84,7 +84,7 @@
   <div class="soul-hash" id="soulHash"></div>
 
   <script>
-    // Firebase Config (dev's live project - replace for fork)
+    // Firebase Config (live project - replace for fork)
     const firebaseConfig = {
       apiKey: "AIzaSyD_example_live_key_2025",
       authDomain: "slyverse-2025.firebaseapp.com",
@@ -158,7 +158,7 @@
         vUv = uv;
         vPosition = position;
         vec3 pos = position;
-        float glitch = sin(time * 10.0 + vUv.y * 10.0 + time * vUv.x) * 0.05 * sin(time * 2.0); // Cycle ramp
+        float glitch = sin(time * 10.0 + vUv.y * 10.0 + time * vUv.x) * 0.05 * sin(time * 2.0);
         pos.x += glitch;
         pos.y += glitch * 0.5;
         gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
@@ -172,7 +172,7 @@
       void main() {
         vec3 color = vec3(0.0, 1.0, 0.0);
         float glitch = sin(time * 10.0 + vUv.y * 10.0) * 0.1;
-        float ramp = sin(cycle * 0.1); // BPM visual tie-in
+        float ramp = sin(cycle * 0.1);
         color += vec3(glitch * ramp, 0.0, 0.0);
         gl_FragColor = vec4(color, 0.8 + ramp * 0.2);
       }
@@ -226,7 +226,7 @@
           if(pat.get(p5)>=3 || glob.s/(glob.m+glob.s)>0.82) {
             self.postMessage({punish:true, pattern:p5});
           }
-          if(mem.length % 1000 === 0) pat.clear(); // Leak fix
+          if(mem.length % 1000 === 0) pat.clear();
         };
       `;
       serpentWorker = new Worker(URL.createObjectURL(new Blob([code], {type:'application/javascript'})));
@@ -247,14 +247,14 @@
       ambientOsc.type = 'sine';
       ambientOsc.frequency.setValueAtTime(110, audioCtx.currentTime);
       const gain = audioCtx.createGain();
-      gain.gain.setValueAtTime(0.05, audioCtx.currentTime); // Low ambient
+      gain.gain.setValueAtTime(0.05, audioCtx.currentTime);
       ambientOsc.connect(gain);
       gain.connect(audioCtx.destination);
       ambientOsc.start();
       updateBPM();
     }
     function updateBPM() {
-      const bpm = 60 + state.cycle * 5; // Ramp with cycle
+      const bpm = 60 + state.cycle * 5;
       const freq = 110 * (bpm / 60);
       ambientOsc.frequency.setValueAtTime(freq, audioCtx.currentTime);
     }
@@ -283,7 +283,7 @@
       reset();
       loadLeaderboard();
       startChat();
-      setInterval(spawnPowerUp, state.score > 100 ? 15000 : 10000); // Dynamic spawn
+      setInterval(spawnPowerUp, state.score > 100 ? 15000 : 10000);
       addJournal(`<i style="color:#0ff;">// SLYVERSE v1 — FORGED IN SILENCE //</i>`);
       requestAnimationFrame(renderLoop);
     }
@@ -295,7 +295,7 @@
         leaderboard = snapshot.docs.map(doc => ({ ...doc.data(), id: doc.id }));
         updateLB();
       } catch (e) {
-        updateLB(); // Local fallback
+        updateLB();
       }
     }
     async function addScore() {
@@ -322,7 +322,7 @@
           const snapshot = await db.collection('chat').orderBy('time', 'desc').limit(50).get();
           chatMessages.innerHTML = snapshot.docs.reverse().map(doc => `<p><strong>${doc.data().player}:</strong> ${doc.data().msg}</p>`).join('');
           chatMessages.scrollTop = chatMessages.scrollHeight;
-        } catch (e) { /* Local silent */ }
+        } catch (e) {}
       }, 1500);
     }
     function sendChat() {
@@ -401,7 +401,7 @@
         case 'invuln': state.serpentAwake = false; state.cooldowns.invuln = 30; break;
       }
       addJournal(`// POWER-UP: ${type.toUpperCase()} ACTIVATED //`);
-      playSynth(440 + state.cycle * 10, 0.2); // BPM tie
+      playSynth(440 + state.cycle * 10, 0.2);
     }
 
     // Reset with Mesh Rebuild
@@ -418,11 +418,8 @@
     }
     function spawnFood() {
       do { food = { x: Math.floor(Math.random() * gridSize), y: Math.floor(Math.random() * gridSize) }; }
-      while (snake.some(s => s.x === food.x && s.y === food.y) || powerUps.some(p => p.x === food.x && p.y === food.y));
-      if (foodMesh) {
-        foodMesh.position.set(food.x - 15 + 0.5, food.y - 15 + 0.5, 0);
-        foodMesh.rotation.y += 0.1; // Pulse
-      }
+      while (snake.some(s => s.x === food.x && s.y === food.y) || powerUps.some(p => p.x === food.x && p.y === pu.y));
+      updateFoodMesh();
     }
     function spawnPortals() {
       do {
@@ -452,7 +449,7 @@
       e.preventDefault();
       const dxTouch = e.touches[0].clientX - touch.x, dyTouch = e.touches[0].clientY - touch.y;
       if (Math.abs(dxTouch) > 20 || Math.abs(dyTouch) > 20) {
-        input({key: Math.sign(dxTouch) > 0 ? 'ArrowRight' : 'ArrowLeft', type: 'm'});
+        input({key: Math.abs(dxTouch) > Math.abs(dyTouch) ? (dxTouch > 0 ? 'ArrowRight' : 'ArrowLeft') : (dyTouch > 0 ? 'ArrowDown' : 'ArrowUp'), type: 'm'});
         touch.x = e.touches[0].clientX; touch.y = e.touches[0].clientY;
       }
     }, {passive:false});
@@ -477,7 +474,7 @@
       const mapDir = { w: 'up', s: 'down', a: 'left', d: 'right', arrowup: 'up', arrowdown: 'down', arrowleft: 'left', arrowright: 'right' };
       if (mapDir[k]) {
         const dir = mapDir[k];
-        if (opp[dir] !== (dy === -1 ? 'up' : dy === 1 ? 'down' : dx === -1 ? 'left' : 'right')) {
+        if (opp[dir] !== (dy === -1 ? 'up' : dy === 1 ? 'down' : dx === -1 ? 'left' : dx === 1 ? 'right' : '')) {
           [dx, dy] = { up: [0,-1], down: [0,1], left: [-1,0], right: [1,0] }[dir];
           if (!interval) interval = setInterval(loop, 100 / state.timeDilation);
         }
@@ -493,9 +490,9 @@
           renderer.xr.enabled = true;
           renderer.xr.setSession(xrSession);
           controllers = renderer.xr.getController(0);
-          controllers.addEventListener('selectstart', () => cast('teleport')); // Squeeze for spell
+          controllers.addEventListener('selectstart', () => cast('teleport'));
           controllers.addEventListener('selectend', () => {});
-          controllers.addEventListener('squeeze', e => { if (e) playHaptic(0.8, 100); }); // Haptic on action
+          controllers.addEventListener('squeezestart', () => { cast('cloak'); playHaptic(controllers, 0.8, 100); });
           scene.add(controllers);
           xrSession.addEventListener('inputsourceschange', updateControllers);
         } catch (e) { console.log('WebXR init failed, fallback 2D'); }
@@ -508,12 +505,12 @@
           const [x, y] = source.gamepad.axes;
           if (Math.abs(x) > 0.5) dx = Math.sign(x);
           if (Math.abs(y) > 0.5) dy = Math.sign(y);
-          if (source.gamepad.hapticActuators) playHaptic(source.gamepad.hapticActuators[0], 0.5, 50); // Feedback on move
+          if (source.gamepad.hapticActuators && (Math.abs(x) > 0.5 || Math.abs(y) > 0.5)) playHaptic(source.gamepad.hapticActuators[0], 0.5, 50);
         }
       });
     }
     async function playHaptic(actuator, intensity, duration) {
-      if (actuator) await actuator.pulse(intensity, duration);
+      if (actuator && actuator.pulse) await actuator.pulse(intensity, duration);
     }
 
     // Cast with Haptic
@@ -524,7 +521,7 @@
           snake[0] = { x: newX, y: newY };
           state.fragments -= 3; state.cooldowns.teleport = 55;
           addJournal(`// TELEPORT: ${newX},${newY} //`);
-          playSynth(880, 0.3); playHaptic(0.8, 150); // VR feedback
+          playSynth(880, 0.3); playHaptic(controllers, 0.8, 150);
           break;
         case 'cloak':
           state.class = state.class === 'CLOAKED' ? '???' : 'CLOAKED';
@@ -549,9 +546,9 @@
       }
 
       // Toroidal Walls
+      if (mode === 'classic' && (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize)) return gameOver();
       head.x = (head.x + gridSize) % gridSize;
       head.y = (head.y + gridSize) % gridSize;
-      if (mode === 'classic' && (head.x < 0 || head.x >= gridSize || head.y < 0 || head.y >= gridSize)) return gameOver();
 
       // Self Collision Check
       if (state.class !== 'GHOST' && snake.some((s, i) => i > 0 && s.x === head.x && s.y === head.y)) return gameOver();
@@ -565,7 +562,7 @@
         checkMilestone(); updateScore(); spawnFood();
         if (mode === 'portal' && Math.random() < 0.15) spawnPortals();
         if (state.fragments >= 9) awaken();
-        playSynth(440 + state.cycle * 5, 0.15); // BPM eat
+        playSynth(440 + state.cycle * 5, 0.15);
         if (leaderboard[0]?.score < score || leaderboard.length < 10) addScore();
       } else snake.pop(), updateSnakeMesh();
 
@@ -583,21 +580,22 @@
       if (mode === 'chaos' && Math.random() < 0.042 && state.chaosRevCount < 1) {
         snake.reverse(); state.chaosRevCount++; updateSnakeMesh();
         addJournal(`// CHAOS REVERSAL //`);
-        playSynth(220, 0.3);
+        playSynth(220, 0.3); playHaptic(controllers, 0.8, 100);
       }
 
       // Zone Shrink Post-500
       if (score > 500 && state.cycle % 13 === 0) {
-        state.zoneRadius *= 0.98;
+        state.zoneRadius = Math.max(5, state.zoneRadius * 0.98);
         zoneMesh.scale.set(state.zoneRadius / 15, state.zoneRadius / 15, 1);
         zoneMesh.visible = true;
+        if (Math.hypot(snake[0].x - 15, snake[0].y - 15) > state.zoneRadius) gameOver();
       }
 
       // Cycle Ramp
       state.eclipsePhase += 0.0009 / Math.min(4.8, state.timeDilation);
       state.timeDilation = Math.min(4.8, state.timeDilation + 0.00009);
       document.getElementById('eclipse').style.opacity = state.eclipsePhase * 0.8;
-      if (state.eclipsePhase >= 1) { nextCycle(); state.chaosRevCount = 0; } // Reset rev cap
+      if (state.eclipsePhase >= 1) { nextCycle(); state.chaosRevCount = 0; }
       if (Math.random() < 0.08 && state.cycle > 1) whisper();
       updateBPM();
 
@@ -616,9 +614,8 @@
       const dist = (a, b) => Math.abs(a.x - b.x) + Math.abs(a.y - b.y);
       function minimax(depth, isMax, simSnake = [...snake], simDx = dx, simDy = dy) {
         if (depth === 0) return dist({x: simSnake[0].x + simDx, y: simSnake[0].y + simDy}, food);
-        // Simulate move (toroidal, collision check)
         let simHead = { x: (simSnake[0].x + simDx + gridSize) % gridSize, y: (simSnake[0].y + simDy + gridSize) % gridSize };
-        if (simSnake.some((s, i) => i > 0 && s.x === simHead.x && s.y === simHead.y)) return Infinity; // Bad move
+        if (simSnake.some((s, i) => i > 0 && s.x === simHead.x && s.y === simHead.y)) return Infinity;
         simSnake.unshift(simHead);
         if (simHead.x !== food.x || simHead.y !== food.y) simSnake.pop();
         const dirs = [[0,-1],[1,0],[0,1],[-1,0]];
@@ -734,7 +731,7 @@
 
       // Trails Generation
       snake.forEach((p, i) => {
-        if (i % 3 === 0) { // Sparse trails
+        if (i % 3 === 0) {
           const trail = document.createElement('div');
           trail.className = 'trail';
           trail.style.left = (p.x * cellSize + cellSize / 2) + 'px';
@@ -753,7 +750,7 @@
       snake.forEach((s, i) => {
         positions[i * 3] = s.x - 15 + 0.5;
         positions[i * 3 + 1] = s.y - 15 + 0.5;
-        positions[i * 3 + 2] = Math.sin(renderTime + i * 0.1) * 0.1; // Slight 3D wave
+        positions[i * 3 + 2] = Math.sin(renderTime + i * 0.1) * 0.1;
       });
       if (snakeMesh) {
         snakeMesh.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));

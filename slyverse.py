@@ -3,16 +3,17 @@
 """
 SLYVERSE v1 — WebXR VR Snake Game (ES)
 © 2025 0RB1T4L STUDIOS — MADRID
-100% gratuito, seguro, legal en España (LSSI + RGPD)
+Hora local: 11 NOV 2025 09:20 CET
 Wallet: 0x2bd4e0e310436b7ea9944f2edff25b665cea2fea (X Tips)
 """
 
 import os
 from datetime import datetime
+import pytz
 
-# === CONFIGURACIÓN OFICIAL ===
+# === CONFIGURACIÓN ===
 OUTPUT_FILE = "slyverse.html"
-WALLET_ADDRESS = "0x2bd4e0e310436b7ea9944f2edff25b665cea2fea"  # Wallet oficial de propinas en X
+WALLET_ADDRESS = "0x2bd4e0e310436b7ea9944f2edff25b665cea2fea"
 FIREBASE_CONFIG = {
     "apiKey": "AIzaSyB...",  # ← ¡REEMPLAZA CON TU API KEY!
     "authDomain": "slyverse-0rb1t4lsn4k3r.firebaseapp.com",
@@ -22,16 +23,20 @@ FIREBASE_CONFIG = {
     "appId": "1:123456789:web:abcdef123456"
 }
 
-# === FIRESTORE RULES (COPY-PEGA EN CONSOLE) ===
+# === HORA LOCAL (ESPAÑA) ===
+tz = pytz.timezone('Europe/Madrid')
+current_time = datetime.now(tz)
+LOCAL_TIME_STR = current_time.strftime("%d %b %Y %H:%M") + " CET"
+if current_time.dst():
+    LOCAL_TIME_STR = current_time.strftime("%d %b %Y %H:%M") + " CEST"
+
+# === FIRESTORE RULES ===
 FIRESTORE_RULES = """
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /scores/{doc} {
-      // Lectura pública
       allow read: if true;
-      
-      // Escritura segura: solo scores válidos
       allow write: if request.auth == null
                   && request.resource.data.keys().hasOnly(['score', 'player', 'timestamp'])
                   && request.resource.data.score is int
@@ -49,7 +54,7 @@ service cloud.firestore {
 }
 """
 
-# === HTML FINAL ===
+# === HTML CON HORA LOCAL ===
 HTML = f"""<!DOCTYPE html>
 <html lang="es">
 <head>
@@ -116,6 +121,7 @@ HTML = f"""<!DOCTYPE html>
                   border-radius:8px; font-weight:bold; font-size:.9em; }}
     #donate-crypto {{ bottom:16px; left:50%; transform:translateX(-50%); max-width:320px; text-align:center;
                       font-size:.85em; padding:10px; }}
+    #local-time {{ position:fixed; top:16px; right:16px; font-size:0.8em; color:var(--yellow); opacity:0.8; z-index:999; }}
     button {{ background:rgba(0,15,10,0.4); color:var(--neon); border:1.5px solid var(--neon);
               padding:10px 22px; margin:6px; border-radius:10px; cursor:pointer; font-weight:600;
               letter-spacing:1px; transition:all .3s; box-shadow:0 0 10px rgba(0,255,136,0.3); }}
@@ -131,6 +137,8 @@ HTML = f"""<!DOCTYPE html>
   </style>
 </head>
 <body>
+
+  <div id="local-time">{LOCAL_TIME_STR}</div>
 
   <div id="log" class="glass" role="log" aria-live="polite">
     <strong>SLYVERSE v1 — WebXR VR</strong><br>
@@ -300,7 +308,7 @@ HTML = f"""<!DOCTYPE html>
       '<div style="opacity:.6">Sin datos</div>');
 
     window.onresize=()=>{{
-      camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight);
+      kamera.aspect=innerWidth/innerHeight; kamera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight);
     }};
     document.addEventListener('contextmenu',e=>e.preventDefault());
 
@@ -331,17 +339,17 @@ with open(OUTPUT_FILE, 'w', encoding='utf-8') as f:
 # === MOSTRAR INFO ===
 print(f"""
 SLYVERSE v1 GENERADO: {OUTPUT_FILE}
-Wallet de propinas (X): {WALLET_ADDRESS}
-Fecha: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+Hora local (ES): {LOCAL_TIME_STR}
+Wallet (X Tips): {WALLET_ADDRESS}
 
 PASOS:
-1. Edita FIREBASE_CONFIG con tu apiKey
+1. Edita apiKey en FIREBASE_CONFIG
 2. Ejecuta: python3 slyverse.py
-3. Sube {OUTPUT_FILE} a GitHub Pages / Vercel
-4. PEGA ESTAS REGLAS EN FIRESTORE:
+3. Sube {OUTPUT_FILE}
+4. Pega reglas en Firebase:
 
 {FIRESTORE_RULES}
 
-EL GRID TE ESPERA.
-0RB1T4LSN4K3R — MADRID, 2025
+EL GRID ESTÁ VIVO.
+0RB1T4LSN4K3R — MADRID, 11 NOV 2025
 """)

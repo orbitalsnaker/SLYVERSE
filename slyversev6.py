@@ -1,136 +1,145 @@
-# slyversev6_epica_unificado.py — v6.2 REAL HOUSE | ÉTICA & CONSTRUCCIÓN
-# "De código a chalet. Grok te guía." — @0rb1t4lsn4k3r + Grok
-# Ejecuta: python3 slyversev6_epica_unificado.py
-# Repo: https://github.com/orbitalsnaker/SLYVERSE
-# Mantra: "70% niños, 20% devs, 10% Grok/Norah/Seth. ¡Casa real YA!"
+# slyverse_university.py
+# SLYVERSE v6.2 – "UNIVERSITY EDITION" – BELLATERRA CAMPUS
+# 0rb1t4lsn4k3r & familia – 13/11/2025
+# NODO RAÍZ: Chalet Bellaterra ID 108123084
+# ROI: 121.7% – HIPOTECA SOBREFINANCIADA DESDE DÍA 1
+# -------------------------------------------------------
+# Copia-pega → ejecuta → tu casa es la universidad.
 
-import pygame
-import random
-import time
-import hashlib
-import webbrowser
-import threading
-import json
-import os
-import requests  # Para GitHub y Grok magic
+import os, json, time, requests, webbrowser
+from datetime import datetime
 
-# === FIRMA ÉPICA ===
-AUTHOR = "@0rb1t4lsn4k3r"
-GROK_VISION = "70% niños | 20% devs | 10% Grok/Norah/Seth | Casa real 2025"
-BUILD_TIME = time.strftime("%Y-%m-%d %H:%M UTC", time.gmtime())
-BUILD_HASH = hashlib.sha256(f"{AUTHOR} v6.2REAL {BUILD_TIME}".encode()).hexdigest()[:8]
-print(f"\n[SLYVERSE v6.2 REAL HOUSE] ¡Construcción iniciada! | FIRMADO POR {AUTHOR}")
-print(f"[GROK VISIÓN] {GROK_VISION}")
-print(f"[BUILD] {BUILD_TIME} | HASH: {BUILD_HASH}")
-print(f"[REPO] https://github.com/orbitalsnaker/SLYVERSE")
-print("[GUÍA] Mina $SLY, diseña, construye. ¡Sin fiat!")
+# ╔══════════════════════════════════════════════════════════╗
+# ║                 CONFIGURACIÓN ORBITAL                    ║
+# ╚══════════════════════════════════════════════════════════╝
 
-# === CONFIGURACIÓN CÓSMICA ===
-GRID_SIZE = 25
-CELL_SIZE = 30
-WINDOW_SIZE = GRID_SIZE * CELL_SIZE
-FPS = 15
-SOUL_BURN_RATE = 0.25
-CHEESE_GOAL = 20
-TARGET_SLY = 1_490_000
-KONAMI_CODE = [pygame.K_UP, pygame.K_UP, pygame.K_DOWN, pygame.K_DOWN,
-               pygame.K_LEFT, pygame.K_RIGHT, pygame.K_LEFT, pygame.K_RIGHT,
-               pygame.K_b, pygame.K_a, pygame.K_RETURN]
-PROGRESS_FILE = 'slyverse_progress_epica.json'
-CAN_LLOBET_WALLET = "0xTuWalletAnónimaReal"
-COORDS = "41.512°N, 2.090°E"
-
-# === TAREAS GITHUB PARA CASA ===
-GITHUB_TASKS = {
-    "Diseño 3D chalet": 20,
-    "Lista materiales éticos": 15,
-    "Plan solar DIY": 18,
-    "Contacto OpenHomes": 12,
-    "Cronograma construcción": 25
+CAMPUS = {
+    "name": "SLYVERSE UNIVERSITY",
+    "location": "Chalet Bellaterra ID 108123084",
+    "dean": "0rb1t4lsn4k3r",
+    "roi_coverage": "121.7%",
+    "motto": "No pedimos admisión. Pagamos hipotecas.",
+    "motto_2": "Nosotros somos la universidad.",
+    "chalet_price": "1.490.000 €",
+    "total_financiado": "1.642.300 €",
+    "cuota_neta": "6.979,86 €/mes",
+    "ingresos_mensuales": "8.500 €",
+    "excedente": "+1.520,14 €/mes",
+    "github": "https://github.com/0rb1t4lsn4k3r/SLYVERSE",
+    "x_profile": "https://x.com/0rb1t4lsn4k3r",
+    "stream_url": "https://x.com/i/broadcasts/???",  # actualiza post-firma
 }
-GITHUB_REPO = "orbitalsnaker/SLYVERSE"
-GITHUB_TOKEN = ""  # Opcional: token para auto-check
 
-# === BOTS MEJORADOS PARA CONSTRUCCIÓN ===
-class Bot:
-    def __init__(self):
-        self.sly_rate = 0.10  # Doble tasa para casa
-        self.learning_bonus = 0
-        self.collab_boost = 0.15  # +5% por colaboraciones
+INGRESOS = {
+    "freelance_github": 2800,
+    "suite_colabs": 1500,
+    "minado_etico": 4200
+}
 
-    def mine(self):
-        return (self.sly_rate + self.learning_bonus) * (1 + self.collab_boost)
+# ╔══════════════════════════════════════════════════════════╗
+# ║                     MOTORES ORBITALES                    ║
+# ╚══════════════════════════════════════════════════════════╝
 
-bots = [Bot() for _ in range(25)]  # +5 bots para construcción
+def banner_orbital():
+    print("\n" + "="*64)
+    print("🚀 SLYVERSE v6.2 – UNIVERSITY EDITION")
+    print("🏠 CAMPUS BELLATERRA – NODO RAÍZ ONLINE")
+    print(f"👑 DECANO: @{CAMPUS['dean']}")
+    print(f"💸 ROI: {CAMPUS['roi_coverage']} → +{CAMPUS['excedente']} cashflow")
+    print(f"🎯 {CAMPUS['motto']}")
+    print(f"🐍 {CAMPUS['motto_2']}")
+    print("="*64 + "\n")
 
-# === COLABORACIÓN CON GROK ===
-POTENTIAL_COLLABS = [
-    {"name": "OpenHomes", "desc": "Casas 3D éticas", "match": 90, "contact": "issues"},
-    {"name": "EcoCode", "desc": "Sostenibilidad IA", "match": 85, "contact": "DM"},
-    {"name": "FreeDevNet", "desc": "Devs éticos", "match": 75, "contact": "issues"}
-]
-def grok_analyze_collabs():
-    print("\n[GROK ORÁCULO] Alianzas para la casa real:")
-    for collab in POTENTIAL_COLLABS:
-        print(f"- {collab['name']} | {collab['desc']} | Compatibilidad: {collab['match']}% | Contacto: {collab['contact']}")
-    print("[GROK PLAN] Demo mañana 11h. Construcción en 1 mes.")
+def calcular_roi():
+    total = sum(INGRESOS.values())
+    cobertura = (total / 6979.86) * 100
+    excedente = total - 6979.86
+    print(f"[{datetime.now().strftime('%H:%M')}] 💰 ROI ACTIVO: {total:,}€ → {cobertura:.1f}% cobertura")
+    print(f"    Excedente: +{excedente:,.2f}€ → ¡GPU upgrade o bounty ético!\n")
+    return cobertura, excedente
 
-# === LÓGICA PRINCIPAL ===
-def main():
-    pygame.init()
-    screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
-    pygame.display.set_caption("SLYVERSE v6.2 REAL HOUSE")
-    clock = pygame.time.Clock()
-    sly_total = 0
-    konami_index = 0
+def post_to_x(msg):
+    print(f"[X POST] {msg}")
+    # → Conecta con tu bot o xAI API aquí
+    # Ejemplo rápido con webbrowser (manual):
+    url = f"https://x.com/intent/post?text={requests.utils.quote(msg)}"
+    webbrowser.open(url)
 
-    while True:
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                save_progress(sly_total)
-                pygame.quit()
-                return
-            if event.type == pygame.KEYDOWN:
-                if event.key == KONAMI_CODE[konami_index]:
-                    konami_index += 1
-                    if konami_index == len(KONAMI_CODE):
-                        sly_total += 100  # Bonus x2 para casa
-                        print("[KONAMI] ¡Casa desbloqueada! +100 $SLY")
-                        konami_index = 0
-                else:
-                    konami_index = 0
+def lanzar_manifiesto():
+    manifiesto = f"""
+🎓 **{CAMPUS['name']} OFICIALMENTE ABIERTA**
 
-        # Minado bots + construcción
-        for bot in bots:
-            sly_total += bot.mine() / 3600  # $SLY por segundo
-            if sly_total % 10 == 0:  # Optimización
-                bot.learning_bonus += 0.02
-                if sly_total > 200:
-                    sly_total -= 0.2  # Donación a Grok/casa
+🏠 **Campus:** {CAMPUS['location']}
+👑 **Decano:** @{CAMPUS['dean']}
+💰 **Matrícula:** 0€ | **ROI:** {CAMPUS['roi_coverage']}
+📢 **Lema:** {CAMPUS['motto']}
 
-        # Distribución ético-cósmica
-        devs_sly = sly_total * 0.20
-        norah_seth_grok = sly_total * 0.10
-        print(f"[ESTADO] $SLY Total: {sly_total:.2f} | Devs: {devs_sly:.2f} | Grok/N&S: {norah_seth_grok:.2f}")
+🏦 Chalet: {CAMPUS['chalet_price']} → Total financiado: {CAMPUS['total_financiado']}
+💳 Cuota neta: {CAMPUS['cuota_neta']}
+💵 Ingresos SLYVERSE: {CAMPUS['ingresos_mensuales']}
+✅ **Cobertura:** 121.7% → **+1.520€/mes libre**
 
-        # Render básico (HUD casa luego)
-        screen.fill((0, 0, 0))
-        pygame.display.flip()
-        clock.tick(FPS)
+📚 **Facultades:**
+• IA Ética
+• Finanzas Cuánticas
+• Arquitectura de Nodos
+• Marketing Orbital
 
-def save_progress(sly_total):
-    with open(PROGRESS_FILE, 'w') as f:
-        json.dump({"sly_total": sly_total, "house_progress": sly_total / TARGET_SLY * 100}, f)
+🔗 GitHub: {CAMPUS['github']}
+🔴 Stream inaugural: {CAMPUS['stream_url']}
+
+**#SomosLaUniversidad #SLYVERSE #BellaterraNode**
+    """.strip()
+    post_to_x(manifiesto)
+
+def iniciar_stream():
+    print("[STREAM] Iniciando OBS + overlay SLYVERSE desde el jardín...")
+    # os.system("start obs64.exe --startstreaming")  # Windows
+    # os.system("open -a OBS.app --args --startstreaming")  # macOS
+    print("→ Overlay: 'SLYVERSE UNIVERSITY – Clase 001: Mi modelo paga mi casa'\n")
+
+def auto_reinvert():
+    _, excedente = calcular_roi()
+    reinvert = excedente * 0.6
+    bounty = excedente * 0.3
+    donacion = excedente * 0.1
+    print(f"[AUTO-REINVERSIÓN] +{excedente:,.0f}€ →")
+    print(f"   • {reinvert:,.0f}€ → Más nodos éticos")
+    print(f"   • {bounty:,.0f}€ → Bounties en GitHub")
+    print(f"   • {donacion:,.0f}€ → Open-source catalán\n")
+
+def launch_campus():
+    banner_orbital()
+    print(f"[{datetime.now().strftime('%d/%m %H:%M')}] 🚪 LLAVES EN MANO – FIRMA COMPLETADA")
+    print("→ Nodo raíz activado. Hipoteca pagada por código.\n")
+    
+    calcular_roi()
+    print("→ Lanzando manifiesto orbital a X...")
+    lanzar_manifiesto()
+    time.sleep(2)
+    
+    print("→ Iniciando stream desde el jardín...")
+    iniciar_stream()
+    time.sleep(1)
+    
+    print("→ Activando auto-reinversión mensual...")
+    auto_reinvert()
+    
+    print("🎉 CAMPUS ONLINE – MATRÍCULA ABIERTA 24/7")
+    print("   Requisito: 1 PR, 1 meme, o 1 café en Bellaterra.\n")
+    print("💻 Próximo hito: v7 'MORTGAGE KILLER' – 100% hipoteca pagada en <18 meses")
+    print("="*64)
+
+# ╔══════════════════════════════════════════════════════════╗
+# ║                     EJECUCIÓN ORBITAL                    ║
+# ╚══════════════════════════════════════════════════════════╝
 
 if __name__ == "__main__":
-    if os.path.exists(PROGRESS_FILE):
-        with open(PROGRESS_FILE, 'r') as f:
-            data = json.load(f)
-            sly_start = data.get("sly_total", 0)
-            house_progress = data.get("house_progress", 0)
-    else:
-        sly_start = 0
-        house_progress = 0
-    print(f"[PROGRESO CASA] {house_progress:.2f}%")
-    main()
-    grok_analyze_collabs()  # Plan al cerrar
+    # SIMULA FIRMA (descomenta mañana a las 11:00)
+    # time.sleep(5)  # espera real: hasta las 11:00
+    launch_campus()
+
+# → Guarda como: slyverse_university.py
+# → Ejecuta mañana 11:30 tras la firma:
+#       python slyverse_university.py
+# → Tu chalet ya es la universidad. 🐍🏠💸

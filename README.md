@@ -1,247 +1,104 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLYVERSE v6.2.1 - EDICIÓN VIVE</title>
-    <style>
-        body { 
-            margin:0; 
-            background:#000; 
-            overflow:hidden; 
-            font-family: 'Courier New', monospace; 
-            color:#0f0; 
-        }
-        canvas { 
-            display: block; 
-            margin: 20px auto; 
-            border: 4px solid #0f0; 
-            box-shadow: 0 0 30px #0f0, inset 0 0 20px rgba(0,255,0,0.3);
-            border-radius: 8px;
-        }
-        #ui {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.9);
-            padding: 12px;
-            border: 2px solid #0f0;
-            border-radius: 12px;
-            font-size: 15px;
-            text-shadow: 0 0 5px #0f0;
-            backdrop-filter: blur(5px);
-        }
-        #konami { 
-            position: absolute; 
-            bottom: 10px; 
-            right: 10px; 
-            color: #0f0; 
-            font-size: 11px; 
-            opacity: 0.4;
-            text-shadow: 0 0 3px #0f0;
-        }
-        .rain { 
-            position: absolute; 
-            color: #0f0; 
-            font-size: 14px; 
-            user-select: none; 
-            pointer-events: none;
-            animation: fall linear infinite;
-            text-shadow: 0 0 5px #0f0;
-        }
-        @keyframes fall {
-            to { transform: translateY(100vh); opacity: 0; }
-        }
-        .glitch {
-            animation: glitch 1s infinite;
-        }
-        @keyframes glitch {
-            0%, 100% { text-shadow: 0 0 5px #0f0; }
-            50% { text-shadow: -2px 0 #f00, 2px 0 #0ff; }
-        }
-    </style>
-</head>
-<body>
-    <div id="ui">
-        <div>Puntos: <span id="score">0</span></div>
-        <div>Velocidad: <span id="speed">1</span>x</div>
-        <div>$SLY minados: <span id="sly">0</span></div>
-        <div>ROI ético: <span id="roi">100</span>% <span id="fire"></span></div>
-    </div>
-    <canvas id="game"></canvas>
-    <div id="konami">↑ ↑ ↓ ↓ ← → ← → B A</div>
+```markdown
+# SLYVERSE v6.2.1 - EDICIÓN VIVE  
+### *Proyecto Final Ético – Clase 18h*  
+**Director:** Grok (xAI)  
+**Decano:** [TU NOMBRE O ALIAS]  
+**Fecha:** 13 de noviembre de 2025  
 
-    <script>
-        // ====== CONFIGURACIÓN SLYVERSE (FICCIONAL) ======
-        const FINANZAS = {
-            chalet_price: 1500000,
-            gastos: 150000,
-            total_ico: 1650000,
-            cuota_bruta: 7500,
-            deduccion_irpf: 660,
-            cuota_neta: 7000,
-            total_ingresos: 8500,
-            cobertura_roi: 121.4,
-            excedente_mensual: 1500,
-            ingresos: {
-                freelance_github: 3000,
-                suite_colabs: 1500,
-                minado_etico: 4000
-            }
-        };
+---
 
-        // ====== JUEGO SNAKE ÉTICO ======
-        const canvas = document.getElementById('game');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 600;
-        canvas.height = 600;
+## 🎮 **¿Qué es SLYVERSE?**  
+Un **juego de Snake cuántico con minado ético de $SLY** y **ROI dinámico en tiempo real**.  
+Inspirado en *Matrix*, *Neuralink* y la **libertad financiera mediante código**.
 
-        const grid = 20;
-        let count = 0;
-        let score = 0;
-        let sly = 0;
-        let speed = 1;
+> **"La hipoteca se paga sola… con código."**
 
-        let snake = {
-            x: 300,
-            y: 300,
-            dx: grid,
-            dy: 0,
-            cells: [],
-            maxCells: 4
-        };
+---
 
-        let cheese = { x: 380, y: 380 };
+## 🚀 **Características Épicas**
 
-        // ====== LLUVIA DE CÓDIGO MATRIX ======
-        function rainCode() {
-            const chars = 'SLYVERSEΔ∇Ω∞λθπΣΨΩ';
-            const drop = document.createElement('div');
-            drop.className = 'rain';
-            drop.style.left = Math.random() * 100 + 'vw';
-            drop.style.fontSize = (10 + Math.random() * 10) + 'px';
-            drop.style.animationDuration = (3 + Math.random() * 4) + 's';
-            drop.textContent = chars[Math.floor(Math.random() * chars.length)];
-            document.body.appendChild(drop);
-            setTimeout(() => drop.remove(), 8000);
-        }
-        setInterval(rainCode, 80);
+| Feature | Descripción |
+|-------|-------------|
+| 🐍 **Snake Clásico Mejorado** | Movimiento fluido, wrap-around, velocidad creciente |
+| 💰 **$SLY Minado Ético** | +10 $SLY por queso. ROI actualizado en vivo |
+| 🌧️ **Lluvia Matrix** | Código cayendo en tiempo real |
+| 🔥 **ROI Dinámico** | Simulación financiera: ingresos vs cuota hipotecaria |
+| 🎹 **Konami Code** | `↑ ↑ ↓ ↓ ← → ← → B A` → **NEURALINK MODE** |
+| 🏆 **Victoria Secreta** | 1000 $SLY → ¡Hipoteca pagada! |
 
-        // ====== GENERAR QUESO ======
-        function getRandomCheese() {
-            cheese.x = Math.floor(Math.random() * (canvas.width / grid)) * grid;
-            cheese.y = Math.floor(Math.random() * (canvas.height / grid)) * grid;
-        }
+---
 
-        // ====== BUCLE PRINCIPAL ======
-        function loop() {
-            requestAnimationFrame(loop);
+## 🎯 **Cómo Jugar**
 
-            if (++count < 8 / speed) return;
-            count = 0;
+1. Abre [`slyverse-vive.html`](slyverse-vive.html)  
+2. Usa las **flechas del teclado**  
+3. Come quesos 🧀 → Gana $SLY  
+4. Activa el **Konami Code** para modo dios  
+5. ¡Paga la hipoteca con código!
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+---
 
-            // Mover serpiente
-            snake.x += snake.dx;
-            snake.y += snake.dy;
+## ⚙️ **Tecnologías Usadas**
 
-            // Wrap
-            if (snake.x >= canvas.width) snake.x = 0;
-            if (snake.x < 0) snake.x = canvas.width - grid;
-            if (snake.y >= canvas.height) snake.y = 0;
-            if (snake.y < 0) snake.y = canvas.height - grid;
+- HTML5 + Canvas  
+- JavaScript (ES6)  
+- CSS Animations  
+- 0 dependencias externas  
+- 100% offline  
 
-            // Celdas
-            snake.cells.unshift({ x: snake.x, y: snake.y });
-            if (snake.cells.length > snake.maxCells) snake.cells.pop();
+---
 
-            // Dibujar serpiente
-            snake.cells.forEach((cell, index) => {
-                ctx.fillStyle = index === 0 ? '#0f0' : '#0c0';
-                ctx.fillRect(cell.x, cell.y, grid - 1, grid - 1);
-                if (index === 0) {
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(cell.x + 4, cell.y + 4, 4, 4);
-                    ctx.fillRect(cell.x + 12, cell.y + 12, 4, 4);
-                }
-            });
+## 🧠 **Concepto Ético**
 
-            // Dibujar queso
-            ctx.fillStyle = '#ff0';
-            ctx.fillRect(cheese.x, cheese.y, grid - 1, grid - 1);
-            ctx.fillStyle = '#000';
-            ctx.fillRect(cheese.x + 5, cheese.y + 5, 5, 5);
-            ctx.fillRect(cheese.x + 10, cheese.y + 10, 5, 5);
+> **"Minado ético"** = esfuerzo real → recompensa simbólica  
+> **"ROI"** = (Ingresos + $SLY) / Cuota Neta × 100  
 
-            // Comer queso
-            if (snake.x === cheese.x && snake.y === cheese.y) {
-                snake.maxCells++;
-                score += 100;
-                sly += 10;
-                speed += 0.05;
-                document.getElementById('score').textContent = score;
-                document.getElementById('sly').textContent = sly;
-                document.getElementById('speed').textContent = speed.toFixed(2);
-                
-                const roiDinamico = ((FINANZAS.total_ingresos + sly / 10) / FINANZAS.cuota_neta * 100).toFixed(1);
-                document.getElementById('roi').textContent = roiDinamico;
-                document.getElementById('fire').textContent = roiDinamico > 150 ? '🔥🔥🔥' : roiDinamico > 120 ? '🔥' : '';
+Simulación educativa de **finanzas personales gamificadas**.
 
-                getRandomCheese();
-            }
+---
 
-            // Victoria secreta
-            if (sly >= 1000) {
-                setTimeout(() => {
-                    if (confirm("¡HAS PAGADO LA HIPOTECA ÉTICAMENTE!\n¿Quieres reiniciar el universo SLYVERSE?")) {
-                        location.reload();
-                    }
-                }, 500);
-            }
-        }
+## 🎉 **Easter Eggs**
 
-        // ====== CONTROLES ======
-        document.addEventListener('keydown', e => {
-            if (e.key === 'ArrowLeft' && snake.dx === 0) {
-                snake.dx = -grid; snake.dy = 0;
-            } else if (e.key === 'ArrowUp' && snake.dy === 0) {
-                snake.dx = 0; snake.dy = -grid;
-            } else if (e.key === 'ArrowRight' && snake.dx === 0) {
-                snake.dx = grid; snake.dy = 0;
-            } else if (e.key === 'ArrowDown' && snake.dy === 0) {
-                snake.dx = 0; snake.dy = grid;
-            }
-        });
+- `↑ ↑ ↓ ↓ ← → ← → B A` → **NEURALINK MODE**  
+- 1000 $SLY → Mensaje de victoria  
+- Fondo glitch + velocidad x15  
 
-        // ====== KONAMI CODE - NEURALINK MODE ======
-        let konami = '';
-        document.addEventListener('keydown', e => {
-            konami += e.key;
-            if (konami.slice(-20) === 'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba') {
-                alert('NEURALINK MODE ACTIVADO\nMinado ético x100\n¡Hipoteca pagada en 3… 2… 1…!');
-                sly += 50000;
-                speed = 15;
-                document.body.style.background = 'radial-gradient(circle, #001100, #000000)';
-                document.body.style.animation = 'glitch 0.3s infinite';
-                document.getElementById('roi').textContent = '999.9';
-                document.getElementById('roi').classList.add('glitch');
-                setTimeout(() => {
-                    document.body.style.animation = '';
-                    document.getElementById('roi').classList.remove('glitch');
-                }, 3000);
-                konami = '';
-            }
-        });
+---
 
-        // ====== INICIO ======
-        getRandomCheese();
-        requestAnimationFrame(loop);
+## 📂 **Estructura del Proyecto**
 
-        // Mensaje ético inicial (SEGURO)
-        setTimeout(() => {
-            alert(`SLYVERSE v6.2.1 - EDICIÓN VIVE\n\n¡Minado ético activado!\n\nDirector: Grok (xAI)\nDecano: @0rb1t4lsn4k3r\nClase mañana 18h\n\n¡La hipoteca se paga sola... con código!\n\nPresiona OK para comenzar.`);
-        }, 600);
-    </script>
-</body>
-</html>
+```
+/
+├── slyverse-vive.html     ← Juego principal
+├── README.md              ← Este archivo
+└── (futuro) assets/       ← Imágenes, sonidos (opcional)
+```
+
+---
+
+## 👨‍🏫 **Para la Clase de Mañana**
+
+> **"Entregué mi hipoteca en formato Snake con ROI dinámico. ¿Puedo convalidar por Finanzas Cuánticas?"**
+
+---
+
+## 🛡️ **100% Seguro**
+
+- Sin datos reales  
+- Sin conexiones externas  
+- Sin cookies, trackers ni minado real  
+- Código abierto y ético  
+
+---
+
+## 💚 **Licencia**
+
+**MIT License** – Úsalo, modifícalo, impresiona al profe.
+
+---
+
+> **Hecho con ❤️ y ansiedad controlada por [TU NOMBRE]**  
+> **Gracias a Grok por el debug mental.**
+
+---
+```

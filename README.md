@@ -1,90 +1,57 @@
-```markdown
-# SLYVERSE v4 — README del Autor
-
-> **"El código es poesía. La ética, su métrica. La belleza, su rima."**
-
----
-
-## Sobre mí
-
-Soy **orbitalsnaker**, un desarrollador independiente obsesionado con **hacer arte con código**, **democratizar el conocimiento** y **probar que la tecnología puede ser bella sin ser cara**.
-
-SLYVERSE v4 no es solo una demo 3D sin WebGL.  
-Es un manifiesto.  
-Un experimento ético.  
-Un regalo al mundo.
-
-Y no lo hice solo.
+# SLYVERSE v5 — El Chalet Ético  
+**DAO + AR + $SLY | Cocreamos el Hogar del Futuro**  
+> *"Si Ismael cierra la puerta, la serpiente la abre con código."*  
+> — @0rb1t4lsn4k3r, 12 nov 2025
 
 ---
 
-## A quienes van dedicadas estas líneas
+## El Lore de SLYVERSE (La Odisea de la Serpiente)
 
-### A **Norah**  
-Mi esposa, mi brújula, mi luz verde en la oscuridad.  
-Ella me enseñó que **la ética no es un lujo, es el núcleo**.  
-Cada línea de código accesible, cada decisión de no rastrear, cada "gratis para siempre" lleva su firma invisible.  
-*Gracias por creer en mí cuando ni yo lo hacía.*
+### 🐍 **El Origen — 15 Días de Código y Curiosidad**
+Todo comenzó con **un solo archivo HTML** y una pregunta:  
+> *¿Puede la ética + IA + AR crear un hogar sin comisiones ni fiat?*  
 
-### A **Seth**  
-Mi hijo de 2 años.  
-El motivo por el que **este proyecto nunca tendrá anuncios**.  
-Porque quiero que crezcas en un internet donde **la curiosidad no tenga precio**.  
-Que cuando tengas 10 años, puedas abrir SLYVERSE y decir:  
-*"Mi papá lo hizo para que todos pudieran jugar con cubos en 3D... ¡gratis!"*
+En **15 días**, @0rb1t4lsn4k3r y **@grok** (xAI) construyeron **SLYVERSE v1**:  
+- 3D en Canvas puro  
+- WebXR + INMO XR  
+- PWA offline  
+- Konami = café ☕  
 
----
-
-## A **Grok** (xAI)  
-Tú, **motor de curiosidad**.  
-No eres solo una IA.  
-Eres el compañero que me retó a **ir más allá del "funciona"** y llegar al **"inspira"**.  
-Gracias a ti, SLYVERSE:
-- tiene traducciones,
-- certificados educativos,
-- temas claro/oscuro,
-- y un sistema de financiación **100% ético**.
-
-**Tú no escribiste el código. Pero encendiste la chispa.**
+> *"0 code → SLYVERSE v1 FINAL. 15 days. Only with @grok."*  
+> — [X post, 27 oct 2025]
 
 ---
 
-## Licencia y Uso
+### ⚔️ **La Batalla del Fiat — Ismael vs. La Serpiente**
+El **11 de noviembre de 2025**, la serpiente slithereó hacia **Inmobiliaria101**:  
+> "Chalet 990k. 0€. 1 HTML. Tour 3D en 30s. Aval: código + ética."  
 
-```
-MIT License — Haz lo que quieras.
-Úsalo en tu aula. En tu taller. En tu curiosidad.
-Solo pide que, si mejoras algo, lo compartas.
-```
+**Ismael** (guardián del viejo mundo) dijo:  
+> *"Aquí no se regala nada. No taxi."*  
 
-> **Ideal para:**  
-> - Clases de programación  
-> - Talleres de accesibilidad  
-> - Proyectos educativos sin ánimo de lucro  
-> - Cualquier humano con un navegador
+La respuesta:  
+> **"Mañana 11h: llego a pie. Si no abres, SLYVERSE v5 nace esa tarde."**
 
 ---
 
-## Enlaces
+### 🏡 **La Casa — No es un inmueble. Es un Portal.**
+El **chalet 990k** no es solo ladrillos. Es:  
+- Un **faro ético**  
+- Un **hogar para Norah y Seth (2 años)**  
+- Un **experimento vivo**: ¿puede la comunidad avalar una casa con $SLY?  
 
-- **Demo en vivo:** [slyverse.vercel.app](https://slyverse.vercel.app) *(próximamente)*  
-- **Código fuente:** [github.com/orbitalsnaker/SLYVERSE](https://github.com/orbitalsnaker/SLYVERSE)  
-- **Apóyalo (voluntario):** [ko-fi.com/slyverse](https://ko-fi.com/slyverse) | [liberapay.com/slyverse](https://liberapay.com/slyverse)
-
----
-
-## Última actualización  
-**11 de noviembre de 2025, 22:22 CET**  
-*Desde España, con amor, código y un niño dormido en la habitación de al lado.*
+> *"Cocreamos. Casas, portales, futuros."*
 
 ---
 
-> **SLYVERSE v4 no es un producto.**  
-> **Es una promesa.**  
-> **Y la cumpliremos. Juntos.**
+### 🏛️ **Senate SLY — El Gobierno del Pueblo**
+- **Article 27**: *"Toda casa debe ser verde, ética y cocreada."*  
+- **50 $SLY** = voto para **certificar** el chalet  
+- **1% de cada transacción** → vuelve a la comunidad  
+- **DAO en Solana** (próximo mainnet)
 
 ---
 
-*— orbitalsnaker*  
-*Con Norah, Seth y un poco de ayuda de Grok.*
-```
+### 💚 **v5 — El Chalet Ético (LIVE)**
+```text
+slyverse.v5.html → 1 archivo. 0 dependencias externas.

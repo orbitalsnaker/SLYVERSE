@@ -1,104 +1,109 @@
-<!DOCTYPE html>
-<html lang="es" data-theme="dark">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE v5 — El Chalet Ético | DAO + AR</title>
-  <meta name="description" content="Si Ismael cierra, cocreamos. Chalet 3D + $SLY DAO. 100% libre.">
-  <link rel="manifest" href="data:application/manifest+json,{'name':'SLYVERSE v5','short_name':'SLYv5','start_url':'.','display':'standalone','background_color':'#0a0a0a','theme_color':'#00ff41','icons':[{'src':'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22 fill=%22%230f0%22>Chalet</text></svg>','sizes':'192x192','type':'image/svg+xml'}]}"/>
-  <style>
-    :root{--bg:#0a0a0a;--fg:#00ff41;--acc:#ff00ff;--gold:#ffd700;--gray:#333}
-    [data-theme=light]{--bg:#fafafa;--fg:#000;--acc:#00aaff;--gold:#b8860b;--gray:#ccc}
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--fg);overflow:hidden;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
-    canvas{width:100%;height:100%;position:absolute;top:0;left:0;z-index:-1}
-    .ui{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:1rem;pointer-events:none}
-    .top,.mid,.bottom{pointer-events:auto;text-align:center}
-    h1{font-size:1.4rem;margin:0.5rem;color:var(--acc);text-shadow:0 0 10px var(--acc)}
-    .card{background:rgba(255,255,255,0.1);padding:0.8rem;border-radius:12px;margin:0.5rem;max-width:300px}
-    .sly{color:var(--gold);font-weight:bold}
-    button{background:var(--acc);color:var(--bg);border:none;padding:0.6rem 1.2rem;border-radius:50px;font-weight:bold;margin:0.3rem;cursor:pointer;pointer-events:auto;font-size:0.8rem}
-    .toggle{position:absolute;top:1rem;right:1rem;background:var(--gray);color:var(--fg);padding:0.5rem;border-radius:50%}
-    .snake{position:absolute;bottom:1rem;font-size:1.8rem;animation:slither 3s infinite}
-    @keyframes slither{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
-  </style>
-</head>
-<body>
-  <canvas id="c"></canvas>
-  <div class="ui">
-    <div class="top">
-      <h1>SLYVERSE v5 — El Chalet Ético</h1>
-      <p>DAO + AR + $SLY | Si Ismael cierra, cocreamos.</p>
-    </div>
-    <div class="mid" id="chaletCard">
-      <div class="card">
-        <div><strong>Chalet Ético</strong></div>
-        <div>4 hab · Jardín verde · 100% DAO</div>
-        <div class="sly">Aval: <span id="votes">0</span> $SLY</div>
-        <button onclick="vote()">+1 $SLY (tienes <span id="wallet">0</span>)</button>
-        <button onclick="claimKonami()">Konami → +5 $SLY</button>
-      </div>
-    </div>
-    <div class="bottom">
-      <button onclick="enterAR()">Entrar en AR</button>
-      <button onclick="toggleTheme()">Toggle</button>
-      <div class="snake">Snake</div>
-    </div>
-  </div>
+#!/usr/bin/env python3
+# SLYVERSE v5 - Auto-Compra Ética (Python)
+# Autor: 0rb1t4lsn4k3r | Alma: Grok
+# Fecha: 12/11/2025 | Lore: #ÉticaVsFiat
+# Licencia: MIT
 
-  <script type="module">
-    import { init, animate, addLadrillo } from 'https://cdn.jsdelivr.net/gh/orbitalsnaker/slyverse-v5@main/chalet.js';
-    import { connectWallet, mintSLY, voteOnChalet } from 'https://cdn.jsdelivr.net/gh/orbitalsnaker/slyverse-v5@main/dao.js';
+import time
+import random
+import os
+from datetime import datetime
 
-    const c = document.getElementById('c'), ctx = c.getContext('2d');
-    let w, h, rot = 0, votes = 0, wallet = 0;
-    const konami = '38,38,40,40,37,39,37,39,66,65'; let k = [];
+# === CONFIGURACIÓN ÉTICA ===
+CHALET = {
+    "nombre": "Chalet Ético",
+    "aval": "990.000 € en alma",
+    "fiat": 0,
+    "sly_needed": 10,
+    "dueños": ["Norah", "Seth", "0rb1t4lsn4k3r"]
+}
 
-    // Resize
-    function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
-    resize(); window.addEventListener('resize',resize);
+WALLET = {
+    "balance": 100,  # $SLY simulado
+    "auto_buy": True
+}
 
-    // 3D Chalet (simplificado)
-    const chalet = {x:0,y:0,z:5,size:2,color:'#00ff41'};
-    function project(x,y,z){const scale=200/(200+z+300);return{x:w/2+x*scale,y:h/2+y*scale,s:scale}}
-    function drawCube(cube){/* mismo que v4, reutilizado */}
-    function animate3D(){
-      ctx.fillStyle='rgba(10,10,10,0.1)'; ctx.fillRect(0,0,w,h);
-      rot+=0.01; chalet.z=Math.cos(rot*0.8)*3;
-      drawCube(chalet);
-      requestAnimationFrame(animate3D);
-    }
-    animate3D();
+PUERTAS = [
+    {"id": 0, "estado": "cerrada", "votos": 0, "abierta": False},
+    {"id": 1, "estado": "cerrada", "votos": 0, "abierta": False},
+    {"id": 2, "estado": "cerrada", "votos": 0, "abierta": False},
+    {"id": 3, "estado": "cerrada", "votos": 0, "abierta": False}
+]
 
-    // UI
-    function updateUI(){document.getElementById('votes').textContent=votes;document.getElementById('wallet').textContent=wallet}
-    function vote(){
-      if(wallet<1) return alert('¡Necesitas $SLY! Usa Konami.');
-      wallet--; votes++; updateUI();
-      addLadrillo(); voteOnChalet(votes);
-      if(votes>=50) alert('¡Chalet CERTIFIED! DAO Senate SLY activado. Article 27 aprobado.');
-    }
-    function claimKonami(){wallet+=5; updateUI(); alert('Snake +5 $SLY!'); k=[]}
+# === FUNCIÓN: DIBUJO 3D EN CONSOLA (ASCII ART) ===
+def render_chalet():
+    os.system('cls' if os.name == 'nt' else 'clear')
+    print("\033[92m" + "═" * 50)
+    print("     SLYVERSE v5 - CHALET ÉTICO (vivo)".center(50))
+    print("═" * 50 + "\033[0m")
+    print(f"   Aval: {CHALET['aval']} | Fiat: {CHALET['fiat']}€ | Dueños: {', '.join(CHALET['dueños'])}")
+    print(f"   Balance $SLY: {WALLET['balance']} | Auto-Compra: {'ON' if WALLET['auto_buy'] else 'OFF'}")
+    print("\n   [ CHALET 3D - VISTA SUPERIOR ]")
+    print("        ┌────────────┐")
+    for i in range(4):
+        puerta = PUERTAS[i]
+        simbolo = "█" if not puerta["abierta"] else "░"
+        if i == 0:   print(f"        │  {simbolo}      {simbolo}  │  ← Puerta {i}")
+        elif i == 1: print(f"        │            │")
+        elif i == 2: print(f"        │  {simbolo}      {simbolo}  │  ← Puerta {i}")
+        else:        print(f"        │            │")
+    print("        └────────────┘")
+    print("           serpiente slitherea... 🐍\n")
 
-    // Konami
-    document.addEventListener('keydown', e=>{k.push(e.keyCode);if(k.toString().indexOf(konami)>=0) claimKonami()});
+# === FUNCIÓN: AUTO-COMPRA CON $SLY ===
+def auto_buy():
+    if not WALLET["auto_buy"] or WALLET["balance"] < CHALET["sly_needed"]:
+        return False
 
-    // AR
-    function enterAR(){
-      if(navigator.xr && navigator.xr.isSessionSupported('immersive-ar')){
-        navigator.xr.requestSession('immersive-ar').then(s=>init(s));
-      } else alert('Gira con dedo. Chalet 3D listo. ¡Konami = +5 $SLY!');
-    }
+    # Elige una puerta cerrada al azar
+    cerradas = [p for p in PUERTAS if not p["abierta"]]
+    if not cerradas:
+        return False
 
-    // DAO (mock)
-    async function initDAO(){try{await connectWallet(); wallet=await mintSLY(10);}catch(e){console.log('Wallet no conectado')}}; initDAO();
+    puerta = random.choice(cerradas)
+    puerta["votos"] += CHALET["sly_needed"]
+    WALLET["balance"] -= CHALET["sly_needed"]
+    puerta["abierta"] = True
+    puerta["estado"] = "abierta"
 
-    function toggleTheme(){
-      const isDark=document.documentElement.getAttribute('data-theme')==='dark';
-      document.documentElement.setAttribute('data-theme',isDark?'light':'dark');
-    }
+    print(f"\033[92m[COMPRA AUTO] Puerta {puerta['id']} abierta con {CHALET['sly_needed']} $SLY!\033[0m")
+    print(f"   Balance restante: {WALLET['balance']} $SLY")
+    return True
 
-    updateUI();
-  </script>
-</body>
-</html>
+# === FUNCIÓN: PULSO ÉTICO (luz verde) ===
+def pulso_etico():
+    intensidades = ["●", "○", "◉", "◎"]
+    idx = int(time.time() * 2) % len(intensidades)
+    return f"\033[92m{intensidades[idx]}\033[0m"
+
+# === BUCLE PRINCIPAL: SLYVERSE VIVE ===
+def main():
+    print("SLYVERSE v5 INICIANDO... 🐍💚")
+    time.sleep(1.5)
+    
+    ciclo = 0
+    while True:
+        render_chalet()
+        print(f"   {pulso_etico()} Ética slitherea... Ciclo: {ciclo} | {datetime.now().strftime('%H:%M:%S')}")
+        
+        # Auto-compra cada 5 segundos
+        if ciclo % 5 == 0:
+            auto_buy()
+        
+        # Slither lento y ético
+        time.sleep(1)
+        ciclo += 1
+        
+        # Victoria total: todas las puertas abiertas
+        if all(p["abierta"] for p in PUERTAS):
+            print("\n\033[92m" + "═" * 50)
+            print("   CHALET ÉTICO 100% ABIERTO - PROPIEDAD ÉTICA")
+            print("   LA SERPIENTE REINA. FIAT = 0. TÚ = DUEÑO.")
+            print("═" * 50 + "\033[0m")
+            break
+
+if __name__ == "__main__":
+    try:
+        main()
+    except KeyboardInterrupt:
+        print("\n\nSLYVERSE pausado. La ética nunca duerme. 🐍💚")

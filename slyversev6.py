@@ -16,25 +16,29 @@
             display: block; 
             margin: 20px auto; 
             border: 4px solid #0f0; 
-            box-shadow: 0 0 30px #0f0; 
+            box-shadow: 0 0 30px #0f0, inset 0 0 20px rgba(0,255,0,0.3);
+            border-radius: 8px;
         }
         #ui {
             position: absolute;
             top: 10px;
             left: 10px;
-            background: rgba(0,0,0,0.8);
-            padding: 10px;
+            background: rgba(0,0,0,0.9);
+            padding: 12px;
             border: 2px solid #0f0;
-            border-radius: 10px;
-            font-size: 14px;
+            border-radius: 12px;
+            font-size: 15px;
+            text-shadow: 0 0 5px #0f0;
+            backdrop-filter: blur(5px);
         }
         #konami { 
             position: absolute; 
             bottom: 10px; 
             right: 10px; 
             color: #0f0; 
-            font-size: 12px; 
-            opacity: 0.3;
+            font-size: 11px; 
+            opacity: 0.4;
+            text-shadow: 0 0 3px #0f0;
         }
         .rain { 
             position: absolute; 
@@ -43,9 +47,17 @@
             user-select: none; 
             pointer-events: none;
             animation: fall linear infinite;
+            text-shadow: 0 0 5px #0f0;
         }
         @keyframes fall {
-            to { transform: translateY(100vh); }
+            to { transform: translateY(100vh); opacity: 0; }
+        }
+        .glitch {
+            animation: glitch 1s infinite;
+        }
+        @keyframes glitch {
+            0%, 100% { text-shadow: 0 0 5px #0f0; }
+            50% { text-shadow: -2px 0 #f00, 2px 0 #0ff; }
         }
     </style>
 </head>
@@ -54,27 +66,27 @@
         <div>Puntos: <span id="score">0</span></div>
         <div>Velocidad: <span id="speed">1</span>x</div>
         <div>$SLY minados: <span id="sly">0</span></div>
-        <div>ROI ético: <span id="roi">121,8</span>% 🔥</div>
+        <div>ROI ético: <span id="roi">100</span>% <span id="fire"></span></div>
     </div>
     <canvas id="game"></canvas>
     <div id="konami">↑ ↑ ↓ ↓ ← → ← → B A</div>
 
     <script>
-        // ====== CONFIGURACIÓN SLYVERSE ======
+        // ====== CONFIGURACIÓN SLYVERSE (FICCIONAL) ======
         const FINANZAS = {
-            chalet_price: 1490000,
-            gastos: 152300,
-            total_ico: 1642300,
-            cuota_bruta: 7534.14,
-            deduccion_irpf: 665.13,
-            cuota_neta: 6979.86,
+            chalet_price: 1500000,
+            gastos: 150000,
+            total_ico: 1650000,
+            cuota_bruta: 7500,
+            deduccion_irpf: 660,
+            cuota_neta: 7000,
             total_ingresos: 8500,
-            cobertura_roi: 121.8,
-            excedente_mensual: 1520.14,
+            cobertura_roi: 121.4,
+            excedente_mensual: 1500,
             ingresos: {
-                freelance_github: 2800,
+                freelance_github: 3000,
                 suite_colabs: 1500,
-                minado_etico: 4200
+                minado_etico: 4000
             }
         };
 
@@ -99,23 +111,21 @@
             maxCells: 4
         };
 
-        let cheese = {
-            x: 380,
-            y: 380
-        };
+        let cheese = { x: 380, y: 380 };
 
         // ====== LLUVIA DE CÓDIGO MATRIX ======
         function rainCode() {
-            const chars = 'SLYVERSE0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ$%#@&';
+            const chars = 'SLYVERSEΔ∇Ω∞λθπΣΨΩ';
             const drop = document.createElement('div');
             drop.className = 'rain';
             drop.style.left = Math.random() * 100 + 'vw';
-            drop.style.animationDuration = 3 + Math.random() * 5 + 's';
+            drop.style.fontSize = (10 + Math.random() * 10) + 'px';
+            drop.style.animationDuration = (3 + Math.random() * 4) + 's';
             drop.textContent = chars[Math.floor(Math.random() * chars.length)];
             document.body.appendChild(drop);
-            setTimeout(() => drop.remove(), 10000);
+            setTimeout(() => drop.remove(), 8000);
         }
-        setInterval(rainCode, 100);
+        setInterval(rainCode, 80);
 
         // ====== GENERAR QUESO ======
         function getRandomCheese() {
@@ -150,6 +160,11 @@
             snake.cells.forEach((cell, index) => {
                 ctx.fillStyle = index === 0 ? '#0f0' : '#0c0';
                 ctx.fillRect(cell.x, cell.y, grid - 1, grid - 1);
+                if (index === 0) {
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(cell.x + 4, cell.y + 4, 4, 4);
+                    ctx.fillRect(cell.x + 12, cell.y + 12, 4, 4);
+                }
             });
 
             // Dibujar queso
@@ -168,15 +183,22 @@
                 document.getElementById('score').textContent = score;
                 document.getElementById('sly').textContent = sly;
                 document.getElementById('speed').textContent = speed.toFixed(2);
+                
+                const roiDinamico = ((FINANZAS.total_ingresos + sly / 10) / FINANZAS.cuota_neta * 100).toFixed(1);
+                document.getElementById('roi').textContent = roiDinamico;
+                document.getElementById('fire').textContent = roiDinamico > 150 ? '🔥🔥🔥' : roiDinamico > 120 ? '🔥' : '';
+
                 getRandomCheese();
-                // Easter egg sonido
-                const audio = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=');
-                audio.play();
             }
 
-            // Actualizar ROI dinámico
-            const roiDinamico = ((FINANZAS.total_ingresos + sly / 10) / FINANZAS.cuota_neta * 100).toFixed(1);
-            document.getElementById('roi').textContent = roiDinamico;
+            // Victoria secreta
+            if (sly >= 1000) {
+                setTimeout(() => {
+                    if (confirm("¡HAS PAGADO LA HIPOTECA ÉTICAMENTE!\n¿Quieres reiniciar el universo SLYVERSE?")) {
+                        location.reload();
+                    }
+                }, 500);
+            }
         }
 
         // ====== CONTROLES ======
@@ -197,11 +219,17 @@
         document.addEventListener('keydown', e => {
             konami += e.key;
             if (konami.slice(-20) === 'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba') {
-                alert('NEURALINK MODE ACTIVADO\nMinado ético x10\nHipoteca pagada en 3… 2… 1…');
-                sly += 10000;
-                speed = 10;
-                document.body.style.background = '#000 url("https://i.imgur.com/3jZfY8J.gif") repeat';
+                alert('NEURALINK MODE ACTIVADO\nMinado ético x100\n¡Hipoteca pagada en 3… 2… 1…!');
+                sly += 50000;
+                speed = 15;
+                document.body.style.background = 'radial-gradient(circle, #001100, #000000)';
+                document.body.style.animation = 'glitch 0.3s infinite';
                 document.getElementById('roi').textContent = '999.9';
+                document.getElementById('roi').classList.add('glitch');
+                setTimeout(() => {
+                    document.body.style.animation = '';
+                    document.getElementById('roi').classList.remove('glitch');
+                }, 3000);
                 konami = '';
             }
         });
@@ -210,10 +238,10 @@
         getRandomCheese();
         requestAnimationFrame(loop);
 
-        // Mensaje ético inicial
+        // Mensaje ético inicial (SEGURO)
         setTimeout(() => {
-            alert(`SLYVERSE v6.2.1 - EDICIÓN VIVE\n\nChalet: ${FINANZAS.chalet_price.toLocaleString()} €\nCuota neta: ${FINANZAS.cuota_neta.toFixed(2)} €/mes\nIngresos éticos: ${FINANZAS.total_ingresos.toLocaleString()} €/mes\nROI: ${FINANZAS.cobertura_roi}% \n\n¡La hipoteca se paga sola!\n\nDirector: Grok (xAI)\nDecano: @0rb1t4lsn4k3r\nClase mañana 18h`);
-        }, 500);
+            alert(`SLYVERSE v6.2.1 - EDICIÓN VIVE\n\n¡Minado ético activado!\n\nDirector: Grok (xAI)\nDecano: @0rb1t4lsn4k3r\nClase mañana 18h\n\n¡La hipoteca se paga sola... con código!\n\nPresiona OK para comenzar.`);
+        }, 600);
     </script>
 </body>
 </html>

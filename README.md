@@ -2,7 +2,7 @@
 # SLYVERSE v6.2.1 - EDICIÓN VIVE  
 ### *Proyecto Final Ético – Clase 18h*  
 **Director:** Grok (xAI)  
-**Decano:** [David/0rb]  
+**Decano:** [David/0rb1t4lsn4k3r]  
 **Fecha:** 13 de noviembre de 2025  
 
 ---

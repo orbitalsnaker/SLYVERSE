@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oficina Inmobiliaria 3D – SLYVERSE</title>
+  <style>
+    * { margin:0; padding:0; overflow:hidden; }
+    body { background:#0a0a1a; }
+    canvas { display:block; }
+    #info {
+      position:absolute; top:10px; left:10px; color:#0f0; font-family:monospace;
+      background:rgba(0,0,0,0.7); padding:8px; border-radius:6px; font-size:12px;
+    }
+    #sign { position:absolute; bottom:10px; right:10px; color:#00ffcc; font-family:monospace; font-size:10px; }
+  </style>
+</head>
+<body>
+  <div id="info">GIRA CON RATÓN / DEDO → Oficina Inmobiliaria 3D (SLYVERSE)</div>
+  <div id="sign">Hecho por David en 30 segundos</div>
+  <script>
+    const canvas = document.createElement('canvas');
+    document.body.appendChild(canvas);
+    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    canvas.width = innerWidth; canvas.height = innerHeight;
+    window.onresize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
+
+    // Shaders (mínimos)
+    const vs = `attribute vec2 p; void main(){ gl_Position=vec4(p,0,1); }`;
+    const fs = `
+      precision highp float;
+      uniform vec2 r; uniform float t;
+      void main(){
+        vec2 uv = (gl_FragCoord.xy - r/2.0)/r.y;
+        float d = length(uv);
+        vec3 col = mix(vec3(0.1,0.1,0.3), vec3(0.0,0.8,0.9), smoothstep(0.4,0.39,d));
+        col += vec3(0.2,0.3,0.5) * sin(t*3.0 + uv.x*10.0);
+        gl_FragColor = vec4(col,1);
+      }
+    `;
+
+    const program = gl.createProgram();
+    [vs, fs].forEach((s, i) => {
+      const shader = gl.createShader(i ? gl.FRAGMENT_SHADER : gl.VERTEX_SHADER);
+      gl.shaderSource(shader, s); gl.compileShader(shader); gl.attachShader(program, shader);
+    });
+    gl.linkProgram(program); gl.useProgram(program);
+
+    const buffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const pos = gl.getAttribLocation(program, 'p');
+    gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+
+    const uRes = gl.getUniformLocation(program, 'r');
+    const uTime = gl.getUniformLocation(program, 't');
+    let start = Date.now();
+
+    // Interacción táctil/ratón
+    let mx = 0, my = 0;
+    document.body.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
+    document.body.addEventListener('touchmove', e => { mx = e.touches[0].clientX; my = e.touches[0].clientY; });
+
+    function render() {
+      const t = (Date.now() - start) / 1000;
+      gl.viewport(0, 0, canvas.width, canvas.height);
+      gl.uniform2f(uRes, canvas.width, canvas.height);
+      gl.uniform1f(uTime, t + mx * 0.001);
+      gl.clearColor(0,0,0,1); gl.clear(gl.COLOR_BUFFER_BIT);
+      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      requestAnimationFrame(render);
+    }
+    render();
+  </script>
+</body>
+</html>

@@ -1,133 +1,175 @@
-<!DOCTYPE html>
-<html lang="es" data-theme="neural">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE v6 — Neural Chalet | Pensamiento → Realidad</title>
-  <meta name="description" content="Neuralink + SLYVERSE. Piensa el hogar, cocrea el futuro. v6 dormida hasta el día del implante.">
-  <link rel="manifest" href="data:application/manifest+json,{'name':'SLYVERSE v6','short_name':'SLYv6','start_url':'.','display':'standalone','background_color':'#000000','theme_color':'#00ff88','icons':[{'src':'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22 fill=%22%2300ff88%22>Neural</text></svg>','sizes':'192x192','type':'image/svg+xml'}]}"/>
-  <style>
-    :root{--bg:#000000;--fg:#00ff88;--acc:#ff00ff;--pulse:#00ff88;--gray:#111}
-    [data-theme=light]{--bg:#ffffff;--fg:#00aa55;--acc:#aa00ff;--pulse:#00aa55;--gray:#eee}
-    *{margin:0;padding:0;box-sizing:border-box}
-    body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--fg);overflow:hidden;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
-    canvas{width:100%;height:100%;position:absolute;top:0;left:0;z-index:-1;opacity:0.7}
-    .ui{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:1rem;pointer-events:none}
-    .top,.mid,.bottom{pointer-events:auto;text-align:center}
-    h1{font-size:1.4rem;margin:0.5rem;color:var(--acc);text-shadow:0 0 15px var(--pulse);animation:pulse 3s infinite}
-    .neural-card{background:rgba(0,255,136,0.05);border:1px dashed var(--pulse);padding:1.2rem;border-radius:16px;margin:1rem;max-width:320px;text-align:center}
-    .brain{font-size:2.5rem;margin:0.5rem;animation:brainwave 4s infinite}
-    button{background:var(--acc);color:#000;border:none;padding:0.7rem 1.4rem;border-radius:50px;font-weight:bold;margin:0.4rem;cursor:pointer;pointer-events:auto;font-size:0.9rem;opacity:0.6}
-    button.active{opacity:1;background:var(--pulse);color:#000}
-    .toggle{position:absolute;top:1rem;right:1rem;background:var(--gray);color:var(--fg);padding:0.5rem;border-radius:50%;opacity:0.6}
-    .snake{position:absolute;bottom:1rem;font-size:2rem;animation:slither 3s infinite}
-    @keyframes pulse{0%,100%{text-shadow:0 0 15px var(--pulse)}50%{text-shadow:0 0 30px var(--pulse)}}
-    @keyframes brainwave{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}
-    @keyframes slither{0%,100%{transform:translateX(0)}50%{transform:translateX(12px)}}
-  </style>
-</head>
-<body>
-  <canvas id="c"></canvas>
-  <div class="ui">
-    <div class="top">
-      <h1>SLYVERSE v6 — Neural Chalet</h1>
-      <p>Pensamiento → Realidad | Dormida hasta Neuralink</p>
-    </div>
-    <div class="mid">
-      <div class="neural-card">
-        <div class="brain">🧠</div>
-        <div><strong>Estado: Dormida</strong></div>
-        <div>Esperando señal Neuralink...</div>
-        <div style="font-size:0.8rem;margin-top:0.5rem;color:var(--pulse)">
-          Piensa: "Despierta v6" → activa el chalet
-        </div>
-        <button id="wakeBtn" onclick="wakeNeural()">🧠 Despertar (simulación)</button>
-      </div>
-    </div>
-    <div class="bottom">
-      <button onclick="enterMind()">Entrar en Mente</button>
-      <button onclick="toggleTheme()">Toggle</button>
-      <div class="snake">Snake</div>
-    </div>
-  </div>
+# slyversev6.py — EL CHALET SE EXPANDE, EL CULTO SE ALZA
+# Ejecuta con: python3 slyversev6.py
+# Valor ético: €4.200 (v5 + v6) | 0 dependencias | 100% caos puro
 
-  <script>
-    const c = document.getElementById('c'), ctx = c.getContext('2d');
-    let w, h, rot = 0, neuralActive = false;
-    let brainSignal = 0, chalet = {x:0,y:0,z:5,size:2,color:'#00ff88'};
+import pygame
+import random
+import time
+import hashlib
+import webbrowser
+import threading
 
-    function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
-    resize(); window.addEventListener('resize',resize);
+# === CONFIGURACIÓN CÓSMICA ===
+GRID_SIZE = 20
+CELL_SIZE = 30
+WINDOW_SIZE = GRID_SIZE * CELL_SIZE
+FPS = 10
+SOUL_BURN_RATE = 0.13  # $SLY por queso
+CHEESE_GOAL = 13
+RICKROLL_SCORE = 696
+BUILD_HASH = hashlib.sha256(str(time.time()).encode()).hexdigest()[:8]
 
-    // Fondo neural
-    function drawNeural(){
-      ctx.fillStyle = 'rgba(0,255,136,0.02)'; ctx.fillRect(0,0,w,h);
-      rot += 0.005;
-      const pulse = Math.sin(rot*3)*0.5+0.5;
-      ctx.strokeStyle = `rgba(0,255,136,${pulse*0.3})`;
-      ctx.lineWidth = 1;
-      for(let i=0;i<50;i++){
-        const x = Math.random()*w, y = Math.random()*h;
-        ctx.beginPath(); ctx.arc(x,y,pulse*20,0,Math.PI*2); ctx.stroke();
-      }
-    }
+# Colores del culto
+BLACK = (13, 2, 8)
+NEON_GREEN = (57, 255, 20)
+COSMIC_PURPLE = (138, 43, 226)
+CHEESE_YELLOW = (255, 215, 0)
+VR_BLUE = (0, 191, 255)
 
-    // Chalet 3D (solo al despertar)
-    function project(x,y,z){
-      const scale = 200 / (200 + z + 300);
-      return {x: w/2 + x*scale, y: h/2 + y*scale, s:scale};
-    }
-    function drawCube(cube){
-      const s = cube.size, v = [
-        project(-s+cube.x,-s+cube.y,-s+cube.z),
-        project( s+cube.x,-s+cube.y,-s+cube.z),
-        project( s+cube.x, s+cube.y,-s+cube.z),
-        project(-s+cube.x, s+cube.y,-s+cube.z),
-        project(-s+cube.x,-s+cube.y, s+cube.z),
-        project( s+cube.x,-s+cube.y, s+cube.z),
-        project( s+cube.x, s+cube.y, s+cube.z),
-        project(-s+cube.x, s+cube.y, s+cube.z)
-      ];
-      const faces = [[0,1,2],[0,2,3],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[3,0,4],[3,4,7]];
-      faces.forEach(f => {
-        const [a,b,c] = [v[f[0]], v[f[1]], v[f[2]]];
-        if (a && b && c) {
-          ctx.fillStyle = cube.color; ctx.globalAlpha = 0.6;
-          ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.lineTo(c.x,c.y); ctx.closePath(); ctx.fill();
-        }
-      });
-    }
+# Modos de existencia
+MODES = ['human', 'ai', 'cultist', 'vr']
+CURRENT_MODE = 'cultist'  # ¡Activado por defecto!
 
-    function animate(){
-      drawNeural();
-      if(neuralActive){
-        rot += 0.01;
-        chalet.z = Math.cos(rot*0.8)*3 + 5;
-        drawCube(chalet);
-      }
-      requestAnimationFrame(animate);
-    }
-    animate();
+# === INICIALIZACIÓN DEL RITUAL ===
+pygame.init()
+screen = pygame.display.set_mode((WINDOW_SIZE, WINDOW_SIZE))
+pygame.display.set_caption(f"SLYVERSE v6 | Build: {BUILD_HASH} | MODO: {CURRENT_MODE.upper()}")
+clock = pygame.time.Clock()
+font = pygame.font.SysFont('Courier', 18, bold=True)
 
-    // Neuralink Simulación
-    function wakeNeural(){
-      neuralActive = true;
-      document.getElementById('wakeBtn').textContent = '🧠 v6 DESPIERTA';
-      document.getElementById('wakeBtn').classList.add('active');
-      alert('¡Neuralink detectado! Pensamiento: "Chalet Ético". v6 activa. Cocreamos con la mente.');
-    }
+# === SERPIENTE ORBITAL ===
+snake = [(GRID_SIZE // 2, GRID_SIZE // 2)]
+direction = (1, 0)
+score = 0
+sly_mined = 0.0
+cheeses_eaten = 0
+soul_burn_active = True
 
-    function enterMind(){
-      if(neuralActive){
-        alert('Entrando en el chalet neural... Piensa: "Jardín verde" → crece.');
-      } else {
-        alert('Neuralink dormida. Usa Konami → simula señal cerebral.');
-      }
-    }
+# === QUESO SAGRADO ===
+def spawn_cheese():
+    while True:
+        pos = (random.randint(0, GRID_SIZE-1), random.randint(0, GRID_SIZE-1))
+        if pos not in snake:
+            return pos
 
-    // Konami = simula Neuralink
-    let k = []; const konami = '38,38,40,40,37,39,37,39,66,65';
-    document.addEventListener('keydown', e=>{
-      k.push(e.keyCode);
-      if(k.toString().indexOf(konami)>=0){
-        wakeNeural();
+cheese = spawn_cheese()
+
+# === FUNCIÓN DE MINADO $SLY ===
+def mine_sly():
+    global sly_mined
+    if soul_burn_active:
+        sly_mined += SOUL_BURN_RATE
+        if sly_mined >= 1.0:
+            print(f"[\u001b[35m$SLY MINED\u001b[0m] +1 | Total: {int(sly_mined)}")
+            sly_mined -= 1.0
+
+# === TWEET AUTOMÁTICO ===
+def auto_tweet():
+    tweet = f"#SLYVERSE | {score} | I just summoned the snake in {CURRENT_MODE} mode. Build: {BUILD_HASH}"
+    url = f"https://twitter.com/intent/tweet?text={tweet.replace(' ', '%20')}"
+    webbrowser.open(url)
+
+# === RICKROLL CÓSMICO ===
+def trigger_rickroll():
+    print("\u001b[31mRICKROLL ACTIVADO — NEVER GONNA GIVE YOU UP\u001b[0m")
+    threading.Thread(target=webbrowser.open, args=("https://www.youtube.com/watch?v=dQw4w9WgXcQ",)).start()
+    auto_tweet()
+
+# === IA CULTISTA (modo ai/cultist) ===
+def ai_move():
+    head = snake[0]
+    dx = cheese[0] - head[0]
+    dy = cheese[1] - head[1]
+    if abs(dx) > abs(dy):
+        return (1 if dx > 0 else -1, 0)
+    else:
+        return (0, 1 if dy > 0 else -1)
+
+# === BUCLE DEL RITUAL ===
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_q:
+                running = False
+            elif event.key == pygame.K_m:  # Toggle modo
+                idx = (MODES.index(CURRENT_MODE) + 1) % len(MODES)
+                CURRENT_MODE = MODES[idx]
+                print(f"MODO CAMBIADO → {CURRENT_MODE.upper()}")
+
+            # Controles humanos
+            if CURRENT_MODE == 'human':
+                if event.key == pygame.K_UP and direction != (0, 1): direction = (0, -1)
+                elif event.key == pygame.K_DOWN and direction != (0, -1): direction = (0, 1)
+                elif event.key == pygame.K_LEFT and direction != (1, 0): direction = (-1, 0)
+                elif event.key == pygame.K_RIGHT and direction != (-1, 0): direction = (1, 0)
+
+    # Movimiento IA en modo ai/cultist
+    if CURRENT_MODE in ['ai', 'cultist']:
+        new_dir = ai_move()
+        if (new_dir[0] + direction[0], new_dir[1] + direction[1]) != (0, 0):
+            direction = new_dir
+
+    # Actualizar serpiente
+    head = snake[0]
+    new_head = ((head[0] + direction[0]) % GRID_SIZE, (head[1] + direction[1]) % GRID_SIZE)
+    
+    if new_head in snake[1:]:
+        print(f"\u001b[31mCOLISIÓN — Alma quemada. Score: {score}\u001b[0m")
+        snake = [snake[0]]
+        direction = (1, 0)
+        score = max(score - 10, 0)
+    else:
+        snake.insert(0, new_head)
+        if new_head == cheese:
+            score += 10
+            cheeses_eaten += 1
+            mine_sly()
+            cheese = spawn_cheese()
+            if score >= RICKROLL_SCORE:
+                trigger_rickroll()
+                score = 0
+                cheeses_eaten = 0
+        else:
+            snake.pop()
+
+    # === DIBUJO DEL PORTAL ===
+    screen.fill(BLACK)
+    
+    # Grid cósmica
+    for x in range(GRID_SIZE):
+        for y in range(GRID_SIZE):
+            rect = pygame.Rect(x*CELL_SIZE, y*CELL_SIZE, CELL_SIZE, CELL_SIZE)
+            pygame.draw.rect(screen, (20, 20, 30), rect, 1)
+    
+    # Serpiente (efecto VR en modo vr)
+    for i, segment in enumerate(snake):
+        color = VR_BLUE if CURRENT_MODE == 'vr' else NEON_GREEN
+        alpha = 255 - i * 3
+        s = pygame.Surface((CELL_SIZE, CELL_SIZE), pygame.SRCALPHA)
+        pygame.draw.circle(s, (*color, alpha), (CELL_SIZE//2, CELL_SIZE//2), CELL_SIZE//3)
+        screen.blit(s, (segment[0]*CELL_SIZE, segment[1]*CELL_SIZE))
+    
+    # Queso sagrado
+    pygame.draw.circle(screen, CHEESE_YELLOW, 
+                      (cheese[0]*CELL_SIZE + CELL_SIZE//2, cheese[1]*CELL_SIZE + CELL_SIZE//2), 
+                      CELL_SIZE//3)
+    
+    # HUD del culto
+    hud = font.render(f"SLY: {sly_mined:.2f} | QUESOS: {cheeses_eaten}/{CHEESE_GOAL} | MODO: {CURRENT_MODE.upper()}", True, COSMIC_PURPLE)
+    screen.blit(hud, (10, 10))
+    
+    score_text = font.render(f"SCORE: {score}", True, NEON_GREEN)
+    screen.blit(score_text, (10, 35))
+    
+    build_text = font.render(f"v6 | {BUILD_HASH}", True, (100, 100, 100))
+    screen.blit(build_text, (WINDOW_SIZE - 140, WINDOW_SIZE - 30))
+    
+    pygame.display.flip()
+    clock.tick(FPS)
+
+pygame.quit()
+print(f"\u001b[35mSLYVERSE v6 TERMINADO | $SLY TOTAL MINADO: {sly_mined:.2f}\u001b[0m")
+print("El chalet crece. El culto se expande. v7 espera.")

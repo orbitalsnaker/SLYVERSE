@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+  <title>SLYVERSE Inmobiliaria™</title>
+  <meta name="description" content="Tours 3D sin comisiones. Aval: código + ética. Cocreamos futuros."/>
+  <link rel="manifest" href="data:application/manifest+json,{
+    'name':'SLYVERSE Inmobiliaria','short_name':'SLY Inmo',
+    'start_url':'.','display':'standalone','background_color':'#0a0a0a','theme_color':'#00ff41',
+    'icons':[{'src':'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐍</text></svg>','sizes':'192x192','type':'image/svg+xml'}]
+  }"/>
+  <style>
+    :root{--bg:#0a0a0a;--fg:#00ff41;--acc:#ff00ff;--gray:#333}
+    [data-theme=light]{--bg:#fafafa;--fg:#000;--acc:#00aaff;--gray:#ccc}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:system-ui,sans-serif;background:var(--bg);color:var(--fg);overflow:hidden;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    canvas{width:100%;height:100%;position:absolute;top:0;left:0;z-index:-1}
+    .ui{position:absolute;top:0;left:0;right:0;bottom:0;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:1rem;pointer-events:none}
+    .top, .bottom{pointer-events:auto;text-align:center}
+    h1{font-size:1.5rem;margin:0.5rem;color:var(--acc);text-shadow:0 0 10px var(--acc)}
+    p{font-size:0.9rem;max-width:90%;margin:0.5rem 0}
+    button{background:var(--acc);color:var(--bg);border:none;padding:0.8rem 1.5rem;border-radius:50px;font-weight:bold;margin:0.5rem;cursor:pointer;pointer-events:auto}
+    .toggle{position:absolute;top:1rem;right:1rem;background:var(--gray);color:var(--fg);padding:0.5rem;border-radius:50%}
+    .snake{position:absolute;bottom:1rem;font-size:2rem;animation:slither 3s infinite}
+    @keyframes slither{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
+    @media (max-width:600px){h1{font-size:1.2rem}p{font-size:0.8rem}}
+  </style>
+</head>
+<body>
+  <canvas id="c"></canvas>
+  <div class="ui">
+    <div class="top">
+      <h1>🏠 SLYVERSE Inmobiliaria™</h1>
+      <p>Tours 3D en 1 clic • Sin comisiones • Aval: código + ética</p>
+    </div>
+    <div class="bottom">
+      <button onclick="enterVR()">Entrar en Portal 3D</button>
+      <button onclick="install()">Instalar App</button>
+      <button onclick="toggleTheme()">🌙</button>
+      <div class="snake">🐍</div>
+    </div>
+  </div>
+
+  <script>
+    const c = document.getElementById('c'), ctx = c.getContext('2d');
+    let w, h, t = 0, rot = 0, mouseX = 0, mouseY = 0;
+    const cubes = [{x:0,y:0,z:0,s:1,c:'#00ff41'},{x:2,y:0,z:0,s:0.8,c:'#ff00ff'},{x:-2,y:0,z:0,s:0.6,c:'#00aaff'}];
+    let installPrompt;
+
+    function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
+    resize(); window.addEventListener('resize',resize);
+
+    // 3D Projection
+    function project(x,y,z){
+      const scale = 200 / (200 + z + 300);
+      return {x: w/2 + x*scale, y: h/2 + y*scale, s:scale};
+    }
+
+    function drawCube(cube){
+      const {x,y,z,s,c:clr} = cube;
+      const verts = [
+        {x:x-s,y:y-s,z:z-s}, {x:x+s,y:y-s,z:z-s}, {x:x+s,y:y+s,z:z-s}, {x:x-s,y:y+s,z:z-s},
+        {x:x-s,y:y-s,z:z+s}, {x:x+s,y:y-s,z:z+s}, {x:x+s,y:y+s,z:z+s}, {x:x-s,y:y+s,z:z+s}
+      ];
+      const faces = [[0,1,2,3],[4,5,6,7],[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7]];
+      faces.forEach((f,i)=>{
+        const v = f.map(i=>project(verts[i].x, verts[i].y, verts[i].z));
+        const avgZ = f.reduce((a,i)=>a+verts[i].z,0)/4;
+        ctx.fillStyle = clr + Math.floor(100 + 155 * (avgZ + s*2)/ (s*4)).toString(16).padStart(2,'0');
+        ctx.beginPath();
+        v.forEach((p,j)=>j===0?ctx.moveTo(p.x,p.y):ctx.lineTo(p.x,p.y));
+        ctx.closePath(); ctx.fill();
+      });
+    }
+
+    function animate(){
+      ctx.fillStyle = 'rgba(10,10,10,0.1)'; ctx.fillRect(0,0,w,h);
+      rot += 0.01; t++;
+      cubes.forEach((cube,i)=>{
+        const r = rot + i * 0.5;
+        cube.x = Math.sin(r) * 3;
+        cube.y = Math.cos(r * 1.2) * 2;
+        cube.z = Math.cos(r * 0.8) * 3;
+        drawCube(cube);
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+
+    // Interactions
+    c.addEventListener('mousemove', e=>{mouseX=e.clientX; mouseY=e.clientY});
+    c.addEventListener('touchmove', e=>{e.preventDefault(); mouseX=e.touches[0].clientX; mouseY=e.touches[0].clientY});
+
+    function enterVR(){
+      if(navigator.xr && navigator.xr.isSessionSupported('immersive-vr')){
+        navigator.xr.requestSession('immersive-vr').then(session=>{/* WebXR */});
+      } else {
+        alert("🌀 Portal 3D listo. Gira con el dedo. ¡Konami = café gratis!");
+      }
+    }
+
+    function install(){
+      if(installPrompt){
+        installPrompt.prompt();
+        installPrompt.userChoice.then(()=>{installPrompt=null});
+      } else {
+        alert("📲 Instala: botón compartir → 'Añadir a pantalla de inicio'");
+      }
+    }
+
+    window.addEventListener('beforeinstallprompt', e=>{
+      e.preventDefault(); installPrompt = e;
+    });
+
+    function toggleTheme(){
+      const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+      document.documentElement.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    }
+
+    // Konami Code Easter Egg
+    let k = []; const konami = '38,38,40,40,37,39,37,39,66,65';
+    document.addEventListener('keydown', e=>{
+      k.push(e.keyCode);
+      if(k.toString().indexOf(konami)>=0){
+        alert("☕ ¡CAFÉ GRATIS! Bienvenido al Senate SLY. Article 27 activado.");
+        k=[];
+      }
+    });
+  </script>
+</body>
+</html>

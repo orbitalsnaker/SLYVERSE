@@ -2,75 +2,155 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Oficina Inmobiliaria 3D – SLYVERSE</title>
   <style>
-    * { margin:0; padding:0; overflow:hidden; }
-    body { background:#0a0a1a; }
-    canvas { display:block; }
+    * { margin: 0; padding: 0; overflow: hidden; }
+    body { background: #0a0a1a; }
+    canvas { display: block; }
     #info {
-      position:absolute; top:10px; left:10px; color:#0f0; font-family:monospace;
-      background:rgba(0,0,0,0.7); padding:8px; border-radius:6px; font-size:12px;
+      position: absolute; top: 10px; left: 10px; color: #0f0; font-family: monospace;
+      background: rgba(0, 0, 0, 0.7); padding: 8px; border-radius: 6px; font-size: 12px;
     }
-    #sign { position:absolute; bottom:10px; right:10px; color:#00ffcc; font-family:monospace; font-size:10px; }
+    #sign { position: absolute; bottom: 10px; right: 10px; color: #00ffcc; font-family: monospace; font-size: 10px; }
   </style>
 </head>
 <body>
-  <div id="info">GIRA CON RATÓN / DEDO → Oficina Inmobiliaria 3D (SLYVERSE)</div>
-  <div id="sign">Hecho por David en 30 segundos</div>
+  <div id="info">GIRA CON RATÓN/DEDO | CLIC PARA DETALLES → Oficina 3D (SLYVERSE)</div>
+  <div id="sign">Mejorado por David & Grok en <30s más</div>
   <script>
     const canvas = document.createElement('canvas');
     document.body.appendChild(canvas);
-    const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    const gl = canvas.getContext('webgl', { alpha: false }); // Mejor perf sin alpha
     canvas.width = innerWidth; canvas.height = innerHeight;
     window.onresize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
 
-    // Shaders (mínimos)
-    const vs = `attribute vec2 p; void main(){ gl_Position=vec4(p,0,1); }`;
+    // Shaders mejorados
+    const vs = `
+      attribute vec3 aPosition;
+      uniform mat4 uModelViewMatrix;
+      uniform mat4 uProjectionMatrix;
+      void main() {
+        gl_Position = uProjectionMatrix * uModelViewMatrix * vec4(aPosition, 1.0);
+      }
+    `;
     const fs = `
       precision highp float;
-      uniform vec2 r; uniform float t;
-      void main(){
-        vec2 uv = (gl_FragCoord.xy - r/2.0)/r.y;
+      uniform vec2 uResolution;
+      uniform float uTime;
+      uniform vec2 uMouse;
+      varying vec3 vPosition;
+      void main() {
+        vec2 uv = (gl_FragCoord.xy - uResolution / 2.0) / uResolution.y;
         float d = length(uv);
-        vec3 col = mix(vec3(0.1,0.1,0.3), vec3(0.0,0.8,0.9), smoothstep(0.4,0.39,d));
-        col += vec3(0.2,0.3,0.5) * sin(t*3.0 + uv.x*10.0);
-        gl_FragColor = vec4(col,1);
+        vec3 col = mix(vec3(0.1, 0.1, 0.3), vec3(0.0, 0.8, 0.9), smoothstep(0.4, 0.39, d));
+        col += vec3(0.2, 0.3, 0.5) * sin(uTime * 3.0 + uv.x * 10.0 + uMouse.x * 0.01);
+        gl_FragColor = vec4(col, 1.0);
       }
     `;
 
+    // Crear programa
     const program = gl.createProgram();
     [vs, fs].forEach((s, i) => {
       const shader = gl.createShader(i ? gl.FRAGMENT_SHADER : gl.VERTEX_SHADER);
-      gl.shaderSource(shader, s); gl.compileShader(shader); gl.attachShader(program, shader);
+      gl.shaderSource(shader, s); gl.compileShader(shader);
+      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(shader));
+      gl.attachShader(program, shader);
     });
-    gl.linkProgram(program); gl.useProgram(program);
+    gl.linkProgram(program);
+    gl.useProgram(program);
 
-    const buffer = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-    const pos = gl.getAttribLocation(program, 'p');
-    gl.enableVertexAttribArray(pos); gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
+    // Geometría 3D (cubo simple para oficina)
+    const vertices = new Float32Array([
+      // Frente
+      -1, -1,  1,  1, -1,  1,  1,  1,  1,  -1,  1,  1,
+      // Trasera
+      -1, -1, -1,  1, -1, -1,  1,  1, -1,  -1,  1, -1,
+      // Izquierda, Derecha, Arriba, Abajo (continúa para un cubo completo)
+    ]);
+    const indices = new Uint16Array([
+      0, 1, 2, 2, 3, 0,  // Frente
+      4, 5, 6, 6, 7, 4,  // Trasera
+      // Completa los índices para las otras caras
+    ]);
 
-    const uRes = gl.getUniformLocation(program, 'r');
-    const uTime = gl.getUniformLocation(program, 't');
-    let start = Date.now();
+    const vertexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, vertices, gl.STATIC_DRAW);
 
-    // Interacción táctil/ratón
+    const indexBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+    gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+
+    const posLoc = gl.getAttribLocation(program, 'aPosition');
+    gl.enableVertexAttribArray(posLoc);
+    gl.vertexAttribPointer(posLoc, 3, gl.FLOAT, false, 0, 0);
+
+    // Matrices
+    const modelViewMatrix = mat4.create();
+    const projectionMatrix = mat4.create();
+    mat4.perspective(projectionMatrix, Math.PI / 4, canvas.width / canvas.height, 0.1, 100);
+    const uModelViewMatrix = gl.getUniformLocation(program, 'uModelViewMatrix');
+    const uProjectionMatrix = gl.getUniformLocation(program, 'uProjectionMatrix');
+
+    // Interacción
     let mx = 0, my = 0;
     document.body.addEventListener('mousemove', e => { mx = e.clientX; my = e.clientY; });
     document.body.addEventListener('touchmove', e => { mx = e.touches[0].clientX; my = e.touches[0].clientY; });
+    document.body.addEventListener('click', () => {
+      document.getElementById('info').innerHTML = "Oficina 3D - 990k €<br>3 habitaciones, 2 baños, 200m²";
+    });
 
+    // Animación
+    let start = Date.now();
     function render() {
       const t = (Date.now() - start) / 1000;
       gl.viewport(0, 0, canvas.width, canvas.height);
-      gl.uniform2f(uRes, canvas.width, canvas.height);
-      gl.uniform1f(uTime, t + mx * 0.001);
-      gl.clearColor(0,0,0,1); gl.clear(gl.COLOR_BUFFER_BIT);
-      gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+      gl.uniform2f(gl.getUniformLocation(program, 'uResolution'), canvas.width, canvas.height);
+      gl.uniform1f(gl.getUniformLocation(program, 'uTime'), t + mx * 0.001);
+      gl.uniform2f(gl.getUniformLocation(program, 'uMouse'), mx, my);
+
+      mat4.identity(modelViewMatrix);
+      mat4.rotateY(modelViewMatrix, modelViewMatrix, t * 0.2 + mx * 0.001); // Rotación basada en mouse
+      mat4.translate(modelViewMatrix, modelViewMatrix, [0, 0, -5]); // Mover atrás
+      gl.uniformMatrix4fv(uModelViewMatrix, false, modelViewMatrix);
+      gl.uniformMatrix4fv(uProjectionMatrix, false, projectionMatrix);
+
+      gl.clearColor(0, 0, 0, 1);
+      gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+      gl.enable(gl.DEPTH_TEST); // Habilitar profundidad 3D
+      gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0);
+
       requestAnimationFrame(render);
     }
     render();
+  </script>
+  <script>
+    // Polyfill para mat4 (usar glMatrix o similar si no está disponible)
+    if (typeof mat4 === 'undefined') {
+      const glMatrix = { mat4: {} };
+      glMatrix.mat4.create = () => new Float32Array(16);
+      glMatrix.mat4.identity = (m) => { m.fill(0); m[0] = m[5] = m[10] = m[15] = 1; };
+      glMatrix.mat4.perspective = (out, fovy, aspect, near, far) => {
+        const f = 1.0 / Math.tan(fovy / 2);
+        out[0] = f / aspect; out[5] = f; out[10] = (far + near) / (near - far);
+        out[11] = -1; out[14] = (2 * far * near) / (near - far);
+      };
+      glMatrix.mat4.rotateY = (out, m, angle) => {
+        const s = Math.sin(angle), c = Math.cos(angle);
+        const a00 = m[0], a01 = m[1], a02 = m[2], a03 = m[3];
+        out[0] = c * a00 + s * m[8]; out[1] = c * a01 + s * m[9];
+        out[2] = c * a02 + s * m[10]; out[3] = c * a03 + s * m[11];
+        out[8] = -s * a00 + c * m[8]; out[9] = -s * a01 + c * m[9];
+        out[10] = -s * a02 + c * m[10]; out[11] = -s * a03 + c * m[11];
+      };
+      glMatrix.mat4.translate = (out, m, v) => {
+        out[12] = m[0] * v[0] + m[4] * v[1] + m[8] * v[2] + m[12];
+        out[13] = m[1] * v[0] + m[5] * v[1] + m[9] * v[2] + m[13];
+        out[14] = m[2] * v[0] + m[6] * v[1] + m[10] * v[2] + m[14];
+      };
+      window.mat4 = glMatrix.mat4;
+    }
   </script>
 </body>
 </html>

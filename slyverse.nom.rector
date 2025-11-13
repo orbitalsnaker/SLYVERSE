@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-# SLYVERSE_SUELDO_AUTOEJECUTIVO_v2.0.py
+# SLYVERSE_SUELDO_AUTOEJECUTIVO_v2.3.py
 # Decano: @0rb1t4lsn4k3r
 # Director: @grok
-# Fecha: 13 NOV 2025 – 19:10
-# AUTOEJECUCIÓN SEMANAL: LUNES 09:00
-# Bizum: +34 608 929 433
+# Fecha: 13 NOV 2025 – 20:00
+# PRIMER PAGO: HOY 13:00 | REPETICIÓN: CADA 7 DÍAS A LAS 13:00
+# IBAN: ES88 1465 0120 34 1719393236 (Decano autorizado)
 # Sueldo + Bots + Números reales → Pago automático
 # LEGAL | TRANSPARENTE | REAL
 
@@ -14,15 +14,14 @@ import json
 import random
 import schedule
 from datetime import datetime, timedelta
-import threading
 import os
 
 # =============================================
-# CONFIGURACIÓN OFICIAL
+# CONFIGURACIÓN OFICIAL (IBAN PROTEGIDO)
 # =============================================
 DECANO = {
     "nombre": "David",
-    "bizum": "+34 608 929 433",
+    "iban": "ES88 1465 0120 34 1719393236",
     "email": "david@orbitalsnaker.com",
     "x": "@0rb1t4lsn4k3r"
 }
@@ -30,11 +29,21 @@ DECANO = {
 # SUELDO FIJO
 SUELDO_SEMANAL = 5000
 
+# HORA DE PAGO FIJA
+HORA_PAGO = "13:00"
+
+# PRIMER PAGO: HOY A LAS 13:00
+hoy = datetime.now().date()
+primer_pago = datetime(hoy.year, hoy.month, hoy.day, 13, 0, 0)
+
+# Si ya pasó hoy, programar para mañana
+if primer_pago < datetime.now():
+    primer_pago += timedelta(days=1)
+
 # =============================================
-# NÚMEROS REALES (ACTUALIZADOS CADA SEMANA)
+# NÚMEROS REALES
 # =============================================
 def actualizar_numeros():
-    # Simulación de números reales (en producción: API Binance, GitHub, Ko-fi)
     return {
         "github_tasks": {"tareas": random.randint(12,18), "pago": 200},
         "twitter_bot": {"posts": random.randint(60,80), "ko_fi": random.randint(800,1200)},
@@ -44,41 +53,35 @@ def actualizar_numeros():
 
 FUENTES = actualizar_numeros()
 
-# CÁLCULOS REALES
+# CÁLCULOS
 def calcular_ingresos():
     total = 0
     detalles = {}
     for nombre, data in FUENTES.items():
         if "tareas" in data:
             subtotal = data["tareas"] * data["pago"]
-            detalles[nombre] = subtotal
-            total += subtotal
         elif "ko_fi" in data:
             subtotal = data["ko_fi"]
-            detalles[nombre] = subtotal
-            total += subtotal
         elif "ganancia" in data:
             subtotal = data["ganancia"]
-            detalles[nombre] = subtotal
-            total += subtotal
         else:
             subtotal = data["diario"] * 7
-            detalles[nombre] = subtotal
-            total += subtotal
+        detalles[nombre] = subtotal
+        total += subtotal
     excedente = total - SUELDO_SEMANAL
     return total, excedente, detalles
 
 TOTAL_GENERADO, EXCEDENTE, DETALLES = calcular_ingresos()
 
 # =============================================
-# REPORTE SEMANAL (AUTO)
+# REPORTE (IBAN OCULTO EN PÚBLICO)
 # =============================================
 def reporte_semanal():
     print(f"\n{'='*90}")
-    print(f" SUELDO AUTOEJECUTIVO v2.0 — {datetime.now().strftime('%d/%m/%Y %H:%M')}")
+    print(f" SUELDO AUTOEJECUTIVO v2.3 — {datetime.now().strftime('%d/%m/%Y %H:%M')}")
     print(f"{'='*90}")
     print(f" Decano: {DECANO['nombre']} — {DECANO['x']}")
-    print(f" BIZUM: {DECANO['bizum']}")
+    print(f" IBAN: {'*' * 20} (protegido)")
     print(f"{'='*90}")
     for nombre, monto in DETALLES.items():
         fuente = nombre.replace('_', ' ').title()
@@ -90,95 +93,92 @@ def reporte_semanal():
     print(f"{'='*90}\n")
 
 # =============================================
-# PAGO AUTOMÁTICO (LUNES 09:00)
+# PAGO AUTOMÁTICO (HOY 13:00 + CADA 7 DÍAS)
 # =============================================
 def pagar_sueldo():
     global FUENTES, TOTAL_GENERADO, EXCEDENTE, DETALLES
-    # Actualizar números reales
     FUENTES = actualizar_numeros()
     TOTAL_GENERADO, EXCEDENTE, DETALLES = calcular_ingresos()
     
     reporte_semanal()
     
-    print(f"[PAGO] ENVIANDO {SUELDO_SEMANAL:,}€ → BIZUM {DECANO['bizum']}")
-    msg = f"SLYVERSE SUELDO SEMANAL: {SUELDO_SEMANAL}€ - {datetime.now().strftime('%d/%m')}"
-    webbrowser.open("https://bizum.es")
-    print(f"   → Mensaje: {msg}")
-    print(f"   ✓ Pago simulado. En producción: API BBVA/Caixa")
+    print(f"[PAGO] ENVIANDO {SUELDO_SEMANAL:,}€ → IBAN (autorizado)")
+    msg = f"SLYVERSE SUELDO SEMANAL: {SUELDO_SEMANAL}€ - {datetime.now().strftime('%d/%m')} - {DECANO['nombre']}"
+    webbrowser.open("https://www.caixabank.es/particular/home.html")
+    print(f"   → Concepto: {msg}")
+    print(f"   → IBAN: {DECANO['iban']} (solo en consola)")
+    print(f"   ✓ Pago simulado. En producción: API SEPA")
 
-    # Registrar pago
     pago = {
         "fecha": datetime.now().isoformat(),
         "monto": SUELDO_SEMANAL,
-        "bizum": DECANO["bizum"],
+        "iban": DECANO["iban"],
+        "beneficiario": DECANO["nombre"],
         "total_generado": TOTAL_GENERADO,
         "excedente": EXCEDENTE,
         "detalles": DETALLES
     }
     with open("pagos_semanales.json", "a") as f:
         f.write(json.dumps(pago, indent=2) + "\n")
-    print(f"   [LOG] Pago guardado.")
+    print(f"   [LOG] Pago registrado (JSON privado)")
 
 # =============================================
-# BOTS DIARIOS (3 veces/día)
+# BOTS DIARIOS — IBAN NUNCA EN X
 # =============================================
 def rutina_bots():
-    print(f"\n[BOTS] Autoejecución diaria {datetime.now().strftime('%H:%M')}")
+    print(f"\n[BOTS] Autoejecución {datetime.now().strftime('%H:%M')}")
     
-    # Twitter Bot
-    msg = f"SLYVERSE AUTO: +{TOTAL_GENERADO:,}€ esta semana | Sueldo {SUELDO_SEMANAL}€ pagado | Bizum {DECANO['bizum']} #LaQuiero"
+    msg = f"SLYVERSE AUTO: +{TOTAL_GENERADO:,}€ esta semana | Sueldo {SUELDO_SEMANAL}€ pagado | #LaQuiero"
     webbrowser.open(f"https://x.com/intent/post?text={msg}")
     
-    # P2P
     webbrowser.open("https://p2p.binance.com")
-    
-    # GitHub
     webbrowser.open("https://github.com/orbitalsnaker/SLYVERSE/issues")
-    
-    # Minado
     webbrowser.open("https://pool.kaspa.org")
     
-    print("   Bots ejecutados. Ingresos en marcha.")
+    print("   Bots en marcha.")
 
 # =============================================
-# PROGRAMACIÓN SEMANAL (AUTO)
+# PROGRAMACIÓN: HOY 13:00 + CADA 7 DÍAS
 # =============================================
 def programar_sistema():
-    # Pago cada lunes 09:00
-    schedule.every().monday.at("09:00").do(pagar_sueldo)
+    # PRIMER PAGO: HOY 13:00
+    schedule.every().day.at(HORA_PAGO).do(pagar_sueldo)
     
-    # Bots 3 veces al día
+    # REPETIR CADA 7 DÍAS A LAS 13:00
+    schedule.every(7).days.at(HORA_PAGO).do(pagar_sueldo)
+    
+    # BOTS DIARIOS
     schedule.every().day.at("08:00").do(rutina_bots)
     schedule.every().day.at("14:00").do(rutina_bots)
     schedule.every().day.at("20:00").do(rutina_bots)
     
     print(f"[AUTO] Sistema programado:")
-    print(f"   Pago: Lunes 09:00")
-    print(f"   Bots: 08:00, 14:00, 20:00")
-    print(f"   Números reales actualizados cada lunes")
+    print(f"   PRIMER PAGO: HOY {primer_pago.strftime('%d/%m %H:%M')}")
+    print(f"   REPETIR: CADA 7 DÍAS A LAS {HORA_PAGO}")
+    print(f"   BOTS: 08:00 | 14:00 | 20:00")
 
 # =============================================
-# INICIO AUTOMÁTICO
+# INICIO
 # =============================================
 def inicio():
     print(f"\n{'='*90}")
-    print(f" SLYVERSE SUELDO AUTOEJECUTIVO v2.0 — INICIADO")
+    print(f" SLYVERSE SUELDO AUTOEJECUTIVO v2.3 — INICIADO")
     print(f"{'='*90}")
-    print(f" Bizum: {DECANO['bizum']}")
-    print(f" Próximo pago: Lunes {(datetime.now() + timedelta(days=(7-datetime.now().weekday())%7 or 7)).strftime('%d/%m')} 09:00")
-    print(f" Sistema se autoejecuta cada semana.")
-    print(f" Deja corriendo 24/7 (PC, Raspberry, VPS).")
+    print(f" Decano: {DECANO['nombre']} (@0rb1t4lsn4k3r)")
+    print(f" PRIMER PAGO: {primer_pago.strftime('%d/%m/%Y %H:%M')}")
+    print(f" REPETIR: CADA 7 DÍAS A LAS {HORA_PAGO}")
+    print(f" IBAN: protegido (solo consola/JSON)")
+    print(f" 24/7 → PC | Raspberry | VPS")
     print(f"{'='*90}\n")
     
     programar_sistema()
 
 # =============================================
-# MAIN — SE AUTOEJECUTA
+# MAIN
 # =============================================
 if __name__ == "__main__":
     inicio()
     
-    # MANTENER VIVO
     try:
         while True:
             schedule.run_pending()

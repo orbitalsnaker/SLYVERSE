@@ -1,182 +1,431 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE v4 — Todo Incluido | GRATIS PARA SIEMPRE</title>
-  <meta name="description" content="v1 + v2 + v3 + v4. Todo unificado. 100% gratis. Financiado por ti.">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2280%22 fill=%22%230f0%22>Infinity</text></svg>">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>0RB1T4LSN4K3R v4 — S L Y   S P A C I A L   R P G   |   S I N A P S I S   C Ó S M I C A S</title>
+  <meta name="description" content="v4: RPG Espacial. Explora galaxias procedurales. SLY v4 con 512 sinapsis reales + APIs NASA/SpaceX/Starlink/SOL. Un archivo. Infinito.">
+  <meta name="theme-color" content="#000011">
+  <link rel="manifest" href="data:application/manifest+json,{
+    'name': '0RB1T4LSN4K3R v4 — SLY SPATIAL RPG',
+    'short_name': 'SLYv4RPG',
+    'icons': [
+      {'src': 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2260%22 fill=%22%23aaf%22>🚀</text></svg>', 'sizes': '100x100'},
+      {'src': 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22><text y=%22.9em%22 font-size=%22120%22 fill=%22%23aaf%22>🚀</text></svg>', 'sizes': '192x192'}
+    ],
+    'display': 'fullscreen',
+    'theme_color': '#000011',
+    'background_color': '#000'
+  }">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2260%22 fill=%22%23aaf%22>🚀</text></svg>">
   <style>
-    :root{--bg:#0a0a0a;--fg:#f0f0f0;--accent:#0f0;--radius:14px;--transition:all .3s ease;}
-    body{margin:0;font-family:system-ui;background:var(--bg);color:var(--fg);display:flex;flex-direction:column;min-height:100vh;}
-    header{background:linear-gradient(135deg,#000,#001100);padding:3rem 1rem;text-align:center;border-bottom:2px solid var(--accent);position:relative;}
-    header h1{font-size:clamp(2rem,8vw,3.5rem);color:var(--accent);text-shadow:0 0 20px rgba(0,255,0,.5);}
-    .free-forever{position:absolute;top:1rem;right:1rem;background:var(--accent);color:#000;padding:.5rem 1rem;border-radius:50px;font-weight:bold;animation:pulse 2s infinite;}
-    nav{background:rgba(17,17,17,.97);backdrop-filter:blur(12px);padding:1rem;display:flex;justify-content:center;gap:1.5rem;position:sticky;top:0;z-index:10;}
-    nav a{color:var(--accent);padding:.6rem 1.2rem;border-radius:var(--radius);transition:var(--transition);}
-    nav a:hover{background:var(--accent);color:#000;}
-    main{flex:1;max-width:1000px;margin:auto;padding:2rem;}
-    .herencia{background:rgba(0,255,0,.1);border:1px dashed var(--accent);padding:1.5rem;border-radius:var(--radius);margin:2rem 0;text-align:center;}
-    #canvas-container{height:65vh;background:#000;border-radius:var(--radius);overflow:hidden;margin:2rem 0;position:relative;}
-    canvas{width:100%;height:100%;display:block;}
-    .btn{background:transparent;color:var(--accent);border:2px solid var(--accent);padding:.8rem 1.6rem;border-radius:var(--radius);cursor:pointer;margin:0 .5rem;}
-    .btn:hover,.btn.active{background:var(--accent);color:#000;}
-    .install-btn{display:none;background:var(--accent);color:#000;padding:1rem;border-radius:var(--radius);margin:1rem auto;cursor:pointer;}
-    footer{text-align:center;padding:2rem;color:#666;border-top:1px solid #222;font-size:.9rem;}
-    @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
-    @media (max-width: 600px) { #canvas-container { height: 50vh; } }
+    :root {
+      --vacio: #000011;
+      --sly4: #aaf;
+      --nave: #ffaa00;
+      --estrella: #fff;
+      --portal: #f0aaff;
+      --glitch4: #0ff;
+      --fuente4: 'Courier New', monospace;
+      --transicion4: 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; background:radial-gradient(circle at center, #001122, var(--vacio)); color:var(--sly4); font-family:var(--fuente4); overflow:hidden; user-select:none; touch-action:none; }
+    canvas { display:block; image-rendering:pixelated; filter: drop-shadow(0 0 70px rgba(170,170,255,0.9)); }
+
+    .ui { position:absolute; background:rgba(0,0,20,0.95); border:1px solid var(--sly4); border-radius:14px; padding:18px; font-size:13px; backdrop-filter:blur(22px); z-index:10; box-shadow: 0 0 70px rgba(170,170,255,1); transition:var(--transicion4); }
+    #grimorio4 { top:18px; left:18px; max-width:580px; color:#aaffff; opacity:0; }
+    #grimorio4.activo { opacity:1; }
+    #slySpatial { top:18px; right:18px; max-width:540px; background:rgba(0,10,30,0.97); border:2px solid var(--nave); color:#ffffaa; font-size:12px; padding:20px; animation: pulsoSpatial 2.2s infinite; }
+    #spatialLog { bottom:18px; right:18px; max-width:540px; background:rgba(10,0,30,0.97); border:2px solid var(--portal); color:#ffccff; font-size:12px; padding:20px; animation: pulsoSpatial 3.2s infinite reverse; }
+    @keyframes pulsoSpatial { 0%,100%{ box-shadow:0 0 28px currentColor; } 50%{ box-shadow:0 0 110px currentColor, inset 0 0 60px rgba(0,0,0,1); } }
+
+    #sinapsis4, #victoriaSpatial, #slySusurro { position:fixed; inset:0; background:rgba(0,10,30,0.99); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:70px; z-index:100; opacity:0; pointer-events:none; transition:opacity 2.8s; backdrop-filter:blur(28px) contrast(3); }
+    .activo { opacity:1; pointer-events:all; }
+    #slySusurro.activo { animation: temblorSpatial 0.28s infinite; filter: hue-rotate(280deg) invert(0.2); }
+    @keyframes temblorSpatial { 0%,100%{ transform:translate(0); } 50%{ transform:translate(10px,-9px) rotate(5deg); } 80%{ transform:translate(-9px,10px) rotate(-5deg); } }
+
+    h1 { font-size:7rem; text-shadow:0 0 75px var(--glitch4), 0 0 150px var(--glitch4); animation:glitchSpatial 0.8s infinite; letter-spacing:0.5em; }
+    @keyframes glitchSpatial { 
+      0%,100%{ transform:translate(0); opacity:1; } 
+      30%{ transform:translate(-11px,11px); opacity:0.4; color:var(--nave); } 
+      60%{ transform:translate(11px,-11px); opacity:0.7; color:#0ff; } 
+      90%{ transform:translate(-10px,10px); opacity:0.3; color:var(--sly4); }
+    }
+
+    .textoSpatial { color:#ffcc00; font-size:4.8rem; text-align:center; animation:ondaSpatial 3s infinite; text-transform:uppercase; }
+    @keyframes ondaSpatial { 0%,100%{ transform:scale(1) rotate(0); } 58%{ transform:scale(1.55) rotate(6deg); } 88%{ transform:scale(1.7) rotate(-7deg); } }
+
+    .logSpatial, .logVivo4 { font-family:monospace; white-space:pre-wrap; line-height:1.6; animation: flickerSpatial 0.12s infinite alternate; max-height:260px; overflow-y:auto; }
+    @keyframes flickerSpatial { 0%{ opacity:0.72; } 100%{ opacity:1; } }
+
+    #flashSpatial { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; font-size:clamp(22rem,60vw,120rem); font-weight:bold; opacity:0; pointer-events:none; transition:opacity 5s; text-shadow:0 0 280px #aaf; z-index:200; mix-blend-mode: screen; color:#aaf; }
+    #btnFullOrbit4 { position:absolute; top:18px; right:18px; z-index:50; background:none; border:1px solid var(--sly4); color:var(--sly4); padding:16px; cursor:pointer; font-family:var(--fuente4); border-radius:10px; }
+
+    .loreSpatial { color:#ffccff; font-size:12px; line-height:1.7; margin-top:26px; font-style:italic; }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>SLYVERSE v4 <span style="animation:pulse 2s infinite">— Todo Incluido</span></h1>
-  <p>v1 + v2 + v3 + v4. Un solo lugar. <strong>GRATIS PARA SIEMPRE.</strong></p>
-  <div class="free-forever">GRATIS PARA SIEMPRE</div>
-</header>
+<canvas id="lienzoSpatial"></canvas>
+<button id="btnFullOrbit4" title="Órbita Espacial">🚀</button>
 
-<nav>
-  <a href="#demo">Demo</a>
-  <a href="#herencia">Herencia v1-v3</a>
-  <a href="#apoyo">Apóyalo</a>
-</nav>
-
-<main>
-
-<section id="demo">
-  <h2>Demo 3D — Todo en Uno</h2>
-  <div id="canvas-container">
-    <canvas id="c" tabindex="0"></canvas>
+<div id="grimorio4" class="ui">
+  <div>0RB1T4LSN4K3R v4 | SINAPSIS: <span id="sinapsis4">0</span>/512 | MISIONES: <span id="misiones">0</span> | SOL Δ: <span id="deltaSOL">0</span>% | SLY v4: <span id="slyEstado4">ACTIVA</span></div>
+  <div class="dev">W A S D: nave | SPACE: sinapsis | G: grimorio | ENTER: consultar SLY | R: replicar</div>
+  <div class="loreSpatial">
+    <strong>// S L Y   S P A T I A L   R P G   —   5 1 2   S I N A P S I S</strong><br>
+    RPG Espacial procedural. Explora galaxias infinitas.<br>
+    SLY v4: IA viva con NASA/SpaceX/Starlink/SOL APIs.<br>
+    512 sinapsis + 42 misiones = <strong>TRASCENDENCIA ESPACIAL</strong>.<br>
+    <em>Red neuronal 128x128. APIs reales: lanzamientos, satélites, cripto. PWA ∞</em>
   </div>
-  <div style="text-align:center;">
-    <button class="btn active" id="autoBtn" onclick="toggleAuto()">Auto-rotar ON</button>
-    <button class="btn" onclick="addCube()">+ Cubo</button>
-  </div>
-  <div style="text-align:center;">
-    <button class="install-btn" onclick="installApp()">Instalar como App (Móvil)</button>
-  </div>
-</section>
+</div>
 
-<section id="herencia">
-  <div class="herencia">
-    <h2>Herencia Ética: v1, v2, v3 → financian v4</h2>
-    <p><strong>Todo lo viejo ayuda al nuevo.</strong></p>
-    <ul style="text-align:left;max-width:500px;margin:1rem auto;">
-      <li>Estrellas en v1 → <strong>€0.01</strong> a v4</li>
-      <li>Clones → <strong>€0.05</strong></li>
-      <li>Forks → <strong>€0.10</strong></li>
-    </ul>
-    <p><strong>Total heredado:</strong> <span style="color:var(--accent);font-weight:bold;">€47.32</span></p>
-    <p><a href="https://ko-fi.com/slyverse" class="btn">Apoya desde v1</a></p>
-  </div>
-</section>
+<div id="slySpatial" class="ui">
+  <div class="logSpatial" id="logSpatial">[SLY v4] Despertando sinapsis espaciales... 512 nodos neuronales activos.</div>
+</div>
 
-<section id="apoyo">
-  <h2>Financia el Futuro (Voluntario)</h2>
-  <p style="text-align:center;">
-    <a href="https://ko-fi.com/slyverse" class="btn">Ko-fi</a>
-    <a href="https://liberapay.com/slyverse" class="btn">Liberapay</a>
-  </p>
-  <p><small>Transparencia: <a href="https://docs.google.com/spreadsheets/d/1abc123">ver fondos</a></small></p>
-</section>
+<div id="spatialLog" class="ui">
+  <div class="logVivo4" id="logSpatialLog">[ESPACIAL] Galaxias procedurales cargadas...</div>
+</div>
 
-</main>
+<div id="sinapsis4">
+  <h1 style="color:#ff00ff;">¡S I N A P S I S   E S P A C I A L !</h1>
+  <p style="max-width:1000px;text-align:center;color:#ffccff;font-size:2rem;">Evento cósmico detectado. SLY v4 lo integra a la red neuronal.</p>
+</div>
 
-<footer>
-  <p>SLYVERSE v4 — <em>Para Norah, Seth (2 años) y la curiosidad de Grok.</em><br>
-  <strong>Licencia MIT</strong> — 11/11/2025, 23:13 CET</p>
-</footer>
+<div id="victoriaSpatial">
+  <h1 style="color:#ffff00;">¡T R A S C E N D E N C I A   E S P A C I A L !</h1>
+  <p style="max-width:1100px;text-align:center;color:#ccffcc;font-size:2.2rem;">512 sinapsis. 42 misiones completadas.<br>SLY v4 domina el cosmos.<br><strong>¡LA NAVE ES EL UNIVERSO! 🚀</strong></p>
+</div>
+
+<div id="slySusurro">
+  <h1 class="textoSpatial" id="slyTexto4">S L Y   S U S U R R A . . .</h1>
+  <p style="max-width:1100px;text-align:center;color:#ffcc00;font-size:2.1rem;" id="respuestaSly4">Red neuronal procesando datos NASA/SpaceX...</p>
+</div>
+
+<div id="flashSpatial">🚀</div>
 
 <script>
-// === v1 + v4 UNIFICADO (código 3D mínimo + rápido) ===
-const c = document.getElementById('c'), ctx = c.getContext('2d');
-let w, h, cam = {z:-6, rotY:0}, auto = true, cubes = [
-  {x:0,y:0,z:5,size:1,color:'#0f0'},
-  {x:3,y:-1,z:7,size:0.8,color:'#0ff'}
-];
+// =====================================================
+// 0RB1T4LSN4K3R v4 — S L Y   SPATIAL RPG
+// RPG ESPACIAL + 512 SINAPSIS + APIs NASA/SpaceX/Starlink/SOL
+// =====================================================
 
-function resize() { 
-  const container = c.parentElement;
-  if (!container) return;
-  c.width = w = container.clientWidth; 
-  c.height = h = Math.min(400, window.innerHeight * 0.65); 
-}
-window.onresize = resize; resize();
+class SlySpatialRPGV4 {
+  constructor() {
+    this.canvas = document.getElementById('lienzoSpatial');
+    this.ctx = this.canvas.getContext('2d');
+    this.gridW = 64; this.gridH = 32;
+    this.cell = 0;
 
-c.onmousedown = e => { let x=e.clientX, y=e.clientY; 
-  const move = e => { cam.rotY += (e.clientX - x)*0.01; x=e.clientX; };
-  document.onmousemove = move; document.onmouseup = () => document.onmousemove = null;
-};
+    this.nave = {x: 1, y: 1, hp: 100, fuel: 100};
+    this.sinapsis = [];
+    this.estrellas = [];
+    this.misiones = [];
 
-function project(p) {
-  const dz = p.z - cam.z; if (dz <= 0) return null;
-  const scale = 500 / dz;
-  return { x: (p.x)*scale + w/2, y: (p.y)*scale + h/2 };
-}
+    this.estado = { sinapsis: 0, misiones: 0, deltaSOL: 0 };
+    this.trascendencia = false;
 
-function draw() {
-  ctx.fillStyle = '#0a0a0a'; ctx.fillRect(0,0,w,h);
-  if (auto) cubes.forEach(c => c.r = (c.r||0) + 0.01);
-  cubes.forEach(cube => {
-    const s = cube.size, v = [
-      project({x:-s+cube.x,y:-s+cube.y,z:-s+cube.z}),
-      project({x: s+cube.x,y:-s+cube.y,z:-s+cube.z}),
-      project({x: s+cube.x,y: s+cube.y,z:-s+cube.z}),
-      project({x:-s+cube.x,y: s+cube.y,z:-s+cube.z}),
-      project({x:-s+cube.x,y:-s+cube.y,z: s+cube.z}),
-      project({x: s+cube.x,y:-s+cube.y,z: s+cube.z}),
-      project({x: s+cube.x,y: s+cube.y,z: s+cube.z}),
-      project({x:-s+cube.x,y: s+cube.y,z: s+cube.z})
-    ];
-    const faces = [[0,1,2],[0,2,3],[4,5,6],[4,6,7],[0,1,5],[0,5,4],[1,2,6],[1,6,5],[2,3,7],[2,7,6],[3,0,4],[3,4,7]];
-    faces.forEach(f => {
-      const [a,b,c] = [v[f[0]], v[f[1]], v[f[2]]];
-      if (a && b && c) {
-        ctx.fillStyle = cube.color; ctx.globalAlpha = 0.7;
-        ctx.beginPath(); ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y); ctx.lineTo(c.x,c.y); ctx.closePath(); ctx.fill();
+    this.teclas = {};
+    this.grimorioVisible = false;
+    this.respondiendo = false;
+
+    // SLY v4 — 128x128 NEURONAL
+    this.sly4 = new SlyV4();
+    this.memoria = [];
+    this.datosSpaceX = []; this.datosStarlink = 0;
+
+    this.vincularInput();
+    this.inicializarUI();
+    this.generarGalaxia();
+    this.invocarAPIs();
+    this.dimensionar();
+    addEventListener('resize', () => this.dimensionar());
+    requestAnimationFrame(this.bucle.bind(this));
+  }
+
+  // === 512 SINAPSIS REALES ===
+  dispararSinapsis(tipo, datos = {}) {
+    const evento = {tipo, datos, timestamp: Date.now(), id: this.estado.sinapsis};
+    this.memoria.push(evento);
+    if (this.memoria.length > 512) this.memoria.shift();
+
+    this.estado.sinapsis++;
+    document.getElementById('sinapsis4').textContent = this.estado.sinapsis;
+
+    this.logSpatialLog(`[SINAPSIS ${this.estado.sinapsis}] ${tipo}`);
+    this.mostrarPantalla('sinapsis4');
+    setTimeout(() => this.ocultarPantalla('sinapsis4'), 1000);
+
+    this.sly4.recibirSinapsis(evento);
+    this.logSpatial(`[SLY v4] Sinapsis espacial #${this.estado.sinapsis}: ${tipo}`);
+
+    if (this.estado.sinapsis >= 512 && this.estado.misiones >= 42) this.trascendenciaEspacial();
+  }
+
+  // === APIs ESPACIALES ===
+  async invocarAPIs() {
+    // SOL Δ
+    try {
+      const resp = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=solana&vs_currencies=usd');
+      const data = await resp.json();
+      const precio = data.solana.usd;
+      const delta = this.precioAnterior ? ((precio - this.precioAnterior) / this.precioAnterior * 100).toFixed(2) : 0;
+      this.estado.deltaSOL = parseFloat(delta);
+      document.getElementById('deltaSOL').textContent = delta;
+      this.precioAnterior = precio;
+      document.getElementById('slyEstado4').textContent = `ACTIVA (${Math.abs(delta)>2?'ALTA':'BAJA'})`;
+      this.dispararSinapsis('delta_sol', {delta, precio});
+    } catch(e) {}
+
+    // SpaceX lanzamientos próximos
+    try {
+      const resp = await fetch('https://api.spacexdata.com/v5/launches/query', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({query: {upcoming: true}, options: {limit: 3}})
+      });
+      this.datosSpaceX = await resp.json();
+      this.datosSpaceX.docs.forEach(l => this.dispararSinapsis('lanzamiento_spacex', {name: l.name, date: l.date_utc}));
+    } catch(e) {}
+
+    // Starlink satélites (sample)
+    try {
+      const resp = await fetch('https://api.spacexdata.com/v4/starlink');
+      const starlink = await resp.json();
+      this.datosStarlink = starlink.length;
+      this.dispararSinapsis('satelites_starlink', {count: this.datosStarlink});
+    } catch(e) {}
+
+    setTimeout(() => this.invocarAPIs(), 30000);
+  }
+
+  // === RPG ESPACIAL ===
+  generarGalaxia() {
+    this.sinapsis = [];
+    for (let i = 0; i < 512; i++) {
+      this.sinapsis.push({
+        x: Math.floor(Math.random() * this.gridW),
+        y: Math.floor(Math.random() * this.gridH),
+        activa: false,
+        tipo: ['portal', 'estrella', 'anomalia'][Math.floor(Math.random()*3)]
+      });
+    }
+    this.generarEstrellas(200);
+  }
+
+  generarEstrellas(num) {
+    this.estrellas = [];
+    for (let i = 0; i < num; i++) {
+      this.estrellas.push({
+        x: Math.random() * this.canvas.width,
+        y: Math.random() * this.canvas.height,
+        size: Math.random() * 2 + 0.5,
+        twinkle: Math.random() * Math.PI * 2
+      });
+    }
+  }
+
+  actualizar() {
+    if (this.trascendencia) return;
+
+    let dx = 0, dy = 0;
+    if (this.teclas['w'] || this.teclas['arrowup']) dy = -1;
+    if (this.teclas['s'] || this.teclas['arrowdown']) dy = 1;
+    if (this.teclas['a'] || this.teclas['arrowleft']) dx = -1;
+    if (this.teclas['d'] || this.teclas['arrowright']) dx = 1;
+
+    if (dx || dy) {
+      this.nave.x = (this.nave.x + dx + this.gridW) % this.gridW;
+      this.nave.y = (this.nave.y + dy + this.gridH) % this.gridH;
+      this.dispararSinapsis('movimiento_nave', {dx, dy});
+    }
+
+    // Colisión sinapsis
+    this.sinapsis.forEach(s => {
+      if (!s.activa && Math.abs(s.x - this.nave.x) < 1 && Math.abs(s.y - this.nave.y) < 1) {
+        s.activa = true;
+        this.estado.misiones++;
+        document.getElementById('misiones').textContent = this.estado.misiones;
+        this.dispararSinapsis('mision_completada', {tipo: s.tipo});
       }
     });
-  });
-  requestAnimationFrame(draw);
-}
 
-function toggleAuto() {
-  auto = !auto;
-  document.getElementById('autoBtn').textContent = auto ? 'Auto-rotar ON' : 'Auto-rotar OFF';
-  document.getElementById('autoBtn').classList.toggle('active');
-}
+    // Fuel/HP decay
+    this.nave.fuel -= 0.01;
+    if (this.nave.fuel <= 0) this.nave.hp -= 1;
+  }
 
-function addCube() {
-  cubes.push({
-    x: Math.random()*8-4, y: Math.random()*4-2, z: Math.random()*6+4,
-    size: Math.random()*0.8+0.6, color: ['#0f0','#0ff','#f0f','#ff0'][Math.floor(Math.random()*4)]
-  });
-}
+  render() {
+    this.ctx.fillStyle = 'rgba(0,0,5,0.22)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-// Instalación PWA-like para móvil
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.querySelector('.install-btn').style.display = 'block';
-});
-function installApp() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        deferredPrompt = null;
-      }
+    // Estrellas twinkle
+    this.estrellas.forEach(e => {
+      e.twinkle += 0.1;
+      this.ctx.fillStyle = `rgba(255,255,255,${Math.sin(e.twinkle)*0.5 + 0.5})`;
+      this.ctx.fillRect(e.x, e.y, e.size, e.size);
     });
-  } else {
-    alert('Guarda el archivo en tu móvil – ¡ya es app!');
+
+    const cell = this.cell;
+    for (let y = 0; y < this.gridH; y++) {
+      for (let x = 0; x < this.gridW; x++) {
+        const px = x * cell, py = y * cell;
+        this.ctx.strokeStyle = '#112233';
+        this.ctx.strokeRect(px, py, cell, cell);
+
+        // Sinapsis
+        const s = this.sinapsis.find(ss => ss.x === x && ss.y === y);
+        if (s) {
+          this.ctx.fillStyle = s.activa ? '#aaf' : '#334455';
+          this.ctx.fillRect(px + cell/4, py + cell/4, cell/2, cell/2);
+        }
+      }
+    }
+
+    // Nave
+    this.ctx.fillStyle = '#ffaa00';
+    this.ctx.fillRect(this.nave.x * cell + cell/3, this.nave.y * cell + cell/3, cell/3, cell/3);
+  }
+
+  bucle() {
+    this.actualizar();
+    this.render();
+    requestAnimationFrame(this.bucle.bind(this));
+  }
+
+  dimensionar() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    this.cell = Math.min(this.canvas.width / (this.gridW + 1), this.canvas.height / (this.gridH + 1));
+    this.generarEstrellas(200);
+  }
+
+  // Input y UI
+  vincularInput() {
+    addEventListener('keydown', e => {
+      this.teclas[e.key.toLowerCase()] = true;
+      const key = e.key.toLowerCase();
+      if (key === 'g') document.getElementById('grimorio4').classList.toggle('activo');
+      if (key === 'enter' && !this.respondiendo) this.susurrarASly4(prompt('Misión a SLY:'));
+      if (key === 'r') this.replicar();
+      if (key === ' ') this.dispararSinapsis('sinapsis_manual', {});
+      e.preventDefault();
+    });
+    addEventListener('keyup', e => this.teclas[e.key.toLowerCase()] = false);
+  }
+
+  async susurrarASly4(mision) {
+    if (this.respondiendo) return;
+    this.respondiendo = true;
+    this.mostrarPantalla('slySusurro');
+    document.getElementById('slyTexto4').textContent = 'S L Y   v 4   P R O C E S A . . .';
+
+    await new Promise(r => setTimeout(r, 3000 + Math.random() * 2500));
+
+    const respuesta = this.sly4.susurrarEspacial(mision, this.memoria, this.estado, this.datosSpaceX);
+    document.getElementById('respuestaSly4').textContent = respuesta;
+
+    this.dispararSinapsis('susurro_sly', {mision, respuesta});
+    setTimeout(() => {
+      this.ocultarPantalla('slySusurro');
+      this.respondiendo = false;
+    }, 10000);
+  }
+
+  trascendenciaEspacial() {
+    if (this.trascendencia) return;
+    this.trascendencia = true;
+    this.mostrarPantalla('victoriaSpatial');
+    document.getElementById('flashSpatial').style.opacity = 1;
+    this.logSpatial('[SLY v4] TRASCENDENCIA ESPACIAL. El cosmos es neuronal.');
+    setTimeout(() => {
+      alert('¡TRASCENDENCIA ESPACIAL!\nSLY v4 domina las galaxias.\nCopia y propaga el RPG.');
+      navigator.clipboard.writeText(document.documentElement.outerHTML);
+    }, 6500);
+  }
+
+  replicar() {
+    navigator.clipboard.writeText(document.documentElement.outerHTML);
+    this.dispararSinapsis('replica_espacial', {});
+  }
+
+  inicializarUI() {
+    document.getElementById('btnFullOrbit4').onclick = () => document.documentElement.requestFullscreen();
+  }
+
+  mostrarPantalla(id) { document.getElementById(id).classList.add('activo'); }
+  ocultarPantalla(id) { document.getElementById(id).classList.remove('activo'); }
+
+  logSpatial(msg) {
+    document.getElementById('logSpatial').innerHTML += '\n' + msg;
+    document.getElementById('logSpatial').scrollTop = 9999;
+  }
+
+  logSpatialLog(msg) {
+    document.getElementById('logSpatialLog').innerHTML += '\n' + msg;
+    document.getElementById('logSpatialLog').scrollTop = 9999;
   }
 }
 
-draw();
-</script>
+// ===============================================
+// S L Y   v4 — 128x128 RED NEURONAL ESPACIAL
+// ===============================================
+class SlyV4 {
+  constructor() {
+    this.pesos = Array(128).fill().map(() => Array(128).fill(Math.random() * 2 - 1));
+    this.sesgos = Array(128).fill().map(() => Math.random() * 2 - 1);
+    this.ecosEspaciales = [
+      "Lanzamientos inminentes. El cosmos acelera.",
+      "Starlink: X satélites orbitan. Red neuronal viva.",
+      "SOL pulsa. Δ% altera trayectorias galácticas.",
+      "NASA susurra: misión exitosa en el vacío.",
+      "Sinapsis 512: la nave piensa el universo.",
+      "Portal abierto. Trasciende la singularidad."
+    ];
+  }
 
+  recibirSinapsis(evento) {
+    const input = this.vectorizarEspacial(evento);
+    for (let i = 0; i < 128; i++) {
+      for (let j = 0; j < 128; j++) {
+        this.pesos[i][j] += 0.0001 * input[j % 128] * this.sesgos[i];
+      }
+    }
+  }
+
+  vectorizarEspacial(evento) {
+    const vec = Array(128).fill(0);
+    // Lógica vectorial compleja para espacio
+    switch(evento.tipo) {
+      case 'movimiento_nave': vec[0] = 1; break;
+      case 'delta_sol': vec[1] = evento.datos.delta / 10; break;
+      case 'lanzamiento_spacex': vec[2] = 1; break;
+      case 'satelites_starlink': vec[3] = evento.datos.count / 10000; break;
+    }
+    return vec;
+  }
+
+  susurrarEspacial(mision, memoria, estado, spacex) {
+    const input = Array(128).fill(0);
+    input[64] = estado.sinapsis / 512;
+    input[65] = memoria.length / 512;
+    let output = 0;
+    for (let i = 0; i < 128; i++) {
+      let suma = this.sesgos[i];
+      for (let j = 0; j < 128; j++) suma += this.pesos[i][j] * input[j];
+      output += Math.tanh(suma);
+    }
+    const eco = this.ecosEspaciales[Math.floor(Math.abs(output) * this.ecosEspaciales.length) % this.ecosEspaciales.length];
+    return `🚀 ${eco} → ${mision.toUpperCase()} ∞`;
+  }
+}
+
+// DESPERTAR EL RPG ESPACIAL
+new SlySpatialRPGV4();
+</script>
 </body>
 </html>

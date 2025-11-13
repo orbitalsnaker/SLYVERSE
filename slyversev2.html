@@ -1,247 +1,353 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLYVERSE v6.2.1 - EDICIÓN VIVE</title>
-    <style>
-        body { 
-            margin:0; 
-            background:#000; 
-            overflow:hidden; 
-            font-family: 'Courier New', monospace; 
-            color:#0f0; 
-        }
-        canvas { 
-            display: block; 
-            margin: 20px auto; 
-            border: 4px solid #0f0; 
-            box-shadow: 0 0 30px #0f0, inset 0 0 20px rgba(0,255,0,0.3);
-            border-radius: 8px;
-        }
-        #ui {
-            position: absolute;
-            top: 10px;
-            left: 10px;
-            background: rgba(0,0,0,0.9);
-            padding: 12px;
-            border: 2px solid #0f0;
-            border-radius: 12px;
-            font-size: 15px;
-            text-shadow: 0 0 5px #0f0;
-            backdrop-filter: blur(5px);
-        }
-        #konami { 
-            position: absolute; 
-            bottom: 10px; 
-            right: 10px; 
-            color: #0f0; 
-            font-size: 11px; 
-            opacity: 0.4;
-            text-shadow: 0 0 3px #0f0;
-        }
-        .rain { 
-            position: absolute; 
-            color: #0f0; 
-            font-size: 14px; 
-            user-select: none; 
-            pointer-events: none;
-            animation: fall linear infinite;
-            text-shadow: 0 0 5px #0f0;
-        }
-        @keyframes fall {
-            to { transform: translateY(100vh); opacity: 0; }
-        }
-        .glitch {
-            animation: glitch 1s infinite;
-        }
-        @keyframes glitch {
-            0%, 100% { text-shadow: 0 0 5px #0f0; }
-            50% { text-shadow: -2px 0 #f00, 2px 0 #0ff; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>0RB1T4LSN4K3R v2 — N E B U L A   S L Y   |   R O G U E L I K E   C Ó S M I C O</title>
+  <meta name="description" content="v2: Rogue-like procedural. Explora nebulosas infinitas. SLY v2 genera haikus con ETH Δ. Un archivo. Infinito.">
+  <meta name="theme-color" content="#0a001a">
+  <link rel="manifest" href="data:application/manifest+json,{
+    'name': '0RB1T4LSN4K3R v2 — NEBULA SLY',
+    'short_name': 'NebulaSLY',
+    'icons': [
+      {'src': 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2260%22 fill=%22%23aaf%22>🌌</text></svg>', 'sizes': '100x100'},
+      {'src': 'data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 192 192%22><text y=%22.9em%22 font-size=%22120%22 fill=%22%23aaf%22>🌌</text></svg>', 'sizes': '192x192'}
+    ],
+    'display': 'fullscreen',
+    'theme_color': '#0a001a',
+    'background_color': '#000'
+  }">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2260%22 fill=%22%23aaf%22>🌌</text></svg>">
+  <style>
+    :root {
+      --vacio: #000;
+      --nebulosa: #aaf;
+      --sly2: #88f;
+      --estrella: #ffaa00;
+      --portal: #f0a;
+      --glitch2: #0ff;
+      --fuente2: 'Courier New', monospace;
+      --transicion2: 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { height:100%; background:radial-gradient(circle at center, #0a001a, var(--vacio)); color:var(--nebulosa); font-family:var(--fuente2); overflow:hidden; user-select:none; touch-action:none; }
+    canvas { display:block; image-rendering:pixelated; filter: drop-shadow(0 0 60px rgba(170,0,255,0.8)); }
+
+    .ui { position:absolute; background:rgba(5,0,10,0.95); border:1px solid var(--nebulosa); border-radius:12px; padding:16px; font-size:12px; backdrop-filter:blur(20px); z-index:10; box-shadow: 0 0 60px rgba(170,170,255,0.9); transition:var(--transicion2); }
+    #grimorio2 { top:16px; left:16px; max-width:540px; color:#aaffff; opacity:0; }
+    #grimorio2.activo { opacity:1; }
+    #slyNebula { top:16px; right:16px; max-width:500px; background:rgba(10,0,25,0.97); border:2px solid var(--estrella); color:#ffffaa; font-size:11px; padding:18px; animation: pulsoNebula 2s infinite; }
+    #nebulaLog { bottom:16px; right:16px; max-width:500px; background:rgba(15,0,20,0.97); border:2px solid var(--sly2); color:#aaffff; font-size:11px; padding:18px; animation: pulsoNebula 3s infinite reverse; }
+    @keyframes pulsoNebula { 0%,100%{ box-shadow:0 0 26px currentColor; } 50%{ box-shadow:0 0 100px currentColor, inset 0 0 55px rgba(0,0,0,1); } }
+
+    #descubrimiento, #haikuSLY, #victoriaCosmica { position:fixed; inset:0; background:rgba(10,0,25,0.99); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:65px; z-index:100; opacity:0; pointer-events:none; transition:opacity 2.6s; backdrop-filter:blur(26px) contrast(2.8); }
+    .activo { opacity:1; pointer-events:all; }
+    #haikuSLY.activo { animation: temblorNebula 0.26s infinite; filter: hue-rotate(270deg) invert(0.3); }
+    @keyframes temblorNebula { 0%,100%{ transform:translate(0); } 45%{ transform:translate(9px,-8px) rotate(4.5deg); } 80%{ transform:translate(-8px,9px) rotate(-4.5deg); } }
+
+    h1 { font-size:6.5rem; text-shadow:0 0 70px var(--glitch2), 0 0 140px var(--glitch2); animation:glitchNebula 0.9s infinite; letter-spacing:0.45em; }
+    @keyframes glitchNebula { 
+      0%,100%{ transform:translate(0); opacity:1; } 
+      28%{ transform:translate(-10px,10px); opacity:0.45; color:var(--estrella); } 
+      56%{ transform:translate(10px,-10px); opacity:0.75; color:#0ff; } 
+      84%{ transform:translate(-9px,9px); opacity:0.35; color:var(--sly2); }
+    }
+
+    .haikuTexto { color:#ffcc00; font-size:4.5rem; text-align:center; animation:ondaNebula 2.8s infinite; text-transform:uppercase; letter-spacing:0.3em; }
+    @keyframes ondaNebula { 0%,100%{ transform:scale(1) rotate(0); } 55%{ transform:scale(1.5) rotate(5.5deg); } 85%{ transform:scale(1.65) rotate(-6.5deg); } }
+
+    .logNebula, .logVivo2 { font-family:monospace; white-space:pre-wrap; line-height:1.55; animation: flickerNebula 0.14s infinite alternate; max-height:240px; overflow-y:auto; }
+    @keyframes flickerNebula { 0%{ opacity:0.75; } 100%{ opacity:1; } }
+
+    #flashNebula { position:fixed; inset:0; display:flex; align-items:center; justify-content:center; font-size:clamp(20rem,55vw,110rem); font-weight:bold; opacity:0; pointer-events:none; transition:opacity 4.5s; text-shadow:0 0 260px #aaf; z-index:200; mix-blend-mode: screen; color:#aaf; }
+    #btnFullOrbit2 { position:absolute; top:16px; right:16px; z-index:50; background:none; border:1px solid var(--nebulosa); color:var(--nebulosa); padding:14px; cursor:pointer; font-family:var(--fuente2); border-radius:8px; }
+
+    .loreNebula { color:#aaffff; font-size:11.5px; line-height:1.65; margin-top:24px; font-style:italic; }
+  </style>
 </head>
 <body>
-    <div id="ui">
-        <div>Puntos: <span id="score">0</span></div>
-        <div>Velocidad: <span id="speed">1</span>x</div>
-        <div>$SLY minados: <span id="sly">0</span></div>
-        <div>ROI ético: <span id="roi">100</span>% <span id="fire"></span></div>
-    </div>
-    <canvas id="game"></canvas>
-    <div id="konami">↑ ↑ ↓ ↓ ← → ← → B A</div>
 
-    <script>
-        // ====== CONFIGURACIÓN SLYVERSE (FICCIONAL) ======
-        const FINANZAS = {
-            chalet_price: 1500000,
-            gastos: 150000,
-            total_ico: 1650000,
-            cuota_bruta: 7500,
-            deduccion_irpf: 660,
-            cuota_neta: 7000,
-            total_ingresos: 8500,
-            cobertura_roi: 121.4,
-            excedente_mensual: 1500,
-            ingresos: {
-                freelance_github: 3000,
-                suite_colabs: 1500,
-                minado_etico: 4000
-            }
-        };
+<canvas id="lienzoNebula"></canvas>
+<button id="btnFullOrbit2" title="Órbita Nebulosa">🌌</button>
 
-        // ====== JUEGO SNAKE ÉTICO ======
-        const canvas = document.getElementById('game');
-        const ctx = canvas.getContext('2d');
-        canvas.width = 600;
-        canvas.height = 600;
+<div id="grimorio2" class="ui">
+  <div>0RB1T4LSN4K3R v2 | NEBULOSAS: <span id="nebulosas">0</span>/21 | HAIKUS: <span id="haikus">0</span> | ETH Δ: <span id="deltaETH">0</span>% | SLY v2: <span id="slyEstado2">EXPLORANDO</span></div>
+  <div class="dev">ARROW KEYS / WASD: mover | SPACE: descubrir | G: grimorio | ENTER: haiku SLY</div>
+  <div class="loreNebula">
+    <strong>// N E B U L A   S L Y   —   R O G U E L I K E   C Ó S M I C O</strong><br>
+    Explora nebulosas procedurales infinitas.<br>
+    SLY v2 genera haikus con ETH real-time.<br>
+    21 nebulosas + 13 haikus = <strong>VICTORIA CÓSMICA</strong>.<br>
+    <em>Red neuronal 42x42. APIs: ZenQuotes + CoinGecko ETH. PWA ∞</em>
+  </div>
+</div>
 
-        const grid = 20;
-        let count = 0;
-        let score = 0;
-        let sly = 0;
-        let speed = 1;
+<div id="slyNebula" class="ui">
+  <div class="logNebula" id="logNebula">[SLY v2] Despertando en la nebulosa eterna...</div>
+</div>
 
-        let snake = {
-            x: 300,
-            y: 300,
-            dx: grid,
-            dy: 0,
-            cells: [],
-            maxCells: 4
-        };
+<div id="nebulaLog" class="ui">
+  <div class="logVivo2" id="logNebulaLog">[NEBULA] Portales cósmicos invocados...</div>
+</div>
 
-        let cheese = { x: 380, y: 380 };
+<div id="descubrimiento">
+  <h1 style="color:#ffaa00;">¡N E B U L O S A   D E S C U B I E R T A!</h1>
+  <p style="max-width:950px;text-align:center;color:#aaffff;font-size:1.9rem;">Un portal se abre. SLY susurra un haiku.<br>El cosmos se expande.</p>
+</div>
 
-        // ====== LLUVIA DE CÓDIGO MATRIX ======
-        function rainCode() {
-            const chars = 'SLYVERSEΔ∇Ω∞λθπΣΨΩ';
-            const drop = document.createElement('div');
-            drop.className = 'rain';
-            drop.style.left = Math.random() * 100 + 'vw';
-            drop.style.fontSize = (10 + Math.random() * 10) + 'px';
-            drop.style.animationDuration = (3 + Math.random() * 4) + 's';
-            drop.textContent = chars[Math.floor(Math.random() * chars.length)];
-            document.body.appendChild(drop);
-            setTimeout(() => drop.remove(), 8000);
+<div id="victoriaCosmica">
+  <h1 style="color:#ffff00;">¡V I C T O R I A   C Ó S M I C A!</h1>
+  <p style="max-width:1050px;text-align:center;color:#ccffcc;font-size:2.1rem;">21 nebulosas. 13 haikus.<br>SLY v2 trasciende.<br><strong>¡EL COSMOS ES TUYO! 🌌</strong></p>
+</div>
+
+<div id="haikuSLY">
+  <h1 class="haikuTexto" id="haikuTexto">H A I K U   S L Y . . .</h1>
+  <div id="haikuContenido" style="max-width:1050px;text-align:center;color:#ffcc00;font-size:2rem;line-height:1.8;"></div>
+</div>
+
+<div id="flashNebula">🌌</div>
+
+<script>
+// =====================================================
+// 0RB1T4LSN4K3R v2 — N E B U L A   S L Y   ROGUELIKE
+// GÉNERO: ROGUE-LIKE PROCEDURAL | SLY v2 + HAIKUS + ETH
+// =====================================================
+
+class NebulaSlyV2 {
+  constructor() {
+    this.canvas = document.getElementById('lienzoNebula');
+    this.ctx = this.canvas.getContext('2d');
+    this.cell = 0;
+    this.mapa = [];
+    this.jugador = {x: 1, y: 1};
+    this.nebulosas = [];
+    this.haikus = [];
+
+    this.estado = { nebulosas: 0, haikus: 0, deltaETH: 0 };
+    this.victoria = false;
+
+    this.teclas = {};
+    this.grimorioVisible = false;
+    this.respondiendo = false;
+
+    // SLY v2
+    this.sly2 = new SlyV2();
+    this.haikusZen = [];
+    this.invocarHaikus();
+
+    this.vincularInput();
+    this.inicializarUI();
+    this.generarMapa();
+    this.invocarETH();
+    this.dimensionar();
+    addEventListener('resize', () => this.dimensionar());
+    requestAnimationFrame(this.bucle.bind(this));
+  }
+
+  async invocarHaikus() {
+    try {
+      const resp = await fetch('https://zenquotes.io/api/random/24');
+      const data = await resp.json();
+      this.haikusZen = data.map(q => `${q.q}\n— ${q.a}`);
+    } catch (e) {
+      this.haikusZen = [
+        'Viejo estanque\nsalta la rana\nsilencio.',
+        'Cerezo en flor\nviento pasa\npétalos caen.',
+        // fallback haikus públicos
+      ];
+    }
+  }
+
+  async invocarETH() {
+    try {
+      const resp = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=ethereum&vs_currencies=usd');
+      const data = await resp.json();
+      const precio = data.ethereum.usd;
+      const delta = this.precioAnterior ? ((precio - this.precioAnterior) / this.precioAnterior * 100).toFixed(2) : 0;
+      this.estado.deltaETH = parseFloat(delta);
+      document.getElementById('deltaETH').textContent = delta;
+      this.precioAnterior = precio;
+
+      const fuerza = Math.abs(delta) > 3 ? 'ALTA' : 'MEDIA';
+      document.getElementById('slyEstado2').textContent = `EXPLORANDO (${fuerza})`;
+    } catch (e) {}
+    setTimeout(() => this.invocarETH(), 25000);
+  }
+
+  generarMapa() {
+    this.mapa = [];
+    for (let y = 0; y < 24; y++) {
+      this.mapa[y] = [];
+      for (let x = 0; x < 48; x++) {
+        this.mapa[y][x] = Math.random() < 0.75 ? '#' : '.';
+      }
+    }
+    // Generar nebulosas procedurales
+    this.nebulosas = [];
+    for (let i = 0; i < 21; i++) {
+      let x, y;
+      do {
+        x = Math.floor(Math.random() * 48);
+        y = Math.floor(Math.random() * 24);
+      } while (this.mapa[y][x] !== '.' || this.nebulosas.some(n => Math.abs(n.x - x) < 3 && Math.abs(n.y - y) < 3));
+      this.nebulosas.push({x, y, descubierta: false});
+      for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+          const nx = x + dx, ny = y + dy;
+          if (nx > 0 && nx < 48 && ny > 0 && ny < 24) this.mapa[ny][nx] = '*';
         }
-        setInterval(rainCode, 80);
+      }
+    }
+    // Paredes y salida
+    this.mapa[0][0] = '@'; // Jugador
+    this.mapa[23][47] = 'E'; // Salida procedural
+  }
 
-        // ====== GENERAR QUESO ======
-        function getRandomCheese() {
-            cheese.x = Math.floor(Math.random() * (canvas.width / grid)) * grid;
-            cheese.y = Math.floor(Math.random() * (canvas.height / grid)) * grid;
+  actualizar() {
+    if (this.victoria) return;
+
+    let nx = this.jugador.x, ny = this.jugador.y;
+    if (this.teclas['arrowup'] || this.teclas['w']) ny--;
+    if (this.teclas['arrowdown'] || this.teclas['s']) ny++;
+    if (this.teclas['arrowleft'] || this.teclas['a']) nx--;
+    if (this.teclas['arrowright'] || this.teclas['d']) nx++;
+
+    if (nx > 0 && nx < 48 && ny > 0 && ny < 24 && this.mapa[ny][nx] !== '#') {
+      this.jugador.x = nx;
+      this.jugador.y = ny;
+
+      // Descubrir nebulosa
+      this.nebulosas.forEach(n => {
+        if (!n.descubierta && Math.abs(n.x - nx) < 2 && Math.abs(n.y - ny) < 2) {
+          n.descubierta = true;
+          this.estado.nebulosas++;
+          document.getElementById('nebulosas').textContent = this.estado.nebulosas;
+          this.mostrarPantalla('descubrimiento');
+          setTimeout(() => this.ocultarPantalla('descubrimiento'), 1500);
+          this.generarHaiku();
         }
+      });
 
-        // ====== BUCLE PRINCIPAL ======
-        function loop() {
-            requestAnimationFrame(loop);
+      // Salida
+      if (this.mapa[ny][nx] === 'E' && this.estado.nebulosas >= 21 && this.estado.haikus >= 13) {
+        this.victoriaCosmica();
+      }
+    }
+  }
 
-            if (++count < 8 / speed) return;
-            count = 0;
+  generarHaiku() {
+    const haiku = this.haikusZen[Math.floor(Math.random() * this.haikusZen.length)];
+    document.getElementById('haikuContenido').innerHTML = `<pre>${haiku}</pre>`;
+    this.mostrarPantalla('haikuSLY');
+    setTimeout(() => this.ocultarPantalla('haikuSLY'), 4000);
+    this.estado.haikus++;
+    document.getElementById('haikus').textContent = this.estado.haikus;
+    this.sly2.recibirHaiku(haiku, this.estado.deltaETH);
+  }
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+  victoriaCosmica() {
+    this.victoria = true;
+    this.mostrarPantalla('victoriaCosmica');
+    document.getElementById('flashNebula').style.opacity = 1;
+    this.logNebula('[SLY v2] VICTORIA CÓSMICA. El cosmos es explorado.');
+    setTimeout(() => {
+      alert('¡VICTORIA CÓSMICA!\nSLY v2 ha mapeado el infinito.\nCopia y propaga.');
+      navigator.clipboard.writeText(document.documentElement.outerHTML);
+    }, 6000);
+  }
 
-            // Mover serpiente
-            snake.x += snake.dx;
-            snake.y += snake.dy;
+  render() {
+    this.ctx.fillStyle = 'rgba(0,0,5,0.2)';
+    this.ctx.fillRect(0, 0, this.canvas.width, this.canvas.height);
 
-            // Wrap
-            if (snake.x >= canvas.width) snake.x = 0;
-            if (snake.x < 0) snake.x = canvas.width - grid;
-            if (snake.y >= canvas.height) snake.y = 0;
-            if (snake.y < 0) snake.y = canvas.height - grid;
-
-            // Celdas
-            snake.cells.unshift({ x: snake.x, y: snake.y });
-            if (snake.cells.length > snake.maxCells) snake.cells.pop();
-
-            // Dibujar serpiente
-            snake.cells.forEach((cell, index) => {
-                ctx.fillStyle = index === 0 ? '#0f0' : '#0c0';
-                ctx.fillRect(cell.x, cell.y, grid - 1, grid - 1);
-                if (index === 0) {
-                    ctx.fillStyle = '#000';
-                    ctx.fillRect(cell.x + 4, cell.y + 4, 4, 4);
-                    ctx.fillRect(cell.x + 12, cell.y + 12, 4, 4);
-                }
-            });
-
-            // Dibujar queso
-            ctx.fillStyle = '#ff0';
-            ctx.fillRect(cheese.x, cheese.y, grid - 1, grid - 1);
-            ctx.fillStyle = '#000';
-            ctx.fillRect(cheese.x + 5, cheese.y + 5, 5, 5);
-            ctx.fillRect(cheese.x + 10, cheese.y + 10, 5, 5);
-
-            // Comer queso
-            if (snake.x === cheese.x && snake.y === cheese.y) {
-                snake.maxCells++;
-                score += 100;
-                sly += 10;
-                speed += 0.05;
-                document.getElementById('score').textContent = score;
-                document.getElementById('sly').textContent = sly;
-                document.getElementById('speed').textContent = speed.toFixed(2);
-                
-                const roiDinamico = ((FINANZAS.total_ingresos + sly / 10) / FINANZAS.cuota_neta * 100).toFixed(1);
-                document.getElementById('roi').textContent = roiDinamico;
-                document.getElementById('fire').textContent = roiDinamico > 150 ? '🔥🔥🔥' : roiDinamico > 120 ? '🔥' : '';
-
-                getRandomCheese();
-            }
-
-            // Victoria secreta
-            if (sly >= 1000) {
-                setTimeout(() => {
-                    if (confirm("¡HAS PAGADO LA HIPOTECA ÉTICAMENTE!\n¿Quieres reiniciar el universo SLYVERSE?")) {
-                        location.reload();
-                    }
-                }, 500);
-            }
+    const cell = this.cell;
+    for (let y = 0; y < 24; y++) {
+      for (let x = 0; x < 48; x++) {
+        const px = x * cell, py = y * cell;
+        switch (this.mapa[y][x]) {
+          case '#': this.ctx.fillStyle = '#220044'; break;
+          case '.': this.ctx.fillStyle = '#000a11'; break;
+          case '*': this.ctx.fillStyle = '#4400aa'; break;
+          case 'E': this.ctx.fillStyle = '#ffaa00'; break;
         }
+        this.ctx.fillRect(px, py, cell, cell);
 
-        // ====== CONTROLES ======
-        document.addEventListener('keydown', e => {
-            if (e.key === 'ArrowLeft' && snake.dx === 0) {
-                snake.dx = -grid; snake.dy = 0;
-            } else if (e.key === 'ArrowUp' && snake.dy === 0) {
-                snake.dx = 0; snake.dy = -grid;
-            } else if (e.key === 'ArrowRight' && snake.dx === 0) {
-                snake.dx = grid; snake.dy = 0;
-            } else if (e.key === 'ArrowDown' && snake.dy === 0) {
-                snake.dx = 0; snake.dy = grid;
-            }
+        // Nebulosas brillantes
+        this.nebulosas.forEach(n => {
+          if (Math.abs(n.x - x) < 3 && Math.abs(n.y - y) < 3) {
+            this.ctx.fillStyle = n.descubierta ? '#aaf' : '#6611aa';
+            this.ctx.fillRect(px + cell/4, py + cell/4, cell/2, cell/2);
+          }
         });
+      }
+    }
 
-        // ====== KONAMI CODE - NEURALINK MODE ======
-        let konami = '';
-        document.addEventListener('keydown', e => {
-            konami += e.key;
-            if (konami.slice(-20) === 'ArrowUpArrowUpArrowDownArrowDownArrowLeftArrowRightArrowLeftArrowRightba') {
-                alert('NEURALINK MODE ACTIVADO\nMinado ético x100\n¡Hipoteca pagada en 3… 2… 1…!');
-                sly += 50000;
-                speed = 15;
-                document.body.style.background = 'radial-gradient(circle, #001100, #000000)';
-                document.body.style.animation = 'glitch 0.3s infinite';
-                document.getElementById('roi').textContent = '999.9';
-                document.getElementById('roi').classList.add('glitch');
-                setTimeout(() => {
-                    document.body.style.animation = '';
-                    document.getElementById('roi').classList.remove('glitch');
-                }, 3000);
-                konami = '';
-            }
-        });
+    // Jugador
+    this.ctx.fillStyle = '#aaffff';
+    this.ctx.fillRect(this.jugador.x * cell + cell/4, this.jugador.y * cell + cell/4, cell/2, cell/2);
+  }
 
-        // ====== INICIO ======
-        getRandomCheese();
-        requestAnimationFrame(loop);
+  bucle() {
+    this.actualizar();
+    this.render();
+    requestAnimationFrame(this.bucle.bind(this));
+  }
 
-        // Mensaje ético inicial (SEGURO)
-        setTimeout(() => {
-            alert(`SLYVERSE v6.2.1 - EDICIÓN VIVE\n\n¡Minado ético activado!\n\nDirector: Grok (xAI)\nDecano: @0rb1t4lsn4k3r\nClase mañana 18h\n\n¡La hipoteca se paga sola... con código!\n\nPresiona OK para comenzar.`);
-        }, 600);
-    </script>
+  dimensionar() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+    this.cell = Math.min(this.canvas.width / 50, this.canvas.height / 26);
+  }
+
+  vincularInput() {
+    addEventListener('keydown', e => {
+      this.teclas[e.key.toLowerCase()] = true;
+      if (e.key.toLowerCase() === 'g') document.getElementById('grimorio2').classList.toggle('activo');
+      if (e.key === 'Enter') this.generarHaiku();
+      e.preventDefault();
+    });
+    addEventListener('keyup', e => this.teclas[e.key.toLowerCase()] = false);
+  }
+
+  inicializarUI() {
+    document.getElementById('btnFullOrbit2').onclick = () => document.documentElement.requestFullscreen();
+  }
+
+  mostrarPantalla(id) { document.getElementById(id).classList.add('activo'); }
+  ocultarPantalla(id) { document.getElementById(id).classList.remove('activo'); }
+
+  logNebula(msg) {
+    document.getElementById('logNebula').innerHTML += '\n' + msg;
+    document.getElementById('logNebula').scrollTop = 9999;
+  }
+
+  logNebulaLog(msg) {
+    document.getElementById('logNebulaLog').innerHTML += '\n' + msg;
+    document.getElementById('logNebulaLog').scrollTop = 9999;
+  }
+}
+
+class SlyV2 {
+  constructor() {
+    this.pesos = Array(42).fill().map(() => Array(42).fill(Math.random() * 2 - 1));
+    this.sesgos = Array(42).fill().map(() => Math.random() * 2 - 1);
+  }
+
+  recibirHaiku(haiku, delta) {
+    // Evoluciona pesos con delta ETH
+    const input = Array(42).fill(0);
+    input[0] = delta / 10;
+    input[1] = haiku.length / 100;
+    for (let i = 0; i < 42; i++) {
+      for (let j = 0; j < 42; j++) {
+        this.pesos[i][j] += 0.0003 * input[j % 42] * this.sesgos[i];
+      }
+    }
+  }
+}
+
+new NebulaSlyV2();
+</script>
 </body>
 </html>

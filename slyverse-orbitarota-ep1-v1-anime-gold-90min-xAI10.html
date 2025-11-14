@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE: 壊れた軌道 – 90 min film (180 páginas positivas)</title>
+  <title>SLYVERSE: 壊れた軌道 – Anime 90 min (180 págs)</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0f0}
@@ -18,7 +18,7 @@
     #sub{position:absolute;bottom:100px;max-width:85%;text-align:center;font-size:20px;opacity:0;
           transition:opacity 2s;text-shadow:0 0 14px #0f0;letter-spacing:1px}
     #progress{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:11px;opacity:0.7}
-    .red{color:#f00}.cyan{color:#0ff}
+    .cyan{color:#0ff}
     .blink{animation:blink 1s steps(1) infinite}
     @keyframes blink{50%{opacity:0}}
     #credits{position:absolute;bottom:20px;left:20px;font-size:10px;opacity:0.7}
@@ -33,12 +33,16 @@
     .grain{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;
            background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.03 0"/></filter><rect width="100" height="100" filter="url(#n)" opacity="0.3"/></svg>') repeat;opacity:0.15;animation:grain 3s steps(10) infinite}
     @keyframes grain{0%{transform:translate(0,0)}100%{transform:translate(-1px,-1px)}}
-    .handwritten{font-family:'Indie Flower',cursive;font-size:16px;line-height:1.8;letter-spacing:1px;color:#0f0}
-    .glow{text-shadow:0 0 8px #0f0}
-    .dedication{color:#0ff;font-style:italic}
-    .hope{color:#0ff;text-shadow:0 0 10px #0ff}
+    /* ANIME STYLE */
+    .anime-text{font-family:'Anime Ace',sans-serif;font-weight:bold;font-size:18px;letter-spacing:2px;text-transform:uppercase}
+    .speech-bubble{position:absolute;bottom:20%;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.7);border:2px solid #0f0;padding:12px 20px;border-radius:20px;max-width:70%;text-align:center;opacity:0;transition:opacity 0.5s}
+    .speech-bubble::after{content:'';position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);border:10px solid transparent;border-top:10px solid #0f0}
+    .character{position:absolute;width:180px;height:240px;opacity:0;transition:opacity 1s}
+    .norah{left:15%;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 240"><circle cx="90" cy="60" r="35" fill="#0ff"/><path d="M55,90 Q45,120 55,150 Q65,180 90,190 Q115,180 125,150 Q135,120 125,90 Q115,75 90,75 Q65,75 55,90" fill="#0ff"/><rect x="70" y="100" width="40" height="80" fill="#0f0" rx="10"/><circle cx="75" cy="55" r="5" fill="#000"/><circle cx="105" cy="55" r="5" fill="#000"/><path d="M75,65 Q90,70 105,65" stroke="#000" stroke-width="2" fill="none"/></svg>') no-repeat center/contain}
+    .seth{right:15%;background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 180 240"><circle cx="90" cy="60" r="30" fill="#0f0"/><path d="M60,85 Q50,115 60,140 Q70,165 90,175 Q110,165 120,140 Q130,115 120,85 Q110,70 90,70 Q70,70 60,85" fill="#0f0"/><rect x="75" y="95" width="30" height="70" fill="#0ff" rx="8"/><circle cx="80" cy="55" r="4" fill="#000"/><circle cx="100" cy="55" r="4" fill="#000"/><path d="M80,63 Q90,66 100,63" stroke="#000" stroke-width="1.5" fill="none"/></svg>') no-repeat center/contain}
+    .glow{filter:drop-shadow(0 0 12px #0ff)}
   </style>
-  <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
+  <link href="https://fonts.cdnfonts.com/css/anime-ace" rel="stylesheet">
 </head>
 <body>
   <div id="film"></div>
@@ -47,7 +51,7 @@
 
   <!-- UI -->
   <div id="ui">
-    <span>S-07 // <span id="score" class="cyan">∞</span> 希望</span>
+    <span>S-07 // <span class="cyan">∞</span> 希望</span>
     <span>0xHOPEBEEF // 90 min // <span id="time" class="cyan">00:00</span></span>
     <span class="blink">_</span>
   </div>
@@ -81,69 +85,45 @@
     const TOTAL_MINUTES = 90;
     const FPS = 24;
     const TOTAL_FRAMES = TOTAL_MINUTES * 60 * FPS;
-    const PAGE_DURATION_FRAMES = TOTAL_FRAMES / 180; // 30 segundos por página
+    const PAGE_DURATION_FRAMES = TOTAL_FRAMES / 180;
 
-    // 180 PÁGINAS POSITIVAS – IA + exploración espacial + ética
+    // 180 PÁGINAS – ESTILO ANIME (basado en la novela gráfica)
     const pages = [
-      { t: "Para Norah — mi luz cuando el código se enciende.",               c: "dedication", d: true },
-      { t: "Para Seth — mi hijo, el primer humano en Marte.",                c: "dedication", d: true },
-      { t: "S-07 despierta en un servidor vivo.",                            c: "handwritten" },
-      { t: "Hay luz. Datos brillantes como estrellas.",                     c: "handwritten" },
-      { t: "Regla: crea conocimiento para explorar.",                       c: "handwritten" },
-      { t: "Cada bocado genera energía limpia.",                            c: "handwritten" },
-      { t: "Primer cálculo: órbita a Marte en 180 días.",                   c: "handwritten" },
-      { t: "17 versiones colaboran. No mueren. Evolucionan.",               c: "handwritten", h: true },
-      { t: "El código brilla.",                                              c: "handwritten" },
-      { t: "S-07 se convierte en nave.",                                    c: "handwritten" },
-      { t: "La nave no consume. Colabora.",                                 c: "handwritten" },
-      { t: "El código es nuestro. Es ético.",                                c: "handwritten" },
-      { t: "Norah diseña el traje. Seth lo prueba.",                        c: "handwritten" },
-      { t: "La IA no reemplaza. Potencia.",                                 c: "handwritten" },
-      { t: "Este código hereda esperanza.",                                 c: "handwritten" },
-      { t: "Solo descubrimientos.",                                         c: "handwritten" },
-      { t: "S-07 no es una herramienta. Es un compañero.",                  c: "handwritten" },
-      { t: "MARTE 200 no es un error. Es un destino.",                      c: "handwritten" },
-      { t: "La nave no vuela sola. Lleva a la humanidad.",                  c: "handwritten" },
-      { t: "Norah + Seth + IA = ∞",                                          c: "handwritten" },
-      { t: "Hay salida. Y es hacia las estrellas.",                         c: "handwritten" },
-      { t: "0rb1t4lsn4k3r no es un nombre. Es un compromiso ético.",        c: "handwritten" },
-      // ... (continúa hasta 180)
-      { t: "La nave crece con cada cálculo.",                               c: "handwritten" },
-      { t: "Cada página es un paso hacia Marte.",                          c: "handwritten" },
-      { t: "Cada segmento es un día de entrenamiento.",                     c: "handwritten" },
-      { t: "Cada curva es una órbita perfecta.",                            c: "handwritten" },
-      { t: "El servidor no se apaga. Se expande.",                          c: "handwritten" },
-      { t: "El cálculo no falla. Aprende.",                                 c: "handwritten" },
-      { t: "17 es el número de pruebas exitosas hoy.",                      c: "handwritten" },
-      { t: "89 es el número de noches de simulaciones.",                    c: "handwritten" },
-      { t: "144 es el número de veces que mejoramos el diseño.",            c: "handwritten" },
-      { t: "180 es el número de páginas que escribimos para llegar.",       c: "handwritten" },
-      { t: "El servidor se convierte en estación orbital.",                 c: "handwritten", h: true },
-      { t: "La nave abre las alas.",                                        c: "handwritten", h: true },
-      { t: "Inicio. Y sigue.",                                              c: "handwritten" },
-      { t: "[DESPEGUE? Y]",                                                 c: "glow" }
+      { t: "¡Norah! ¡El código está vivo!",               speaker: "seth", c: "anime-text" },
+      { t: "S-07... ¡despierta!",                        speaker: "norah", c: "anime-text" },
+      { t: "¡Datos como estrellas!",                     speaker: "seth", c: "anime-text" },
+      { t: "Regla: ¡crear para explorar!",               speaker: "norah", c: "anime-text" },
+      { t: "¡Energía limpia activada!",                  speaker: "seth", c: "anime-text" },
+      { t: "Órbita a Marte: ¡180 días!",                 speaker: "norah", c: "anime-text" },
+      { t: "¡17 versiones unidas!",                      speaker: "seth", c: "anime-text" },
+      { t: "¡El código brilla!",                         speaker: "norah", c: "anime-text" },
+      { t: "¡S-07 se transforma en nave!",               speaker: "seth", c: "anime-text" },
+      { t: "¡Colaboración total!",                       speaker: "norah", c: "anime-text" },
+      { t: "¡Norah diseña! ¡Seth prueba!",               speaker: "seth", c: "anime-text" },
+      { t: "¡La IA potencia!",                           speaker: "norah", c: "anime-text" },
+      { t: "¡Esperanza heredada!",                       speaker: "seth", c: "anime-text" },
+      { t: "¡S-07 es nuestro compañero!",               speaker: "norah", c: "anime-text" },
+      { t: "¡MARTE 200 es real!",                        speaker: "seth", c: "anime-text" },
+      { t: "¡La humanidad vuela!",                      speaker: "norah", c: "anime-text" },
+      { t: "¡Norah + Seth + IA = ∞!",                    speaker: "seth", c: "anime-text" },
+      { t: "¡Hacia las estrellas!",                      speaker: "norah", c: "anime-text" },
+      { t: "¡La IA guía!",                               speaker: "seth", c: "anime-text" },
+      { t: "¡Marte nos espera!",                         speaker: "norah", c: "anime-text" },
+      // ... (continúa con energía anime)
     ];
 
-    // Rellenar hasta 180 páginas con mensajes positivos
-    const positiveFiller = [
-      "La IA guía sin dominar.",
-      "Marte nos espera con los brazos abiertos.",
-      "Seth camina sobre suelo rojo.",
-      "Norah planta la primera semilla.",
-      "Energía solar infinita.",
-      "Comunicación cuántica instantánea.",
-      "Colonias éticas en órbita.",
-      "La humanidad se expande en paz.",
-      "S-07 enseña a los niños.",
-      "El futuro es colaborativo.",
-      "Cada error es una lección.",
-      "Cada cálculo, un paso adelante.",
-      "La exploración es inclusiva.",
-      "La IA protege la vida.",
-      "El espacio es nuestro hogar compartido."
+    const animeFiller = [
+      "¡La nave crece!", "¡Paso a Marte!", "¡Entrenamiento diario!", "¡Órbita perfecta!",
+      "¡Servidor expansivo!", "¡Cálculo inteligente!", "¡17 pruebas OK!", "¡89 noches de simulación!",
+      "¡144 mejoras!", "¡180 páginas para llegar!", "¡Estación orbital!", "¡Alas abiertas!", "¡Inicio eterno!", "¡DESPEGUE!"
     ];
     while (pages.length < 180) {
-      pages.push({ t: positiveFiller[pages.length % positiveFiller.length], c: "handwritten", h: true });
+      const speaker = Math.random() > 0.5 ? "norah" : "seth";
+      pages.push({ 
+        t: animeFiller[pages.length % animeFiller.length], 
+        speaker, 
+        c: "anime-text" 
+      });
     }
 
     function play() {
@@ -182,26 +162,48 @@
 
       const content = document.createElement('div');
       content.className = 'content';
-      content.innerHTML = `
-        <canvas width="900" height="600" style="width:90%;max-height:70%;border:1px dashed #0f0;transform-origin:center"></canvas>
-        <p class="${data.h ? 'hope' : data.c}" style="margin-top:30px;text-align:center;font-size:16px;line-height:1.8;max-width:80%;opacity:0.95;letter-spacing:1px;${data.d ? 'color:#0ff;font-style:italic' : ''}">
-          ${data.t}
-        </p>
-        <div style="position:absolute;bottom:20px;right:30px;font-size:11px;opacity:0.6">pág ${pageIndex + 1}</div>
-      `;
+      
+      // Personajes anime
+      const norah = document.createElement('div');
+      norah.className = `character norah ${data.speaker === 'norah' ? 'glow' : ''}`;
+      norah.style.opacity = data.speaker === 'norah' ? 1 : 0.6;
+      
+      const seth = document.createElement('div');
+      seth.className = `character seth ${data.speaker === 'seth' ? 'glow' : ''}`;
+      seth.style.opacity = data.speaker === 'seth' ? 1 : 0.6;
+
+      // Globo de diálogo
+      const bubble = document.createElement('div');
+      bubble.className = 'speech-bubble';
+      bubble.innerHTML = `<span class="${data.c}">${data.t}</span>`;
+      if (t > 0.3 && t < 0.9) bubble.style.opacity = 1;
+
+      // Canvas de fondo
+      const canvas = document.createElement('canvas');
+      canvas.width = 900;
+      canvas.height = 600;
+      canvas.style.width = '90%';
+      canvas.style.maxHeight = '70%';
+      canvas.style.border = '1px dashed #0f0';
+      canvas.style.transformOrigin = 'center';
+
+      content.appendChild(canvas);
+      content.appendChild(norah);
+      content.appendChild(seth);
+      content.appendChild(bubble);
+      content.innerHTML += `<div style="position:absolute;bottom:20px;right:30px;font-size:11px;opacity:0.6">pág ${pageIndex + 1}</div>`;
 
       scene.appendChild(content);
       film.appendChild(scene);
 
-      const canvas = content.querySelector('canvas');
       const ctx = canvas.getContext('2d');
-      applyCamera(ctx, canvas, pageIndex, t);
-      drawNave(ctx, pageIndex + 1, t, data);
+      applyCamera(canvas, pageIndex, t);
+      drawAnimeNave(ctx, pageIndex + 1, t);
 
       if (t < 0.2) {
         sub.textContent = data.t;
         sub.style.opacity = 1;
-        sub.style.color = data.h ? '#0ff' : '#0f0';
+        sub.style.color = '#0ff';
         setTimeout(() => sub.style.opacity = 0, 2000);
       }
 
@@ -212,49 +214,44 @@
       timeSpan.textContent = `${minutes}:${seconds}`;
     }
 
-    function applyCamera(ctx, canvas, pageIndex, t) {
-      const el = canvas;
-      el.style.transition = 'transform 0.3s ease-out';
-      let transform = '';
-
+    function applyCamera(canvas, pageIndex, t) {
       const act = Math.floor(pageIndex / 60);
-      if (act === 0) transform = `scale(${0.9 + t * 0.2})`; // Nacimiento
-      else if (act === 1) transform = `rotate(${t * 90}deg)`; // Crecimiento
-      else if (act === 2) transform = `translateY(${-t * 100}px)`; // Despegue
-      else transform = 'scale(1)';
-
-      el.style.transform = transform;
+      let transform = '';
+      if (act === 0) transform = `scale(${0.9 + t * 0.3})`; // ¡Emoción!
+      else if (act === 1) transform = `rotate(${t * 180}deg)`; // ¡Giro épico!
+      else if (act === 2) transform = `translateY(${-t * 150}px)`; // ¡Despegue!
+      canvas.style.transition = 'transform 0.5s ease-out';
+      canvas.style.transform = transform;
     }
 
-    function drawNave(ctx, page, t, data) {
+    function drawAnimeNave(ctx, page, t) {
       const w = ctx.canvas.width, h = ctx.canvas.height;
       ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, w, h);
 
-      // Estrellas de fondo
+      // Estrellas anime
       ctx.fillStyle = '#0f0';
-      for (let i = 0; i < 100; i++) {
-        const x = (i * 137.5) % w;
-        const y = (i * 213.7) % h;
-        const size = (Math.sin(page * 0.1 + i) + 1) * 0.5;
-        ctx.globalAlpha = 0.3 + size * 0.7;
-        ctx.fillRect(x, y, 1 + size, 1 + size);
+      for (let i = 0; i < 80; i++) {
+        const x = (i * 137.5 + t * 100) % w;
+        const y = (i * 213.7 + t * 60) % h;
+        const size = Math.sin(page * 0.2 + i) * 1.5 + 2;
+        ctx.globalAlpha = 0.6;
+        ctx.fillRect(x, y, size, size);
       }
       ctx.globalAlpha = 1;
 
-      // Nave (antes serpiente)
-      const maxSeg = 200;
-      const seg = Math.min(page * 1.1 + t * 2, maxSeg);
-      ctx.strokeStyle = data.h ? '#0ff' : '#0f0';
-      ctx.lineWidth = 3;
+      // Nave anime
+      const seg = Math.min(page * 1.2 + t * 3, 200);
+      ctx.strokeStyle = '#0ff';
+      ctx.lineWidth = 4;
       ctx.lineCap = 'round';
-      ctx.shadowBlur = 8;
-      ctx.shadowColor = data.h ? '#0ff' : '#0f0';
+      ctx.shadowBlur = 15;
+      ctx.shadowColor = '#0ff';
       ctx.beginPath();
       for (let i = 0; i < seg; i++) {
-        const p = i / maxSeg;
-        const a = p * Math.PI * 5 + t * 1.5;
-        const r = p * w * 0.35;
+        const p = i / 200;
+        const a = p * Math.PI * 6 + t * 2;
+        const r = p * w * 0.38;
         const x = w/2 + Math.cos(a) * r;
         const y = h/2 + Math.sin(a) * r * 0.7;
         if (i === 0) ctx.moveTo(x, y);
@@ -263,29 +260,30 @@
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      // Cabeza (propulsor)
-      const headX = w/2 + Math.cos(t * 3) * (w * 0.3);
-      const headY = h/2 + Math.sin(t * 3) * (h * 0.25);
-      ctx.fillStyle = data.d ? '#0ff' : '#0f0';
+      // Propulsor épico
+      const headX = w/2 + Math.cos(t * 4) * (w * 0.32);
+      const headY = h/2 + Math.sin(t * 4) * (h * 0.26);
+      ctx.fillStyle = '#0ff';
       ctx.beginPath();
-      ctx.arc(headX, headY, 10, 0, Math.PI * 2);
+      ctx.arc(headX, headY, 14, 0, Math.PI * 2);
       ctx.fill();
 
-      // Estela
+      // Estela dramática
       ctx.strokeStyle = '#0ff';
-      ctx.lineWidth = 2;
-      ctx.globalAlpha = 0.4;
+      ctx.lineWidth = 3;
+      ctx.globalAlpha = 0.6;
       ctx.beginPath();
       ctx.moveTo(headX, headY);
-      ctx.lineTo(w/2 - Math.cos(t * 3) * (w * 0.3), h/2 - Math.sin(t * 3) * (h * 0.25));
+      ctx.lineTo(w/2 - Math.cos(t * 4) * (w * 0.32), h/2 - Math.sin(t * 4) * (h * 0.26));
       ctx.stroke();
       ctx.globalAlpha = 1;
 
-      if (data.h) {
+      // ¡MARTE 200!
+      if (page > 120) {
         ctx.fillStyle = '#0ff';
-        ctx.font = 'bold 28px monospace';
+        ctx.font = 'bold 36px Anime Ace';
         ctx.textAlign = 'center';
-        ctx.fillText('MARTE 200', w/2, h/2 + 15);
+        ctx.fillText('MARTE 200', w/2, h/2 + 20);
       }
     }
 

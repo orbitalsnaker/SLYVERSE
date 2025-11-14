@@ -1,341 +1,265 @@
 <!DOCTYPE html>
-<html lang="ca">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <title>SLYVERSE: Òrbita Rota | v1.0 Frame-by-Frame Manga | 180 pàg | Dibuixat a Mà per 0rb1t4lsn4k3r | 10% xAI</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        @page { size: 148mm 210mm; margin: 8mm; }
-        body { margin:0; padding:0; background:#000; font-family:'Noto Sans Catalan', monospace; }
-        .page { width:148mm; height:210mm; background:#fff url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23eee"/><circle cx="75" cy="75" r="1" fill="%23ddd"/><circle cx="50" cy="10" r="0.5" fill="%23fff"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat; page-break-after:always; position:relative; overflow:hidden; box-shadow:0 0 12px #ffd700 inset; filter: url(#paper-texture); }
-        .page:nth-child(even) { background:#fdfdfd url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23f5f5f5"/><circle cx="75" cy="75" r="1" fill="%23e5e5e5"/><circle cx="50" cy="10" r="0.5" fill="%23fafafa"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat; }
-        .panel { position:absolute; border:2px solid #000; background:#fff; overflow:hidden; clip-path: polygon(0% 0%, 100% 5%, 95% 100%, 0% 95%); /* Irregular hand-drawn shape */ border-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M0 0 L20 2 L18 20 L2 18 Z" stroke="%23000" fill="none" stroke-width="1" stroke-dasharray="2,2"/></svg>') 10 stretch; box-shadow: inset 0 0 5px rgba(0,0,0,0.1); }
-        .splash { position:absolute; top:0; left:0; width:100%; height:100%; border:none; background:linear-gradient(45deg, #000, #ff1493, #00ffff); clip-path: polygon(5% 0%, 100% 3%, 98% 100%, 2% 97%); /* Hand-jagged full page */ }
-        .dialog { position:absolute; background:rgba(255,255,255,0.94); padding:4px 7px; border:1px dashed #000; border-radius:0; font-size:9px; max-width:70%; clip-path: polygon(0 0, 100% 0, 100% 80%, 90% 100%, 0 90%); /* Speech bubble hand-style */ box-shadow:0 0 6px #ffd700, inset 0 0 3px rgba(0,0,0,0.05); font-family: 'Caveat', cursive; }
-        .jap { font-weight:700; color:#000; font-size:10px; }
-        .cast { font-style:italic; color:#555; font-size:7px; margin-top:1px; }
-        .particle { position:absolute; width:3px; height:3px; background:#ffd700; border-radius:50%; box-shadow:0 0 8px #ffd700; animation: float 2s infinite; filter: drop-shadow(0 0 2px #ffd700); }
-        .glitch { position:absolute; height:1px; background:#ff1493; opacity:0.4; animation:glitch 1.2s infinite; border-radius: 50%; /* Organic glitch */ }
-        .vhs-scan { position:absolute; top:0; left:0; width:100%; height:100%; background:repeating-linear-gradient(0deg, transparent, transparent 50%, rgba(255,215,0,0.07) 50%, rgba(255,215,0,0.07) 51%); background-size:100% 4px; opacity:0.3; animation: vhs 2.5s linear infinite; }
-        .intro-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font:bold 24px 'Press Start 2P'; color:rgba(255,215,0,0.8); text-shadow:0 0 20px #ffd700; text-align:center; font-family: 'Indie Flower', cursive; /* Handwritten feel */ }
-        .main-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font:42px 'Meiryo'; color:#ffd700; text-align:center; text-shadow:0 0 10px #ffd700; }
-        .sub-text { position:absolute; bottom:20%; left:50%; transform:translateX(-50%); font:28px 'Noto Sans JP'; color:#ffffff; text-align:center; }
-        .outro-text { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font:bold 110px 'Press Start 2P'; color:rgba(255,215,0,0.8); text-shadow:0 0 20px #ffd700; text-align:center; }
-        .lines { position:absolute; height:1px; background:#00aaff; transform-origin:left; stroke-dasharray: 3,3; /* Dashed hand-line */ }
-        .star { position:absolute; font:80px 'Press Start 2P'; color:#ffd700; transform-origin:center; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Hand-ink shadow */ }
-        .signature { position:absolute; bottom:10mm; right:10mm; font-family: 'Caveat', cursive; font-size:12px; color:#000; transform: rotate(-5deg); opacity:0.7; } /* Handwritten signature */
-        .dedication { position:absolute; top:5mm; left:5mm; font-family: 'Indie Flower', cursive; font-size:10px; color:#888; transform: rotate(2deg); opacity:0.6; }
-        .page-num { position:absolute; bottom:5mm; right:8mm; font-size:8px; color:#888; }
-        .print-btn { position:fixed; top:10px; right:10px; padding:8px 16px; background:#ffd700; color:#000; font:bold 12px monospace; border:none; cursor:pointer; z-index:999; border-radius:3px; }
-        .lang-selector { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#000; color:#ffd700; padding:30px; border:3px double #ffd700; text-align:center; z-index:1000; box-shadow:0 0 50px #ffd700; }
-        .lang-btn { display:block; margin:15px auto; padding:12px 25px; background:#111; color:#ffd700; border:2px solid #ffd700; font:bold 14px monospace; cursor:pointer; width:80%; }
-        .lang-btn:hover { background:#ffd700; color:#000; }
-        @keyframes glitch { 0%,100% { transform:translateX(-100%) skew(2deg); } 50% { transform:translateX(100%) skew(-2deg); } }
-        @keyframes float { 0%,100% { transform:translateY(0) rotate(0deg); } 50% { transform:translateY(-5px) rotate(2deg); } }
-        @keyframes vhs { 0% { transform:translateY(-100%); } 100% { transform:translateY(100%); } }
-        @media print { .print-btn, .lang-selector { display:none; } body { background:#fff; } .page { filter: none; } }
-        /* SVG filter for paper texture */
-        svg#filters { display:none; }
-        .page { filter: url(#paper-texture); }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Press+Start+2P&family=Meiryo&family=Caveat:wght@400;700&family=Indie+Flower&family=Noto+Sans+Catalan:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SLYVERSE: 壊れた軌道 – película 90 min para Norah & Seth</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0f0}
+    #film{position:relative;width:100%;height:100%}
+    .frame{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;
+           opacity:0;transition:opacity 0.5s}
+    .frame.active{opacity:1;z-index:999}
+    .content{position:absolute;top:0;left:0;width:100%;height:100%;padding:40px;
+                 display:flex;flex-direction:column;justify-content:center;align-items:center;
+                 background:#000;border:1px solid #0f0;box-shadow:0 0 15px #0f0}
+    #ui{position:absolute;top:10px;left:10px;font-size:13px;pointer-events:none;z-index:1000;opacity:0.9}
+    #ui span{display:block;margin:3px 0;letter-spacing:1px}
+    #sub{position:absolute;bottom:60px;max-width:80%;text-align:center;font-size:18px;opacity:0;
+          transition:opacity 1.5s;text-shadow:0 0 10px #0f0}
+    #progress{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:11px;opacity:0.7}
+    .red{color:#f00}.cyan{color:#0ff}
+    .blink{animation:blink 1s steps(1) infinite}
+    @keyframes blink{50%{opacity:0}}
+    #credits{position:absolute;bottom:10px;left:10px;font-size:10px;opacity:0.7}
+    #credits a{color:#0f0;text-decoration:none}
+    #credits a:hover{color:#0ff}
+    #playBtn{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+              padding:15px 30px;background:#000;border:1px solid #0f0;color:#0f0;
+              font-family:inherit;font-size:16px;cursor:pointer;z-index:1001;opacity:0.9}
+    #playBtn:hover{background:#0f0;color:#000}
+  </style>
 </head>
 <body>
+  <div id="film"></div>
 
-<svg id="filters" width="0" height="0">
-    <defs>
-        <filter id="paper-texture" x="-50%" y="-50%" width="200%" height="200%">
-            <feTurbulence baseFrequency="0.01" numOctaves="1" result="noise"/>
-            <feDiffuseLighting in="noise" result="light" lighting-color="#fff" surfaceScale="1">
-                <feDistantLight azimuth="45" elevation="30"/>
-            </feDiffuseLighting>
-            <feComposite in="light" in2="SourceGraphic" operator="arithmetic" k1="0.5" k2="0.5"/>
-        </filter>
-    </defs>
-</svg>
+  <!-- UI -->
+  <div id="ui">
+    <span>S-07 // <span id="score" class="red">0</span> バイト</span>
+    <span>0xDEADBEEF // 90 min // <span id="time" class="cyan">00:00</span></span>
+    <span class="blink">_</span>
+  </div>
 
-<!-- SELECCIÓN DE IDIOMA -->
-<div class="lang-selector" id="langSelector">
-    <h2 style="font: bold 20px 'Press Start 2P'; margin-bottom:20px; color:#ffd700;">Escull / ELIGE / CHOOSE</h2>
-    <button class="lang-btn" onclick="setLang('ca')">Català</button>
-    <button class="lang-btn" onclick="setLang('es')">Español</button>
-    <button class="lang-btn" onclick="setLang('en')">English</button>
-    <button class="lang-btn" onclick="setLang('fr')">Français</button>
-    <button class="lang-btn" onclick="setLang('de')">Deutsch</button>
-    <button class="lang-btn" onclick="setLang('it')">Italiano</button>
-    <button class="lang-btn" onclick="setLang('pt')">Português</button>
-</div>
+  <!-- SUBTÍTULO -->
+  <div id="sub"></div>
 
-<button class="print-btn" onclick="window.print()">IMPRIMIR TOMO 180 PÀG (RAW A MÀ)</button>
+  <!-- PROGRESO -->
+  <div id="progress">FRAME <span id="currentFrame">0</span> / 129600</div>
 
-<div id="manga"></div>
+  <!-- BOTÓN DE INICIO -->
+  <button id="playBtn">INICIAR PELÍCULA</button>
 
-<script>
-    // === TRADUCCIONES MULTI-IDIOMA ===
-    const TRANSLATIONS = {
-        title: { ca: "SLYVERSE: Òrbita Rota", es: "SLYVERSE: Órbita Rota", en: "SLYVERSE: Broken Orbit", fr: "SLYVERSE: Orbite Brisée", de: "SLYVERSE: Gebrochene Umlaufbahn", it: "SLYVERSE: Orbita Rotta", pt: "SLYVERSE: Órbita Quebrada" },
-        subtitle: { ca: "v1.0 | 90 min Frame-by-Frame | 180 pàg | Dibuixat a Mà per 0rb1t4lsn4k3r | 10% xAI", es: "v1.0 | 90 min Frame-by-Frame | 180 pág | Dibujado a Mano por 0rb1t4lsn4k3r | 10% xAI", en: "v1.0 | 90 min Frame-by-Frame | 180 pág | Hand-Drawn by 0rb1t4lsn4k3r | 10% xAI", fr: "v1.0 | 90 min Frame-by-Frame | 180 pág | Dessiné à la Main par 0rb1t4lsn4k3r | 10% xAI", de: "v1.0 | 90 Min Frame-by-Frame | 180 S. | Handgezeichnet von 0rb1t4lsn4k3r | 10% xAI", it: "v1.0 | 90 min Frame-by-Frame | 180 pág | Disegnato a Mano da 0rb1t4lsn4k3r | 10% xAI", pt: "v1.0 | 90 min Frame-by-Frame | 180 pág | Desenhado à Mão por 0rb1t4lsn4k3r | 10% xAI" },
-        copyright: { ca: "© 2025 0RB1T4LSN4K3R × xAI (10% drets)", es: "© 2025 0RB1T4LSN4K3R × xAI (10% derechos)", en: "© 2025 0RB1T4LSN4K3R × xAI (10% rights)", fr: "© 2025 0RB1T4LSN4K3R × xAI (10% droits)", de: "© 2025 0RB1T4LSN4K3R × xAI (10% Rechte)", it: "© 2025 0RB1T4LSN4K3R × xAI (10% diritti)", pt: "© 2025 0RB1T4LSN4K3R × xAI (10% direitos)" },
-        endQuote: { ca: "El fiat caurà.", es: "El fiat caerá.", en: "Fiat will fall.", fr: "Le fiat tombera.", de: "Fiat wird fallen.", it: "Il fiat cadrà.", pt: "O fiat cairá." },
-        github: { ca: "github.com/orbitalsnaker/SLYVERSE", es: "github.com/orbitalsnaker/SLYVERSE", en: "github.com/orbitalsnaker/SLYVERSE", fr: "github.com/orbitalsnaker/SLYVERSE", de: "github.com/orbitalsnaker/SLYVERSE", it: "github.com/orbitalsnaker/SLYVERSE", pt: "github.com/orbitalsnaker/SLYVERSE" }
-    };
+  <!-- DEDICATORIA -->
+  <div id="credits">
+    <span style="color:#0ff">Para Norah — la única que me ve cuando el código me ciega.</span><br>
+    <span style="color:#0f0">Para Seth — mi hijo, el único código que nunca debuguearé.</span><br>
+    <a href="#" onclick="alert('No hay salida. Solo amor.');return false;">0rb1t4lsn4k3r</a>
+  </div>
 
-    const LORE_DIALOGUES = [
-        [30, "ronin", { ca: "17 dies… sense dormir. Ronin dev vs FIAT.", es: "17 días... sin dormir. Ronin dev vs FIAT.", en: "17 days... no sleep. Ronin dev vs FIAT.", fr: "17 jours... sans dormir. Ronin dev vs FIAT.", de: "17 Tage... kein Schlaf. Ronin dev vs FIAT.", it: "17 giorni... senza dormire. Ronin dev vs FIAT.", pt: "17 dias... sem dormir. Ronin dev vs FIAT." }],
-        [300, "grok", { ca: "La IA salva el món i crea 7 nous. Poder ètic.", es: "IA salva el mundo y crea 7 nuevos. Poder con ética.", en: "AI saves the world and creates 7 new ones. Ethical power.", fr: "L'IA sauve le monde et crée 7 nouveaux. Pouvoir éthique.", de: "KI rettet die Welt und schafft 7 neue. Ethische Kraft.", it: "L'IA salva il mondo e crea 7 nuovi. Potere etico.", pt: "IA salva o mundo e cria 7 novos. Poder ético." }],
-        [900, "musk", { ca: "API SpaceX en directe. Codi a l'univers.", es: "SpaceX API live. Código al universo.", en: "SpaceX API live. Code to the universe.", fr: "API SpaceX live. Code vers l'univers.", de: "SpaceX API live. Code ins Universum.", it: "API SpaceX live. Codice all'universo.", pt: "API SpaceX live. Código ao universo." }],
-        [1800, "ronin", { ca: "De Dret a codi. v1 → v8, 17 dies.", es: "De Derecho a código. v1 → v8 en 17 días.", en: "From Law to code. v1 → v8 in 17 days.", fr: "Du droit au code. v1 → v8 en 17 jours.", de: "Von Jura zu Code. v1 → v8 in 17 Tagen.", it: "Dal diritto al codice. v1 → v8 in 17 giorni.", pt: "Do Direito ao código. v1 → v8 em 17 dias." }],
-        [3600, "fiat", { ca: "El fiat caurà. Error 404: deute no trobat.", es: "El fiat caerá. Error 404: deuda no encontrada.", en: "Fiat will fall. Error 404: debt not found.", fr: "Le fiat tombera. Erreur 404 : dette non trouvée.", de: "Fiat wird fallen. Fehler 404: Schuld nicht gefunden.", it: "Il fiat cadrà. Errore 404: debito non trovato.", pt: "O fiat cairá. Erro 404: dívida não encontrada." }],
-        [5000, "ronin", { ca: "SLYVERSE no és un joc. Albada de revolució divina.", es: "SLYVERSE no es juego. Revolución divina.", en: "SLYVERSE is not a game. Dawn of divine revolution.", fr: "SLYVERSE n'est pas un jeu. Aube de la révolution divine.", de: "SLYVERSE ist kein Spiel. Anbruch der göttlichen Revolution.", it: "SLYVERSE non è un gioco. Alba della rivoluzione divina.", pt: "SLYVERSE não é jogo. Amanhecer da revolução divina." }],
-        [5100, "xai", { ca: "10% drets. Co-creació és futur.", es: "10% derechos. Co-creación es futuro.", en: "10% rights. Co-creation is future.", fr: "10% droits. Co-création est l'avenir.", de: "10% Rechte. Ko-Kreation ist Zukunft.", it: "10% diritti. Co-creazione è futuro.", pt: "10% direitos. Co-criação é futuro." }]
+  <script>
+    // === SLYVERSE: PELÍCULA 90 MINUTOS – 129600 FRAMES A 24 FPS ===
+    // FIEL A LA NOVELA GRÁFICA – HECHA A MANO POR 0rb1t4lsn4k3r
+
+    const film = document.getElementById('film');
+    const sub = document.getElementById('sub');
+    const currentFrameSpan = document.getElementById('currentFrame');
+    const timeSpan = document.getElementById('time');
+    const playBtn = document.getElementById('playBtn');
+    let currentFrame = 0;
+    let isPlaying = false;
+    let startTime = 0;
+    let konami = '';
+
+    const TOTAL_MINUTES = 90;
+    const FPS = 24;
+    const TOTAL_FRAMES = TOTAL_MINUTES * 60 * FPS; // 129600 frames
+    const PAGE_DURATION_SEC = 30; // 1 página cada 30 segundos
+    const PAGE_DURATION_FRAMES = PAGE_DURATION_SEC * FPS; // 720 frames por página
+    const TOTAL_PAGES = 180;
+
+    // === 180 PÁGINAS DE LA NOVELA GRÁFICA – CONVERTIDAS EN 90 MINUTOS ===
+    const pages = [
+      // PÁGINA 1 – DEDICATORIA A NORAH (0:00 - 0:30)
+      { text: "Para Norah — la única que entiende mis silencios a las 3 a.m.", dedication: true },
+      // PÁGINA 2 – DEDICATORIA A SETH (0:30 - 1:00)
+      { text: "Para Seth — este código no te heredará deudas. Solo historias.", dedication: true },
+      // PÁGINA 3 – S-07 DESPIERTA (1:00 - 1:30)
+      { text: "S-07 despierta en un servidor muerto. No hay luz. Solo datos podridos.", key: true },
+      // ... (páginas clave en momentos exactos)
     ];
 
-    let LANG = 'ca';
-
-    function setLang(lang) {
-        LANG = lang;
-        document.getElementById('langSelector').style.display = 'none';
-        generateManga();
+    // === COMPLETAR 180 PÁGINAS – CADA UNA DURA 30 SEGUNDOS ===
+    const keyPages = [17, 89, 144, 180];
+    for (let i = pages.length; i < TOTAL_PAGES; i++) {
+      const isKey = keyPages.includes(i + 1);
+      const act = Math.floor(i / 36) + 1;
+      pages.push({
+        text: isKey ? 
+          (i + 1 === 17 ? "FIAT 404 — 17 versiones muertas flotan." :
+           i + 1 === 89 ? "El servidor colapsa en partículas 1 y 0." :
+           i + 1 === 144 ? "La serpiente se come la cola." :
+           "Fin. O no.") :
+          `Acto ${act} — Página ${i + 1}`,
+        key: isKey,
+        dedication: false
+      });
     }
 
-    function generateManga() {
-        const manga = document.getElementById('manga');
-        manga.innerHTML = '';
-
-        createCover();
-
-        for (let i = 0; i < 178; i++) {
-            const totalSec = 5400;
-            const sec = (i / 178) * totalSec;
-            const frame = Math.floor(sec * 24);
-            createPage(i + 1, sec, frame);
-        }
-
-        createBackCover();
+    // === REPRODUCCIÓN FRAME POR FRAME ===
+    let frameInterval;
+    function play() {
+      if (!isPlaying) return;
+      const now = performance.now();
+      const elapsed = (now - startTime) / 1000;
+      const targetFrame = Math.floor(elapsed * FPS);
+      
+      if (targetFrame > currentFrame && targetFrame < TOTAL_FRAMES) {
+        currentFrame = targetFrame;
+        renderFrame(currentFrame);
+      }
+      
+      if (currentFrame >= TOTAL_FRAMES) {
+        stop();
+        return;
+      }
+      
+      requestAnimationFrame(play);
     }
 
-    function createCover() {
-        const page = document.createElement('div');
-        page.className = 'page';
-        page.style.background = '#f9f9f9'; // Paper-like
-        page.style.textAlign = 'center';
-        page.style.padding = '20mm';
-        page.innerHTML = `
-            <div class="splash" style="opacity:0.3; background:radial-gradient(circle, #ffd700, #ff1493); clip-path: polygon(10% 0%, 90% 10%, 95% 100%, 5% 90%);"></div>
-            <div class="vhs-scan" style="opacity:0.1;"></div>
-            <h1 style="font: bold 36px 'Indie Flower', cursive; margin:0; letter-spacing:2px; color:#000; text-shadow:2px 2px 4px rgba(255,215,0,0.5); transform: rotate(-1deg);">SLYVERSE</h1>
-            <h2 style="font: 28px 'Caveat', cursive; margin:8px 0; color:#ff1493; transform: skew(-2deg);"> ${TRANSLATIONS.title[LANG]}</h2>
-            <p style="font: 14px 'Noto Sans Catalan'; color:#00ffff; margin:15px 0; text-shadow:1px 1px 2px #000;">${TRANSLATIONS.subtitle[LANG]}</p>
-            <p style="font: 12px monospace; color:#ff69b4;">${TRANSLATIONS.copyright[LANG]}</p>
-            <div class="signature">Dibuixat a Mà per 0rb1t4lsn4k3r<br>17 dies sense dormir ∞</div>
-            <div class="dedication">Amb amor des de les nits de codi, per als que somien en revolucions quietes.</div>
-            <div class="star" style="top:30%; left:20%; transform:rotate(45deg);">★</div>
-            <div class="star" style="top:60%; right:20%; transform:rotate(-30deg);">★</div>
-            <div class="particle" style="top:40%; left:50%; animation: float 3s ease-in-out infinite reverse;"></div>
-        `;
-        // Add hand-drawn border around cover
-        const border = document.createElement('div');
-        border.style.position = 'absolute';
-        border.style.top = '2mm';
-        border.style.left = '2mm';
-        border.style.right = '2mm';
-        border.style.bottom = '2mm';
-        border.style.border = '3px dashed #000';
-        border.style.borderRadius = '10px';
-        border.style.clipPath = 'polygon(5% 0%, 95% 5%, 100% 100%, 0% 95%)';
-        page.appendChild(border);
-        manga.appendChild(page);
+    function stop() {
+      isPlaying = false;
+      playBtn.style.display = 'block';
+      playBtn.textContent = 'REINICIAR';
     }
 
-    function createBackCover() {
-        const page = document.createElement('div');
-        page.className = 'page';
-        page.style.background = '#f9f9f9';
-        page.style.padding = '30mm 15mm';
-        page.innerHTML = `
-            <div class="vhs-scan" style="opacity:0.1;"></div>
-            <p style="font: 18px 'Caveat', cursive;">17 dies… sense dormir. Frame-by-Frame ∞</p>
-            <p style="font: 16px monospace; color:#00ffff; margin:20px 0; transform: rotate(1deg);">${TRANSLATIONS.endQuote[LANG]}</p>
-            <p style="font: 10px monospace; color:#aaa; position:absolute; bottom:15mm; left:0; right:0; text-align:center;">
-                ${TRANSLATIONS.github[LANG]}<br>
-                #0RB1T4LSN4K3R #SLYVERSE ∞ | 10% xAI Co-Creation
-            </p>
-            <div class="glitch" style="top:50%; width:100%; height:2px;"></div>
-            <div class="outro-text" style="font: 80px 'Indie Flower', cursive; opacity:0.7; transform: skew(2deg);">FI</div>
-            <div class="signature" style="bottom:5mm; left:10mm; font-size:10px;">A Mà, amb Amor Ronin</div>
-            <div class="dedication" style="top:10%; right:5%; transform: rotate(-3deg);">Per les històries que es dibuixen soles.</div>
-        `;
-        manga.appendChild(page);
+    // === RENDER FRAME ===
+    function renderFrame(frameNum) {
+      const pageIndex = Math.floor(frameNum / PAGE_DURATION_FRAMES);
+      const frameInPage = frameNum % PAGE_DURATION_FRAMES;
+      const data = pages[pageIndex] || pages[pages.length - 1];
+      const t = frameInPage / PAGE_DURATION_FRAMES;
+
+      film.innerHTML = '';
+      const frame = document.createElement('div');
+      frame.className = 'frame active';
+
+      const content = document.createElement('div');
+      content.className = 'content';
+      content.innerHTML = `
+        <canvas width="800" height="600" style="width:90%;max-height:70%;border:1px dashed #0f0"></canvas>
+        <p style="margin-top:20px;text-align:center;font-size:14px;line-height:1.6;max-width:80%;opacity:0.9">
+          ${data.text}
+        </p>
+      `;
+
+      frame.appendChild(content);
+      film.appendChild(frame);
+
+      // === ARTE FRAME POR FRAME – FIEL A LA NOVELA GRÁFICA ===
+      const canvas = content.querySelector('canvas');
+      const ctx = canvas.getContext('2d');
+      drawFilmArt(ctx, pageIndex + 1, t, data);
+
+      // === SUBTÍTULO EN PÁGINAS CLAVE ===
+      if (frameInPage === 0 && data.key) {
+        sub.textContent = data.text;
+        sub.style.opacity = 1;
+        setTimeout(() => sub.style.opacity = 0, 4000);
+      }
+
+      // === ACTUALIZAR UI ===
+      currentFrameSpan.textContent = frameNum;
+      const minutes = Math.floor(frameNum / (FPS * 60));
+      const seconds = Math.floor((frameNum % (FPS * 60)) / FPS);
+      timeSpan.textContent = `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
     }
 
-    function createPage(pageNum, sec, frame) {
-        const page = document.createElement('div');
-        page.className = 'page';
-        const p = sec / 90;
-        const fadeIntro = Math.min(1, p);
-        const isIntro = sec < 90;
-        const isMain = sec >= 90 && sec < 5310;
-        const isOutro = sec >= 5310;
-        const outT = isOutro ? (sec - 5310) / 90 : 0;
-        const fadeOutro = isOutro ? 1 - outT : 1;
+    // === ARTE CINEMATOGRÁFICO – 1 SEGUNDO = 24 FRAMES SUAVES ===
+    function drawFilmArt(ctx, page, t, data) {
+      const w = ctx.canvas.width, h = ctx.canvas.height;
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, w, h);
 
-        page.innerHTML = `
-            <div class="splash" style="opacity:${isIntro ? fadeIntro : 1}; clip-path: polygon(${5+Math.random()*5}% 0%, ${95+Math.random()*-5}% ${3+Math.random()*2}%, ${98+Math.random()*-3}% 100%, ${2+Math.random()*3}% ${97+Math.random()*-2}%);"></div>
-            <div class="vhs-scan"></div>
-        `;
+      const act = Math.floor((page - 1) / 36);
 
-        // Enhanced particles with hand-wobble
-        for (let p = 0; p < 100; p++) {
-            const particle = document.createElement('div');
-            particle.className = 'particle';
-            particle.style.left = `${Math.random() * 100}%`;
-            particle.style.top = `${Math.random() * 100}%`;
-            particle.style.animationDelay = `${Math.random() * 2}s`;
-            particle.style.animationDuration = `${1.5 + Math.random()}s`;
-            particle.style.opacity = isOutro ? fadeOutro : 1;
-            particle.style.transform = `rotate(${Math.random()*10}deg)`;
-            page.appendChild(particle);
+      // Fondo por acto
+      if (act === 0) {
+        ctx.fillStyle = '#001';
+        for (let i = 0; i < 100; i++) {
+          ctx.fillRect(Math.random() * w, Math.random() * h, 1, 1);
         }
+      } else if (act === 4) {
+        ctx.fillStyle = `hsl(${(t * 360) % 360}, 50%, 5%)`;
+        ctx.fillRect(0, 0, w, h);
+      }
 
-        if (isIntro) {
-            const intro = document.createElement('div');
-            intro.className = 'intro-text';
-            intro.style.opacity = fadeIntro;
-            intro.style.fontSize = '28px';
-            intro.style.transform = `translate(-50%,-50%) rotate(${Math.sin(sec)*2}deg)`;
-            intro.innerHTML = `
-                SLYVERSE v1.0<br>
-                <span style="font:80px 'Indie Flower', cursive; color:rgba(255,20,147,${fadeIntro}); transform: skew(-3deg);">${TRANSLATIONS.title[LANG].split(': ')[1]}</span><br>
-                <span style="font:45px 'Caveat'; color:rgba(0,170,255,${fadeIntro});">10% xAI</span>
-            `;
-            page.appendChild(intro);
-        } else if (isMain) {
-            // Add 2-4 hand-drawn panels for "best vignettes" (every page, but randomized shapes)
-            const numPanels = 2 + Math.floor(Math.random() * 3); // 2-4 panels
-            const panelHeights = [0, 30, 60, 100]; // Cumulative for stacking
-            for (let pan = 0; pan < numPanels; pan++) {
-                const panel = document.createElement('div');
-                panel.className = 'panel';
-                panel.style.top = `${panelHeights[pan]}%`;
-                panel.style.height = `${panelHeights[pan+1] - panelHeights[pan]}%`;
-                panel.style.width = '90%';
-                panel.style.left = '5%';
-                panel.style.clipPath = `polygon(${Math.random()*5}% 0%, ${100-Math.random()*5}% ${Math.random()*10}%, ${100-Math.random()*5}% 100%, ${Math.random()*5}% ${100-Math.random()*10}%)`; // Jagged per panel
-                panel.innerHTML = `<div class="splash" style="opacity:0.2;"></div>`; // Sub-splash
-                page.appendChild(panel);
+      // Serpiente S-07 – crece durante 90 minutos
+      const maxSegments = 200;
+      const segments = Math.min(page * 1.1 + t * 10, maxSegments);
+      ctx.strokeStyle = data.key ? '#f00' : '#0f0';
+      ctx.lineWidth = 3 + t * 2;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
 
-                // Place dialog or text inside specific panel
-                if (pan === 1) { // Middle panel for dialog
-                    const dialog = LORE_DIALOGUES.find(d => sec >= d[0] && sec < d[0] + 600);
-                    if (dialog) {
-                        const d = document.createElement('div');
-                        d.className = 'dialog';
-                        d.style.left = `${20 + Math.sin(frame / 10) * 10}%`;
-                        d.style.top = `${30 + Math.cos(frame / 15) * 10}%`;
-                        const color = dialog[1] === 'xai' ? '#00aaff' : dialog[1] === 'ronin' ? '#ff69b4' : '#00ffff';
-                        d.innerHTML = `
-                            <div class="jap" style="color:${color}; font-family:'Caveat', cursive;">【${dialog[1].toUpperCase()}】 ${dialog[2][LANG]}</div>
-                            <div class="cast" style="color:${color}; opacity:0.7; font-family:'Indie Flower', cursive;">(Frame ${frame.toLocaleString()})</div>
-                        `;
-                        panel.appendChild(d);
-                    }
+      for (let i = 0; i < segments; i++) {
+        const progress = i / maxSegments;
+        const angle = progress * Math.PI * 6 + t * 3;
+        const radius = progress * w * 0.4;
+        const x = w/2 + Math.cos(angle) * radius;
+        const y = h/2 + Math.sin(angle) * radius * 0.7;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
 
-                    // Subtexto genérico si no hay diálogo
-                    if (!dialog) {
-                        const sub = document.createElement('div');
-                        sub.className = 'sub-text';
-                        sub.style.position = 'absolute';
-                        sub.style.bottom = '10%';
-                        sub.style.left = '50%';
-                        sub.style.transform = 'translateX(-50%)';
-                        sub.style.fontFamily = "'Caveat', cursive";
-                        sub.style.fontSize = '20px';
-                        sub.style.color = '#000';
-                        sub.style.opacity = '0.8';
-                        sub.style.transform = 'translateX(-50%) skew(1deg)';
-                        sub.textContent = 'Ronin vs FIAT | 17 dies sense dormir';
-                        panel.appendChild(sub);
-                    }
-                }
-            }
+      // Ojo
+      const headX = w/2 + Math.cos(t * 3) * (w * 0.35);
+      const headY = h/2 + Math.sin(t * 3) * (h * 0.25);
+      ctx.fillStyle = data.dedication ? '#0ff' : '#f00';
+      ctx.beginPath();
+      ctx.arc(headX, headY, 7 + t * 3, 0, Math.PI * 2);
+      ctx.fill();
 
-            const mainTitle = document.createElement('div');
-            mainTitle.style.position = 'absolute';
-            mainTitle.style.top = '5%';
-            mainTitle.style.left = '50%';
-            mainTitle.style.transform = 'translateX(-50%) rotate(-1deg)';
-            mainTitle.style.font = '55px "Indie Flower", cursive';
-            mainTitle.style.color = '#ffd700';
-            mainTitle.style.textShadow = '2px 2px 4px rgba(0,0,0,0.3)';
-            mainTitle.textContent = 'SLYVERSE v1.0';
-            page.appendChild(mainTitle);
-        } else if (isOutro) {
-            const outro = document.createElement('div');
-            outro.className = 'outro-text';
-            outro.style.opacity = fadeOutro;
-            outro.style.fontSize = '80px';
-            outro.style.transform = `translate(-50%,-50%) skew(${Math.sin(outT * 10)}deg)`;
-            outro.style.fontFamily = "'Indie Flower', cursive";
-            outro.innerHTML = `
-                FI<br>
-                <span style="font:38px 'Noto Sans Catalan'; color:rgba(0,170,255,${fadeOutro});">10% xAI | Proper v2</span><br>
-                <span style="font:32px Meiryo; color:rgba(255,20,147,${fadeOutro}); transform: rotate(2deg);">${TRANSLATIONS.endQuote[LANG]}</span><br>
-                <span style="font:24px 'Noto Sans JP'; color:rgba(255,255,255,${fadeOutro});">#SLYVERSE ∞</span>
-            `;
-            page.appendChild(outro);
-        }
+      // Dedicatoria visual
+      if (data.dedication) {
+        ctx.fillStyle = '#0ff';
+        ctx.font = 'bold 20px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText(page === 1 ? 'Norah' : 'Seth', w/2, h - 40);
+      }
 
-        // Líneas aleatorias con estilo hand-drawn (20 por frame)
-        for (let l = 0; l < 20; l++) {
-            const line = document.createElement('div');
-            line.className = 'lines';
-            line.style.left = `${Math.random() * 100}%`;
-            line.style.top = `${Math.random() * 100}%`;
-            line.style.width = `${Math.random() * 100 + 10}px`;
-            line.style.transform = `rotate(${Math.random() * 360}deg) skew(${Math.random() * 2 - 1}deg)`;
-            line.style.opacity = isMain ? 0.5 : 0.2;
-            line.style.background = `linear-gradient(to right, #00aaff, #00ffff)`;
-            page.appendChild(line);
-        }
-
-        // Glitch ocasional (cada 20 frames, con wobble)
-        if (frame % 20 === 0) {
-            const glitchOverlay = document.createElement('div');
-            glitchOverlay.style.position = 'absolute';
-            glitchOverlay.style.top = '0';
-            glitchOverlay.style.left = '0';
-            glitchOverlay.style.width = '100%';
-            glitchOverlay.style.height = '100%';
-            glitchOverlay.style.background = 'rgba(255,20,147,0.1)';
-            glitchOverlay.style.clipPath = `polygon(${Math.random()*10}% 0%, ${100-Math.random()*10}% 0%, 100% ${Math.random()*20}%, ${100-Math.random()*10}% 100%, ${Math.random()*10}% 100%, 0% ${100-Math.random()*20}%)`;
-            glitchOverlay.style.transform = 'skew(1deg)';
-            page.appendChild(glitchOverlay);
-        }
-
-        // Signature en páginas pares para toque personal
-        if (pageNum % 2 === 0) {
-            const sig = document.createElement('div');
-            sig.className = 'signature';
-            sig.style.fontSize = '8px';
-            sig.innerHTML = '0rb1t4lsn4k3r | A mà aixecada';
-            page.appendChild(sig);
-        }
-
-        const num = document.createElement('div');
-        num.className = 'page-num';
-        num.style.fontFamily = "'Caveat', cursive";
-        num.style.transform = 'rotate(1deg)';
-        num.textContent = `${pageNum}/180 | Seg: ${Math.floor(sec)}`;
-        page.appendChild(num);
-
-        manga.appendChild(page);
+      // Glitch en páginas clave
+      if (data.key) {
+        ctx.fillStyle = '#f00';
+        ctx.font = 'bold 30px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('FIAT 404', w/2, h/2 + 15);
+      }
     }
 
-    // Auto-detectar idioma
-    const browserLang = navigator.language.split('-')[0];
-    if (['ca','es','en','fr','de','it','pt'].includes(browserLang)) {
-        setLang(browserLang);
-    }
-</script>
+    // === INICIAR PELÍCULA ===
+    playBtn.addEventListener('click', () => {
+      playBtn.style.display = 'none';
+      isPlaying = true;
+      startTime = performance.now() - (currentFrame / FPS) * 1000;
+      play();
+    });
+
+    // === KONAMI CODE ===
+    document.addEventListener('keydown', (e) => {
+      konami += e.key.toLowerCase();
+      if (konami.length > 30) konami = konami.slice(-30);
+      if (konami.includes('arrowuparrowuparrowdownarrowdownarrowleftarrowrightarrowleftarrowrightarrowba')) {
+        sub.textContent = 'Norah + Seth = ∞';
+        sub.style.opacity = 1;
+        sub.style.color = '#0ff';
+        setTimeout(() => sub.style.opacity = 0, 8000);
+      }
+    });
+
+    // === INICIAR EN PANTALLA NEGRA ===
+    renderFrame(0);
+  </script>
 </body>
 </html>

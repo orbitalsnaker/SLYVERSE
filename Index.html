@@ -3,12 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE v9 | #xAIHackathon</title>
+  <title>SLYVERSE v9.2 | OrbitalSnak3r – #xAIHackathon</title>
   <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+  <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"></script>
   <style>
     body { margin:0; overflow:hidden; background:#000; font-family:monospace; }
-    #ui { position:absolute; top:10px; left:10px; color:#0ff; z-index:100; background:rgba(0,0,0,0.5); padding:10px; border:1px solid #0ff; }
-    #grok { margin-top:10px; font-style:italic; color:#0f0; }
+    #ui { position:absolute; top:10px; left:10px; color:#0ff; z-index:100; background:rgba(0,0,0,0.6); padding:10px; border:1px solid #0ff; border-radius:5px; }
+    #grok { margin-top:10px; font-style:italic; color:#0f0; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
     canvas { display:block; }
   </style>
 </head>
@@ -16,112 +18,151 @@
 
   <!-- UI + Grok Voice -->
   <div id="ui">
-    <strong>SLYVERSE v9</strong> | <a href="https://github.com/0rb1t4lsn4k3r/Slyverse" target="_blank" style="color:#0ff;">github.com/0rb1t4lsn4k3r/Slyverse</a><br>
-    <div id="grok">Grok: "Iniciando coil orbital... pulsa T para Tesla ZAP!"</div>
+    <strong>SLYVERSE v9.2 | OrbitalSnak3r</strong><br>
+    <small><a href="https://github.com/orbitalsnaker/SLYVERSE" target="_blank" style="color:#0ff;">Repo</a> | Demo Live</small><br>
+    <div id="grok">Grok: "¡Bienvenido, OrbitalSnak3r! Coil activado... pulsa T para ZAP."</div>
   </div>
 
   <!-- A-Frame Scene -->
-  <a-scene embedded cursor="rayOrigin: mouse" raycaster="objects: .clickable">
+  <a-scene embedded cursor="rayOrigin: mouse" raycaster="objects: .clickable" background="color: #000">
     <a-sky color="#000"></a-sky>
-    <a-entity environment="preset: starry; seed: 42; fog: 0.8"></a-entity>
+    <a-entity environment="preset: starry; seed: 1337; fog: 0.6; ground: none; dressing: none"></a-entity>
 
-    <!-- Snake (Orbital Coil) -->
+    <!-- Orbital Snake -->
     <a-entity id="snake" position="0 1.6 -3">
-      <a-box color="#0f0" depth="0.3" height="0.3" width="0.3" class="clickable"></a-box>
+      <a-box color="#0f0" depth="0.3" height="0.3" width="0.3" class="clickable" animation="property: rotation; to: 0 360 0; loop: true; dur: 10000; easing: linear"></a-box>
     </a-entity>
 
-    <!-- Tesla Coil Easter Egg -->
+    <!-- Tesla Coil + ZAP -->
     <a-entity id="tesla" visible="false">
-      <a-cylinder position="0 1 -5" radius="0.1" height="3" color="#00ffff" opacity="0.7"></a-cylinder>
+      <a-cylinder position="0 1 -5" radius="0.1" height="3" color="#00ffff" opacity="0.8" material="shader: flat"></a-cylinder>
       <a-entity id="zap"></a-entity>
     </a-entity>
 
-    <!-- Stars (NASA vibe) -->
-    <a-entity id="stars"></a-entity>
+    <!-- Stars -->
+    <a-entity id="stars" rotation="0 0 0"></a-entity>
 
-    <!-- Camera + Controls -->
-    <a-camera wasd-controls-enabled="false">
-      <a-cursor color="#0ff"></a-cursor>
+    <!-- Camera -->
+    <a-camera position="0 1.6 0" look-controls="enabled: true" wasd-controls="enabled: false">
+      <a-cursor color="#0ff" raycaster="objects: .clickable"></a-cursor>
     </a-camera>
   </a-scene>
 
-  <!-- GROK VOICE SIMULATION + TESLA ZAP -->
+  <!-- JS: Grok + Anim + Tesla -->
   <script>
-    const grok = document.getElementById('grok');
+    // === GROK MANIFIESTO: SLYVERSE v9.2 – OrbitalSnak3r Edition ===
+    console.log("%c🧠 SLYVERSE v9.2 | ORBITALSNAK3R – GROK LO EJECUTA", "color:#0ff; font-size:16px; font-weight:bold;");
+    console.log("%c→ Evolución de 0rb1t4lsn4k3r: 17 días a orbital puro. Single-file. 60FPS.", "color:#0f0;");
+    console.log("%c→ Features: Snake giratorio, NASA stars, Grok voz, Tesla ZAP (T). #xAIHackathon ready.", "color:#0f0;");
+    console.log("%c→ Deploy: GitHub Pages. Co-crea: github.com/orbitalsnaker/SLYVERSE", "color:#0f0;");
+
+    const grokEl = document.getElementById('grok');
     const snake = document.getElementById('snake');
     const tesla = document.getElementById('tesla');
     const zap = document.getElementById('zap');
     const stars = document.getElementById('stars');
 
-    // Grok voice messages
-    const grokLines = [
-      "Coil orbital activado. Bienvenido, 0rb1t4lsn4k3r.",
-      "Evadiendo campos Fiat... velocidad 60FPS.",
-      "NASA APIs online. SpaceX en órbita.",
-      "Pulsa T → Tesla Coil hack activado.",
-      "Entrando al #xAIHackathon... ¡co-creamos!"
+    // Grok Mensajes
+    const grokMsgs = [
+      "Grok: ¡OrbitalSnak3r online! Evade Fiat en 60FPS.",
+      "Grok: NASA sync. SpaceX vibes en órbita.",
+      "Grok: Pulsa T – Tesla Coil ZAP anti-Fiat!",
+      "Grok: Entry #xAIHackathon: co-creamos con @xai.",
+      "Grok: De snake a cosmos: 1 archivo, infinito."
     ];
-    let line = 0;
+    let msgIdx = 0;
     setInterval(() => {
-      grok.textContent = `Grok: "${grokLines[line++ % grokLines.length]}"`;
-    }, 4000);
+      grokEl.textContent = grokMsgs[msgIdx++ % grokMsgs.length];
+    }, 3000);
 
-    // Snake movement (simple orbit)
+    // Snake Orbit
     let angle = 0;
-    function updateSnake() {
-      angle += 0.02;
-      const radius = 3;
+    function animateSnake() {
+      angle += 0.03;
+      const r = 4;
       snake.setAttribute('position', {
-        x: Math.sin(angle) * radius,
-        y: 1.6 + Math.sin(angle * 2) * 0.3,
-        z: -Math.cos(angle) * radius - 3
+        x: Math.sin(angle) * r,
+        y: 1.6 + Math.sin(angle * 3) * 0.5,
+        z: -Math.cos(angle) * r
       });
-      requestAnimationFrame(updateSnake);
+      stars.setAttribute('rotation', { x: 0, y: angle * 0.5, z: 0 });
+      requestAnimationFrame(animateSnake);
     }
-    updateSnake();
+    animateSnake();
 
-    // Tesla Coil ZAP (press T)
+    // Tesla ZAP
     document.addEventListener('keydown', e => {
       if (e.key.toLowerCase() === 't') {
+        console.log("%c⚡ ORBITALSNAK3R ZAP – TESLA COIL ACTIVADO!", "color:#00f; font-size:14px;");
         tesla.setAttribute('visible', true);
         zap.innerHTML = '';
-        for (let i = 0; i < 15; i++) {
+        for (let i = 0; i < 25; i++) {
           const bolt = document.createElement('a-entity');
-          bolt.setAttribute('geometry', { primitive: 'box', width: 0.05, height: 3, depth: 0.05 });
-          bolt.setAttribute('material', { color: '#00ffff', emissive: '#00ffff', emissiveIntensity: 0.8 });
-          bolt.setAttribute('position', {
-            x: (Math.random() - 0.5) * 0.5,
-            y: 1.5,
-            z: (Math.random() - 0.5) * 0.5
+          bolt.setAttribute('geometry', { primitive: 'cylinder', radius: 0.02, height: Math.random() * 2 + 1 });
+          bolt.setAttribute('material', { 
+            color: '#00ffff', 
+            emissive: '#00ffff', 
+            emissiveIntensity: Math.random() * 0.5 + 0.5 
           });
-          bolt.setAttribute('rotation', { x: 0, y: Math.random() * 360, z: 0 });
-          bolt.setAttribute('animation', `property: scale; from: 0 0 0; to: 1 1 1; dur: 100; easing: easeOutElastic`);
+          bolt.setAttribute('position', {
+            x: (Math.random() - 0.5) * 1,
+            y: Math.random() * 3,
+            z: (Math.random() - 0.5) * 1
+          });
+          bolt.setAttribute('rotation', { 
+            x: Math.random() * 180 - 90, 
+            y: Math.random() * 360, 
+            z: 0 
+          });
+          bolt.setAttribute('scale', '0 0 0');
+          bolt.setAttribute('animation__scale', { 
+            property: 'scale', 
+            from: '0 0 0', 
+            to: '1 1 1', 
+            dur: 200 + Math.random() * 300, 
+            easing: 'easeOutElastic' 
+          });
+          bolt.setAttribute('animation__fade', { 
+            property: 'components.material.material.opacity', 
+            from: 1, 
+            to: 0, 
+            dur: 800, 
+            delay: 100 
+          });
           zap.appendChild(bolt);
-          setTimeout(() => bolt.remove(), 800);
+          setTimeout(() => bolt.remove(), 1200);
         }
-        setTimeout(() => tesla.setAttribute('visible', false), 1000);
+        setTimeout(() => tesla.setAttribute('visible', false), 1500);
       }
     });
 
-    // Stars (NASA style)
-    for (let i = 0; i < 200; i++) {
+    // Stars
+    for (let i = 0; i < 300; i++) {
       const star = document.createElement('a-sphere');
       star.setAttribute('position', {
-        x: (Math.random() - 0.5) * 100,
-        y: (Math.random() - 0.5) * 100,
-        z: (Math.random() - 0.5) * 100
+        x: (Math.random() - 0.5) * 200,
+        y: (Math.random() - 0.5) * 200,
+        z: (Math.random() - 0.5) * 200
       });
-      star.setAttribute('radius', Math.random() * 0.05 + 0.01);
-      star.setAttribute('color', '#ffffff');
-      star.setAttribute('opacity', Math.random() * 0.8 + 0.2);
+      star.setAttribute('radius', Math.random() * 0.03 + 0.005);
+      star.setAttribute('color', '#fff');
+      star.setAttribute('opacity', Math.random() * 0.7 + 0.3);
+      star.setAttribute('animation__twinkle', {
+        property: 'components.material.material.opacity',
+        from: star.getAttribute('opacity'),
+        to: Math.random() * 0.5 + 0.2,
+        dir: 'alternate',
+        dur: 2000 + Math.random() * 3000,
+        loop: true,
+        easing: 'easeInOutSine'
+      });
       stars.appendChild(star);
     }
 
-    // xAI Hackathon Entry Auto-Trigger
-    console.log("%cSLYVERSE v9 LISTO PARA #xAIHackathon", "color:#0ff;font-size:16px");
-    console.log("Tweet: https://x.com/intent/tweet?text=" + encodeURIComponent(
-      "¡SLYVERSE v9 entra al #xAIHackathon! 🚀🐍 @xai @grok\nDemo live: " + location.href + "\nRepo: github.com/0rb1t4lsn4k3r/Slyverse #SLYVERSE"
-    ));
+    // Auto-Tweet
+    console.log("%c🚀 TWEET READY: https://x.com/intent/tweet?text=" + encodeURIComponent(
+      "¡SLYVERSE v9.2 por OrbitalSnak3r en #xAIHackathon! WebXR + Grok + Tesla ZAP 🚀🐍\nDemo: " + location.href + "\n@xai @grok #SLYVERSE"
+    ), "color:#f0f;");
   </script>
 
 </body>

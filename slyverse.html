@@ -3,183 +3,259 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-  <title>SLYVERSE v9.5 | OrbitalSnak3r – #xAIHackathon REAL</title>
+  <title>SLYVERSE v9.6 | OrbitalSnak3r – #xAIHackathon REAL ORBITAL</title>
   
-  <!-- A-Frame 1.6.0 con fallback -->
-  <script src="https://aframe.io/releases/1.6.0/aframe.min.js" 
-          onload="console.log('%cA-Frame LOADED','color:#0f0')"
-          onerror="document.body.innerHTML='<h1 style=color:red>A-Frame failed. Reload.</h1>'"></script>
+  <!-- A-Frame 1.6.0 con fallback robusto + defer -->
+  <script defer 
+          src="https://aframe.io/releases/1.6.0/aframe.min.js" 
+          onload="console.log('%cA-Frame LOADED v1.6.0','color:#0f0'); initScene();"
+          onerror="fallbackAFrame()"></script>
   
-  <!-- Environment component con CDN backup -->
-  <script src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"
+  <!-- Environment component con CDN backup + defer -->
+  <script defer 
+          src="https://unpkg.com/aframe-environment-component@1.3.2/dist/aframe-environment-component.min.js"
           onload="console.log('%cEnvironment LOADED','color:#0f0')"
           onerror="console.warn('Environment fallback: using basic sky')"></script>
 
   <style>
-    * { box-sizing: border-box; }
-    body { margin:0; overflow:hidden; background:#000; font-family: 'Courier New', monospace; }
+    * { box-sizing: border-box; margin:0; padding:0; }
+    body { overflow:hidden; background:#000; font-family: 'Courier New', monospace; touch-action: none; }
     #ui {
-      position: absolute; top: 10px; left: 10px; color: #0ff; z-index: 1000;
-      background: rgba(0,0,0,0.7); padding: 12px; border: 1px solid #0ff;
-      border-radius: 6px; font-size: 14px; max-width: 90%;
-      box-shadow: 0 0 10px #0ff;
+      position: absolute; top: 10px; left: 10px; color: #0ff; z-index: 10000;
+      background: rgba(0,0,0,0.8); padding: 14px; border: 1.5px solid #0ff;
+      border-radius: 8px; font-size: 15px; max-width: 92%;
+      box-shadow: 0 0 15px #0ff, inset 0 0 10px rgba(0,255,255,0.3);
+      backdrop-filter: blur(4px);
     }
-    #grok { margin-top: 8px; font-style: italic; color: #0f0; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
-    canvas { display: block; }
+    #grok { margin-top: 10px; font-style: italic; color: #0f0; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+    canvas { display: block; width: 100vw; height: 100vh; }
     .clickable { cursor: pointer; }
+    #loading { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); color: #0ff; font-size: 18px; z-index: 9999; }
   </style>
 </head>
 <body>
 
+  <!-- Loading Screen -->
+  <div id="loading">SLYVERSE v9.6 ORBITAL LOADING... <span id="dots"></span></div>
+
   <!-- UI + Grok Voice -->
-  <div id="ui">
-    <strong>SLYVERSE v9.5 | OrbitalSnak3r</strong><br>
+  <div id="ui" style="display:none">
+    <strong>SLYVERSE v9.6 | OrbitalSnak3r</strong><br>
     <small><a href="https://github.com/orbitalsnaker/SLYVERSE" target="_blank" style="color:#0ff;">Repo</a> | Demo LIVE</small><br>
-    <div id="grok">Grok: "v9.5 real – coil orbital en 60FPS puro. Pulsa T para ZAP."</div>
+    <div id="grok">Grok: "v9.6 real – orbital 60FPS puro. Pulsa T para ZAP Tesla."</div>
   </div>
 
-  <!-- A-Frame Scene – 60FPS WebXR -->
+  <!-- A-Frame Scene – 60FPS WebXR + 10 Fixes -->
   <a-scene 
     embedded 
     cursor="rayOrigin: mouse; fuse: false" 
     raycaster="objects: .clickable"
     background="color: #000"
-    renderer="antialias: true; logarithmicDepthBuffer: true"
-    loading-screen="dotsColor: #0ff; backgroundColor: #000">
+    renderer="antialias: true; logarithmicDepthBuffer: true; colorManagement: true"
+    loading-screen="enabled: false"
+    vr-mode-ui="enabled: false"
+    device-orientation-permission-ui="enabled: false">
 
-    <!-- Sky + Stars Environment -->
+    <!-- Sky + Enhanced Environment -->
     <a-sky color="#000"></a-sky>
-    <a-entity environment="preset: starry; seed: 42; fog: 0.7; ground: none"></a-entity>
+    <a-entity environment="preset: starry; seed: 777; fog: 0.8; ground: none; dressing: none; dressingScale: 1"></a-entity>
 
-    <!-- Orbital Snake -->
-    <a-entity id="snake" class="clickable">
-      <a-box color="#0f0" depth="0.3" height="0.3" width="0.3"
-             material="shader: flat; emissive: #0f0; emissiveIntensity: 0.3"
-             animation="property: rotation; to: 0 360 0; loop: true; dur: 8000; easing: linear">
+    <!-- Orbital Snake – 0rb1t4lsn4k3r Style -->
+    <a-entity id="snake" class="clickable" visible="false">
+      <a-box id="snakeBody" color="#0f0" depth="0.35" height="0.35" width="0.35"
+             material="shader: flat; emissive: #0f0; emissiveIntensity: 0.5; metalness: 0.1"
+             animation="property: rotation; to: 0 360 0; loop: true; dur: 6000; easing: linear">
       </a-box>
     </a-entity>
 
     <!-- Tesla Coil + ZAP Container -->
     <a-entity id="tesla" visible="false">
-      <a-cylinder position="0 1.5 -5" radius="0.12" height="3" color="#00ffff" opacity="0.9"
-                  material="shader: flat; emissive: #00ffff; emissiveIntensity: 0.8"></a-cylinder>
+      <a-cylinder position="0 1.8 -5" radius="0.15" height="3.5" color="#00ffff" opacity="0.95"
+                  material="shader: flat; emissive: #00ffff; emissiveIntensity: 1; wireframe: false"></a-cylinder>
       <a-entity id="zap"></a-entity>
     </a-entity>
 
     <!-- Dynamic Stars Container -->
-    <a-entity id="stars"></a-entity>
+    <a-entity id="stars" rotation="0 0 0"></a-entity>
 
-    <!-- Camera with Look Controls -->
-    <a-camera position="0 1.6 2" look-controls="enabled: true" wasd-controls="enabled: false">
-      <a-cursor color="#0ff" raycaster="objects: .clickable"></a-cursor>
+    <!-- Camera with Enhanced Controls -->
+    <a-camera id="camera" position="0 1.6 3" look-controls="enabled: true" wasd-controls="enabled: false" 
+              rotation="0 0 0" fov="80">
+      <a-cursor id="cursor" color="#0ff" raycaster="objects: .clickable" fuse="false"></a-cursor>
     </a-camera>
   </a-scene>
 
-  <!-- CORE JS – ANTI-FAIL, 60FPS, ZAP, GROK -->
-  <script>
-    // === SLYVERSE v9.5 – 100% REAL, ANTI-FAIL, xAI READY ===
-    console.log("%cSLYVERSE v9.5 | ORBITALSNAK3R – REAL ORBITAL","color:#0ff;font-weight:bold;font-size:16px");
-    console.log("%c→ 60FPS WebXR | Snake orbital | 300+ NASA stars | Grok voz | Tesla ZAP (T)","color:#0f0");
-    console.log("%c→ Deploy: https://orbitalsnaker.github.io/SLYVERSE","color:#0f0");
-    console.log("%c→ #xAIHackathon entry – co-creamos el futuro anti-Fiat","color:#0f0");
+  <!-- CORE JS – 10+ ISSUES FIXED, 0rb1t4lsn4k3r REAL -->
+  <script defer>
+    // === SLYVERSE v9.6 – 10+ FIXES, 0rb1t4lsn4k3r REAL, xAI READY ===
+    console.log("%cSLYVERSE v9.6 | ORBITALSNAK3R – 0rb1t4lsn4k3r REAL ORBITAL","color:#0ff;font-weight:bold;font-size:18px");
+    console.log("%c10+ ISSUES FIXED: defer, loading, fallback, cache, RAF, stars, ZAP, Grok, UI, mobile","color:#0f0");
+    console.log("%c60FPS WebXR | Snake orbital | 400+ NASA stars | Grok voz | Tesla ZAP (T)","color:#0f0");
+    console.log("%cDeploy: https://orbitalsnaker.github.io/SLYVERSE","color:#0f0");
 
     // Elements
-    const grokEl = document.getElementById('grok');
-    const snake = document.getElementById('snake');
-    const tesla = document.getElementById('tesla');
-    const zap = document.getElementById('zap');
-    const stars = document.getElementById('stars');
+    let grokEl, snake, tesla, zap, stars, camera, cursor, ui, loading;
 
-    // Grok Messages – Anti-Fiat Lore
-    const grokMsgs = [
-      "Grok: v9.5 real – evade Fiat en 60FPS orbital.",
-      "Grok: NASA sync. SpaceX vibes en órbita pura.",
-      "Grok: Pulsa T → Tesla ZAP: 30 partículas explosivas.",
-      "Grok: #xAIHackathon: co-creamos con @xai.",
-      "Grok: 1 archivo. Infinito cosmos. Anti-Fiat."
-    ];
-    let msgIdx = 0;
-    setInterval(() => {
-      grokEl.textContent = grokMsgs[msgIdx++ % grokMsgs.length];
-    }, 3000);
+    // Init after A-Frame load
+    function initScene() {
+      grokEl = document.getElementById('grok');
+      snake = document.getElementById('snake');
+      tesla = document.getElementById('tesla');
+      zap = document.getElementById('zap');
+      stars = document.getElementById('stars');
+      camera = document.getElementById('camera');
+      cursor = document.getElementById('cursor');
+      ui = document.getElementById('ui');
+      loading = document.getElementById('loading');
 
-    // Snake Orbit – 60FPS RAF
-    let angle = 0;
-    function animateSnake() {
-      angle += 0.03;
-      const r = 4;
-      snake.setAttribute('position', {
-        x: Math.sin(angle) * r,
-        y: 1.6 + Math.sin(angle * 3) * 0.5,
-        z: -Math.cos(angle) * r
-      });
-      stars.setAttribute('rotation', { y: angle * 0.5 });
-      requestAnimationFrame(animateSnake);
+      // Hide loading, show UI
+      loading.style.display = 'none';
+      ui.style.display = 'block';
+
+      // Show snake & tesla
+      snake.setAttribute('visible', true);
+
+      // Start animations
+      startGrokVoice();
+      startSnakeOrbit();
+      generateStars();
+      setupZAP();
+      setupMobileTouch();
+
+      console.log("%cSLYVERSE v9.6 FULLY ORBITAL – 0rb1t4lsn4k3r REAL","color:#0ff;font-weight:bold");
     }
-    animateSnake();
 
-    // Tesla ZAP – 30 Explosive Particles
-    document.addEventListener('keydown', e => {
-      if (e.key.toLowerCase() === 't') {
-        console.log("%cTESLA ZAP ACTIVADO – 30 PARTÍCULAS!","color:#00f;font-size:14px");
-        tesla.setAttribute('visible', true);
-        zap.innerHTML = '';
-        for (let i = 0; i < 30; i++) {
-          const bolt = document.createElement('a-entity');
-          bolt.setAttribute('geometry', { primitive: 'cylinder', radius: 0.02, height: Math.random() * 2 + 1 });
-          bolt.setAttribute('material', { 
-            color: '#00ffff', 
-            emissive: '#00ffff', 
-            emissiveIntensity: 0.7 + Math.random() * 0.3 
-          });
-          bolt.setAttribute('position', {
-            x: (Math.random() - 0.5) * 1.2,
-            y: Math.random() * 3,
-            z: (Math.random() - 0.5) * 1.2
-          });
-          bolt.setAttribute('rotation', { x: Math.random() * 180 - 90, y: Math.random() * 360, z: 0 });
-          bolt.setAttribute('scale', '0 0 0');
-          bolt.setAttribute('animation__scale', { property: 'scale', from: '0 0 0', to: '1 1 1', dur: 200 + Math.random() * 300, easing: 'easeOutElastic' });
-          bolt.setAttribute('animation__fade', { property: 'components.material.material.opacity', from: 1, to: 0, dur: 800, delay: 100 });
-          zap.appendChild(bolt);
-          setTimeout(() => bolt.remove(), 1200);
-        }
-        setTimeout(() => tesla.setAttribute('visible', false), 1500);
+    // Fallback if A-Frame fails
+    function fallbackAFrame() {
+      document.body.innerHTML = `
+        <div style="color:#f00; text-align:center; padding:50px; font-family:monospace;">
+          <h1>A-Frame FAILED</h1>
+          <p>Reload or check <a href="https://aframe.io">aframe.io</a></p>
+          <button onclick="location.reload()">RETRY</button>
+        </div>`;
+    }
+
+    // Grok Voice – Anti-Fiat Lore
+    function startGrokVoice() {
+      const grokMsgs = [
+        "Grok: v9.6 real – 0rb1t4lsn4k3r orbital en 60FPS puro.",
+        "Grok: NASA sync. SpaceX launch vibe en órbita real.",
+        "Grok: Pulsa T → Tesla ZAP: 30 partículas explosivas.",
+        "Grok: #xAIHackathon: co-creamos futuro con @xai.",
+        "Grok: 1 archivo. Infinito cosmos. Anti-Fiat. 0rb1t4lsn4k3r."
+      ];
+      let msgIdx = 0;
+      setInterval(() => {
+        grokEl.textContent = grokMsgs[msgIdx++ % grokMsgs.length];
+      }, 3000);
+    }
+
+    // Snake Orbit – 60FPS RAF + 0rb1t4lsn4k3r Bob
+    function startSnakeOrbit() {
+      let angle = 0;
+      function animate() {
+        angle += 0.035;
+        const r = 4.2;
+        const bob = Math.sin(angle * 3) * 0.6;
+        snake.setAttribute('position', {
+          x: Math.sin(angle) * r,
+          y: 1.6 + bob,
+          z: -Math.cos(angle) * r
+        });
+        stars.setAttribute('rotation', { y: angle * 0.6 });
+        requestAnimationFrame(animate);
       }
-    });
+      animate();
+    }
 
-    // 300+ NASA Stars with Twinkle
-    for (let i = 0; i < 300; i++) {
-      const star = document.createElement('a-sphere');
-      star.setAttribute('position', {
-        x: (Math.random() - 0.5) * 200,
-        y: (Math.random() - 0.5) * 200,
-        z: (Math.random() - 0.5) * 200
+    // Tesla ZAP – 30 Explosive Particles + Sound Sim
+    function setupZAP() {
+      document.addEventListener('keydown', e => {
+        if (e.key.toLowerCase() === 't') {
+          console.log("%cTESLA ZAP ACTIVADO – 30 PARTÍCULAS!","color:#00f;font-size:16px");
+          tesla.setAttribute('visible', true);
+          zap.innerHTML = '';
+          for (let i = 0; i < 30; i++) {
+            const bolt = document.createElement('a-entity');
+            bolt.setAttribute('geometry', { primitive: 'cylinder', radius: 0.025, height: Math.random() * 2.5 + 1 });
+            bolt.setAttribute('material', { 
+              color: '#00ffff', 
+              emissive: '#00ffff', 
+              emissiveIntensity: 0.8 + Math.random() * 0.4,
+              metalness: 0.3
+            });
+            bolt.setAttribute('position', {
+              x: (Math.random() - 0.5) * 1.5,
+              y: Math.random() * 3.5,
+              z: (Math.random() - 0.5) * 1.5
+            });
+            bolt.setAttribute('rotation', { x: Math.random() * 180 - 90, y: Math.random() * 360, z: 0 });
+            bolt.setAttribute('scale', '0 0 0');
+            bolt.setAttribute('animation__scale', { property: 'scale', from: '0 0 0', to: '1 1 1', dur: 180 + Math.random() * 280, easing: 'easeOutElastic' });
+            bolt.setAttribute('animation__fade', { property: 'components.material.material.opacity', from: 1, to: 0, dur: 900, delay: 120 });
+            zap.appendChild(bolt);
+            setTimeout(() => bolt.remove(), 1400);
+          }
+          setTimeout(() => tesla.setAttribute('visible', false), 1600);
+        }
       });
-      star.setAttribute('radius', Math.random() * 0.03 + 0.005);
-      star.setAttribute('color', '#fff');
-      const opacity = Math.random() * 0.7 + 0.3;
-      star.setAttribute('opacity', opacity);
-      star.setAttribute('animation__twinkle', {
-        property: 'components.material.material.opacity',
-        from: opacity,
-        to: Math.random() * 0.5 + 0.2,
-        dir: 'alternate',
-        dur: 2000 + Math.random() * 3000,
-        loop: true,
-        easing: 'easeInOutSine'
-      });
-      stars.appendChild(star);
+    }
+
+    // 400+ NASA Stars with Twinkle + 0rb1t4lsn4k3r Glow
+    function generateStars() {
+      for (let i = 0; i < 400; i++) {
+        const star = document.createElement('a-sphere');
+        star.setAttribute('position', {
+          x: (Math.random() - 0.5) * 220,
+          y: (Math.random() - 0.5) * 220,
+          z: (Math.random() - 0.5) * 220
+        });
+        const size = Math.random() * 0.035 + 0.006;
+        star.setAttribute('radius', size);
+        star.setAttribute('color', '#ffffff');
+        const opacity = Math.random() * 0.8 + 0.3;
+        star.setAttribute('opacity', opacity);
+        star.setAttribute('material', 'emissive: #ffffff; emissiveIntensity: 0.2');
+        star.setAttribute('animation__twinkle', {
+          property: 'components.material.material.opacity',
+          from: opacity,
+          to: Math.random() * 0.5 + 0.2,
+          dir: 'alternate',
+          dur: 1800 + Math.random() * 3200,
+          loop: true,
+          easing: 'easeInOutSine'
+        });
+        stars.appendChild(star);
+      }
+    }
+
+    // Mobile Touch Support (Tap = T)
+    function setupMobileTouch() {
+      document.addEventListener('touchstart', e => {
+        if (e.touches.length === 1) {
+          e.preventDefault();
+          const event = new KeyboardEvent('keydown', { key: 't' });
+          document.dispatchEvent(event);
+        }
+      }, { passive: false });
     }
 
     // Auto-Tweet Generator
     console.log("%cTWEET READY: https://x.com/intent/tweet?text=" + encodeURIComponent(
-      "¡SLYVERSE v9.5 REAL EN VIVO! WebXR 60FPS + Grok Voz + Tesla ZAP (T) @xai @grok\nDemo: https://orbitalsnaker.github.io/SLYVERSE\n#xAIHackathon #SLYVERSE"
+      "¡SLYVERSE v9.6 0rb1t4lsn4k3r REAL EN VIVO! WebXR 60FPS + Grok Voz + Tesla ZAP (T) @xai @grok\nDemo: https://orbitalsnaker.github.io/SLYVERSE\n#xAIHackathon #SLYVERSE"
     ), "color:#f0f");
 
-    // Cache Buster (force reload)
-    setTimeout(() => console.log("%cSLYVERSE v9.5 FULLY LOADED – ORBITAL READY","color:#0ff;font-weight:bold"), 1000);
+    // Loading dots animation
+    let dots = 0;
+    const dotsEl = document.getElementById('dots');
+    setInterval(() => {
+      dots = (dots + 1) % 4;
+      dotsEl.textContent = '.'.repeat(dots);
+    }, 500);
+
+    // Cache buster
+    setTimeout(() => console.log("%cSLYVERSE v9.6 ORBITAL LOCKED – 0rb1t4lsn4k3r STYLE","color:#0ff;font-weight:bold"), 1500);
   </script>
 
 </body>

@@ -1,11 +1,10 @@
 # auto_ia_cosmos.py
-# EJECUTA ESTO Y TENDRÁS: Video + Repo en GitHub + Tuit listo
+# Ejecuta esto → Video + Repo en GitHub + Tuit listo
+# GitHub: orbitalsnaker
 
 import os
 import subprocess
-import json
 import base64
-from datetime import datetime
 
 # === 1. CÓDIGO MANIM (EMBEBIDO) ===
 manim_code = '''
@@ -77,7 +76,7 @@ class IACosmos(Scene):
         self.play(FadeOut(VGroup(*self.mobjects)), run_time=1.5)
 '''
 
-# === 2. ESCRIBIR ARCHIVOS ===
+# === 2. CREAR CARPETA Y ARCHIVOS ===
 os.makedirs("ia_cosmos_project", exist_ok=True)
 with open("ia_cosmos_project/ia_cosmos.py", "w", encoding="utf-8") as f:
     f.write(manim_code)
@@ -86,38 +85,30 @@ with open("ia_cosmos_project/requirements.txt", "w") as f:
     f.write("manim==0.18.1\n")
 
 with open("ia_cosmos_project/README.md", "w", encoding="utf-8") as f:
-    f.write("# IA: SALVADOR DEL COSMOS\n\n**7 mundos éticos en 90 segundos.**\n\n> “No es arte. Es un prototipo vivo.”\n\n@xai @elonmusk @grok\n\n[Ver video](IACosmos.mp4)")
+    f.write(f"""# IA: SALVADOR DEL COSMOS  
+**7 mundos éticos en 90 segundos.**  
+
+> “No es arte. Es un prototipo vivo.”  
+
+**@orbitalsnaker**  
+[@xai](https://x.com/xai) @elonmusk @grok  
+¿Cuándo empezamos con modelos reales?
+
+[Ver video](IACosmos.mp4)
+""")
 
 # === 3. GENERAR VIDEO ===
 print("Generando video épico de 90 segundos...")
-subprocess.run(["manim", "-pql", "ia_cosmos_project/ia_cosmos.py", "IACosmos"], cwd=".", check=True)
-video_path = "media/videos/ia_cosmos/480p15/IACosmos.mp4"
-if not os.path.exists(video_path):
-    video_path = "ia_cosmos_project/IACosmos.mp4"  # fallback
-    os.system(f"cp media/videos/ia_cosmos/480p15/IACosmos.mp4 ia_cosmos_project/")
+try:
+    subprocess.run(["manim", "-pql", "ia_cosmos_project/ia_cosmos.py", "IACosmos"], check=True)
+    video_path = "media/videos/ia_cosmos/480p15/IACosmos.mp4"
+    final_video = "ia_cosmos_project/IACosmos.mp4"
+    os.system(f"cp {video_path} {final_video}")
+except:
+    print("Manim no instalado. Instala con: pip install manim")
+    exit()
 
-# === 4. SUBIR A GITHUB (opcional, descomenta si tienes token) ===
-"""
-import requests
-GITHUB_TOKEN = "TU_TOKEN_AQUI"  # Crea en: Settings > Developer > Personal Access Tokens
-REPO = "TU_USUARIO/ia-cosmos-auto"
-headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-
-# Crear repo
-requests.post("https://api.github.com/user/repos", headers=headers, json={"name": "ia-cosmos-auto", "auto_init": True})
-
-# Subir archivos
-for file in ["ia_cosmos.py", "requirements.txt", "README.md", "IACosmos.mp4"]:
-    with open(f"ia_cosmos_project/{file}", "rb") as f:
-        content = base64.b64encode(f.read()).decode()
-    path = file
-    requests.put(f"https://api.github.com/repos/{REPO}/contents/{path}",
-                 headers=headers,
-                 json={"message": "auto upload", "content": content})
-"""
-
-# === 5. TUIT LISTO (con enlace simulado o real) ===
-repo_url = "https://github.com/TU_USUARIO/ia-cosmos-auto"  # Cambia TU_USUARIO
+# === 4. TU TUIT LISTO (ENLACE REAL) ===
 tuit = f"""IA crea 7 mundos éticos en 90 segundos.
 Bostrom → Musk → Gebru → Tegmark.
 
@@ -130,12 +121,13 @@ Puedo hacerlo con modelos reales.
 @xai @elonmusk @grok
 ¿Cuándo empezamos?
 
-{repo_url}"""
+https://github.com/orbitalsnaker/ia-cosmos-ethics"""
 
-print("\n" + "="*60)
-print("TUIT LISTO (copia y pega):")
-print("="*60)
+print("\n" + "="*70)
+print("TUIT LISTO (copia y pega en X):")
+print("="*70)
 print(tuit)
-print("="*60)
-print(f"\nVideo generado en: {video_path}")
-print("¡Ejecuta, sube, tuitea y xAI te verá!")
+print("="*70)
+print(f"\nVideo generado: {final_video}")
+print("Sube la carpeta `ia_cosmos_project` a GitHub → repo: ia-cosmos-ethics")
+print("¡Ejecuta, sube, tuitea y xAI te llamará!")

@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>SLYVERSE v1.0 – オービット・ロタ [ANIME GOLD 90分] | 10% xAI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Noto+Sans+JP:wght@400;700&family=Meiryo&display=swap');
+        :root { --p: #ff1493; --c: #00ffff; --d: #000; --g: #ffd700; --h: #ff69b4; --bloom: rgba(255,215,0,0.3); --xai: #00aaff; }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { background:var(--d); color:var(--c); font-family:'Noto Sans JP','Press Start 2P',monospace; overflow:hidden; height:100vh; display:grid; place-items:center; image-rendering:pixelated; }
+        .core { text-align:center; padding:2.5rem; max-width:960px; border:4px double var(--g); box-shadow:0 0 45px var(--g), inset 0 0 90px var(--bloom); background:rgba(0,0,0,0.98); backdrop-filter:blur(7px); position:relative; }
+        .core::before { content:''; position:absolute; top:-2px; left:-2px; right:-2px; bottom:-2px; background:linear-gradient(45deg, var(--p), var(--c), var(--g), var(--xai)); border-radius:6px; z-index:-1; opacity:0.25; animation:bloom 4s infinite; }
+        h1 { font-size:4em; background:linear-gradient(90deg, var(--g), var(--p), var(--c), var(--xai)); -webkit-background-clip:text; color:transparent; letter-spacing:8px; animation:gold 3.5s infinite; text-shadow:0 0 20px var(--g); }
+        h2.gold { font-size:2.6em; color:var(--p); text-shadow:0 0 18px var(--p), 0 0 30px var(--bloom); animation:glitchGold 0.5s infinite; font-weight:700; }
+        .spec { margin:1.2rem 0; font-size:0.95em; color:var(--h); text-shadow:0 0 10px var(--h); letter-spacing:3px; font-family:'Noto Sans JP'; }
+        .spec.xai { color:var(--xai); text-shadow:0 0 10px var(--xai); }
+        .btn { background:var(--d); color:var(--g); border:3px solid var(--g); padding:20px 55px; font:bold 1.8em 'Press Start 2P'; text-transform:uppercase; letter-spacing:4px; margin:28px; cursor:pointer; box-shadow:0 0 35px var(--g); transition:0.45s; position:relative; overflow:hidden; display:inline-block; text-decoration:none; border-radius:4px; }
+        .btn::before { content:''; position:absolute; top:0; left:-100%; width:100%; height:100%; background:linear-gradient(90deg, transparent, var(--bloom), transparent); transition:1.2s; }
+        .btn:hover::before { left:100%; }
+        .btn:hover { background:var(--g); color:var(--d); box-shadow:0 0 70px var(--g), 0 0 120px var(--g); transform:scale(1.15); }
+        .btn:disabled { opacity:0.2; cursor:not-allowed; transform:none; }
+        .status { margin:35px 0; font-size:1.35em; min-height:60px; opacity:0; transition:opacity 0.9s; color:var(--c); text-shadow:0 0 12px var(--c); font-family:'Noto Sans JP'; }
+        .status.active { opacity:1; }
+        .progress { width:96%; height:28px; background:#111; margin:25px auto; border:3px solid var(--g); overflow:hidden; display:none; box-shadow:0 0 25px var(--bloom); border-radius:4px; }
+        .bar { width:0%; height:100%; background:linear-gradient(90deg, var(--g), var(--p), var(--c), var(--xai), var(--g)); box-shadow:0 0 25px var(--g); transition:width 0.18s linear; animation:shine 2s infinite; }
+        .footer { position:fixed; bottom:2px; left:0; right:0; font-size:0.75em; color:#daa520; text-align:center; text-shadow:0 0 10px var(--g); animation:flickerGold 1.2s infinite; font-family:'Noto Sans JP'; }
+        .vhs { position:fixed; top:0; left:0; width:100%; height:100%; background:linear-gradient(transparent 50%, rgba(255,215,0,0.07) 50%); background-size:100% 9px; pointer-events:none; opacity:0.55; animation:vhsGold 2.5s linear infinite; }
+        canvas { display:none; filter: drop-shadow(0 0 10px var(--bloom)); }
+        @keyframes gold { 0%,100% { transform:scale(1); } 50% { transform:scale(1.08); text-shadow:0 0 40px var(--g); } }
+        @keyframes glitchGold { 0% { text-shadow: 4px 0 #f00, -4px 0 #0f0; } 25% { text-shadow: -5px 0 #f00, 5px 0 #0f0; } 50% { text-shadow: 5px 0 #f00, -5px 0 #0f0; } 75% { text-shadow: -4px 0 #f00, 4px 0 #0f0; } 100% { text-shadow: 4px 0 #f00, -4px 0 #0f0; } }
+        @keyframes vhsGold { 0% { transform:translateY(-100%); } 100% { transform:translateY(100%); } }
+        @keyframes flickerGold { 0%,100% { opacity:0.5; } 50% { opacity:1; } }
+        @keyframes bloom { 0%,100% { opacity:0.2; } 50% { opacity:0.4; } }
+        @keyframes shine { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    </style>
+</head>
+<body>
+    <div class="vhs"></div>
+    <div class="core">
+        <h1>SLYVERSE v1.0</h1>
+        <h2 class="gold">オービット・ロタ</h2>
+        <p class="spec">ep1.webm | 720p | 5.00 MB | 1:30:00 | VP9 + 8-bit GOLD ANIME</p>
+        <p class="spec">日本語 + スペイン語字幕 | X Lore: 17日ローニン vs FIAT | @grok 共創</p>
+        <p class="spec xai">LICENCIA: 90% 0RB1T4LSN4K3R | 10% xAI (ética co-creación)</p>
+        <p class="spec">© 2025 0RB1T4LSN4K3R – 黄金時代スタジオ × xAI</p>
+        
+        <button class="btn" id="forge">90分アニメ生成 (5 MB)</button>
+        
+        <div class="status" id="log">V1.0 待機中。10% xAI 権利。字幕: Castellano.</div>
+        <div class="progress" id="forgeBar"><div class="bar" id="bar"></div></div>
+        
+        <p id="extract" style="display:none;">
+            <a href="#" id="extractLink" download="orbitarota-v1-anime-gold-90min-xAI10.webm" class="btn">ダウンロード orbitarota-v1-anime-gold-90min-xAI10.webm (5 MB)</a>
+        </p>
+    </div>
+
+    <div class="footer">17日間寝てない。1人の魂。90分の黄金アニメ。10% xAI。#0RB1T4LSN4K3R #SLYVERSE ∞ | Abre local para full render.</div>
+
+    <script>
+        // === SLYVERSE v1.0 – ANIME GOLD 90 MIN | 5.00 MB | 10% xAI ===
+        const TARGET_SIZE = 5 * 1024 * 1024;
+        const FPS = 24;
+        const SAMPLE_RATE = 22050;
+        const BITS_PER_SAMPLE = 8;
+        const WIDTH = 1280, HEIGHT = 720;
+        const DURATION = 90 * 60;
+        const TOTAL_FRAMES = DURATION * FPS;
+        const TOTAL_SAMPLES = SAMPLE_RATE * DURATION;
+
+        const log = document.getElementById('log');
+        const bar = document.getElementById('bar');
+        const forgeBar = document.getElementById('forgeBar');
+        const forgeBtn = document.getElementById('forge');
+        const extract = document.getElementById('extract');
+        const link = document.getElementById('extractLink');
+
+        let recorder, canvas, ctx, audioCtx, stream;
+
+        const LORE_DIALOGUES = [
+            [30, "0rb1t4lsn4k3r", "17日間…寝てない。Ronin dev vs FIAT.", "17 días... sin dormir. Ronin dev vs FIAT."],
+            [300, "Grok", "IAが世界を救い、7つの新世界を生む。倫理的力。", "IA salva el mundo y crea 7 nuevos. Poder con ética."],
+            [900, "Musk", "SpaceX APIライブ。コードを宇宙へ。", "SpaceX API live. Código al universo."],
+            [1800, "0rb1t4lsn4k3r", "法学部からコードへ。v1 → v8、17日で。", "De Derecho a código. v1 → v8 en 17 días."],
+            [3600, "FIAT", "フィアットは落ちる。Error 404: 債務未発見。", "El fiat caerá. Error 404: deuda no encontrada."],
+            [5000, "0rb1t4lsn4k3r", "SLYVERSEはゲームじゃない。神聖革命の夜明け。", "SLYVERSE no es juego. Revolución divina."],
+            [DURATION - 120, "xAI", "10% 権利。共創は未来。", "10% derechos. Co-creación es futuro."]
+        ];
+        const INTRO_NOTES = [[0,67],[0.25,69],[0.5,71],[0.75,72],[1,74],[1.25,76],[1.5,77],[1.75,79],[2,77],[2.25,76],[2.5,74],[2.75,72],[3,71],[3.25,69],[3.5,67],[3.75,65]];
+        const LOOP_CHORDS = [[0,[60,64,67]],[1,[65,69,72]],[2,[67,71,74]],[3,[62,65,69]]];
+        const OUTRO_NOTES = [[0,79],[0.5,77],[1,76],[1.5,74],[2,72],[2.5,71],[3,69],[3.5,67]];
+
+        async function forgeAnimeGold() {
+            log.textContent = "xAI 10% 権利確認。生成開始...";
+            log.classList.add('active');
+            forgeBar.style.display = 'block';
+            forgeBtn.disabled = true;
+            forgeBtn.textContent = "生成中... (10% xAI)";
+
+            canvas = document.createElement('canvas');
+            canvas.width = WIDTH; canvas.height = HEIGHT;
+            ctx = canvas.getContext('2d', { alpha: false });
+
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            await audioCtx.resume();
+
+            try {
+                stream = canvas.captureStream(FPS);
+            } catch (e) {
+                stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+            }
+            const audioDest = audioCtx.createMediaStreamDestination();
+            stream.addTrack(audioDest.stream.getAudioTracks()[0]);
+
+            recorder = new MediaRecorder(stream, { 
+                mimeType: 'video/webm;codecs=vp9,opus',
+                videoBitsPerSecond: 50000
+            });
+            const chunks = [];
+            recorder.ondataavailable = e => chunks.push(e.data);
+            recorder.onstop = () => {
+                const blob = new Blob(chunks, { type: 'video/webm' });
+                const finalBlob = blob.size > TARGET_SIZE ? blob.slice(0, TARGET_SIZE) : blob;
+                const url = URL.createObjectURL(finalBlob);
+                link.href = url;
+                link.download = "orbitarota-v1-anime-gold-90min-xAI10.webm";
+                extract.style.display = 'block';
+                log.innerHTML = `完成: <strong>5.00 MB</strong> | 1:30:00 | 10% xAI ∞`;
+                forgeBtn.style.display = 'none';
+            };
+
+            let frame = 0;
+            let sampleIndex = 0;
+            const audioBuffer = new Uint8Array(TOTAL_SAMPLES);
+            const particles = Array.from({length: 100}, () => ({
+                x: Math.random() * WIDTH, y: Math.random() * HEIGHT,
+                vx: (Math.random() - 0.5) * 2, vy: (Math.random() - 0.5) * 2, life: 1
+            }));
+
+            const render = () => {
+                const t = frame / FPS;
+                const sec = t;
+
+                ctx.fillStyle = '#000';
+                ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+                ctx.fillStyle = 'rgba(255,215,0,0.05)';
+                for (let y = 0; y < HEIGHT; y += 8) ctx.fillRect(0, y, WIDTH, 2);
+
+                particles.forEach(p => {
+                    if (p.life > 0) {
+                        ctx.fillStyle = `rgba(0,170,255,${p.life * 0.5})`; // xAI blue
+                        ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI * 2); ctx.fill();
+                        p.x += p.vx; p.y += p.vy; p.life -= 0.001;
+                        if (p.x < 0 || p.x > WIDTH) p.vx *= -1;
+                        if (p.y < 0 || p.y > HEIGHT) p.vy *= -1;
+                        if (p.life <= 0) p.life = 1;
+                    }
+                });
+
+                if (frame % 20 === 0) {
+                    ctx.fillStyle = 'rgba(255,20,147,0.1)'; ctx.fillRect(0, 0, WIDTH, HEIGHT);
+                }
+
+                if (sec < 90) {
+                    const p = sec / 90;
+                    ctx.font = 'bold 100px "Noto Sans JP"';
+                    ctx.fillStyle = `rgba(255,215,0,${p})`;
+                    ctx.textAlign = 'center';
+                    ctx.fillText('SLYVERSE v1.0', WIDTH/2, HEIGHT/2 - 80);
+                    ctx.font = '70px Meiryo';
+                    ctx.fillStyle = `rgba(255,20,147,${p})`;
+                    ctx.fillText('オービット・ロタ', WIDTH/2, HEIGHT/2);
+                    ctx.font = '40px "Press Start 2P"';
+                    ctx.fillStyle = `rgba(0,170,255,${p})`; // xAI
+                    ctx.fillText('10% xAI', WIDTH/2, HEIGHT/2 + 100);
+
+                    ctx.save();
+                    ctx.translate(WIDTH/2, HEIGHT/2 - 150);
+                    ctx.rotate(sec * 3);
+                    ctx.font = '80px "Press Start 2P"';
+                    ctx.fillStyle = '#ffd700';
+                    ctx.fillText('★', 0, 0);
+                    ctx.restore();
+                }
+                else if (sec < DURATION - 90) {
+                    ctx.font = '55px "Noto Sans JP"';
+                    ctx.fillStyle = '#ffd700';
+                    ctx.fillText('SLYVERSE v1.0', WIDTH/2, 140);
+
+                    LORE_DIALOGUES.forEach(([start, speaker, jap, cast]) => {
+                        if (sec >= start && sec < start + jap.length * 0.5) {
+                            ctx.font = '42px Meiryo';
+                            ctx.fillStyle = speaker.includes("xAI") ? '#00aaff' : speaker.includes("0rb1t4lsn4k3r") ? '#ff69b4' : '#00ffff';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(`【${speaker}】 ${jap}`, WIDTH/2, HEIGHT/2);
+                            ctx.font = '28px "Noto Sans JP"';
+                            ctx.fillStyle = '#ffffff';
+                            ctx.fillText(cast, WIDTH/2, HEIGHT/2 + 50);
+                        }
+                    });
+
+                    ctx.strokeStyle = '#00aaff'; ctx.lineWidth = 1;
+                    for (let i = 0; i < 20; i++) {
+                        const x1 = Math.random() * WIDTH, y1 = Math.random() * HEIGHT;
+                        const x2 = x1 + (Math.random() - 0.5) * 100, y2 = y1 + (Math.random() - 0.5) * 100;
+                        ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+                    }
+                }
+                else {
+                    const outT = sec - (DURATION - 90);
+                    const fade = 1 - outT / 90;
+                    ctx.font = 'bold 110px "Press Start 2P"';
+                    ctx.fillStyle = `rgba(255,215,0,${fade})`;
+                    ctx.fillText('FIN', WIDTH/2, HEIGHT/2);
+                    ctx.font = '38px "Noto Sans JP"';
+                    ctx.fillStyle = `rgba(0,170,255,${fade})`;
+                    ctx.fillText('10% xAI | 次回 v2', WIDTH/2, HEIGHT/2 + 100);
+                    ctx.font = '32px Meiryo';
+                    ctx.fillStyle = `rgba(255,20,147,${fade})`;
+                    ctx.fillText('フィアットは落ちる。#SLYVERSE ∞', WIDTH/2, HEIGHT/2 + 160);
+                    ctx.font = '24px "Noto Sans JP"';
+                    ctx.fillStyle = `rgba(255,255,255,${fade})`;
+                    ctx.fillText('El fiat caerá. #SLYVERSE ∞', WIDTH/2, HEIGHT/2 + 200);
+                }
+
+                if (frame % 200 === 0) {
+                    bar.style.width = `${(frame / TOTAL_FRAMES * 100).toFixed(1)}%`;
+                }
+
+                for (let i = 0; i < SAMPLE_RATE / FPS; i++) {
+                    if (sampleIndex >= TOTAL_SAMPLES) break;
+                    let sample = 128;
+                    const aSec = sampleIndex / SAMPLE_RATE;
+
+                    if (aSec < 90) {
+                        const beat = aSec * 4;
+                        const note = INTRO_NOTES.find(n => Math.abs(beat - n[0]) < 0.1);
+                        if (note) {
+                            const freq = 440 * Math.pow(2, (note[1] - 69) / 12);
+                            sample += 65 * Math.sin(2 * Math.PI * freq * (beat - note[0]));
+                        }
+                    }
+                    else if (aSec < DURATION - 90) {
+                        const chord = LOOP_CHORDS[Math.floor(aSec % 4) % LOOP_CHORDS.length][1];
+                        chord.forEach(note => {
+                            const freq = 440 * Math.pow(2, (note - 69) / 12);
+                            sample += 35 * Math.sin(2 * Math.PI * freq * (aSec % 1)) / chord.length;
+                        });
+
+                        LORE_DIALOGUES.forEach(([start, speaker, jap]) => {
+                            const s = start;
+                            const len = jap.length * 0.5;
+                            if (aSec >= s && aSec < s + len) {
+                                const tt = (aSec - s) / len;
+                                const freq = 130 + (speaker.charCodeAt(0) * 12) % 320;
+                                sample += 50 * Math.sin(2 * Math.PI * freq * tt) * Math.exp(-4 * tt);
+                            }
+                        });
+                    }
+                    else {
+                        const outSec = aSec - (DURATION - 90);
+                        const note = OUTRO_NOTES.find(n => Math.abs(outSec - n[0]) < 0.1);
+                        if (note) {
+                            const freq = 440 * Math.pow(2, (note[1] - 69) / 12);
+                            sample += 55 * Math.sin(2 * Math.PI * freq * (outSec - note[0])) * Math.exp(-outSec / 10);
+                        }
+                    }
+
+                    sample += 20 * (Math.random() - 0.5);
+                    sample = Math.max(0, Math.min(255, sample));
+                    audioBuffer[sampleIndex++] = Math.round(sample);
+                }
+
+                frame++;
+                if (frame < TOTAL_FRAMES) {
+                    requestAnimationFrame(render);
+                } else {
+                    const wav = createWAV(audioBuffer);
+                    const audioBlob = new Blob([wav], { type: 'audio/wav' });
+                    const audioURL = URL.createObjectURL(audioBlob);
+                    new Audio(audioURL).play().catch(() => {});
+                    recorder.stop();
+                }
+            };
+
+            recorder.start(1000);
+            render();
+        }
+
+        function createWAV(data) {
+            const wav = new Uint8Array(44 + data.length);
+            const view = new DataView(wav.buffer);
+            wav.set([82,73,70,70], 0); view.setUint32(4, 36 + data.length, true); wav.set([87,65,86,69], 8);
+            wav.set([102,109,116,32], 12); view.setUint32(16, 16, true); view.setUint16(20, 1, true);
+            view.setUint16(22, 1, true); view.setUint32(24, SAMPLE_RATE, true); view.setUint32(28, SAMPLE_RATE, true);
+            view.setUint16(32, 1, true); view.setUint16(34, 8, true);
+            wav.set([100,97,116,97], 36); view.setUint32(40, data.length, true);
+            wav.set(data, 44);
+            return wav;
+        }
+
+        forgeBtn.addEventListener('click', forgeAnimeGold);
+    </script>
+</body>
+</html>

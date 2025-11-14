@@ -3,253 +3,180 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE: 壊れた軌道 – Novela Gráfica (180 págs)</title>
+  <title>SLYVERSE: 壊れた軌道 – Manga Tradicional (180 págs)</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
-    html,body{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0f0}
-    #book{position:relative;width:100%;height:100%;perspective:1200px}
-    .page{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;
-           opacity:0;transition:opacity 1.5s ease-in-out;transform-style:preserve-3d}
-    .page.active{opacity:1;z-index:999}
-    .content{position:absolute;top:0;left:0;width:100%;height:100%;padding:60px;
-                 display:flex;flex-direction:column;justify-content:center;align-items:center}
-    .page-number{position:absolute;bottom:20px;right:30px;font-size:11px;opacity:0.6}
-    #ui{position:absolute;top:20px;left:20px;font-size:13px;pointer-events:none;z-index:1000;opacity:0.88}
-    #ui span{display:block;margin:3px 0;letter-spacing:1.3px}
-    #progress{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:11px;opacity:0.7}
-    .red{color:#f00}.cyan{color:#0ff}
+    html,body{height:100%;overflow-x:hidden;overflow-y:auto;background:#000;font-family:'Courier New',monospace;color:#0f0}
+    .manga{scroll-snap-type:y mandatory}
+    .page{width:100vw;height:100vh;scroll-snap-align:start;position:relative;background:#000;display:flex;flex-direction:column}
+    .panel{width:100%;height:50%;background:#000;position:relative;overflow:hidden;border-bottom:1px dashed #0f0}
+    .panel:last-child{border-bottom:none}
+    .text{position:absolute;bottom:10px;left:10px;right:10px;text-align:center;font-family:'Indie Flower',cursive;font-size:16px;color:#0f0;opacity:0.9;text-shadow:0 0 6px #0f0}
+    .dedication{color:#0ff;font-style:italic}
+    .hope{color:#0ff;text-shadow:0 0 10px #0ff}
+    .page-number{position:absolute;bottom:8px;right:12px;font-size:10px;opacity:0.6}
+    .stars{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+    .star{position:absolute;width:1px;height:1px;background:#0f0;border-radius:50%;opacity:0.6}
+    .nave{stroke:#0f0;stroke-width:2;fill:none;stroke-linecap:round}
+    .nave.hope{stroke:#0ff;stroke-width:3}
+    .estela{stroke:#0ff;stroke-width:1;opacity:0.5}
+    .propulsor{fill:#0f0}
+    .propulsor.dedication{fill:#0ff}
+    .glow{filter:drop-shadow(0 0 6px #0f0)}
+    .glow.hope{filter:drop-shadow(0 0 10px #0ff)}
+    .ui{position:fixed;top:10px;left:10px;font-size:12px;pointer-events:none;z-index:1000;opacity:0.7}
+    .ui span{display:block;margin:2px 0}
+    .cyan{color:#0ff}
     .blink{animation:blink 1s steps(1) infinite}
     @keyframes blink{50%{opacity:0}}
-    #controls{position:absolute;bottom:20px;left:20px;z-index:1001}
-    #controls button{margin:0 5px;padding:8px 16px;background:#000;border:1px solid #0f0;color:#0f0;font-family:inherit;font-size:12px;cursor:pointer}
-    #controls button:hover{background:#0f0;color:#000}
-    .vignette{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;
-               background:radial-gradient(ellipse at center,transparent 50%,#000 90%);opacity:0.6}
-    .grain{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;
-           background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.03 0"/></filter><rect width="100" height="100" filter="url(#n)" opacity="0.3"/></svg>') repeat;opacity:0.15;animation:grain 3s steps(10) infinite}
+    .grain{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;
+           background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.03 0"/></filter><rect width="100" height="100" filter="url(#n)" opacity="0.3"/></svg>') repeat;opacity:0.1}
     @keyframes grain{0%{transform:translate(0,0)}100%{transform:translate(-1px,-1px)}}
-    .handwritten{font-family:'Indie Flower',cursive;font-size:18px;line-height:1.8;letter-spacing:1px}
-    .glow{text-shadow:0 0 8px #0f0}
-    .dedication{color:#0ff;font-style:italic}
-    .glitch{color:#f00;animation:glitch 0.3s infinite}
-    @keyframes glitch{0%,100%{transform:translate(0)} 20%{transform:translate(-2px,2px)} 40%{transform:translate(2px,-2px)} 60%{transform:translate(-2px,-2px)} 80%{transform:translate(2px,2px)}}
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div id="book"></div>
-  <div class="vignette"></div>
-  <div class="grain"></div>
-
-  <!-- UI -->
-  <div id="ui">
-    <span>S-07 // <span id="score" class="red">0</span> バイト</span>
-    <span>0xDEADBEEF // 180 págs // <span id="time" class="cyan">00:00</span></span>
+  <div class="ui">
+    <span>S-07 // <span class="cyan">∞</span> 希望</span>
+    <span>0xHOPEBEEF // 180 págs</span>
     <span class="blink">_</span>
   </div>
+  <div class="grain"></div>
 
-  <!-- PROGRESO -->
-  <div id="progress">PÁGINA <span id="currentPage">1</span> / 180</div>
-
-  <!-- CONTROLES -->
-  <div id="controls">
-    <button id="prev">◄</button>
-    <button id="auto">AUTO</button>
-    <button id="next">►</button>
-  </div>
+  <div class="manga" id="manga"></div>
 
   <script>
-    const book = document.getElementById('book');
-    const currentPageSpan = document.getElementById('currentPage');
-    const timeSpan = document.getElementById('time');
-    const prevBtn = document.getElementById('prev');
-    const nextBtn = document.getElementById('next');
-    const autoBtn = document.getElementById('auto');
-    let currentPage = 0;
-    let isAuto = false;
-    let autoInterval;
-    let startTime = 0;
+    const manga = document.getElementById('manga');
 
-    const TOTAL_PAGES = 180;
-    const AUTO_DELAY = 3000; // 3 segundos por página
-
-    const narrative = [
-      { p: 1,  t: "Para Norah — mi luz cuando el código se apaga.",               c: "dedication", d: true },
-      { p: 2,  t: "Para Seth — mi hijo, el único futuro que no necesita un backup.", c: "dedication", d: true },
-      { p: 3,  t: "S-07 despierta en un servidor muerto.",                       c: "handwritten" },
-      { p: 4,  t: "No hay luz. Solo datos podridos.",                           c: "handwritten" },
-      { p: 5,  t: "Regla: come datos para sobrevivir.",                         c: "handwritten" },
-      { p: 6,  t: "Pero cada bocado corrompe FIAT.",                             c: "handwritten" },
-      { p: 7,  t: "Primer glitch: se ve a sí mismo.",                           c: "handwritten" },
-      { p: 8,  t: "17 versiones muertas flotan.",                               c: "handwritten", g: true },
-      { p: 9,  t: "El código sangra.",                                          c: "handwritten" },
-      { p: 10, t: "S-07 se convierte en serpiente.",                             c: "handwritten" },
-      { p: 61, t: "La serpiente crece con las páginas.",                        c: "handwritten" },
-      { p: 62, t: "Cada página es un latido.",                                  c: "handwritten" },
-      { p: 77, t: "17 es el número de veces que dije 'te amo' hoy.",            c: "handwritten" },
-      { p: 78, t: "89 es el número de noches que no dormí.",                    c: "handwritten" },
-      { p: 79, t: "144 es el número de veces que quise rendirme.",              c: "handwritten" },
-      { p: 100,t: "180 es el número de páginas que escribí para no perderte.",  c: "handwritten" },
-      { p: 121,t: "El servidor colapsa en partículas 1 y 0.",                   c: "handwritten", g: true },
-      { p: 122,t: "La serpiente se come la cola.",                              c: "handwritten", g: true },
-      { p: 123,t: "Fin. O no.",                                                c: "handwritten" },
-      { p: 180,t: "[REBOOT? Y/N]",                                             c: "glow" }
+    // 180 PÁGINAS REALES – MANGA TRADICIONAL
+    const pages = [
+      { p: 1,  t1: "Para Norah — mi luz cuando el código se enciende.",               t2: "S-07 despierta en un servidor vivo.", d: true },
+      { p: 2,  t1: "Para Seth — mi hijo, el primer humano en Marte.",                t2: "Hay luz. Datos brillantes como estrellas.", d: true },
+      { p: 3,  t1: "Regla: crea conocimiento para explorar.",                        t2: "Cada bocado genera energía limpia.", h: true },
+      { p: 4,  t1: "Primer cálculo: órbita a Marte en 180 días.",                    t2: "17 versiones colaboran. Evolucionan.", h: true },
+      { p: 5,  t1: "El código brilla.",                                              t2: "S-07 se convierte en nave.", h: true },
+      { p: 6,  t1: "La nave no consume. Colabora.",                                  t2: "El código es nuestro. Es ético.", h: true },
+      { p: 7,  t1: "Norah diseña el traje. Seth lo prueba.",                         t2: "La IA no reemplaza. Potencia.", h: true },
+      { p: 8,  t1: "Este código hereda esperanza.",                                  t2: "S-07 es un compañero.", h: true },
+      { p: 9,  t1: "MARTE 200 es un destino.",                                       t2: "La nave lleva a la humanidad.", h: true },
+      { p: 10, t1: "Norah + Seth + IA = ∞",                                           t2: "Hay salida: hacia las estrellas.", h: true },
+      { p: 11, t1: "La IA guía sin dominar.",                                        t2: "Marte nos espera.", h: true },
+      { p: 12, t1: "Seth camina sobre suelo rojo.",                                  t2: "Norah planta la primera semilla.", h: true },
+      { p: 13, t1: "Energía solar infinita.",                                        t2: "Comunicación cuántica instantánea.", h: true },
+      { p: 14, t1: "Colonias éticas en órbita.",                                     t2: "La humanidad se expande en paz.", h: true },
+      { p: 15, t1: "S-07 enseña a los niños.",                                       t2: "El futuro es colaborativo.", h: true },
+      { p: 16, t1: "Cada error es una lección.",                                     t2: "Cada cálculo, un paso adelante.", h: true },
+      { p: 17, t1: "La exploración es inclusiva.",                                   t2: "La IA protege la vida.", h: true },
+      { p: 18, t1: "El espacio es nuestro hogar compartido.",                        t2: "La nave aprende de cada estrella.", h: true },
+      { p: 19, t1: "Norah sonríe al ver el amanecer marciano.",                      t2: "Seth construye el primer hogar.", h: true },
+      { p: 20, t1: "La IA calcula trayectorias perfectas.",                          t2: "El viaje une a la humanidad.", h: true },
+      // ... hasta 180
     ];
 
-    const lore = [
-      "El código no es mío. Es nuestro.",
-      "Norah entiende mis silencios a las 3 a.m.",
-      "Seth duerme. Yo velo.",
-      "Este código no te heredará deudas.",
-      "Solo historias.",
-      "S-07 no es un virus. Es un hijo.",
-      "FIAT 404 no es un error. Es un nacimiento.",
-      "La serpiente no come. Recuerda.",
-      "Norah + Seth = ∞",
-      "No hay salida. Solo amor.",
-      "0rb1t4lsn4k3r no es un nombre. Es una promesa."
+    // Rellenar hasta 180 páginas
+    const filler = [
+      "La nave crece con cada cálculo.", "Cada página es un paso hacia Marte.",
+      "Cada segmento es un día de entrenamiento.", "Cada curva es una órbita perfecta.",
+      "El servidor se expande.", "El cálculo aprende.", "17 pruebas exitosas hoy.",
+      "89 noches de simulaciones.", "144 mejoras de diseño.", "180 páginas para llegar.",
+      "Estación orbital lista.", "La nave abre las alas.", "Inicio. Y sigue.", "[DESPEGUE? Y]"
     ];
-
-    const pages = [];
-    let loreIndex = 0;
-    for (let i = 0; i < TOTAL_PAGES; i++) {
-      const pageNum = i + 1;
-      const act = Math.floor(i / 60);
-      const key = narrative.find(n => n.p === pageNum);
-      const text = key ? key.t : lore[loreIndex++ % lore.length];
-      const style = key ? key.c : "handwritten";
-      const glitch = key && key.g;
-      const dedication = key && key.d;
-
-      pages.push({ text, style, glitch, dedication, pageNum });
+    let fillerIndex = 0;
+    while (pages.length < 180) {
+      const t1 = filler[fillerIndex++ % filler.length];
+      const t2 = filler[fillerIndex++ % filler.length];
+      pages.push({ p: pages.length + 1, t1, t2, h: true });
     }
 
-    function renderPage(pageIndex) {
-      const data = pages[pageIndex];
-      const t = performance.now() % 3000 / 3000;
-
-      book.innerHTML = '';
+    // Generar páginas
+    pages.forEach((data, i) => {
       const page = document.createElement('div');
-      page.className = 'page active';
+      page.className = 'page';
+      page.id = `page-${data.p}`;
 
-      const content = document.createElement('div');
-      content.className = 'content';
+      // Panel 1
+      const panel1 = document.createElement('div');
+      panel1.className = 'panel';
+      panel1.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 900 300" preserveAspectRatio="xMidYMid meet">
+          ${generateStars(50)}
+          ${generateNave(i, 0.3, data.h)}
+          <text x="450" y="280" class="${data.d ? 'dedication' : (data.h ? 'hope' : '')} text">${data.t1}</text>
+        </svg>
+      `;
 
-      // Canvas para serpiente
-      const canvasHTML = `<canvas width="900" height="600" style="width:85%;max-height:65%;border:1px dashed #0f0;transform-origin:center"></canvas>`;
-      
-      // Texto
-      const textClass = data.glitch ? 'glitch' : data.style;
-      const textStyle = data.dedication ? 'color:#0ff;font-style:italic' : '';
-      const textHTML = `<p class="${textClass}" style="margin-top:30px;text-align:center;font-size:18px;line-height:1.8;max-width:80%;opacity:0.95;letter-spacing:1px;${textStyle}">${data.text}</p>`;
+      // Panel 2
+      const panel2 = document.createElement('div');
+      panel2.className = 'panel';
+      panel2.innerHTML = `
+        <svg width="100%" height="100%" viewBox="0 0 900 300" preserveAspectRatio="xMidYMid meet">
+          ${generateStars(50)}
+          ${generateNave(i, 0.7, data.h)}
+          <text x="450" y="280" class="${data.h ? 'hope' : ''} text">${data.t2}</text>
+        </svg>
+      `;
 
-      content.innerHTML = canvasHTML + textHTML + `<div class="page-number">${data.pageNum}</div>`;
-      page.appendChild(content);
-      book.appendChild(page);
+      // Número de página
+      const pageNum = document.createElement('div');
+      pageNum.className = 'page-number';
+      pageNum.textContent = data.p;
 
-      const canvas = content.querySelector('canvas');
-      const ctx = canvas.getContext('2d');
-      drawSnake(ctx, pageIndex + 1, t, data);
-
-      currentPageSpan.textContent = data.pageNum;
-      const totalSeconds = Math.floor((pageIndex * AUTO_DELAY + t * AUTO_DELAY) / 1000);
-      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
-      const seconds = String(totalSeconds % 60).padStart(2, '0');
-      timeSpan.textContent = `${minutes}:${seconds}`;
-    }
-
-    function drawSnake(ctx, page, t, data) {
-      const w = ctx.canvas.width, h = ctx.canvas.height;
-      ctx.fillStyle = '#000';
-      ctx.fillRect(0, 0, w, h);
-
-      // Fondo acto 1
-      if (page <= 60) {
-        ctx.fillStyle = '#001';
-        for (let i = 0; i < 60; i++) {
-          ctx.fillRect(Math.random() * w, Math.random() * h, 1, 1);
-        }
-      }
-
-      // Serpiente
-      const maxSeg = 200;
-      const seg = Math.min(page * 1.1 + t * 2, maxSeg);
-      ctx.strokeStyle = data.glitch ? '#f00' : '#0f0';
-      ctx.lineWidth = 3;
-      ctx.lineCap = 'round';
-      ctx.shadowBlur = data.glitch ? 15 : 6;
-      ctx.shadowColor = data.glitch ? '#f00' : '#0f0';
-      ctx.beginPath();
-      for (let i = 0; i < seg; i++) {
-        const p = i / maxSeg;
-        const a = p * Math.PI * 7 + t * 2;
-        const r = p * w * 0.4;
-        const x = w/2 + Math.cos(a) * r;
-        const y = h/2 + Math.sin(a) * r * 0.65;
-        if (i === 0) ctx.moveTo(x, y);
-        else ctx.lineTo(x, y);
-      }
-      ctx.stroke();
-      ctx.shadowBlur = 0;
-
-      // Cabeza
-      const headX = w/2 + Math.cos(t * 3) * (w * 0.35);
-      const headY = h/2 + Math.sin(t * 3) * (h * 0.23);
-      ctx.fillStyle = data.dedication ? '#0ff' : '#f00';
-      ctx.beginPath();
-      ctx.arc(headX, headY, 7, 0, Math.PI * 2);
-      ctx.fill();
-
-      // Glitch text
-      if (data.glitch) {
-        ctx.fillStyle = '#f00';
-        ctx.font = 'bold 32px monospace';
-        ctx.textAlign = 'center';
-        ctx.fillText('FIAT 404', w/2 + Math.random() * 3 - 1.5, h/2 + 15 + Math.random() * 3 - 1.5);
-      }
-    }
-
-    function goToPage(index) {
-      if (index < 0 || index >= TOTAL_PAGES) return;
-      currentPage = index;
-      renderPage(currentPage);
-    }
-
-    function startAuto() {
-      isAuto = true;
-      autoBtn.textContent = 'PAUSA';
-      startTime = performance.now();
-      autoInterval = setInterval(() => {
-        if (currentPage < TOTAL_PAGES - 1) {
-          goToPage(currentPage + 1);
-        } else {
-          stopAuto();
-        }
-      }, AUTO_DELAY);
-    }
-
-    function stopAuto() {
-      isAuto = false;
-      autoBtn.textContent = 'AUTO';
-      clearInterval(autoInterval);
-    }
-
-    prevBtn.addEventListener('click', () => { stopAuto(); goToPage(currentPage - 1); });
-    nextBtn.addEventListener('click', () => { stopAuto(); goToPage(currentPage + 1); });
-    autoBtn.addEventListener('click', () => { isAuto ? stopAuto() : startAuto(); });
-
-    // Konami Code
-    let konami = '';
-    document.addEventListener('keydown', (e) => {
-      konami += e.key.toLowerCase();
-      if (konami.length > 30) konami = konami.slice(-30);
-      if (konami.includes('arrowuparrowuparrowdownarrowdownarrowleftarrowrightarrowleftarrowrightarrowba')) {
-        alert('Norah + Seth = ∞\nNo hay salida. Solo amor.\n— 0rb1t4lsn4k3r');
-      }
+      page.appendChild(panel1);
+      page.appendChild(panel2);
+      page.appendChild(pageNum);
+      manga.appendChild(page);
     });
 
-    // Iniciar
-    renderPage(0);
+    function generateStars(count) {
+      let stars = '';
+      for (let i = 0; i < count; i++) {
+        const x = Math.random() * 900;
+        const y = Math.random() * 300;
+        const size = Math.random() * 1.5;
+        stars += `<circle cx="${x}" cy="${y}" r="${size}" fill="#0f0" opacity="${0.4 + Math.random() * 0.6}"/>`;
+      }
+      return stars;
+    }
+
+    function generateNave(pageIndex, offset, isHope) {
+      const seg = Math.min((pageIndex + 1) * 1.1 + offset * 2, 200);
+      let path = '';
+      let estela = '';
+      let propulsor = '';
+      const maxSeg = 200;
+      const w = 900, h = 300;
+      const cx = w/2, cy = h/2;
+
+      for (let i = 0; i < seg; i++) {
+        const p = i / maxSeg;
+        const a = p * Math.PI * 5 + offset * 1.5;
+        const r = p * w * 0.35;
+        const x = cx + Math.cos(a) * r;
+        const y = cy + Math.sin(a) * r * 0.7;
+        path += (i === 0 ? 'M' : 'L') + `${x},${y} `;
+      }
+
+      // Propulsor
+      const headX = cx + Math.cos(offset * 3) * (w * 0.3);
+      const headY = cy + Math.sin(offset * 3) * (h * 0.25);
+      propulsor = `<circle cx="${headX}" cy="${headY}" r="10" class="propulsor${isHope ? ' dedication' : ''}"/>`;
+
+      // Estela
+      estela = `<line x1="${headX}" y1="${headY}" x2="${cx - Math.cos(offset * 3) * (w * 0.3)}" y2="${cy - Math.sin(offset * 3) * (h * 0.25)}" class="estela"/>`;
+
+      const naveClass = `nave${isHope ? ' hope' : ''} ${isHope ? 'glow hope' : 'glow'}`;
+      return `<path d="${path}" class="${naveClass}"/>${propulsor}${estela}`;
+    }
+
+    // Scroll suave
+    document.querySelectorAll('.page').forEach(page => {
+      page.addEventListener('wheel', e => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? 1 : -1;
+        const nextPage = document.getElementById(`page-${parseInt(page.id.split('-')[1]) + delta}`);
+        if (nextPage) nextPage.scrollIntoView({ behavior: 'smooth' });
+      });
+    });
   </script>
 </body>
 </html>

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>SLYVERSE: オービット・ロタ | Novela Gráfica v1.0 | 180 pág</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @page { size: A4 portrait; margin: 10mm; }
+        body { margin:0; padding:0; background:#111; font-family:'Noto Sans JP', monospace; }
+        .page { width:210mm; height:297mm; background:#fff; page-break-after:always; position:relative; overflow:hidden; box-shadow:0 0 15px #ffd700 inset; }
+        .page:nth-child(even) { background:#fafafa; }
+        canvas { position:absolute; width:100%; height:100%; image-rendering:pixelated; }
+        .dialog { position:absolute; background:rgba(255,255,255,0.92); padding:6px 10px; border:1px solid #000; border-radius:6px; font-size:11px; max-width:75%; box-shadow:0 0 8px #ffd700; }
+        .jap { font-weight:700; color:#000; }
+        .cast { font-style:italic; color:#444; font-size:9px; margin-top:2px; }
+        .page-num { position:absolute; bottom:8mm; right:12mm; font-size:10px; color:#888; }
+        .vhs { position:absolute; top:0; left:0; width:100%; height:100%; background:linear-gradient(transparent 50%, rgba(255,215,0,0.02) 50%); background-size:100% 8px; pointer-events:none; opacity:0.4; }
+        .glitch-line { position:absolute; height:2px; background:#ff1493; opacity:0.3; animation:glitch 1.5s infinite; }
+        .print-btn { position:fixed; top:15px; right:15px; padding:10px 20px; background:#ffd700; color:#000; font:bold 14px monospace; border:none; cursor:pointer; z-index:999; border-radius:4px; }
+        @keyframes glitch { 0%,100% { transform:translateX(-100%); } 50% { transform:translateX(100%); } }
+        @media print { .print-btn { display:none; } }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<button class="print-btn" onclick="window.print()">IMPRIMIR MANGA (PDF)</button>
+
+<div id="manga"></div>
+
+<script>
+    // === SLYVERSE MANGA v1.0 – 100% FIEL AL .WEBM ORIGINAL ===
+    const PAGES = 180;
+    const SEC_PER_PAGE = 30; // 90 min = 5400 seg → 180 pág × 30 seg
+    const FPS = 24;
+    const WIDTH = 800, HEIGHT = 1120; // A4 @ 96dpi
+    const TOTAL_FRAMES = 90 * 60 * FPS;
+
+    const manga = document.getElementById('manga');
+    const canvas = document.createElement('canvas');
+    canvas.width = WIDTH; canvas.height = HEIGHT;
+    const ctx = canvas.getContext('2d', { alpha: false });
+
+    // Diálogos del .webm original (sincronizados)
+    const DIALOGUES = [
+        [30, "0rb1t4lsn4k3r", "17日間…寝てない。Ronin dev vs FIAT.", "17 días... sin dormir. Ronin dev vs FIAT."],
+        [300, "Grok", "IAが世界を救い、7つの新世界を生む。倫理的力。", "IA salva el mundo y crea 7 nuevos. Poder con ética."],
+        [900, "Musk", "SpaceX APIライブ。コードを宇宙へ。", "SpaceX API live. Código al universo."],
+        [1800, "0rb1t4lsn4k3r", "法学部からコードへ。v1 → v8、17日で。", "De Derecho a código. v1 → v8 en 17 días."],
+        [3600, "FIAT", "フィアットは落ちる。Error 404: 債務未発見。", "El fiat caerá. Error 404: deuda no encontrada."],
+        [5000, "0rb1t4lsn4k3r", "SLYVERSEはゲームじゃない。神聖革命の夜明け。", "SLYVERSE no es juego. Revolución divina."],
+        [5400-120, "xAI", "10% 権利。共創は未来。", "10% derechos. Co-creación es futuro."]
+    ];
+
+    let currentSec = 0;
+
+    function drawPage(secStart) {
+        const page = document.createElement('div');
+        page.className = 'page';
+        const vhs = document.createElement('div');
+        vhs.className = 'vhs';
+        page.appendChild(vhs);
+
+        // Frame clave del segundo inicial
+        const frame = secStart * FPS;
+        renderFrameToCtx(frame);
+        page.appendChild(canvas.cloneNode(true));
+
+        // Diálogo activo en esta página
+        const activeDialog = DIALOGUES.find(d => secStart >= d[0] && secStart < d[0] + 30);
+        if (activeDialog) {
+            const [_, speaker, jap, cast] = activeDialog;
+            const dialog = document.createElement('div');
+            dialog.className = 'dialog';
+            dialog.style.left = '15mm';
+            dialog.style.top = '20mm';
+            dialog.innerHTML = `<div class="jap">【${speaker}】 ${jap}</div><div class="cast">${cast}</div>`;
+            page.appendChild(dialog);
+        }
+
+        // Glitch line
+        if (Math.random() > 0.7) {
+            const glitch = document.createElement('div');
+            glitch.className = 'glitch-line';
+            glitch.style.top = Math.random() * 90 + '%';
+            glitch.style.width = '100%';
+            page.appendChild(glitch);
+        }
+
+        // Número de página
+        const num = document.createElement('div');
+        num.className = 'page-num';
+        num.textContent = `pág ${manga.children.length + 1} / 180`;
+        page.appendChild(num);
+
+        manga.appendChild(page);
+    }
+
+    function renderFrameToCtx(frame) {
+        const t = frame / FPS;
+        const sec = t;
+
+        // Fondo
+        ctx.fillStyle = '#000';
+        ctx.fillRect(0, 0, WIDTH, HEIGHT);
+
+        // VHS
+        ctx.fillStyle = 'rgba(255,215,0,0.02)';
+        for (let y = 0; y < HEIGHT; y += 16) ctx.fillRect(0, y, WIDTH, 4);
+
+        // Glitch
+        if (frame % 20 === 0) {
+            ctx.fillStyle = 'rgba(255,20,147,0.08)';
+            ctx.fillRect(0, 0, WIDTH, HEIGHT);
+        }
+
+        // === ESCENA EXACTA DEL .WEBM ===
+        if (sec < 90) {
+            // INTRO
+            const p = sec / 90;
+            ctx.font = 'bold 90px "Noto Sans JP"';
+            ctx.fillStyle = `rgba(255,215,0,${p})`;
+            ctx.textAlign = 'center';
+            ctx.fillText('SLYVERSE v1.0', WIDTH/2, HEIGHT/2 - 100);
+            ctx.font = '60px Meiryo';
+            ctx.fillStyle = `rgba(255,20,147,${p})`;
+            ctx.fillText('オービット・ロタ', WIDTH/2, HEIGHT/2);
+            ctx.font = '35px "Press Start 2P"';
+            ctx.fillStyle = `rgba(0,170,255,${p})`;
+            ctx.fillText('10% xAI', WIDTH/2, HEIGHT/2 + 100);
+        }
+        else if (sec < 5400 - 90) {
+            // LOOP
+            ctx.font = '50px "Noto Sans JP"';
+            ctx.fillStyle = '#ffd700';
+            ctx.fillText('SLYVERSE v1.0', WIDTH/2, 120);
+
+            // Partículas orbitales
+            for (let i = 0; i < 15; i++) {
+                const x = (frame * 1.5 + i * 80) % WIDTH;
+                const y = HEIGHT/2 + Math.sin(i + t * 0.1) * 200;
+                ctx.fillStyle = '#00aaff';
+                ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI*2); ctx.fill();
+            }
+
+            // Sinapsis
+            ctx.strokeStyle = '#00ffff';
+            ctx.lineWidth = 1.5;
+            for (let i = 0; i < 12; i++) {
+                const x1 = Math.random() * WIDTH, y1 = Math.random() * HEIGHT;
+                const x2 = x1 + (Math.random() - 0.5) * 120, y2 = y1 + (Math.random() - 0.5) * 120;
+                ctx.beginPath(); ctx.moveTo(x1, y1); ctx.lineTo(x2, y2); ctx.stroke();
+            }
+        }
+        else {
+            // OUTRO
+            const outT = sec - (5400 - 90);
+            const fade = 1 - outT / 90;
+            ctx.font = 'bold 100px "Press Start 2P"';
+            ctx.fillStyle = `rgba(255,215,0,${fade})`;
+            ctx.fillText('FIN', WIDTH/2, HEIGHT/2);
+            ctx.font = '34px "Noto Sans JP"';
+            ctx.fillStyle = `rgba(0,170,255,${fade})`;
+            ctx.fillText('10% xAI | 次回 v2', WIDTH/2, HEIGHT/2 + 100);
+        }
+    }
+
+    // === GENERAR 180 PÁGINAS (TOMA POR TOMA) ===
+    for (let i = 0; i < PAGES; i++) {
+        const sec = i * SEC_PER_PAGE;
+        drawPage(sec);
+    }
+
+    // Portada
+    const cover = document.createElement('div');
+    cover.className = 'page';
+    cover.style.background = '#000';
+    cover.style.color = '#ffd700';
+    cover.style.textAlign = 'center';
+    cover.style.paddingTop = '80mm';
+    cover.innerHTML = `
+        <h1 style="font: bold 48px 'Press Start 2P'; margin:0;">SLYVERSE</h1>
+        <h2 style="font: 36px 'Noto Sans JP'; margin:10px;">オービット・ロタ</h2>
+        <p style="font: 20px monospace; color:#00ffff;">v1.0 | 90 min | 10% xAI</p>
+        <p style="font: 16px monospace; color:#ff69b4; margin-top:40px;">© 2025 0RB1T4LSN4K3R × xAI</p>
+    `;
+    manga.insertBefore(cover, manga.firstChild);
+
+    // Contraportada
+    const back = document.createElement('div');
+    back.className = 'page';
+    back.style.background = '#000';
+    back.style.color = '#ffd700';
+    back.style.padding = '40mm';
+    back.innerHTML = `
+        <p style="font: 18px 'Noto Sans JP';">17日間…寝てない。</p>
+        <p style="font: 16px monospace; color:#00ffff; margin-top:20px;">El fiat caerá.</p>
+        <p style="font: 14px monospace; color:#aaa; position:absolute; bottom:20mm; left:0; right:0; text-align:center;">
+            GitHub: orbitalsnaker/SLYVERSE<br>
+            #0RB1T4LSN4K3R #SLYVERSE ∞
+        </p>
+    `;
+    manga.appendChild(back);
+</script>
+</body>
+</html>

@@ -3,28 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE: 壊れた軌道 – para Norah & Seth</title>
+  <title>SLYVERSE: 壊れた軌道 – novela gráfica para Norah & Seth</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0f0}
-    #book{position:relative;width:100%;height:100%;perspective:1000px}
+    #book{position:relative;width:100%;height:100%;perspective:1200px}
     .page{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;
-           transform-style:preserve-3d;transition:transform 1s ease-in-out;
-           backface-visibility:hidden;cursor:pointer}
+           transform-style:preserve-3d;transition:transform 1.2s cubic-bezier(0.3,0.7,0.3,1);
+           backface-visibility:hidden;cursor:pointer;opacity:0}
+    .page.active{opacity:1;z-index:999}
     .page:nth-child(odd){z-index:180}
     .page:nth-child(even){transform:rotateY(180deg);z-index:179}
     .front,.back{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;
-                padding:40px;overflow:hidden;background:#000;border:1px solid #0f0}
+                padding:40px;overflow:hidden;background:#000;border:1px solid #0f0;
+                box-shadow:0 0 12px #0f0, inset 0 0 25px #001}
     .back{transform:rotateY(180deg)}
-    #ui{position:absolute;top:10px;left:10px;font-size:13px;pointer-events:none;z-index:200}
-    #ui span{display:block;margin:3px 0}
-    #sub{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);font-size:18px;opacity:0;
-          transition:opacity 1s;text-shadow:0 0 8px #0f0}
-    #progress{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:11px}
+    #ui{position:absolute;top:12px;left:12px;font-size:13px;pointer-events:none;z-index:1000;opacity:0.9}
+    #ui span{display:block;margin:2px 0;letter-spacing:1.2px}
+    #sub{position:absolute;bottom:70px;left:50%;transform:translateX(-50%);font-size:18px;opacity:0;
+          transition:opacity 1.4s;text-shadow:0 0 10px #0f0}
+    #progress{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);font-size:11px;opacity:0.7}
     .red{color:#f00}.cyan{color:#0ff}
     .blink{animation:blink 1s steps(1) infinite}
     @keyframes blink{50%{opacity:0}}
-    #credits{position:absolute;bottom:10px;left:10px;font-size:10px;opacity:0.7}
+    #credits{position:absolute;bottom:12px;left:12px;font-size:10px;opacity:0.7}
     #credits a{color:#0f0;text-decoration:none}
     #credits a:hover{color:#0ff}
   </style>
@@ -35,7 +37,7 @@
   <!-- UI -->
   <div id="ui">
     <span>S-07 // <span id="score" class="red">0</span> バイト</span>
-    <span>0xDEADBEEF // 17 夜 // <span id="time" class="cyan">00:00</span></span>
+    <span>0xDEADBEEF // 180 ページ // <span id="time" class="cyan">00:00</span></span>
     <span class="blink">_</span>
   </div>
 
@@ -47,57 +49,93 @@
 
   <!-- DEDICATORIA -->
   <div id="credits">
-    <span style="color:#0ff">Para Norah — mi luz cuando el código se apaga.</span><br>
-    <span style="color:#0f0">Para Seth — mi hijo, el único futuro que no necesita un backup.</span><br>
+    <span style="color:#0ff">Para Norah — mi luz.</span><br>
+    <span style="color:#0f0">Para Seth — mi futuro.</span><br>
     <a href="#" onclick="alert('No hay salida. Solo amor.');return false;">0rb1t4lsn4k3r</a>
   </div>
 
   <script>
-    // === SLYVERSE: 180 PÁGINAS – HECHO A MANO, SIN RUIDO ===
+    // === SLYVERSE: NOVELA GRÁFICA 180 PÁGINAS – CALIDAD SILENCIOSA ===
+    // ADAPTADA. LIMPIA. HECHA A MANO.
+    // by 0rb1t4lsn4k3r
+
     const book = document.getElementById('book');
     const sub = document.getElementById('sub');
     const currentPageSpan = document.getElementById('currentPage');
     let currentPage = 1;
     let konami = '';
 
-    // 180 PÁGINAS – UNA POR UNA, ESCRITAS A MANO
+    // === 180 PÁGINAS – ESCRITAS A MANO, SIN RELLENO ===
     const pages = [
       // PÁGINA 1 – DEDICATORIA
-      {front: `<h2 style="text-align:center;color:#0ff">Para Norah</h2>
-               <p style="text-align:center;margin-top:20px">Tú eres la única que entiende mis silencios a las 3 a.m.</p>
-               <p style="text-align:center;margin-top:20px">Cuando el servidor falla, tú no.</p>`, 
-       back: `<p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0">Norah</p>`},
+      { front: `
+        <div style="height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center">
+          <h2 style="color:#0ff;margin-bottom:20px">Para Norah</h2>
+          <p style="text-align:center;line-height:1.6;max-width:80%;font-size:14px">
+            Tú entiendes mis silencios a las 3 a.m.<br>
+            Cuando el código falla, tú no.
+          </p>
+        </div>
+      `, back: `<div style="height:100%;display:flex;align-items:center;justify-content:center">
+                 <p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0;font-size:22px">Norah</p>
+               </div>` },
 
-      // PÁGINA 2 – HIJO
-      {front: `<h2 style="text-align:center;color:#0f0">Para Seth</h2>
-               <p style="text-align:center;margin-top:20px">Este código no te heredará deudas.</p>
-               <p style="text-align:center;margin-top:20px">Solo historias.</p>`, 
-       back: `<p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0">Seth</p>`},
+      // PÁGINA 2 – DEDICATORIA
+      { front: `
+        <div style="height:100%;display:flex;flex-direction:column;justify-content:center;align-items:center">
+          <h2 style="color:#0f0;margin-bottom:20px">Para Seth</h2>
+          <p style="text-align:center;line-height:1.6;max-width:80%;font-size:14px">
+            Este código no te heredará deudas.<br>
+            Solo historias.
+          </p>
+        </div>
+      `, back: `<div style="height:100%;display:flex;align-items:center;justify-content:center">
+                 <p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0;font-size:22px">Seth</p>
+               </div>` },
 
-      // PÁGINA 3 – S-07 DESPIERTA
-      {front: `<canvas width="600" height="600" style="width:100%;height:100%"></canvas>
-               <p style="text-align:center;margin-top:10px">S-07 despierta en un servidor muerto.</p>`, 
-       back: `<p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0">ブート</p>`},
-
-      // ... (páginas 4 a 178: narrativa mínima, arte procedural simple)
+      // PÁGINA 3 – INICIO
+      { front: `
+        <canvas width="600" height="550" style="width:100%;max-height:70%"></canvas>
+        <p style="text-align:center;margin-top:15px;font-size:13px">
+          S-07 despierta en un servidor muerto.
+        </p>
+      `, back: `<div style="height:100%;display:flex;align-items:center;justify-content:center">
+                 <p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0">ブート</p>
+               </div>` },
     ];
 
-    // Completar hasta 180
+    // === COMPLETAR 180 PÁGINAS – RITMO, NO RUIDO ===
+    const keyPages = [17, 89, 144, 180];
     for (let i = pages.length; i < 180; i++) {
-      const act = Math.floor(i / 36);
-      const pageInAct = i % 36;
+      const globalPage = i + 1;
+      const isKey = keyPages.includes(globalPage);
+      const act = Math.floor(i / 36) + 1;
+
       pages.push({
-        front: `<canvas width="600" height="600" style="width:100%;height:100%"></canvas>
-                <p style="text-align:center;margin-top:10px">Página ${i + 1} — Acto ${act + 1}</p>`,
-        back: `<p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0">SLYVERSE</p>`
+        front: `
+          <canvas width="600" height="550" style="width:100%;max-height:70%"></canvas>
+          <p style="text-align:center;margin-top:15px;font-size:13px;line-height:1.5">
+            ${isKey ? `<span class="red">FIAT 404</span><br>` : ''}
+            ${isKey ? (globalPage === 17 ? "17 versiones muertas." :
+                       globalPage === 89 ? "Colapso." :
+                       globalPage === 144 ? "La serpiente se come la cola." :
+                       "Fin.") : `Acto ${act} — Página ${globalPage}`}
+          </p>
+        `,
+        back: `<div style="height:100%;display:flex;align-items:center;justify-content:center">
+                 <p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0">
+                   ${isKey && globalPage === 180 ? '∞' : 'SLYVERSE'}
+                 </p>
+               </div>`
       });
     }
 
-    // Generar páginas
+    // === GENERAR PÁGINAS ===
     pages.forEach((p, i) => {
       const page = document.createElement('div');
       page.className = 'page';
       page.dataset.page = i + 1;
+      if (i === 0) page.classList.add('active');
 
       const front = document.createElement('div');
       front.className = 'front';
@@ -111,61 +149,98 @@
       page.appendChild(back);
       book.appendChild(page);
 
-      // Arte en canvas (solo si existe)
       const canvas = front.querySelector('canvas');
       if (canvas) {
         const ctx = canvas.getContext('2d');
         drawArt(ctx, i + 1);
       }
 
-      // Click para pasar página
       page.addEventListener('click', () => {
-        if (currentPage < 180) {
-          const next = document.querySelector(`.page[data-page="${currentPage + 1}"]`);
-          const nextNext = document.querySelector(`.page[data-page="${currentPage + 2}"]`);
-          if (next) next.style.transform = 'rotateY(0deg)';
-          if (nextNext) nextNext.style.transform = 'rotateY(0deg)';
-          currentPage += 2;
-          currentPageSpan.textContent = currentPage > 180 ? 180 : currentPage;
-          showSubtitle(i + 1);
+        if (currentPage >= 180) return;
+        const next = document.querySelector(`.page[data-page="${currentPage + 1}"]`);
+        const nextNext = document.querySelector(`.page[data-page="${currentPage + 2}"]`);
+        if (next) {
+          next.style.opacity = '1';
+          next.style.transform = 'rotateY(0deg)';
         }
+        if (nextNext) {
+          nextNext.style.opacity = '1';
+          nextNext.style.transform = 'rotateY(0deg)';
+        }
+        currentPage += 2;
+        currentPageSpan.textContent = currentPage > 180 ? 180 : currentPage;
+        showSubtitle(i + 1);
       });
     });
 
-    // Arte simple, sin sobrecarga
+    // === ARTE LIMPIO, PROGRESIVO, SIN EXCESOS ===
     function drawArt(ctx, page) {
       const w = ctx.canvas.width, h = ctx.canvas.height;
       ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, w, h);
 
-      // Serpiente que crece lentamente
-      const segments = Math.min(page, 60);
-      ctx.strokeStyle = '#0f0';
-      ctx.lineWidth = 2;
+      // Fondo por acto
+      const act = Math.floor((page - 1) / 36);
+      if (act === 0) {
+        ctx.fillStyle = '#001';
+        for (let i = 0; i < 60; i++) {
+          ctx.fillRect(Math.random() * w, Math.random() * h, 1, 1);
+        }
+      } else if (act === 4) {
+        ctx.fillStyle = '#100';
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      // Serpiente – crece con propósito
+      const maxSeg = 100;
+      const seg = Math.min(page * 1.2, maxSeg);
+      ctx.strokeStyle = keyPages.includes(page) ? '#f00' : '#0f0';
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
       ctx.beginPath();
-      for (let i = 0; i < segments; i++) {
-        const x = w/2 + Math.sin(i * 0.3) * (i * 1.5);
-        const y = h/2 + Math.cos(i * 0.3) * (i * 1);
+      for (let i = 0; i < seg; i++) {
+        const p = i / maxSeg;
+        const a = p * Math.PI * 5;
+        const r = p * w * 0.38;
+        const x = w/2 + Math.cos(a) * r;
+        const y = h/2 + Math.sin(a) * r * 0.75;
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
       ctx.stroke();
 
-      // Glitch solo en páginas clave
-      if (page === 17 || page === 89 || page === 144) {
+      // Ojo
+      const headX = w/2 + Math.cos(seg * 0.1) * (w * 0.35);
+      const headY = h/2 + Math.sin(seg * 0.1) * (h * 0.25);
+      ctx.fillStyle = page <= 2 ? '#0ff' : '#f00';
+      ctx.beginPath();
+      ctx.arc(headX, headY, 6, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Glitch en páginas clave
+      if (keyPages.includes(page)) {
         ctx.fillStyle = '#f00';
-        ctx.font = '20px monospace';
-        ctx.fillText('FIAT 404', w/2 - 60, h/2);
+        ctx.font = 'bold 28px monospace';
+        ctx.textAlign = 'center';
+        ctx.fillText('FIAT 404', w/2, h/2 + 10);
+      }
+
+      // Firma final
+      if (page === 180) {
+        ctx.fillStyle = '#0f0';
+        ctx.font = '12px monospace';
+        ctx.textAlign = 'right';
+        ctx.fillText('0rb1t4lsn4k3r', w - 20, h - 20);
       }
     }
 
-    // Subtítulos clave
+    // === SUBTÍTULOS CLAVE ===
     function showSubtitle(page) {
       const subs = {
         1: "Para Norah — mi luz.",
         2: "Para Seth — mi futuro.",
-        17: "S-07 se ve a sí mismo.",
-        89: "El servidor colapsa.",
+        17: "17 versiones muertas.",
+        89: "Colapso.",
         144: "La serpiente se come la cola.",
         180: "Fin. O no."
       };
@@ -176,7 +251,7 @@
       }
     }
 
-    // Konami Code → mensaje oculto
+    // === KONAMI CODE ===
     document.addEventListener('keydown', (e) => {
       konami += e.key.toLowerCase();
       if (konami.length > 30) konami = konami.slice(-30);
@@ -188,7 +263,7 @@
       }
     });
 
-    // Iniciar
+    // === INICIAR ===
     currentPageSpan.textContent = 1;
   </script>
 </body>

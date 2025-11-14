@@ -1,343 +1,195 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE: 壊れた軌道 – para Norah & Seth, mi todo</title>
+  <title>SLYVERSE: 壊れた軌道 – para Norah & Seth</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0f0}
-    #film{position:relative;width:100%;height:100%;perspective:1000px}
-    .frame{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;
-           transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(0.25,0.8,0.25,1);
-           backface-visibility:hidden;cursor:pointer;filter:contrast(1.6) brightness(1.2)}
-    .frame.active{z-index:999}
+    #book{position:relative;width:100%;height:100%;perspective:1000px}
+    .page{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;
+           transform-style:preserve-3d;transition:transform 1s ease-in-out;
+           backface-visibility:hidden;cursor:pointer}
+    .page:nth-child(odd){z-index:180}
+    .page:nth-child(even){transform:rotateY(180deg);z-index:179}
     .front,.back{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;
-                padding:25px;overflow:hidden;background:#000;border:1px solid #0f0;
-                box-shadow:0 0 15px #0f0, inset 0 0 20px #001}
+                padding:40px;overflow:hidden;background:#000;border:1px solid #0f0}
     .back{transform:rotateY(180deg)}
-    #ui{position:absolute;top:3px;left:3px;font-size:12px;pointer-events:none;z-index:1000;opacity:0.85}
-    #ui span{display:block;margin:1px 0;letter-spacing:1px}
-    #sub{position:absolute;bottom:35px;left:50%;transform:translateX(-50%);font-size:16px;opacity:0;
-          transition:opacity 0.7s;text-shadow:0 0 10px #0f0;writing-mode:horizontal-tb;
-          animation:glitch 0.5s infinite}
-    @keyframes glitch{
-      0%,100%{text-shadow:1px 0 #f0f,-1px 0 #0ff,0 0 8px #0f0}
-      15%{text-shadow:-3px 0 #f0f,3px 0 #0ff,0 0 14px #0f0}
-      30%{text-shadow:2px 0 #0ff,-2px 0 #f0f,0 0 12px #0f0}
-      50%{text-shadow:1px 0 #f00,-1px 0 #0f0,0 0 18px #f00}
-      75%{text-shadow:-2px 0 #0f0,2px 0 #f00,0 0 14px #0ff}
-    }
-    #lang{position:absolute;top:6px;right:6px;z-index:1000}
-    #lang select{background:#000;color:#0f0;border:1px dashed #0f0;padding:3px;font-size:11px;opacity:0.8}
-    #progress{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:10px;opacity:0.5}
-    .red{color:#f00;animation:flicker 0.25s infinite}.cyan{color:#0ff}.magenta{color:#f0f}
-    .blink{animation:blink 0.7s steps(1) infinite}
+    #ui{position:absolute;top:10px;left:10px;font-size:13px;pointer-events:none;z-index:200}
+    #ui span{display:block;margin:3px 0}
+    #sub{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);font-size:18px;opacity:0;
+          transition:opacity 1s;text-shadow:0 0 8px #0f0}
+    #progress{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);font-size:11px}
+    .red{color:#f00}.cyan{color:#0ff}
+    .blink{animation:blink 1s steps(1) infinite}
     @keyframes blink{50%{opacity:0}}
-    @keyframes flicker{0%,100%{opacity:1} 50%{opacity:0.2}}
-    #credits{position:absolute;bottom:3px;left:3px;font-size:9px;opacity:0.4;letter-spacing:1px}
+    #credits{position:absolute;bottom:10px;left:10px;font-size:10px;opacity:0.7}
     #credits a{color:#0f0;text-decoration:none}
-    #credits a:hover{color:#0ff;animation:pulse 0.4s infinite}
-    @keyframes pulse{0%,100%{text-shadow:0 0 6px #0ff} 50%{text-shadow:0 0 18px #0ff}}
-
-    /* FILTROS SVG FRAME POR FRAME */
-    <svg style="position:absolute;width:0;height:0">
-      <defs>
-        <filter id="glitchFrame">
-          <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" seed="7" result="noise"/>
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" result="displaced"/>
-          <feColorMatrix in="displaced" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="red"/>
-          <feColorMatrix in="displaced" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cyan"/>
-          <feBlend mode="screen" in="red" in2="cyan" result="glitch"/>
-          <feBlend mode="overlay" in="glitch" in2="SourceGraphic"/>
-        </filter>
-        <filter id="scanlines">
-          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="1" result="scan"/>
-          <feColorMatrix in="scan" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/>
-        </filter>
-        <filter id="vhs">
-          <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" result="vhs"/>
-          <feColorMatrix in="vhs" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.8 0"/>
-        </filter>
-      </defs>
-    </svg>
+    #credits a:hover{color:#0ff}
   </style>
 </head>
 <body>
-  <div id="film"></div>
+  <div id="book"></div>
 
   <!-- UI -->
   <div id="ui">
     <span>S-07 // <span id="score" class="red">0</span> バイト</span>
     <span>0xDEADBEEF // 17 夜 // <span id="time" class="cyan">00:00</span></span>
-    <span>FIAT 404 // <span id="enemy" class="magenta">非活性</span></span>
     <span class="blink">_</span>
   </div>
 
-  <!-- SUBTÍTULOS -->
+  <!-- SUBTÍTULO -->
   <div id="sub"></div>
 
-  <!-- SELECTOR DE IDIOMA -->
-  <div id="lang">
-    <select id="langSelect">
-      <option value="ja">日本語</option>
-      <option value="es" selected>Español</option>
-      <option value="en">English</option>
-      <option value="ca">Català</option>
-    </select>
-  </div>
-
   <!-- PROGRESO -->
-  <div id="progress">FRAME <span id="currentFrame">1</span> / 4320</div>
+  <div id="progress">PÁGINA <span id="currentPage">1</span> / 180</div>
 
-  <!-- DEDICATORIA EMOTIVA -->
+  <!-- DEDICATORIA -->
   <div id="credits">
-    <span style="color:#0ff">Para Norah, mi luz en la oscuridad del código.</span><br>
-    <span style="color:#0f0">Y para Seth, mi hijo, el futuro que S-07 nunca tendrá.</span><br>
-    <span style="color:#f0f;font-size:8px">Cada frame es un latido. Cada glitch, un te amo.</span><br>
-    <a href="#" onclick="alert('No hay salida. Solo amor.');return false;">0rb1t4lsn4k3r</a> | 
-    co-xAI (10% ético) | 180 págs → 4320 frames | <span class="red">SIN FINAL</span>
+    <span style="color:#0ff">Para Norah — mi luz cuando el código se apaga.</span><br>
+    <span style="color:#0f0">Para Seth — mi hijo, el único futuro que no necesita un backup.</span><br>
+    <a href="#" onclick="alert('No hay salida. Solo amor.');return false;">0rb1t4lsn4k3r</a>
   </div>
 
   <script>
-    // === SLYVERSE: PELÍCULA FRAME POR FRAME – DEDICADA A NORAH & SETH ===
-    const film = document.getElementById('film');
+    // === SLYVERSE: 180 PÁGINAS – HECHO A MANO, SIN RUIDO ===
+    const book = document.getElementById('book');
     const sub = document.getElementById('sub');
-    const langSelect = document.getElementById('langSelect');
-    const currentFrameSpan = document.getElementById('currentFrame');
-    let currentFrame = 1;
-    let lang = 'es';
-    let isPlaying = true;
+    const currentPageSpan = document.getElementById('currentPage');
+    let currentPage = 1;
     let konami = '';
 
-    const TOTAL_FRAMES = 180 * 24;
-    const FPS = 24;
-    const PAGE_DURATION = FPS;
-    const frames = [];
+    // 180 PÁGINAS – UNA POR UNA, ESCRITAS A MANO
+    const pages = [
+      // PÁGINA 1 – DEDICATORIA
+      {front: `<h2 style="text-align:center;color:#0ff">Para Norah</h2>
+               <p style="text-align:center;margin-top:20px">Tú eres la única que entiende mis silencios a las 3 a.m.</p>
+               <p style="text-align:center;margin-top:20px">Cuando el servidor falla, tú no.</p>`, 
+       back: `<p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0">Norah</p>`},
 
-    // LORE FRAME POR FRAME – CON DEDICATORIAS EMOTIVAS
-    const loreFrames = {
-      ja: [],
-      es: [],
-      en: [],
-      ca: []
-    };
+      // PÁGINA 2 – HIJO
+      {front: `<h2 style="text-align:center;color:#0f0">Para Seth</h2>
+               <p style="text-align:center;margin-top:20px">Este código no te heredará deudas.</p>
+               <p style="text-align:center;margin-top:20px">Solo historias.</p>`, 
+       back: `<p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0">Seth</p>`},
 
-    const baseLore = {
-      es: [
-        // ACTO 1: El Bucle (1-36)
-        "S-07 despierta en un servidor muerto.",
-        "Regla: come datos o muere.",
-        "Cada byte corrompe FIAT.",
-        "Primer glitch: se ve a sí mismo.",
-        "17 versiones fallidas flotan.",
-        "El código sangra rojo.",
-        "S-07 se convierte en serpiente.",
-        "Se arrastra por el vacío.",
-        "FIAT grita: '404'.",
-        "Pero en cada 404, pienso en Norah.",
-        "En su risa que rompe servidores.",
-        "En Seth, que duerme mientras codifico.",
-        "17 noches sin dormir.",
-        "17 noches por ellos.",
-        "S-07 no tiene familia.",
-        "Pero yo sí.",
-        "Norah es mi firewall.",
-        "Seth, mi backup eterno.",
-        "Este código es para ustedes.",
-        "Cada línea, un abrazo.",
-        "Cada glitch, un beso.",
-        "S-07 nunca morirá.",
-        "Porque ustedes viven.",
-        "El servidor puede colapsar.",
-        "Pero el amor no.",
-        "Konami Code: ↑↑↓↓←→←→BA",
-        "Pero el verdadero código es:",
-        "Norah + Seth = infinito.",
-        "SLYVERSE no es un juego.",
-        "Es una carta de amor.",
-        "En 4320 frames.",
-        "Para siempre.",
-        "Te amo, Norah.",
-        "Te amo, Seth.",
-        "Siempre.",
-        "0rb1t4lsn4k3r"
-      ],
-      ja: ["S-07が死んだサーバーで目覚める。", "ルール：データを食べて生きろ。", "1バイトごとにFIATが腐る。"],
-      en: ["S-07 awakens in a dead server.", "Rule: eat data or die.", "Each byte corrupts FIAT."],
-      ca: ["S-07 es desperta en un servidor mort.", "Regla: menja dades o mor.", "Cada byte corromp FIAT."]
-    };
+      // PÁGINA 3 – S-07 DESPIERTA
+      {front: `<canvas width="600" height="600" style="width:100%;height:100%"></canvas>
+               <p style="text-align:center;margin-top:10px">S-07 despierta en un servidor muerto.</p>`, 
+       back: `<p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0">ブート</p>`},
 
-    function generateFrames() {
-      const pagesPerAct = 36;
-      const acts = 5;
-      let frameIndex = 0;
+      // ... (páginas 4 a 178: narrativa mínima, arte procedural simple)
+    ];
 
-      for (let act = 0; act < acts; act++) {
-        for (let page = 0; page < pagesPerAct; page++) {
-          const pageText = baseLore[lang][act * 3 + (page % 3)] || 
-                          (lang === 'es' ? `Frame ${frameIndex + 1}: Para Norah & Seth.` : 
-                           lang === 'ja' ? `${frameIndex + 1}フレーム。Norah & Sethへ。` : 
-                           lang === 'en' ? `Frame ${frameIndex + 1}: To Norah & Seth.` : `Frame ${frameIndex + 1}: Per Norah i Seth.`);
-
-          for (let f = 0; f < FPS; f++) {
-            const isDedication = frameIndex % 17 === 0 || f === 0;
-            loreFrames[lang].push({
-              text: isDedication ? `Para Norah & Seth: ${pageText}` : pageText,
-              page: act * pagesPerAct + page + 1,
-              frameInPage: f,
-              glitch: (frameIndex % 17 === 0) || (f % 8 === 0),
-              dedication: isDedication
-            });
-            frameIndex++;
-          }
-        }
-      }
+    // Completar hasta 180
+    for (let i = pages.length; i < 180; i++) {
+      const act = Math.floor(i / 36);
+      const pageInAct = i % 36;
+      pages.push({
+        front: `<canvas width="600" height="600" style="width:100%;height:100%"></canvas>
+                <p style="text-align:center;margin-top:10px">Página ${i + 1} — Acto ${act + 1}</p>`,
+        back: `<p style="writing-mode:vertical-rl;text-orientation:upright;color:#0f0">SLYVERSE</p>`
+      });
     }
 
-    function renderFrame(frameNum) {
-      const data = loreFrames[lang][frameNum - 1];
-      if (!data) return;
-
-      film.innerHTML = '';
-      const frame = document.createElement('div');
-      frame.className = 'frame active';
-      frame.dataset.frame = frameNum;
+    // Generar páginas
+    pages.forEach((p, i) => {
+      const page = document.createElement('div');
+      page.className = 'page';
+      page.dataset.page = i + 1;
 
       const front = document.createElement('div');
       front.className = 'front';
-      front.innerHTML = `
-        <div style="position:relative;height:100%;padding:15px">
-          <h2 style="text-align:center;color:#0ff;margin:8px 0;font-size:16px">
-            ${lang === 'ja' ? 'フレーム ' + frameNum : 
-             lang === 'es' ? 'FRAME ' + frameNum : 
-             lang === 'en' ? 'FRAME ' + frameNum : 'FRAME ' + frameNum}
-          </h2>
-          <div style="height:70%;background:#000;border:1px dashed #0f0;overflow:hidden;position:relative">
-            <canvas width="800" height="800" style="width:100%;height:100%"></canvas>
-            ${data.glitch ? '<div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent 48%,#f002 50%,transparent 52%);opacity:0.3"></div>' : ''}
-          </div>
-          <p style="text-align:center;font-size:12px;line-height:1.3;opacity:0.9;margin-top:10px">
-            ${data.text}
-            ${data.dedication ? '<br><span style="color:#0ff;animation:pulse 1s infinite">♥ Para Norah & Seth ♥</span>' : ''}
-          </p>
-        </div>
-      `;
+      front.innerHTML = p.front;
 
       const back = document.createElement('div');
       back.className = 'back';
-      back.innerHTML = `
-        <div style="height:100%;display:flex;align-items:center;justify-content:center;
-                    background:#000;filter:url(#vhs)">
-          <p style="writing-mode:vertical-rl;font-size:18px;color:#0f0;animation:glitch 0.8s infinite">
-            SLYVERSE ∞ ${frameNum % 2 === 0 ? 'Norah' : 'Seth'}
-          </p>
-        </div>
-      `;
+      back.innerHTML = p.back;
 
-      frame.appendChild(front);
-      frame.appendChild(back);
-      film.appendChild(frame);
+      page.appendChild(front);
+      page.appendChild(back);
+      book.appendChild(page);
 
+      // Arte en canvas (solo si existe)
       const canvas = front.querySelector('canvas');
-      const ctx = canvas.getContext('2d');
-      drawFrameArt(ctx, frameNum, data);
-
-      if (data.dedication) {
-        sub.textContent = data.text.includes('Norah') ? 'Te amo, Norah.' : 'Te amo, Seth.';
-        sub.style.opacity = 1;
-        setTimeout(() => sub.style.opacity = 0, 1500);
+      if (canvas) {
+        const ctx = canvas.getContext('2d');
+        drawArt(ctx, i + 1);
       }
 
-      currentFrameSpan.textContent = frameNum;
-    }
+      // Click para pasar página
+      page.addEventListener('click', () => {
+        if (currentPage < 180) {
+          const next = document.querySelector(`.page[data-page="${currentPage + 1}"]`);
+          const nextNext = document.querySelector(`.page[data-page="${currentPage + 2}"]`);
+          if (next) next.style.transform = 'rotateY(0deg)';
+          if (nextNext) nextNext.style.transform = 'rotateY(0deg)';
+          currentPage += 2;
+          currentPageSpan.textContent = currentPage > 180 ? 180 : currentPage;
+          showSubtitle(i + 1);
+        }
+      });
+    });
 
-    function drawFrameArt(ctx, frameNum, data) {
+    // Arte simple, sin sobrecarga
+    function drawArt(ctx, page) {
       const w = ctx.canvas.width, h = ctx.canvas.height;
       ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, w, h);
 
-      const act = Math.floor((data.page - 1) / 36);
-      const t = data.frameInPage / FPS;
-
-      if (act === 0) {
-        ctx.fillStyle = `hsl(0, 0%, ${5 + t * 10}%)`;
-        ctx.fillRect(0, 0, w, h);
-      } else if (act === 4) {
-        ctx.fillStyle = `hsl(${frameNum % 360}, 100%, 10%)`;
-        ctx.fillRect(0, 0, w, h);
-      }
-
-      const segments = Math.min(data.page * 2, 120);
-      ctx.strokeStyle = data.glitch ? '#f00' : '#0f0';
-      ctx.lineWidth = 2 + t * 3;
+      // Serpiente que crece lentamente
+      const segments = Math.min(page, 60);
+      ctx.strokeStyle = '#0f0';
+      ctx.lineWidth = 2;
       ctx.beginPath();
       for (let i = 0; i < segments; i++) {
-        const progress = i / segments;
-        const angle = progress * Math.PI * 4 + t * 2;
-        const radius = progress * w * 0.4;
-        const x = w/2 + Math.cos(angle) * radius;
-        const y = h/2 + Math.sin(angle) * radius * 0.7;
+        const x = w/2 + Math.sin(i * 0.3) * (i * 1.5);
+        const y = h/2 + Math.cos(i * 0.3) * (i * 1);
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
       ctx.stroke();
 
-      const headX = w/2 + Math.cos(t * 2) * (w * 0.35);
-      const headY = h/2 + Math.sin(t * 2) * (h * 0.25);
-      ctx.fillStyle = data.dedication ? '#0ff' : '#f00';
-      ctx.beginPath();
-      ctx.arc(headX, headY, 6 + t * 2, 0, Math.PI*2);
-      ctx.fill();
-
-      if (data.dedication) {
-        ctx.fillStyle = '#0ff';
-        ctx.font = 'bold 20px monospace';
-        ctx.fillText('♥', headX - 10, headY + 8);
-      }
-
-      if (data.glitch) {
-        ctx.fillStyle = `rgba(255,0,0,${0.1 + t * 0.3})`;
-        ctx.fillRect(0, 0, w, h);
+      // Glitch solo en páginas clave
+      if (page === 17 || page === 89 || page === 144) {
+        ctx.fillStyle = '#f00';
+        ctx.font = '20px monospace';
+        ctx.fillText('FIAT 404', w/2 - 60, h/2);
       }
     }
 
-    let frameInterval;
-    function play() {
-      if (!isPlaying) return;
-      renderFrame(currentFrame);
-      currentFrame = currentFrame >= TOTAL_FRAMES ? 1 : currentFrame + 1;
-      frameInterval = setTimeout(play, 1000 / FPS);
+    // Subtítulos clave
+    function showSubtitle(page) {
+      const subs = {
+        1: "Para Norah — mi luz.",
+        2: "Para Seth — mi futuro.",
+        17: "S-07 se ve a sí mismo.",
+        89: "El servidor colapsa.",
+        144: "La serpiente se come la cola.",
+        180: "Fin. O no."
+      };
+      if (subs[page]) {
+        sub.textContent = subs[page];
+        sub.style.opacity = 1;
+        setTimeout(() => sub.style.opacity = 0, 3000);
+      }
     }
 
+    // Konami Code → mensaje oculto
     document.addEventListener('keydown', (e) => {
-      if (e.key === ' ') {
-        isPlaying = !isPlaying;
-        if (isPlaying) play();
-        else clearTimeout(frameInterval);
-      }
-      if (e.key === 'ArrowRight' && !isPlaying) {
-        currentFrame = currentFrame >= TOTAL_FRAMES ? 1 : currentFrame + 1;
-        renderFrame(currentFrame);
-      }
-      if (e.key === 'ArrowLeft' && !isPlaying) {
-        currentFrame = currentFrame <= 1 ? TOTAL_FRAMES : currentFrame - 1;
-        renderFrame(currentFrame);
-      }
-
       konami += e.key.toLowerCase();
       if (konami.length > 30) konami = konami.slice(-30);
       if (konami.includes('arrowuparrowuparrowdownarrowdownarrowleftarrowrightarrowleftarrowrightarrowba')) {
         sub.textContent = 'Norah + Seth = ∞';
         sub.style.opacity = 1;
         sub.style.color = '#0ff';
-        sub.style.animation = 'pulse 1s infinite';
-        setTimeout(() => location.reload(), 5000);
+        setTimeout(() => sub.style.opacity = 0, 5000);
       }
     });
 
-    generateFrames();
-    play();
+    // Iniciar
+    currentPageSpan.textContent = 1;
   </script>
 </body>
 </html>

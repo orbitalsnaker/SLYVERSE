@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE: 壊れた軌道 – 90 segundos para Norah & Seth</title>
+  <title>SLYVERSE: 壊れた軌道 – 90 minutos para Norah & Seth</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0f0}
@@ -36,7 +36,7 @@
   <!-- UI -->
   <div id="ui">
     <span>S-07 // <span id="score" class="red">0</span> バイト</span>
-    <span>0xDEADBEEF // 90 seg // <span id="time" class="cyan">00:00</span></span>
+    <span>0xDEADBEEF // 90 min // <span id="time" class="cyan">00:00</span></span>
     <span class="blink">_</span>
   </div>
 
@@ -44,7 +44,7 @@
   <div id="sub"></div>
 
   <!-- PROGRESO -->
-  <div id="progress">FRAME <span id="currentFrame">0</span> / 2160</div>
+  <div id="progress">FRAME <span id="currentFrame">0</span> / 129600</div>
 
   <!-- BOTÓN -->
   <button id="play">INICIAR</button>
@@ -57,9 +57,9 @@
   </div>
 
   <script>
-    // === SLYVERSE: PELÍCULA 90 SEGUNDOS – 2160 FRAMES A 24 FPS ===
-    // FIEL. SILENCIOSA. HECHA A MANO. SIN EXCESOS.
-    // by 0rb1t4lsn4k3r
+    // === SLYVERSE: PELÍCULA 90 MINUTOS – 129600 FRAMES A 24 FPS ===
+    // 0rb1t4lsn4k3r YA SABE CÓMO.
+    // SIN RUIDO. SIN EXCESO. SOLO VERDAD.
 
     const film = document.getElementById('film');
     const sub = document.getElementById('sub');
@@ -71,12 +71,12 @@
     let startTime = 0;
     let konami = '';
 
-    const TOTAL_SECONDS = 90;
+    const TOTAL_MINUTES = 90;
     const FPS = 24;
-    const TOTAL_FRAMES = TOTAL_SECONDS * FPS; // 2160
-    const PAGE_DURATION_FRAMES = Math.floor(TOTAL_FRAMES / 180); // 12 frames por página
+    const TOTAL_FRAMES = TOTAL_MINUTES * 60 * FPS; // 129600
+    const PAGE_DURATION_FRAMES = Math.floor(TOTAL_FRAMES / 180); // 720 frames por página (30 segundos)
 
-    // === 180 PÁGINAS – 90 SEGUNDOS – 0.5 SEG POR PÁGINA ===
+    // === 180 PÁGINAS – 90 MINUTOS – 30 SEGUNDOS POR PÁGINA ===
     const pages = [
       { text: "Para Norah — mi luz.", dedication: true },
       { text: "Para Seth — mi futuro.", dedication: true },
@@ -88,12 +88,11 @@
       { text: "El código sangra.", key: true },
       { text: "S-07 se convierte en serpiente.", key: true },
       { text: "FIAT 404.", key: true, glitch: true },
-      // ... (páginas intermedias)
     ];
 
     // Completar 180
     for (let i = pages.length; i < 180; i++) {
-      const isKey = [16, 88, 143, 179].includes(i); // páginas 17,89,144,180
+      const isKey = [16, 88, 143, 179].includes(i);
       pages.push({
         text: isKey ? (i === 16 ? "FIAT 404" : i === 88 ? "Colapso" : i === 143 ? "Serpiente infinita" : "Fin.") : "",
         key: isKey,
@@ -158,42 +157,47 @@
       if (frameInPage === 0 && data.key) {
         sub.textContent = data.text;
         sub.style.opacity = 1;
-        setTimeout(() => sub.style.opacity = 0, 2000);
+        setTimeout(() => sub.style.opacity = 0, 3000);
       }
 
       // UI
       currentFrameSpan.textContent = frameNum;
-      const seconds = Math.floor(frameNum / FPS);
-      const min = String(Math.floor(seconds / 60)).padStart(2, '0');
-      const sec = String(seconds % 60).padStart(2, '0');
-      timeSpan.textContent = `${min}:${sec}`;
+      const totalSeconds = Math.floor(frameNum / FPS);
+      const minutes = String(Math.floor(totalSeconds / 60)).padStart(2, '0');
+      const seconds = String(totalSeconds % 60).padStart(2, '0');
+      timeSpan.textContent = `${minutes}:${seconds}`;
     }
 
-    // === ARTE LIMPIO, PROGRESIVO, SIN RUIDO ===
+    // === ARTE PROGRESIVO – 90 MINUTOS DE RESPIRACIÓN ===
     function drawArt(ctx, page, t, data) {
       const w = ctx.canvas.width, h = ctx.canvas.height;
       ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, w, h);
 
-      // Fondo
-      if (page <= 2) {
+      // Fondo por acto
+      const act = Math.floor((page - 1) / 36);
+      if (act === 0) {
         ctx.fillStyle = '#001';
         for (let i = 0; i < 50; i++) {
           ctx.fillRect(Math.random() * w, Math.random() * h, 1, 1);
         }
+      } else if (act === 4) {
+        const hue = (t * 360 + page * 2) % 360;
+        ctx.fillStyle = `hsl(${hue}, 20%, 5%)`;
+        ctx.fillRect(0, 0, w, h);
       }
 
-      // Serpiente
-      const maxSeg = 120;
-      const seg = Math.min(page + t * 5, maxSeg);
+      // Serpiente – crece lentamente durante 90 minutos
+      const maxSeg = 180;
+      const seg = Math.min(page + t * 0.5, maxSeg);
       ctx.strokeStyle = data.glitch ? '#f00' : '#0f0';
       ctx.lineWidth = 3;
       ctx.lineCap = 'round';
       ctx.beginPath();
       for (let i = 0; i < seg; i++) {
         const p = i / maxSeg;
-        const a = p * Math.PI * 6 + t * 2;
-        const r = p * w * 0.38;
+        const a = p * Math.PI * 7 + t * 1.5;
+        const r = p * w * 0.4;
         const x = w/2 + Math.cos(a) * r;
         const y = h/2 + Math.sin(a) * r * 0.7;
         if (i === 0) ctx.moveTo(x, y);
@@ -202,11 +206,11 @@
       ctx.stroke();
 
       // Ojo
-      const headX = w/2 + Math.cos(t * 2) * (w * 0.3);
-      const headY = h/2 + Math.sin(t * 2) * (h * 0.2);
+      const headX = w/2 + Math.cos(t * 2) * (w * 0.35);
+      const headY = h/2 + Math.sin(t * 2) * (h * 0.25);
       ctx.fillStyle = data.dedication ? '#0ff' : '#f00';
       ctx.beginPath();
-      ctx.arc(headX, headY, 6, 0, Math.PI * 2);
+      ctx.arc(headX, headY, 7, 0, Math.PI * 2);
       ctx.fill();
 
       // Glitch
@@ -234,7 +238,7 @@
         sub.textContent = 'Norah + Seth = ∞';
         sub.style.opacity = 1;
         sub.style.color = '#0ff';
-        setTimeout(() => sub.style.opacity = 0, 5000);
+        setTimeout(() => sub.style.opacity = 0, 8000);
       }
     });
 

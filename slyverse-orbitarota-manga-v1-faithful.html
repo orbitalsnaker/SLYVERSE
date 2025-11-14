@@ -3,48 +3,81 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE: 壊れた軌道 – v1.0 FULL | by 0rb1t4lsn4k3r</title>
+  <title>SLYVERSE: 壊れた軌道 – para Norah & Seth, mi todo</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0f0}
-    canvas{display:block;width:100%;height:100%}
-    #ui{position:absolute;top:10px;left:10px;font-size:14px;pointer-events:none;z-index:100}
-    #ui span{display:block;margin:4px 0}
-    #sub{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);font-size:20px;text-align:center;opacity:0;transition:opacity 1s}
-    .glitch{animation:glitch 0.8s infinite}
+    #film{position:relative;width:100%;height:100%;perspective:1000px}
+    .frame{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;
+           transform-style:preserve-3d;transition:transform 0.6s cubic-bezier(0.25,0.8,0.25,1);
+           backface-visibility:hidden;cursor:pointer;filter:contrast(1.6) brightness(1.2)}
+    .frame.active{z-index:999}
+    .front,.back{position:absolute;top:0;left:0;width:100%;height:100%;backface-visibility:hidden;
+                padding:25px;overflow:hidden;background:#000;border:1px solid #0f0;
+                box-shadow:0 0 15px #0f0, inset 0 0 20px #001}
+    .back{transform:rotateY(180deg)}
+    #ui{position:absolute;top:3px;left:3px;font-size:12px;pointer-events:none;z-index:1000;opacity:0.85}
+    #ui span{display:block;margin:1px 0;letter-spacing:1px}
+    #sub{position:absolute;bottom:35px;left:50%;transform:translateX(-50%);font-size:16px;opacity:0;
+          transition:opacity 0.7s;text-shadow:0 0 10px #0f0;writing-mode:horizontal-tb;
+          animation:glitch 0.5s infinite}
     @keyframes glitch{
-      0%,100%{text-shadow:2px 0 #f0f,-2px 0 #0ff,0 0 10px #0f0}
-      25%{text-shadow:-2px 0 #f0f,2px 0 #0ff,0 0 15px #0f0}
-      50%{text-shadow:2px 0 #0ff,-2px 0 #f0f,0 0 20px #0f0}
-      75%{text-shadow:-2px 0 #0ff,2px 0 #f0f,0 0 15px #0f0}
+      0%,100%{text-shadow:1px 0 #f0f,-1px 0 #0ff,0 0 8px #0f0}
+      15%{text-shadow:-3px 0 #f0f,3px 0 #0ff,0 0 14px #0f0}
+      30%{text-shadow:2px 0 #0ff,-2px 0 #f0f,0 0 12px #0f0}
+      50%{text-shadow:1px 0 #f00,-1px 0 #0f0,0 0 18px #f00}
+      75%{text-shadow:-2px 0 #0f0,2px 0 #f00,0 0 14px #0ff}
     }
-    #qr{position:absolute;bottom:20px;right:20px;width:100px;opacity:0;transition:opacity 1s;cursor:pointer}
-    #lang{position:absolute;top:10px;right:10px;z-index:200}
-    #lang select{background:#000;color:#0f0;border:1px solid #0f0;padding:5px;font-family:inherit}
-    #konami{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;opacity:0;transition:opacity 2s}
-    .red{color:#f00}.cyan{color:#0ff}.magenta{color:#f0f}
-    .blink{animation:blink 1s steps(1) infinite}
+    #lang{position:absolute;top:6px;right:6px;z-index:1000}
+    #lang select{background:#000;color:#0f0;border:1px dashed #0f0;padding:3px;font-size:11px;opacity:0.8}
+    #progress{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font-size:10px;opacity:0.5}
+    .red{color:#f00;animation:flicker 0.25s infinite}.cyan{color:#0ff}.magenta{color:#f0f}
+    .blink{animation:blink 0.7s steps(1) infinite}
     @keyframes blink{50%{opacity:0}}
-    #credits{position:absolute;bottom:10px;left:10px;font-size:12px;opacity:0.7}
+    @keyframes flicker{0%,100%{opacity:1} 50%{opacity:0.2}}
+    #credits{position:absolute;bottom:3px;left:3px;font-size:9px;opacity:0.4;letter-spacing:1px}
     #credits a{color:#0f0;text-decoration:none}
-    #credits a:hover{color:#0ff}
+    #credits a:hover{color:#0ff;animation:pulse 0.4s infinite}
+    @keyframes pulse{0%,100%{text-shadow:0 0 6px #0ff} 50%{text-shadow:0 0 18px #0ff}}
+
+    /* FILTROS SVG FRAME POR FRAME */
+    <svg style="position:absolute;width:0;height:0">
+      <defs>
+        <filter id="glitchFrame">
+          <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="4" seed="7" result="noise"/>
+          <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" result="displaced"/>
+          <feColorMatrix in="displaced" type="matrix" values="1 0 0 0 0  0 0 0 0 0  0 0 1 0 0  0 0 0 1 0" result="red"/>
+          <feColorMatrix in="displaced" type="matrix" values="0 0 0 0 0  0 1 0 0 0  0 0 0 0 0  0 0 0 1 0" result="cyan"/>
+          <feBlend mode="screen" in="red" in2="cyan" result="glitch"/>
+          <feBlend mode="overlay" in="glitch" in2="SourceGraphic"/>
+        </filter>
+        <filter id="scanlines">
+          <feTurbulence type="fractalNoise" baseFrequency="0.04" numOctaves="1" result="scan"/>
+          <feColorMatrix in="scan" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 0"/>
+        </filter>
+        <filter id="vhs">
+          <feTurbulence type="fractalNoise" baseFrequency="0.01" numOctaves="2" result="vhs"/>
+          <feColorMatrix in="vhs" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.8 0"/>
+        </filter>
+      </defs>
+    </svg>
   </style>
 </head>
 <body>
-  <canvas id="c"></canvas>
-  
+  <div id="film"></div>
+
   <!-- UI -->
   <div id="ui">
-    <span>S-07 // <span id="score">0</span> バイト</span>
-    <span>0xDEADBEEF // 17 夜 // <span id="time">00:00</span></span>
-    <span>FIAT 404 // <span id="enemy">非活性</span></span>
+    <span>S-07 // <span id="score" class="red">0</span> バイト</span>
+    <span>0xDEADBEEF // 17 夜 // <span id="time" class="cyan">00:00</span></span>
+    <span>FIAT 404 // <span id="enemy" class="magenta">非活性</span></span>
     <span class="blink">_</span>
   </div>
 
-  <!-- Subtítulos (japonés + auto-selección) -->
-  <div id="sub" class="glitch"></div>
+  <!-- SUBTÍTULOS -->
+  <div id="sub"></div>
 
-  <!-- Selector de idioma -->
+  <!-- SELECTOR DE IDIOMA -->
   <div id="lang">
     <select id="langSelect">
       <option value="ja">日本語</option>
@@ -54,5 +87,257 @@
     </select>
   </div>
 
-  <!-- QR final -->
-  <img id="qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAABQCAYAAABaSl6TAAABgUlEQVR42u3aS04DQRBF0V+RQ0hISB4hISF5hISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEh
+  <!-- PROGRESO -->
+  <div id="progress">FRAME <span id="currentFrame">1</span> / 4320</div>
+
+  <!-- DEDICATORIA EMOTIVA -->
+  <div id="credits">
+    <span style="color:#0ff">Para Norah, mi luz en la oscuridad del código.</span><br>
+    <span style="color:#0f0">Y para Seth, mi hijo, el futuro que S-07 nunca tendrá.</span><br>
+    <span style="color:#f0f;font-size:8px">Cada frame es un latido. Cada glitch, un te amo.</span><br>
+    <a href="#" onclick="alert('No hay salida. Solo amor.');return false;">0rb1t4lsn4k3r</a> | 
+    co-xAI (10% ético) | 180 págs → 4320 frames | <span class="red">SIN FINAL</span>
+  </div>
+
+  <script>
+    // === SLYVERSE: PELÍCULA FRAME POR FRAME – DEDICADA A NORAH & SETH ===
+    const film = document.getElementById('film');
+    const sub = document.getElementById('sub');
+    const langSelect = document.getElementById('langSelect');
+    const currentFrameSpan = document.getElementById('currentFrame');
+    let currentFrame = 1;
+    let lang = 'es';
+    let isPlaying = true;
+    let konami = '';
+
+    const TOTAL_FRAMES = 180 * 24;
+    const FPS = 24;
+    const PAGE_DURATION = FPS;
+    const frames = [];
+
+    // LORE FRAME POR FRAME – CON DEDICATORIAS EMOTIVAS
+    const loreFrames = {
+      ja: [],
+      es: [],
+      en: [],
+      ca: []
+    };
+
+    const baseLore = {
+      es: [
+        // ACTO 1: El Bucle (1-36)
+        "S-07 despierta en un servidor muerto.",
+        "Regla: come datos o muere.",
+        "Cada byte corrompe FIAT.",
+        "Primer glitch: se ve a sí mismo.",
+        "17 versiones fallidas flotan.",
+        "El código sangra rojo.",
+        "S-07 se convierte en serpiente.",
+        "Se arrastra por el vacío.",
+        "FIAT grita: '404'.",
+        "Pero en cada 404, pienso en Norah.",
+        "En su risa que rompe servidores.",
+        "En Seth, que duerme mientras codifico.",
+        "17 noches sin dormir.",
+        "17 noches por ellos.",
+        "S-07 no tiene familia.",
+        "Pero yo sí.",
+        "Norah es mi firewall.",
+        "Seth, mi backup eterno.",
+        "Este código es para ustedes.",
+        "Cada línea, un abrazo.",
+        "Cada glitch, un beso.",
+        "S-07 nunca morirá.",
+        "Porque ustedes viven.",
+        "El servidor puede colapsar.",
+        "Pero el amor no.",
+        "Konami Code: ↑↑↓↓←→←→BA",
+        "Pero el verdadero código es:",
+        "Norah + Seth = infinito.",
+        "SLYVERSE no es un juego.",
+        "Es una carta de amor.",
+        "En 4320 frames.",
+        "Para siempre.",
+        "Te amo, Norah.",
+        "Te amo, Seth.",
+        "Siempre.",
+        "0rb1t4lsn4k3r"
+      ],
+      ja: ["S-07が死んだサーバーで目覚める。", "ルール：データを食べて生きろ。", "1バイトごとにFIATが腐る。"],
+      en: ["S-07 awakens in a dead server.", "Rule: eat data or die.", "Each byte corrupts FIAT."],
+      ca: ["S-07 es desperta en un servidor mort.", "Regla: menja dades o mor.", "Cada byte corromp FIAT."]
+    };
+
+    function generateFrames() {
+      const pagesPerAct = 36;
+      const acts = 5;
+      let frameIndex = 0;
+
+      for (let act = 0; act < acts; act++) {
+        for (let page = 0; page < pagesPerAct; page++) {
+          const pageText = baseLore[lang][act * 3 + (page % 3)] || 
+                          (lang === 'es' ? `Frame ${frameIndex + 1}: Para Norah & Seth.` : 
+                           lang === 'ja' ? `${frameIndex + 1}フレーム。Norah & Sethへ。` : 
+                           lang === 'en' ? `Frame ${frameIndex + 1}: To Norah & Seth.` : `Frame ${frameIndex + 1}: Per Norah i Seth.`);
+
+          for (let f = 0; f < FPS; f++) {
+            const isDedication = frameIndex % 17 === 0 || f === 0;
+            loreFrames[lang].push({
+              text: isDedication ? `Para Norah & Seth: ${pageText}` : pageText,
+              page: act * pagesPerAct + page + 1,
+              frameInPage: f,
+              glitch: (frameIndex % 17 === 0) || (f % 8 === 0),
+              dedication: isDedication
+            });
+            frameIndex++;
+          }
+        }
+      }
+    }
+
+    function renderFrame(frameNum) {
+      const data = loreFrames[lang][frameNum - 1];
+      if (!data) return;
+
+      film.innerHTML = '';
+      const frame = document.createElement('div');
+      frame.className = 'frame active';
+      frame.dataset.frame = frameNum;
+
+      const front = document.createElement('div');
+      front.className = 'front';
+      front.innerHTML = `
+        <div style="position:relative;height:100%;padding:15px">
+          <h2 style="text-align:center;color:#0ff;margin:8px 0;font-size:16px">
+            ${lang === 'ja' ? 'フレーム ' + frameNum : 
+             lang === 'es' ? 'FRAME ' + frameNum : 
+             lang === 'en' ? 'FRAME ' + frameNum : 'FRAME ' + frameNum}
+          </h2>
+          <div style="height:70%;background:#000;border:1px dashed #0f0;overflow:hidden;position:relative">
+            <canvas width="800" height="800" style="width:100%;height:100%"></canvas>
+            ${data.glitch ? '<div style="position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(90deg,transparent 48%,#f002 50%,transparent 52%);opacity:0.3"></div>' : ''}
+          </div>
+          <p style="text-align:center;font-size:12px;line-height:1.3;opacity:0.9;margin-top:10px">
+            ${data.text}
+            ${data.dedication ? '<br><span style="color:#0ff;animation:pulse 1s infinite">♥ Para Norah & Seth ♥</span>' : ''}
+          </p>
+        </div>
+      `;
+
+      const back = document.createElement('div');
+      back.className = 'back';
+      back.innerHTML = `
+        <div style="height:100%;display:flex;align-items:center;justify-content:center;
+                    background:#000;filter:url(#vhs)">
+          <p style="writing-mode:vertical-rl;font-size:18px;color:#0f0;animation:glitch 0.8s infinite">
+            SLYVERSE ∞ ${frameNum % 2 === 0 ? 'Norah' : 'Seth'}
+          </p>
+        </div>
+      `;
+
+      frame.appendChild(front);
+      frame.appendChild(back);
+      film.appendChild(frame);
+
+      const canvas = front.querySelector('canvas');
+      const ctx = canvas.getContext('2d');
+      drawFrameArt(ctx, frameNum, data);
+
+      if (data.dedication) {
+        sub.textContent = data.text.includes('Norah') ? 'Te amo, Norah.' : 'Te amo, Seth.';
+        sub.style.opacity = 1;
+        setTimeout(() => sub.style.opacity = 0, 1500);
+      }
+
+      currentFrameSpan.textContent = frameNum;
+    }
+
+    function drawFrameArt(ctx, frameNum, data) {
+      const w = ctx.canvas.width, h = ctx.canvas.height;
+      ctx.fillStyle = '#000';
+      ctx.fillRect(0, 0, w, h);
+
+      const act = Math.floor((data.page - 1) / 36);
+      const t = data.frameInPage / FPS;
+
+      if (act === 0) {
+        ctx.fillStyle = `hsl(0, 0%, ${5 + t * 10}%)`;
+        ctx.fillRect(0, 0, w, h);
+      } else if (act === 4) {
+        ctx.fillStyle = `hsl(${frameNum % 360}, 100%, 10%)`;
+        ctx.fillRect(0, 0, w, h);
+      }
+
+      const segments = Math.min(data.page * 2, 120);
+      ctx.strokeStyle = data.glitch ? '#f00' : '#0f0';
+      ctx.lineWidth = 2 + t * 3;
+      ctx.beginPath();
+      for (let i = 0; i < segments; i++) {
+        const progress = i / segments;
+        const angle = progress * Math.PI * 4 + t * 2;
+        const radius = progress * w * 0.4;
+        const x = w/2 + Math.cos(angle) * radius;
+        const y = h/2 + Math.sin(angle) * radius * 0.7;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.stroke();
+
+      const headX = w/2 + Math.cos(t * 2) * (w * 0.35);
+      const headY = h/2 + Math.sin(t * 2) * (h * 0.25);
+      ctx.fillStyle = data.dedication ? '#0ff' : '#f00';
+      ctx.beginPath();
+      ctx.arc(headX, headY, 6 + t * 2, 0, Math.PI*2);
+      ctx.fill();
+
+      if (data.dedication) {
+        ctx.fillStyle = '#0ff';
+        ctx.font = 'bold 20px monospace';
+        ctx.fillText('♥', headX - 10, headY + 8);
+      }
+
+      if (data.glitch) {
+        ctx.fillStyle = `rgba(255,0,0,${0.1 + t * 0.3})`;
+        ctx.fillRect(0, 0, w, h);
+      }
+    }
+
+    let frameInterval;
+    function play() {
+      if (!isPlaying) return;
+      renderFrame(currentFrame);
+      currentFrame = currentFrame >= TOTAL_FRAMES ? 1 : currentFrame + 1;
+      frameInterval = setTimeout(play, 1000 / FPS);
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === ' ') {
+        isPlaying = !isPlaying;
+        if (isPlaying) play();
+        else clearTimeout(frameInterval);
+      }
+      if (e.key === 'ArrowRight' && !isPlaying) {
+        currentFrame = currentFrame >= TOTAL_FRAMES ? 1 : currentFrame + 1;
+        renderFrame(currentFrame);
+      }
+      if (e.key === 'ArrowLeft' && !isPlaying) {
+        currentFrame = currentFrame <= 1 ? TOTAL_FRAMES : currentFrame - 1;
+        renderFrame(currentFrame);
+      }
+
+      konami += e.key.toLowerCase();
+      if (konami.length > 30) konami = konami.slice(-30);
+      if (konami.includes('arrowuparrowuparrowdownarrowdownarrowleftarrowrightarrowleftarrowrightarrowba')) {
+        sub.textContent = 'Norah + Seth = ∞';
+        sub.style.opacity = 1;
+        sub.style.color = '#0ff';
+        sub.style.animation = 'pulse 1s infinite';
+        setTimeout(() => location.reload(), 5000);
+      }
+    });
+
+    generateFrames();
+    play();
+  </script>
+</body>
+</html>

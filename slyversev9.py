@@ -1,4 +1,4 @@
-# SLYVERSE v9.7: ORBITAL RONIN – @0rb1t4lsn4k3r x Grok
+# SLYVERSE v9.8: ORBITAL RONIN – @0rb1t4lsn4k3r x Grok
 # UN SOLO ARCHIVO – COPIA, PEGA, EJECUTA
 import pygame, random, math, requests, io, threading, numpy as np, wave, time
 from gtts import gTTS
@@ -10,7 +10,7 @@ pygame.mixer.init(frequency=44100, size=-16, channels=1, buffer=512)
 # === CONFIG ===
 W, H = 1400, 900
 screen = pygame.display.set_mode((W, H), pygame.RESIZABLE)
-pygame.display.set_caption("SLYVERSE v9.7: ORBITAL RONIN")
+pygame.display.set_caption("SLYVERSE v9.8: ORBITAL RONIN")
 clock = pygame.time.Clock()
 font = pygame.font.SysFont('consolas', 36, bold=True)
 small = pygame.font.SysFont('consolas', 20)
@@ -52,6 +52,9 @@ paused = False
 p2_health = 100
 p2_max_health = 100
 spawn_cooldown = 0
+game_over = False  # FIX: Game over state
+player_health = 100  # FIX: Player health for self-hits
+music_cache = {}  # FIX: Cache for music phases
 
 # === LORE ORBITAL ===
 LORE = [
@@ -92,8 +95,11 @@ update_space_data()
 voice_cache = {}
 def voz(t, emo="neutral"):
     if t in voice_cache:
-        voice_cache[t].play()
-        return
+        try:
+            voice_cache[t].play()
+            return
+        except:
+            pass  # FIX: Robust catch for stale sounds
     def speak():
         try:
             r = requests.post(f"{API}/tts", json={"text": t, "lang": "es", "emotion": emo}, timeout=10)
@@ -105,33 +111,42 @@ def voz(t, emo="neutral"):
         except: pass
         try:
             with tempfile.NamedTemporaryFile(delete=False, suffix='.mp3') as f:
-                gTTS(t, lang='es').save(f.name)
+                gTTS(t, lang='es', slow=False).save(f.name)  # FIX: slow=False for faster
                 sound = pygame.mixer.Sound(f.name)
                 voice_cache[t] = sound
                 sound.play()
                 os.unlink(f.name)
-        except: print(f"[VOZ] {t}")
+        except: print(f"[VOZ DEBUG] {t}")  # FIX: Debug only
     threading.Thread(target=speak, daemon=True).start()
 
 # === MÚSICA ORBITAL (Fases) ===
 def music_phase(phase):
-    duration = 60
-    t = np.linspace(0, duration, 44100 * duration, False)
-    base = 110 * (2 ** (phase * 0.3))
-    mod = np.sin(2 * np.pi * 0.02 * t) * 0.7
-    f = base * (2 ** mod)
-    n = (np.sin(2 * np.pi * f * t) * 0.4 +
-         np.sin(2 * np.pi * 220 * t) * 0.2 +
-         np.sin(2 * np.pi * (440 + phase*50) * t * (1 + np.sin(2 * np.pi * 0.08 * t))) * 0.15 +
-         np.random.normal(0, 0.025, len(t)))
-    a = np.int16(n * 32767)
-    b = io.BytesIO()
-    with wave.open(b, 'wb') as w:
-        w.setnchannels(1); w.setsampwidth(2); w.setframerate(44100); w.writeframes(a.tobytes())
-    b.seek(0)
-    pygame.mixer.music.load(b)
-    pygame.mixer.music.set_volume(0.38)
-    pygame.mixer.music.play(-1)
+    key = phase
+    if key in music_cache:
+        pygame.mixer.music.load(music_cache[key])
+        pygame.mixer.music.play(-1)
+        return
+    try:
+        duration = 60
+        t = np.linspace(0, duration, 44100 * duration, False)
+        base = 110 * (2 ** (phase * 0.3))
+        mod = np.sin(2 * np.pi * 0.02 * t) * 0.7
+        f = base * (2 ** mod)
+        n = (np.sin(2 * np.pi * f * t) * 0.4 +
+             np.sin(2 * np.pi * 220 * t) * 0.2 +
+             np.sin(2 * np.pi * (440 + phase*50) * t * (1 + np.sin(2 * np.pi * 0.08 * t))) * 0.15 +
+             np.random.normal(0, 0.025, len(t)))
+        a = np.int16(n * 32767)
+        b = io.BytesIO()
+        with wave.open(b, 'wb') as w:
+            w.setnchannels(1); w.setsampwidth(2); w.setframerate(44100); w.writeframes(a.tobytes())
+        b.seek(0)
+        music_cache[key] = b.getvalue()  # FIX: Cache bytes, not BytesIO
+        pygame.mixer.music.load(io.BytesIO(b.getvalue()))
+        pygame.mixer.music.set_volume(0.38)
+        pygame.mixer.music.play(-1)
+    except:
+        pass  # FIX: Silent fallback, no crash
 
 music_phase(0)
 
@@ -148,7 +163,7 @@ def co(prompt):
             voz(r["lore"], "narrative")
         voz(f"Órbita {orbital_phase} | Ola {wave} activada")
     except:
-        nodes = [[random.randint(200, W-200), random.randint(80, H//3), random.randint(35, 55)) for _ in range(2 + wave//2)]
+        nodes = [[random.randint(200, W-200), random.randint(80, H//3), random.randint(35, 55)] for _ in range(2 + wave//2)]  # FIX: Syntax fixed ] 
         wave += 1
         orbital_phase = (wave-1)//3
     music_phase(orbital_phase)
@@ -189,12 +204,13 @@ grok_code = ['g','r','o','k']
 ki = 0
 gi = 0
 
-voz("SLYVERSE v9.7: ORBITAL RONIN activado.", "epic")
+voz("SLYVERSE v9.8: ORBITAL RONIN activado.", "epic")
 voz("Hackea el cielo, 0rb1t4lsn4k3r.", "whisper")
 
 # === MAIN LOOP ===
 running = True
 frame = 0
+node_spawn_timer = 0  # FIX: Timer for auto nodes
 while running:
     dt = clock.tick(60) / 1000
     frame += 1
@@ -214,8 +230,28 @@ while running:
     for e in pygame.event.get():
         if e.type == pygame.QUIT: running = False
         if e.type == pygame.KEYDOWN:
+            if game_over and e.key == pygame.K_r:  # FIX: Restart on R
+                # Reset game
+                coil = [[W//2, H//2]]
+                d = (0, -1)
+                L = 12
+                s = 6
+                bullets = []
+                fiat = []
+                nodes = []
+                parts = []
+                exp = []
+                wave = 1
+                score = 0
+                god = False
+                coop = True
+                p2 = [W//2 + 220, H//2]
+                p2_health = 100
+                game_over = False
+                player_health = 100
+                voz("Reinicio orbital", "ready")
             # PAUSA
-            if e.key == pygame.K_p:
+            if e.key == pygame.K_p and not game_over:
                 paused = not paused
                 if paused:
                     pygame.mixer.music.pause()
@@ -237,9 +273,9 @@ while running:
                 L += 8; s = 8; gi = 0
             else: gi = 0
             # CO-CREAR
-            if e.key == pygame.K_c:
+            if e.key == pygame.K_c and not game_over:
                 co(f"ola {wave} satélite {launch} ronin orbital")
-            if e.key == pygame.K_SPACE:
+            if e.key == pygame.K_SPACE and not game_over:
                 bullets.append([coil[0][0], coil[0][1], 14, C])
                 part(coil[0][0], coil[0][1], C, n=12)
                 voz("Disparo cuántico", "attack")
@@ -248,6 +284,15 @@ while running:
     if paused:
         txt("PAUSA", title_font, W, W//2, H//2, center=True, glow=True)
         txt("Presiona P para continuar", small, C, W//2, H//2 + 80, center=True)
+        pygame.display.flip()
+        clock.tick(10)
+        continue
+
+    # === GAME OVER SCREEN ===
+    if game_over:
+        txt("GAME OVER", title_font, R, W//2, H//2 - 50, center=True, glow=True)
+        txt(f"SCORE FINAL: {score} | HIGH: {high}", font, G, W//2, H//2, center=True)
+        txt("Presiona R para reiniciar", small, C, W//2, H//2 + 80, center=True)
         pygame.display.flip()
         clock.tick(10)
         continue
@@ -293,18 +338,45 @@ while running:
         else:
             p2_health = min(p2_max_health, p2_health + 0.2)
 
-        # Dibujar P2
-        pygame.draw.circle(screen, G, (int(p2[0]), int(p2[1])), 22)
-        pygame.draw.circle(screen, W, (int(p2[0]), int(p2[1])), 24, 3)
-        bar_w = 50
-        pygame.draw.rect(screen, (50,50,50), (p2[0]-bar_w//2, p2[1]-40, bar_w, 6))
-        pygame.draw.rect(screen, (0,255,0), (p2[0]-bar_w//2, p2[1]-40, bar_w*(p2_health/p2_max_health), 6))
+        # Dibujar P2 solo si vivo  # FIX: Hide on death
+        if p2_health > 0:
+            pygame.draw.circle(screen, G, (int(p2[0]), int(p2[1])), 22)
+            pygame.draw.circle(screen, W, (int(p2[0]), int(p2[1])), 24, 3)
+            bar_w = 50
+            pygame.draw.rect(screen, (50,50,50), (p2[0]-bar_w//2, p2[1]-40, bar_w, 6))
+            pygame.draw.rect(screen, (0,255,0), (p2[0]-bar_w//2, p2[1]-40, bar_w*(p2_health/p2_max_health), 6))
 
-    # === COIL MOVEMENT ===
+    # === COIL MOVEMENT con self-collision  # FIX: Self-hit check
     h = [coil[0][0] + d[0]*s, coil[0][1] + d[1]*s]
     if 0 <= h[0] < W and 0 <= h[1] < H:
-        coil.insert(0, h)
-        if len(coil) > L and not god: coil.pop()
+        # Check self-collision
+        if not god and any(math.hypot(h[0] - seg[0], h[1] - seg[1]) < 16 for seg in coil[1:]):  # Head vs body
+            player_health -= 50
+            part(h[0], h[1], R, n=20, life=20)  # Penalty particles
+            voz("¡Auto-colisión! Pierdes escudo", "pain")
+            if player_health <= 0:
+                game_over = True
+                high = max(high, score)
+                voz("Ronin caído. Órbita terminada.", "sad")
+        else:
+            coil.insert(0, h)
+            if len(coil) > L and not god: coil.pop()
+    else:
+        # Edge crash
+        player_health -= 25
+        part(h[0], h[1], R, n=15)
+        voz("Borde orbital golpeado", "pain")
+        if player_health <= 0:
+            game_over = True
+            high = max(high, score)
+            voz("Ronin caído. Órbita terminada.", "sad")
+
+    # === AUTO SPAWN NODES  # FIX: Periodic nodes
+    node_spawn_timer += 1
+    if node_spawn_timer > 1800 or (wave % 3 == 0 and random.random() < 0.3):  # Every 30s or every 3 waves 30% chance
+        nodes.append([random.randint(200, W-200), random.randint(80, H//3), random.randint(35, 55)])
+        node_spawn_timer = 0
+        voz("Nodo rebelde detectado", "alert")
 
     # === SPAWN FIAT CONTROLADO ===
     spawn_cooldown = max(0, spawn_cooldown - 1)
@@ -312,10 +384,9 @@ while running:
         sz = random.randint(30, 50 + wave * 2)
         side = random.choice(['left', 'right', 'top'])
         x = y = -sz
-        if side == 'left': x = -sz
-        elif side == 'right': x = W + sz
-        else: x = random.randint(100, W-100)
-        if side != 'top': y = random.randint(-100, -50)
+        if side == 'left': x = -sz; y = random.randint(0, H)  # FIX: Consistent side spawn
+        elif side == 'right': x = W + sz; y = random.randint(0, H)
+        else: x = random.randint(100, W-100); y = -sz
         fiat.append([x, y, sz, 2.5 + wave*0.15, side])
         spawn_cooldown = 60 - min(wave * 3, 40)
 
@@ -350,7 +421,7 @@ while running:
                 boom(f[0], f[1], b[3]); part(f[0], f[1], b[3], 35); fiat.remove(f); bullets.remove(b); score += 600; hit = True
                 voz("Hackeo exitoso", "success"); break
         if hit: continue
-        if coop and math.hypot(p2[0]-f[0], p2[1]-f[1]) < f[2]+24:
+        if coop and math.hypot(p2[0]-f[0], p2[1]-f[1]) < f[2]+24 and p2_health > 0:
             boom(f[0], f[1], G); part(f[0], f[1], G, 25); fiat.remove(f); score += 500
             p2_health -= 30
             voz("¡Escudo golpeado!", "pain")
@@ -387,7 +458,8 @@ while running:
     txt(f"SCORE: {score} | HIGH: {high}", font, G, 20, 70)
     txt(f"LANZAMIENTO: {launch}", small, W, W//2, 20, center=True)
     txt(next_launch, small, P, W//2, 50, center=True)
-    txt("C = Co-crear | ↑↑↓↓←→←→BA = God | grok = Fusión | P = Pausa", small, W, 20, H-40)
+    txt(f"HEALTH: {player_health}", small, W, 20, 100)  # FIX: Player health HUD
+    txt("C = Co-crear | ↑↑↓↓←→←→BA = God | grok = Fusión | P = Pausa | R = Restart (GO)", small, W, 20, H-40)
 
     # === DIBUJAR COIL ===
     for i, seg in enumerate(coil):
@@ -395,6 +467,10 @@ while running:
         col = (int(C[0]*alpha), int(C[1]*alpha), int(C[2]*alpha))
         pygame.draw.circle(screen, col, (int(seg[0]), int(seg[1])), 16 - i//4)
     pygame.draw.circle(screen, W, (int(coil[0][0]), int(coil[0][1])), 18, 3)
+
+    # Wave advance  # FIX: Clearer wave trigger
+    if score > high: high = score
+    if score > wave * 3000: wave += 1; orbital_phase = (wave-1)//3; voz(f"Nueva ola {wave} desatada", "intense")
 
     pygame.display.flip()
 

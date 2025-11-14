@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE: 壊れた軌道 – 90 minutos de verdad</title>
+  <title>SLYVERSE: 壊れた軌道 – 90 minutos completos</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0f0}
     #film{position:relative;width:100%;height:100%;overflow:hidden}
     .scene{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;
-           opacity:0;transition:opacity 2s ease-in-out;perspective:1200px}
+           opacity:0;transition:opacity 1.8s ease-in-out;perspective:1000px}
     .scene.active{opacity:1;z-index:999}
     .content{position:absolute;top:0;left:0;width:100%;height:100%;padding:60px;
                  display:flex;flex-direction:column;justify-content:center;align-items:center}
@@ -64,10 +64,6 @@
   </div>
 
   <script>
-    // === SLYVERSE: 90 MINUTOS – LORE DE X DE 0rb1t4lsn4k3r ===
-    // CADA ESCENA: UNA VERDAD. UNA FRASE. UN FRAME.
-    // SILENCIOSO. CINEMATOGRÁFICO. REAL.
-
     const film = document.getElementById('film');
     const sub = document.getElementById('sub');
     const currentSceneSpan = document.getElementById('currentScene');
@@ -83,9 +79,7 @@
     const TOTAL_FRAMES = TOTAL_MINUTES * 60 * FPS;
     const SCENE_DURATION_FRAMES = TOTAL_FRAMES / 180; // 30 segundos por escena
 
-    // === 180 ESCENAS – LORE DE X DE 0rb1t4lsn4k3r ===
     const scenes = [
-      // 1. DEDICATORIA
       { text: "Para Norah — mi luz cuando el código se apaga.", camera: "fadeIn", dedication: true },
       { text: "Para Seth — mi hijo, el único futuro que no necesita un backup.", camera: "fadeIn", dedication: true },
       { text: "S-07 despierta en un servidor muerto.", camera: "zoomIn", key: true },
@@ -101,10 +95,8 @@
       { text: "El servidor colapsa en partículas 1 y 0.", camera: "shake", key: true, glitch: true },
       { text: "La serpiente se come la cola.", camera: "spiral", key: true, glitch: true },
       { text: "Fin. O no.", camera: "fadeOut", key: true },
-      // ... (completar hasta 180 con progresión natural)
     ];
 
-    // === LORE COMPLETO – 180 VERDADES DE 0rb1t4lsn4k3r ===
     const loreFragments = [
       "El código no es mío. Es nuestro.",
       "Norah entiende mis silencios a las 3 a.m.",
@@ -127,20 +119,17 @@
       "0rb1t4lsn4k3r no es un nombre. Es una promesa."
     ];
 
-    // Rellenar con progresión
     for (let i = scenes.length; i < 180; i++) {
-      const act = Math.floor(i / 36);
       const isKey = [16, 88, 143, 179].includes(i);
-      const fragment = loreFragments[i % loreFragments.length] || "";
+      const act = Math.floor(i / 36);
       scenes.push({
-        text: isKey ? (i === 16 ? "17 versiones muertas." : i === 88 ? "Colapso." : i === 143 ? "Ouroboros." : "Fin.") : fragment,
+        text: isKey ? (i === 16 ? "FIAT 404" : i === 88 ? "Colapso" : i === 143 ? "Ouroboros" : "Fin.") : loreFragments[i % loreFragments.length] || "",
         camera: act === 0 ? "static" : act === 1 ? "slowPan" : act === 2 ? "drift" : act === 3 ? "pulse" : "breathe",
         key: isKey,
         glitch: isKey && i !== 179
       });
     }
 
-    // === PLAY ===
     function play() {
       if (!isPlaying) return;
       const now = performance.now();
@@ -167,7 +156,6 @@
       playBtn.textContent = 'REINICIAR';
     }
 
-    // === RENDER ESCENA ===
     function renderScene(sceneIndex) {
       const data = scenes[sceneIndex];
       const t = (performance.now() % (SCENE_DURATION_FRAMES * 1000 / FPS)) / (SCENE_DURATION_FRAMES * 1000 / FPS);
@@ -206,7 +194,6 @@
       timeSpan.textContent = `${minutes}:${seconds}`;
     }
 
-    // === CÁMARA ===
     function applyCamera(ctx, canvas, type, t) {
       const el = canvas;
       el.style.transition = 'transform 0.5s ease-out';
@@ -229,7 +216,6 @@
       el.style.transform = transform;
     }
 
-    // === ARTE ===
     function drawSceneArt(ctx, scene, t, data) {
       const w = ctx.canvas.width, h = ctx.canvas.height;
       ctx.fillStyle = '#000';
@@ -278,7 +264,6 @@
       }
     }
 
-    // === INICIAR ===
     playBtn.addEventListener('click', () => {
       playBtn.style.display = 'none';
       isPlaying = true;
@@ -287,7 +272,6 @@
       play();
     });
 
-    // === KONAMI CODE ===
     document.addEventListener('keydown', (e) => {
       konami += e.key.toLowerCase();
       if (konami.length > 30) konami = konami.slice(-30);
@@ -299,7 +283,6 @@
       }
     });
 
-    // === SHAKE ===
     const style = document.createElement('style');
     style.textContent = `
       @keyframes shake {

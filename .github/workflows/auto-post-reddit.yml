@@ -1,0 +1,63 @@
+name: Auto-Post Encrypted Troll to Reddit on Push
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  encrypt-and-post:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    # Step 1: Decrypt/Read Encrypted Post Content (Base64 + Secrets for "super encriptado")
+    - name: Decrypt Post Content
+      id: decrypt
+      env:
+        ENCRYPTED_BODY: ${{ secrets.ENCRYPTED_POST_BODY }}  # Sube base64 del body encriptado a secrets
+        ENCRYPTED_TITLE: ${{ secrets.ENCRYPTED_TITLE }}    # Base64 del título
+      run: |
+        # Decrypt base64 (simple, pero "super" con secrets multi-layer)
+        DECRYPTED_BODY=$(echo "$ENCRYPTED_BODY" | base64 -d)
+        DECRYPTED_TITLE=$(echo "$ENCRYPTED_TITLE" | base64 -d)
+        echo "post_body=$DECRYPTED_BODY" >> $GITHUB_OUTPUT
+        echo "title=$DECRYPTED_TITLE" >> $GITHUB_OUTPUT
+        echo "subreddit=futurology" >> $GITHUB_OUTPUT  # Hardcode o secret
+    
+    # Step 2: Auth Reddit (Auto con secrets)
+    - name: Get Reddit Auth Token
+      id: auth
+      env:
+        CLIENT_ID: ${{ secrets.REDDIT_CLIENT_ID }}
+        CLIENT_SECRET: ${{ secrets.REDDIT_CLIENT_SECRET }}
+        USERNAME: ${{ secrets.REDDIT_USERNAME }}  # Anon account
+        PASSWORD: ${{ secrets.REDDIT_PASSWORD }}
+      run: |
+        TOKEN=$(curl -s -X POST "https://www.reddit.com/api/v1/access_token" \
+          -H "Authorization: Basic $(echo -n $CLIENT_ID:$CLIENT_SECRET | base64)" \
+          -d "grant_type=password&username=$USERNAME&password=$PASSWORD" | jq -r .access_token)
+        echo "token=$TOKEN" >> $GITHUB_OUTPUT
+    
+    # Step 3: Auto-Post (Ejecutable al subir – integrated all-in-one)
+    - name: Submit Encrypted Troll to Reddit
+      env:
+        TOKEN: ${{ steps.auth.outputs.token }}
+        SUBREDDIT: ${{ steps.decrypt.outputs.subreddit }}
+        POST_BODY: ${{ steps.decrypt.outputs.post_body }}
+        TITLE: ${{ steps.decrypt.outputs.title }}
+      run: |
+        RESPONSE=$(curl -s -X POST "https://oauth.reddit.com/api/submit" \
+          -H "Authorization: Bearer $TOKEN" \
+          -H "Content-Type: application/x-www-form-urlencoded" \
+          -d "sr=$SUBREDDIT&title=$TITLE&text=$POST_BODY&kind=self&send_replies=true&flair_text=EthicalHack")
+        echo $RESPONSE | jq .  # Log para debug
+        if [[ $(echo $RESPONSE | jq -r .json.errors) == "null" ]]; then
+          echo "¡Trolleo Zuck auto-posted! ID: $(echo $RESPONSE | jq -r .json.data.id)"
+        else
+          echo "Error en post – check logs."
+        fi
+
+# Secrets a agregar en GitHub (todo integrado, encriptado via base64):
+# ENCRYPTED_POST_BODY: Base64 de: "Hey r/futurology... [full body del hilo]"
+# ENCRYPTED_TITLE: Base64 de: "AMA: I'm an orbital ronin... 🚀🐍"
+# + Reddit creds como antes

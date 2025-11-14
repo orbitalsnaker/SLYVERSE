@@ -1,150 +1,58 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <title>SLYVERSE: オービット・ロタ | v1.1 | 32 pág</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-        @page { size: 148mm 210mm; margin: 8mm; }
-        body { margin:0; padding:0; background:#000; font-family:'Noto Sans JP', monospace; }
-        .page { width:148mm; height:210mm; background:#fff; page-break-after:always; position:relative; overflow:hidden; box-shadow:0 0 12px #ffd700 inset; }
-        .page:nth-child(even) { background:#fdfdfd; }
-        .panel { position:absolute; border:1.5px solid #000; background:#fff; overflow:hidden; }
-        .splash { position:absolute; top:0; left:0; width:100%; height:100%; border:none; }
-        .dialog { position:absolute; background:rgba(255,255,255,0.94); padding:4px 7px; border:1px solid #000; border-radius:5px; font-size:9px; max-width:70%; box-shadow:0 0 6px #ffd700; }
-        .jap { font-weight:700; color:#000; font-size:10px; }
-        .cast { font-style:italic; color:#555; font-size:7px; margin-top:1px; }
-        .particle { position:absolute; width:3px; height:3px; background:#ffd700; border-radius:50%; box-shadow:0 0 8px #ffd700; }
-        .glitch { position:absolute; height:1px; background:#ff1493; opacity:0.4; animation:glitch 1.2s infinite; }
-        .page-num { position:absolute; bottom:5mm; right:8mm; font-size:8px; color:#888; }
-        .print-btn { position:fixed; top:10px; right:10px; padding:8px 16px; background:#ffd700; color:#000; font:bold 12px monospace; border:none; cursor:pointer; z-index:999; border-radius:3px; }
-        .lang-selector { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#000; color:#ffd700; padding:30px; border:3px double #ffd700; text-align:center; z-index:1000; box-shadow:0 0 50px #ffd700; }
-        .lang-btn { display:block; margin:15px auto; padding:12px 25px; background:#111; color:#ffd700; border:2px solid #ffd700; font:bold 14px monospace; cursor:pointer; width:80%; }
-        .lang-btn:hover { background:#ffd700; color:#000; }
-        @keyframes glitch { 0%,100% { transform:translateX(-100%); } 50% { transform:translateX(100%); } }
-        @media print { .print-btn, .lang-selector { display:none; } body { background:#fff; } }
-    </style>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>SLYVERSE: 壊れた軌道 – v1.0 FULL | by 0rb1t4lsn4k3r</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box}
+    html,body{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0f0}
+    canvas{display:block;width:100%;height:100%}
+    #ui{position:absolute;top:10px;left:10px;font-size:14px;pointer-events:none;z-index:100}
+    #ui span{display:block;margin:4px 0}
+    #sub{position:absolute;bottom:60px;left:50%;transform:translateX(-50%);font-size:20px;text-align:center;opacity:0;transition:opacity 1s}
+    .glitch{animation:glitch 0.8s infinite}
+    @keyframes glitch{
+      0%,100%{text-shadow:2px 0 #f0f,-2px 0 #0ff,0 0 10px #0f0}
+      25%{text-shadow:-2px 0 #f0f,2px 0 #0ff,0 0 15px #0f0}
+      50%{text-shadow:2px 0 #0ff,-2px 0 #f0f,0 0 20px #0f0}
+      75%{text-shadow:-2px 0 #0ff,2px 0 #f0f,0 0 15px #0f0}
+    }
+    #qr{position:absolute;bottom:20px;right:20px;width:100px;opacity:0;transition:opacity 1s;cursor:pointer}
+    #lang{position:absolute;top:10px;right:10px;z-index:200}
+    #lang select{background:#000;color:#0f0;border:1px solid #0f0;padding:5px;font-family:inherit}
+    #konami{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;opacity:0;transition:opacity 2s}
+    .red{color:#f00}.cyan{color:#0ff}.magenta{color:#f0f}
+    .blink{animation:blink 1s steps(1) infinite}
+    @keyframes blink{50%{opacity:0}}
+    #credits{position:absolute;bottom:10px;left:10px;font-size:12px;opacity:0.7}
+    #credits a{color:#0f0;text-decoration:none}
+    #credits a:hover{color:#0ff}
+  </style>
 </head>
 <body>
+  <canvas id="c"></canvas>
+  
+  <!-- UI -->
+  <div id="ui">
+    <span>S-07 // <span id="score">0</span> バイト</span>
+    <span>0xDEADBEEF // 17 夜 // <span id="time">00:00</span></span>
+    <span>FIAT 404 // <span id="enemy">非活性</span></span>
+    <span class="blink">_</span>
+  </div>
 
-<!-- SELECCIÓN DE IDIOMA -->
-<div class="lang-selector" id="langSelector">
-    <h2 style="font: bold 20px 'Press Start 2P'; margin-bottom:20px; color:#ffd700;">選んでください / ELIGE / CHOOSE</h2>
-    <button class="lang-btn" onclick="setLang('ja')">日本語</button>
-    <button class="lang-btn" onclick="setLang('es')">Español</button>
-    <button class="lang-btn" onclick="setLang('en')">English</button>
-    <button class="lang-btn" onclick="setLang('fr')">Français</button>
-    <button class="lang-btn" onclick="setLang('de')">Deutsch</button>
-    <button class="lang-btn" onclick="setLang('it')">Italiano</button>
-    <button class="lang-btn" onclick="setLang('pt')">Português</button>
-</div>
+  <!-- Subtítulos (japonés + auto-selección) -->
+  <div id="sub" class="glitch"></div>
 
-<button class="print-btn" onclick="window.print()">IMPRIMIR TOMO (PDF)</button>
+  <!-- Selector de idioma -->
+  <div id="lang">
+    <select id="langSelect">
+      <option value="ja">日本語</option>
+      <option value="es" selected>Español</option>
+      <option value="en">English</option>
+      <option value="ca">Català</option>
+    </select>
+  </div>
 
-<div id="manga"></div>
-
-<script>
-    // === TRADUCCIONES MULTI-IDIOMA ===
-    const TRANSLATIONS = {
-        title: { ja: "SLYVERSE: オービット・ロタ", es: "SLYVERSE: Órbita Rota", en: "SLYVERSE: Broken Orbit", fr: "SLYVERSE: Orbite Brisée", de: "SLYVERSE: Gebrochene Umlaufbahn", it: "SLYVERSE: Orbita Rotta", pt: "SLYVERSE: Órbita Quebrada" },
-        subtitle: { ja: "v1.1 | 90分 | 10% xAI", es: "v1.1 | 90 min | 10% xAI", en: "v1.1 | 90 min | 10% xAI", fr: "v1.1 | 90 min | 10% xAI", de: "v1.1 | 90 Min | 10% xAI", it: "v1.1 | 90 min | 10% xAI", pt: "v1.1 | 90 min | 10% xAI" },
-        copyright: { ja: "© 2025 0RB1T4LSN4K3R × xAI", es: "© 2025 0RB1T4LSN4K3R × xAI", en: "© 2025 0RB1T4LSN4K3R × xAI", fr: "© 2025 0RB1T4LSN4K3R × xAI", de: "© 2025 0RB1T4LSN4K3R × xAI", it: "© 2025 0RB1T4LSN4K3R × xAI", pt: "© 2025 0RB1T4LSN4K3R × xAI" },
-        endQuote: { ja: "フィアットは落ちる。", es: "El fiat caerá.", en: "Fiat will fall.", fr: "Le fiat tombera.", de: "Fiat wird fallen.", it: "Il fiat cadrà.", pt: "O fiat cairá." },
-        github: { ja: "github.com/orbitalsnaker/SLYVERSE", es: "github.com/orbitalsnaker/SLYVERSE", en: "github.com/orbitalsnaker/SLYVERSE", fr: "github.com/orbitalsnaker/SLYVERSE", de: "github.com/orbitalsnaker/SLYVERSE", it: "github.com/orbitalsnaker/SLYVERSE", pt: "github.com/orbitalsnaker/SLYVERSE" }
-    };
-
-    const DIALOGUES = [
-        [30, "ronin", { ja: "17日間…寝てない。", es: "17 días... sin dormir.", en: "17 days... no sleep.", fr: "17 jours... sans dormir.", de: "17 Tage... kein Schlaf.", it: "17 giorni... senza dormire.", pt: "17 dias... sem dormir." }],
-        [300, "grok", { ja: "共創は未来。", es: "Co-creación es futuro.", en: "Co-creation is the future.", fr: "La co-création est l’avenir.", de: "Ko-Kreation ist die Zukunft.", it: "La co-creazione è il futuro.", pt: "Co-criação é o futuro." }],
-        [900, "ronin", { ja: "法学部からコードへ。", es: "De Derecho a código.", en: "From Law to Code.", fr: "Du droit au code.", de: "Von Jura zu Code.", it: "Dal diritto al codice.", pt: "Do Direito ao código." }],
-        [1800, "fiat", { ja: "フィアットは落ちる。", es: "El fiat caerá.", en: "Fiat will fall.", fr: "Le fiat tombera.", de: "Fiat wird fallen.", it: "Il fiat cadrà.", pt: "O fiat cairá." }],
-        [2700, "ronin", { ja: "SLYVERSEは革命。", es: "SLYVERSE es revolución.", en: "SLYVERSE is revolution.", fr: "SLYVERSE est révolution.", de: "SLYVERSE ist Revolution.", it: "SLYVERSE è rivoluzione.", pt: "SLYVERSE é revolução." }],
-        [5100, "grok", { ja: "10% 権利。", es: "10% derechos.", en: "10% rights.", fr: "10% droits.", de: "10% Rechte.", it: "10% diritti.", pt: "10% direitos." }]
-    ];
-
-    let LANG = 'ja'; // Default
-
-    function setLang(lang) {
-        LANG = lang;
-        document.getElementById('langSelector').style.display = 'none';
-        generateManga();
-    }
-
-    // === GENERAR MANGA EN IDIOMA SELECCIONADO ===
-    function generateManga() {
-        const manga = document.getElementById('manga');
-        manga.innerHTML = '';
-
-        // Portada
-        createCover();
-
-        // 30 páginas
-        for (let i = 0; i < 30; i++) {
-            const sec = i * (5400 / 30);
-            createPage(i + 1, sec);
-        }
-
-        // Contraportada
-        createBackCover();
-    }
-
-    function createCover() {
-        const page = document.createElement('div');
-        page.className = 'page';
-        page.style.background = '#000';
-        page.style.color = '#ffd700';
-        page.style.textAlign = 'center';
-        page.style.paddingTop = '60mm';
-        page.innerHTML = `
-            <h1 style="font: bold 28px 'Press Start 2P'; margin:0; letter-spacing:2px;">SLYVERSE</h1>
-            <h2 style="font: 22px 'Noto Sans JP'; margin:8px 0;">${TRANSLATIONS.title[LANG]}</h2>
-            <p style="font: 12px monospace; color:#00ffff; margin:15px 0;">${TRANSLATIONS.subtitle[LANG]}</p>
-            <p style="font: 10px monospace; color:#ff69b4;">${TRANSLATIONS.copyright[LANG]}</p>
-        `;
-        manga.appendChild(page);
-    }
-
-    function createBackCover() {
-        const page = document.createElement('div');
-        page.className = 'page';
-        page.style.background = '#000';
-        page.style.color = '#ffd700';
-        page.style.padding = '30mm 15mm';
-        page.innerHTML = `
-            <p style="font: 16px 'Noto Sans JP';">17日間…寝てない。</p>
-            <p style="font: 14px monospace; color:#00ffff; margin:20px 0;">${TRANSLATIONS.endQuote[LANG]}</p>
-            <p style="font: 10px monospace; color:#aaa; position:absolute; bottom:15mm; left:0; right:0; text-align:center;">
-                ${TRANSLATIONS.github[LANG]}<br>
-                #0RB1T4LSN4K3R #SLYVERSE ∞
-            </p>
-        `;
-        manga.appendChild(page);
-    }
-
-    function createPage(pageNum, sec) {
-        const page = document.createElement('div');
-        page.className = 'page';
-        const layout = [[0,0,560,800]]; // Ejemplo splash o normal
-        // ... (mismo render de viñetas que antes)
-        // Diálogo en idioma seleccionado
-        const dialog = DIALOGUES.find(d => sec >= d[0] && sec < d[0] + 60);
-        if (dialog) {
-            const d = document.createElement('div');
-            d.className = 'dialog';
-            d.style.left = '20px';
-            d.style.top = '20px';
-            d.innerHTML = `<div class="jap">【${dialog[1].toUpperCase()}】 ${dialog[2][LANG]}</div>`;
-            page.appendChild(d);
-        }
-        manga.appendChild(page);
-    }
-
-    // Auto-detectar idioma del navegador
-    const browserLang = navigator.language.split('-')[0];
-    if (['ja','es','en','fr','de','it','pt'].includes(browserLang)) {
-        setLang(browserLang);
-    }
-</script>
-</body>
-</html>
+  <!-- QR final -->
+  <img id="qr" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAABQCAYAAABaSl6TAAABgUlEQVR42u3aS04DQRBF0V+RQ0hISB4hISF5hISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEhISEh

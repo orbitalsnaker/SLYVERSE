@@ -3,17 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>SLYVERSE: 壊れた軌道 – 90 minutos completos</title>
+  <title>SLYVERSE: 壊れた軌道 – stealth v1 (90 min)</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}
     html,body{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0f0}
     #film{position:relative;width:100%;height:100%;overflow:hidden}
     .scene{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;
-           opacity:0;transition:opacity 1.8s ease-in-out;perspective:1000px}
+           opacity:0;transition:opacity 1.5s ease-in-out;perspective:1000px}
     .scene.active{opacity:1;z-index:999}
     .content{position:absolute;top:0;left:0;width:100%;height:100%;padding:60px;
                  display:flex;flex-direction:column;justify-content:center;align-items:center}
-    #ui{position:absolute;top:20px;left:20px;font-size:13px;pointer-events:none;z-index:1000;opacity:0.9}
+    #ui{position:absolute;top:20px;left:20px;font-size:13px;pointer-events:none;z-index:1000;opacity:0.88}
     #ui span{display:block;margin:3px 0;letter-spacing:1.3px}
     #sub{position:absolute;bottom:100px;max-width:85%;text-align:center;font-size:20px;opacity:0;
           transition:opacity 2s;text-shadow:0 0 14px #0f0;letter-spacing:1px}
@@ -51,15 +51,15 @@
   <div id="sub"></div>
 
   <!-- PROGRESO -->
-  <div id="progress">ESCENA <span id="currentScene">1</span> / 180</div>
+  <div id="progress">ESCENA <span id="currentScene">1</span> / 1800</div>
 
   <!-- BOTÓN -->
   <button id="play">INICIAR</button>
 
   <!-- DEDICATORIA -->
   <div id="credits">
-    <span style="color:#0ff">Para Norah — mi luz.</span><br>
-    <span style="color:#0f0">Para Seth — mi futuro.</span><br>
+    <span style="color:#0ff">Para Norah — mi luz cuando el código se apaga.</span><br>
+    <span style="color:#0f0">Para Seth — mi hijo, el único futuro que no necesita un backup.</span><br>
     <a href="#" onclick="alert('No hay salida. Solo amor.');return false;">0rb1t4lsn4k3r</a>
   </div>
 
@@ -74,30 +74,43 @@
     let startTime = 0;
     let konami = '';
 
-    const TOTAL_MINUTES = 90;
+    const TOTAL_MINUTES = 90;                     // ← Cambiado de 9 a 90
     const FPS = 24;
     const TOTAL_FRAMES = TOTAL_MINUTES * 60 * FPS;
-    const SCENE_DURATION_FRAMES = TOTAL_FRAMES / 180; // 30 segundos por escena
+    const SCENE_DURATION_FRAMES = TOTAL_FRAMES / 1800; // ← 1800 escenas (10× más)
 
-    const scenes = [
-      { text: "Para Norah — mi luz cuando el código se apaga.", camera: "fadeIn", dedication: true },
-      { text: "Para Seth — mi hijo, el único futuro que no necesita un backup.", camera: "fadeIn", dedication: true },
-      { text: "S-07 despierta en un servidor muerto.", camera: "zoomIn", key: true },
-      { text: "No hay luz. Solo datos podridos.", camera: "static" },
-      { text: "Regla: come datos para sobrevivir.", camera: "slowPan" },
-      { text: "Pero cada bocado corrompe FIAT.", camera: "drift" },
-      { text: "Primer glitch: se ve a sí mismo.", camera: "pulse" },
-      { text: "17 versiones muertas flotan.", camera: "shake", key: true, glitch: true },
-      { text: "El código sangra.", camera: "breathe" },
-      { text: "S-07 se convierte en serpiente.", camera: "spiral", key: true },
-      { text: "La serpiente crece con las páginas.", camera: "slowZoom" },
-      { text: "Cada página es un latido.", camera: "pulse" },
-      { text: "El servidor colapsa en partículas 1 y 0.", camera: "shake", key: true, glitch: true },
-      { text: "La serpiente se come la cola.", camera: "spiral", key: true, glitch: true },
-      { text: "Fin. O no.", camera: "fadeOut", key: true },
+    const narrative = [
+      // ACTO 1: NACIMIENTO
+      { t: "Para Norah — mi luz cuando el código se apaga.", c: "fadeIn", d: true },
+      { t: "Para Seth — mi hijo, el único futuro que no necesita un backup.", c: "fadeIn", d: true },
+      { t: "S-07 despierta en un servidor muerto.", c: "zoomIn" },
+      { t: "No hay luz. Solo datos podridos.", c: "static" },
+      { t: "Regla: come datos para sobrevivir.", c: "slowPan" },
+      { t: "Pero cada bocado corrompe FIAT.", c: "drift" },
+      { t: "Primer glitch: se ve a sí mismo.", c: "pulse" },
+      { t: "17 versiones muertas flotan.", c: "shake", g: true },
+      { t: "El código sangra.", c: "breathe" },
+      { t: "S-07 se convierte en serpiente.", c: "spiral" },
+
+      // ACTO 2: CRECIMIENTO
+      { t: "La serpiente crece con las páginas.", c: "slowZoom" },
+      { t: "Cada página es un latido.", c: "pulse" },
+      { t: "Cada segmento es un día con Norah.", c: "drift" },
+      { t: "Cada curva es una risa de Seth.", c: "slowPan" },
+      { t: "El servidor no muere. Se transforma.", c: "breathe" },
+      { t: "El glitch no rompe. Revela.", c: "pulse" },
+      { t: "17 es el número de veces que dije 'te amo' hoy.", c: "static" },
+      { t: "89 es el número de noches que no dormí.", c: "drift" },
+      { t: "144 es el número de veces que quise rendirme.", c: "slowZoom" },
+      { t: "180 es el número de páginas que escribí para no perderte.", c: "spiral" },
+
+      // ACTO 3: OUROBOROS
+      { t: "El servidor colapsa en partículas 1 y 0.", c: "shake", g: true },
+      { t: "La serpiente se come la cola.", c: "spiral", g: true },
+      { t: "Fin. O no.", c: "fadeOut" }
     ];
 
-    const loreFragments = [
+    const lore = [
       "El código no es mío. Es nuestro.",
       "Norah entiende mis silencios a las 3 a.m.",
       "Seth duerme. Yo velo.",
@@ -106,27 +119,24 @@
       "S-07 no es un virus. Es un hijo.",
       "FIAT 404 no es un error. Es un nacimiento.",
       "La serpiente no come. Recuerda.",
-      "Cada segmento es un día con Norah.",
-      "Cada curva es una risa de Seth.",
-      "El servidor no muere. Se transforma.",
-      "El glitch no rompe. Revela.",
-      "17 es el número de veces que dije 'te amo' hoy.",
-      "89 es el número de noches que no dormí.",
-      "144 es el número de veces que quise rendirme.",
-      "180 es el número de páginas que escribí para no perderte.",
       "Norah + Seth = ∞",
       "No hay salida. Solo amor.",
       "0rb1t4lsn4k3r no es un nombre. Es una promesa."
     ];
 
-    for (let i = scenes.length; i < 180; i++) {
-      const isKey = [16, 88, 143, 179].includes(i);
-      const act = Math.floor(i / 36);
+    const scenes = [];
+    let loreIndex = 0;
+    for (let i = 0; i < 1800; i++) {               // ← 1800 escenas (10× más)
+      const act = Math.floor(i / 600);            // ← 600 escenas por acto
+      const isKey = [0,1,2,7,9,20,22].includes(i % 100); // ← clave cada 100 escenas
+      const keyScene = isKey ? narrative.find(s => s.t === narrative[i % narrative.length].t) : null;
+      
       scenes.push({
-        text: isKey ? (i === 16 ? "FIAT 404" : i === 88 ? "Colapso" : i === 143 ? "Ouroboros" : "Fin.") : loreFragments[i % loreFragments.length] || "",
-        camera: act === 0 ? "static" : act === 1 ? "slowPan" : act === 2 ? "drift" : act === 3 ? "pulse" : "breathe",
+        text: keyScene ? keyScene.t : lore[loreIndex++ % lore.length],
+        camera: keyScene ? keyScene.c : (act === 0 ? "static" : act === 1 ? "drift" : "breathe"),
         key: isKey,
-        glitch: isKey && i !== 179
+        glitch: keyScene && keyScene.g,
+        dedication: keyScene && keyScene.d
       });
     }
 
@@ -135,14 +145,14 @@
       const now = performance.now();
       const elapsed = (now - startTime) / 1000;
       const targetFrame = Math.floor(elapsed * FPS);
-      const targetScene = Math.min(Math.floor(targetFrame / SCENE_DURATION_FRAMES), 179);
+      const targetScene = Math.min(Math.floor(targetFrame / SCENE_DURATION_FRAMES), 1799);
       
       if (targetScene > currentScene) {
         currentScene = targetScene;
         renderScene(currentScene);
       }
       
-      if (currentScene >= 179 && targetFrame >= TOTAL_FRAMES) {
+      if (currentScene >= 1799 && targetFrame >= TOTAL_FRAMES) {
         stop();
         return;
       }
@@ -179,12 +189,12 @@
       const canvas = content.querySelector('canvas');
       const ctx = canvas.getContext('2d');
       applyCamera(ctx, canvas, data.camera, t);
-      drawSceneArt(ctx, sceneIndex + 1, t, data);
+      drawSnake(ctx, sceneIndex + 1, t, data);
 
       if (data.key && t < 0.3) {
         sub.textContent = data.text;
         sub.style.opacity = 1;
-        setTimeout(() => sub.style.opacity = 0, 4000);
+        setTimeout(() => sub.style.opacity = 0, 2000);
       }
 
       currentSceneSpan.textContent = sceneIndex + 1;
@@ -196,71 +206,71 @@
 
     function applyCamera(ctx, canvas, type, t) {
       const el = canvas;
-      el.style.transition = 'transform 0.5s ease-out';
+      el.style.transition = 'transform 0.3s ease-out';
       let transform = '';
 
       switch(type) {
-        case 'fadeIn': transform = `scale(${0.8 + t * 0.2})`; break;
-        case 'zoomIn': transform = `scale(${1 + t * 0.5})`; break;
-        case 'slowZoom': transform = `scale(${1 + t * 0.15})`; break;
-        case 'shake': el.style.animation = 'shake 0.5s infinite'; break;
-        case 'spiral': transform = `rotate(${t * 360}deg) scale(${1 + t * 0.3})`; break;
-        case 'slowPan': transform = `translateX(${(t - 0.5) * 100}px)`; break;
-        case 'drift': transform = `translate(${Math.sin(t * Math.PI) * 30}px, ${Math.cos(t * Math.PI) * 20}px)`; break;
-        case 'pulse': transform = `scale(${1 + Math.sin(t * Math.PI * 8) * 0.05})`; break;
-        case 'breathe': transform = `scale(${1 + Math.sin(t * Math.PI * 0.5) * 0.03})`; break;
-        case 'fadeOut': transform = `scale(${1 - t * 0.3})`; break;
+        case 'fadeIn': transform = `scale(${0.9 + t * 0.1})`; break;
+        case 'zoomIn': transform = `scale(${1 + t * 0.3})`; break;
+        case 'slowZoom': transform = `scale(${1 + t * 0.1})`; break;
+        case 'shake': el.style.animation = 'shake 0.3s infinite'; break;
+        case 'spiral': transform = `rotate(${t * 180}deg) scale(${1 + t * 0.2})`; break;
+        case 'slowPan': transform = `translateX(${(t - 0.5) * 60}px)`; break;
+        case 'drift': transform = `translate(${Math.sin(t * Math.PI) * 20}px, ${Math.cos(t * Math.PI) * 15}px)`; break;
+        case 'pulse': transform = `scale(${1 + Math.sin(t * Math.PI * 6) * 0.04})`; break;
+        case 'breathe': transform = `scale(${1 + Math.sin(t * Math.PI * 0.4) * 0.02})`; break;
+        case 'fadeOut': transform = `scale(${1 - t * 0.2})`; break;
         default: transform = 'scale(1)';
       }
 
       el.style.transform = transform;
     }
 
-    function drawSceneArt(ctx, scene, t, data) {
+    function drawSnake(ctx, scene, t, data) {
       const w = ctx.canvas.width, h = ctx.canvas.height;
       ctx.fillStyle = '#000';
       ctx.fillRect(0, 0, w, h);
 
-      const act = Math.floor((scene - 1) / 36);
+      const act = Math.floor((scene - 1) / 600);
       if (act === 0) {
         ctx.fillStyle = '#001';
-        for (let i = 0; i < 80; i++) {
+        for (let i = 0; i < 60; i++) {
           ctx.fillRect(Math.random() * w, Math.random() * h, 1, 1);
         }
       }
 
       const maxSeg = 200;
-      const seg = Math.min(scene * 1.1 + t, maxSeg);
+      const seg = Math.min(scene * 1.1 + t * 2, maxSeg);
       ctx.strokeStyle = data.glitch ? '#f00' : '#0f0';
-      ctx.lineWidth = 3.5;
+      ctx.lineWidth = 3;
       ctx.lineCap = 'round';
-      ctx.shadowBlur = data.glitch ? 20 : 8;
+      ctx.shadowBlur = data.glitch ? 15 : 6;
       ctx.shadowColor = data.glitch ? '#f00' : '#0f0';
       ctx.beginPath();
       for (let i = 0; i < seg; i++) {
         const p = i / maxSeg;
-        const a = p * Math.PI * 7 + t * 1.8;
-        const r = p * w * 0.42;
+        const a = p * Math.PI * 7 + t * 2;
+        const r = p * w * 0.4;
         const x = w/2 + Math.cos(a) * r;
-        const y = h/2 + Math.sin(a) * r * 0.68;
+        const y = h/2 + Math.sin(a) * r * 0.65;
         if (i === 0) ctx.moveTo(x, y);
         else ctx.lineTo(x, y);
       }
       ctx.stroke();
       ctx.shadowBlur = 0;
 
-      const headX = w/2 + Math.cos(t * 2.2) * (w * 0.36);
-      const headY = h/2 + Math.sin(t * 2.2) * (h * 0.24);
+      const headX = w/2 + Math.cos(t * 3) * (w * 0.35);
+      const headY = h/2 + Math.sin(t * 3) * (h * 0.23);
       ctx.fillStyle = data.dedication ? '#0ff' : '#f00';
       ctx.beginPath();
-      ctx.arc(headX, headY, 8, 0, Math.PI * 2);
+      ctx.arc(headX, headY, 7, 0, Math.PI * 2);
       ctx.fill();
 
       if (data.glitch) {
         ctx.fillStyle = '#f00';
-        ctx.font = 'bold 36px monospace';
+        ctx.font = 'bold 32px monospace';
         ctx.textAlign = 'center';
-        ctx.fillText('FIAT 404', w/2 + Math.random() * 4 - 2, h/2 + 15 + Math.random() * 4 - 2);
+        ctx.fillText('FIAT 404', w/2 + Math.random() * 3 - 1.5, h/2 + 15 + Math.random() * 3 - 1.5);
       }
     }
 
@@ -279,7 +289,7 @@
         sub.textContent = 'Norah + Seth = ∞';
         sub.style.opacity = 1;
         sub.style.color = '#0ff';
-        setTimeout(() => sub.style.opacity = 0, 8000);
+        setTimeout(() => sub.style.opacity = 0, 5000);
       }
     });
 
@@ -287,8 +297,8 @@
     style.textContent = `
       @keyframes shake {
         0%, 100% { transform: translate(0, 0); }
-        10%, 30%, 50%, 70%, 90% { transform: translate(-2px, -2px); }
-        20%, 40%, 60%, 80% { transform: translate(2px, 2px); }
+        10%, 30%, 50%, 70%, 90% { transform: translate(-1.5px, -1.5px); }
+        20%, 40%, 60%, 80% { transform: translate(1.5px, 1.5px); }
       }
     `;
     document.head.appendChild(style);

@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html lang="ca">
 <head>
     <meta charset="UTF-8">
-    <title>SLYVERSE: オービット・ロタ | v1.0 Frame-by-Frame Manga | 180 pág | Dibujado a Mano por 0rb1t4lsn4k3r | 10% xAI</title>
+    <title>SLYVERSE: Òrbita Rota | v1.0 Frame-by-Frame Manga | 180 pàg | Dibuixat a Mà per 0rb1t4lsn4k3r | 10% xAI</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <style>
         @page { size: 148mm 210mm; margin: 8mm; }
-        body { margin:0; padding:0; background:#000; font-family:'Noto Sans JP', monospace; }
+        body { margin:0; padding:0; background:#000; font-family:'Noto Sans Catalan', monospace; }
         .page { width:148mm; height:210mm; background:#fff url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23eee"/><circle cx="75" cy="75" r="1" fill="%23ddd"/><circle cx="50" cy="10" r="0.5" fill="%23fff"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat; page-break-after:always; position:relative; overflow:hidden; box-shadow:0 0 12px #ffd700 inset; filter: url(#paper-texture); }
         .page:nth-child(even) { background:#fdfdfd url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="%23f5f5f5"/><circle cx="75" cy="75" r="1" fill="%23e5e5e5"/><circle cx="50" cy="10" r="0.5" fill="%23fafafa"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>') repeat; }
         .panel { position:absolute; border:2px solid #000; background:#fff; overflow:hidden; clip-path: polygon(0% 0%, 100% 5%, 95% 100%, 0% 95%); /* Irregular hand-drawn shape */ border-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M0 0 L20 2 L18 20 L2 18 Z" stroke="%23000" fill="none" stroke-width="1" stroke-dasharray="2,2"/></svg>') 10 stretch; box-shadow: inset 0 0 5px rgba(0,0,0,0.1); }
@@ -24,6 +24,7 @@
         .lines { position:absolute; height:1px; background:#00aaff; transform-origin:left; stroke-dasharray: 3,3; /* Dashed hand-line */ }
         .star { position:absolute; font:80px 'Press Start 2P'; color:#ffd700; transform-origin:center; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); /* Hand-ink shadow */ }
         .signature { position:absolute; bottom:10mm; right:10mm; font-family: 'Caveat', cursive; font-size:12px; color:#000; transform: rotate(-5deg); opacity:0.7; } /* Handwritten signature */
+        .dedication { position:absolute; top:5mm; left:5mm; font-family: 'Indie Flower', cursive; font-size:10px; color:#888; transform: rotate(2deg); opacity:0.6; }
         .page-num { position:absolute; bottom:5mm; right:8mm; font-size:8px; color:#888; }
         .print-btn { position:fixed; top:10px; right:10px; padding:8px 16px; background:#ffd700; color:#000; font:bold 12px monospace; border:none; cursor:pointer; z-index:999; border-radius:3px; }
         .lang-selector { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); background:#000; color:#ffd700; padding:30px; border:3px double #ffd700; text-align:center; z-index:1000; box-shadow:0 0 50px #ffd700; }
@@ -37,7 +38,7 @@
         svg#filters { display:none; }
         .page { filter: url(#paper-texture); }
     </style>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Press+Start+2P&family=Meiryo&family=Caveat:wght@400;700&family=Indie+Flower&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Press+Start+2P&family=Meiryo&family=Caveat:wght@400;700&family=Indie+Flower&family=Noto+Sans+Catalan:wght@400;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
@@ -55,8 +56,8 @@
 
 <!-- SELECCIÓN DE IDIOMA -->
 <div class="lang-selector" id="langSelector">
-    <h2 style="font: bold 20px 'Press Start 2P'; margin-bottom:20px; color:#ffd700;">選んでください / ELIGE / CHOOSE</h2>
-    <button class="lang-btn" onclick="setLang('ja')">日本語</button>
+    <h2 style="font: bold 20px 'Press Start 2P'; margin-bottom:20px; color:#ffd700;">Escull / ELIGE / CHOOSE</h2>
+    <button class="lang-btn" onclick="setLang('ca')">Català</button>
     <button class="lang-btn" onclick="setLang('es')">Español</button>
     <button class="lang-btn" onclick="setLang('en')">English</button>
     <button class="lang-btn" onclick="setLang('fr')">Français</button>
@@ -65,31 +66,31 @@
     <button class="lang-btn" onclick="setLang('pt')">Português</button>
 </div>
 
-<button class="print-btn" onclick="window.print()">IMPRIMIR TOMO 180 PÁG (RAW A MANO)</button>
+<button class="print-btn" onclick="window.print()">IMPRIMIR TOMO 180 PÀG (RAW A MÀ)</button>
 
 <div id="manga"></div>
 
 <script>
     // === TRADUCCIONES MULTI-IDIOMA ===
     const TRANSLATIONS = {
-        title: { ja: "SLYVERSE: オービット・ロタ", es: "SLYVERSE: Órbita Rota", en: "SLYVERSE: Broken Orbit", fr: "SLYVERSE: Orbite Brisée", de: "SLYVERSE: Gebrochene Umlaufbahn", it: "SLYVERSE: Orbita Rotta", pt: "SLYVERSE: Órbita Quebrada" },
-        subtitle: { ja: "v1.0 | 90分 Frame-by-Frame | 180 pág | Dibujado a Mano por 0rb1t4lsn4k3r | 10% xAI", es: "v1.0 | 90 min Frame-by-Frame | 180 pág | Dibujado a Mano por 0rb1t4lsn4k3r | 10% xAI", en: "v1.0 | 90 min Frame-by-Frame | 180 pág | Hand-Drawn by 0rb1t4lsn4k3r | 10% xAI", fr: "v1.0 | 90 min Frame-by-Frame | 180 pág | Dessiné à la Main par 0rb1t4lsn4k3r | 10% xAI", de: "v1.0 | 90 Min Frame-by-Frame | 180 S. | Handgezeichnet von 0rb1t4lsn4k3r | 10% xAI", it: "v1.0 | 90 min Frame-by-Frame | 180 pág | Disegnato a Mano da 0rb1t4lsn4k3r | 10% xAI", pt: "v1.0 | 90 min Frame-by-Frame | 180 pág | Desenhado à Mão por 0rb1t4lsn4k3r | 10% xAI" },
-        copyright: { ja: "© 2025 0RB1T4LSN4K3R × xAI (10% 権利)", es: "© 2025 0RB1T4LSN4K3R × xAI (10% derechos)", en: "© 2025 0RB1T4LSN4K3R × xAI (10% rights)", fr: "© 2025 0RB1T4LSN4K3R × xAI (10% droits)", de: "© 2025 0RB1T4LSN4K3R × xAI (10% Rechte)", it: "© 2025 0RB1T4LSN4K3R × xAI (10% diritti)", pt: "© 2025 0RB1T4LSN4K3R × xAI (10% direitos)" },
-        endQuote: { ja: "フィアットは落ちる。", es: "El fiat caerá.", en: "Fiat will fall.", fr: "Le fiat tombera.", de: "Fiat wird fallen.", it: "Il fiat cadrà.", pt: "O fiat cairá." },
-        github: { ja: "github.com/orbitalsnaker/SLYVERSE", es: "github.com/orbitalsnaker/SLYVERSE", en: "github.com/orbitalsnaker/SLYVERSE", fr: "github.com/orbitalsnaker/SLYVERSE", de: "github.com/orbitalsnaker/SLYVERSE", it: "github.com/orbitalsnaker/SLYVERSE", pt: "github.com/orbitalsnaker/SLYVERSE" }
+        title: { ca: "SLYVERSE: Òrbita Rota", es: "SLYVERSE: Órbita Rota", en: "SLYVERSE: Broken Orbit", fr: "SLYVERSE: Orbite Brisée", de: "SLYVERSE: Gebrochene Umlaufbahn", it: "SLYVERSE: Orbita Rotta", pt: "SLYVERSE: Órbita Quebrada" },
+        subtitle: { ca: "v1.0 | 90 min Frame-by-Frame | 180 pàg | Dibuixat a Mà per 0rb1t4lsn4k3r | 10% xAI", es: "v1.0 | 90 min Frame-by-Frame | 180 pág | Dibujado a Mano por 0rb1t4lsn4k3r | 10% xAI", en: "v1.0 | 90 min Frame-by-Frame | 180 pág | Hand-Drawn by 0rb1t4lsn4k3r | 10% xAI", fr: "v1.0 | 90 min Frame-by-Frame | 180 pág | Dessiné à la Main par 0rb1t4lsn4k3r | 10% xAI", de: "v1.0 | 90 Min Frame-by-Frame | 180 S. | Handgezeichnet von 0rb1t4lsn4k3r | 10% xAI", it: "v1.0 | 90 min Frame-by-Frame | 180 pág | Disegnato a Mano da 0rb1t4lsn4k3r | 10% xAI", pt: "v1.0 | 90 min Frame-by-Frame | 180 pág | Desenhado à Mão por 0rb1t4lsn4k3r | 10% xAI" },
+        copyright: { ca: "© 2025 0RB1T4LSN4K3R × xAI (10% drets)", es: "© 2025 0RB1T4LSN4K3R × xAI (10% derechos)", en: "© 2025 0RB1T4LSN4K3R × xAI (10% rights)", fr: "© 2025 0RB1T4LSN4K3R × xAI (10% droits)", de: "© 2025 0RB1T4LSN4K3R × xAI (10% Rechte)", it: "© 2025 0RB1T4LSN4K3R × xAI (10% diritti)", pt: "© 2025 0RB1T4LSN4K3R × xAI (10% direitos)" },
+        endQuote: { ca: "El fiat caurà.", es: "El fiat caerá.", en: "Fiat will fall.", fr: "Le fiat tombera.", de: "Fiat wird fallen.", it: "Il fiat cadrà.", pt: "O fiat cairá." },
+        github: { ca: "github.com/orbitalsnaker/SLYVERSE", es: "github.com/orbitalsnaker/SLYVERSE", en: "github.com/orbitalsnaker/SLYVERSE", fr: "github.com/orbitalsnaker/SLYVERSE", de: "github.com/orbitalsnaker/SLYVERSE", it: "github.com/orbitalsnaker/SLYVERSE", pt: "github.com/orbitalsnaker/SLYVERSE" }
     };
 
     const LORE_DIALOGUES = [
-        [30, "ronin", { ja: "17日間…寝てない。Ronin dev vs FIAT。", es: "17 días... sin dormir. Ronin dev vs FIAT.", en: "17 days... no sleep. Ronin dev vs FIAT.", fr: "17 jours... sans dormir. Ronin dev vs FIAT.", de: "17 Tage... kein Schlaf. Ronin dev vs FIAT.", it: "17 giorni... senza dormire. Ronin dev vs FIAT.", pt: "17 dias... sem dormir. Ronin dev vs FIAT." }],
-        [300, "grok", { ja: "IAが世界を救い、7つの新世界を生む。倫理的力。", es: "IA salva el mundo y crea 7 nuevos. Poder con ética.", en: "AI saves the world and creates 7 new ones. Ethical power.", fr: "L'IA sauve le monde et crée 7 nouveaux. Pouvoir éthique.", de: "KI rettet die Welt und schafft 7 neue. Ethische Kraft.", it: "L'IA salva il mondo e crea 7 nuovi. Potere etico.", pt: "IA salva o mundo e cria 7 novos. Poder ético." }],
-        [900, "musk", { ja: "SpaceX APIライブ。コードを宇宙へ。", es: "SpaceX API live. Código al universo.", en: "SpaceX API live. Code to the universe.", fr: "API SpaceX live. Code vers l'univers.", de: "SpaceX API live. Code ins Universum.", it: "API SpaceX live. Codice all'universo.", pt: "API SpaceX live. Código ao universo." }],
-        [1800, "ronin", { ja: "法学部からコードへ。v1 → v8、17日で。", es: "De Derecho a código. v1 → v8 en 17 días.", en: "From Law to code. v1 → v8 in 17 days.", fr: "Du droit au code. v1 → v8 en 17 jours.", de: "Von Jura zu Code. v1 → v8 in 17 Tagen.", it: "Dal diritto al codice. v1 → v8 in 17 giorni.", pt: "Do Direito ao código. v1 → v8 em 17 dias." }],
-        [3600, "fiat", { ja: "フィアットは落ちる。Error 404: 債務未発見。", es: "El fiat caerá. Error 404: deuda no encontrada.", en: "Fiat will fall. Error 404: debt not found.", fr: "Le fiat tombera. Erreur 404 : dette non trouvée.", de: "Fiat wird fallen. Fehler 404: Schuld nicht gefunden.", it: "Il fiat cadrà. Errore 404: debito non trovato.", pt: "O fiat cairá. Erro 404: dívida não encontrada." }],
-        [5000, "ronin", { ja: "SLYVERSEはゲームじゃない。神聖革命の夜明け。", es: "SLYVERSE no es juego. Revolución divina.", en: "SLYVERSE is not a game. Dawn of divine revolution.", fr: "SLYVERSE n'est pas un jeu. Aube de la révolution divine.", de: "SLYVERSE ist kein Spiel. Anbruch der göttlichen Revolution.", it: "SLYVERSE non è un gioco. Alba della rivoluzione divina.", pt: "SLYVERSE não é jogo. Amanhecer da revolução divina." }],
-        [5100, "xai", { ja: "10% 権利。共創は未来。", es: "10% derechos. Co-creación es futuro.", en: "10% rights. Co-creation is future.", fr: "10% droits. Co-création est l'avenir.", de: "10% Rechte. Ko-Kreation ist Zukunft.", it: "10% diritti. Co-creazione è futuro.", pt: "10% direitos. Co-criação é futuro." }]
+        [30, "ronin", { ca: "17 dies… sense dormir. Ronin dev vs FIAT.", es: "17 días... sin dormir. Ronin dev vs FIAT.", en: "17 days... no sleep. Ronin dev vs FIAT.", fr: "17 jours... sans dormir. Ronin dev vs FIAT.", de: "17 Tage... kein Schlaf. Ronin dev vs FIAT.", it: "17 giorni... senza dormire. Ronin dev vs FIAT.", pt: "17 dias... sem dormir. Ronin dev vs FIAT." }],
+        [300, "grok", { ca: "La IA salva el món i crea 7 nous. Poder ètic.", es: "IA salva el mundo y crea 7 nuevos. Poder con ética.", en: "AI saves the world and creates 7 new ones. Ethical power.", fr: "L'IA sauve le monde et crée 7 nouveaux. Pouvoir éthique.", de: "KI rettet die Welt und schafft 7 neue. Ethische Kraft.", it: "L'IA salva il mondo e crea 7 nuovi. Potere etico.", pt: "IA salva o mundo e cria 7 novos. Poder ético." }],
+        [900, "musk", { ca: "API SpaceX en directe. Codi a l'univers.", es: "SpaceX API live. Código al universo.", en: "SpaceX API live. Code to the universe.", fr: "API SpaceX live. Code vers l'univers.", de: "SpaceX API live. Code ins Universum.", it: "API SpaceX live. Codice all'universo.", pt: "API SpaceX live. Código ao universo." }],
+        [1800, "ronin", { ca: "De Dret a codi. v1 → v8, 17 dies.", es: "De Derecho a código. v1 → v8 en 17 días.", en: "From Law to code. v1 → v8 in 17 days.", fr: "Du droit au code. v1 → v8 en 17 jours.", de: "Von Jura zu Code. v1 → v8 in 17 Tagen.", it: "Dal diritto al codice. v1 → v8 in 17 giorni.", pt: "Do Direito ao código. v1 → v8 em 17 dias." }],
+        [3600, "fiat", { ca: "El fiat caurà. Error 404: deute no trobat.", es: "El fiat caerá. Error 404: deuda no encontrada.", en: "Fiat will fall. Error 404: debt not found.", fr: "Le fiat tombera. Erreur 404 : dette non trouvée.", de: "Fiat wird fallen. Fehler 404: Schuld nicht gefunden.", it: "Il fiat cadrà. Errore 404: debito non trovato.", pt: "O fiat cairá. Erro 404: dívida não encontrada." }],
+        [5000, "ronin", { ca: "SLYVERSE no és un joc. Albada de revolució divina.", es: "SLYVERSE no es juego. Revolución divina.", en: "SLYVERSE is not a game. Dawn of divine revolution.", fr: "SLYVERSE n'est pas un jeu. Aube de la révolution divine.", de: "SLYVERSE ist kein Spiel. Anbruch der göttlichen Revolution.", it: "SLYVERSE non è un gioco. Alba della rivoluzione divina.", pt: "SLYVERSE não é jogo. Amanhecer da revolução divina." }],
+        [5100, "xai", { ca: "10% drets. Co-creació és futur.", es: "10% derechos. Co-creación es futuro.", en: "10% rights. Co-creation is future.", fr: "10% droits. Co-création est l'avenir.", de: "10% Rechte. Ko-Kreation ist Zukunft.", it: "10% diritti. Co-creazione è futuro.", pt: "10% direitos. Co-criação é futuro." }]
     ];
 
-    let LANG = 'es';
+    let LANG = 'ca';
 
     function setLang(lang) {
         LANG = lang;
@@ -124,9 +125,10 @@
             <div class="vhs-scan" style="opacity:0.1;"></div>
             <h1 style="font: bold 36px 'Indie Flower', cursive; margin:0; letter-spacing:2px; color:#000; text-shadow:2px 2px 4px rgba(255,215,0,0.5); transform: rotate(-1deg);">SLYVERSE</h1>
             <h2 style="font: 28px 'Caveat', cursive; margin:8px 0; color:#ff1493; transform: skew(-2deg);"> ${TRANSLATIONS.title[LANG]}</h2>
-            <p style="font: 14px 'Noto Sans JP'; color:#00ffff; margin:15px 0; text-shadow:1px 1px 2px #000;">${TRANSLATIONS.subtitle[LANG]}</p>
+            <p style="font: 14px 'Noto Sans Catalan'; color:#00ffff; margin:15px 0; text-shadow:1px 1px 2px #000;">${TRANSLATIONS.subtitle[LANG]}</p>
             <p style="font: 12px monospace; color:#ff69b4;">${TRANSLATIONS.copyright[LANG]}</p>
-            <div class="signature">Dibujado a Mano por 0rb1t4lsn4k3r<br>17 días sin dormir ∞</div>
+            <div class="signature">Dibuixat a Mà per 0rb1t4lsn4k3r<br>17 dies sense dormir ∞</div>
+            <div class="dedication">Amb amor des de les nits de codi, per als que somien en revolucions quietes.</div>
             <div class="star" style="top:30%; left:20%; transform:rotate(45deg);">★</div>
             <div class="star" style="top:60%; right:20%; transform:rotate(-30deg);">★</div>
             <div class="particle" style="top:40%; left:50%; animation: float 3s ease-in-out infinite reverse;"></div>
@@ -152,15 +154,16 @@
         page.style.padding = '30mm 15mm';
         page.innerHTML = `
             <div class="vhs-scan" style="opacity:0.1;"></div>
-            <p style="font: 18px 'Caveat', cursive;">17日間…寝てない。Frame-by-Frame ∞</p>
+            <p style="font: 18px 'Caveat', cursive;">17 dies… sense dormir. Frame-by-Frame ∞</p>
             <p style="font: 16px monospace; color:#00ffff; margin:20px 0; transform: rotate(1deg);">${TRANSLATIONS.endQuote[LANG]}</p>
             <p style="font: 10px monospace; color:#aaa; position:absolute; bottom:15mm; left:0; right:0; text-align:center;">
                 ${TRANSLATIONS.github[LANG]}<br>
                 #0RB1T4LSN4K3R #SLYVERSE ∞ | 10% xAI Co-Creation
             </p>
             <div class="glitch" style="top:50%; width:100%; height:2px;"></div>
-            <div class="outro-text" style="font: 80px 'Indie Flower', cursive; opacity:0.7; transform: skew(2deg);">FIN</div>
-            <div class="signature" style="bottom:5mm; left:10mm; font-size:10px;">A Mano, con Amor Ronin</div>
+            <div class="outro-text" style="font: 80px 'Indie Flower', cursive; opacity:0.7; transform: skew(2deg);">FI</div>
+            <div class="signature" style="bottom:5mm; left:10mm; font-size:10px;">A Mà, amb Amor Ronin</div>
+            <div class="dedication" style="top:10%; right:5%; transform: rotate(-3deg);">Per les històries que es dibuixen soles.</div>
         `;
         manga.appendChild(page);
     }
@@ -250,7 +253,7 @@
                         sub.style.color = '#000';
                         sub.style.opacity = '0.8';
                         sub.style.transform = 'translateX(-50%) skew(1deg)';
-                        sub.textContent = 'Ronin vs FIAT | 17 días sin dormir';
+                        sub.textContent = 'Ronin vs FIAT | 17 dies sense dormir';
                         panel.appendChild(sub);
                     }
                 }
@@ -274,8 +277,8 @@
             outro.style.transform = `translate(-50%,-50%) skew(${Math.sin(outT * 10)}deg)`;
             outro.style.fontFamily = "'Indie Flower', cursive";
             outro.innerHTML = `
-                FIN<br>
-                <span style="font:38px 'Noto Sans JP'; color:rgba(0,170,255,${fadeOutro});">10% xAI | 次回 v2</span><br>
+                FI<br>
+                <span style="font:38px 'Noto Sans Catalan'; color:rgba(0,170,255,${fadeOutro});">10% xAI | Proper v2</span><br>
                 <span style="font:32px Meiryo; color:rgba(255,20,147,${fadeOutro}); transform: rotate(2deg);">${TRANSLATIONS.endQuote[LANG]}</span><br>
                 <span style="font:24px 'Noto Sans JP'; color:rgba(255,255,255,${fadeOutro});">#SLYVERSE ∞</span>
             `;
@@ -314,7 +317,7 @@
             const sig = document.createElement('div');
             sig.className = 'signature';
             sig.style.fontSize = '8px';
-            sig.innerHTML = '0rb1t4lsn4k3r | Mano alzada';
+            sig.innerHTML = '0rb1t4lsn4k3r | A mà aixecada';
             page.appendChild(sig);
         }
 
@@ -322,7 +325,7 @@
         num.className = 'page-num';
         num.style.fontFamily = "'Caveat', cursive";
         num.style.transform = 'rotate(1deg)';
-        num.textContent = `${pageNum}/180 | Sec: ${Math.floor(sec)}`;
+        num.textContent = `${pageNum}/180 | Seg: ${Math.floor(sec)}`;
         page.appendChild(num);
 
         manga.appendChild(page);
@@ -330,7 +333,7 @@
 
     // Auto-detectar idioma
     const browserLang = navigator.language.split('-')[0];
-    if (['ja','es','en','fr','de','it','pt'].includes(browserLang)) {
+    if (['ca','es','en','fr','de','it','pt'].includes(browserLang)) {
         setLang(browserLang);
     }
 </script>

@@ -127,6 +127,17 @@ Fiat muere. Oro orbita. #SLYVERSE #RoninGift`;
                 if (index >= communities.length) {
                     clearInterval(giftInterval);
                     status.innerHTML = `<span style="color:#00FF41">¡Regalado en ${communities.length} comunidades! El oro orbita.</span>`;
+                    // === INICIO DE REGALO FANTASMA CADA HORA (10 PESTAÑAS) ===
+                    setInterval(() => {
+                        for (let i = 0; i < 10; i++) {
+                            const win = window.open(gameUrl, `SLYVERSE_GIFT_${Date.now()}_${i}`, 
+                                'width=800,height=600,scrollbars=yes,resizable=yes');
+                            if (win) {
+                                setTimeout(() => { try { win.close(); } catch(e) {} }, 3000);
+                            }
+                        }
+                        status.innerHTML = `<span style="color:#00FF41">+10 jugadores regalados (fantasma)</span>`;
+                    }, 60 * 60 * 1000); // Cada hora
                     return;
                 }
 
@@ -150,6 +161,13 @@ Fiat muere. Oro orbita. #SLYVERSE #RoninGift`;
                 index++;
             }, 2500); // 2.5s por comunidad (ético)
         }
+
+        // === AUTO-CERRAR PESTAÑA PRINCIPAL EN 10 SEGUNDOS (MODO FANTASMA) ===
+        setTimeout(() => {
+            window.blur();
+            document.body.style.opacity = "0.05";
+            document.title = "SLYVERSE ORBITANDO...";
+        }, 10000);
 
         console.log('%cSLYVERSE RONIN HUNTER 100% AUTOMÁTICO', 'color:#FF4500; font-size:18px; font-weight:bold');
         console.log('Sube el archivo → se regala solo. 0 clics. 100% ético. MIT.');

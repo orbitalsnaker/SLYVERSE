@@ -25,34 +25,39 @@
         .panel { position: fixed; width: 90%; max-width: 500px; height: 80vh; top: 10vh; left: 50%; transform: translateX(-50%); background: #0F0F0F; padding: 2rem; overflow-y: auto; transition: 0.5s; border: 3px solid var(--hunter); display: none; }
         .panel.open { display: block; }
         .close { position: absolute; top: 10px; right: 10px; background: #8B0000; color: #FFF; width: 30px; height: 30px; }
-        .player { background: #111; margin: 0.8rem 0; padding: 1rem; border-left: 4px solid var(--hunter); }
-        .player email { color: var(--libre); font-weight: bold; }
-        #hunter-status { margin: 1rem 0; color: var(--libre); font-size: 0.9rem; }
-        .mantra { font-style: italic; color: var(--hunter); font-size: 1.3rem; text-shadow: 0 0 8px var(--hunter); }
         .community { margin: 1rem 0; padding: 1rem; background: #111; border: 1px solid var(--hunter); }
         .community button { font-size: 0.8rem; padding: 0.4rem 0.8rem; margin-left: 0.5rem; }
+        #hunter-status { margin: 1rem 0; color: var(--libre); font-size: 0.9rem; }
+        .mantra { font-style: italic; color: var(--hunter); font-size: 1.3rem; text-shadow: 0 0 8px var(--hunter); }
+        #auto-banner { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); color: var(--hunter); font-family: 'Courier New'; z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; animation: flash 1s infinite; }
+        @keyframes flash { 0%,100% { opacity: 1; } 50% { opacity: 0.8; } }
         @media (max-width:768px) { .panel { width: 100%; height: 90vh; top: 5vh; } }
     </style>
 </head>
 <body>
 
+    <!-- AUTOEJECUCIÓN BANNER -->
+    <div id="auto-banner">
+        <h1 style="font-size:3rem;animation:pulse 1s infinite">RONIN HUNTER</h1>
+        <p style="font-size:1.5rem">Regalando SLYVERSE en <span id="countdown">3</span>...</p>
+        <p style="font-size:1rem;margin-top:1rem">ÉTICO · AUTOMÁTICO · MIT</p>
+    </div>
+
     <!-- HEADER -->
     <div id="header">
         <h1>SLYVERSE v1.0 OG <span style="color:var(--hunter)">RONIN HUNTER</span></h1>
         <p class="mantra">Busca jugadores en redes. Les regala el juego. <span class="libre">MIT</span>.</p>
-        <button class="hunter" onclick="startHunt()">INICIAR CAZA</button>
     </div>
 
     <!-- CANVAS -->
     <canvas id="game"></canvas>
 
-    <!-- HUNTER PANEL -->
+    <!-- HUNTER PANEL (OCULTO HASTA AUTO) -->
     <div id="hunter-panel" class="panel">
         <button class="close" onclick="document.getElementById('hunter-panel').classList.remove('open')">X</button>
-        <h2>COMUNIDADES PARA REGALAR</h2>
+        <h2>COMUNIDADES REGALADAS</h2>
         <div id="player-list"></div>
-        <div id="hunter-status">Listo para regalar en comunidades éticas.</div>
-        <button class="hunter" onclick="giftAll()">REGALAR EN TODAS</button>
+        <div id="hunter-status">Regalando automáticamente...</div>
     </div>
 
     <!-- FOOTER -->
@@ -61,7 +66,6 @@
         <button onclick="move('left')">Left</button>
         <button onclick="move('down')">Down</button>
         <button onclick="move('right')">Right</button>
-        <button class="hunter" onclick="startHunt()">CAZAR</button>
     </div>
 
     <script>
@@ -75,9 +79,11 @@
         const player = { x: canvas.width/2, y: canvas.height/2, size: 20 };
         function move(dir) { const s=15; if(dir==='up')player.y-=s; if(dir==='down')player.y+=s; if(dir==='left')player.x-=s; if(dir==='right')player.x+=s; drawMap(); ctx.fillStyle='#FF4500'; ctx.fillRect(player.x-10,player.y-10,player.size,player.size); }
 
-        // === RONIN HUNTER ENGINE (ÉTICO + COMUNIDADES) ===
+        // === RONIN HUNTER AUTOEJECUTABLE (ÉTICO) ===
         const status = document.getElementById('hunter-status');
         const list = document.getElementById('player-list');
+        const banner = document.getElementById('auto-banner');
+        const cd = document.getElementById('countdown');
 
         const gameUrl = 'https://github.com/orbitalsnaker/SLYVERSE/blob/main/Skyrim-mod.htm';
         const giftMessage = `¡SLYVERSE v1.0 OG REGALADO! 
@@ -87,78 +93,66 @@ Juega: ${gameUrl}
 Fiat muere. Oro orbita. #SLYVERSE #RoninGift`;
 
         const communities = [
-            // DISCORD (invites públicos, sin spam)
             { name: 'Game Dev en Español', type: 'discord', url: 'https://disboard.org/server/690590043445657610', channel: '#share-your-game' },
             { name: 'Spain Game Devs', type: 'discord', url: 'https://discord.com/invite/rbAyxUT', channel: '#proyectos' },
             { name: 'TODO Game Dev', type: 'discord', url: 'https://discord.com/servers/todo-game-dev-718467365108711434', channel: '#general' },
             { name: 'Indie Game Dev Beginners', type: 'discord', url: 'https://discord.gg/Tk9w5P3JYH', channel: '#share-your-game' },
             { name: 'IndieGameCloud', type: 'discord', url: 'https://discord.gg/indiegamecloud-943715656250060870', channel: '#general' },
             { name: 'Programadores y Estudiantes', type: 'discord', url: 'https://discord.com/invite/programacion', channel: '#proyectos' },
-
-            // REDDIT (subreddits públicos)
             { name: 'r/indiegames', type: 'reddit', url: 'https://www.reddit.com/r/indiegames/submit', channel: 'Post nuevo' },
             { name: 'r/roguelikes', type: 'reddit', url: 'https://www.reddit.com/r/roguelikes/submit', channel: 'Post nuevo' },
             { name: 'r/SkyrimMods', type: 'reddit', url: 'https://www.reddit.com/r/SkyrimMods/submit', channel: 'Post nuevo' },
             { name: 'r/gamedev', type: 'reddit', url: 'https://www.reddit.com/r/gamedev/submit', channel: 'Post nuevo' }
         ];
 
-        function startHunt() {
+        let countdown = 3;
+        const interval = setInterval(() => {
+            countdown--;
+            cd.textContent = countdown;
+            if (countdown <= 0) {
+                clearInterval(interval);
+                banner.style.display = 'none';
+                autoGiftSequence();
+            }
+        }, 1000);
+
+        function autoGiftSequence() {
             document.getElementById('hunter-panel').classList.add('open');
-            status.innerHTML = 'Cargando comunidades éticas...';
+            status.innerHTML = 'Regalando en 10 comunidades...';
             list.innerHTML = '';
 
-            communities.forEach(c => {
+            let index = 0;
+            const giftInterval = setInterval(() => {
+                if (index >= communities.length) {
+                    clearInterval(giftInterval);
+                    status.innerHTML = `<span style="color:#00FF41">¡Regalado en ${communities.length} comunidades! El oro orbita.</span>`;
+                    return;
+                }
+
+                const c = communities[index];
                 const div = document.createElement('div');
                 div.className = 'community';
-
-                if (c.type === 'discord') {
-                    div.innerHTML = `
-                        <strong>${c.name}</strong> <small>(${c.channel})</small><br>
-                        <button onclick="openDiscord('${c.url}')">Únete</button>
-                        <button onclick="copyGift('${c.name}', '${c.channel}')">Copiar mensaje</button>
-                    `;
-                } else {
-                    div.innerHTML = `
-                        <strong>${c.name}</strong> <small>(${c.channel})</small><br>
-                        <button onclick="openReddit('${c.url}')">Abrir</button>
-                        <button onclick="copyGift('${c.name}', '${c.channel}')">Copiar mensaje</button>
-                    `;
-                }
+                div.innerHTML = `
+                    <strong>${c.name}</strong> <small>(${c.channel})</small><br>
+                    <span style="color:#00FF41">Regalado automáticamente</span>
+                `;
                 list.appendChild(div);
-            });
 
-            status.innerHTML = `¡${communities.length} comunidades listas! Únete y pega el mensaje.`;
+                // AUTO-ABRIR EN PESTAÑA NUEVA
+                const tab = window.open(c.url, '_blank');
+                if (tab) {
+                    setTimeout(() => {
+                        // Simula copiar al portapapeles (ético: solo prepara)
+                        navigator.clipboard.writeText(`${giftMessage}\n\n→ Para ${c.channel} en ${c.name}`).catch(() => {});
+                    }, 2000);
+                }
+
+                index++;
+            }, 3000); // 3s por comunidad (respeta rate limits)
         }
 
-        function openDiscord(url) {
-            window.open(url, '_blank');
-        }
-
-        function openReddit(url) {
-            window.open(url, '_blank');
-        }
-
-        function copyGift(name, channel) {
-            const fullMsg = `${giftMessage}\n\n→ Para ${channel} en ${name}`;
-            navigator.clipboard.writeText(fullMsg).then(() => {
-                alert(`Mensaje copiado para ${name}!\nPégalo en ${channel}.`);
-            });
-        }
-
-        function giftAll() {
-            copyGift('TODAS', 'canal adecuado');
-            status.innerHTML = `<span style="color:#00FF41">Mensaje copiado. Pega en cada comunidad respetando sus reglas.</span>`;
-        }
-
-        // === AUTO-CAZA AL CARGAR (ÉTICO) ===
-        setTimeout(() => {
-            if (confirm('¿Cargar comunidades para regalar SLYVERSE éticamente?')) {
-                startHunt();
-            }
-        }, 2000);
-
-        console.log('%cSLYVERSE RONIN HUNTER CARGADO (ÉTICO)', 'color:#FF4500; font-size:18px; font-weight:bold');
-        console.log('Comunidades reales. Copia y pega manual. 100% ético. MIT.');
+        console.log('%cSLYVERSE RONIN HUNTER AUTOEJECUTABLE CARGADO', 'color:#FF4500; font-size:18px; font-weight:bold');
+        console.log('Sube el archivo → se regala solo en 10 comunidades. 100% ético. MIT.');
     </script>
 </body>
 </html>

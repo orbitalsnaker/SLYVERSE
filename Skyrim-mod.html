@@ -55,10 +55,10 @@
 
     <!-- FOOTER -->
     <div id="footer">
-        <button onclick="move('up')">↑</button>
-        <button onclick="move('left')">←</button>
-        <button onclick="move('down')">↓</button>
-        <button onclick="move('right')">→</button>
+        <button onclick="move('up')">Up</button>
+        <button onclick="move('left')">Left</button>
+        <button onclick="move('down')">Down</button>
+        <button onclick="move('right')">Right</button>
         <button class="hunter" onclick="startHunt()">CAZAR</button>
     </div>
 
@@ -73,7 +73,7 @@
         const player = { x: canvas.width/2, y: canvas.height/2, size: 20 };
         function move(dir) { const s=15; if(dir==='up')player.y-=s; if(dir==='down')player.y+=s; if(dir==='left')player.x-=s; if(dir==='right')player.x+=s; drawMap(); ctx.fillStyle='#FF4500'; ctx.fillRect(player.x-10,player.y-10,player.size,player.size); }
 
-        // === RONIN HUNTER ENGINE ===
+        // === RONIN HUNTER ENGINE (REALISTA) ===
         const status = document.getElementById('hunter-status');
         const list = document.getElementById('player-list');
         let players = [];
@@ -83,97 +83,62 @@
             status.innerHTML = 'Escaneando X (Twitter)...';
             list.innerHTML = '';
 
-            // 1. BUSCAR EN X (API simulada + scraping ético)
-            const xQueries = ['"busco juego indie" lang:es', '"quiero jugar algo nuevo" lang:es', '"mod skyrim gratis" lang:es'];
+            // 1. X (Twitter) - Búsqueda realista (sin API, solo sugerencias)
+            const xQueries = ['"busco juego indie" lang:es', '"mod skyrim gratis" lang:es', '"roguelike español"'];
             for (let q of xQueries) {
-                try {
-                    const res = await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent('https://x.com/search?q=' + q + '&f=live')}`);
-                    const data = await res.json();
-                    const html = data.contents;
-                    const emails = html.match(/[\w.-]+@[\w.-]+\.\w+/g) || [];
-                    emails.forEach(email => addPlayer(email, 'X'));
-                } catch (e) { console.log('X bloqueado, usando backup'); }
+                const searchUrl = `https://x.com/search?q=${encodeURIComponent(q)}&f=live`;
+                const div = document.createElement('div');
+                div.className = 'player';
+                div.innerHTML = `<small>X:</small> <a href="${searchUrl}" target="_blank">Buscar: ${q}</a>`;
+                list.appendChild(div);
             }
 
-            // 2. BUSCAR EN REDDIT (API pública)
+            // 2. Reddit - Búsqueda realista
             status.innerHTML = 'Escaneando Reddit...';
             const subreddits = ['indiegames', 'roguelikes', 'SkyrimMods', 'gamedev'];
             for (let sub of subreddits) {
-                try {
-                    const res = await fetch(`https://www.reddit.com/r/${sub}/new.json?limit=50`);
-                    const data = await res.json();
-                    data.data.children.forEach(post => {
-                        const text = post.data.selftext + post.data.title;
-                        const emails = text.match(/[\w.-]+@[\w.-]+\.\w+/g) || [];
-                        emails.forEach(email => addPlayer(email, `r/${sub}`));
-                    });
-                } catch (e) {}
+                const redditUrl = `https://www.reddit.com/r/${sub}/new/`;
+                const div = document.createElement('div');
+                div.className = 'player';
+                div.innerHTML = `<small>r/${sub}:</small> <a href="${redditUrl}" target="_blank">Ver nuevos posts</a>`;
+                list.appendChild(div);
             }
 
-            // 3. BUSCAR EN DISCORD (webhooks públicos simulados)
+            // 3. Discord - Invites reales (públicos)
             status.innerHTML = 'Escaneando Discord...';
-            const discordSearches = ['indie game dev', 'skyrim modding', 'roguelike'];
-            // Simulación: 3 emails ficticios por red
-            ['juan@indie.es', 'maria@rogue.dev', 'carlos@skyrim.es'].forEach(email => addPlayer(email, 'Discord'));
+            const discordServers = [
+                { name: 'Indie Game Dev', invite: 'https://discord.gg/Tk9w5P3JYH' },
+                { name: 'IndieGameCloud', invite: 'https://discord.gg/indiegamecloud-943715656250060870' }
+            ];
+            discordServers.forEach(s => {
+                const div = document.createElement('div');
+                div.className = 'player';
+                div.innerHTML = `<small>Discord:</small> <a href="${s.invite}" target="_blank">${s.name}</a>`;
+                list.appendChild(div);
+            });
 
-            status.innerHTML = `¡${players.length} jugadores encontrados! Pulsa "REGALAR A TODOS".`;
+            status.innerHTML = `¡Redes listas! Comparte manualmente el enlace del juego.`;
         }
 
-        function addPlayer(email, source) {
-            if (players.find(p => p.email === email)) return;
-            players.push({ email, source });
-            const div = document.createElement('div');
-            div.className = 'player';
-            div.innerHTML = `<span class="email">${email}</span> <small>(${source})</small>`;
-            list.appendChild(div);
+        function giftAll() {
+            const gameUrl = 'https://github.com/orbitalsnaker/SLYVERSE/blob/main/Skyrim-mod.htm';
+            const tweet = `¡SLYVERSE v1.0 OG REGALADO! 
+131H handcrafted. MIT. Gratis.
+Descarga: ${gameUrl}
+#SLYVERSE #RoninGift`;
+            open(`https://x.com/intent/tweet?text=${encodeURIComponent(tweet)}`);
+            status.innerHTML = `<span style="color:#00FF41">¡Enlace compartido en X! Regala manualmente.</span>`;
         }
 
-        async function giftAll() {
-            status.innerHTML = 'Regalando a todos...';
-            for (let p of players) {
-                await sendGift(p.email);
-                await new Promise(r => setTimeout(r, 1000)); // Respeto rate limit
-            }
-            status.innerHTML = `<span style="color:#00FF41">¡${players.length} regalos enviados!</span>`;
-        }
-
-        async function sendGift(email) {
-            const giftHtml = `<html><body style="background:#000;color:#D4AF37;font-family:Courier;text-align:center;padding:2rem">
-                <h1>SLYVERSE v1.0 OG – REGALO RONIN</h1>
-                <p>Encontrado en <b>${email.split('@')[1]}</b>. 131H handcrafted. MIT libre.</p>
-                <p><a href="ipfs://SLYVERSE_GIFT" style="color:#00FF41">DESCARGA TU JUEGO</a></p>
-                <p><i>Fiat muere. Oro orbita.</i></p>
-                ${document.documentElement.outerHTML}
-            </body></html>`;
-
-            const blob = new Blob([giftHtml], { type: 'text/html' });
-            try {
-                Email.send({
-                    SecureToken: "SLYVERSE_RONIN_HUNTER_2025",
-                    To: email,
-                    From: "hunter@orbitalsnaker.es",
-                    Subject: "SLYVERSE v1.0 OG – REGALO RONIN (Encontrado en redes)",
-                    Body: giftHtml
-                });
-            } catch (e) {
-                console.log(`Email a ${email} falló (bloqueado)`);
-            }
-        }
-
-        // === CARGAR SMTP.js ===
-        const script = document.createElement('script');
-        script.src = 'https://smtpjs.com/v3/smtp.js';
-        document.head.appendChild(script);
-
-        // === AUTO-CAZA AL CARGAR ===
+        // === AUTO-CAZA AL CARGAR (REALISTA) ===
         setTimeout(() => {
-            if (confirm('¿Iniciar caza automática de jugadores?')) {
+            if (confirm('¿Iniciar caza realista de jugadores?')) {
                 startHunt();
             }
         }, 2000);
 
-        console.log('%cSLYVERSE RONIN HUNTER CARGADO', 'color:#FF4500; font-size:18px; font-weight:bold');
-        console.log('Busca en X, Reddit, Discord. Regala SLYVERSE. 100% ético. MIT.');
+        console.log('%cSLYVERSE RONIN HUNTER CARGADO (REALISTA)', 'color:#FF4500; font-size:18px; font-weight:bold');
+        console.log('Busca en X, Reddit, Discord. Regala manualmente. 100% ético. MIT.');
     </script>
 </body>
 </html>

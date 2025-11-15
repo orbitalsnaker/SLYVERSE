@@ -147,9 +147,11 @@
     let W, H, t = 0, aurum = parseInt(localStorage.getItem('slyverse_v1_aurum')||'0'), level=1, combo=0, highscore=0
     const P = {x:0,y:0,r:18,a:0,pulse:0,tr:[],bossCharge:0}
     const S = [], BOSS = [], QUESTS = [], LB = JSON.parse(localStorage.getItem('slyverse_v1_lb')||'[]'), SPACEX = [
-        {name:'Starship IFT-6',date:'2025-11-19',status:'Success 🐍',payload:'Orbital ronin'},
-        {name:'Falcon 9 Block 6',date:'2025-11-15',status:'RTLS',payload:'Starlink v1.0'},
-        {name:'Crew Dragon Polaris',date:'2025-11-25',status:'Splashdown',payload:'NASA Axiom-4'}
+        {name:'Starlink Mission',date:'2025-11-14',status:'Success',payload:'Falcon 9 LC-39A Florida'},
+        {name:'Starlink 6-89',date:'2025-11-14',status:'Success',payload:'Falcon 9 Kennedy'},
+        {name:'Starlink Batch',date:'2025-11-18',status:'Upcoming',payload:'Falcon 9 LC-40'},
+        {name:'Sentinel-6B',date:'2025-11',status:'Upcoming',payload:'Falcon 9 SLC-4E California'},
+        {name:'Starlink 29 Satellites',date:'2025-11-14',status:'Success',payload:'Falcon 9 Kennedy'}
     ]
     const els = {aurum:document.getElementById('aurum'),level:document.getElementById('level'),combo:document.getElementById('combo')}
 
@@ -171,13 +173,15 @@
         {id:2,txt:"Forja 500 AURUM",tgt:500,c:0},
         {id:3,txt:"Combo x20",tgt:20,c:0},
         {id:4,txt:"Mata 3 Boss",tgt:3,c:0},
-        {id:5,txt:"6969 AURUM ETERNO",tgt:6969,c:0}
+        {id:5,txt:"6969 AURUM ETERNO",tgt:6969,c:0},
+        {id:6,txt:"SpaceX unlock (2500 AURUM)",tgt:2500,c:0},
+        {id:7,txt:"Anime gold (5000 AURUM)",tgt:5000,c:0}
     ]
 
     const resize = () => {
         W = C.width = innerWidth; H = C.height = innerHeight; AC.width = 800; AC.height = 600
         P.x = W/2; P.y = H/2
-        if(S.length===0) for(let i=0;i<4500;i++) S.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*2.5+0.2,tw:Math.random()*Math.PI*2,o:Math.random()*12})
+        if(S.length===0) for(let i=0;i<5000;i++) S.push({x:Math.random()*W,y:Math.random()*H,s:Math.random()*3+0.1,tw:Math.random()*Math.PI*2,o:Math.random()*15})
     }; addEventListener('resize',resize); resize()
 
     const save = () => {
@@ -237,132 +241,4 @@ Fiat caerit. Aurum ∞. Thua mer zel. #SLYVERSE #RoninHunterv1`
         spawnParticles(amt>50?amt/2:20)
         if(aurum>=6969){console.log('%c🌌 THUA MER ZEL v1 ETERNO 🌌\n🐍 Ronin: ∞ | Fiat: OBLITERADO | Highscore: ∞','color:#D4AF37;font-size:26px;font-family:monospace'); P.r=40; LB.unshift({score:aurum,name:'🐍 ETERNO'}); save()}
         else if(aurum>=5000){document.getElementById('anime-unlock').style.display='block'; console.log('%c🎥 ANIME 90\' GOLD + SUBS CASTELLANO 🐍','color:#FF4500;font-size:22px')}
-        else if(aurum>=2500){document.getElementById('manga-unlock').style.display='block'; console.log('%c📖 MANGA 180p ÓRBITA TRENCAVA 🐍','color:#FFD700;font-size:20px')}
-        else if(aurum>=1000){P.r=30; console.log('%c🏆 THUAMER v1 ∞ EVOLUCIONADO! 🐍','color:#D4AF37;font-size:18px')}
-        else if(aurum%250===0) console.log(`%c🐍 ${aurum} AURUM FORJADO v1! Combo:${combo} ∞`,'color:#FF4500;font-size:16px')
-    }
-
-    const updateLevel = () => {const nl=Math.floor(aurum/250)+1; if(nl>level){level=nl; els.level.textContent=level; spawnParticles(60); P.r+=3}}
-
-    const spawnBoss = () => {
-        BOSS.length=0; BOSS.push({x:W/2 + (Math.random()-0.5)*200,y:H/2 + (Math.random()-0.5)*200,r:160,a:0,hp:5,p:'FIAT LORD v1'})
-        document.getElementById('boss-alert').style.display='block'; P.bossCharge=0
-        setTimeout(()=>document.getElementById('boss-alert').style.display='none',6000)
-    }
-
-    const updateQuests = () => {
-        quests.forEach((q,i)=>{q.c = Math.min(q.tgt, (i===0?combo/2: i===1?aurum/10: i===2?combo: i===3?BOSS.length: aurum))})
-        const list = document.getElementById('quest-list'); list.innerHTML = quests.map(q=>`<div class="quest-item ${q.c>=q.tgt?'quest-complete':''}">[${q.c}/${q.tgt}] ${q.txt}</div>`).join('')
-        if(quests.every(q=>q.c>=q.tgt)){document.getElementById('quests').style.display='none'; addAurum(500)}
-    }
-
-    const updateLB = () => {
-        const list = document.getElementById('lb-list'); list.innerHTML = LB.slice(0,10).map((e,i)=>`<div class="lb-entry">${i+1}. ${e.name||'Anon'}: ${e.score}</div>`).join('')
-    }
-
-    const dirs = [[0,-20],[-20,0],[0,20],[20,0]]
-
-    addEventListener('keydown',e=>{
-        if(e.code==='Space'){e.preventDefault(); P.pulse=45; return}
-        if(e.code==='KeyQ') document.getElementById('quests').style.display = document.getElementById('quests').style.display?'none':'block'
-        if(e.code==='KeyL') {document.getElementById('leaderboard').style.display = document.getElementById('leaderboard').style.display?'none':'block'; updateLB()}
-        if(e.code==='KeyS') document.getElementById('spacex-panel').style.display = document.getElementById('spacex-panel').style.display?'none':'block'
-        const map={KeyW:0,KeyA:1,KeyS:2,KeyD:3,ArrowUp:0,ArrowLeft:1,ArrowDown:2,ArrowRight:3}
-        const d=map[e.code]; if(d!==undefined){e.preventDefault(); P.x+=dirs[d][0]*level/5; P.y+=dirs[d][1]*level/5; clampP()}
-    })
-
-    ;['up','left','down','right'].forEach((id,i)=>document.getElementById(id).onpointerdown=e=>{e.preventDefault(); P.x+=dirs[i][0]*level/5; P.y+=dirs[i][1]*level/5; clampP()})
-
-    const clampP = () => {P.x=Math.max(P.r,Math.min(W-P.r,P.x)); P.y=Math.max(P.r,Math.min(H-P.r,P.y))}
-
-    C.onclick = e=>{if(e.detail===2) toggleReadme()}
-    addEventListener('keydown',e=>{if(e.code==='KeyR') toggleReadme()})
-
-    // ANIME v1 pixel gold (procedural ronin anime)
-    const animeLoop = () => {
-        AX.fillStyle='rgba(0,0,0,0.1)'; AX.fillRect(0,0,800,600)
-        // Procedural frames: snake ronin vs fiat (simplified pixel anime)
-        for(let f=0;f<60;f++) {
-            let px = (t*10 + f*20)%800, py = Math.sin(t*5 + f)*100 + 300
-            AX.fillStyle='#FF4500'; AX.fillRect(px,py,8,8)
-            AX.fillStyle='#D4AF37'; AX.font='bold 16px Courier'; AX.fillText('🐍',px+10,py+20)
-        }
-        AX.fillStyle='#00FF41'; AX.font='bold 24px Palatino'; AX.fillText('ANIME 90\' v1 - Subs: Fiat caerit.',50,550)
-        requestAnimationFrame(animeLoop)
-    }; animeLoop()
-
-    // MANGA pages (procedural 180p ronin catalán)
-    document.getElementById('manga-unlock').onclick = () => {
-        const pages = document.getElementById('manga-pages')
-        pages.innerHTML += `<img class="manga-page" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAwIiBoZWlnaHQ9IjYwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJibGFjayIvPjx0ZXh0IHg9IjQwMCIgeT0iMzAwIiBmb250LWZhbWlseT0iQ291cmllciIgZm9udC1zaXplPSI0MCIgZmlsbD0iI0RGNEFGMzciIHRleHQtYW5jaG9yPSJtaWRkbGUiPk9SIFJJVFRBIFRSRU5DQURBPC90ZXh0PjxjaXJjbGUgY3g9IjQwMCIgY3k9IjIwMCIgcj0iMTAwIiBmaWxsPSIjRkY0NTAwIi8+PHRleHQgeD0iNDAwIiB5PSI1MDAiIGZvbnQtZmFtaWx5PSJQYWxhdGlubyIgZm9udC1zaXplPSIyNCIgZmlsbD0iIzAwRkY0MSI+UGFnLiAyNS80MjA8L3RleHQ+PC9zdmc+" alt="Manga Pg">`
-        if(pages.children.length>180) pages.innerHTML=''
-    }
-
-    const draw = () => {
-        X.fillStyle='rgba(0,0,0,0.12)'; X.fillRect(0,0,W,H); t+=0.005
-
-        S.forEach(s=>{
-            s.tw+=0.05 + s.o*0.01; s.x+=(Math.sin(s.tw*4)+1)*1.2; s.y+=(Math.cos(s.tw*3)+1)*0.8
-            s.x=(s.x+W)%W; s.y=(s.y+H)%H
-            let b=25 + Math.sin(s.tw)*40
-            X.fillStyle=`hsl(${t*6 + s.x*0.002},90%,${b}%)`
-            X.shadowBlur=5; X.shadowColor='#FFD700'; X.fillRect(s.x,s.y,s.s,s.s)
-        }); X.shadowBlur=0
-
-        BOSS.forEach((b,i)=>{
-            b.a+=0.15; b.x+=(Math.sin(t*8 + i)*3); b.y+=(Math.cos(t*6 + i)*2)
-            X.save(); X.translate(b.x,b.y); X.rotate(b.a*3)
-            X.globalAlpha=0.7 + Math.sin(t*5)*0.3; X.shadowBlur=200; X.shadowColor='#FF3E00'
-            X.fillStyle='rgba(255,62,0,0.4)'; X.beginPath(); X.arc(0,0,b.r,0,Math.PI*2); X.fill()
-            X.shadowBlur=0; X.fillStyle='#000'; X.font='bold 20px Courier'; X.textAlign='center'; X.fillText(b.p,0,b.hp*10)
-            X.strokeStyle='#D4AF37'; X.lineWidth=4; X.beginPath(); X.arc(0,0,b.r,0,Math.PI*2); X.stroke()
-            X.restore()
-            let bd=Math.hypot(P.x-b.x,P.y-b.y)
-            if(P.pulse>0 && bd<b.r){b.hp--; if(b.hp<=0){addAurum(200); quests[3].c++; BOSS.splice(i,1); console.log('%c💀 FIAT LORD v1 ANIQUILADO! +200 AURUM 🐍','color:#FF3E00;font-size:22px'); spawnParticles(100)}}
-        })
-
-        if(P.bossCharge>750){spawnBoss(); P.bossCharge=0}
-
-        N.forEach((n,i)=>{
-            let a=t*0.7 + i*1; let Xp=W/2 + Math.sin(a)*500 + Math.cos(a*1.5)*250
-            let Yp=H/2 + Math.cos(a*0.9)*480 + Math.sin(a*1.8)*200; let sz=60 + Math.sin(a*4 + t)*45
-            X.save(); X.translate(Xp,Yp); X.rotate(a)
-            X.globalAlpha=0.55 + Math.sin(t*3 + i)*0.45; X.shadowBlur=160; X.shadowColor=n.c; X.fillStyle=n.c
-            X.beginPath(); X.arc(0,0,sz,0,Math.PI*2); X.fill()
-            for(let p=0;p<16;p++){
-                let pa=a + p*0.4; X.globalAlpha=1; X.shadowBlur=35; X.fillStyle=n.c
-                X.beginPath(); X.arc(Math.cos(pa)*sz*0.75,Math.sin(pa)*sz*0.75,16 + Math.sin(t*9 + p)*12,0,Math.PI*2); X.fill()
-            }
-            X.shadowBlur=0; X.fillStyle='#000'; X.font='bold 16px Courier New'; X.textAlign='center'; X.fillText(n.n,0,sz+50)
-            X.restore()
-
-            let d=Math.hypot(P.x-Xp,P.y-Yp)
-            if(d<420){let pull=(420-d)/420*0.05; P.x+=(Xp-P.x)*pull; P.y+=(Yp-P.y)*pull}
-            if(P.pulse>0 && d<160){addAurum(15 + i*2 + level*3); quests[0].c++; P.pulse*=0.7; X.globalAlpha=0.6 + Math.sin(t*20)*0.3; X.fillStyle=n.c; X.fillRect(0,0,W,H); console.log(`%c🐍 ${n.n} DEVORADA v1! +${15+i*2+level*3} | Aurum:${aurum} | Lvl:${level}`,'color:'+n.c)}
-        })
-
-        P.tr.push({x:P.x,y:P.y,a:1}); if(P.tr.length>220) P.tr.shift()
-        P.tr.forEach((pt,i)=>{pt.a*=0.975; X.globalAlpha=pt.a; let fade=i/P.tr.length; X.fillStyle=`hsl(22,100%,${45+fade*55}%)`; X.shadowBlur=30; X.beginPath(); X.arc(pt.x,pt.y,8+fade*8,0,Math.PI*2); X.fill()})
-
-        X.save(); X.translate(P.x,P.y); X.rotate(t*6 + P.pulse*0.3)
-        X.globalAlpha=1; X.shadowBlur=120 + P.pulse*4; X.shadowColor='#FF4500'; X.fillStyle='#FF4500'
-        X.beginPath(); for(let i=0;i<20;i++){let ang=i*Math.PI*2/20 + t*10 + P.pulse*0.2; let rad=P.r*(1+Math.sin(ang*10 + t*15)*0.5 + P.pulse*0.4); X.lineTo(Math.cos(ang)*rad,Math.sin(ang)*rad)}
-        X.closePath(); X.fill()
-
-        if(P.pulse>0){P.pulse*=0.925; X.globalAlpha=P.pulse/45*1; X.strokeStyle='#FF4500'; X.lineWidth=8 + P.pulse*1.5; X.shadowBlur=100; X.beginPath(); X.arc(0,0,P.pulse*15,0,Math.PI*2); X.stroke()}
-        X.shadowBlur=0; X.restore()
-
-        X.save(); X.globalAlpha=0.5 + Math.sin(t*15)*0.4; X.shadowBlur=50; X.shadowColor='#D4AF37'
-        X.font='bold 32px Palatino'; X.fillStyle='#D4AF37'; X.fillText(`AURUM v1: ${aurum}`,30,60)
-        X.font='bold 26px Courier'; X.fillText(`LVL ${level} | COMBO ${combo}`,30,100)
-        X.restore()
-
-        updateLevel(); updateQuests(); if(aurum>100){document.getElementById('quests').style.display='block'; document.getElementById('leaderboard').style.display='block'; document.getElementById('spacex-panel').style.display='block'}
-        document.getElementById('spacex-list').innerHTML = SPACEX.map(l=>`<div class="launch-item">${l.name} (${l.date}): ${l.status}</div>`).join('')
-        if(t<500) document.getElementById('instructions').classList.add('show')
-        else document.getElementById('instructions').classList.remove('show')
-    }
-
-    const loop = () => {draw(); requestAnimationFrame(loop)}
-    loop(); save(); updateQuests(); updateLB()
-</script>
+        else if(aurum>=2500){document.getElementById('manga-unlock').style.display='block'; console.log('%c📖 MANGA 180p ÓRBITA TRENCAVA 🐍','color:#FFD700;font

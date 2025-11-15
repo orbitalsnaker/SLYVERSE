@@ -29,6 +29,8 @@
         .player email { color: var(--libre); font-weight: bold; }
         #hunter-status { margin: 1rem 0; color: var(--libre); font-size: 0.9rem; }
         .mantra { font-style: italic; color: var(--hunter); font-size: 1.3rem; text-shadow: 0 0 8px var(--hunter); }
+        .community { margin: 1rem 0; padding: 1rem; background: #111; border: 1px solid var(--hunter); }
+        .community button { font-size: 0.8rem; padding: 0.4rem 0.8rem; margin-left: 0.5rem; }
         @media (max-width:768px) { .panel { width: 100%; height: 90vh; top: 5vh; } }
     </style>
 </head>
@@ -47,10 +49,10 @@
     <!-- HUNTER PANEL -->
     <div id="hunter-panel" class="panel">
         <button class="close" onclick="document.getElementById('hunter-panel').classList.remove('open')">X</button>
-        <h2>JUGADORES ENCONTRADOS</h2>
+        <h2>COMUNIDADES PARA REGALAR</h2>
         <div id="player-list"></div>
-        <div id="hunter-status">Buscando en X, Reddit, Discord...</div>
-        <button class="hunter" onclick="giftAll()">REGALAR A TODOS</button>
+        <div id="hunter-status">Listo para regalar en comunidades éticas.</div>
+        <button class="hunter" onclick="giftAll()">REGALAR EN TODAS</button>
     </div>
 
     <!-- FOOTER -->
@@ -73,72 +75,90 @@
         const player = { x: canvas.width/2, y: canvas.height/2, size: 20 };
         function move(dir) { const s=15; if(dir==='up')player.y-=s; if(dir==='down')player.y+=s; if(dir==='left')player.x-=s; if(dir==='right')player.x+=s; drawMap(); ctx.fillStyle='#FF4500'; ctx.fillRect(player.x-10,player.y-10,player.size,player.size); }
 
-        // === RONIN HUNTER ENGINE (REALISTA) ===
+        // === RONIN HUNTER ENGINE (ÉTICO + COMUNIDADES) ===
         const status = document.getElementById('hunter-status');
         const list = document.getElementById('player-list');
-        let players = [];
 
-        async function startHunt() {
+        const gameUrl = 'https://github.com/orbitalsnaker/SLYVERSE/blob/main/Skyrim-mod.htm';
+        const giftMessage = `¡SLYVERSE v1.0 OG REGALADO! 
+131H handcrafted. 90min anime. 180p manga. 50 quests. 
+Todo MIT libre. Offline. Gratis eterno.
+Juega: ${gameUrl}
+Fiat muere. Oro orbita. #SLYVERSE #RoninGift`;
+
+        const communities = [
+            // DISCORD (invites públicos, sin spam)
+            { name: 'Game Dev en Español', type: 'discord', url: 'https://disboard.org/server/690590043445657610', channel: '#share-your-game' },
+            { name: 'Spain Game Devs', type: 'discord', url: 'https://discord.com/invite/rbAyxUT', channel: '#proyectos' },
+            { name: 'TODO Game Dev', type: 'discord', url: 'https://discord.com/servers/todo-game-dev-718467365108711434', channel: '#general' },
+            { name: 'Indie Game Dev Beginners', type: 'discord', url: 'https://discord.gg/Tk9w5P3JYH', channel: '#share-your-game' },
+            { name: 'IndieGameCloud', type: 'discord', url: 'https://discord.gg/indiegamecloud-943715656250060870', channel: '#general' },
+            { name: 'Programadores y Estudiantes', type: 'discord', url: 'https://discord.com/invite/programacion', channel: '#proyectos' },
+
+            // REDDIT (subreddits públicos)
+            { name: 'r/indiegames', type: 'reddit', url: 'https://www.reddit.com/r/indiegames/submit', channel: 'Post nuevo' },
+            { name: 'r/roguelikes', type: 'reddit', url: 'https://www.reddit.com/r/roguelikes/submit', channel: 'Post nuevo' },
+            { name: 'r/SkyrimMods', type: 'reddit', url: 'https://www.reddit.com/r/SkyrimMods/submit', channel: 'Post nuevo' },
+            { name: 'r/gamedev', type: 'reddit', url: 'https://www.reddit.com/r/gamedev/submit', channel: 'Post nuevo' }
+        ];
+
+        function startHunt() {
             document.getElementById('hunter-panel').classList.add('open');
-            status.innerHTML = 'Escaneando X (Twitter)...';
+            status.innerHTML = 'Cargando comunidades éticas...';
             list.innerHTML = '';
 
-            // 1. X (Twitter) - Búsqueda realista (sin API, solo sugerencias)
-            const xQueries = ['"busco juego indie" lang:es', '"mod skyrim gratis" lang:es', '"roguelike español"'];
-            for (let q of xQueries) {
-                const searchUrl = `https://x.com/search?q=${encodeURIComponent(q)}&f=live`;
+            communities.forEach(c => {
                 const div = document.createElement('div');
-                div.className = 'player';
-                div.innerHTML = `<small>X:</small> <a href="${searchUrl}" target="_blank">Buscar: ${q}</a>`;
-                list.appendChild(div);
-            }
+                div.className = 'community';
 
-            // 2. Reddit - Búsqueda realista
-            status.innerHTML = 'Escaneando Reddit...';
-            const subreddits = ['indiegames', 'roguelikes', 'SkyrimMods', 'gamedev'];
-            for (let sub of subreddits) {
-                const redditUrl = `https://www.reddit.com/r/${sub}/new/`;
-                const div = document.createElement('div');
-                div.className = 'player';
-                div.innerHTML = `<small>r/${sub}:</small> <a href="${redditUrl}" target="_blank">Ver nuevos posts</a>`;
-                list.appendChild(div);
-            }
-
-            // 3. Discord - Invites reales (públicos)
-            status.innerHTML = 'Escaneando Discord...';
-            const discordServers = [
-                { name: 'Indie Game Dev', invite: 'https://discord.gg/Tk9w5P3JYH' },
-                { name: 'IndieGameCloud', invite: 'https://discord.gg/indiegamecloud-943715656250060870' }
-            ];
-            discordServers.forEach(s => {
-                const div = document.createElement('div');
-                div.className = 'player';
-                div.innerHTML = `<small>Discord:</small> <a href="${s.invite}" target="_blank">${s.name}</a>`;
+                if (c.type === 'discord') {
+                    div.innerHTML = `
+                        <strong>${c.name}</strong> <small>(${c.channel})</small><br>
+                        <button onclick="openDiscord('${c.url}')">Únete</button>
+                        <button onclick="copyGift('${c.name}', '${c.channel}')">Copiar mensaje</button>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <strong>${c.name}</strong> <small>(${c.channel})</small><br>
+                        <button onclick="openReddit('${c.url}')">Abrir</button>
+                        <button onclick="copyGift('${c.name}', '${c.channel}')">Copiar mensaje</button>
+                    `;
+                }
                 list.appendChild(div);
             });
 
-            status.innerHTML = `¡Redes listas! Comparte manualmente el enlace del juego.`;
+            status.innerHTML = `¡${communities.length} comunidades listas! Únete y pega el mensaje.`;
+        }
+
+        function openDiscord(url) {
+            window.open(url, '_blank');
+        }
+
+        function openReddit(url) {
+            window.open(url, '_blank');
+        }
+
+        function copyGift(name, channel) {
+            const fullMsg = `${giftMessage}\n\n→ Para ${channel} en ${name}`;
+            navigator.clipboard.writeText(fullMsg).then(() => {
+                alert(`Mensaje copiado para ${name}!\nPégalo en ${channel}.`);
+            });
         }
 
         function giftAll() {
-            const gameUrl = 'https://github.com/orbitalsnaker/SLYVERSE/blob/main/Skyrim-mod.htm';
-            const tweet = `¡SLYVERSE v1.0 OG REGALADO! 
-131H handcrafted. MIT. Gratis.
-Descarga: ${gameUrl}
-#SLYVERSE #RoninGift`;
-            open(`https://x.com/intent/tweet?text=${encodeURIComponent(tweet)}`);
-            status.innerHTML = `<span style="color:#00FF41">¡Enlace compartido en X! Regala manualmente.</span>`;
+            copyGift('TODAS', 'canal adecuado');
+            status.innerHTML = `<span style="color:#00FF41">Mensaje copiado. Pega en cada comunidad respetando sus reglas.</span>`;
         }
 
-        // === AUTO-CAZA AL CARGAR (REALISTA) ===
+        // === AUTO-CAZA AL CARGAR (ÉTICO) ===
         setTimeout(() => {
-            if (confirm('¿Iniciar caza realista de jugadores?')) {
+            if (confirm('¿Cargar comunidades para regalar SLYVERSE éticamente?')) {
                 startHunt();
             }
         }, 2000);
 
-        console.log('%cSLYVERSE RONIN HUNTER CARGADO (REALISTA)', 'color:#FF4500; font-size:18px; font-weight:bold');
-        console.log('Busca en X, Reddit, Discord. Regala manualmente. 100% ético. MIT.');
+        console.log('%cSLYVERSE RONIN HUNTER CARGADO (ÉTICO)', 'color:#FF4500; font-size:18px; font-weight:bold');
+        console.log('Comunidades reales. Copia y pega manual. 100% ético. MIT.');
     </script>
 </body>
 </html>

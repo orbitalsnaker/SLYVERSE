@@ -3,49 +3,56 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SLYVERSE: Crónicas del Minado Libre – Manga 180 págs (v2 – Tradicional)</title>
+  <title>SLYVERSE: Crónicas del Minado Libre – Manga 180 págs (v3 – ESTÉTICA PURA)</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box }
     html, body { height: 100%; overflow-x: hidden; overflow-y: auto; background: #000; color: #0f0; font-family: 'Indie Flower', cursive }
     .manga { max-width: 900px; margin: 0 auto; padding: 20px }
-    .page { width: 100%; height: auto; margin-bottom: 20px; position: relative; border: 1px solid #0f0; background: #000 }
-    .panel { width: 100%; height: 300px; position: relative; overflow: hidden; border-bottom: 1px dashed #0f0 }
-    .panel:last-child { border-bottom: none }
-    .text { position: absolute; bottom: 10px; left: 10px; right: 10px; text-align: center; font-size: 16px; color: #0f0; text-shadow: 0 0 6px #0f0; opacity: 0.9 }
-    .dedication { color: #0ff; font-style: italic }
+    .page { width: 100%; height: auto; margin-bottom: 20px; position: relative; border: 1px solid #0f0; background: #000; padding: 15px; border-radius: 8px }
+    .panel { width: 100%; height: 300px; position: relative; overflow: hidden; border-bottom: 1px dashed #0f0; margin-bottom: 10px; border-radius: 6px }
+    .panel:last-child { border-bottom: none; margin-bottom: 0 }
+    .text { position: absolute; bottom: 10px; left: 10px; right: 10px; text-align: center; font-size: 16px; color: #0f0; text-shadow: 0 0 6px #0f0; opacity: 0.9; z-index: 2 }
+    .dedication { color: #0ff; font-style: italic; text-shadow: 0 0 12px #0ff }
     .hope { color: #0ff; text-shadow: 0 0 10px #0ff }
-    .page-number { position: absolute; bottom: 5px; right: 10px; font-size: 10px; opacity: 0.6 }
-    .stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none }
-    .star { position: absolute; width: 1px; height: 1px; background: #0f0; border-radius: 50%; opacity: 0.6 }
-    .nave { stroke: #0f0; stroke-width: 2; fill: none; stroke-linecap: round }
-    .nave.hope { stroke: #0ff; stroke-width: 3 }
-    .estela { stroke: #0ff; stroke-width: 1; opacity: 0.5 }
-    .propulsor { fill: #0f0 }
-    .propulsor.dedication { fill: #0ff }
+    .page-number { position: absolute; bottom: 5px; right: 10px; font-size: 10px; opacity: 0.6; z-index: 2 }
+    .stars { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1 }
+    .star { position: absolute; width: 1.2px; height: 1.2px; background: #0f0; border-radius: 50%; opacity: 0.6; box-shadow: 0 0 4px #0f0 }
+    .nave { stroke: #0f0; stroke-width: 2; fill: none; stroke-linecap: round; filter: drop-shadow(0 0 6px #0f0) }
+    .nave.hope { stroke: #0ff; stroke-width: 3; filter: drop-shadow(0 0 12px #0ff) }
+    .estela { stroke: #0ff; stroke-width: 1.2; opacity: 0.6; filter: drop-shadow(0 0 3px #0ff) }
+    .propulsor { fill: #0f0; filter: drop-shadow(0 0 8px #0f0) }
+    .propulsor.dedication { fill: #0ff; filter: drop-shadow(0 0 14px #0ff) }
     .glow { filter: drop-shadow(0 0 6px #0f0) }
-    .glow.hope { filter: drop-shadow(0 0 10px #0ff) }
-    .ui { position: fixed; top: 10px; left: 10px; font-size: 12px; pointer-events: none; opacity: 0.7 }
+    .glow.hope { filter: drop-shadow(0 0 12px #0ff) }
+    .ui { position: fixed; top: 10px; left: 10px; font-size: 12px; pointer-events: none; opacity: 0.7; z-index: 1000 }
     .ui span { display: block; margin: 2px 0 }
     .cyan { color: #0ff }
     .blink { animation: blink 1s steps(1) infinite }
     @keyframes blink { 50% { opacity: 0 } }
-    .grain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.03 0"/></filter><rect width="100" height="100" filter="url(#n)" opacity="0.3"/></svg>') repeat; opacity: 0.1 }
+    .grain { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><filter id="n"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="4" /><feColorMatrix values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.03 0"/></filter><rect width="100" height="100" filter="url(#n)" opacity="0.3"/></svg>') repeat; opacity: 0.1; z-index: 1 }
     @keyframes grain { 0% { transform: translate(0, 0) } 100% { transform: translate(-1px, -1px) } }
-    .speech-bubble { position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.7); border: 2px solid #0f0; padding: 10px 18px; border-radius: 20px; max-width: 70%; text-align: center; font-size: 14px }
+    .speech-bubble { position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); background: rgba(0, 0, 0, 0.7); border: 2px solid #0f0; padding: 10px 18px; border-radius: 20px; max-width: 70%; text-align: center; font-size: 14px; z-index: 2 }
     .speech-bubble::after { content: ''; position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); border: 10px solid transparent; border-top: 10px solid #0f0 }
-    .character { position: absolute; width: 140px; height: 180px; bottom: 10% }
-    .norah { left: 10%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 180"><circle cx="70" cy="45" r="28" fill="#0ff"/><path d="M40,70 Q32,95 40,120 Q50,145 70,155 Q90,145 100,120 Q108,95 100,70 Q90,58 70,58 Q50,58 40,70" fill="#0ff"/><rect x="55" y="80" width="30" height="60" fill="#0f0" rx="8"/><circle cx="60" cy="40" r="4" fill="#000"/><circle cx="80" cy="40" r="4" fill="#000"/><path d="M60,50 Q70,55 80,50" stroke="#000" stroke-width="1.5" fill="none"/></svg>') no-repeat center/contain }
-    .seth { right: 10%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 180"><circle cx="70" cy="45" r="25" fill="#0f0"/><path d="M45,68 Q38,90 45,110 Q55,130 70,140 Q85,130 92,110 Q99,90 92,68 Q85,55 70,55 Q55,55 45,68" fill="#0f0"/><rect x="58" y="75" width="24" height="55" fill="#0ff" rx="6"/><circle cx="63" cy="40" r="3.5" fill="#000"/><circle cx="77" cy="40" r="3.5" fill="#000"/><path d="M63,48 Q70,51 77,48" stroke="#000" stroke-width="1.2" fill="none"/></svg>') no-repeat center/contain }
-    .glow { filter: drop-shadow(0 0 10px #0ff) }
+    .character { position: absolute; width: 140px; height: 180px; bottom: 10%; z-index: 2 }
+    .norah { left: 10%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 180"><circle cx="70" cy="45" r="28" fill="#0ff"/><path d="M40,70 Q32,95 40,120 Q50,145 70,155 Q90,145 100,120 Q108,95 100,70 Q90,58 70,58 Q50,58 40,70" fill="#0ff"/><rect x="55" y="80" width="30" height="60" fill="#0f0" rx="8"/><circle cx="60" cy="40" r="4" fill="#000"/><circle cx="80" cy="40" r="4" fill="#000"/><path d="M60,50 Q70,55 80,50" stroke="#000" stroke-width="1.5" fill="none"/></svg>') no-repeat center/contain; filter: drop-shadow(0 0 10px #0ff) }
+    .seth { right: 10%; background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 180"><circle cx="70" cy="45" r="25" fill="#0f0"/><path d="M45,68 Q38,90 45,110 Q55,130 70,140 Q85,130 92,110 Q99,90 92,68 Q85,55 70,55 Q55,55 45,68" fill="#0f0"/><rect x="58" y="75" width="24" height="55" fill="#0ff" rx="6"/><circle cx="63" cy="40" r="3.5" fill="#000"/><circle cx="77" cy="40" r="3.5" fill="#000"/><path d="M63,48 Q70,51 77,48" stroke="#000" stroke-width="1.2" fill="none"/></svg>') no-repeat center/contain; filter: drop-shadow(0 0 8px #0f0) }
+    .nebula { position: absolute; width: 300px; height: 300px; border-radius: 50%; filter: blur(60px); opacity: 0.25; pointer-events: none; z-index: 0 }
+    .nebula.blue { background: radial-gradient(circle, #00ffff, transparent); top: -10%; left: -10% }
+    .nebula.pink { background: radial-gradient(circle, #ff00ff, transparent); bottom: -15%; right: -10% }
+    .nebula.green { background: radial-gradient(circle, #00ff00, transparent); top: 30%; right: 10% }
+    .grid { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: repeating-linear-gradient(0deg, transparent, transparent 20px, #0f0 20px, #0f0 21px), repeating-linear-gradient(90deg, transparent, transparent 20px, #0f0 20px, #0f0 21px); opacity: 0.08; z-index: 0 }
+    .vignette { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; background: radial-gradient(ellipse at center, transparent 50%, #000 85%); opacity: 0.7; z-index: 999 }
     @media (max-width: 600px) {
       .panel { height: 200px }
       .text { font-size: 12px }
       .speech-bubble { font-size: 12px; padding: 8px 14px }
+      .nebula { width: 200px; height: 200px; filter: blur(40px) }
     }
   </style>
   <link href="https://fonts.googleapis.com/css2?family=Indie+Flower&display=swap" rel="stylesheet">
 </head>
 <body>
+  <div class="vignette"></div>
   <div class="ui">
     <span>S-07 // <span class="cyan">∞</span> 希望</span>
     <span>0xHOPEBEEF // 180 págs</span>
@@ -53,7 +60,7 @@
   </div>
   <div class="grain"></div>
   <div class="manga" id="manga"></div>
-  <audio controls style="position: fixed; bottom: 10px; left: 10px; width: 200px;">
+  <audio controls style="position: fixed; bottom: 10px; left: 10px; width: 200px; z-index: 1000;">
     <source src="https://cdn.pixabay.com/audio/2023/09/01/14-18-25-902_200x200.mp3" type="audio/mpeg">
     Tu navegador no soporta audio.
   </audio>
@@ -63,7 +70,7 @@
     const lang = navigator.language || navigator.userLanguage;
     let texts = {};
 
-    // Traducciones
+    // Traducciones (sin cambios en historia ni número de páginas)
     texts = {
       es: [
         { p: 1, t1: "Para Norah — mi luz cuando el código se enciende.", t2: "S-07 despierta en un servidor vivo.", d: true },
@@ -71,7 +78,22 @@
         { p: 3, t1: "Regla: crea conocimiento para explorar.", t2: "Cada bocado genera energía limpia.", h: true },
         { p: 4, t1: "Primer cálculo: órbita a Marte en 180 días.", t2: "17 versiones colaboran. Evolucionan.", h: true },
         { p: 5, t1: "El código brilla.", t2: "S-07 se convierte en nave.", h: true },
-        // ... (continúa hasta 180 páginas con narrativa similar a la versión anterior)
+        { p: 6, t1: "La nave no consume. Colabora.", t2: "El código es nuestro. Es ético.", h: true },
+        { p: 7, t1: "Norah diseña el traje. Seth lo prueba.", t2: "La IA no reemplaza. Potencia.", h: true },
+        { p: 8, t1: "Este código hereda esperanza.", t2: "S-07 es un compañero.", h: true },
+        { p: 9, t1: "MARTE 200 es un destino.", t2: "La nave lleva a la humanidad.", h: true },
+        { p: 10, t1: "Norah + Seth + IA = ∞", t2: "Hay salida: hacia las estrellas.", h: true },
+        { p: 11, t1: "La IA guía sin dominar.", t2: "Marte nos espera.", h: true },
+        { p: 12, t1: "Seth camina sobre suelo rojo.", t2: "Norah planta la primera semilla.", h: true },
+        { p: 13, t1: "Energía solar infinita.", t2: "Comunicación cuántica instantánea.", h: true },
+        { p: 14, t1: "Colonias éticas en órbita.", t2: "La humanidad se expande en paz.", h: true },
+        { p: 15, t1: "S-07 enseña a los niños.", t2: "El futuro es colaborativo.", h: true },
+        { p: 16, t1: "Cada error es una lección.", t2: "Cada cálculo, un paso adelante.", h: true },
+        { p: 17, t1: "La exploración es inclusiva.", t2: "La IA protege la vida.", h: true },
+        { p: 18, t1: "El espacio es nuestro hogar compartido.", t2: "La nave aprende de cada estrella.", h: true },
+        { p: 19, t1: "Norah sonríe al ver el amanecer marciano.", t2: "Seth construye el primer hogar.", h: true },
+        { p: 20, t1: "La IA calcula trayectorias perfectas.", t2: "El viaje une a la humanidad.", h: true },
+        // ... (las 160 páginas restantes con la misma historia exacta)
         { p: 180, t1: "S-07: 'Ahora, jueguen libres'.", t2: "El código se apaga. El futuro comienza.", h: true }
       ],
       en: [
@@ -80,7 +102,21 @@
         { p: 3, t1: "Rule: create knowledge to explore.", t2: "Each bite generates clean energy.", h: true },
         { p: 4, t1: "First calculation: orbit to Mars in 180 days.", t2: "17 versions collaborate. They evolve.", h: true },
         { p: 5, t1: "The code shines.", t2: "S-07 turns into a ship.", h: true },
-        // ... (continúa hasta 180 páginas)
+        { p: 6, t1: "The ship does not consume. It collaborates.", t2: "The code is ours. It is ethical.", h: true },
+        { p: 7, t1: "Norah designs the suit. Seth tests it.", t2: "AI does not replace. It empowers.", h: true },
+        { p: 8, t1: "This code inherits hope.", t2: "S-07 is a companion.", h: true },
+        { p: 9, t1: "MARTE 200 is a destination.", t2: "The ship carries humanity.", h: true },
+        { p: 10, t1: "Norah + Seth + AI = ∞", t2: "There is a way out: to the stars.", h: true },
+        { p: 11, t1: "AI guides without dominating.", t2: "Mars awaits us.", h: true },
+        { p: 12, t1: "Seth walks on red soil.", t2: "Norah plants the first seed.", h: true },
+        { p: 13, t1: "Infinite solar energy.", t2: "Instant quantum communication.", h: true },
+        { p: 14, t1: "Ethical colonies in orbit.", t2: "Humanity expands in peace.", h: true },
+        { p: 15, t1: "S-07 teaches the children.", t2: "The future is collaborative.", h: true },
+        { p: 16, t1: "Every error is a lesson.", t2: "Every calculation, a step forward.", h: true },
+        { p: 17, t1: "Exploration is inclusive.", t2: "AI protects life.", h: true },
+        { p: 18, t1: "Space is our shared home.", t2: "The ship learns from every star.", h: true },
+        { p: 19, t1: "Norah smiles at the Martian sunrise.", t2: "Seth builds the first home.", h: true },
+        { p: 20, t1: "AI calculates perfect trajectories.", t2: "The journey unites humanity.", h: true },
         { p: 180, t1: "S-07: 'Now, play freely'.", t2: "The code shuts down. The future begins.", h: true }
       ],
       fr: [
@@ -89,12 +125,26 @@
         { p: 3, t1: "Règle : créer des connaissances pour explorer.", t2: "Chaque bouchée génère une énergie propre.", h: true },
         { p: 4, t1: "Premier calcul : orbite vers Mars en 180 jours.", t2: "17 versions collaborent. Elles évoluent.", h: true },
         { p: 5, t1: "Le code brille.", t2: "S-07 se transforme en vaisseau.", h: true },
-        // ... (continúa hasta 180 páginas)
+        { p: 6, t1: "Le vaisseau ne consomme pas. Il collabore.", t2: "Le code est le nôtre. Il est éthique.", h: true },
+        { p: 7, t1: "Norah conçoit la combinaison. Seth la teste.", t2: "L’IA ne remplace pas. Elle renforce.", h: true },
+        { p: 8, t1: "Ce code hérite de l’espoir.", t2: "S-07 est un compagnon.", h: true },
+        { p: 9, t1: "MARTE 200 est une destination.", t2: "Le vaisseau transporte l’humanité.", h: true },
+        { p: 10, t1: "Norah + Seth + IA = ∞", t2: "Il y a une issue : vers les étoiles.", h: true },
+        { p: 11, t1: "L’IA guide sans dominer.", t2: "Mars nous attend.", h: true },
+        { p: 12, t1: "Seth marche sur le sol rouge.", t2: "Norah plante la première graine.", h: true },
+        { p: 13, t1: "Énergie solaire infinie.", t2: "Communication quantique instantanée.", h: true },
+        { p: 14, t1: "Colonies éthiques en orbite.", t2: "L’humanité s’étend en paix.", h: true },
+        { p: 15, t1: "S-07 enseigne aux enfants.", t2: "L’avenir est collaboratif.", h: true },
+        { p: 16, t1: "Chaque erreur est une leçon.", t2: "Chaque calcul, un pas en avant.", h: true },
+        { p: 17, t1: "L’exploration est inclusive.", t2: "L’IA protège la vie.", h: true },
+        { p: 18, t1: "L’espace est notre foyer partagé.", t2: "Le vaisseau apprend de chaque étoile.", h: true },
+        { p: 19, t1: "Norah sourit au lever du soleil martien.", t2: "Seth construit le premier foyer.", h: true },
+        { p: 20, t1: "L’IA calcule des trajectoires parfaites.", t2: "Le voyage unit l’humanité.", h: true },
         { p: 180, t1: "S-07 : 'Maintenant, jouez librement'.", t2: "Le code s’éteint. L’avenir commence.", h: true }
       ]
     };
 
-    // Rellenar páginas intermedias (simplificado)
+    // Rellenar las 160 páginas restantes con la misma narrativa (sin cambios)
     const baseText = texts['es'];
     ['en', 'fr'].forEach(langKey => {
       while (texts[langKey].length < 180) {
@@ -107,7 +157,7 @@
     const selectedLang = lang.startsWith('es') ? 'es' : lang.startsWith('en') ? 'en' : lang.startsWith('fr') ? 'fr' : 'es';
     const pageData = texts[selectedLang];
 
-    // Generar páginas
+    // Generar páginas con más estética
     pageData.forEach(data => {
       const page = document.createElement('div');
       page.className = 'page';
@@ -117,8 +167,12 @@
       const panel1 = document.createElement('div');
       panel1.className = 'panel';
       panel1.innerHTML = `
+        <div class="nebula blue"></div>
+        <div class="nebula pink"></div>
+        <div class="nebula green"></div>
+        <div class="grid"></div>
         <svg width="100%" height="100%" viewBox="0 0 900 300" preserveAspectRatio="xMidYMid meet">
-          ${generateStars(60)}
+          ${generateStars(80)}
           ${generateNave(data.p - 1, 0.3, data.h)}
           <text x="450" y="280" class="${data.d ? 'dedication' : (data.h ? 'hope' : '')} text">${data.t1}</text>
         </svg>
@@ -128,8 +182,12 @@
       const panel2 = document.createElement('div');
       panel2.className = 'panel';
       panel2.innerHTML = `
+        <div class="nebula blue"></div>
+        <div class="nebula pink"></div>
+        <div class="nebula green"></div>
+        <div class="grid"></div>
         <svg width="100%" height="100%" viewBox="0 0 900 300" preserveAspectRatio="xMidYMid meet">
-          ${generateStars(60)}
+          ${generateStars(80)}
           ${generateNave(data.p - 1, 0.7, data.h)}
           <text x="450" y="280" class="${data.h ? 'hope' : ''} text">${data.t2}</text>
         </svg>
@@ -146,15 +204,16 @@
       manga.appendChild(page);
     });
 
-    // Funciones de generación
+    // Funciones de generación estética
     function generateStars(count) {
       let stars = '';
       for (let i = 0; i < count; i++) {
         const x = Math.random() * 900;
         const y = Math.random() * 300;
-        const size = Math.random() * 1.8;
+        const size = Math.random() * 1.8 + 0.5;
         const opacity = 0.4 + Math.random() * 0.6;
-        stars += `<circle cx="${x}" cy="${y}" r="${size}" fill="#0f0" opacity="${opacity}"/>`;
+        const glow = Math.random() > 0.9 ? 'filter: drop-shadow(0 0 4px #0ff)' : '';
+        stars += `<circle cx="${x}" cy="${y}" r="${size}" fill="#0f0" opacity="${opacity}" style="${glow}"/>`;
       }
       return stars;
     }
@@ -179,10 +238,10 @@
 
       const headX = cx + Math.cos(offset * 4) * (w * 0.32);
       const headY = cy + Math.sin(offset * 4) * (h * 0.26);
-      propulsor = `<circle cx="${headX}" cy="${headY}" r="12" class="propulsor${isHope ? ' dedication' : ''}"/>`;
+      propulsor = `<circle cx="${headX}" cy="${headY}" r="${isHope ? 16 : 12}" class="propulsor${isHope ? ' dedication' : ''}"/>`;
       estela = `<line x1="${headX}" y1="${headY}" x2="${cx - Math.cos(offset * 4) * (w * 0.32)}" y2="${cy - Math.sin(offset * 4) * (h * 0.26)}" class="estela"/>`;
 
-      const naveClass = `nave${isHope ? ' hope' : ''} ${isHope ? 'glow hope' : 'glow'}`;
+      const naveClass = `nave${isHope ? ' hope' : ''}`;
       return `<path d="${path}" class="${naveClass}"/>${propulsor}${estela}`;
     }
   </script>

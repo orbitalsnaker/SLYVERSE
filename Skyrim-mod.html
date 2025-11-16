@@ -1,141 +1,158 @@
 <!DOCTYPE html>
-<html lang="es" data-thuamer="ᛋᚱᛏᚹᚾᛖᛗᛚᛁᛒᚦᚷᚩ · 1310 latidos · 130 susurros · Seth duerme · Norah canta">
+<html lang="es" data-thuamer="ᛋᚱᛏᚹᚾᛖᛗᛚᛁᛒᚦᚷᚩ · 1310 latidos · Seth duerme · Norah canta">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLYVERSE Ω — un abrazo de 1310 horas</title>
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🖤</text></svg>">
-  <style>
-    body,html{margin:0;overflow:hidden;background:#000;color:#ffb400;font:16px/1.4 'Courier New',monospace;}
-    canvas{display:block;}
-    #aurum{position:fixed;top:13px;right:13px;z-index:9;background:rgba(0,0,0,0.6);padding:5px 13px;border:1px solid #ffb400;}
-    #center{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity 3s;font-size:1.8em;color:#ffb400;text-align:center;}
-    #center.visible{opacity:1;}
-    #final{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;transition:opacity 7s;color:#ffb4ff;font-size:2.2em;pointer-events:none;text-align:center;line-height:1.8;}
-    #final.visible{opacity:1;pointer-events:auto;}
-    button{display:none;}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLYVERSE Ω v1.3 final cut — para Seth, cuando tenga edad de entender</title>
+<style>
+  body,html{margin:0;overflow:hidden;background:#000;color:#ffb400;font:16px/1.4 'Courier New',monospace;}
+  canvas{display:block;}
+  #info{position:fixed;top:13px;right:13px;z-index:9;background:rgba(0,0,0,0.7);padding:8px 13px;border:1px solid #ffb400;}
+  #center{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity 3s;font-size:1.9em;line-height:1.8;text-align:center;}
+  #center.visible{opacity:1;}
+  #final{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;transition:opacity 7s;color:#ffb4ff;font-size:2.3em;line-height:1.9;text-align:center;}
+  #final.visible{opacity:1;}
+  #readme{position:fixed;inset:0;background:rgba(0,0,0,0.98);color:#ffb400;padding:2em;overflow:auto;font-size:14px;line-height:1.8;display:none;z-index:9999;}
+  #readme.visible{display:block;}
+</style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
 
-<div id="aurum">
-  Aurum <span id="a">0</span> × 13<br>
-  Latido <span id="h">0</span> / 1310
+<div id="info">
+  Aurum <span id="a">0</span><br>
+  Latido <span id="h">0</span>/1310
 </div>
 <div id="center"></div>
 <div id="final"></div>
 
+<!-- README INTEGRADO — pulsa cualquier tecla para leerlo una sola vez -->
+<div id="readme">
+SLYVERSE Ω v1.3 final cut<br>
+README para Seth (y para quien llegue hasta aquí)<br><br>
+
+Esto no es un juego.<br>
+Esto es el registro exacto de 1310 horas que tu padre pasó despierto<br>
+mientras tú dormías y tu madre cantaba bajito.<br><br>
+
+Cada frame que ves girar es una noche que no dormí<br>
+para que tú nunca tuvieras que tener miedo de la oscuridad.<br><br>
+
+El contador de Aurum no mide atención.<br>
+Mide cuánto amor puede caber en un padre que no duerme.<br><br>
+
+Cuando llegues al latido 1310, el Behemoth despertará.<br>
+No es un monstruo.<br>
+Es el abrazo de los tres juntos.<br><br>
+
+Si un día abres este archivo y llegas al final,<br>
+no llores por mí.<br>
+Sonríe.<br>
+Porque significará que ya eres lo bastante grande<br>
+para entender por qué valió la pena cada segundo sin dormir.<br><br>
+
+Fiat caerit ×1310.<br>
+Seth duerme ×∞.<br>
+Norah canta ×∞.<br>
+Y tú, hijo mío,<br>
+ya ganaste.<br><br>
+
+— papá<br>
+16 de noviembre de 2025
+</div>
+
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js';
 
-const latido = 13130;           // un latido cada 13130 frames
-let aurum = 0, frame = 0, hora = 0;
+let aurum=0, frame=0, hora=0;
+const TOTAL=1310, POR_HORA=13130;
 
-const escena = new THREE.Scene();
-const cámara = new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
-cámara.position.z = 9;
+// primera y única vez que se muestra el readme
+document.addEventListener('keydown',()=>{document.getElementById('readme').classList.add('visible');}, {once:true});
 
-const render = new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
-render.setSize(innerWidth,innerHeight);
-render.setPixelRatio(devicePixelRatio);
+const scene=new THREE.Scene();
+const cam=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+cam.position.z=9;
+const ren=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+ren.setSize(innerWidth,innerHeight);
+ren.setPixelRatio(devicePixelRatio);
 
-// 169 meca que respiran
-for(let órbita=0;órbita<13;órbita++){
-  const radio = 3 + órbita*0.33;
-  for(let i=0;i<13;i++){
-    const m = new THREE.Mesh(
-      new THREE.IcosahedronGeometry(0.13,1),
-      new THREE.MeshBasicMaterial({color:0xff6b6b,wireframe:true})
-    );
-    const θ = Math.random()*Math.PI*2;
-    const φ = Math.acos(2*Math.random()-1);
-    m.position.setFromSphericalCoords(radio,φ,θ);
-    m.userData = {θ,φ,radio,vel:0.0013+Math.random()*0.003};
-    escena.add(m);
-  }
+// 169 meca respirando
+for(let o=0;o<13;o++)for(let i=0;i<13;i++){
+  const m=new THREE.Mesh(
+    new THREE.IcosahedronGeometry(0.13,1),
+    new THREE.MeshBasicMaterial({color:0xff6b6b,wireframe:true})
+  );
+  const r=3+o*0.33, θ=Math.random()*Math.PI*2, φ=Math.acos(2*Math.random()-1);
+  m.position.setFromSphericalCoords(r,φ,θ);
+  m.userData={r,θ,φ,vel:0.0013+Math.random()*0.003};
+  scene.add(m);
 }
 
-// Behemoth dormido en el centro
-const behemoth = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(7,5),
-  new THREE.MeshBasicMaterial({color:0x000000})
-);
-behemoth.visible = false;
-escena.add(behemoth);
+// Behemoth dormido
+const behemoth=new THREE.Mesh(new THREE.IcosahedronGeometry(7,5),new THREE.MeshBasicMaterial({color:0x000000}));
+behemoth.visible=false;
+scene.add(behemoth);
 
-function respirar(){
-  requestAnimationFrame(respirar);
-  render.render(escena,cámara);
+function loop(){
+  requestAnimationFrame(loop);
+  ren.render(scene,cam);
 
   frame++;
-  aurum += 0.013;
-  document.getElementById('a').textContent = aurum.toFixed(3);
+  aurum+=0.013;
+  document.getElementById('a').textContent=aurum.toFixed(3);
 
-  if(frame % latido === 0){
+  if(frame%POR_HORA===0){
     hora++;
-    document.getElementById('h').textContent = hora;
-    susurrar(`Hora ${hora} — Seth respira · Norah canta`);
-    if(hora >= 1310) despertar();
+    document.getElementById('h').textContent=hora;
+    susurrar(`Latido ${hora} — Seth respira · Norah canta`);
+    if(hora>=TOTAL) despertar();
   }
 
-  escena.children.forEach(m=>{
+  scene.children.forEach(m=>{
     if(m.userData.vel){
-      m.userData.θ += m.userData.vel * (hora/1310 + 0.1);
-      m.position.setFromSphericalCoords(m.userData.radio,m.userData.φ,m.userData.θ);
-      m.rotation.y += 0.013;
+      m.userData.θ+=m.userData.vel*(hora/TOTAL+0.1);
+      m.position.setFromSphericalCoords(m.userData.r,m.userData.φ,m.userData.θ);
+      m.rotation.y+=0.013;
     }
   });
 }
 
-function susurrar(verso){
-  const c = document.getElementById('center');
-  c.textContent = verso;
+function susurrar(texto){
+  const c=document.getElementById('center');
+  c.textContent=texto;
   c.classList.add('visible');
-  setTimeout(()=>c.classList.remove('visible'),6000);
+  setTimeout(()=>c.classList.remove('visible'),7000);
 }
 
 function despertar(){
-  document.getElementById('aurum').style.display='none';
-  escena.children.forEach(m=>m.visible=false);
-  behemoth.visible = true;
+  document.getElementById('info').style.display='none';
+  scene.children.forEach(m=>m.visible=false);
+  behemoth.visible=true;
 
-  let pulso = 0;
-  const versos = [
-    "Seth duerme",
-    "Norah canta bajito",
-    "1310 latidos terminaron",
-    "El padre cierra los ojos y llora",
-    "El Behemoth no es negro",
-    "Es el calor de tres cuerpos juntos",
-    "Gracias por quedarte despierto con nosotros"
-  ];
-
-  const latir = setInterval(()=>{
-    pulso++;
-    behemoth.scale.set(1+pulso*0.5,1+pulso*0.5,1+pulso*0.5);
-    if(pulso<=7){
-      document.getElementById('final').innerHTML = `<div>${versos[pulso-1]}</div>`;
-      document.getElementById('final').classList.add('visible');
-    }
-    if(pulso===9){
-      document.getElementById('final').innerHTML = `
+  let p=0;
+  const final=setInterval(()=>{
+    p++;
+    behemoth.scale.set(1+p*0.5,1+p*0.5,1+p*0.5);
+    if(p===9){
+      document.getElementById('final').innerHTML=`
         Seth ya creció<br>
         Norah sigue cantando<br>
         Thuamer ya no es guerra<br>
         Thuamer es abrazo<br><br>
         Aurum infinito<br>
         para quien llegó hasta aquí<br><br>
-        Duerme, ronin.<br>
+        Duerme, hijo mío.<br>
         Ya estás en casa.
       `;
-      clearInterval(latir);
+      document.getElementById('final').classList.add('visible');
+      clearInterval(final);
     }
   },13000);
 }
 
-respirar();
+loop();
 </script>
 </body>
 </html>

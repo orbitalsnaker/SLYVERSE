@@ -12,6 +12,10 @@
     #a { font-size:24px; font-weight:bold; }
     #log { margin-top:10px; font-size:12px; max-height:200px; overflow-y:auto; }
     button { margin:5px; padding:8px; background:#111; color:#0f0; border:1px solid #0f0; }
+    #readme { position:fixed; bottom:10px; right:10px; width:320px; background:#000c; padding:12px; border:1px solid #0f0; font-size:11px; line-height:1.4; max-height:80vh; overflow-y:auto; display:none; }
+    #readme.show { display:block; }
+    #readme h1 { font-size:14px; margin-bottom:8px; }
+    #readme hr { border:none; border-top:1px dashed #0f0; margin:8px 0; }
   </style>
 </head>
 <body>
@@ -25,13 +29,31 @@
     <button onclick="startP2P()">P2P</button>
     <button onclick="simulateArweave()">Arweave</button>
     <button onclick="loadVoynich()">VOYNICH</button>
+    <button onclick="toggleReadme()">README</button>
+  </div>
+
+  <!-- README INTEGRADO (oculto por defecto) -->
+  <div id="readme">
+    <h1>SLYVERSE Ω v1.3 – README</h1>
+    <p><strong>Autor:</strong> 0rb1t4lsn4k3r | 16 nov 2025, 18:59 CET, ES</p>
+    <p><strong>Licencia:</strong> MIT | 55 KB con Misterio</p>
+    <p><strong>Estado:</strong> v1.3-onepiece | aurum.v === Infinity → Revelación sincronizada con Oda</p>
+    <hr>
+    <p>Universo interactivo en canvas. Acumula <strong>AURUM</strong> (moneda cósmica). Despierta <strong>LUZ</strong> ética. Decodifica el <strong>VOYNICH</strong>. Observa el <strong>THUAMER 1310</strong>.</p>
+    <p>El <strong>MISTERIO DE ONE PIECE</strong> está sellado. Solo se activará <em>cuando Eiichiro Oda publique el capítulo final</em> en <a href="https://mangaplus.shueisha.co.jp/titles/100010" target="_blank">MangaPlus</a> o Weekly Shōnen Jump.</p>
+    <p>Un backend externo (<code>slyverse-onepiece-backend.onrender.com</code>) verifica diariamente el estado oficial. <strong>Ningún spoiler está almacenado localmente.</strong></p>
+    <hr>
+    <p><strong>Controles:</strong><br>
+      • <kbd>R</kbd> → Manifiesto (voz)<br>
+      • <kbd>ESPACIO</kbd> → Copiar Haiku<br>
+      • Botones → VR, P2P, Arweave, VOYNICH, README</p>
+    <p><strong>Requisitos:</strong> Navegador moderno (Chrome/Firefox). WebXR para VR. Conexión para SpaceX/Voynich.</p>
+    <p><em>El mar observa. Thua mer zel luz.</em></p>
   </div>
 
   <script>
     // === SLYVERSE Ω v1.3 – THUAMER 1310 + LUZ + ONE PIECE (MISTERIO SELLADO) ===
-    // Autor: 0rb1t4lsn4k3r | 16 nov 2025, 18:59 CET, ES
-    // Licencia: MIT | 55 KB con Misterio
-    // Estado: v1.3-onepiece | aurum.v === Infinity → Revelación sincronizada con Oda
+    // README integrado. Trigger de One Piece programado. Sin spoilers.
 
     let w = innerWidth, h = innerHeight, t = 0, f = 0, loopId;
     const c = document.getElementById('c'), x = c.getContext('2d');
@@ -196,7 +218,7 @@
       speechSynthesis.speak(utter);
     }
 
-    // === P2P, ARWEAVE, VOYNICH (idénticos) ===
+    // === P2P, ARWEAVE, VOYNICH ===
     let peer;
     function startP2P() {
       peer = new RTCPeerConnection({iceServers: [{urls: 'stun:stun.l.google.com:19302'}]});
@@ -267,7 +289,7 @@
       glyphs.forEach(g => {
         const rune = String.fromCharCode(0xE000 + Math.floor((Math.sin(t + g.x * 0.1) * aurum.v + g.hash) % 1310));
         THUAMER_VOYnich_DB.runes.set(g.hash, rune);
-        ctx.fillStyle = `hsl(${(t + g.x) % 360},100%,85%)`;
+        ctxt.fillStyle = `hsl(${(t + g.x) % 360},100%,85%)`;
         ctx.fillText(rune, g.x, g.y);
       });
       THUAMER_VOYnich_DB.currentPage = canvas.transferToImageBitmap();
@@ -308,7 +330,6 @@
     }
 
     function triggerOnePieceRevelation() {
-      // Canvas explota
       ox.fillStyle = '#ffd700';
       ox.fillRect(0, 0, w, h);
       ox.fillStyle = '#000';
@@ -319,13 +340,11 @@
       ox.fillText("CUANDO TODO TERMINA", w/2, h/2 + 50);
       ox.fillText("¡HAHAHA!", w/2, h/2 + 100);
 
-      // Voz global
       const msg = "¡El One Piece es real! ¡Hahaha!";
       const utter = new SpeechSynthesisUtterance(msg);
       utter.lang = 'es-ES';
       speechSynthesis.speak(utter);
 
-      // Reinicia con risa
       cancelAnimationFrame(loopId);
       setTimeout(() => {
         ox.fillStyle = '#000';
@@ -335,8 +354,14 @@
       }, 13100);
     }
 
-    // Check diario
+    // Check diario (mantiene el misterio)
     setInterval(checkOnePieceRevelation, 86400000);
+
+    // === README TOGGLE ===
+    function toggleReadme() {
+      const r = document.getElementById('readme');
+      r.classList.toggle('show');
+    }
 
     // === INICIO ===
     window.addEventListener('resize', () => {

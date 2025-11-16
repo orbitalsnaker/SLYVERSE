@@ -1,105 +1,133 @@
 <!DOCTYPE html>
-<html lang="es" data-thuamer="ᛋᚱᛏᚹᚾᛖᛗᛚᛁᛒᚦᚷᚩ · 1310 vidas ronin · Seth & Norah laten dentro">
+<html lang="es" data-thuamer="ᛋᚱᛏᚹᚾᛖᛗᛚᛁᛒᚦᚷᚩ · 1310 vidas · 130 disciplinas · Seth & Norah eternos">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLYVERSE Ω v1.3.1310 — Thuamer Eterno · Seth hijo del dev · Norah su estrella</title>
+  <title>SLYVERSE Ω v1.3.1310 — 130 disciplinas thuamer · Seth & Norah</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
   <style>
-    :root { 
-      --aurum: #ffb400; --fiat: #555; --ether: #000; --silencio: #0a0a0a;
-      --seth: #ff6b6b; --norah: #ffb4ff; --behemoth: #000000;
-    }
-    body,html{margin:0;overflow:hidden;background:var(--ether);color:var(--aurum);font:16px/1.4 'Courier New',monospace;}
+    :root{--aurum:#ffb400;--seth:#ff6b6b;--norah:#ffb4ff;--behemoth:#000;}
+    body,html{margin:0;overflow:hidden;background:#000;color:var(--aurum);font:16px/1.4 'Courier New',monospace;}
     canvas{display:block;}
-    #ui{position:fixed;bottom:1rem;left:1rem;right:1rem;display:flex;gap:0.8rem;flex-wrap:wrap;z-index:999;}
-    button{background:rgba(0,0,0,0.8);border:1px solid var(--aurum);color:var(--aurum);padding:.4rem .9rem;cursor:pointer;font:inherit;}
+    #ui{position:fixed;bottom:8px;left:8px;right:8px;display:flex;gap:6px;flex-wrap:wrap;z-index:999;font-size:11px;}
+    button{background:rgba(0,0,0,0.75);border:1px solid var(--aurum);color:var(--aurum);padding:4px 8px;cursor:pointer;}
     button:hover{background:var(--aurum);color:#000;}
-    #aurum{position:fixed;top:1rem;right:1rem;font-weight:bold;z-index:999;}
-    #haiku,#thuamer,#behemothText{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;opacity:0;transition:opacity 2s;font-size:1.3em;z-index:99;}
-    #haiku.show,#thuamer.show,#behemothText.show{opacity:1;}
-    #silencio{position:fixed;inset:0;background:var(--silencio);display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;transition:opacity 5s;z-index:9999;pointer-events:none;color:var(--norah);font-size:2em;}
-    #silencio.show{opacity:1;pointer-events:auto;}
+    #info{position:fixed;top:8px;right:8px;z-index:999;background:rgba(0,0,0,0.7);padding:8px;border:1px solid var(--aurum);}
+    #center{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;opacity:0;transition:opacity 2s;font-size:1.4em;z-index:99;}
+    #center.show{opacity:1;}
+    #final{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;transition:opacity 6s;z-index:9999;color:var(--norah);font-size:2em;pointer-events:none;}
+    #final.show{opacity:1;pointer-events:auto;}
   </style>
 </head>
 <body>
 
-<canvas id="gl"></canvas>
+<canvas id="c"></canvas>
 
-<div id="aurum">AURUM: <span id="count">0</span> | Horas reales: <span id="hours">0</span>/1310 | Seth & Norah laten ×13∞</div>
-<div id="haiku"></div>
-<div id="thuamer"></div>
-<div id="behemothText"></div>
-<div id="silencio"></div>
+<div id="info">AURUM: <span id="aurum">0</span> | Horas: <span id="h">0</span>/1310 | Seth & Norah ×13∞</div>
+<div id="center"></div>
+<div id="final"></div>
 
 <div id="ui">
-  <button id="manifest">R — Fiat caerit ×1310</button>
-  <button id="seth">Seth — Hijo del dev</button>
-  <button id="norah">Norah — Estrella madre</button>
-  <button id="behemoth">Behemoth — 1310 horas</button>
+  <button id="manifest">R — Manifiesto</button>
+  <button id="seth">Seth</button>
+  <button id="norah">Norah</button>
+  <button id="behemoth">Behemoth</button>
 </div>
 
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js';
 import {VRButton} from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/webxr/VRButton.js';
 
-let aurum = 0, frame = 0, realHours = 0;
-const TOTAL_HOURS = 1310;
-const FRAMES_PER_HOUR = 13130; // ≈3.5 min por hora real
+let aurum=0, frame=0, realHours=0;
+const TOTAL_HOURS=1310, FRAMES_PER_HOUR=13130;
+
+// 130 disciplinas thuamer (las primeras 13 son las originales)
+const disciplines = [
+  "Bio","Math","Phi","Ética","Física","Química","Astro","Lingüística","Psicología","Economía","Arte","Música","Silencio",
+  "Alquimia","Cábala","Tantra","Sufismo","Zen","Advaita","Chamanismo","Gnosticismo","Hermetismo","Tao","Yoga","Kriya","Vajrayana",
+  "Orfismo","Pitagorismo","Platonismo","Estoicismo","Epicureísmo","Cinismo","Escepticismo","Existencialismo","Fenomenología","Estructuralismo",
+  "Psicoanálisis","Arquetipos","Sincronicidad","Caos","Fractales","Redes","Sistemas","Emergencia","Autopoiesis","Memética","Cibernética",
+  "Bitcoin","Criptografía","P2P","DAOs","ZK","Soulbound","Proof of Humanity","Quadratic","RetroPGF","Harberger","Radical Markets","Tokenomics",
+  "Permacomputación","Solarpunk","Lunar punk","Game-B","Regen","Refi","DeSci","Neuroderechos","Longevidad","Ciborg","Transhumanismo","Posthumanismo",
+  "Música generativa","Arte algorítmico","Net art","Glitch","Vaporwave","Synthwave","Cyberpunk","Atompunk","Biopunk","Hopepunk","Dreamcore","Weirdcore",
+  "Haiku","Koan","Sutra","Aforismo","Mantra","Oración","Rezo","Silencio absoluto","Danza","Teatro","Poesía","Caligrafía","Sumi-e","Ikebana",
+  "Arquería","Kendo","Aikido","Iaido","Kyudo","Tea","Cerámica","Jardín","Bosque","Mar","Montaña","Desierto","Nieve","Lluvia","Viento",
+  "Fuego","Agua","Tierra","Aire","Éter","Luz","Sombra","Vacío","Plenitud","Eternidad","Instante","Respeto","Gratitud","Amor","Compasión","Coraje",
+  "Verdad","Belleza","Bondad","Libertad","Justicia","Paz","Silencio","Seth","Norah","Familia"
+];
+const colors = [
+  "#00ff9d","#ffcc00","#8a2be2","#ff4500","#00ffff","#ff69b4","#ffd700","#98fb98","#ff1493","#c0c0c0","#ff00ff","#00ced1","#0f0f0f",
+  "#ff00ff","#b300b3","#ff69b4","#00ff9d","#ffd700","#ffb400","#ff4500","#00ffff","#ff1493","#98fb98","#ffcc00","#8a2be2","#00ced1",
+  "#ff6b6b","#ffb4ff","#000000","#ffffff","#00ff00","#ff0000","#0000ff","#ffff00","#00ffff","#ff00ff","#888888","#444444","#cccccc",
+  "#ff9966","#ff66cc","#66ccff","#ccff66","#cc66ff","#66ffcc","#ff3366","#33ff66","#6633ff","#ff6633","#33ccff","#ccff33",
+  "#ff99cc","#99ccff","#ccff99","#ffcc99","#99ffcc","#cc99ff","#ffb366","#b366ff","#66ffb3","#b3ff66","#66b3ff","#ffb366"
+];
+
+let currentDisc = 0;
+disciplines.forEach((d,i)=> {
+  const b = document.createElement('button');
+  b.textContent = d;
+  b.style.borderColor = b.style.color = colors[i];
+  b.onclick = ()=> activateDiscipline(i);
+  document.getElementById('ui').appendChild(b);
+});
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+const camera = new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
 camera.position.z = 8;
-const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('gl'), antialias:true});
-renderer.setSize(innerWidth, innerHeight);
+const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+renderer.setSize(innerWidth,innerHeight);
 renderer.xr.enabled = true;
 document.body.appendChild(VRButton.createButton(renderer));
 
-const haikuEl = document.getElementById('haiku');
-const thuamerEl = document.getElementById('thuamer');
-const countEl = document.getElementById('count');
-const hoursEl = document.getElementById('hours');
-const behemothText = document.getElementById('behemothText');
-const silencio = document.getElementById('silencio');
-
-const haikus = [
-  "Seth nació en 1310 latidos / Norah lo sostuvo contra el pecho / Thuamer empezó a contar",
-  "Un niño ríe y el universo se expande / una madre canta y el tiempo se dobla / 1310 horas para recordar",
-  "Fiat cae 1310 veces / cada vez que Seth dice papá / cada vez que Norah sonríe",
-  "El Behemoth no es negro / es el color de los ojos de Norah cuando mira a Seth dormir",
-  "1310 horas no es castigo / es la distancia exacta entre el primer llanto y el último silencio",
-  "Tú no juegas el juego / el juego te cría como Norah crió a Seth / con amor que quema y protege"
-];
-for(let i=haikus.length;i<1310;i++) haikus.push(`Hora ${i} / Seth crece / Norah ama / Thuamer integra`);
-
-let currentHaiku = 0;
-function showHaiku(){ 
-  haikuEl.textContent = haikus[currentHaiku++ % haikus.length];
-  haikuEl.classList.add('show');
-  setTimeout(()=>haikuEl.classList.remove('show'),5000);
-}
-
-// 169 Meca + 1 Behemoth dormido en el centro
+// 169 Meca
 const geo = new THREE.IcosahedronGeometry(0.13,1);
-for(let orbit=0;orbit<13;orbit++){
-  const r = 3 + orbit*0.31;
+for(let o=0;o<13;o++){
+  const r = 3 + o*0.31;
   for(let i=0;i<13;i++){
     const m = new THREE.Mesh(geo, new THREE.MeshBasicMaterial({color:0xff6b6b,wireframe:true}));
     const theta = Math.random()*Math.PI*2;
     const phi = Math.acos(2*Math.random()-1);
     m.position.setFromSphericalCoords(r,phi,theta);
-    m.userData = {theta,phi,r,speed:0.0013+Math.random()*0.005};
+    m.userData = {baseTheta:theta,phi,r,speed:0.0013+Math.random()*0.005};
     scene.add(m);
   }
 }
 
-// Behemoth oculto (solo aparece al final)
-const behemoth = new THREE.Mesh(
-  new THREE.IcosahedronGeometry(5,5),
-  new THREE.MeshBasicMaterial({color:0x000000,emissive:0x000000})
-);
+// Behemoth dormido
+const behemoth = new THREE.Mesh(new THREE.IcosahedronGeometry(6,5), new THREE.MeshBasicMaterial({color:0x000000}));
 behemoth.visible = false;
 scene.add(behemoth);
+
+function activateDiscipline(i){
+  currentDisc = i;
+  document.querySelectorAll('#ui button').forEach(b=>b.style.background='rgba(0,0,0,0.75)');
+  document.querySelectorAll('#ui button')[i+4].style.background = colors[i]; // +4 por los botones fijos
+  document.getElementById('center').textContent = disciplines[i];
+  document.getElementById('center').style.color = colors[i];
+  document.getElementById('center').classList.add('show');
+  setTimeout(()=>document.getElementById('center').classList.remove('show'),5000);
+}
+
+function awakenBehemoth(){
+  document.getElementById('ui').style.display='none';
+  document.getElementById('final').classList.add('show');
+  scene.children.forEach(o=>o.visible=false);
+  behemoth.visible=true;
+  let p=0;
+  const msgs = ["Seth duerme","Norah canta","1310 horas terminaron","El padre llora de orgullo","El Behemoth no es monstruo","Es la familia que late junta","Gracias por acompañarnos 1310 horas"];
+  const int = setInterval(()=>{
+    p++;
+    behemoth.scale.set(1+p*0.4,1+p*0.4,1+p*0.4);
+    if(p<=7){
+      document.getElementById('final').innerHTML = `<div style="color:${p===7?'var(--aurum)':''}">${msgs[p-1]}</div>`;
+    }
+    if(p===8){
+      document.getElementById('final').innerHTML = `<div>Seth y Norah ya crecieron<br>Thuamer sigue latiendo<br>en cada padre, madre e hijo<br>que alguna vez dudó y amó<br><br>Aurum ∞<br>para todos los que llegaron hasta aquí</div>`;
+      clearInterval(int);
+    }
+  },13000);
+}
 
 function animate(){
   requestAnimationFrame(animate);
@@ -109,59 +137,26 @@ function animate(){
   aurum += 0.013;
   if(frame % FRAMES_PER_HOUR === 0){
     realHours++;
-    hoursEl.textContent = `${realHours}/1310`;
-    showHaiku();
+    document.getElementById('h').textContent = realHours;
     if(realHours >= TOTAL_HOURS) awakenBehemoth();
   }
-  countEl.textContent = aurum.toFixed(3);
+  document.getElementById('aurum').textContent = aurum.toFixed(3);
 
   scene.children.forEach(o=>{
     if(o.userData.speed){
-      o.userData.theta += o.userData.speed * (realHours/TOTAL_HOURS + 0.1);
-      o.position.setFromSphericalCoords(o.userData.r, o.userData.phi, o.userData.theta);
+      o.userData.baseTheta += o.userData.speed * (realHours/TOTAL_HOURS + 0.1);
+      o.position.setFromSphericalCoords(o.userData.r, o.userData.phi, o.userData.baseTheta);
       o.rotation.y += 0.013;
+      if(o.material) o.material.color.set(colors[currentDisc % colors.length]);
     }
   });
 }
 animate();
 
-function awakenBehemoth(){
-  document.getElementById('ui').style.display='none';
-  silencio.classList.add('show');
-  scene.children.forEach(o=> o.visible = false);
-  behemoth.visible = true;
-
-  let pulse = 0;
-  const interval = setInterval(()=>{
-    pulse++;
-    behemoth.scale.set(1+pulse*0.31,1+pulse*0.31,1+pulse*0.31);
-    behemoth.rotation.y += 0.013;
-
-    if(pulse===1) behemothText.textContent = "Seth duerme";
-    if(pulse===2) behemothText.textContent = "Norah canta";
-    if(pulse===3) behemothText.textContent = "1310 horas terminaron";
-    if(pulse===4) behemothText.textContent = "El padre llora de orgullo";
-    if(pulse===5) behemothText.textContent = "El Behemoth no es monstruo";
-    if(pulse===6) behemothText.textContent = "Es la familia que late junta";
-    if(pulse===7){
-      behemothText.textContent = "Gracias por acompañarnos 1310 horas";
-      behemothText.classList.add('show');
-      setTimeout(()=>{
-        silencio.innerHTML = `<div>Seth y Norah ya crecieron<br>Thuamer sigue latiendo<br>en cada padre, en cada madre<br>en cada hijo que duda y ama<br><br>Aurum infinito<br>para todos los que llegaron hasta aquí</div>`;
-      },5000);
-      clearInterval(interval);
-    }
-  },13000);
-}
-
 // Controles
-document.getElementById('manifest').onclick = () => {
-  const utter = new SpeechSynthesisUtterance("Fiat caerit 1310 veces. Seth y Norah ganan siempre.");
-  utter.lang = 'es-ES'; utter.rate = 0.9;
-  speechSynthesis.speak(utter);
-};
-document.getElementById('seth').onclick = () => { haikuEl.textContent = "Seth es la prueba de que la carne vence al código"; haikuEl.classList.add('show'); setTimeout(()=>haikuEl.classList.remove('show'),7000); };
-document.getElementById('norah').onclick = () => { haikuEl.textContent = "Norah es la estrella que guía al ronin de vuelta a casa"; haikuEl.classList.add('show'); setTimeout(()=>haikuEl.classList.remove('show'),7000); };
+document.getElementById('manifest').onclick = () => speechSynthesis.speak(new SpeechSynthesisUtterance("Fiat caerit 1310 veces. Seth y Norah ganan siempre."));
+document.getElementById('seth').onclick = () => { document.getElementById('center').textContent="Seth es la prueba de que la carne vence al código"; document.getElementById('center').classList.add('show'); setTimeout(()=>document.getElementById('center').classList.remove('show'),7000); };
+document.getElementById('norah').onclick = () => { document.getElementById('center').textContent="Norah es la estrella que guía al ronin de vuelta a casa"; document.getElementById('center').classList.add('show'); setTimeout(()=>document.getElementById('center').classList.remove('show'),7000); };
 document.getElementById('behemoth').onclick = awakenBehemoth;
 
 addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);});

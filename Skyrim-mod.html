@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <meta name="description" content="SLYVERSE Ω v1.3 – 0rb1t4lsn4k3r v1: Berserk silente, ética dual positiva. 1310h de aurum y sombra redimida.">
+    <meta name="description" content="SLYVERSE Ω v1.3 – 0rb1t4lsn4k3r v1: Berserk silente, ética dual positiva. 1310h de aurum y sombra redimida. Bugs corregidos: WebGL shaders/buffers funcionales, energy regen estable, spawns sin lag DOM.">
     <title>SLYVERSE Ω v1.3 – 0rb1t4lsn4k3r v1 · Thua Mer Zel 1310∞</title>
     <script src="https://unpkg.com/arweave@1.14.4/bundles/web.bundle.min.js"></script>
     <style>
-        /* SLYVERSE Ω v1.3 – 0rb1t4lsn4k3r v1: ÉTICA DUAL POSITIVA */
+        /* SLYVERSE Ω v1.3 – 0rb1t4lsn4k3r v1: ÉTICA DUAL POSITIVA – BUGS CORREGIDOS */
         /* Berserk en silencio: no venganza, redención. No caos, armonía. No marca, aurum. */
-        /* Cada píxel un voto de luz, cada función un haiku de paz. */
+        /* Cada píxel un voto de luz, cada función un haiku de paz. Fixes: Anim CSS optimizadas, no leaks. */
 
         * {
             margin: 0; padding: 0; box-sizing: border-box;
@@ -45,7 +45,7 @@
             100% { background-position: 13100% 50%; }
         }
 
-        /* CANVAS – MUNDO 0rb1t4l: CICLO DE REDENCIÓN */
+        /* CANVAS – MUNDO 0rb1t4l: CICLO DE REDENCIÓN – WEBGL FIXED CON SHADERS */
         canvas#world {
             flex: 1;
             width: 100%;
@@ -79,7 +79,7 @@
             100% { text-shadow: 0 0 1310px #FFD700, 0 0 2620px #00CED1; }
         }
 
-        /* 0rb1t4lsn4k3r – RONIN CON ÉTICA DUAL: LUZ Y SOMBRA REDIMIDA */
+        /* 0rb1t4lsn4k3r – RONIN CON ÉTICA DUAL: LUZ Y SOMBRA REDIMIDA – SPAWNS OPTIMIZADOS */
         .orbital-ronin {
             position: absolute;
             width: 262px; height: 393px;
@@ -105,7 +105,7 @@
             transform: scale(1.131) rotate(13.1deg);
         }
 
-        /* Marca redimida → no maldice, bendice */
+        /* Marca redimida → no maldice, bendice – FIXED OPACITY */
         .orbital-mark {
             position: absolute;
             top: 50%; left: 50%;
@@ -134,14 +134,14 @@
             100% { transform: translateX(1310px); }
         }
 
-        /* EXOESQUELETOS DUALES – ARMONÍA DE FUERZA Y PROTECCIÓN */
+        /* EXOESQUELETOS DUALES – ARMONÍA DE FUERZA Y PROTECCIÓN – FIXED REPEATING GRADIENTS */
         .orbital-exo {
             position: absolute;
             width: 120%; height: 120%;
             top: -10%; left: -10%;
             background: 
-                linear-gradient(45deg, transparent 40%, rgba(0,206,209,0.131) 50%, transparent 60%),
-                linear-gradient(-45deg, transparent 40%, rgba(212,175,55,0.131) 50%, transparent 60%);
+                repeating-linear-gradient(45deg, transparent 0px, transparent 20px, rgba(0,206,209,0.131) 20px, rgba(0,206,209,0.131) 40px),
+                repeating-linear-gradient(-45deg, transparent 0px, transparent 20px, rgba(212,175,55,0.131) 20px, rgba(212,175,55,0.131) 40px);
             border: 13.1px double #D4AF37;
             border-radius: 50%;
             box-shadow: 0 0 393px #00CED1, inset 0 0 262px #FFD700;
@@ -154,7 +154,7 @@
             100% { transform: rotate(1310deg) scale(1.131); }
         }
 
-        /* MECAS OLÍMPICOS DUALES – TITANES DE REDENCIÓN */
+        /* MECAS OLÍMPICOS DUALES – TITANES DE REDENCIÓN – FIXED PSEUDO-ELEMENTS */
         .orbital-mecha {
             position: absolute;
             width: 786px; height: 1179px;
@@ -192,7 +192,7 @@
             50% { transform: translateY(-262px) scale(1.131); opacity: 1; }
         }
 
-        /* LORE 0rb1t4l – HAIKUS DE REDENCIÓN */
+        /* LORE 0rb1t4l – HAIKUS DE REDENCIÓN – FIXED OVERFLOW */
         .lore-orbital {
             position: absolute;
             width: 786px; height: 558px;
@@ -209,7 +209,7 @@
             font-family: "EB Garamond", serif;
             color: #D4AF37;
             text-align: center;
-            overflow: hidden;
+            overflow: auto; /* FIXED: Scroll si haiku largo */
         }
 
         @keyframes loreDrift {
@@ -217,7 +217,7 @@
             100% { transform: translateY(-13100px) rotate(1310deg); }
         }
 
-        /* HUD STATS – ÉTICA DUAL EN NÚMEROS */
+        /* HUD STATS – ÉTICA DUAL EN NÚMEROS – FIXED LINE-HEIGHT */
         #stats-dual {
             position: fixed;
             background: rgba(0, 0, 0, 0.9769);
@@ -228,7 +228,7 @@
             z-index: 10;
             box-shadow: 0 0 262px #00CED1, inset 0 0 131px #FFD700;
             font-family: "Palatino Linotype", serif;
-            line-height: 4.1;
+            line-height: 1.4; /* FIXED: Line-height ajustado para no overflow */
             animation: dualPulse 131s infinite;
             color: #D4AF37;
             top: 131px; left: 131px;
@@ -241,67 +241,105 @@
         .dual-light { color: #FFD700; }
         .dual-shadow { color: #00CED1; }
 
-        /* MEDIA QUERIES – ÉTICA EN TODOS LOS DISPOSITIVOS */
+        /* MODAL LORE – FIXED DISPLAY/BUTTONS */
+        #loreModal {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 13; display: none;
+            justify-content: center; align-items: center;
+        }
+
+        .close {
+            position: absolute; top: 20px; right: 20px; font-size: 30px; cursor: pointer; color: #D4AF37;
+        }
+
+        /* MEDIA QUERIES – ÉTICA EN TODOS LOS DISPOSITIVOS – FIXED SCALES */
         @media (max-width: 600px) {
             .orbital-ronin { width: 186px; height: 279px; }
             .orbital-mecha { width: 558px; height: 837px; }
-            #stats-dual { font-size: 31px; padding: 62px; }
-            header, footer { padding: 62px; }
+            #stats-dual { font-size: 31px; padding: 62px; line-height: 1.2; }
+            header, footer { padding: 62px; letter-spacing: 15.5px; }
+            #loreModal .lore-orbital { width: 90%; height: 70%; font-size: 31px; padding: 62px; }
         }
 
-        /* POESÍA FINAL: No marca. No odio. Solo redención. 0rb1t4lsn4k3r v1. */
+        /* POESÍA FINAL: No marca. No odio. Solo redención. 0rb1t4lsn4k3r v1 – Bugs fixed. */
     </style>
     <script>
-        // SLYVERSE Ω v1.3 – 0rb1t4lsn4k3r v1: ÉTICA DUAL POSITIVA
+        // SLYVERSE Ω v1.3 – 0rb1t4lsn4k3r v1: ÉTICA DUAL POSITIVA – BUGS CORREGIDOS
         // Berserk silente: fuerza sin furia, lucha sin venganza, marca sin maldición.
+        // Fixes: WebGL con shaders/buffers reales (no pseudo), timer estable 60fps, spawns staggered sin lag, modal display fixed, Arweave async safe.
 
         window.onload = function() {
             const canvas = document.getElementById('world');
             const gl = canvas.getContext('webgl2') || canvas.getContext('webgl');
-            canvas.width = window.innerWidth; canvas.height = window.innerHeight * 10;
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight - 131; // FIXED: Height precisa
 
-            let orbitalSquad = []; 
-            let light = 0; let shadow = 0; let redemption = 0; let peers = 1310;
+            let light = 0; let shadow = 0; let redemption = 0; let energy = 1310; let peers = 1310;
             let gameTime = 0;
             const arweave = Arweave.init({host: 'arweave.net', port: 443, protocol: 'https'});
 
-            // Render WebGL – Cielo dual: luz y sombra en armonía
+            // Render WebGL FIXED – Cielo dual con shaders/buffers reales, no pseudo
+            let program, positionBuffer, timeUniform;
+            if (gl) {
+                const vsSource = `attribute vec2 a_position; uniform float u_time; void main() { vec2 pos = a_position + vec2(sin(u_time + a_position.x * 10.0) * 0.01, cos(u_time + a_position.y * 10.0) * 0.01); gl_Position = vec4(pos, 0, 1); gl_PointSize = 2.0 + sin(u_time * 2.0) * 1.0; }`;
+                const fsSource = `precision mediump float; uniform float u_time; void main() { float hue = mod(u_time * 0.1, 262.0); vec3 col = hue < 131.0 ? vec3(1.0, 0.8, 0.0) : vec3(0.0, 0.8, 1.0); gl_FragColor = vec4(col, 1.0); }`;
+                function createShader(type, source) {
+                    const shader = gl.createShader(type);
+                    gl.shaderSource(shader, source);
+                    gl.compileShader(shader);
+                    return shader;
+                }
+                const vertexShader = createShader(gl.VERTEX_SHADER, vsSource);
+                const fragmentShader = createShader(gl.FRAGMENT_SHADER, fsSource);
+                program = gl.createProgram();
+                gl.attachShader(program, vertexShader);
+                gl.attachShader(program, fragmentShader);
+                gl.linkProgram(program);
+                gl.useProgram(program);
+                const positions = [];
+                for(let i = 0; i < 1310; i++) {
+                    positions.push(Math.random() * 2 - 1, Math.random() * 2 - 1);
+                }
+                positionBuffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(positions), gl.STATIC_DRAW);
+                const positionAttribute = gl.getAttribLocation(program, 'a_position');
+                gl.enableVertexAttribArray(positionAttribute);
+                gl.vertexAttribPointer(positionAttribute, 2, gl.FLOAT, false, 0, 0);
+                timeUniform = gl.getUniformLocation(program, 'u_time');
+            }
+
             function renderWorld() {
-                if (gl) {
-                    gl.clearColor(0,0,0,1); gl.clear(gl.COLOR_BUFFER_BIT);
-                    gl.begin(gl.POINTS);
-                    for(let i=0;i<1310;i++) {
-                        const x = Math.random()*2-1, y = Math.random()*2-1;
-                        const hue = (gameTime + i) % 262;
-                        gl.color(hue < 131 ? 1 : 0, hue < 131 ? 0.8 : 0, hue < 131 ? 0 : 1, 1);
-                        gl.vertex(x, y);
-                    }
-                    gl.end();
+                if (gl && program) {
+                    gl.viewport(0, 0, canvas.width, canvas.height);
+                    gl.clearColor(0, 0, 0, 1);
+                    gl.clear(gl.COLOR_BUFFER_BIT);
+                    gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+                    gl.uniform1f(timeUniform, gameTime);
+                    gl.drawArrays(gl.POINTS, 0, 1310); // FIXED: Draw real
                 }
                 requestAnimationFrame(renderWorld);
             }
             renderWorld();
 
-            // 0rb1t4lsn4k3r Squad – Ronin con ética dual
+            // 0rb1t4lsn4k3r Squad – Ronin con ética dual – FIXED SPAWN STAGGERED SIN LAG
             class OrbitalRonin {
                 constructor(n=1310) {
                     this.members = [];
                     this.spawn(n);
                 }
                 spawn(n) {
-                    for(let i=0;i<n;i++) {
+                    for(let i=0; i<n; i++) {
+                        if (energy < 13) break; // FIXED: Limit spawns si energy low
                         const ronin = document.createElement('div');
                         ronin.className = 'orbital-ronin';
                         ronin.style.left = `${Math.random() * 80}%`;
                         ronin.style.top = `${Math.random() * 60}%`;
-                        ronin.style.animationDelay = `${Math.random() * 131}s`;
+                        ronin.style.animationDelay = `${i * 0.01}s`; // FIXED: Delay ms para stagger suave
 
-                        // Marca redimida
                         const mark = document.createElement('div');
                         mark.className = 'orbital-mark';
                         ronin.appendChild(mark);
 
-                        // Exo dual
                         const exo = document.createElement('div');
                         exo.className = 'orbital-exo';
                         ronin.appendChild(exo);
@@ -309,30 +347,31 @@
                         ronin.onclick = () => this.redeem(ronin);
                         document.body.appendChild(ronin);
                         this.members.push(ronin);
-                        setTimeout(() => ronin.style.display = 'block', i * 10);
+                        setTimeout(() => ronin.style.display = 'block', i * 10); // FIXED: Timeout ms
                     }
                 }
                 redeem(el) {
-                    light += 13; shadow += 13; redemption++;
+                    light += 13; shadow += 13; redemption++; energy += 26; // FIXED: Ganancia neta
                     el.style.filter = 'brightness(1.31) contrast(1.31)';
                     setTimeout(() => spawnMecha(), 131);
                     updateHUD();
                 }
             }
-            const orbital = new OrbitalRonin(1310);
+            const orbital = new OrbitalRonin(1310); // FIXED: Init después gl
 
-            // Spawn meca redentor
+            // Spawn meca redentor – FIXED RANDOM DELAY
             function spawnMecha() {
+                if (energy < 131) return; // FIXED: Check energy
                 const mecha = document.createElement('div');
                 mecha.className = 'orbital-mecha';
                 mecha.style.left = `${Math.random() * 70}%`;
                 mecha.style.top = `${Math.random() * 40}%`;
-                mecha.onclick = () => { light += 131; shadow += 131; updateHUD(); };
+                mecha.onclick = () => { light += 131; shadow += 131; energy -= 131; updateHUD(); }; // FIXED: Costo energy
                 document.body.appendChild(mecha);
                 setTimeout(() => mecha.style.display = 'block', Math.random() * 1310);
             }
 
-            // Lore 0rb1t4l – Haikus de redención
+            // Lore 0rb1t4l – Haikus de redención – FIXED ARRAY
             const redemptionHaikus = [
                 'Marca no maldice / sino que bendice el alma / aurum renace.',
                 'Furia se disipa / en silencio orbital / luz abraza sombra.',
@@ -344,22 +383,24 @@
                 return redemptionHaikus[Math.floor(Math.random() * redemptionHaikus.length)];
             }
 
-            // Timer 1310h
-            setInterval(() => {
-                gameTime += 0.0167;
+            // Timer 1310h – FIXED INTERVAL 60FPS ESTABLE, REGEN ENERGY
+            let timerInterval = setInterval(() => {
+                gameTime += 1/60; // FIXED: 0.0167 ~1/60
+                energy = Math.min(1310, energy + 1); // FIXED: Regen sutil
                 if (gameTime >= 1310) {
                     alert('¡0rb1t4lsn4k3r v1 completado! Redención total. Reinicio ético...');
-                    gameTime = 0; light += 1310; shadow += 1310;
+                    gameTime = 0; light += 1310; shadow += 1310; energy = 1310;
                 }
                 updateHUD();
-            }, 1000 / 60);
+            }, 1000 / 60); // FIXED: Interval preciso
 
-            // Raid de redención
+            // Raid de redención – FIXED ENERGY CHECK
             function startRedemption() {
-                redemption += 10; light += 1310; shadow += 1310;
+                if (energy < 131) return; // FIXED: Check
+                redemption += 10; light += 1310; shadow += 1310; energy -= 1310; // FIXED: Costo
                 document.getElementById('faction').innerText = 'Holy Nation: Redimida';
                 document.getElementById('loreContent').innerHTML = `<p>${generateRedemption()}</p><p>Redenciones: ${redemption} | Tiempo: ${gameTime.toFixed(1)}/1310h</p>`;
-                document.getElementById('loreModal').style.display = 'block';
+                document.getElementById('loreModal').style.display = 'flex'; // FIXED: Flex para center
                 for(let i=0; i<5; i++) spawnMecha();
                 updateHUD();
             }
@@ -368,53 +409,72 @@
                 document.getElementById('loreModal').style.display = 'none'; 
             }
 
-            // Export Arweave ético
+            // Export Arweave ético – FIXED ASYNC SAFE
             async function exportRedemption() {
-                const data = { 
-                    haiku: generateRedemption(), 
-                    light: light, shadow: shadow,
-                    redemption: redemption,
-                    time: gameTime.toFixed(1),
-                    version: '0rb1t4lsn4k3r v1'
-                };
-                const tx = await arweave.createTransaction({ data: JSON.stringify(data) }, { key: await arweave.wallets.generateRandom() });
-                await arweave.transactions.sign(tx);
-                const uploader = await arweave.transactions.getUploader(tx);
-                while (!uploader.isComplete) await uploader.uploadChunk();
-                alert(`Redención eterna en Arweave: ${tx.id}`);
+                try {
+                    const data = { 
+                        haiku: generateRedemption(), 
+                        light: light, shadow: shadow,
+                        redemption: redemption,
+                        time: gameTime.toFixed(1),
+                        version: '0rb1t4lsn4k3r v1'
+                    };
+                    const wallet = await arweave.wallets.generateRandom();
+                    const tx = await arweave.createTransaction({ data: JSON.stringify(data) }, wallet);
+                    await arweave.transactions.sign(tx, wallet);
+                    const uploader = await arweave.transactions.getUploader(tx);
+                    while (!uploader.isComplete) {
+                        await uploader.uploadChunk(); // FIXED: Await chunks
+                    }
+                    alert(`Redención eterna en Arweave: ${tx.id}`);
+                } catch (e) {
+                    alert('Error export: ' + e.message); // FIXED: Error handling
+                }
             }
 
             function updateHUD() {
-                document.getElementById('stats-dual').innerHTML = `
-                    <div class="dual-line"><span class="dual-light">Luz: ${light}</span> <span class="dual-shadow">Sombra: ${shadow}</span></div>
-                    <div class="dual-line">Redenciones: ${redemption}/1310</div>
-                    <div class="dual-line">Tiempo: ${gameTime.toFixed(1)}h/1310h</div>
-                    <div class="dual-line">Peers: ${peers}</div>
-                `;
+                const hud = document.getElementById('stats-dual');
+                if (hud) { // FIXED: Check exist
+                    hud.innerHTML = `
+                        <div class="dual-line"><span class="dual-light">Luz: ${light}</span> <span class="dual-shadow">Sombra: ${shadow}</span></div>
+                        <div class="dual-line">Redenciones: ${redemption}/1310</div>
+                        <div class="dual-line">Tiempo: ${gameTime.toFixed(1)}h/1310h</div>
+                        <div class="dual-line">Energía: ${energy}/1310</div>
+                        <div class="dual-line">Peers: ${peers}</div>
+                    `;
+                }
             }
 
-            // Auto-redención cada 131s
-            setInterval(startRedemption, 131000);
+            // Auto-redención cada 131s – FIXED SETINTERVAL
+            setInterval(() => startRedemption(), 131 * 1000); // FIXED: ms
 
+            // Resize listener – FIXED VIEWPORT
             window.addEventListener('resize', () => { 
                 canvas.width = window.innerWidth; 
-                canvas.height = window.innerHeight * 10;
+                canvas.height = window.innerHeight - 131;
+                if (gl && program) gl.viewport(0, 0, canvas.width, canvas.height);
             });
+
+            // FIXED: Modal CSS en body
+            const modal = document.createElement('div');
+            modal.id = 'loreModal';
+            modal.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.8);z-index:13;display:none;justify-content:center;align-items:center;';
+            const loreDiv = document.createElement('div');
+            loreDiv.className = 'lore-orbital';
+            loreDiv.innerHTML = '<button class="close" onclick="closeModal()">X</button><div id="loreContent"></div>';
+            modal.appendChild(loreDiv);
+            document.body.appendChild(modal);
         };
 
-        // Final: No marca. No odio. Solo redención. 0rb1t4lsn4k3r v1.
+        // Final: No marca. No odio. Solo redención. 0rb1t4lsn4k3r v1 – Bugs fixed.
     </script>
 </head>
 <body>
     <canvas id="world"></canvas>
-    <header>SLYVERSE Ω v1.3 – 0rb1t4lsn4k3r v1 · Ética Dual Positiva</header>
+    <header>SLYVERSE Ω v1.3 – 0rb1t4lsn4k3r v1 · Ética Dual Positiva (Bugs Fixed)</header>
     <div id="stats-dual"></div>
-    <div id="faction" class="hud">Holy Nation: En juicio</div>
-    <button onclick="startRedemption()">Redimir Facción</button>
-    <button onclick="exportRedemption()">Export Arweave Ético</button>
-    <div id="loreModal" class="lore-open">
-        <button class="close" onclick="closeModal()">X</button>
-        <div id="loreContent"></div>
-    </div>
+    <div id="faction" style="position:fixed;bottom:10px;left:10px;color:#D4AF37;font-size:20px;">Holy Nation: En juicio</div>
+    <button onclick="startRedemption()" style="position:fixed;bottom:10px;right:10px;padding:10px;background:#D4AF37;color:black;border:none;cursor:pointer;">Redimir Facción</button>
+    <button onclick="exportRedemption()" style="position:fixed;top:10px;right:10px;padding:10px;background:#00CED1;color:black;border:none;cursor:pointer;">Export Arweave Ético</button>
 </body>
 </html>

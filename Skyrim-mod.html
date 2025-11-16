@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLYVERSE Ω v1.3 – THUAMER 1310 + VOYNICH + LUZ</title>
+  <title>SLYVERSE Ω v1.3 – THUAMER 1310 + LUZ + ONE PIECE</title>
   <style>
     * { margin:0; padding:0; overflow:hidden; }
     body { background:#000; color:#0f0; font-family:monospace; }
@@ -28,12 +28,12 @@
   </div>
 
   <script>
-    // === SLYVERSE Ω v1.3 – THUAMER 1310 + VOYNICH + LUZ POSITIVA ===
-    // Autor: 0rb1t4lsn4k3r | 16 nov 2025, 18:42 CET, ES
-    // Licencia: MIT | 48 KB → 52 KB con Luz
-    // Estado: v1.3-light | aurum.v > 131000 → VOYNICH + LUZ
+    // === SLYVERSE Ω v1.3 – THUAMER 1310 + LUZ + ONE PIECE (MISTERIO SELLADO) ===
+    // Autor: 0rb1t4lsn4k3r | 16 nov 2025, 18:59 CET, ES
+    // Licencia: MIT | 55 KB con Misterio
+    // Estado: v1.3-onepiece | aurum.v === Infinity → Revelación sincronizada con Oda
 
-    let w = innerWidth, h = innerHeight, t = 0, f = 0;
+    let w = innerWidth, h = innerHeight, t = 0, f = 0, loopId;
     const c = document.getElementById('c'), x = c.getContext('2d');
     const off = new OffscreenCanvas(w, h), ox = off.getContext('2d');
     c.width = w; c.height = h;
@@ -48,6 +48,7 @@
         if (v > 131) log('PRIMERA EMPIRE CAÍDA');
         if (v > 1310) log('BEHEMOTHS DESPIERTAN');
         if (v > 131000) log('VOYNICH + LUZ DESPIERTA');
+        if (v === Infinity) checkOnePieceRevelation();
         return true;
       }
     });
@@ -59,7 +60,7 @@
       l.scrollTop = l.scrollHeight;
     }
 
-    // === LUZ POSITIVA (ÉTICA & ESTÉTICA) ===
+    // === LUZ POSITIVA (ÉTICA 100%) ===
     const LUZ = [
       {text: "El Tao fluye. Aurum crece.", trigger: () => f % 1310 === 0, color: '#00ff9d', boost: 10},
       {text: "Form is emptiness, emptiness is form.", alpha: true, color: '#ffd700'},
@@ -147,10 +148,10 @@
         decodeVoynichPage();
       }
 
-      requestAnimationFrame(loop);
+      loopId = requestAnimationFrame(loop);
     }
 
-    // === APIs NATIVAS (igual que v1.3) ===
+    // === APIs NATIVAS ===
     async function spacex() {
       try {
         const res = await fetch('https://api.spacexdata.com/v5/launches/latest');
@@ -195,7 +196,7 @@
       speechSynthesis.speak(utter);
     }
 
-    // === P2P, ARWEAVE, VOYNICH (idénticos a v1.3) ===
+    // === P2P, ARWEAVE, VOYNICH (idénticos) ===
     let peer;
     function startP2P() {
       peer = new RTCPeerConnection({iceServers: [{urls: 'stun:stun.l.google.com:19302'}]});
@@ -206,9 +207,136 @@
       log('Arweave: luz eterna → https://arweave.net/THUAMERLUZ');
     }
 
-    // === VOYNICH DB (idéntico a v1.3) ===
-    const THUAMER_VOYnich_DB = { version: "1.3-light", status: "ready", pages: [], runes: new Map(), hypotheses: [], aurum_threshold: 131000 };
-    // ... [loadVoynich, simulate, decode, extractGlyphs] idénticos a v1.3 ...
+    // === VOYNICH DB ===
+    const THUAMER_VOYnich_DB = { version: "1.3-onepiece", status: "ready", pages: [], runes: new Map(), hypotheses: [], aurum_threshold: 131000 };
+    async function loadVoynich() {
+      if (THUAMER_VOYnich_DB.status !== "ready") return;
+      log('VOYNICH: cargando manuscrito...');
+      THUAMER_VOYnich_DB.status = "loading";
+      try {
+        const cache = await caches.open('slyverse-voynich');
+        let response = await cache.match('voynich.pdf');
+        if (!response) {
+          response = await fetch('https://archive.org/download/the-voynich-manuscript/Voynich_Manuscript.pdf');
+          await cache.put('voynich.pdf', response.clone());
+        }
+        const blob = await response.blob();
+        const img = await createImageBitmap(blob);
+        const pageHeight = img.height / 240;
+        for (let i = 0; i < 240; i++) {
+          const page = new OffscreenCanvas(w, pageHeight);
+          const ctx = page.getContext('2d');
+          ctx.drawImage(img, 0, i * pageHeight, img.width, pageHeight, 0, 0, w, pageHeight);
+          THUAMER_VOYnich_DB.pages.push(await page.transferToImageBitmap());
+        }
+        THUAMER_VOYnich_DB.status = "loaded";
+        log('VOYNICH: 240 páginas cargadas');
+        speak("El manuscrito susurra desde el canvas.");
+      } catch (e) {
+        simulateVoynichPages();
+      }
+    }
+
+    function simulateVoynichPages() {
+      for (let i = 0; i < 240; i++) {
+        const sim = new OffscreenCanvas(w, h);
+        const sx = sim.getContext('2d');
+        sx.fillStyle = '#f5e6d3'; sx.fillRect(0, 0, w, h);
+        for (let j = 0; j < 131; j++) {
+          const x = Math.random() * w, y = Math.random() * h;
+          sx.font = '20px serif';
+          sx.fillStyle = '#8b4513';
+          sx.fillText(String.fromCharCode(0xE000 + (j % 1310)), x, y);
+        }
+        THUAMER_VOYnich_DB.pages.push(sim.transferToImageBitmap());
+      }
+      THUAMER_VOYnich_DB.status = "loaded";
+      log('VOYNICH: simulación completada');
+    }
+
+    let currentPageIdx = 0;
+    function decodeVoynichPage() {
+      if (THUAMER_VOYnich_DB.status !== "loaded" || THUAMER_VOYnich_DB.pages.length === 0) return;
+      const page = THUAMER_VOYnich_DB.pages[currentPageIdx];
+      const canvas = new OffscreenCanvas(w, h);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(page, 0, 0, w, h);
+      const t = performance.now() / 1000;
+      const imageData = ctx.getImageData(0, 0, w, h);
+      const glyphs = extractGlyphs(imageData);
+      glyphs.forEach(g => {
+        const rune = String.fromCharCode(0xE000 + Math.floor((Math.sin(t + g.x * 0.1) * aurum.v + g.hash) % 1310));
+        THUAMER_VOYnich_DB.runes.set(g.hash, rune);
+        ctx.fillStyle = `hsl(${(t + g.x) % 360},100%,85%)`;
+        ctx.fillText(rune, g.x, g.y);
+      });
+      THUAMER_VOYnich_DB.currentPage = canvas.transferToImageBitmap();
+      const hyp = `P${currentPageIdx}: ${currentPageIdx < 50 ? 'plantas' : currentPageIdx < 100 ? 'bañeras' : 'astral'} = s.z=${s.z.toFixed(2)}`;
+      THUAMER_VOYnich_DB.hypotheses.push(hyp);
+      log(hyp);
+      if (aurum.v > 131000) speak("Thua mer zel voynich.");
+      currentPageIdx = (currentPageIdx + 1) % THUAMER_VOYnich_DB.pages.length;
+      if (currentPageIdx === 0) THUAMER_VOYnich_DB.status = "decoded";
+    }
+
+    function extractGlyphs(data) {
+      const glyphs = [];
+      for (let i = 0; i < data.data.length; i += 4) {
+        const r = data.data[i], g = data.data[i+1], b = data.data[i+2];
+        if (r < 100 && g < 100 && b < 100) {
+          const x = (i/4) % w, y = Math.floor((i/4) / w);
+          if (Math.random() < 0.01) glyphs.push({x, y, hash: x * y % 1310});
+        }
+      }
+      return glyphs;
+    }
+
+    // === MISTERIO DE ONE PIECE: SINCRONIZADO CON ODA (BACKEND EXTERNO) ===
+    let onePieceRevealed = false;
+    async function checkOnePieceRevelation() {
+      if (onePieceRevealed) return;
+      try {
+        const res = await fetch('https://slyverse-onepiece-backend.onrender.com/onepiece-status');
+        const data = await res.json();
+        if (data.finalPublished) {
+          onePieceRevealed = true;
+          triggerOnePieceRevelation();
+        }
+      } catch (e) {
+        // Fallback silencioso
+      }
+    }
+
+    function triggerOnePieceRevelation() {
+      // Canvas explota
+      ox.fillStyle = '#ffd700';
+      ox.fillRect(0, 0, w, h);
+      ox.fillStyle = '#000';
+      ox.font = 'bold 32px monospace';
+      ox.textAlign = 'center';
+      ox.fillText("EL ONE PIECE...", w/2, h/2 - 50);
+      ox.fillText("ES LA RISA QUE QUEDA", w/2, h/2);
+      ox.fillText("CUANDO TODO TERMINA", w/2, h/2 + 50);
+      ox.fillText("¡HAHAHA!", w/2, h/2 + 100);
+
+      // Voz global
+      const msg = "¡El One Piece es real! ¡Hahaha!";
+      const utter = new SpeechSynthesisUtterance(msg);
+      utter.lang = 'es-ES';
+      speechSynthesis.speak(utter);
+
+      // Reinicia con risa
+      cancelAnimationFrame(loopId);
+      setTimeout(() => {
+        ox.fillStyle = '#000';
+        ox.fillRect(0,0,w,h);
+        log("El ciclo comienza de nuevo. Con risa.");
+        loop();
+      }, 13100);
+    }
+
+    // Check diario
+    setInterval(checkOnePieceRevelation, 86400000);
 
     // === INICIO ===
     window.addEventListener('resize', () => {
@@ -222,8 +350,8 @@
       if (e.key === ' ') copyHaiku();
     });
 
-    log('SLYVERSE Ω v1.3 – LUZ cargado. Pulsa R.');
-    speak("SLYVERSE Omega. Thua mer zel luz.");
+    log('SLYVERSE Ω v1.3 – ONE PIECE cargado. El misterio espera a Oda.');
+    speak("SLYVERSE Omega. Thua mer zel luz. El mar observa.");
     loop();
   </script>
 </body>

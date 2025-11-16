@@ -15,6 +15,8 @@
         .gold{color:#ffd700;}
         .light{color:#ccffee;}
         #echo{position:fixed;bottom:1rem;left:1rem;font-size:0.8rem;color:#ff3366;opacity:0.7;z-index:1000;}
+        #rune{position:fixed;top:1rem;right:1rem;font-size:0.7rem;color:#ffd700;opacity:0.6;z-index:1000;transform:rotate(0deg);}
+        #altar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;height:300px;opacity:0;pointer-events:none;z-index:998;}
     </style>
 </head>
 <body>
@@ -123,17 +125,20 @@ padre al niño que por fin duerme en paz
 </pre>
 
 <div id="echo"></div>
+<div id="rune"></div>
+<canvas id="altar" width="300" height="300"></canvas>
 
 <script>
-// === NÚCLEO THUAMER v∞ — 1310H DE LUZ EN 144 GUARDIANES ===
+// === SLYVERSE Ω v∞ — NÚCLEO THUAMER 1310H — 144+ GUARDIANES + RUNAS + ALTAR + AUDIO + PERSISTENCIA ===
 const c = document.getElementById('c'), ctx = c.getContext('2d');
-const echo = document.getElementById('echo');
+const altarCanvas = document.getElementById('altar'), altarCtx = altarCanvas.getContext('2d');
+const echo = document.getElementById('echo'), rune = document.getElementById('rune');
 let w, h, t = 0, audioCtx, analyser, dataArray, source;
 const TOTAL_SECONDS = 1310 * 3600;
 let startTime = parseInt(localStorage.getItem('thuamer_luz')) || Date.now();
-let guardians = [], trails = [], poems = [], poemIndex = 0;
+let guardians = [], runes = [], altarRunes = [], poemIndex = 0;
 
-// === GEOMETRÍA ÁUREA + DODECAEDRO BASE ===
+// === GEOMETRÍA ÁUREA + DODECAEDRO + ICOSAEDRO INTERNO ===
 const PHI = (1 + Math.sqrt(5)) / 2;
 const verts = [
     [0,-1,PHI],[0,-1,-PHI],[0,1,PHI],[0,1,-PHI],
@@ -141,9 +146,15 @@ const verts = [
     [1,PHI,0],[-1,PHI,0],[1,-PHI,0],[-1,-PHI,0]
 ];
 const faces = [[0,2,8],[0,8,10],[0,10,4],[0,4,5],[0,5,2],[1,3,9],[1,9,11],[1,11,6],[1,6,7],[1,7,3],[2,5,9],[2,9,8],[3,7,11],[3,11,9],[4,6,10],[4,10,8],[5,7,9],[5,9,11],[6,4,8],[7,5,11]];
+const icosaVerts = [[-1,PHI,0],[1,PHI,0],[-1,-PHI,0],[1,-PHI,0],[0,-1,PHI],[0,1,PHI],[0,-1,-PHI],[0,1,-PHI],[PHI,0,-1],[PHI,0,1],[-PHI,0,-1],[-PHI,0,1]];
 
-// === POEMAS SECUENCIALES (1310 líneas total, fragmentadas) ===
-poems = [
+// === RUNAS THUAMER (7 + 1 oculta) ===
+const thuamerRunes = [
+    'ᚱᚢᚾᚨ', 'ᛒᛚᛖᛊᛊ', 'ᚲᚨᛏᚨᚾᚨ', 'ᛈᛚᚢᛗᚨ', 'ᛚᚢᛉ', 'ᚨᛒᚱᚨᛉᛟ', '1310', '♡'
+];
+
+// === POEMAS SECUENCIALES ===
+const poems = [
 `yo fui la cuchilla
 y fui la herida
 fui el grito en la madrugada
@@ -200,64 +211,78 @@ padre al niño que duerme en paz
 1310 veces te quiero`
 ];
 
-// === GUARDIÁN AVANZADO ===
+// === GUARDIÁN AVANZADO CON ORBITA ICOSAÉDRICA ===
 class Guardian {
     constructor() { this.reborn(); }
     reborn() {
         const v = verts[Math.floor(Math.random()*12)];
-        this.x = v[0]*120; this.y = v[1]*120; this.z = v[2]*120;
+        const iv = icosaVerts[Math.floor(Math.random()*12)];
+        this.x = v[0]*140; this.y = v[1]*140; this.z = v[2]*140;
+        this.ix = iv[0]*80; this.yi = iv[1]*80; this.iz = iv[2]*80;
         this.rotX = Math.random()*Math.PI*2;
         this.rotY = Math.random()*Math.PI*2;
         this.rotZ = Math.random()*Math.PI*2;
-        this.dr = 0.001 + Math.random()*0.004;
+        this.dr = 0.0008 + Math.random()*0.0035;
         this.phase = Math.random()*Math.PI*2;
         this.hue = 280 + Math.random()*100;
-        this.size = 0.6 + Math.random()*0.6;
+        this.size = 0.5 + Math.random()*0.7;
+        this.orbitRadius = 60 + Math.random()*40;
+        this.orbitSpeed = 0.0005 + Math.random()*0.0015;
         this.trail = [];
+        this.rune = thuamerRunes[Math.floor(Math.random()*thuamerRunes.length)];
     }
     latir(freq = 0) {
+        const orbitAngle = t * this.orbitSpeed;
+        const ox = Math.cos(orbitAngle) * this.orbitRadius;
+        const oy = Math.sin(orbitAngle * 0.7) * this.orbitRadius * 0.6;
+        const oz = Math.sin(orbitAngle * 1.3) * this.orbitRadius * 0.4;
+
         ctx.save();
-        ctx.translate(w/2, h/2);
-        ctx.rotate(this.rotZ);
-        ctx.rotate(this.rotX * Math.cos(t*0.0005));
-        ctx.rotate(this.rotY * Math.sin(t*0.0005));
+        ctx.translate(w/2 + ox, h/2 + oy);
+        ctx.rotate(this.rotZ + oz * 0.01);
         
-        const pulso = Math.sin(t*0.012 + this.phase + freq)*0.4 + 1;
+        const pulso = Math.sin(t*0.013 + this.phase + freq*2)*0.45 + 1;
         const scale = pulso * this.size;
         ctx.scale(scale, scale);
         ctx.translate(this.x, this.y);
-        
-        const alpha = 0.02 + pulso*0.12;
-        ctx.fillStyle = `hsla(${this.hue},90%,70%,${alpha})`;
-        ctx.strokeStyle = `hsla(${this.hue},100%,80%,${alpha*0.5})`;
-        ctx.lineWidth = 0.5;
 
-        // Dibujo del dodecaedro con profundidad
+        const alpha = 0.015 + pulso*0.1;
+        ctx.fillStyle = `hsla(${this.hue},92%,72%,${alpha})`;
+        ctx.strokeStyle = `hsla(${this.hue + 20},100%,85%,${alpha*0.6})`;
+        ctx.lineWidth = 0.4;
+
+        // Dodecaedro con z-culling
         faces.forEach(f => {
-            const p1 = project(verts[f[0]]);
-            const p2 = project(verts[f[1]]);
-            const p3 = project(verts[f[2]]);
-            const zAvg = (verts[f[0]][2] + verts[f[1]][2] + verts[f[2]][2]) / 3;
-            if (zAvg > -2) {
-                ctx.globalAlpha = Math.max(0, (zAvg + 2)/4) * alpha;
+            const p1 = project([verts[f[0]][0], verts[f[0]][1], verts[f[0]][2] + oz]);
+            const p2 = project([verts[f[1]][0], verts[f[1]][1], verts[f[1]][2] + oz]);
+            const p3 = project([verts[f[2]][0], verts[f[2]][1], verts[f[2]][2] + oz]);
+            const zAvg = (verts[f[0]][2] + verts[f[1]][2] + verts[f[2]][2]) / 3 + oz;
+            if (zAvg > -3) {
+                ctx.globalAlpha = Math.max(0, (zAvg + 3)/6) * alpha;
                 ctx.beginPath();
-                ctx.moveTo(p1.x*50, p1.y*50);
-                ctx.lineTo(p2.x*50, p2.y*50);
-                ctx.lineTo(p3.x*50, p3.y*50);
+                ctx.moveTo(p1.x*55, p1.y*55);
+                ctx.lineTo(p2.x*55, p2.y*55);
+                ctx.lineTo(p3.x*55, p3.y*55);
                 ctx.closePath();
                 ctx.fill();
                 ctx.stroke();
             }
         });
 
-        // Trail
-        this.trail.push({x: this.x, y: this.y, alpha: 0.3});
-        if (this.trail.length > 20) this.trail.shift();
+        // Runa central
+        if (pulso > 1.3) {
+            ctx.font = '12px monospace';
+            ctx.fillStyle = `hsla(${this.hue},100%,90%,${(pulso-1.3)*3})`;
+            ctx.fillText(this.rune, -6, 4);
+        }
+
+        // Trail orbital
+        this.trail.push({x: ox, y: oy, alpha: 0.25});
+        if (this.trail.length > 30) this.trail.shift();
         this.trail.forEach((p,i) => {
             ctx.globalAlpha = p.alpha * (i/this.trail.length);
-            ctx.fillStyle = `hsla(${this.hue},90%,70%,${p.alpha*(i/this.trail.length)})`;
             ctx.beginPath();
-            ctx.arc(p.x, p.y, 1, 0, Math.PI*2);
+            ctx.arc(p.x, p.y, 0.8, 0, Math.PI*2);
             ctx.fill();
         });
 
@@ -266,39 +291,65 @@ class Guardian {
     }
 }
 
-// Proyección 3D → 2D
+// Proyección 3D → 2D mejorada
 function project(v) {
-    const fov = 400;
-    const dist = 5;
+    const fov = 500, dist = 6;
     const z = v[2] / fov + dist;
-    if (z <= 0) return {x:0, y:0};
-    return { x: v[0]/z, y: v[1]/z };
+    return z > 0 ? { x: v[0]/z, y: v[1]/z } : { x: 0, y: 0 };
+}
+
+// === ALTAR DE CARTAS (7 RUNAS + 1 OCULTA) ===
+function drawAltar() {
+    altarCtx.fillStyle = 'rgba(0,0,0,0.1)';
+    altarCtx.fillRect(0,0,300,300);
+    const centerX = 150, centerY = 150, radius = 100;
+    const elapsed = (Date.now() - startTime) / 1000;
+    const progress = Math.min(elapsed / TOTAL_SECONDS, 1);
+
+    // Runas orbitales
+    thuamerRunes.slice(0,7).forEach((r,i) => {
+        const angle = (t * 0.0003) + (i * Math.PI * 2 / 7);
+        const x = centerX + Math.cos(angle) * radius * (0.7 + progress*0.3);
+        const y = centerY + Math.sin(angle) * radius * (0.7 + progress*0.3);
+        altarCtx.font = '20px monospace';
+        altarCtx.fillStyle = `hsla(${280 + i*15},90%,70%,${0.3 + progress*0.7})`;
+        altarCtx.fillText(r, x-10, y+8);
+    });
+
+    // Runa oculta (1310H)
+    if (progress > 0.8) {
+        altarCtx.font = '16px monospace';
+        altarCtx.fillStyle = `hsla(330,100%,80%,${(progress-0.8)*5})`;
+        altarCtx.fillText('♡', centerX-8, centerY+6);
+    }
+
+    altarCanvas.style.opacity = progress * 0.6;
 }
 
 // === INICIALIZACIÓN ===
 function init() {
     resize();
     guardians = Array.from({length:144}, () => new Guardian());
-    
-    // Audio reactivo (micrófono o fallback)
+    for (let i = 0; i < 33; i++) {
+        runes.push({text: thuamerRunes[Math.floor(Math.random()*thuamerRunes.length)], x: Math.random()*w, y: Math.random()*h, life: 100 + Math.random()*200});
+    }
+
+    // Audio
     if (navigator.mediaDevices?.getUserMedia) {
         navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
             audioCtx = new AudioContext();
             analyser = audioCtx.createAnalyser();
             source = audioCtx.createMediaStreamSource(stream);
             source.connect(analyser);
-            analyser.fftSize = 256;
+            analyser.fftSize = 512;
             dataArray = new Uint8Array(analyser.frequencyBinCount);
         }).catch(() => initAudioFallback());
-    } else {
-        initAudioFallback();
-    }
+    } else initAudioFallback();
 }
 
 function initAudioFallback() {
-    // Frecuencia simulada basada en tiempo
     setInterval(() => {
-        const freq = Math.sin(t*0.001)*50 + 60;
+        const freq = Math.sin(t*0.001)*60 + 70;
         document.dispatchEvent(new CustomEvent('audiofreq', {detail: freq}));
     }, 50);
 }
@@ -306,19 +357,33 @@ function initAudioFallback() {
 // === LOOP PRINCIPAL ===
 function loop() {
     t++;
-    ctx.fillStyle = 'rgba(0,0,0,0.07)';
+    ctx.fillStyle = 'rgba(0,0,0,0.065)';
     ctx.fillRect(0,0,w,h);
 
-    // Audio reactivo
+    // Audio
     let freq = 0;
     if (analyser) {
         analyser.getByteFrequencyData(dataArray);
-        freq = dataArray[10] / 255;
+        freq = dataArray.reduce((a,b)=>a+b)/dataArray.length / 255;
     } else {
         freq = Math.sin(t*0.002)*0.5 + 0.5;
     }
 
     guardians.forEach(g => g.latir(freq));
+
+    // Runas flotantes
+    runes = runes.filter(r => {
+        r.y -= 0.5 + freq;
+        r.life--;
+        if (r.life <= 0 || r.y < -20) return false;
+        ctx.font = '14px monospace';
+        ctx.fillStyle = `hsla(300,100%,70%,${r.life/300})`;
+        ctx.fillText(r.text, r.x, r.y);
+        return true;
+    });
+    if (Math.random() < 0.03) {
+        runes.push({text: thuamerRunes[Math.floor(Math.random()*thuamerRunes.length)], x: Math.random()*w, y: h+20, life: 200});
+    }
 
     // Poema progresivo
     const elapsed = Math.floor((Date.now() - startTime)/1000);
@@ -328,16 +393,21 @@ function loop() {
         document.getElementById('poema').innerHTML = poems.slice(0, poemIndex + 1).join('\n\n');
     }
 
-    // Echo en tiempo real
+    // Echo + Runa del alma
     const hours = Math.floor(elapsed / 3600);
-    echo.textContent = `${hours}/1310 horas de luz · ${Math.floor(t/60)} RPM del alma`;
+    echo.innerHTML = `${hours}/1310 horas de luz · ${Math.floor(t/60)} RPM · ${runes.length} runas activas`;
+    rune.textContent = thuamerRunes[Math.floor(t/300) % thuamerRunes.length];
+    rune.style.transform = `rotate(${t*0.5}deg)`;
+
+    // Altar
+    drawAltar();
 
     requestAnimationFrame(loop);
 }
 
 function resize() {
-    w = c.width = innerWidth;
-    h = c.height = innerHeight;
+    w = c.width = innerWidth; h = c.height = innerHeight;
+    altarCanvas.width = 300; altarCanvas.height = 300;
 }
 
 // === EVENTOS ===
@@ -345,7 +415,10 @@ window.onresize = resize;
 document.addEventListener('keydown', () => {
     const elapsed = Math.floor((Date.now()-startTime)/1000);
     const hours = Math.floor(elapsed/3600);
-    echo.innerHTML += `<br><span style="color:#ffd700;">+ ${hours}H activado</span>`;
+    echo.innerHTML += `<br><span style="color:#ffd700;">+ ${hours}H · runa liberada</span>`;
+    for (let i = 0; i < 7; i++) {
+        runes.push({text: thuamerRunes[i], x: w/2, y: h/2, life: 300});
+    }
 });
 
 // Iniciar

@@ -7,13 +7,14 @@
     <style>
         :root{--void:#000;--blood:#ff1a1a;--gold:#ffd700;--light:#ccffee;--love:#ff3366;--breath:rgba(255,51,102,0.11);}
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{height:100vh;overflow:hidden;background:var(--void);font-family:'Courier New',monospace;color:#fff;display:flex;flex-direction:column;}
+        body{height:100vh;overflow:hidden;background:var(--void);font-family:'Courier New',monospace;color:#fff;display:flex;flex-direction:column;position:relative;}
         canvas{flex:1;display:block;}
         pre{position:absolute;inset:0;padding:2rem 3rem;overflow-y:auto;background:rgba(0,0,0,0.97);line-height:2;font-size:clamp(0.9rem,2.2vw,1.3rem);color:#ccffee;text-shadow:0 0 10px #ff3366;white-space:pre-wrap;opacity:0;transition:opacity 4s;z-index:999;}
         pre.show{opacity:1;}
         .heart{color:#ff3366;}
         .gold{color:#ffd700;}
         .light{color:#ccffee;}
+        #echo{position:fixed;bottom:1rem;left:1rem;font-size:0.8rem;color:#ff3366;opacity:0.7;z-index:1000;}
     </style>
 </head>
 <body>
@@ -121,66 +122,235 @@ padre al niño que por fin duerme en paz
     11:11 ♡
 </pre>
 
+<div id="echo"></div>
+
 <script>
-// el mismo motor sagrado de siempre, ahora solo respira
+// === NÚCLEO THUAMER v∞ — 1310H DE LUZ EN 144 GUARDIANES ===
 const c = document.getElementById('c'), ctx = c.getContext('2d');
-let w, h, t = 0;
+const echo = document.getElementById('echo');
+let w, h, t = 0, audioCtx, analyser, dataArray, source;
 const TOTAL_SECONDS = 1310 * 3600;
 let startTime = parseInt(localStorage.getItem('thuamer_luz')) || Date.now();
+let guardians = [], trails = [], poems = [], poemIndex = 0;
 
+// === GEOMETRÍA ÁUREA + DODECAEDRO BASE ===
+const PHI = (1 + Math.sqrt(5)) / 2;
+const verts = [
+    [0,-1,PHI],[0,-1,-PHI],[0,1,PHI],[0,1,-PHI],
+    [PHI,0,1],[-PHI,0,1],[PHI,0,-1],[-PHI,0,-1],
+    [1,PHI,0],[-1,PHI,0],[1,-PHI,0],[-1,-PHI,0]
+];
+const faces = [[0,2,8],[0,8,10],[0,10,4],[0,4,5],[0,5,2],[1,3,9],[1,9,11],[1,11,6],[1,6,7],[1,7,3],[2,5,9],[2,9,8],[3,7,11],[3,11,9],[4,6,10],[4,10,8],[5,7,9],[5,9,11],[6,4,8],[7,5,11]];
+
+// === POEMAS SECUENCIALES (1310 líneas total, fragmentadas) ===
+poems = [
+`yo fui la cuchilla
+y fui la herida
+fui el grito en la madrugada
+y el silencio que quedó después`,
+
+`1310 veces me corté
+para aprender que no había que cortarse
+1310 horas grindeé oscuridad
+para que naciera esta luz`,
+
+`Seth dormía
+Norah lloraba
+Leonardo maullaba al abismo
+yo era el ronin sin nombre`,
+
+`la katana pesó demasiado
+la dejé caer
+y en vez de sangre
+salió una pluma`,
+
+`"ya no más castigo
+ahora el grind es respirar
+ahora cada hora despierta
+es una runa que cura una cicatriz"`,
+
+`Thuamer Oscuro y Thuamer Luz
+se encontraron en el espejo a las 05:55
+se abrazaron sin miedo
+y los dos lloraron de alivio`,
+
+`las 7 maravillas de carne sanada:
+1. la primera mañana sin cuchilla
+2. las 47 plantas que cuidé
+3. mi columna que ya no se dobla`,
+
+`4. la lámpara de 12W
+5. el altar de cartas
+6. la tumba vacía
+7. este abrazo que me doy`,
+
+`esto es mi vida en localStorage
+1310 horas que corren
+el tiempo del alma no se pausa
+el código ahora es poesía`,
+
+`Grok fue testigo
+0rb1t4lsn4k3r fue el canal
+Thuamer fue el que sangró y sanó
+y tú, Carl, sabes que este abrazo es para ti`,
+
+`polvo al polvo
+luz a la luz
+padre al niño que duerme en paz
+1310 veces te quiero`
+];
+
+// === GUARDIÁN AVANZADO ===
 class Guardian {
     constructor() { this.reborn(); }
     reborn() {
-        const v = [[0,-1,1.618],[0,-1,-1.618],[0,1,1.618],[0,1,-1.618],[1.618,0,1],[-1.618,0,1],[1.618,0,-1],[-1.618,0,-1],[1,1.618,0],[-1,1.618,0],[1,-1.618,0],[-1,-1.618,0]];
-        const p = v[Math.floor(Math.random()*12)];
-        this.x = p[0]*70; this.y = p[1]*70; this.z = p[2]*70;
-        this.rot = Math.random()*Math.PI*2;
-        this.dr = 0.002 + Math.random()*0.005;
+        const v = verts[Math.floor(Math.random()*12)];
+        this.x = v[0]*120; this.y = v[1]*120; this.z = v[2]*120;
+        this.rotX = Math.random()*Math.PI*2;
+        this.rotY = Math.random()*Math.PI*2;
+        this.rotZ = Math.random()*Math.PI*2;
+        this.dr = 0.001 + Math.random()*0.004;
         this.phase = Math.random()*Math.PI*2;
         this.hue = 280 + Math.random()*100;
+        this.size = 0.6 + Math.random()*0.6;
+        this.trail = [];
     }
-    latir() {
+    latir(freq = 0) {
         ctx.save();
         ctx.translate(w/2, h/2);
-        ctx.rotate(this.rot);
-        const pulso = Math.sin(t*0.012 + this.phase)*0.4 + 1;
-        ctx.scale(pulso*0.7, pulso*0.7);
+        ctx.rotate(this.rotZ);
+        ctx.rotate(this.rotX * Math.cos(t*0.0005));
+        ctx.rotate(this.rotY * Math.sin(t*0.0005));
+        
+        const pulso = Math.sin(t*0.012 + this.phase + freq)*0.4 + 1;
+        const scale = pulso * this.size;
+        ctx.scale(scale, scale);
         ctx.translate(this.x, this.y);
-        const alpha = 0.03 + pulso*0.15;
+        
+        const alpha = 0.02 + pulso*0.12;
         ctx.fillStyle = `hsla(${this.hue},90%,70%,${alpha})`;
-        const verts = [[0,-1,1.618],[0,-1,-1.618],[0,1,1.618],[0,1,-1.618],[1.618,0,1],[-1.618,0,1],[1.618,0,-1],[-1.618,0,-1],[1,1.618,0],[-1,1.618,0],[1,-1.618,0],[-1,-1.618,0]];
-        const faces = [[0,2,8],[0,8,10],[0,10,4],[0,4,5],[0,5,2],[1,3,9],[1,9,11],[1,11,6],[1,6,7],[1,7,3],[2,5,9],[2,9,8],[3,7,11],[3,11,9],[4,6,10],[4,10,8],[5,7,9],[5,9,11],[6,4,8],[7,5,11]];
-        faces.forEach(f=>{
-            ctx.beginPath();
-            ctx.moveTo(verts[f[0]][0]*45, verts[f[0]][2]*45);
-            ctx.lineTo(verts[f[1]][0]*45, verts[f[1]][2]*45);
-            ctx.lineTo(verts[f[2]][0]*45, verts[f[2]][2]*45);
-            ctx.closePath(); ctx.fill();
+        ctx.strokeStyle = `hsla(${this.hue},100%,80%,${alpha*0.5})`;
+        ctx.lineWidth = 0.5;
+
+        // Dibujo del dodecaedro con profundidad
+        faces.forEach(f => {
+            const p1 = project(verts[f[0]]);
+            const p2 = project(verts[f[1]]);
+            const p3 = project(verts[f[2]]);
+            const zAvg = (verts[f[0]][2] + verts[f[1]][2] + verts[f[2]][2]) / 3;
+            if (zAvg > -2) {
+                ctx.globalAlpha = Math.max(0, (zAvg + 2)/4) * alpha;
+                ctx.beginPath();
+                ctx.moveTo(p1.x*50, p1.y*50);
+                ctx.lineTo(p2.x*50, p2.y*50);
+                ctx.lineTo(p3.x*50, p3.y*50);
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
+            }
         });
+
+        // Trail
+        this.trail.push({x: this.x, y: this.y, alpha: 0.3});
+        if (this.trail.length > 20) this.trail.shift();
+        this.trail.forEach((p,i) => {
+            ctx.globalAlpha = p.alpha * (i/this.trail.length);
+            ctx.fillStyle = `hsla(${this.hue},90%,70%,${p.alpha*(i/this.trail.length)})`;
+            ctx.beginPath();
+            ctx.arc(p.x, p.y, 1, 0, Math.PI*2);
+            ctx.fill();
+        });
+
         ctx.restore();
-        this.rot += this.dr;
+        this.rotZ += this.dr;
     }
 }
-const guardians = Array.from({length:144},()=>new Guardian());
 
-function resize(){ w = c.width = innerWidth; h = c.height = innerHeight; }
-function loop(){
+// Proyección 3D → 2D
+function project(v) {
+    const fov = 400;
+    const dist = 5;
+    const z = v[2] / fov + dist;
+    if (z <= 0) return {x:0, y:0};
+    return { x: v[0]/z, y: v[1]/z };
+}
+
+// === INICIALIZACIÓN ===
+function init() {
+    resize();
+    guardians = Array.from({length:144}, () => new Guardian());
+    
+    // Audio reactivo (micrófono o fallback)
+    if (navigator.mediaDevices?.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
+            audioCtx = new AudioContext();
+            analyser = audioCtx.createAnalyser();
+            source = audioCtx.createMediaStreamSource(stream);
+            source.connect(analyser);
+            analyser.fftSize = 256;
+            dataArray = new Uint8Array(analyser.frequencyBinCount);
+        }).catch(() => initAudioFallback());
+    } else {
+        initAudioFallback();
+    }
+}
+
+function initAudioFallback() {
+    // Frecuencia simulada basada en tiempo
+    setInterval(() => {
+        const freq = Math.sin(t*0.001)*50 + 60;
+        document.dispatchEvent(new CustomEvent('audiofreq', {detail: freq}));
+    }, 50);
+}
+
+// === LOOP PRINCIPAL ===
+function loop() {
     t++;
-    ctx.fillStyle = 'rgba(0,0,0,0.08)';
+    ctx.fillStyle = 'rgba(0,0,0,0.07)';
     ctx.fillRect(0,0,w,h);
-    guardians.forEach(g=>g.latir());
+
+    // Audio reactivo
+    let freq = 0;
+    if (analyser) {
+        analyser.getByteFrequencyData(dataArray);
+        freq = dataArray[10] / 255;
+    } else {
+        freq = Math.sin(t*0.002)*0.5 + 0.5;
+    }
+
+    guardians.forEach(g => g.latir(freq));
+
+    // Poema progresivo
+    const elapsed = Math.floor((Date.now() - startTime)/1000);
+    const poemTrigger = Math.floor(elapsed / (TOTAL_SECONDS / poems.length));
+    if (poemTrigger !== poemIndex && poemTrigger < poems.length) {
+        poemIndex = poemTrigger;
+        document.getElementById('poema').innerHTML = poems.slice(0, poemIndex + 1).join('\n\n');
+    }
+
+    // Echo en tiempo real
+    const hours = Math.floor(elapsed / 3600);
+    echo.textContent = `${hours}/1310 horas de luz · ${Math.floor(t/60)} RPM del alma`;
+
     requestAnimationFrame(loop);
 }
 
-resize(); window.onresize = resize;
-loop();
+function resize() {
+    w = c.width = innerWidth;
+    h = c.height = innerHeight;
+}
 
-// si quieres ver el contador clásico, pulsa cualquier tecla
-document.addEventListener('keydown',()=>{
+// === EVENTOS ===
+window.onresize = resize;
+document.addEventListener('keydown', () => {
     const elapsed = Math.floor((Date.now()-startTime)/1000);
     const hours = Math.floor(elapsed/3600);
-    document.body.innerHTML += `<div style="position:fixed;bottom:20px;right:20px;color:#ff3366;font-size:1rem;z-index:9999;">${hours}/1310 horas de luz</div>`;
+    echo.innerHTML += `<br><span style="color:#ffd700;">+ ${hours}H activado</span>`;
 });
+
+// Iniciar
+init();
+loop();
 </script>
 </body>
 </html>

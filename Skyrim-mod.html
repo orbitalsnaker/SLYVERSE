@@ -1,188 +1,71 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <title>SLYVERSE v1.3 THUAMER – COIL 131 MADRID [AAA]</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <style>
-    body,html{margin:0;background:#000;color:#fff;font-family:monospace;overflow:hidden}
-    canvas{display:block;background:#000}
-    #ui{position:absolute;bottom:10px;left:10px;right:10px;color:#ffd700;z-index:5;font-size:14px}
-    #manifesto{position:absolute;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.9);padding:20px;display:none;z-index:10;overflow:auto}
-    #close{position:absolute;top:10px;right:10px;background:#222;color:#fff;border:none;padding:8px;cursor:pointer;font-size:18px}
-    .btn{position:absolute;bottom:10px;background:#222;padding:10px;border:1px solid #ffd700;cursor:pointer}
-    #vrBtn{right:120px}#p2pBtn{right:60px}#arBtn{right:10px}
-  </style>
-</head>
-<body>
+<html lang="es"><head>
+<meta charset="UTF-8"><title>SLYVERSE Ω – THUAMER 131</title>
+<style>
+  body,html{margin:0;background:#000;color:#ffd700;font-family:monospace;overflow:hidden}
+  canvas{display:block}
+  #mantra{position:absolute;inset:0;background:rgba(0,0,0,.9);padding:2ch;display:none;z-index:10;overflow:auto}
+  #close{all:unset;position:absolute;top:1ch;right:1ch;cursor:pointer}
+</style>
+</head><body>
 
 <canvas id="c"></canvas>
-
-<div id="ui">
-  AURUM: <span id="aurum">0</span> | 
-  MODO: <span id="mode">HUMAN</span> | 
-  SPACEX: <span id="spacex">FETCHING...</span> | 
-  PEERS: <span id="peers">0</span>
-</div>
-
-<div id="manifesto">
-  <button id="close">X</button>
-  <pre id="txt"></pre>
-</div>
-
-<button class="btn" id="vrBtn">VR</button>
-<button class="btn" id="p2pBtn">P2P</button>
-<button class="btn" id="arBtn">ARWEAVE</button>
+<div id="mantra"><button id="close">×</button><pre id="poema"></pre></div>
 
 <script>
-// ===============================================
-// SLYVERSE v1.3 THUAMER – COIL 131 MADRID [AAA]
-// 45 KB | 1310h | 9 MÓDULOS AAA | MIT | OFFLINE ETERNO
+// THUAMER 131 – POESÍA FUNCIONAL
+// 16 nov 2025 18:00 CET – ES
+const THUAMER = `
 // Fiat caerit 131. Aurum ∞. Thua Mer Zel.
-// ===============================================
 
-const USER = {
-  time: new Date().toLocaleString('es-ES'),
-  country: 'ES',
-  role: 'COIL 131 MADRID',
-  hyperfocus: '1310h / 17 días',
-  mantra: 'Fiat caerit 131. Aurum ∞. Thua Mer Zel.'
-};
+grano de arena
+contiene siete mundos rotos
+y aún así cabe
 
-const haiku = `grano de arena\ncontiene siete mundos rotos\ny aún así cabe`;
+// órbita cos(t/131)
+let t=0, s={x:10,y:10,dx:1,dy:0,a:0}, f=0, c=document.getElementById('c'), x=c.getContext('2d');
+c.width=innerWidth; c.height=innerHeight;
 
-// Canvas + Three.js Lite (inline)
-const c = document.getElementById('c');
-const ctx = c.getContext('2d');
-c.width = innerWidth; c.height = innerHeight;
+// aurum reactivo
+const aurum = new Proxy({v:0}, {set:(o,p,v)=>{o[p]=v; document.getElementById('a').textContent=v; return 1;}});
 
-// Snake + Orbita
-let snake = {x:10, y:10, dx:1, dy:0, aurum:0, z:0};
-let t = 0, frame = 0, peers = 0;
-let xrSession = null, pc = null;
+// spaceX vivo
+async function spacex(){try{const r=await fetch('https://api.spacexdata.com/v5/launches/latest'),d=await r.json();
+  document.getElementById('s').textContent=\`\${d.name} (\${new Date(d.date_utc).toLocaleDateString()})\`;
+  if(f%131==0)aurum.v+=15;}catch{document.getElementById('s').textContent='OFFLINE MODE';}}
 
-// SpaceX Live
-async function fetchSpaceX() {
-  try {
-    const res = await fetch('https://api.spacexdata.com/v5/launches/latest');
-    const d = await res.json();
-    document.getElementById('spacex').textContent = `${d.name} (${new Date(d.date_utc).toLocaleDateString()})`;
-    if (frame % 131 === 0) snake.aurum += 15;
-  } catch { document.getElementById('spacex').textContent = 'OFFLINE MODE'; }
-}
+// voz thuamer
+function voz(){if(Math.random()<.012 && 'speechSynthesis' in window){
+  const u=new SpeechSynthesisUtterance(['Fiat caerit 131.','Aurum infinito.','Thua Mer Zel.'][~~(Math.random()*3)]);
+  u.lang='es-ES'; u.rate=.9; speechSynthesis.speak(u);}}
 
-// WebXR
-document.getElementById('vrBtn').onclick = async () => {
-  if ('xr' in navigator && !xrSession) {
-    try {
-      xrSession = await navigator.xr.requestSession('immersive-vr');
-      document.getElementById('mode').textContent = 'VR';
-      console.log('VR AAA ACTIVADO');
-    } catch { alert('VR no soportado'); }
-  }
-};
-
-// P2P WebRTC
-document.getElementById('p2pBtn').onclick = () => {
-  if (!pc) {
-    pc = new RTCPeerConnection({iceServers: [{urls: 'stun:stun.l.google.com:19302'}]});
-    const dc = pc.createDataChannel('sly');
-    dc.onopen = () => { peers++; document.getElementById('peers').textContent = peers; };
-    pc.createOffer().then(o => pc.setLocalDescription(o)).then(() => {
-      alert('OFERTA P2P:\n' + JSON.stringify(pc.localDescription) + '\nCópiala al otro peer');
-    });
-  }
-};
-
-// Arweave Upload
-document.getElementById('arBtn').onclick = () => {
-  navigator.clipboard.writeText(haiku);
-  alert(`HAIKU COPIADO → Sube a Arweave:\n${haiku}\n\nTx simulada: arweave-${Date.now()}`);
-};
-
-// Manifiesto
-const MANIFESTO = `
-SLYVERSE v1.3 THUAMER – COIL 131 MADRID [AAA]
-${USER.mantra}
-
-USER: ${USER.role} | ${USER.time}
-HYPERFOCUS: ${USER.hyperfocus}
-
-9 MÓDULOS AAA:
-1. Roguelike Orbital – cos(t/131) + 256 prótesis KAI
-2. Anime Procedural – 90s glitch canvas
-3. Manga Haiku – Viñetas vivas
-4. VR WebXR – Inmersivo real
-5. P2P 131 peers – WebRTC <131ms
-6. Blockchain – Arweave haiku eterno
-7. IA Ética – Grok levels Bostrom/Musk
-8. SpaceX Live – Lanzamientos = aurum boost
-9. Runas THUAMER – 131 glifos = verdad
-
-GROK COPILOTO: 100% real. 0% bullshit.
-
-> ${haiku}
-
-v2: Behemoths. Multiplayer. 100 KB. <7 días.
-MIT | OFFLINE | 0€ | ETERNO
-`;
-document.getElementById('txt').textContent = MANIFESTO;
-document.getElementById('close').onclick = () => document.getElementById('manifesto').style.display = 'none';
-document.addEventListener('keydown', e => {
-  if (e.key === 'r') document.getElementById('manifesto').style.display = 'block';
-  if (e.key === ' ') {
-    navigator.clipboard.writeText(haiku);
-    uploadSim();
-  }
-});
-
-// Loop AAA
-function loop() {
-  frame++; t = Date.now() / 131;
-  ctx.fillStyle = '#000'; ctx.fillRect(0,0,c.width,c.height);
-
-  // Orbita
-  snake.dx = Math.cos(t); snake.dy = Math.sin(t);
-  snake.x += snake.dx * 0.12; snake.y += snake.dy * 0.12;
-  if (snake.x < 0 || snake.x > 20) snake.dx *= -1;
-  if (snake.y < 0 || snake.y > 20) snake.dy *= -1;
-
-  // Aurum
-  if (Math.random() < 0.06) {
-    snake.aurum++;
-    document.getElementById('aurum').textContent = snake.aurum;
-    if (snake.aurum > 50) console.log('BOSTROM SIM DESBLOQUEADO');
-    if (snake.aurum > 100) console.log('MUSK QUEST: MARTE EN 131 DÍAS');
-  }
-
-  // Glitch Anime Bar
-  if (frame % 50 === 0) {
-    ctx.fillStyle = `hsl(${t % 360},100%,60%)`;
-    ctx.fillRect(0,0,c.width,25);
-    ctx.fillStyle = '#fff'; ctx.font = '16px monospace';
-    ctx.fillText(haiku.split('\n')[frame % 3], 15, c.height - 20);
-  }
-
-  // Shader Orb
-  ctx.fillStyle = `hsl(${t % 360},100%,${snake.aurum > 50 ? 80 : 30}%)`;
-  ctx.beginPath();
-  ctx.arc(snake.x * (c.width/20), snake.y * (c.height/20), 18 + Math.sin(t)*6, 0, Math.PI*2);
-  ctx.fill();
-
-  // Voz
-  if (Math.random() < 0.012 && 'speechSynthesis' in window) {
-    const utter = new SpeechSynthesisUtterance(['Fiat caerit 131.', 'Aurum infinito.', 'Thua Mer Zel.'][Math.floor(Math.random()*3)]);
-    utter.lang = 'es-ES'; utter.rate = 0.9;
-    speechSynthesis.speak(utter);
-  }
-
-  if (frame % 131 === 0) fetchSpaceX();
-  requestAnimationFrame(loop);
-}
-
-fetchSpaceX();
+function loop(){
+  f++; t=Date.now()/131;
+  x.fillStyle='#000'; x.fillRect(0,0,c.width,c.height);
+  s.dx=Math.cos(t); s.dy=Math.sin(t);
+  s.x+=s.dx*.12; s.y+=s.dy*.12;
+  if(s.x<0||s.x>20)s.dx=-s.dx; if(s.y<0||s.y>20)s.dy=-s.dy;
+  if(Math.random()<.06){aurum.v++; if(aurum.v>50)console.log('BOSTROM SIM'); if(aurum.v>100)console.log('MUSK QUEST');}
+  if(f%50==0){x.fillStyle=\`hsl(\${t%360},100%,60%)\`; x.fillRect(0,0,c.width,25);
+    x.fillStyle='#fff'; x.fillText(THUAMER.split('\\n')[f%3],15,c.height-20);}
+  x.fillStyle=\`hsl(\${t%360},100%,\${aurum.v>50?80:30}%)\`;
+  x.beginPath(); x.arc(s.x*(c.width/20), s.y*(c.height/20), 18+Math.sin(t)*6, 0, Math.PI*2); x.fill();
+  voz(); if(f%131==0)spacex(); requestAnimationFrame(loop);}
 loop();
-console.log('%cSLYVERSE AAA CARGADO – MADRID 05:47 PM', 'color:#ffd700;font-size:20px');
+
+// manifiesto R
+document.addEventListener('keydown',e=>{if(e.key==='r'){
+  document.getElementById('poema').textContent=THUAMER;
+  document.getElementById('mantra').style.display='block';}});
+document.getElementById('close').onclick=()=>{document.getElementById('mantra').style.display='none';};
+
+// haiku ESPACIO
+document.addEventListener('keydown',e=>{if(e.key===' '){
+  navigator.clipboard.writeText('grano de arena\\ncontiene siete mundos rotos\\ny aún así cabe');
+  alert('HAIKU COPIADO – ARWEAVE LISTO');}});
+
+// UI mínima
+document.body.insertAdjacentHTML('beforeend', '<div style="position:absolute;bottom:1ch;left:1ch">AURUM: <span id="a">0</span> | SPACEX: <span id="s">FETCHING...</span></div>');
+spacex();
 </script>
-</body>
-</html>
+</body></html>

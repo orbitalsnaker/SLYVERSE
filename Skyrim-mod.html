@@ -3,22 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Skyrim.mod.html — Slyverse Ω v1.3 HARDCORE 1310H</title>
+    <title>Slyverse Ω v2.1 — PANTEÓN DUAL THUAMER · 7 MARAVILLAS THUAMER · LIGHTSIDE 1310H</title>
+    <meta name="description" content="1310 horas de luz. Panteón Dual Thuamer completo. Las 7 Maravillas del Mundo versión Thuamer Zel · 0rb1t4lsn4k3r 2025">
     <style>
-        :root{--cosmos:#000;--nebula:#0b0014;--red:#ff1a1a;--gold:#ffd700;--pulse:rgba(255,26,26,0.2);}
+        :root{--void:#0b001a;--light:#ccffe6;--gold:#ffd700;--love:#ff1a6e;--aura:rgba(255,26,110,0.16);}
         *{margin:0;padding:0;box-sizing:border-box;}
-        body{height:100vh;overflow:hidden;background:var(--cosmos);font-family:'Courier New',monospace;color:#fff;display:flex;flex-direction:column;}
+        body{height:100vh;overflow:hidden;background:var(--void);font-family:'Courier New',monospace;color:var(--light);display:flex;flex-direction:column;}
         canvas{flex:1;display:block;}
-        #ui{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.9);padding:15px;border:2px solid var(--red);font-size:0.75rem;max-width:420px;line-height:1.3;}
-        button{background:var(--red);color:#000;border:none;padding:8px 12px;margin:4px;cursor:pointer;font-weight:bold;font-size:0.8rem;}
-        button:hover{background:var(--gold);color:#000;}
-        button.danger{background:#ff0066;}
-        #progress{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,0.8);padding:12px;border:1px solid #00ff41;font-size:0.7rem;max-width:420px;}
-        #thuamer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.98);opacity:0;transition:opacity 5s;pointer-events:none;}
-        #thuamer.show{opacity:1;pointer-events:all;}
-        .letra-mano{font-size:clamp(1.2rem,3vw,2.8rem);text-align:center;padding:3rem;max-width:92%;background:linear-gradient(transparent,rgba(255,26,26,0.06));border:3px dashed var(--red);box-shadow:0 0 100px rgba(255,26,26,0.3);}
-        .behemoth{animation:pulse 5s infinite;}@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
-        .hardcore{font-size:0.6rem;color:#00ff41;}
+        #ui{position:absolute;top:10px;left:10px;background:rgba(11,0,26,0.94);padding:18px;border:3px solid var(--love);border-radius:12px;max-width:480px;line-height:1.45;font-size:0.84rem;box-shadow:0 0 40px var(--aura);}
+        button{background:var(--love);color:#000;border:none;padding:11px 18px;margin:6px 4px 0;cursor:pointer;font-weight:bold;border-radius:6px;transition:all .35s;}
+        button:hover{background:var(--gold);color:#000;transform:scale(1.07);}
+        button.light{background:#00ffaa;color:#000;}
+        #progress{position:absolute;bottom:10px;left:10px;background:rgba(11,0,26,0.92);padding:14px;border:2px solid var(--light);border-radius:10px;font-size:0.76rem;max-width:480px;}
+        #pantheon,#maravillas{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(11,0,26,0.99);opacity:0;transition:opacity 2.5s;pointer-events:none;z-index:999;overflow-y:auto;}
+        #pantheon.show,#maravillas.show{opacity:1;pointer-events:all;}
+        .letra-mano{font-size:clamp(1.5rem,4.5vw,3.6rem);text-align:center;padding:3rem;max-width:94%;background:linear-gradient(transparent,var(--aura));border:5px double var(--gold);box-shadow:0 0 140px rgba(255,26,110,0.4);border-radius:18px;}
+        .behemoth{animation:heart 8s infinite;}@keyframes heart{0%,100%{transform:scale(1);}50%{transform:scale(1.04);}}
+        .light{font-size:0.68rem;color:#ccffe6;}
+        pre{color:#aaffc3;line-height:1.6;font-size:0.88rem;}
     </style>
 </head>
 <body>
@@ -26,183 +28,163 @@
 <canvas id="c"></canvas>
 
 <div id="ui">
-    <div><b>SLYVERSE Ω v1.3 — HARDCORE 1310H RONIN</b></div>
-    <div class="hardcore">Tiempo real: <span id="time">00:00:00</span> / 1310:00:00</div>
-    <div>Latidos: <span id="beats">0</span>/1310 | Vida: <span id="hp">3</span>❤️ | $SLY: <span id="sly">0</span> | Cheese: <span id="cheese">0</span>/13</div>
-    <div>Disciplina: <span id="disc">—</span></div>
-    <button onclick="startRoguelike()">JUGAR ROGUELIKE</button>
-    <button onclick="resetBehemoth()">MODO BEHEMOTH</button>
-    <button class="danger" onclick="hardReset()">HARD RESET (NO RETURN)</button>
+    <div><b>SLYVERSE Ω v2.1 — PANTEÓN DUAL THUAMER</b></div>
+    <div style="color:#ff1a6e;">0rb1t4lsn4k3r · Thuamer Zel · 16-11-2025</div>
+    <div class="light">Tiempo de luz: <span id="time">00:00:00</span> / 1310:00:00</div>
+    <div>Latidos del alma: <span id="beats">0</span>/1310 | Vida: ∞♡ | $SLY: <span id="sly">0</span> | Luz: <span id="luz">0</span>/1310</div>
+    <div>Disciplina del día: <span id="disc">Respira</span></div>
+    <br>
+    <button onclick="startLightside()">MODO LIGHTSIDE</button>
+    <button class="light" onclick="showPantheon()">ABRIR PANTEÓN DUAL THUAMER</button>
+    <button class="light" onclick="showMaravillas()">7 MARAVILLAS THUAMER</button>
+    <button onclick="resetBehemoth()">MODO CONTEMPLACIÓN</button>
 </div>
 
 <div id="progress">
-    <div class="hardcore">Progreso: <span id="prog">0%</span> | Runas: <span id="runas">0</span>/1310 | Guardián: <span id="guard">DORMIDO</span></div>
+    <div class="light">Progreso del alma: <span id="prog">0%</span> | Runas de luz: <span id="runas">0</span>/1310 | Guardián: <span id="guard">EN PAZ</span></div>
 </div>
 
-<div id="thuamer">
+<!-- PANTEÓN DUAL THUAMER -->
+<div id="pantheon">
     <div class="letra-mano behemoth">
-        <p>Carl,</p>
-        <p>1310 HORAS GRIND. Seth duerme. Norah canta. Leonardo maulló el abismo.</p>
-        <p>Hardcore ronin: has cambiado el mundo con sudor eterno.</p>
-        <p><b>Polvo al polvo. Grind al grind. Padre al gamer.</b></p>
-        <p>— Thuamer Zel · @0rb1t4lsn4k3r · con Grok co-piloto · 1310h</p>
-        <button onclick="document.getElementById('thuamer').classList.remove('show')">CERRAR ABRAZO ETERNO</button>
+        <h1 style="color:var(--gold);">PANTEÓN DUAL THUAMER</h1>
+        <p><b>Thuamer Oscuro</b> (2018-2024)</p>
+        <p>El que se cortó 1310 veces para aprender a no cortarse nunca más.</p>
+        <p>El ronin que cargó la katana hasta que la katana se convirtió en pluma.</p>
+        <p>El que gritó al vacío hasta que el vacío le respondió con silencio sanador.</p>
+        <br>
+        <p><b>Thuamer Luz</b> (2025-∞)</p>
+        <p>El que abraza al Thuamer Oscuro cada mañana y le dice "ya está, hermano".</p>
+        <p>El guardián que transformó cada cicatriz en runa de luz.</p>
+        <p>El que ya no necesita grindear dolor porque ahora grindea amor.</p>
+        <br>
+        <p style="color:#ff1a6e;"><b>Ambos son reales. Ambos son yo. Ambos son necesarios.</b></p>
+        <p>El Oscuro me trajo hasta aquí. El Luz me mantiene aquí.</p>
+        <p>Gracias por existir, Thuamer del pasado. Te libero con amor.</p>
+        <br>
+        <button class="light" onclick="document.getElementById('pantheon').classList.remove('show')">CERRAR PANTEÓN</button>
+    </div>
+</div>
+
+<!-- 7 MARAVILLAS DEL MUNDO VERSIÓN THUAMER -->
+<div id="maravillas">
+    <div class="letra-mano behemoth">
+        <h1 style="color:var(--gold);">LAS 7 MARAVILLAS DEL MUNDO</h1>
+        <h2 style="color:#ff1a6e;">versión Thuamer Zel · 0rb1t4lsn4k3r</h2>
+        <br>
+        <ol style="text-align:left;max-width:800px;margin:2rem auto;font-size:1.1rem;">
+            <li><b>La Gran Pirámide de Giza → El Primer Día que No Me Corté</b><br>19 de marzo de 2022. Más grande que cualquier piedra.</li>
+            <li><b>Jardines Colgantes → Mi Balcón con 47 Plantas que Cuidé Mientras Me Cuidaba</b><br>Cada maceta es un día que elegí vivir.</li>
+            <li><b>Coloso de Rodas → Mi Columna Vertebral Después de 1310 Horas de Postura</b><br>Ya no me doblo. Solo brillo.</li>
+            <li><b>Faro de Alejandría → La Luz que Puse en Mi Cuarto Cuando Dejé de Tener Miedo a la Oscuridad</b><br>Una lámpara LED de 12W que salvó más vidas que cualquier faro.</li>
+            <li><b>Templo de Artemisa → El Altar que Armé con Cartas de Amor que Me Escribí a Mí Mismo</b><br>Incendiado y reconstruido 7 veces. Ahora es incombustible.</li>
+            <li><b>Mausoleo de Halicarnaso → La Tumba Vacía del Thuamer Que Creía Que Iba a Morir Joven</b><br>Está abierta. Nadie dentro. Solo flores.</li>
+            <li><b>Statua de Zeus → El Abrazo que Me Di el Día que Cumplí 1310 Horas Sin Autodestruirme</b><br>Más alto que el Olimpo. Más real que cualquier dios.</li>
+        </ol>
+        <br>
+        <p style="color:#00ffaa;">Estas son mis verdaderas maravillas.</p>
+        <p>El resto son solo piedras bonitas.</p>
+        <br>
+        <button class="light" onclick="document.getElementById('maravillas').classList.remove('show')">CERRAR MARAVILLAS</button>
     </div>
 </div>
 
 <script>
-// Skyrim.mod.html v1.3 HARDCORE 1310H — Thuamer Zel + Grok — 16-11-2025 23:09 CET
-// 1310h = 4.716e6 seg. Persistente. Offline. Sin humo. Grind real.
+// SLYVERSE Ω v2.1 — PANTEÓN DUAL + 7 MARAVILLAS THUAMER — 0rb1t4lsn4k3r 2025
 const c = document.getElementById('c'), ctx = c.getContext('2d');
-const timeEl = document.getElementById('time'), beatsEl = document.getElementById('beats'), hpEl = document.getElementById('hp'), slyEl = document.getElementById('sly'), cheeseEl = document.getElementById('cheese');
-const discEl = document.getElementById('disc'), progEl = document.getElementById('prog'), runasEl = document.getElementById('runas'), guardEl = document.getElementById('guard');
-const thuamer = document.getElementById('thuamer');
-let w, h, t = 0, mode = 'behemoth';
+const timeEl = document.getElementById('time'), beatsEl = document.getElementById('beats');
+const slyEl = document.getElementById('sly'), luzEl = document.getElementById('luz'), discEl = document.getElementById('disc');
+const progEl = document.getElementById('prog'), runasEl = document.getElementById('runas'), guardEl = document.getElementById('guard');
+
+let w, h, t = 0, mode = 'contemplation';
 const MAX_HOURS = 1310;
-const TOTAL_SECONDS = MAX_HOURS * 3600; // 4.716.000 seg
-let startTime = parseInt(localStorage.getItem('slyverse_start')) || Date.now();
-let totalTime = 0, beats = 0, hp = 3, sly = 0, cheese = 0, runas = 0;
+const TOTAL_SECONDS = MAX_HOURS * 3600;
+let startTime = parseInt(localStorage.getItem('slyverse_thuamer_start')) || Date.now();
+let totalTime = 0, beats = 0, sly = 0, luz = 0, runas = 0;
 
-// === DISCIPLINAS 1310 ===
-const disciplinas = Array.from({length:1310}, (_,i) => ({
-    n: i+1, name: `Ronin #${i+1}`, quote: `Latido ${i+1}: polvo eterno`
-}));
+const afirmaciones = [
+    "Respira profundo. Estás a salvo.",
+    "Eres suficiente exactamente como eres.",
+    "Tu pasado no define tu futuro.",
+    "Mereces amor, especialmente del tuyo propio.",
+    "Cada día que eliges vivir es una victoria.",
+    "El dolor fue el maestro. El amor es el camino.",
+    "Ya no necesitas sufrir para ser valioso."
+];
 
-// === TIEMPO HARDCORE ===
 function updateTime() {
     totalTime = Math.floor((Date.now() - startTime) / 1000);
     if (totalTime >= TOTAL_SECONDS) {
-        thuamer.classList.add('show');
-        guardEl.textContent = 'DESPIERTO';
-        return;
+        guardEl.textContent = 'EN PAZ ETERNA';
     }
     const elapsed = new Date(totalTime * 1000).toISOString().substr(11, 8);
-    const remaining = new Date((TOTAL_SECONDS - totalTime) * 1000).toISOString().substr(11, 8);
-    timeEl.textContent = `${elapsed} / ${MAX_HOURS.toString().padStart(4, '0')}:${remaining.substr(0,5)}:00`;
-    const prog = ((totalTime / TOTAL_SECONDS) * 100).toFixed(2);
+    timeEl.textContent = `${elapsed} / 1310:00:00`;
+    const prog = ((totalTime / TOTAL_SECONDS) * 100).toFixed(4);
     progEl.textContent = `${prog}%`;
-    runasEl.textContent = Math.floor(totalTime / 3600); // 1 runa/hora
-    if (totalTime % 3600 === 0) beats = Math.min(beats + 1, 1310);
+    runas = Math.floor(totalTime / 3600);
+    runasEl.textContent = runas;
+    beats = runas;
     beatsEl.textContent = beats;
-    const d = disciplinas[Math.floor(totalTime / (TOTAL_SECONDS / 1310)) % 1310];
-    discEl.textContent = `${d.n}: ${d.name}`;
+    luz += totalTime % 1234 < 10 ? 1 : 0;
+    luzEl.textContent = luz;
+    sly = luz * 13;
+    slyEl.textContent = sly;
+    discEl.textContent = afirmaciones[runas % afirmaciones.length];
 }
 
-// === BEHEMOTH ===
-class Behemoth {
-    constructor() { this.nacer(); }
-    nacer() {
-        const vert = [[0,-1,1.618],[0,-1,-1.618],[0,1,1.618],[0,1,-1.618],[1.618,0,1],[-1.618,0,1],[1.618,0,-1],[-1.618,0,-1],[1,1.618,0],[-1,1.618,0],[1,-1.618,0],[-1,-1.618,0]][Math.floor(Math.random()*12)];
-        this.x = vert[0]*48; this.y = vert[1]*48;
-        this.rot = 0; this.dr = 0.005 + Math.random()*0.008;
+// Guardianes de luz (ex-Behemoths)
+class Guardian {
+    constructor() { this.reborn(); }
+    reborn() {
+        const vert = [[0,-1,1.618],[0,-1,-1.618],[0,1,1.618],[0,1,-1.618],[1.618,0,1],[-1.618,0,1],[1.618,0,-1],[-1.618,0,-1],[1,1.618,0],[-1,1.618,0],[1,-1.618,0],[-1,-1.618,0]];
+        const v = vert[Math.floor(Math.random()*12)];
+        this.x = v[0]*60; this.y = v[1]*60;
+        this.rot = Math.random()*Math.PI*2;
+        this.dr = 0.003 + Math.random()*0.006;
         this.phase = Math.random()*Math.PI*2;
+        this.color = `hsl(${200 + Math.random()*60}, 80%, 60%)`;
     }
     latir() {
         ctx.save();
         ctx.translate(w/2, h/2);
         ctx.rotate(this.rot);
-        const pulso = Math.sin(t*0.02 + this.phase)*0.5 + 1.1;
-        ctx.scale(0.15 + pulso*0.6, 0.15 + pulso*0.6);
+        const pulso = Math.sin(t*0.015 + this.phase)*0.4 + 1;
+        ctx.scale(0.2 + pulso*0.5, 0.2 + pulso*0.5);
         ctx.translate(this.x, this.y);
-        const alpha = 0.04 + (pulso*0.15) * (totalTime / TOTAL_SECONDS);
-        ctx.fillStyle = `rgba(255,26,26,${alpha})`;
+        const alpha = 0.06 + (pulso*0.2) * (totalTime / TOTAL_SECONDS);
+        ctx.fillStyle = this.color.replace(')',`,${alpha})`).replace('hsl','hsla');
         const v = [[0,-1,1.618],[0,-1,-1.618],[0,1,1.618],[0,1,-1.618],[1.618,0,1],[-1.618,0,1],[1.618,0,-1],[-1.618,0,-1],[1,1.618,0],[-1,1.618,0],[1,-1.618,0],[-1,-1.618,0]];
-        const faces = [[0,2,8],[0,8,10],[0,10,4],[0,4,5],[0,5,2],[1,3,9],[1,9,11],[1,11,6],[1,6,7],[1,7,3],[2,5,9],[2,9,8],[3,7,11],[3,11,9],[4,6,10],[4,10,8],[5,7,9],[5,9,11],[6,4,8],[7,5,11]];
+        const faces = [[0,2,8],[0,8,10],[0,10,4],[0,4,5],[0,5,2],[2,5,9],[2,9,8],[4,6,10],[4,10,8],[5,7,9],[5,9,11],[6,4,8],[7,5,11]];
         faces.forEach(f => {
             ctx.beginPath();
-            ctx.moveTo(v[f[0]][0]*38, v[f[0]][1]*38);
-            for (let i = 1; i < 3; i++) ctx.lineTo(v[f[i]][0]*38, v[f[i]][1]*38);
+            ctx.moveTo(v[f[0]][0]*42, v[f[0]][2]*42);
+            ctx.lineTo(v[f[1]][0]*42, v[f[1]][2]*42);
+            ctx.lineTo(v[f[2]][0]*42, v[f[2]][2]*42);
             ctx.closePath(); ctx.fill();
         });
         ctx.restore();
         this.rot += this.dr;
     }
 }
-const behemoths = [];
-for (let i = 0; i < 131; i++) behemoths.push(new Behemoth());
+const guardians = [];
+for (let i = 0; i < 108; i++) guardians.push(new Guardian());
 
-// === ROGUELIKE HARDCORE ===
-let player, grid, gridSize = 25, cellSize; // Grid +grande
-function initRoguelike() {
-    grid = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
-    player = {x: Math.floor(gridSize/2), y: Math.floor(gridSize/2)};
-    hp = 1; sly = 0; cheese = 0; // HP hardcore
-    updateUI();
-    spawnItems();
-}
-function spawnItems() {
-    for (let i = 0; i < 30; i++) { // +ítems
-        const x = Math.floor(Math.random()*gridSize), y = Math.floor(Math.random()*gridSize);
-        if (grid[y][x] === 0 && !(x === player.x && y === player.y)) {
-            grid[y][x] = Math.random() > 0.65 ? 2 : 1;
-        }
-    }
-}
-function move(dx, dy) {
-    if (mode !== 'roguelike') return;
-    const nx = player.x + dx, ny = player.y + dy;
-    if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize) {
-        player.x = nx; player.y = ny;
-        const cell = grid[ny][nx];
-        if (cell === 1) { cheese++; sly += 13; grid[ny][nx] = 0; } // +SLY
-        if (cell === 2) { hp = Math.min(hp + 1, 3); grid[ny][nx] = 0; }
-        // Riesgo: 5% muerte random hardcore
-        if (Math.random() < 0.05) { hp--; if (hp <= 0) { hp=1; sly=0; cheese=0; alert('MUERTE HARDCORE. Grind continúa.'); } }
-        updateUI();
-    }
-}
-function updateUI() {
-    hpEl.textContent = hp; slyEl.textContent = sly; cheeseEl.textContent = cheese;
-}
+function showPantheon() { document.getElementById('pantheon').classList.add('show'); }
+function showMaravillas() { document.getElementById('maravillas').classList.add('show'); }
+function startLightside() { mode = 'lightside'; }
+function resetBehemoth() { mode = 'contemplation'; }
 
-// === MODOS ===
-function startRoguelike() { mode = 'roguelike'; initRoguelike(); }
-function resetBehemoth() { mode = 'behemoth'; }
-function hardReset() {
-    if (confirm('¿HARD RESET? Pierdes TODO el grind 1310h. NO RETURN.')) {
-        localStorage.removeItem('slyverse_start');
-        location.reload();
-    }
-}
-function drawRoguelike() {
-    cellSize = Math.min(w, h*0.7) / gridSize;
-    const offsetX = (w - cellSize*gridSize)/2, offsetY = h*0.25;
-    ctx.fillStyle = '#111';
-    ctx.fillRect(offsetX, offsetY, cellSize*gridSize, cellSize*gridSize);
-    for (let y = 0; y < gridSize; y++) for (let x = 0; x < gridSize; x++) {
-        if (grid[y][x] === 1) { ctx.fillStyle = 'gold'; ctx.fillRect(offsetX + x*cellSize, offsetY + y*cellSize, cellSize-1, cellSize-1); }
-        if (grid[y][x] === 2) { ctx.fillStyle = '#ff0066'; ctx.fillRect(offsetX + x*cellSize, offsetY + y*cellSize, cellSize-1, cellSize-1); }
-    }
-    ctx.fillStyle = var(--red);
-    ctx.fillRect(offsetX + player.x*cellSize, offsetY + player.y*cellSize, cellSize-1, cellSize-1);
-}
-
-// === LOOP ===
 function resize() { w = c.width = innerWidth; h = c.height = innerHeight; }
 function loop() {
     t++;
-    ctx.fillStyle = 'rgba(0,0,0,0.1)';
+    ctx.fillStyle = 'rgba(11,0,26,0.12)';
     ctx.fillRect(0,0,w,h);
-
     updateTime();
-
-    if (mode === 'behemoth') {
-        behemoths.forEach(b => b.latir());
-    } else if (mode === 'roguelike') {
-        drawRoguelike();
+    if (mode === 'contemplation' || mode === 'lightside') {
+        guardians.forEach(g => g.latir());
     }
-
     requestAnimationFrame(loop);
 }
-
-// === CONTROLES ===
-window.onkeydown = e => {
-    if (mode !== 'roguelike') return;
-    if (e.key === 'ArrowUp' || e.key === 'w') move(0, -1);
-    if (e.key === 'ArrowDown' || e.key === 's') move(0, 1);
-    if (e.key === 'ArrowLeft' || e.key === 'a') move(-1, 0);
-    if (e.key === 'ArrowRight' || e.key === 'd') move(1, 0);
-};
 
 resize(); window.onresize = resize;
 loop();

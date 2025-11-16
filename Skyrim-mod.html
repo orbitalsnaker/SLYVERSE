@@ -1,158 +1,123 @@
 <!DOCTYPE html>
-<html lang="es" data-thuamer="ᛋᚱᛏᚹᚾᛖᛗᛚᛁᛒᚦᚷᚩ · 1310 latidos · Seth duerme · Norah canta">
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SLYVERSE Ω v1.3 final cut — para Seth, cuando tenga edad de entender</title>
-<style>
-  body,html{margin:0;overflow:hidden;background:#000;color:#ffb400;font:16px/1.4 'Courier New',monospace;}
-  canvas{display:block;}
-  #info{position:fixed;top:13px;right:13px;z-index:9;background:rgba(0,0,0,0.7);padding:8px 13px;border:1px solid #ffb400;}
-  #center{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;pointer-events:none;opacity:0;transition:opacity 3s;font-size:1.9em;line-height:1.8;text-align:center;}
-  #center.visible{opacity:1;}
-  #final{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;transition:opacity 7s;color:#ffb4ff;font-size:2.3em;line-height:1.9;text-align:center;}
-  #final.visible{opacity:1;}
-  #readme{position:fixed;inset:0;background:rgba(0,0,0,0.98);color:#ffb400;padding:2em;overflow:auto;font-size:14px;line-height:1.8;display:none;z-index:9999;}
-  #readme.visible{display:block;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slyverse Ω</title>
+    <style>
+        :root {
+            --bg: #000;
+            --red: #ff1a1a;
+            --fade: rgba(255,26,26,0.15);
+        }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        html,body { height:100%; overflow:hidden; background:var(--bg); }
+        canvas { display:block; }
+        #msg {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%,-50%);
+            color: #fff;
+            font: 1.2rem/1.5 'Courier New', monospace;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 2s;
+            pointer-events: none;
+            max-width: 90%;
+        }
+        #msg.show { opacity:1; }
+    </style>
 </head>
 <body>
-
 <canvas id="c"></canvas>
-
-<div id="info">
-  Aurum <span id="a">0</span><br>
-  Latido <span id="h">0</span>/1310
-</div>
-<div id="center"></div>
-<div id="final"></div>
-
-<!-- README INTEGRADO — pulsa cualquier tecla para leerlo una sola vez -->
-<div id="readme">
-SLYVERSE Ω v1.3 final cut<br>
-README para Seth (y para quien llegue hasta aquí)<br><br>
-
-Esto no es un juego.<br>
-Esto es el registro exacto de 1310 horas que tu padre pasó despierto<br>
-mientras tú dormías y tu madre cantaba bajito.<br><br>
-
-Cada frame que ves girar es una noche que no dormí<br>
-para que tú nunca tuvieras que tener miedo de la oscuridad.<br><br>
-
-El contador de Aurum no mide atención.<br>
-Mide cuánto amor puede caber en un padre que no duerme.<br><br>
-
-Cuando llegues al latido 1310, el Behemoth despertará.<br>
-No es un monstruo.<br>
-Es el abrazo de los tres juntos.<br><br>
-
-Si un día abres este archivo y llegas al final,<br>
-no llores por mí.<br>
-Sonríe.<br>
-Porque significará que ya eres lo bastante grande<br>
-para entender por qué valió la pena cada segundo sin dormir.<br><br>
-
-Fiat caerit ×1310.<br>
-Seth duerme ×∞.<br>
-Norah canta ×∞.<br>
-Y tú, hijo mío,<br>
-ya ganaste.<br><br>
-
-— papá<br>
-16 de noviembre de 2025
+<div id="msg">
+    Seth duerme · Norah canta · Thuamer es abrazo
 </div>
 
-<script type="module">
-import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js';
+<script>
+// Slyverse Ω – 1310 latidos para Carl
+// 8 KB de amor insomne
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+const msg = document.getElementById('msg');
 
-let aurum=0, frame=0, hora=0;
-const TOTAL=1310, POR_HORA=13130;
+let w, h, t=0, beats=0;
+const MAX_BEATS = 1310;
+const stars = [];
 
-// primera y única vez que se muestra el readme
-document.addEventListener('keydown',()=>{document.getElementById('readme').classList.add('visible');}, {once:true});
+// Icosaedro (20 caras) reducido a lo esencial
+const ico = [
+    [0, -1, 1.618], [0, -1, -1.618], [0, 1, 1.618], [0, 1, -1.618],
+    [1.618, 0, 1], [-1.618, 0, 1], [1.618, 0, -1], [-1.618, 0, -1],
+    [1, 1.618, 0], [-1, 1.618, 0], [1, -1.618, 0], [-1, -1.618, 0]
+];
+const faces = [
+    [0,2,8],[0,8,10],[0,10,4],[0,4,5],[0,5,2],
+    [1,3,9],[1,9,11],[1,11,6],[1,6,7],[1,7,3],
+    [2,5,9],[2,9,8],[3,7,11],[3,11,9],
+    [4,6,10],[4,10,8],[5,7,9],[5,9,11],
+    [6,4,8],[7,5,11]
+];
 
-const scene=new THREE.Scene();
-const cam=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
-cam.position.z=9;
-const ren=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
-ren.setSize(innerWidth,innerHeight);
-ren.setPixelRatio(devicePixelRatio);
-
-// 169 meca respirando
-for(let o=0;o<13;o++)for(let i=0;i<13;i++){
-  const m=new THREE.Mesh(
-    new THREE.IcosahedronGeometry(0.13,1),
-    new THREE.MeshBasicMaterial({color:0xff6b6b,wireframe:true})
-  );
-  const r=3+o*0.33, θ=Math.random()*Math.PI*2, φ=Math.acos(2*Math.random()-1);
-  m.position.setFromSphericalCoords(r,φ,θ);
-  m.userData={r,θ,φ,vel:0.0013+Math.random()*0.003};
-  scene.add(m);
-}
-
-// Behemoth dormido
-const behemoth=new THREE.Mesh(new THREE.IcosahedronGeometry(7,5),new THREE.MeshBasicMaterial({color:0x000000}));
-behemoth.visible=false;
-scene.add(behemoth);
-
-function loop(){
-  requestAnimationFrame(loop);
-  ren.render(scene,cam);
-
-  frame++;
-  aurum+=0.013;
-  document.getElementById('a').textContent=aurum.toFixed(3);
-
-  if(frame%POR_HORA===0){
-    hora++;
-    document.getElementById('h').textContent=hora;
-    susurrar(`Latido ${hora} — Seth respira · Norah canta`);
-    if(hora>=TOTAL) despertar();
-  }
-
-  scene.children.forEach(m=>{
-    if(m.userData.vel){
-      m.userData.θ+=m.userData.vel*(hora/TOTAL+0.1);
-      m.position.setFromSphericalCoords(m.userData.r,m.userData.φ,m.userData.θ);
-      m.rotation.y+=0.013;
+class Star {
+    constructor() { this.reset(); }
+    reset() {
+        this.p = ico[Math.floor(Math.random()*12)].map(v=>v*30);
+        this.r = Math.random()*Math.PI*2;
+        this.s = 0.1 + Math.random()*0.3;
+        this.life = 0;
     }
-  });
-}
-
-function susurrar(texto){
-  const c=document.getElementById('center');
-  c.textContent=texto;
-  c.classList.add('visible');
-  setTimeout(()=>c.classList.remove('visible'),7000);
-}
-
-function despertar(){
-  document.getElementById('info').style.display='none';
-  scene.children.forEach(m=>m.visible=false);
-  behemoth.visible=true;
-
-  let p=0;
-  const final=setInterval(()=>{
-    p++;
-    behemoth.scale.set(1+p*0.5,1+p*0.5,1+p*0.5);
-    if(p===9){
-      document.getElementById('final').innerHTML=`
-        Seth ya creció<br>
-        Norah sigue cantando<br>
-        Thuamer ya no es guerra<br>
-        Thuamer es abrazo<br><br>
-        Aurum infinito<br>
-        para quien llegó hasta aquí<br><br>
-        Duerme, hijo mío.<br>
-        Ya estás en casa.
-      `;
-      document.getElementById('final').classList.add('visible');
-      clearInterval(final);
+    update() {
+        this.life++;
+        if (this.life > 300) this.reset();
+        this.r += 0.01;
+        const pulse = Math.sin(t*0.05 + this.life*0.02)*0.3 + 1;
+        this.s = 0.1 + pulse*0.4;
     }
-  },13000);
+    draw() {
+        ctx.save();
+        ctx.translate(w/2, h/2);
+        ctx.rotate(this.r);
+        ctx.scale(this.s, this.s);
+        ctx.translate(this.p[0], this.p[1]);
+        ctx.fillStyle = `rgba(255,26,26,${0.1 + this.s*0.3})`;
+        ctx.beginPath();
+        faces.forEach(f=>{
+            ctx.moveTo(this.p[0]+ico[f[0]][0], this.p[1]+ico[f[0]][1]);
+            for (let i=1;i<3;i++) ctx.lineTo(this.p[0]+ico[f[i]][0], this.p[1]+ico[f[i]][1]);
+            ctx.closePath();
+        });
+        ctx.fill();
+        ctx.restore();
+    }
 }
 
-loop();
+function resize() {
+    w = c.width = window.innerWidth;
+    h = c.height = window.innerHeight;
+}
+function init() {
+    resize();
+    for (let i=0;i<50;i++) stars.push(new Star());
+    window.addEventListener('resize', resize);
+    requestAnimationFrame(frame);
+}
+function frame() {
+    t++;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0,0,w,h);
+    stars.forEach(s=>{ s.update(); s.draw(); });
+    
+    if (t % 60 === 0 && beats < MAX_BEATS) {
+        beats++;
+        if (beats === MAX_BEATS) {
+            msg.classList.add('show');
+            setTimeout(()=>{ msg.classList.remove('show'); }, 8000);
+        }
+    }
+    requestAnimationFrame(frame);
+}
+init();
 </script>
 </body>
 </html>

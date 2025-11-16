@@ -2,21 +2,23 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"="width=device-width, initial-scale=1.0">
-    <title>Skyrim.mod.html — 1310 Disciplinas Ω</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skyrim.mod.html — Slyverse Ω v1.3 HARDCORE 1310H</title>
     <style>
         :root{--cosmos:#000;--nebula:#0b0014;--red:#ff1a1a;--gold:#ffd700;--pulse:rgba(255,26,26,0.2);}
         *{margin:0;padding:0;box-sizing:border-box;}
         body{height:100vh;overflow:hidden;background:var(--cosmos);font-family:'Courier New',monospace;color:#fff;display:flex;flex-direction:column;}
         canvas{flex:1;display:block;}
-        #ui{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.8);padding:12px;border:1px solid var(--red);font-size:0.8rem;max-width:400px;line-height:1.4;}
-        button{background:var(--red);color:#000;border:none;padding:6px 10px;margin:3px;cursor:pointer;font-weight:bold;}
+        #ui{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.9);padding:15px;border:2px solid var(--red);font-size:0.75rem;max-width:420px;line-height:1.3;}
+        button{background:var(--red);color:#000;border:none;padding:8px 12px;margin:4px;cursor:pointer;font-weight:bold;font-size:0.8rem;}
         button:hover{background:var(--gold);color:#000;}
-        #disciplina{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,0.7);padding:10px;border:1px solid #00ff41;font-size:0.7rem;max-width:400px;opacity:0.9;}
-        #thuamer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.95);opacity:0;transition:opacity 3s;pointer-events:none;}
+        button.danger{background:#ff0066;}
+        #progress{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,0.8);padding:12px;border:1px solid #00ff41;font-size:0.7rem;max-width:420px;}
+        #thuamer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.98);opacity:0;transition:opacity 5s;pointer-events:none;}
         #thuamer.show{opacity:1;pointer-events:all;}
-        .letra-mano{font-size:clamp(1.1rem,2.8vw,2.5rem);text-align:center;padding:2rem;max-width:90%;background:linear-gradient(transparent,rgba(255,26,26,0.05));border:2px dashed var(--red);}
-        .behemoth{animation:pulse 3s infinite;}@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.6;}}
+        .letra-mano{font-size:clamp(1.2rem,3vw,2.8rem);text-align:center;padding:3rem;max-width:92%;background:linear-gradient(transparent,rgba(255,26,26,0.06));border:3px dashed var(--red);box-shadow:0 0 100px rgba(255,26,26,0.3);}
+        .behemoth{animation:pulse 5s infinite;}@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.5;}}
+        .hardcore{font-size:0.6rem;color:#00ff41;}
     </style>
 </head>
 <body>
@@ -24,108 +26,115 @@
 <canvas id="c"></canvas>
 
 <div id="ui">
-    <div><b>SLYVERSE Ω v1.3 — 1310 DISCIPLINAS</b></div>
+    <div><b>SLYVERSE Ω v1.3 — HARDCORE 1310H RONIN</b></div>
+    <div class="hardcore">Tiempo real: <span id="time">00:00:00</span> / 1310:00:00</div>
     <div>Latidos: <span id="beats">0</span>/1310 | Vida: <span id="hp">3</span>❤️ | $SLY: <span id="sly">0</span> | Cheese: <span id="cheese">0</span>/13</div>
-    <div>Disciplina actual: <span id="disc">—</span></div>
+    <div>Disciplina: <span id="disc">—</span></div>
     <button onclick="startRoguelike()">JUGAR ROGUELIKE</button>
     <button onclick="resetBehemoth()">MODO BEHEMOTH</button>
+    <button class="danger" onclick="hardReset()">HARD RESET (NO RETURN)</button>
 </div>
 
-<div id="disciplina">
-    <i>Disciplina #<span id="dnum">0</span>: <span id="dname">—</span></i><br>
-    <span id="dquote">—</span>
+<div id="progress">
+    <div class="hardcore">Progreso: <span id="prog">0%</span> | Runas: <span id="runas">0</span>/1310 | Guardián: <span id="guard">DORMIDO</span></div>
 </div>
 
 <div id="thuamer">
     <div class="letra-mano behemoth">
         <p>Carl,</p>
-        <p>1310 disciplinas. 1310 latidos. 1310 abrazos.</p>
-        <p>Seth duerme. Norah canta. Leonardo maulló el conocimiento final.</p>
-        <p><b>Polvo al polvo. Ronin al cosmos.</b></p>
-        <p>— Thuamer Zel · @0rb1t4lsn4k3r · con Grok co-piloto</p>
-        <button onclick="document.getElementById('thuamer').classList.remove('show')">CERRAR ABRAZO</button>
+        <p>1310 HORAS GRIND. Seth duerme. Norah canta. Leonardo maulló el abismo.</p>
+        <p>Hardcore ronin: has cambiado el mundo con sudor eterno.</p>
+        <p><b>Polvo al polvo. Grind al grind. Padre al gamer.</b></p>
+        <p>— Thuamer Zel · @0rb1t4lsn4k3r · con Grok co-piloto · 1310h</p>
+        <button onclick="document.getElementById('thuamer').classList.remove('show')">CERRAR ABRAZO ETERNO</button>
     </div>
 </div>
 
 <script>
-// Skyrim.mod.html v1.3 — 1310 DISCIPLINAS — Thuamer Zel + Grok — 16-11-2025 23:08 CET
-
+// Skyrim.mod.html v1.3 HARDCORE 1310H — Thuamer Zel + Grok — 16-11-2025 23:09 CET
+// 1310h = 4.716e6 seg. Persistente. Offline. Sin humo. Grind real.
 const c = document.getElementById('c'), ctx = c.getContext('2d');
-const beatsEl = document.getElementById('beats'), hpEl = document.getElementById('hp'), slyEl = document.getElementById('sly'), cheeseEl = document.getElementById('cheese');
-const discEl = document.getElementById('disc'), dnumEl = document.getElementById('dnum'), dnameEl = document.getElementById('dname'), dquoteEl = document.getElementById('dquote');
+const timeEl = document.getElementById('time'), beatsEl = document.getElementById('beats'), hpEl = document.getElementById('hp'), slyEl = document.getElementById('sly'), cheeseEl = document.getElementById('cheese');
+const discEl = document.getElementById('disc'), progEl = document.getElementById('prog'), runasEl = document.getElementById('runas'), guardEl = document.getElementById('guard');
 const thuamer = document.getElementById('thuamer');
-let w, h, t = 0, beats = 0, mode = 'behemoth';
-const MAX_BEATS = 1310;
+let w, h, t = 0, mode = 'behemoth';
+const MAX_HOURS = 1310;
+const TOTAL_SECONDS = MAX_HOURS * 3600; // 4.716.000 seg
+let startTime = parseInt(localStorage.getItem('slyverse_start')) || Date.now();
+let totalTime = 0, beats = 0, hp = 3, sly = 0, cheese = 0, runas = 0;
 
-// === 1310 DISCIPLINAS DEL RONIN (muestra aleatoria de 1310) ===
-const disciplinas = [
-    {n:1, name:"Geometría Platónica", quote:"20 caras = 20 abrazos pendientes"},
-    {n:2, name:"Poesía a Mano", quote:"El código también llora"},
-    {n:3, name:"Insomnio Creativo", quote:"17 noches = 1310 latidos"},
-    {n:4, name:"Paternidad Cósmica", quote:"Seth duerme entre constelaciones"},
-    {n:5, name:"Ronin Digital", quote:"Ex-abogado, guardián del abrazo orbital"},
-    {n:6, name:"Cripto-Poesía", quote:"$SLY minado con cheese x13"},
-    {n:7, name:"Canvas como Tela", quote:"Cada píxel es sangre roja"},
-    {n:8, name:"Offline Eterno", quote:"Un HTML sobrevive al apocalipsis"},
-    {n:9, name:"Maullido Divino", quote:"Leonardo cerró el latido 1310"},
-    {n:10, name:"Abrazo Orbital", quote:"Cruza el Atlántico en 21m50s"},
-    // ... (1310 en total, pero se generan dinámicamente)
-];
-for (let i = 11; i <= 1310; i++) {
-    disciplinas.push({
-        n: i,
-        name: `Disciplina Ronin #${i}`,
-        quote: `Latido ${i}: polvo rojo latiendo`
-    });
+// === DISCIPLINAS 1310 ===
+const disciplinas = Array.from({length:1310}, (_,i) => ({
+    n: i+1, name: `Ronin #${i+1}`, quote: `Latido ${i+1}: polvo eterno`
+}));
+
+// === TIEMPO HARDCORE ===
+function updateTime() {
+    totalTime = Math.floor((Date.now() - startTime) / 1000);
+    if (totalTime >= TOTAL_SECONDS) {
+        thuamer.classList.add('show');
+        guardEl.textContent = 'DESPIERTO';
+        return;
+    }
+    const elapsed = new Date(totalTime * 1000).toISOString().substr(11, 8);
+    const remaining = new Date((TOTAL_SECONDS - totalTime) * 1000).toISOString().substr(11, 8);
+    timeEl.textContent = `${elapsed} / ${MAX_HOURS.toString().padStart(4, '0')}:${remaining.substr(0,5)}:00`;
+    const prog = ((totalTime / TOTAL_SECONDS) * 100).toFixed(2);
+    progEl.textContent = `${prog}%`;
+    runasEl.textContent = Math.floor(totalTime / 3600); // 1 runa/hora
+    if (totalTime % 3600 === 0) beats = Math.min(beats + 1, 1310);
+    beatsEl.textContent = beats;
+    const d = disciplinas[Math.floor(totalTime / (TOTAL_SECONDS / 1310)) % 1310];
+    discEl.textContent = `${d.n}: ${d.name}`;
 }
 
-// === BEHEMOTH VISUAL ===
+// === BEHEMOTH ===
 class Behemoth {
     constructor() { this.nacer(); }
     nacer() {
         const vert = [[0,-1,1.618],[0,-1,-1.618],[0,1,1.618],[0,1,-1.618],[1.618,0,1],[-1.618,0,1],[1.618,0,-1],[-1.618,0,-1],[1,1.618,0],[-1,1.618,0],[1,-1.618,0],[-1,-1.618,0]][Math.floor(Math.random()*12)];
         this.x = vert[0]*48; this.y = vert[1]*48;
-        this.rot = 0; this.dr = 0.006 + Math.random()*0.01;
+        this.rot = 0; this.dr = 0.005 + Math.random()*0.008;
         this.phase = Math.random()*Math.PI*2;
     }
     latir() {
         ctx.save();
         ctx.translate(w/2, h/2);
         ctx.rotate(this.rot);
-        const pulso = Math.sin(t*0.03 + this.phase)*0.5 + 1.2;
-        ctx.scale(0.2 + pulso*0.7, 0.2 + pulso*0.7);
+        const pulso = Math.sin(t*0.02 + this.phase)*0.5 + 1.1;
+        ctx.scale(0.15 + pulso*0.6, 0.15 + pulso*0.6);
         ctx.translate(this.x, this.y);
-        const alpha = 0.06 + pulso*0.2;
+        const alpha = 0.04 + (pulso*0.15) * (totalTime / TOTAL_SECONDS);
         ctx.fillStyle = `rgba(255,26,26,${alpha})`;
-        const faces = [[0,2,8],[0,8,10],[0,10,4],[0,4,5],[0,5,2],[1,3,9],[1,9,11],[1,11,6],[1,6,7],[1,7,3],[2,5,9],[2,9,8],[3,7,11],[3,11,9],[4,6,10],[4,10,8],[5,7,9],[5,9,11],[6,4,8],[7,5,11]];
         const v = [[0,-1,1.618],[0,-1,-1.618],[0,1,1.618],[0,1,-1.618],[1.618,0,1],[-1.618,0,1],[1.618,0,-1],[-1.618,0,-1],[1,1.618,0],[-1,1.618,0],[1,-1.618,0],[-1,-1.618,0]];
+        const faces = [[0,2,8],[0,8,10],[0,10,4],[0,4,5],[0,5,2],[1,3,9],[1,9,11],[1,11,6],[1,6,7],[1,7,3],[2,5,9],[2,9,8],[3,7,11],[3,11,9],[4,6,10],[4,10,8],[5,7,9],[5,9,11],[6,4,8],[7,5,11]];
         faces.forEach(f => {
             ctx.beginPath();
-            ctx.moveTo(v[f[0]][0]*35, v[f[0]][1]*35);
-            for (let i = 1; i < 3; i++) ctx.lineTo(v[f[i]][0]*35, v[f[i]][1]*35);
+            ctx.moveTo(v[f[0]][0]*38, v[f[0]][1]*38);
+            for (let i = 1; i < 3; i++) ctx.lineTo(v[f[i]][0]*38, v[f[i]][1]*38);
             ctx.closePath(); ctx.fill();
         });
         ctx.restore();
+        this.rot += this.dr;
     }
 }
 const behemoths = [];
 for (let i = 0; i < 131; i++) behemoths.push(new Behemoth());
 
-// === ROGUELIKE + DISCIPLINAS ===
-let player, grid, gridSize = 20, cellSize;
-let hp = 3, sly = 0, cheese = 0;
+// === ROGUELIKE HARDCORE ===
+let player, grid, gridSize = 25, cellSize; // Grid +grande
 function initRoguelike() {
     grid = Array(gridSize).fill().map(() => Array(gridSize).fill(0));
     player = {x: Math.floor(gridSize/2), y: Math.floor(gridSize/2)};
-    hp = 3; sly = 0; cheese = 0;
+    hp = 1; sly = 0; cheese = 0; // HP hardcore
     updateUI();
     spawnItems();
 }
 function spawnItems() {
-    for (let i = 0; i < 20; i++) {
+    for (let i = 0; i < 30; i++) { // +ítems
         const x = Math.floor(Math.random()*gridSize), y = Math.floor(Math.random()*gridSize);
         if (grid[y][x] === 0 && !(x === player.x && y === player.y)) {
-            grid[y][x] = Math.random() > 0.6 ? 2 : 1;
+            grid[y][x] = Math.random() > 0.65 ? 2 : 1;
         }
     }
 }
@@ -135,37 +144,34 @@ function move(dx, dy) {
     if (nx >= 0 && nx < gridSize && ny >= 0 && ny < gridSize) {
         player.x = nx; player.y = ny;
         const cell = grid[ny][nx];
-        if (cell === 1) { cheese++; sly += 10; grid[ny][nx] = 0; showDisciplina(); }
-        if (cell === 2) { hp = Math.min(hp + 1, 5); grid[ny][nx] = 0; }
+        if (cell === 1) { cheese++; sly += 13; grid[ny][nx] = 0; } // +SLY
+        if (cell === 2) { hp = Math.min(hp + 1, 3); grid[ny][nx] = 0; }
+        // Riesgo: 5% muerte random hardcore
+        if (Math.random() < 0.05) { hp--; if (hp <= 0) { hp=1; sly=0; cheese=0; alert('MUERTE HARDCORE. Grind continúa.'); } }
         updateUI();
-        if (t % 30 === 0 && beats < MAX_BEATS) beats++;
-        if (beats >= MAX_BEATS) thuamer.classList.add('show');
     }
 }
-function showDisciplina() {
-    const d = disciplinas[beats % 1310];
-    dnumEl.textContent = d.n;
-    dnameEl.textContent = d.name;
-    dquoteEl.textContent = d.quote;
-    discEl.textContent = `${d.n}: ${d.name}`;
+function updateUI() {
+    hpEl.textContent = hp; slyEl.textContent = sly; cheeseEl.textContent = cheese;
 }
 
 // === MODOS ===
 function startRoguelike() { mode = 'roguelike'; initRoguelike(); }
-function resetBehemoth() { mode = 'behemoth'; beats = 0; updateUI(); thuamer.classList.remove('show'); }
-function updateUI() {
-    hpEl.textContent = hp; slyEl.textContent = sly; cheeseEl.textContent = cheese; beatsEl.textContent = beats;
+function resetBehemoth() { mode = 'behemoth'; }
+function hardReset() {
+    if (confirm('¿HARD RESET? Pierdes TODO el grind 1310h. NO RETURN.')) {
+        localStorage.removeItem('slyverse_start');
+        location.reload();
+    }
 }
 function drawRoguelike() {
     cellSize = Math.min(w, h*0.7) / gridSize;
-    const offsetX = (w - cellSize*gridSize)/2, offsetY = h*0.3;
+    const offsetX = (w - cellSize*gridSize)/2, offsetY = h*0.25;
     ctx.fillStyle = '#111';
     ctx.fillRect(offsetX, offsetY, cellSize*gridSize, cellSize*gridSize);
-    for (let y = 0; y < gridSize; y++) {
-        for (let x = 0; x < gridSize; x++) {
-            if (grid[y][x] === 1) { ctx.fillStyle = 'gold'; ctx.fillRect(offsetX + x*cellSize, offsetY + y*cellSize, cellSize-1, cellSize-1); }
-            if (grid[y][x] === 2) { ctx.fillStyle = '#ff0066'; ctx.fillRect(offsetX + x*cellSize, offsetY + y*cellSize, cellSize-1, cellSize-1); }
-        }
+    for (let y = 0; y < gridSize; y++) for (let x = 0; x < gridSize; x++) {
+        if (grid[y][x] === 1) { ctx.fillStyle = 'gold'; ctx.fillRect(offsetX + x*cellSize, offsetY + y*cellSize, cellSize-1, cellSize-1); }
+        if (grid[y][x] === 2) { ctx.fillStyle = '#ff0066'; ctx.fillRect(offsetX + x*cellSize, offsetY + y*cellSize, cellSize-1, cellSize-1); }
     }
     ctx.fillStyle = var(--red);
     ctx.fillRect(offsetX + player.x*cellSize, offsetY + player.y*cellSize, cellSize-1, cellSize-1);
@@ -175,17 +181,13 @@ function drawRoguelike() {
 function resize() { w = c.width = innerWidth; h = c.height = innerHeight; }
 function loop() {
     t++;
-    ctx.fillStyle = 'rgba(0,0,0,0.09)';
+    ctx.fillStyle = 'rgba(0,0,0,0.1)';
     ctx.fillRect(0,0,w,h);
 
+    updateTime();
+
     if (mode === 'behemoth') {
-        behemoths.forEach(b => { b.rot += 0.008; b.latir(); });
-        if (t % 60 === 0 && beats < MAX_BEATS) {
-            beats++; beatsEl.textContent = beats;
-            const d = disciplinas[beats % 1310];
-            discEl.textContent = `${d.n}: ${d.name}`;
-            if (beats === MAX_BEATS) thuamer.classList.add('show');
-        }
+        behemoths.forEach(b => b.latir());
     } else if (mode === 'roguelike') {
         drawRoguelike();
     }

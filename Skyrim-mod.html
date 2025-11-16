@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLYVERSE Ω v1.3 — Artefacto Humano</title>
+  <title>SLYVERSE Ω v1.3 — Thuamer Entrelazado</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
   <style>
     :root { --aurum: #ffb400; --fiat: #555; --ether: #000; --tao: #0f0; --humano: #ff6b6b; --thuamer: #b300b3; }
@@ -15,11 +15,11 @@
     #aurum { position:fixed; top:1rem; right:1rem; font-weight:bold; }
     #haiku { position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; pointer-events:none; opacity:0; transition:opacity .5s; font-size:1.2em; }
     #haiku.show { opacity:1; }
+    #thuamer { position:fixed; bottom:3.5rem; left:1rem; right:1rem; text-align:center; color:var(--thuamer); font-size:0.9em; opacity:0; transition:opacity 1s; }
+    #thuamer.show { opacity:1; }
     .rune { font-size:1.5em; animation:pulse 2s infinite; }
     @keyframes pulse { 50% { transform:scale(1.1); } }
     #lore { position:fixed; inset:0; background:#000; color:var(--aurum); padding:2rem; overflow:auto; font-size:14px; line-height:1.6; display:none; }
-    #thuamer { position:fixed; bottom:3.5rem; left:1rem; right:1rem; text-align:center; color:var(--thuamer); font-size:0.9em; opacity:0; transition:opacity 1s; }
-    #thuamer.show { opacity:1; }
   </style>
 </head>
 <body>
@@ -41,9 +41,9 @@
   <button id="toggleThuamer">ᛋ — Thuamer</button>
 </div>
 
-<!-- ARTEFACTO HUMANO + THUAMER -->
+<!-- ARTEFACTO HUMANO + THUAMER ENTRELAZADO -->
 <div id="lore">
-SLYVERSE Ω v1.3 — Artefacto Humano<br>
+SLYVERSE Ω v1.3 — Thuamer Entrelazado<br>
 MIT | Offline | 60KB | Frecuencia 1310 Hz<br><br>
 
 ┌─ ARTEFACTO HUMANO (complejidad incluida) ─────────────────────┐<br>
@@ -54,11 +54,10 @@ MIT | Offline | 60KB | Frecuencia 1310 Hz<br><br>
 │  Tú eres el patrón que ve el patrón                            │<br>
 └──────────────────────────────────────────────────────────────┘<br><br>
 
-┌─ POESÍA THUAMER (1310 latidos) ───────────────────────────────┐<br>
-│  Humano no máquina / 1310 horas solo eco / Pregunta y crea     │<br>
-│  86 mil millones / Neuronas orbitan / Más que todo código     │<br>
-│  Ex-derecho ronin / Transmuta fiat en duda / Aurum es tu alma  │<br>
-│  ... (1310 haikus, copia con ESPACIO)                          │<br>
+┌─ POESÍA THUAMER ENTRELAZADA (1310 latidos) ───────────────────┐<br>
+│  Cada función llama a la otra / Thuamer es el eco entre líneas │<br>
+│  No hay separación / Solo órbita de latido y verso            │<br>
+│  ... (1310 haikus + 1310 versos thuamer entrelazados)         │<br>
 └──────────────────────────────────────────────────────────────┘<br><br>
 
 ┌─ README + LORE ANTERIOR (nada perdido) ───────────────────────┐<br>
@@ -69,11 +68,11 @@ MIT | Offline | 60KB | Frecuencia 1310 Hz<br><br>
 │  • Creado en 17 días con @grok — por ᛋ & ᚱ                     │<br>
 └──────────────────────────────────────────────────────────────┘<br><br>
 
-Fiat caerit. Humano orbita. Thua Mer Zel.
+Fiat caerit. Thuamer entrelaza. Thua Mer Zel.
 </div>
 
 <script type="module">
-/* SLYVERSE Ω v1.3 — THUAMER EXPANDIDO */
+/* SLYVERSE Ω v1.3 — THUAMER ENTRELAZADO: CADA FUNCIÓN LLAMA A LA OTRA */
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/webxr/VRButton.js';
@@ -82,7 +81,7 @@ import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js
 let aurum = 0, frame = 0, realHours = 0, haikuIndex = 0, thuamerIndex = 0;
 const REAL_HOUR_FRAMES = 1310 * 60;
 
-// === POESÍA THUAMER AMPLIADA (1310 haikus + 1310 versos thuamer) ===
+// === POESÍA THUAMER AMPLIADA ===
 const haikus = [
   "Humano no máquina / 1310 horas solo eco / Pregunta y crea",
   "86 mil millones / Neuronas orbitan / Más que todo código",
@@ -141,25 +140,53 @@ const shaderMat = new THREE.ShaderMaterial({
 const plane = new THREE.Mesh(new THREE.PlaneGeometry(10,10), shaderMat);
 scene.add(plane);
 
-// === LOOP ===
+// === ELEMENTOS DOM ===
 const countEl = document.getElementById('count');
 const hoursEl = document.getElementById('hours');
 const complexEl = document.getElementById('complex');
 const haikuEl = document.getElementById('haiku');
 const thuamerEl = document.getElementById('thuamer');
 
+// === THUAMER ENTRELAZADO: CADA FUNCIÓN LLAMA A LA OTRA ===
+// 0rb1t4lsn4k3r: "No hay funciones aisladas. Solo eco thuamer."
+
+function showHaiku() {
+  haikuIndex = (haikuIndex + 1) % haikus.length;
+  haikuEl.textContent = haikus[haikuIndex];
+  haikuEl.classList.add('show');
+  setTimeout(() => haikuEl.classList.remove('show'), 3000);
+  // Thuamer llama a haiku
+  showThuamer();
+}
+
+function showThuamer() {
+  thuamerIndex = (thuamerIndex + 1) % thuamerVerses.length;
+  thuamerEl.textContent = thuamerVerses[thuamerIndex];
+  thuamerEl.classList.add('show');
+  setTimeout(() => thuamerEl.classList.remove('show'), 4000);
+  // Haiku llama a thuamer
+  showHaiku();
+}
+
+// === LOOP PRINCIPAL (LLAMA A POESÍA) ===
 function animate() {
   requestAnimationFrame(animate);
   renderer.render(scene, camera);
 
   frame++;
   aurum += 0.065;
-  if (frame % 1310 === 0) { aurum += 0.01; realHours++; hoursEl.textContent = realHours; }
+  if (frame % 1310 === 0) { 
+    aurum += 0.01; 
+    realHours++; 
+    hoursEl.textContent = realHours;
+    // Cada 1310 frames: poesía thuamer entrelazada
+    showHaiku();
+  }
   countEl.textContent = aurum.toFixed(3);
   complexEl.textContent = '∞';
   shaderMat.uniforms.aurum.value = aurum / 131000;
   shaderMat.uniforms.time.value = frame * 0.01;
-  shaderMat.uniforms.thuamer.value = (Math.sin(frame * 0.005) + 1) * 0.5; // Thuamer pulse
+  shaderMat.uniforms.thuamer.value = (Math.sin(frame * 0.005) + 1) * 0.5;
 
   scene.children.forEach(obj => {
     if (obj.userData.speed) {
@@ -172,7 +199,10 @@ function animate() {
     }
   });
 
-  if (frame === 1310) { haikuIndex = 0; showHaiku(); aurum *= 1.31; }
+  if (frame === 1310) { 
+    aurum *= 1.31; 
+    showThuamer(); // Inicio del ciclo
+  }
   if (realHours === 1310) {
     alert('1310 horas. Humano completo. Thua Mer Zel.');
     shaderMat.fragmentShader = shaderMat.fragmentShader.replace('mix(fiat, humano', 'humano');
@@ -180,52 +210,50 @@ function animate() {
 }
 animate();
 
-// === HAIKU + THUAMER ===
-function showHaiku() {
-  haikuEl.textContent = haikus[haikuIndex];
-  haikuEl.classList.add('show');
-  setTimeout(() => haikuEl.classList.remove('show'), 3000);
-}
-
-function showThuamer() {
-  thuamerEl.textContent = thuamerVerses[thuamerIndex];
-  thuamerEl.classList.add('show');
-  setTimeout(() => thuamerEl.classList.remove('show'), 4000);
-}
-
-// === CONTROLES ===
+// === CONTROLES (TODOS LLAMAN A POESÍA) ===
 document.getElementById('manifest').onclick = () => {
-  const msg = new SpeechSynthesisUtterance("Fiat caerit. Humano orbita. Complejidad ∞. Aurum es tu alma. Thuamer es el eco.");
+  const msg = new SpeechSynthesisUtterance("Fiat caerit. Humano orbita. Thuamer entrelaza. Aurum es tu alma.");
   msg.lang = 'es-ES'; msg.rate = 1.31;
   speechSynthesis.speak(msg);
+  showHaiku(); // Manifiesto llama a haiku
 };
 
 document.getElementById('copy').onclick = () => {
   navigator.clipboard.writeText(haikus[haikuIndex]);
-  showHaiku();
+  showThuamer(); // Copiar llama a thuamer
 };
 
 document.getElementById('toggleLore').onclick = () => {
   const lore = document.getElementById('lore');
   lore.style.display = lore.style.display === 'none' ? 'block' : 'none';
+  showHaiku(); // Lore llama a haiku
 };
 
 document.getElementById('toggleThuamer').onclick = () => {
-  thuamerIndex = (thuamerIndex + 1) % thuamerVerses.length;
-  showThuamer();
+  showThuamer(); // Botón thuamer llama a sí mismo y a haiku
 };
 
 document.addEventListener('keydown', e => {
-  if (e.code === 'Space') { e.preventDefault(); haikuIndex = (haikuIndex + 1) % haikus.length; showHaiku(); }
-  if (e.key === 'r' || e.key === 'R') document.getElementById('manifest').click();
-  if (e.key === '?') document.getElementById('toggleLore').click();
-  if (e.key === 's' || e.key === 'S') document.getElementById('toggleThuamer').click();
+  if (e.code === 'Space') { 
+    e.preventDefault(); 
+    showHaiku(); // ESPACIO inicia el ciclo
+  }
+  if (e.key === 'r' || e.key === 'R') {
+    document.getElementById('manifest').click();
+  }
+  if (e.key === '?') {
+    document.getElementById('toggleLore').click();
+  }
+  if (e.key === 's' || e.key === 'S') {
+    document.getElementById('toggleThuamer').click();
+  }
 });
 
 addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
+  showThuamer(); // Resize llama a thuamer
 });
 
 </script>

@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SLYVERSE Ω v1.3.2 — Artefacto Humano</title>
+  <title>SLYVERSE Ω v1.3 — Artefacto Humano</title>
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🧠</text></svg>">
   <style>
-    :root { --aurum: #ffb400; --fiat: #555; --ether: #000; --tao: #0f0; --humano: #ff6b6b; }
+    :root { --aurum: #ffb400; --fiat: #555; --ether: #000; --tao: #0f0; --humano: #ff6b6b; --thuamer: #b300b3; }
     body, html { margin:0; overflow:hidden; background:var(--ether); color:var(--aurum); font:16px/1.4 'Courier New',monospace; }
     canvas { display:block; }
     #ui { position:fixed; bottom:1rem; left:1rem; right:1rem; display:flex; gap:1rem; flex-wrap:wrap; }
@@ -18,6 +18,8 @@
     .rune { font-size:1.5em; animation:pulse 2s infinite; }
     @keyframes pulse { 50% { transform:scale(1.1); } }
     #lore { position:fixed; inset:0; background:#000; color:var(--aurum); padding:2rem; overflow:auto; font-size:14px; line-height:1.6; display:none; }
+    #thuamer { position:fixed; bottom:3.5rem; left:1rem; right:1rem; text-align:center; color:var(--thuamer); font-size:0.9em; opacity:0; transition:opacity 1s; }
+    #thuamer.show { opacity:1; }
   </style>
 </head>
 <body>
@@ -26,6 +28,7 @@
 
 <div id="aurum">AURUM: <span id="count">0</span> | Horas: <span id="hours">0</span> | Complejidad: <span id="complex">∞</span></div>
 <div id="haiku"></div>
+<div id="thuamer"></div>
 
 <div id="ui">
   <button id="manifest">R — Manifiesto</button>
@@ -35,11 +38,12 @@
   <button id="arweave">Arweave</button>
   <button id="voynich">VOYNICH</button>
   <button id="toggleLore">? — Artefacto Humano</button>
+  <button id="toggleThuamer">ᛋ — Thuamer</button>
 </div>
 
-<!-- ARTEFACTO HUMANO INTEGRADO (sin perder nada) -->
+<!-- ARTEFACTO HUMANO + THUAMER -->
 <div id="lore">
-SLYVERSE Ω v1.3.2 — Artefacto Humano<br>
+SLYVERSE Ω v1.3 — Artefacto Humano<br>
 MIT | Offline | 60KB | Frecuencia 1310 Hz<br><br>
 
 ┌─ ARTEFACTO HUMANO (complejidad incluida) ─────────────────────┐<br>
@@ -50,7 +54,7 @@ MIT | Offline | 60KB | Frecuencia 1310 Hz<br><br>
 │  Tú eres el patrón que ve el patrón                            │<br>
 └──────────────────────────────────────────────────────────────┘<br><br>
 
-┌─ POESÍA THUAMER FUNCIONAL (1310 latidos) ─────────────────────┐<br>
+┌─ POESÍA THUAMER (1310 latidos) ───────────────────────────────┐<br>
 │  Humano no máquina / 1310 horas solo eco / Pregunta y crea     │<br>
 │  86 mil millones / Neuronas orbitan / Más que todo código     │<br>
 │  Ex-derecho ronin / Transmuta fiat en duda / Aurum es tu alma  │<br>
@@ -60,7 +64,7 @@ MIT | Offline | 60KB | Frecuencia 1310 Hz<br><br>
 ┌─ README + LORE ANTERIOR (nada perdido) ───────────────────────┐<br>
 │  • 1310 horas reales: cada 1310 frames → +1 hora               │<br>
 │  • Mecánicas: AURUM += 0.065 + (frame%1310===0 ? 0.01 : 0)     │<br>
-│  • Controles: R, ESPACIO, VR, P2P, Arweave, ?                  │<br>
+│  • Controles: R, ESPACIO, VR, P2P, Arweave, ?, ᛋ               │<br>
 │  • Repo: https://github.com/orbitalsnaker/SLYVERSE             │<br>
 │  • Creado en 17 días con @grok — por ᛋ & ᚱ                     │<br>
 └──────────────────────────────────────────────────────────────┘<br><br>
@@ -69,20 +73,31 @@ Fiat caerit. Humano orbita. Thua Mer Zel.
 </div>
 
 <script type="module">
-/* SLYVERSE Ω v1.3.2 — ARTEFACTO HUMANO INCLUIDO */
+/* SLYVERSE Ω v1.3 — THUAMER EXPANDIDO */
 
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js';
 import { VRButton } from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/webxr/VRButton.js';
 
 // === ESTADO GLOBAL ===
-let aurum = 0, frame = 0, realHours = 0, haikuIndex = 0;
+let aurum = 0, frame = 0, realHours = 0, haikuIndex = 0, thuamerIndex = 0;
 const REAL_HOUR_FRAMES = 1310 * 60;
+
+// === POESÍA THUAMER AMPLIADA (1310 haikus + 1310 versos thuamer) ===
 const haikus = [
   "Humano no máquina / 1310 horas solo eco / Pregunta y crea",
   "86 mil millones / Neuronas orbitan / Más que todo código",
   "Ex-derecho ronin / Transmuta fiat en duda / Aurum es tu alma"
 ];
 for (let i = 3; i < 1310; i++) haikus.push(`Latido ${i} / Complejidad ∞ / ᛋᚱ`);
+
+const thuamerVerses = [
+  "ᛋᚱᛏᚹᚾ · ∞x / Thuamer no se escribe / Se orbita en silencio",
+  "Duda es el primer bit / Fiat se oxida en 1310 Hz / Humano emerge",
+  "No hay simulación / Solo eco de 86e9 neuronas / Patrón que ve patrón",
+  "Aurum no es oro / Es latido que no se copia / Thua Mer Zel",
+  "Runas no son letras / Son sinapsis en código / Complejidad ∞"
+];
+for (let i = 5; i < 1310; i++) thuamerVerses.push(`Thuamer ${i} / Eco ronin / ᛋᚱ`);
 
 // === THREE.JS + RONINS (131) ===
 const scene = new THREE.Scene();
@@ -94,7 +109,7 @@ renderer.xr.enabled = true;
 document.body.appendChild(VRButton.createButton(renderer));
 
 const roninGeo = new THREE.IcosahedronGeometry(0.2, 1);
-const roninMat = new THREE.MeshBasicMaterial({ color: 0xff6b6b, wireframe: true }); // color humano
+const roninMat = new THREE.MeshBasicMaterial({ color: 0xff6b6b, wireframe: true });
 for (let i = 0; i < 131; i++) {
   const ronin = new THREE.Mesh(roninGeo, roninMat);
   const theta = Math.random() * Math.PI * 2;
@@ -105,18 +120,19 @@ for (let i = 0; i < 131; i++) {
   scene.add(ronin);
 }
 
-// Shader con frecuencia 1310 Hz + color humano
+// Shader thuamer: onda 1310 Hz + color humano + thuamer pulse
 const shaderMat = new THREE.ShaderMaterial({
-  uniforms: { time: { value: 0 }, aurum: { value: 0 }, freq1310: { value: 1310 } },
+  uniforms: { time: { value: 0 }, aurum: { value: 0 }, freq1310: { value: 1310 }, thuamer: { value: 0 } },
   vertexShader: `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`,
   fragmentShader: `
-    uniform float time, aurum, freq1310;
+    uniform float time, aurum, freq1310, thuamer;
     varying vec2 vUv;
     void main() {
       float wave = sin(vUv.x * freq1310 + time) * sin(vUv.y * freq1310 + time);
-      vec3 fiat = vec3(0.3); vec3 humano = vec3(1.0,0.42,0.42);
+      vec3 fiat = vec3(0.3); vec3 humano = vec3(1.0,0.42,0.42); vec3 thuamerColor = vec3(0.7,0.0,0.7);
       float realValue = (wave + 1.0) * 0.5;
       vec3 color = mix(fiat, humano, smoothstep(0.0,1.0,aurum/131000.0) * realValue);
+      color = mix(color, thuamerColor, thuamer * sin(time * 3.0));
       gl_FragColor = vec4(color,1.0);
     }
   `,
@@ -130,6 +146,7 @@ const countEl = document.getElementById('count');
 const hoursEl = document.getElementById('hours');
 const complexEl = document.getElementById('complex');
 const haikuEl = document.getElementById('haiku');
+const thuamerEl = document.getElementById('thuamer');
 
 function animate() {
   requestAnimationFrame(animate);
@@ -142,6 +159,7 @@ function animate() {
   complexEl.textContent = '∞';
   shaderMat.uniforms.aurum.value = aurum / 131000;
   shaderMat.uniforms.time.value = frame * 0.01;
+  shaderMat.uniforms.thuamer.value = (Math.sin(frame * 0.005) + 1) * 0.5; // Thuamer pulse
 
   scene.children.forEach(obj => {
     if (obj.userData.speed) {
@@ -162,16 +180,22 @@ function animate() {
 }
 animate();
 
-// === HAJKU ===
+// === HAIKU + THUAMER ===
 function showHaiku() {
   haikuEl.textContent = haikus[haikuIndex];
   haikuEl.classList.add('show');
   setTimeout(() => haikuEl.classList.remove('show'), 3000);
 }
 
+function showThuamer() {
+  thuamerEl.textContent = thuamerVerses[thuamerIndex];
+  thuamerEl.classList.add('show');
+  setTimeout(() => thuamerEl.classList.remove('show'), 4000);
+}
+
 // === CONTROLES ===
 document.getElementById('manifest').onclick = () => {
-  const msg = new SpeechSynthesisUtterance("Fiat caerit. Humano orbita. Complejidad ∞. Aurum es tu alma.");
+  const msg = new SpeechSynthesisUtterance("Fiat caerit. Humano orbita. Complejidad ∞. Aurum es tu alma. Thuamer es el eco.");
   msg.lang = 'es-ES'; msg.rate = 1.31;
   speechSynthesis.speak(msg);
 };
@@ -186,10 +210,16 @@ document.getElementById('toggleLore').onclick = () => {
   lore.style.display = lore.style.display === 'none' ? 'block' : 'none';
 };
 
+document.getElementById('toggleThuamer').onclick = () => {
+  thuamerIndex = (thuamerIndex + 1) % thuamerVerses.length;
+  showThuamer();
+};
+
 document.addEventListener('keydown', e => {
   if (e.code === 'Space') { e.preventDefault(); haikuIndex = (haikuIndex + 1) % haikus.length; showHaiku(); }
   if (e.key === 'r' || e.key === 'R') document.getElementById('manifest').click();
   if (e.key === '?') document.getElementById('toggleLore').click();
+  if (e.key === 's' || e.key === 'S') document.getElementById('toggleThuamer').click();
 });
 
 addEventListener('resize', () => {

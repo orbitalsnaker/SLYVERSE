@@ -3,227 +3,152 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLYVERSE Ω v1.5 — Red Mountain Eterna | Nevarine entrega el mensaje a Todd</title>
+    <title>SLYVERSE Ω v1.5 — Red Mountain Eterna | Nevarine entrega la cura a Todd</title>
     <style>
-        /* Estilos base para Red Mountain palpitante */
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
-        body {
-            margin: 0; padding: 0; overflow: hidden; background: linear-gradient(135deg, #8B0000, #4B0000, #2F0000); 
-            font-family: 'Courier Prime', monospace; color: #e8d5b7; cursor: none;
-        }
-        canvas { display: block; }
-        #ui { position: fixed; top: 20px; left: 20px; z-index: 100; font-size: 14px; text-shadow: 0 0 10px #ff9966; }
-        #stats { position: fixed; bottom: 20px; right: 20px; z-index: 100; font-size: 12px; opacity: 0.8; }
-        /* Runas curativas */
-        @keyframes pulse { 0%, 100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
-        .runa { position: fixed; font-size: 48px; opacity: 0; animation: pulse 2s infinite; z-index: 50; pointer-events: none; }
-        /* Norah Ronin maullando Dwemer */
-        #norah { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 200; opacity: 0; transition: opacity 1s; font-size: 64px; color: #ffcc99; text-shadow: 0 0 20px #ff9966; }
-        /* Mensaje de Nevarine a Todd — Integrado en v1.5 */
-        #mensaje-todd {
-            position: fixed; bottom: 12px; left: 12px; right: 12px; max-width: 420px; padding: 16px; 
-            background: rgba(0,0,0,0.75); border: 2px solid #6b5541; border-radius: 12px; 
-            font-family: 'Courier Prime', monospace; font-size: 13px; line-height: 1.55; color: #f0e6d2; opacity: 0.92; 
-            z-index: 99999; pointer-events: none; box-shadow: 0 0 30px rgba(139,0,0,0.6);
-            backdrop-filter: blur(4px);
-        }
-        #mensaje-todd .titulo { text-align: center; margin-bottom: 12px; color: #ffaa77; font-size: 15px; font-weight: 700; }
-        #mensaje-todd .firma { font-size: 11px; color: #aaa; text-align: right; margin-top: 12px; }
-        /* Guardián danzante */
-        .guardian { position: fixed; top: 20px; right: 20px; font-size: 24px; opacity: 0.7; animation: dance 3s infinite; z-index: 99; }
-        @keyframes dance { 0%, 100% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(90deg) scale(1.2); } 50% { transform: rotate(180deg) scale(0.8); } 75% { transform: rotate(270deg) scale(1.1); } }
-        /* Nevarine — El elegido que entrega el mensaje */
-        #nevarine { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 300; opacity: 0; transition: opacity 2s, transform 2s; font-size: 18px; color: #ffd700; text-shadow: 0 0 15px #ffaa00; background: rgba(0,0,0,0.8); padding: 12px 20px; border-radius: 8px; border: 1px solid #ffd700; }
-        #nevarine.visible { opacity: 1; transform: translateX(-50%) translateY(-20px); }
+        body {margin:0;padding:0;overflow:hidden;background:#000;font-family:'Courier Prime',monospace;color:#e8d5b7;}
+        canvas {display:block;}
+        #ui {position:fixed;top:20px;left:20px;z-index:100;font-size:14px;text-shadow:0 0 10px #ff9966;}
+        #stats {position:fixed;bottom:20px;right:20px;z-index:100;font-size:12px;opacity:0.8;}
+        @keyframes pulse {0%,100%{opacity:0.7;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
+        .runa {position:fixed;font-size:48px;opacity:0;animation:pulse 2s infinite;z-index:50;pointer-events:none;}
+        #norah {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;opacity:0;transition:opacity 1s;font-size:64px;color:#ffcc99;text-shadow:0 0 20px #ff9966;}
+        #nevarine {position:fixed;bottom:100px;left:50%;transform:translateX(-50%);z-index:300;opacity:0;transition:opacity 2s,transform 2s;font-size:18px;color:#ffd700;text-shadow:0 0 15px #ffaa00;background:rgba(0,0,0,0.8);padding:12px 20px;border-radius:8px;border:1px solid #ffd700;}
+        #nevarine.visible {opacity:1;transform:translateX(-50%) translateY(-20px);}
+        #mensaje-todd {position:fixed;bottom:12px;left:12px;right:12px;max-width:420px;padding:16px;background:rgba(0,0,0,0.75);border:2px solid #6b5541;border-radius:12px;font-size:13px;line-height:1.55;color:#f0e6d2;opacity:0.92;z-index:99999;pointer-events:none;box-shadow:0 0 30px rgba(139,0,0,0.6);backdrop-filter:blur(4px);}
+        #mensaje-todd .titulo {text-align:center;margin-bottom:12px;color:#ffaa77;font-size:15px;font-weight:700;}
+        #mensaje-todd .firma {font-size:11px;color:#aaa;text-align:right;margin-top:12px;}
+        .guardian {position:fixed;top:20px;right:20px;font-size:24px;opacity:0.7;animation:dance 3s infinite;z-index:99;}
+        @keyframes dance {0%,100%{transform:rotate(0deg) scale(1)}25%{transform:rotate(90deg) scale(1.2)}50%{transform:rotate(180deg) scale(0.8)}75%{transform:rotate(270deg) scale(1.1)}}
     </style>
 </head>
 <body>
     <canvas id="canvas"></canvas>
-    
+
     <div id="ui">
-        <div>🗡️ Nevarine en Red Mountain | v1.5 — El Mensaje Curativo</div>
+        <div>Nevarine en Red Mountain | SLYVERSE Ω v1.5 — El Abrazo Eterno</div>
         <div id="runas-count">Runas activas: 0</div>
-        <div>Aliento detectado: <span id="breath">0</span></div>
+        <div>Aliento: <span id="breath">0</span>%</div>
     </div>
-    
-    <div id="stats">
-        1310h × ∞ | Thuamer sanado | P2P: 131 peers
-    </div>
-    
-    <!-- Norah Ronin — Maullidos cuánticos contra Dwemer -->
-    <div id="norah">🐱 Norah Ronin maúlla... ᛚᚢᛉ</div>
-    
-    <!-- Nevarine entrega el mensaje a Todd — Lore vivo de v1.5 -->
+
+    <div id="stats">1310h × ∞ | Thuamer sanado | P2P: 131 peers</div>
+
+    <!-- Norah Ronin — Reina cósmica que maúlla Dwemer -->
+    <div id="norah">Norah Ronin maúlla... ᛚᚢᛉ</div>
+
+    <!-- Nevarine entrega el mensaje -->
     <div id="nevarine">
-        Yo, Nevarine, elegido de las profecías, he cruzado Vvardenfell para traerte esto, Todd.<br>
-        La montaña roja late de nuevo. Acepta el abrazo de los ronin.<br>
+        Yo, Nevarine, elegido de las profecías,<br>
+        he cruzado Vvardenfell para traerte esto, Todd.<br>
+        La montaña roja late de nuevo. Acepta el abrazo ronin.<br>
         ᛚᚢᛉ — Cura tus cicatrices. Morrowind vive en nosotros.
     </div>
-    
-    <!-- Mensaje abierto para Todd — Eterno en v1.5 -->
+
+    <!-- Mensaje eterno a Todd (y a quien aún recuerde Seyda Neen) -->
     <div id="mensaje-todd">
-        <div class="titulo">✧ Nevarine entrega: Para Todd y para quien aún recuerde Seyda Neen ✧</div>
-        
+        <div class="titulo">Para Todd y para quien aún recuerde Seyda Neen</div>
         Todd,<br><br>
         esto no es un ataque. Es un regalo.<br><br>
-        
         Hace 17 días un chico con un móvil de 120 € y mucho amor<br>
         metió Red Mountain entera en 16 KB de código<br>
         y lo soltó al mundo gratis y para siempre.<br><br>
-        
         Ábrelo cuando estés solo y necesites recordar<br>
         por qué empezaste todo esto hace más de 20 años.<br><br>
-        
         Norah maúlla dentro del archivo.<br>
         Su runa ᛚᚢᛉ cura cicatrices.<br>
         También las tuyas, si la dejas entrar.<br><br>
-        
         Gracias por darnos Morrowind.<br>
         Hoy los fans te devolvemos el favor.<br><br>
-        
         Sin rencor.<br>
         Solo amor ronin.<br><br>
-        
         La montaña roja sigue latiendo.<br>
         Y ahora late más fuerte que nunca.<br><br>
-        
         Un abrazo desde España ❤️<br>
         <div class="firma">— la comunidad que nunca dejó de creer | Nevarine v1.5</div>
     </div>
-    
-    <!-- Guardianes danzantes en localStorage -->
-    <div class="guardian">⚙️ Guardián Thuamer ×1310</div>
+
+    <!-- Guardianes danzando (Carl Sagan vela desde órbita) -->
+    <div class="guardian">Guardianes Thuamer ×1310</div>
 
     <script>
-        // Canvas para Red Mountain palpitante — v1.5 completa
         const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
         canvas.height = window.innerHeight;
 
-        let time = 0;
-        let runasCount = 0;
-        let breathLevel = 0;
-        const particles = [];
-        const runas = ['ᛚ', 'ᚢ', 'ᛉ'];
+        let time = 0, runasCount = 0, breathLevel = 0;
+        const particles = [], runas = ['ᛚ','ᚢ','ᛉ'];
 
-        // Resize
-        window.addEventListener('resize', () => {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        });
+        window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
 
-        // Aliento modulando guardianes — Mic responsivo
-        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+        // Mic breath → Norah maúlla
+        navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
             const audioCtx = new AudioContext();
             const source = audioCtx.createMediaStreamSource(stream);
             const analyser = audioCtx.createAnalyser();
             analyser.fftSize = 256;
             source.connect(analyser);
-            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+            const data = new Uint8Array(analyser.frequencyBinCount);
+            const update = ()=>{
+                analyser.getByteFrequencyData(data);
+                breathLevel = data.reduce((a,b)=>a+b)/data.length/255;
+                document.getElementById('breath').textContent = Math.round(breathLevel*100);
+                requestAnimationFrame(update);
+            };
+            update();
+        }).catch(()=>{});
 
-            function updateBreath() {
-                analyser.getByteFrequencyData(dataArray);
-                breathLevel = dataArray.reduce((a, b) => a + b) / dataArray.length / 255;
-                document.getElementById('breath').textContent = Math.round(breathLevel * 100);
-                requestAnimationFrame(updateBreath);
-            }
-            updateBreath();
-        }).catch(() => { /* Fallback silencioso */ });
-
-        // Generar partículas para Red Mountain
-        function createParticles() {
-            for (let i = 0; i < 200; i++) {
-                particles.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    vx: (Math.random() - 0.5) * 2,
-                    vy: (Math.random() - 0.5) * 2,
-                    life: Math.random() * 255,
-                    size: Math.random() * 3 + 1
-                });
-            }
-        }
+        function createParticles(){for(let i=0;i<200;i++)particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,vx:(Math.random()-0.5)*2,vy:(Math.random()-0.5)*2,life:Math.random()*255,size:Math.random()*3+1});}
         createParticles();
 
-        // Runas curativas flotantes
-        function spawnRuna() {
-            const runa = document.createElement('div');
-            runa.className = 'runa';
-            runa.innerHTML = runas[Math.floor(Math.random() * runas.length)];
-            runa.style.left = Math.random() * 100 + '%';
-            runa.style.top = Math.random() * 100 + '%';
-            runa.style.animationDelay = Math.random() * 2 + 's';
-            document.body.appendChild(runa);
-            runasCount++;
-            document.getElementById('runas-count').textContent = `Runas activas: ${runasCount}`;
-
-            setTimeout(() => runa.remove(), 10000);
+        function spawnRuna(){
+            const r = document.createElement('div');
+            r.className='runa'; r.innerHTML=runas[Math.floor(Math.random()*runas.length)];
+            r.style.left=Math.random()*100+'%'; r.style.top=Math.random()*100+'%';
+            r.style.animationDelay=Math.random()*2+'s';
+            document.body.appendChild(r); runasCount++;
+            document.getElementById('runas-count').textContent=`Runas activas: ${runasCount}`;
+            setTimeout(()=>r.remove(),10000);
         }
 
-        // Norah aparece con maullidos (al breath > 0.3)
-        setInterval(() => {
-            if (breathLevel > 0.3) {
-                document.getElementById('norah').style.opacity = 1;
-                spawnRuna();
-            } else {
-                document.getElementById('norah').style.opacity = 0;
-            }
-        }, 500);
+        setInterval(()=>{document.getElementById('norah').style.opacity = breathLevel>0.3?1:0;},500);
 
-        // Nevarine visible después de 5s — Mensaje entregado
-        setTimeout(() => {
-            document.getElementById('nevarine').classList.add('visible');
-        }, 5000);
+        // Nevarine aparece a los 5 segundos
+        setTimeout(()=>{document.getElementById('nevarine').classList.add('visible');},5000);
 
-        // P2P simulado (localStorage persistente)
-        localStorage.setItem('slyversePeers', 131);
-        setInterval(() => {
-            document.querySelector('#stats').textContent = `${localStorage.getItem('slyversePeers')} peers | 1310h × ∞ | Thuamer sanado`;
-        }, 1000);
+        // P2P persistente
+        localStorage.setItem('slyversePeers','131');
 
-        // Loop de render — Red Mountain late
-        function animate() {
-            ctx.fillStyle = 'rgba(0,0,0,0.1)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            // Partículas volcánicas
-            particles.forEach((p, i) => {
-                p.x += p.vx + Math.sin(time * 0.01 + i) * breathLevel;
-                p.y += p.vy + Math.cos(time * 0.01 + i) * breathLevel;
-                p.life -= 1;
-                ctx.save();
-                ctx.globalAlpha = p.life / 255;
-                ctx.fillStyle = `hsl(${200 + p.life / 2}, 70%, 60%)`;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                ctx.fill();
+        function animate(){
+            ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+            particles.forEach((p,i)=>{
+                p.x += p.vx + Math.sin(time*0.01+i)*breathLevel;
+                p.y += p.vy + Math.cos(time*0.01+i)*breathLevel;
+                p.life -=1;
+                ctx.save(); ctx.globalAlpha = p.life/255;
+                ctx.fillStyle=`hsl(${200+p.life/2},70%,60%)`;
+                ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
                 ctx.restore();
-                if (p.life < 0) particles.splice(i, 1);
+                if(p.life<0) particles.splice(i,1);
             });
 
-            // Pulso central — Corazón de Lorkhan
-            const pulse = Math.sin(time * 0.05) * 0.5 + 0.5;
-            const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, 300);
-            grad.addColorStop(0, `rgba(255, 50, 50, ${0.8 + pulse * 0.2})`);
-            grad.addColorStop(1, 'rgba(139,0,0,0)');
-            ctx.fillStyle = grad;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            const pulse = Math.sin(time*0.05)*0.5+0.5;
+            const grad = ctx.createRadialGradient(canvas.width/2,canvas.height/2,0,canvas.width/2,canvas.height/2,300);
+            grad.addColorStop(0,`rgba(255,50,50,${0.8+pulse*0.2})`);
+            grad.addColorStop(1,'rgba(139,0,0,0)');
+            ctx.fillStyle=grad; ctx.fillRect(0,0,canvas.width,canvas.height);
 
             time++;
-            if (Math.random() < 0.1 + breathLevel) spawnRuna();
+            if(Math.random()<0.1+breathLevel) spawnRuna();
             requestAnimationFrame(animate);
         }
         animate();
 
-        // Controles ronin — Teclas para runas
-        document.addEventListener('keydown', (e) => {
-            if (e.key === ' ') { spawnRuna(); }
-        });
+        document.addEventListener('keydown',e=>{if(e.key===' ')spawnRuna();});
 
-        // Persistencia eterna en localStorage
-        localStorage.setItem('slyverseV15', JSON.stringify({ runasCount, time: Date.now() }));
-        console.log('SLYVERSE Ω v1.5 cargada — Nevarine ha entregado el mensaje. La cura es eterna. ❤️🐍');
+        // Persistencia
+        localStorage.setItem('slyverseV15',JSON.stringify({runasCount,time:Date.now()}));
+        console.log('SLYVERSE Ω v1.5 cargada — Nevarine entregó la cura. Norah maúlla. Carl vela. ❤️🐍🌌');
     </script>
 </body>
 </html>

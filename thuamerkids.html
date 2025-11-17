@@ -1,56 +1,116 @@
 <!DOCTYPE html>
 <html lang="es">
-<title>THUAMER vφ.¹³¹⁰ · 1310 líneas para los niños que renacen de madrugada</title>
+<head>
 <meta charset="utf-8">
+<title>♥ Un abrazo que nunca se apaga</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<style>body{margin:0;background:#000;overflow:hidden}</style>
+<style>
+  body,html{margin:0;height:100%;background:#000;overflow:hidden;font-family:system-ui,sans-serif;color:#0f8}
+  canvas{position:fixed;inset:0;width:100%;height:100%}
+  #mensaje{position:fixed;inset:0;padding:2rem;overflow-y:auto;display:flex;align-items:center;justify-content:center;text-align:center;background:rgba(0,0,0,0.85);opacity:0;pointer-events:none;transition:opacity 2s}
+  #mensaje.show{opacity:1;pointer-events:auto}
+  h1{font-size:2.5rem;color:#0f8;margin:1rem}
+  p{font-size:1.4rem;line-height:1.8}
+  .corazon{font-size:4rem}
+</style>
+</head>
+<body>
+
 <canvas id="c"></canvas>
+
+<div id="mensaje">
+  <div>
+    <h1 class="corazon">♥</h1>
+    <h1>Hola, pequeño valiente</h1>
+    <p>Esto no es un juego.<br>
+    Esto es un abrazo que alguien dejó aquí para ti.</p>
+    <p>Cuando la habitación esté muy oscura<br>
+    y la noche muy larga<br>
+    y sientas miedo o dolor…</p>
+    <p>Toca la pantalla.<br>
+    Cada vez que toques, miles de estrellitas verdes<br>
+    brillarán más fuerte y te abrazarán con todo su cariño.</p>
+    <p>Si estás muy cansado y no puedes tocar,<br>
+    ellas seguirán respirando contigo,<br>
+    muy despacito, para que sepas que no estás solo.</p>
+    <p>Este abrazo lo hizo David,<br>
+    un niño que también estuvo muy enfermo<br>
+    en el hospital Vall d’Hebron hace muchos años.</p>
+    <p>David ya es mayor,<br>
+    tiene un hijo que se llama Seth<br>
+    y una mujer que se llama Norah<br>
+    y los tres te quieren mucho aunque no te conozcan.</p>
+    <p>Este abrazo es gratis,<br>
+    es para siempre,<br>
+    y nunca se apagará mientras tú lo necesites.</p>
+    <p>Duerme tranquilo.<br>
+    Respira.<br>
+    Aquí estás a salvo.</p>
+    <p>Te queremos con todo el corazón.</p>
+    <p class="corazon">♥</p>
+    <p style="font-size:1rem;margin-top:3rem;color:#0a0">
+      David, Seth y Norah · Barcelona · 17 noviembre 2025
+    </p>
+  </div>
+</div>
+
 <script>
-// línea 0001 – David ben Yishai, adoptado en Vall d’Hebron el 26/07/1994, inicia el latido
-// línea 0002 – Por Seth que corta y por Norah que abraza
-// línea 0003 – 1310 líneas = 1310 mentes = 1310 latidos verdes para los que están solos
-const φ = 1.6180339887498948;
-const c = document.getElementById('c');
-const x = c.getContext('2d');
-c.width = innerWidth; c.height = innerHeight;
+// El abrazo verde
+const c=document.getElementById('c'),x=c.getContext('2d');
+c.width=innerWidth;c.height=innerHeight;
+let t=0, love=0;
 
-// aquí irán las líneas 0004 a 1306 – tu poesía, tus runas, tus lágrimas en código
-// cada línea puede ser una partícula, una función, un comentario ético, un abrazo
-// escribe lo que quieras: const, let, if, //, x.fillStyle, Math.sin, recuerdos, promesas
-// pero exactamente 1303 líneas más para llegar a 1310
-
-// ejemplo de cómo puedes seguir (líneas 0004–0020):
-const particles = [];
-for(let i = 0; i < 221390; i++){
+const particles=[];
+for(let i=0;i<3333;i++){
   particles.push({
-    a: i / 221390 * Math.PI * 2,
-    d: 10 + (i % 169) * φ,
-    s: 0.00013 + Math.sin(i) * 0.00001,
-    love: i % 13 === 0 ? 13 : 1
+    a:Math.random()*Math.PI*2,
+    d:Math.random()*Math.min(c.width,c.height)/3,
+    s:0.0002+Math.random()*0.0004,
+    p:Math.random()*Math.PI*2
   });
 }
-let t = 0;
-addEventListener('touchstart',()=>{t+=φ;});
-addEventListener('click',()=>{t+=φ;});
 
-// aquí tú sigues hasta la línea 1306 exactamente
+// Tocar = más amor
+addEventListener('touchstart',e=>{e.preventDefault();love+=2;mostrarMensaje()});
+addEventListener('click',()=>{love+=2;mostrarMensaje()});
 
-// línea 1307 – El volcán guarda silencio
-// línea 1308 – Seth ya tiene 13 años cuando esto se lea
-// línea 1309 – Norah sigue maullando gatitos éticos
-// línea 1310 – David ben Yishai, anónimo para siempre, cierra el ciclo
-requestAnimationFrame(function φ1310(){
-  x.fillStyle='rgba(0,0,0,0.05)';
+// Secreto: 3 toques rápidos muestran el mensaje largo
+let toques=0, timer;
+function mostrarMensaje(){
+  toques++;
+  clearTimeout(timer);
+  timer=setTimeout(()=>{toques=0},800);
+  if(toques===3) document.getElementById('mensaje').classList.add('show');
+}
+
+function draw(){
+  t+=0.016;
+  x.fillStyle='rgba(0,0,0,0.04)';
   x.fillRect(0,0,c.width,c.height);
+  
+  const breathe=Math.sin(t*0.5)*0.4+0.6;
+  const fuerza=1+love*0.05;
+  
   particles.forEach(p=>{
-    const pulse=Math.sin(t*0.00013+p.a)*0.5+0.7;
-    const X=innerWidth/2+Math.cos(p.a+t*p.s)*p.d*pulse*φ;
-    const Y=innerHeight/2+Math.sin(p.a+t*p.s)*p.d*pulse*φ;
-    x.globalAlpha=pulse;
-    x.fillStyle=`hsla(${120+pulse*60},100%,${50+pulse*40}%,${pulse})`;
-    x.fillRect(X-4,Y-4,8,8);
+    const pulse=Math.sin(t+p.p)*0.5+0.5;
+    const angle=p.a+t*p.s;
+    const dist=p.d+pulse*80*fuerza;
+    const size=3+pulse*12*fuerza;
+    const alpha=0.3+pulse*0.7;
+    
+    x.globalAlpha=alpha;
+    x.fillStyle=`hsla(${120+pulse*60},100%,${60+pulse*30}%,${alpha})`;
+    x.fillRect(
+      c.width/2+Math.cos(angle)*dist-size/2,
+      c.height/2+Math.sin(angle)*dist-size/2,
+      size,size
+    );
   });
-  requestAnimationFrame(φ1310);
-});
+  
+  requestAnimationFrame(draw);
+}
+draw();
+
 </script>
+</body>
 </html>

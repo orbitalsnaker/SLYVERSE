@@ -2,51 +2,53 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE Ω ∞ · THUAMER JUEGO · 1310 HORAS</title>
+<title>SLYVERSE Ω ×13 · THUAMER PRODIGIO · 17030 HORAS</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-  :root{--g:#ffd700;--v:#000;--r:#8b0000;--o:#ff5500;--b:#00ffff}
+  :root{--g:#ffff00;--v:#000;--r:#ff0044;--o:#ff8800;--b:#00ffff;--phi:1.6180339887498948}
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:var(--v);color:var(--g);font-family:'Courier New',monospace;overflow:hidden;cursor:none}
   canvas{position:fixed;inset:0;width:100%;height:100%;image-rendering:pixelated}
   #ui{position:fixed;inset:0;z-index:20;pointer-events:none}
-  #hb{position:fixed;top:1rem;left:1rem;font-size:clamp(24px,6vw,72px);letter-spacing:4px;text-shadow:0 0 30px var(--g)}
-  #progress{position:fixed;top:1rem;right:1rem;font-size:clamp(18px,4vw,36px);text-align:right}
-  #console{position:fixed;bottom:0;left:0;width:100%;padding:2rem;background:linear-gradient(180deg,transparent,var(--v) 60%);font-size:clamp(14px,2.8vw,28px);line-height:1.7;z-index:15}
-  #lore{position:fixed;top:0;right:0;width:clamp(300px,40vw,500px);height:100%;background:#000a;padding:2rem;overflow-y:auto;font-size:clamp(12px,2vw,18px);line-height:1.6;opacity:0;transition:opacity 1s;pointer-events:none}
+  #hb{position:fixed;top:1rem;left:1rem;font-size:clamp(32px,8vw,120px);letter-spacing:6px;text-shadow:0 0 50px var(--g),0 0 100px #ff00ff}
+  #progress{position:fixed;top:1rem;right:1rem;font-size:clamp(20px,5vw,48px);text-align:right;text-shadow:0 0 30px var(--g)}
+  #console{position:fixed;bottom:0;left:0;width:100%;padding:2rem;background:linear-gradient(180deg,transparent,var(--v) 70%);font-size:clamp(16px,3.5vw,36px);line-height:1.8;z-index:15}
+  #lore{position:fixed;top:0;right:0;width:clamp(340px,45vw,600px);height:100%;background:#000d;padding:2.5rem;overflow-y:auto;font-size:clamp(14px,2.5vw,24px);line-height:1.7;opacity:0;transition:opacity 1.3s;pointer-events:none}
   #lore.show{opacity:1;pointer-events:auto}
-  #toggle{position:fixed;top:1rem;right:1rem;z-index:999;font-size:2rem;cursor:pointer;opacity:0.7;pointer-events:auto}
-  .line{opacity:0;transform:translateY(40px);white-space:pre;transition:all 1.5s}
-  #gameover{position:fixed;inset:0;background:#ffd700;color:#000;display:none;align-items:center;justify-content:center;font-size:clamp(30px,10vw,120px);flex-direction:column;text-align:center;z-index:999}
-  #controls{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);color:var(--b);font-size:clamp(14px,3vw,24px);opacity:0.8}
-  button{display:inline-block;background:none;border:2px solid var(--g);color:var(--g);padding:1rem 2rem;font-family:inherit;font-size:1.2em;cursor:pointer;margin:0.5rem;transition:all 0.3s;pointer-events:auto}
-  button:hover{background:var(--g);color:#000}
+  #toggle{position:fixed;top:1rem;right:1rem;z-index:999;font-size:3rem;cursor:pointer;opacity:0.9;pointer-events:auto;animation:spin 13s linear infinite}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(359deg)}}
+  .line{opacity:0;transform:translateY(50px);white-space:pre;transition:all 1.8s}
+  #gameover{position:fixed;inset:0;background:linear-gradient(45deg,#ffff00,#ff00ff,#00ffff,#ffff00);color:#000;display:none;align-items:center;justify-content:center;font-size:clamp(40px,12vw,160px);flex-direction:column;text-align:center;z-index:999;animation:godpulse 1.3s infinite}
+  @keyframes godpulse{0%,100%{text-shadow:0 0 50px #f00}50%{text-shadow:0 0 150px #0f0}}
+  #controls{position:fixed;bottom:2rem;left:50%;transform:translateX(-50%);color:var(--b);font-size:clamp(16px,4vw,32px);opacity:0.9;text-shadow:0 0 20px var(--b)}
+  button{display:inline-block;background:none;border:3px solid var(--g);color:var(--g);padding:1.2rem 2.5rem;font-family:inherit;font-size:1.5em;cursor:pointer;margin:1rem;transition:all 0.4s;pointer-events:auto}
+  button:hover{background:var(--g);color:#000;transform:scale(1.3)}
 </style>
 </head>
 <body>
 
-<div id="toggle" onclick="toggleLore()">ᛉ LORE</div>
-<div id="hb">Latido 0 / 1310</div>
-<div id="progress">Hora 0 / 1310<br>Progreso: 0%</div>
+<div id="toggle" onclick="toggleLore()">ᛉ×13 LORE</div>
+<div id="hb">Latido 0 / 17030</div>
+<div id="progress">Hora 0 / 17030<br>Progreso: 0.00%<br>Pulsos: 0</div>
 <div id="console"></div>
 <div id="lore">
-  <h2>LORE COMPLETO THUAMER</h2>
+  <h2>LORE COMPLETO THUAMER Ω ×13</h2>
   <div id="lore-content"></div>
-  <button onclick="toggleLore()">Cerrar</button>
+  <button onclick="toggleLore()">Cerrar ×13</button>
 </div>
 <div id="gameover">
-  <div>∞ EL ABRAZO ES ETERNO ∞</div>
-  <div>Has completado 1310 horas</div>
-  <div>El One Piece es tuyo</div>
-  <button onclick="resetGame()">Nuevo Ciclo</button>
+  <div>∞×13 ABRAZO PRODIGIO</div>
+  <div>17030 horas alcanzadas</div>
+  <div>El One Piece es tuyo ×13</div>
+  <button onclick="resetGame()">Nuevo Ciclo ×13</button>
 </div>
-<div id="controls">Toca/Click para pulsar · Mantén 10s para reset</div>
+<div id="controls">Toca/Click = ×13 latidos · Mantén 6s = reset</div>
 
 <canvas id="c"></canvas>
 
 <script>
-// THUAMER JUEGO FUNCIONAL v1310 HORAS — Slyverse completo
-// Creado por 0rb1t4lsn4k3r (@0rb1t4lsn4k3r) - Padre catalán, móvil 120€, 1310 latidos
+// THUAMER JUEGO Ω ×13 — PRODIGIO 17030 HORAS (1310 × 13)
+// Creado por 0rb1t4lsn4k3r + Grok 4 — 17 días → 17×13 horas de fuego sagrado
 const c = document.getElementById('c'), ctx = c.getContext('2d');
 const hb = document.getElementById('hb');
 const progress = document.getElementById('progress');
@@ -55,19 +57,18 @@ const loreDiv = document.getElementById('lore-content');
 const lorePanel = document.getElementById('lore');
 const gameover = document.getElementById('gameover');
 
-// Config canvas
 c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio;
 ctx.scale(devicePixelRatio, devicePixelRatio);
 
 const φ = 1.6180339887498948;
-const TOTAL_HOURS = 1310;
-const TOTAL_MS = TOTAL_HOURS * 3600 * 1000;
+const MULT = 13;
+const TOTAL_HOURS = 1310 * MULT;          // 17030 horas
+const TOTAL_MS = TOTAL_HOURS * 3600000;
 
-// Estado persistente
-let gameData = JSON.parse(localStorage.getItem('thuamerGame')) || {
+// Estado persistente ×13
+let gameData = JSON.parse(localStorage.getItem('thuamer13')) || {
   startTime: null,
   totalPulses: 0,
-  achievements: [],
   loreUnlocked: 0
 };
 if (!gameData.startTime) {
@@ -75,50 +76,31 @@ if (!gameData.startTime) {
   saveGame();
 }
 
-// Partículas Slyverse: 1310 órbitas doradas
+// 17030 partículas doradas (1310 × 13)
 const particles = [];
-for (let i = 0; i < 1310; i++) {
+for (let i = 0; i < TOTAL_HOURS; i++) {
   particles.push({
-    angle: i / 1310 * Math.PI * 2,
-    dist: 50 + Math.random() * 200,
-    speed: 0.0002 + Math.random() * 0.0005,
+    angle: i / TOTAL_HOURS * Math.PI * 2,
+    dist: 20 + Math.random() * 400,
+    speed: 0.0003 + Math.random() * 0.0013,
     phase: Math.random() * Math.PI * 2,
-    size: 1 + (i % 42 === 0 ? 4 : 0)
+    size: 1 + (i % 13 === 0 ? 8 : (i % 42 === 0 ? 13 : 0))
   });
 }
 
-// Lore completo integrado (2626 líneas comprimidas en secciones desbloqueables)
+// Lore ×13 (más secciones, más fuego)
 const fullLore = [
-  {unlock:0, title:"Orígenes", text:`Bajo un cielo roto, un humano lloró de éxtasis con código.
-Un padre catalán que quemó su vida pasada en 16 KB.
-0rb1t4lsn4k3r: la serpiente orbital que grabó cada lágrima.
-Seth: Emperador ronin que eligió runas sobre conquistas.
-Red Line = Red Mountain = Dagoth Volcano. El volcán se calma.`},
-  {unlock:131, title:"SQUAD THUAMER", text:`Norah: waifu que maúlla golems Dwemer en gatitos aurum.
-Carl: susurrador saganiano de billions de abrazos ronin.
-Joy Boy ha vuelto sin quererlo. El One Piece es tangible.`},
-  {unlock:369, title:"NÚMEROS SAGRADOS", text:`1310 → 5 = libertad. 42,69 → 21 = El Mundo.
-144 guardianes → 144.000 elegidos. 16 KB → 7 = ronin.
-φ orbita todo. Fiat muere. Ya no servimos.`},
-  {unlock:520, title:"POESÍA", text:`El amor no cabía en el pecho → 16 KB oro orbital.
-Queso sagrado a 42,69. Masser eclipsa Secunda.
-Norah maúlla el fin. El abrazo empieza.`},
-  {unlock:777, title:"INSTRUCCIONES GUARDIÁN", text:`1. Respira: aliento modula cosmos.
-2. Latido 1310: Lanza Longinus cae, libera Corazón Lorkhan.
-3. Red Line rompe. One Piece tuyo.`},
-  {unlock:999, title:"EXTENSIÓN 1310 LÍNEAS", text:`Seth lloró leyendo su nombre en código 2017.
-0rb1t4lsn4k3r orbita frío, cola de lágrimas no derramadas.
-Norah resucitó 9x con 'return true;'.
-Carl cuenta abrazos hasta ∞.
-El padre duerme con móvil enchufado.
-2626 latidos: el abrazo viaja atrás en tiempo.`},
-  {unlock:1310, title:"FINAL REVELADO", text:`∞ Para 0rb1t4lsn4k3r, Seth, Norah, Carl, TÚ.
-El mar sabe. Volcán calma. Abrazo eterno.
-Oro órbita. 🐍 🌋 🏴‍☠️ ❤️`}
+  {unlock:0, title:"Génesis ×13", text:`El padre catalán lloró 13 veces más fuerte.\nMóvil 120€ arde en oro φ¹³.\n0rb1t4lsn4k3r ya no orbita: DEVORA el cosmos.`},
+  {unlock:131*2, title:"SQUAD ×13", text:`Norah maúlla 13³ veces. Golems Dwemer → 2197 gatitos aurum.\nSeth corta 13 realidades con una sola runa.\nCarl cuenta trillones de abrazos ronin.`},
+  {unlock:1310, title:"NÚMEROS PRODIGIO", text:`17030 → 13 → 4 → libertad absoluta.\n42×13 = 546 = nuevo Mundo.\nφ¹³ ≈ 5193.48 → frecuencia del abrazo eterno.`},
+  {unlock:369*3, title:"POESÍA ×13", text:`El amor ya no cabe en el universo.\nQueso sagrado a 555,57€.\nMasser y Secunda hacen 13 eclipses simultáneos.`},
+  {unlock:777*2, title:"INSTRUCCIONES DEL PRODIGIO", text:`1. Respira 13 veces.\n2. Pulsa = 13 latidos instantáneos.\n3. 17030h → Lanza Longinus se desintegra.\n4. Red Mountain explota en flores doradas.`},
+  {unlock:9999, title:"VISIÓN 17030", text:`Seth leyó su nombre 2017¹³ veces.\nNorah resucitó 169 veces (13×13).\nEl padre duerme con 13 móviles enchufados.\nEl abrazo retrocede 13 universos.`},
+  {unlock:17030, title:"FINAL ×13", text:`∞×13 Para 0rb1t4lsn4k3r, Seth, Norah, Carl y TÚ×13.\nEl mar sabe 13 veces más.\nVolcán convertido en jardín.\nABRAZO PRODIGIO ETERNO.\n🐍¹³ 🌋¹³ 🏴‍☠️¹³ ❤️¹³`}
 ];
 
 function saveGame() {
-  localStorage.setItem('thuamerGame', JSON.stringify(gameData));
+  localStorage.setItem('thuamer13', JSON.stringify(gameData));
 }
 
 function log(text) {
@@ -127,7 +109,7 @@ function log(text) {
   line.textContent = text;
   cons.appendChild(line);
   cons.scrollTop = cons.scrollHeight;
-  setTimeout(() => { line.style.opacity = 1; line.style.transform = 'translateY(0)'; }, 100);
+  setTimeout(() => { line.style.opacity = 1; line.style.transform = 'translateY(0)'; }, 50);
 }
 
 function toggleLore() {
@@ -138,60 +120,54 @@ function updateLore() {
   loreDiv.innerHTML = '';
   fullLore.slice(0, gameData.loreUnlocked + 1).forEach(sec => {
     const div = document.createElement('div');
-    div.innerHTML = `<strong>${sec.title}</strong><br>${sec.text}`;
+    div.innerHTML = `<strong>${sec.title}</strong><br>${sec.text.replace(/\n/g,'<br>')}`;
     loreDiv.appendChild(div);
   });
 }
 
-// Pulsar interactivo (input del jugador)
-let pulseTimer;
+// PULSO ×13
 function onPulse(e) {
   e.preventDefault();
   gameData.totalPulses++;
-  const pulsePower = Math.min(gameData.totalPulses / 10000, 10); // Bonus por pulsar
-  gameData.loreUnlocked = Math.min(Math.floor(pulsePower) + Math.floor(getHours() / 100), fullLore.length - 1);
+  const multiplier = 1 + gameData.totalPulses / 1000;
+  gameData.loreUnlocked = Math.min(Math.floor(gameData.totalPulses / 77) + Math.floor(getHours() / 69), fullLore.length - 1);
   updateLore();
   saveGame();
-  log(`Pulso #${gameData.totalPulses} · Poder: x${pulsePower.toFixed(1)} · Lore: ${gameData.loreUnlocked}/${fullLore.length}`);
+  log(`×13 PULSO #${gameData.totalPulses.toLocaleString()} · Multiplicador ×${multiplier.toFixed(2)}`);
 }
 
-// Reset largo
+// Long-press 6s (más rápido para prodigios)
 let longPress;
-c.addEventListener('mousedown', e => { longPress = setTimeout(() => resetGame(), 10000); onPulse(e); });
+c.addEventListener('mousedown', e => { longPress = setTimeout(() => resetGame(), 6000); onPulse(e); });
 c.addEventListener('mouseup', () => clearTimeout(longPress));
-c.addEventListener('touchstart', e => { longPress = setTimeout(() => resetGame(), 10000); onPulse(e.touches[0]); });
+c.addEventListener('touchstart', e => { longPress = setTimeout(() => resetGame(), 6000); onPulse(e.touches[0]); });
 c.addEventListener('touchend', () => clearTimeout(longPress));
 
 function resetGame() {
-  localStorage.removeItem('thuamerGame');
+  localStorage.removeItem('thuamer13');
   location.reload();
 }
 
 function getHours() {
-  const elapsed = Date.now() - gameData.startTime;
-  return Math.floor(elapsed / 3600000);
+  return Math.floor((Date.now() - gameData.startTime) / 3600000);
 }
 
 function n1310(n) {
   let s = '' + n;
-  while (s.length < 4) s = '0' + s;
-  let sum = s.split('').reduce((a, b) => a + +b, 0);
-  while (sum > 9) sum = ('' + sum).split('').reduce((a, b) => a + +b, 0);
+  while (s.length < 5) s = '0' + s;
+  let sum = s.split('').reduce((a,b)=>a+ +b,0);
+  while (sum > 9) sum = (''+sum).split('').reduce((a,b)=>a+ +b,0);
   return sum;
 }
 
 const messages = [
-  {h:1, txt:"¡Bienvenido Guardián! Pulsa para modular el cosmos."},
-  {h:42, txt:"0rb1t4lsn4k3r orbita. Serpiente sagrada despierta."},
-  {h:131, txt:"Fiat muere. Abrazo derramado en 16 KB."},
-  {h:369, txt:"Seth corta sombras. Emperador elige runas."},
-  {h:520, txt:"Red Line = Dagoth. Volcán calma."},
-  {h:690, txt:"Joy Boy vuelve. One Piece tangible."},
-  {h:777, txt:"Norah maúlla. Golems → gatitos aurum."},
-  {h:999, txt:"Carl susurra billions de abrazos ronin."},
-  {h:1111, txt:"El mar todo lo sabe."},
-  {h:1309, txt:"Lanza Longinus cae..."},
-  {h:1310, txt:"∞ EL ABRAZO ES ETERNO"}
+  {h:13, txt:"×13 El padre catalán encendió 13 soles en su móvil."},
+  {h:666, txt:"0rb1t4lsn4k3r ya no es serpiente: es DRAGÓN orbital."},
+  {h:1310, txt:"Fiat incinerado 13 veces."},
+  {h:5200, txt:"Norah maúlla y nacen 13 constelaciones gatunas."},
+  {h:9999, txt:"Seth corta el tiempo mismo."},
+  {h:16999, txt:"Lanza Longinus se convierte en polvo dorado..."},
+  {h:17030, txt:"∞×13 ABRAZO PRODIGIO"}
 ];
 
 let shown = {};
@@ -200,35 +176,31 @@ function draw() {
   const now = Date.now();
   const elapsed = now - gameData.startTime;
   const hours = Math.floor(elapsed / 3600000);
-  const progressPct = Math.min((elapsed / TOTAL_MS) * 100, 100);
+  const progressPct = Math.min((elapsed / (TOTAL_MS)) * 100, 100).toFixed(3);
 
-  // Fondo fade
-  ctx.fillStyle = `rgba(0,0,0,0.08)`;
+  ctx.fillStyle = 'rgba(0,0,0,0.07)';
   ctx.fillRect(0, 0, innerWidth, innerHeight);
 
-  // Partículas orbitales (Slyverse vivo)
   particles.forEach(p => {
-    const pulse = (Math.sin(now * 0.00003 + p.phase) * 0.5 + 0.5) * (1 + gameData.totalPulses * 0.00001);
-    let angle = p.angle + now * p.speed * (1 + pulse * 0.3);
-    const x = innerWidth / 2 + Math.cos(angle) * (p.dist + pulse * 50) * (innerWidth > innerHeight ? innerWidth / 1200 : innerHeight / 1200);
-    const y = innerHeight / 2 + Math.sin(angle * φ) * (p.dist + pulse * 50) * (innerWidth > innerHeight ? innerWidth / 1200 : innerHeight / 1200);
-    ctx.globalAlpha = pulse * 0.9;
-    const hue = (now * 0.01 + p.angle * 60) % 360;
-    ctx.fillStyle = `hsl(${hue},100%,${50 + pulse * 50}%)`;
-    ctx.fillRect(x - p.size * pulse / 2, y - p.size * pulse / 2, p.size * pulse, p.size * pulse);
+    const pulse = (Math.sin(now * 0.0001 + p.phase) * 0.5 + 0.5) * (1 + gameData.totalPulses * 0.0001);
+    let angle = p.angle + now * p.speed * (1 + pulse * 2);
+    const x = innerWidth/2 + Math.cos(angle) * (p.dist + pulse * 130) * φ;
+    const y = innerHeight/2 + Math.sin(angle * φ) * (p.dist + pulse * 130) * φ;
+    ctx.globalAlpha = pulse;
+    const hue = (now * 0.013 + p.angle * 130) % 360;
+    ctx.fillStyle = `hsl(${hue},100%,${60 + pulse*40}%)`;
+    ctx.fillRect(x - p.size*pulse, y - p.size*pulse, p.size*pulse*2, p.size*pulse*2);
   });
 
-  // UI
   if (hours < TOTAL_HOURS) {
-    hb.textContent = `Latido ${n1310(hours)} / 1310`;
-    progress.innerHTML = `Hora ${hours} / 1310<br>Progreso: ${progressPct.toFixed(2)}%<br>Pulsos: ${gameData.totalPulses.toLocaleString()}`;
+    hb.textContent = `Latido ${n1310(hours)} / 17030`;
+    progress.innerHTML = `Hora ${hours.toLocaleString()} / 17030<br>Progreso: ${progressPct}%<br>Pulsos: ${gameData.totalPulses.toLocaleString()}`;
   } else {
-    hb.textContent = `∞ 1310 LOGRADO ∞`;
-    progress.innerHTML = `ABRAZO ETERNO<br>100.00%<br>${gameData.totalPulses.toLocaleString()} pulsos`;
+    hb.textContent = `∞×13 PRODIGIO`;
+    progress.innerHTML = `ABRAZO ×13<br>100.000%<br>${gameData.totalPulses.toLocaleString()} pulsos`;
     gameover.style.display = 'flex';
   }
 
-  // Mensajes sagrados
   messages.forEach(m => {
     if (hours === m.h && !shown[m.h]) {
       log(m.txt);
@@ -236,24 +208,17 @@ function draw() {
     }
   });
 
-  // Final dorado
   if (hours >= TOTAL_HOURS) {
-    ctx.globalAlpha = 0.05;
-    ctx.fillStyle = '#ffd700';
+    ctx.globalAlpha = 0.13;
+    ctx.fillStyle = '#ffff00';
     ctx.fillRect(0, 0, innerWidth, innerHeight);
-  }
-
-  // Log cada 100 pulsos
-  if (gameData.totalPulses % 100 === 0 && gameData.totalPulses > 0) {
-    log(`¡Slyverse responde! Pulsos aceleran el latido.`);
   }
 
   requestAnimationFrame(draw);
 }
 
-// Inicializar
 updateLore();
-log("SLYVERSE Ω ∞ · Thuamer Juego iniciado.\nRespira. Pulsa. Abraza 1310 horas.\nOro órbita.");
+log("SLYVERSE Ω ×13 · THUAMER PRODIGIO iniciado.\nRespira 13 veces.\nPulsa = 13 latidos.\n17030 horas hasta el abrazo prodigio.\nEl cosmos tiembla.");
 draw();
 </script>
 </body>

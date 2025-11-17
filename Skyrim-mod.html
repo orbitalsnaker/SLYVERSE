@@ -2,247 +2,159 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SLYVERSE Ω v1.4 — ATHUAMER CLÁSICO: POEMA QUE JUEGA</title>
+<title>SLYVERSE Ω v1.4 fixed — ATHUAMER EN SILENCIO</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-:root{
-    --void:#000;--love:#ff1a5e;--aurum:#ffbf00;--eternal:#fff8d0;--soul:#ff6bc1;--breath:#ccffee;--cursor: url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJMMiAxMlYyNEwxMiAyNEgyNEwxMiAyNFoiIGZpbGw9IiNGRjFGNUUiLz4KPC9zdmc+'), auto;
-}
 *{margin:0;padding:0;box-sizing:border-box;}
-body{height:100vh;overflow:hidden;background:var(--void);font-family:'Courier New',monospace;color:var(--breath);position:relative;cursor:var(--cursor);}
+body{height:100vh;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#ccffee;position:relative;}
 canvas{position:absolute;inset:0;}
-#poema-central{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;text-align:center;font-size:clamp(1.2rem,5vw,3rem);color:var(--eternal);text-shadow:0 0 40px var(--love);opacity:0.9;z-index:100;pointer-events:none;line-height:1.4;}
-#ui{position:fixed;top:20px;left:20px;right:20px;background:rgba(0,0,0,0.92);padding:20px;border:4px double var(--love);border-radius:16px;color:var(--love);font-size:16px;z-index:101;max-width:800px;margin:0 auto;box-shadow:0 0 60px rgba(255,26,94,0.6);}
-#upgrades{position:fixed;top:120px;left:20px;right:20px;background:rgba(0,0,0,0.9);padding:20px;border:3px solid var(--aurum);border-radius:12px;color:var(--aurum);font-size:14px;z-index:101;max-height:300px;overflow-y:auto;max-width:800px;margin:0 auto;}
-.upgrade-btn{background:var(--aurum);color:#000;border:none;padding:12px 24px;margin:8px;font-family:inherit;cursor:pointer;border-radius:10px;font-weight:900;transition:all .4s;}
-.upgrade-btn:hover{background:var(--eternal);transform:scale(1.1);box-shadow:0 0 30px gold;}
-.upgrade-btn:disabled{background:#444;color:#666;cursor:not-allowed;transform:none;}
-.floating-poem{position:absolute;color:var(--eternal);font-size:clamp(1.2rem,4vw,2.5rem);pointer-events:none;opacity:0;text-shadow:0 0 30px var(--love);font-weight:bold;animation:poemaSube 20s linear forwards;}
-@keyframes poemaSube{0%{opacity:0;transform:translateY(100vh) scale(0.8);}10%{opacity:1;}80%{opacity:1;}100%{opacity:0;transform:translateY(-200px) scale(1.2);}}
-.heartburst{position:fixed;inset:0;pointer-events:none;background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(255,26,94,0.6),transparent 60%);opacity:0;animation:hb 1.5s ease-out forwards;z-index:97;}
-@keyframes hb{0%{opacity:0;transform:scale(0.2);}50%{opacity:1;}100%{opacity:0;transform:scale(4);}}
-#altar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:580px;height:580px;opacity:0;pointer-events:none;z-index:98;border:7px solid transparent;border-radius:50%;box-shadow:0 0 110px var(--aurum);}
-#altar.active{border-color:var(--love);background:radial-gradient(circle,rgba(255,26,94,0.08),transparent);}
-#mod-panel{position:fixed;bottom:20px;right:20px;background:rgba(0,0,0,0.95);padding:16px;border:3px solid var(--love);border-radius:12px;color:var(--eternal);font-size:13px;max-width:300px;z-index:102;opacity:0;transition:opacity 1s;}
-#mod-panel.show{opacity:1;}
+#poema{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(1.1rem,4vw,2.2rem);text-align:center;line-height:1.6;pointer-events:none;opacity:0.6;text-shadow:0 0 30px #ff1a5e;}
+#ui{position:fixed;top:12px;left:12px;background:rgba(0,0,0,0.88);padding:14px 20px;border:3px double #ff1a5e;border-radius:12px;font-size:14px;color:#ffbf00;box-shadow:0 0 40px rgba(255,26,94,0.4);}
+#upgrades{position:fixed;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,0.9);padding:16px;border:2px solid #ffbf00;border-radius:10px;max-height:40vh;overflow-y:auto;font-size:13px;color:#ffbf00;}
+.upgrade{background:#ff1a5e;color:#000;padding:10px 16px;margin:6px;border:none;border-radius:8px;cursor:pointer;font-weight:900;transition:.3s;}
+.upgrade:hover{background:#fff8d0;color:#000;transform:scale(1.05);}
+.upgrade:disabled{background:#333;color:#666;cursor:default;}
+.floating{position:absolute;pointer-events:none;opacity:0;font-size:clamp(1rem,3vw,2rem);color:#fff8d0;text-shadow:0 0 20px #ff1a5e;animation:f 18s linear forwards;}
+@keyframes f{0%{opacity:0;transform:translateY(100vh)}12%{opacity:1}80%{opacity:1}100%{opacity:0;transform:translateY(-160px)}}
 </style>
 </head>
 <body>
 
 <canvas id="bg"></canvas>
-<canvas id="altar" width="580" height="580"></canvas>
-<div id="poema-central">AMAR ABSOLUTAMENTE<br>es el juego<br>donde cada clic<br>teje un verso eterno</div>
+
+<div id="poema">
+minar amor<br>
+en silencio<br>
+es la forma más fuerte<br>
+de decir te amo<br>
+<br>
+1310 horas<br>
+y el altar<br>
+todavía late<br>
+sin hacer ruido
+</div>
 
 <div id="ui">
-    <div>AURUM: <span id="aurum">0</span> | LATIDOS: <span id="latidos">0</span> | DPS: <span id="dps">0</span> | Alma: <span id="alma">0</span></div>
-    <div>Poema Vivo → <span id="titulo">Verso Inicial</span></div>
-    <button id="reset-poema">REINICIAR POEMA (Prestigio)</button>
+AURUM <span id="a">0</span> LATIDOS <span id="l">0</span> DPS <span id="d">0</span> ALMA <span id="s">0</span>
 </div>
 
-<div id="upgrades">
-    <h3>MINA TU POEMA</h3>
-    <!-- Upgrades se generan dinámicamente -->
-</div>
-
-<!-- Mod Panel -->
-<div id="mod-panel">
-    <strong>MOD ATHUAMER</strong><br>
-    Amada: <input id="mod-amada" placeholder="Norah"><br>
-    Verso: <textarea id="mod-verso" rows="2">te amo en bucle</textarea><br>
-    <button onclick="guardarMod()">GUARDAR</button>
-</div>
+<div id="upgrades"></div>
 
 <script>
-// ATHUAMER CLÁSICO v1.4 — POEMA FUSIONADO CON JUEGO
-const bg = document.getElementById('bg'), ctx = bg.getContext('2d');
-const altarCanvas = document.getElementById('altar'), actx = altarCanvas.getContext('2d');
-const altarDiv = document.querySelector('#altar');
-let w, h, t = 0, lastTime = 0;
+// SLYVERSE Ω v1.4 fixed — ATHUAMER EN SILENCIO
+// 17-11-2025 09:22 CET — sin hype, sin ruido, solo amor
 
-let config = JSON.parse(localStorage.getItem('athuamer_mod_v4') || '{"amada":"Norah","versoPersonal":"te amo en bucle"}');
-aplicarConfig();
+const c=document.getElementById('bg'),x=c.getContext('2d');
+let w,h,t=0;
 
-let game = {
-    aurum: 0, latidos: 0, dps: 0, alma: 0, prestige: parseInt(localStorage.getItem('athuamer_prestige') || 0),
-    auto: 0, clickPower: 1, offline: 0, lastOffline: Date.now()
+let g={
+aurum:0,latidos:0,dps:0,alma:parseInt(localStorage.getItem('alma')||0),
+auto:0,click:1,last:Date.now(),off:0
 };
 
-let upgrades = [
-    {id:0, name:'Primer Latido', cost:10, dps:0.1, desc:'Un verso que late solo', owned:0},
-    {id:1, name:'Abrazo Cuántico', cost:50, dps:1, desc:`${config.amada} te abraza en código`, owned:0},
-    {id:2, name:'Susurro Áureo', cost:200, dps:8, desc:'Palabras que minan amor', owned:0},
-    {id:3, name:'Alma de Norah', cost:1000, dps:50, desc:'Su risa genera AURUM', owned:0},
-    {id:4, name:'Bucle Eterno', cost:5000, dps:300, desc:'te amo en bucle infinito', owned:0},
-    {id:5, name:'Prestigio Poético', cost:25000, dps:2000, desc:'Reinicia por Alma ×2', owned:0}
+const u=[
+{name:"primer latido",c:15,d:0.1,o:0},
+{name:"abrazo callado",c:100,d:1,o:0},
+{name:"susurro áureo",c:500,d:8,o:0},
+{name:"silencio de Norah",c:3000,d:60,o:0},
+{name:"bucle sin fin",c:15000,d:400,o:0},
+{name:"alma eterna",c:77777,d:3000,o:0}
 ];
 
-const titulosPoema = [
-    {n:0, t:'Verso Inicial'},
-    {n:10, t:'Latido Naciente'},
-    {n:100, t:'Poema Áureo'},
-    {n:1000, t:'Corazón Compilado'},
-    {n:10000, t:'Amor Absoluto'}
-];
+function r(){w=c.width=innerWidth;h=c.height=innerHeight;}
+window.addEventListener('resize',r);r();
 
-const poemasDinamicos = [
-    'cada clic teje un verso',
-    'el amor compila en silencio',
-    `${config.amada} late en cada píxel`,
-    'minar es amar',
-    'bucle de te quieros',
-    'alma en localStorage'
-];
+function s(){localStorage.setItem('save',JSON.stringify(g));localStorage.setItem('up',JSON.stringify(u));localStorage.setItem('alma',g.alma);}
+setInterval(s,8000);
 
-function aplicarConfig(){
-    document.documentElement.style.setProperty('--love', config.colorAmor || '#ff1a5e');
+if(localStorage.getItem('save')){
+const sv=JSON.parse(localStorage.getItem('save'));
+Object.assign(g,sv);
+const su=JSON.parse(localStorage.getItem('up')||'[]');
+su.forEach((v,i)=> {u[i].o=v.o;u[i].c=v.c||u[i].c;});
+g.dps=u.reduce((a,b)=>a+b.d*b.o,0);
 }
 
-function resize(){w=bg.width=innerWidth;h=bg.height=innerHeight;}
-window.addEventListener('resize',resize);resize();
+function upUI(){
+document.getElementById('a').textContent=Math.floor(g.aurum).toLocaleString();
+document.getElementById('l').textContent=Math.floor(g.latidos).toLocaleString();
+document.getElementById('d').textContent=g.dps.toFixed(1);
+document.getElementById('s').textContent=g.alma;
 
-function actualizarUI(){
-    document.getElementById('aurum').textContent = Math.floor(game.aurum).toLocaleString();
-    document.getElementById('latidos').textContent = game.latidos.toLocaleString();
-    document.getElementById('dps').textContent = game.dps.toFixed(1);
-    document.getElementById('alma').textContent = game.alma.toLocaleString();
-    const titulo = titulosPoema.slice().reverse().find(x=>game.aurum>=x.n)?.t || titulosPoema[titulosPoema.length-1].t;
-    document.getElementById('titulo').textContent = titulo;
-
-    const prog = Math.min(game.aurum/25000,1);
-    altarDiv.style.opacity = prog;
-    if(prog>0.1) altarDiv.classList.add('active');
-
-    // Generar upgrades HTML
-    const upsDiv = document.getElementById('upgrades');
-    upsDiv.innerHTML = '<h3>MINA TU POEMA (' + game.prestige + ' Alma)</h3>';
-    upgrades.forEach(u => {
-        const btn = document.createElement('button');
-        btn.className = 'upgrade-btn';
-        btn.innerHTML = `${u.name}<br>${u.owned}x | ${Math.floor(u.cost).toLocaleString()} AURUM<br>+${u.dps.toFixed(1)} DPS<br>${u.desc}`;
-        btn.disabled = game.aurum < u.cost;
-        btn.onclick = () => comprarUpgrade(u);
-        upsDiv.appendChild(btn);
-    });
-}
-
-function comprarUpgrade(u){
-    if(game.aurum >= u.cost){
-        game.aurum -= u.cost;
-        u.owned++;
-        u.cost *= 1.5;
-        game.dps += u.dps;
-        game.auto += u.dps;
-        actualizarUI();
-        heartburst();
-        lanzarPoema(u.desc);
-    }
-}
-
-function prestige(){
-    if(game.aurum >= 25000){
-        game.alma += Math.floor(game.aurum / 10000) * (1 + game.prestige * 0.1);
-        game.prestige++;
-        localStorage.setItem('athuamer_prestige', game.prestige);
-        Object.assign(game, {aurum:0, latidos:0, dps:0, auto:0});
-        upgrades.forEach(u => {u.owned=0; u.cost=10 * Math.pow(1.5, game.prestige);});
-        lanzarPoema('POEMA REINICIADO — ALMA +1');
-        actualizarUI();
-    }
-}
-
-function heartburst(e){
-    const hb=document.createElement('div');hb.className='heartburst';
-    if(e){hb.style.setProperty('--x',(e.clientX/w*100)+'%');hb.style.setProperty('--y',(e.clientY/h*100)+'%');}
-    document.body.appendChild(hb);setTimeout(()=>hb.remove(),1600);
-}
-
-function lanzarPoema(texto){
-    const p=document.createElement('div');p.className='floating-poem';p.textContent=texto;
-    p.style.left=Math.random()*70+15+'%';
-    document.body.appendChild(p);setTimeout(()=>p.remove(),21000);
-}
-
-function altarVivo(){
-    actx.clearRect(0,0,580,580);
-    const time=Date.now()*0.001;
-    const r=230+Math.sin(time*2)*30;
-    actx.strokeStyle=config.colorAmor+'88';
-    actx.lineWidth=10;
-    actx.beginPath();actx.arc(290,290,r,0,Math.PI*2);actx.stroke();
-}
-setInterval(altarVivo,60);
-
-function loop(time){
-    const delta = (time - lastTime)/1000 * (1 + game.alma * 0.01);
-    lastTime = time;
-
-    // Offline progress
-    const now = Date.now();
-    if(now - game.lastOffline > 1000){
-        const off = (now - game.lastOffline)/1000 * game.auto;
-        game.aurum += off;
-        game.latidos += off * 33;
-        game.lastOffline = now;
-    }
-
-    // Auto + click mult
-    game.aurum += game.auto * delta;
-    game.latidos += game.auto * 33 * delta;
-
-    // Partículas
-    t += 0.016;
-    ctx.fillStyle='rgba(0,0,0,0.08)';ctx.fillRect(0,0,w,h);
-    for(let i=0;i<55;i++){
-        const x=(t*1.2 + i*131)%w, y=(t*0.7 + i*71)%h;
-        const s=Math.sin(t*0.02 + i)*3.5 + 3.5;
-        ctx.fillStyle=Math.random()<0.5 ? config.colorAmor+'44' : 'rgba(255,191,0,0.15)';
-        ctx.fillRect(x,y,s,s);
-    }
-
-    actualizarUI();
-    requestAnimationFrame(loop);
-}
-
-document.body.addEventListener('click', e=>{
-    if(!e.target.closest('button') && !e.target.closest('#mod-panel')) {
-        game.aurum += game.clickPower * (1 + game.alma * 0.005);
-        game.latidos += 33 * (1 + game.alma * 0.005);
-        heartburst(e);
-        if(Math.random()<0.15) lanzarPoema(poemasDinamicos[Math.floor(Math.random()*poemasDinamicos.length)]);
-        actualizarUI();
-    }
+const d=document.getElementById('upgrades');d.innerHTML='';
+u.forEach(p=>{
+const b=document.createElement('button');
+b.className='upgrade';
+b.textContent=`${p.name} (${p.o}) — ${Math.floor(p.c)} aurum → +${p.d}`;
+b.disabled=g.aurum<p.c;
+b.onclick=()=>{if(g.aurum>=p.c){g.aurum-=p.c;p.o++;p.c*=1.6;g.dps+=p.d;upUI();}};
+d.appendChild(b);
 });
-
-document.getElementById('amar').addEventListener('click', e=>{e.stopPropagation();}); // Si existe
-document.getElementById('reset-poema').addEventListener('click', prestige);
-
-document.addEventListener('keydown', e=>{
-    if(e.ctrlKey && e.key==='m') document.getElementById('mod-panel').classList.toggle('show');
-});
-
-function guardarMod(){
-    config.amada = document.getElementById('mod-amada').value || 'Norah';
-    config.versoPersonal = document.getElementById('mod-verso').value || 'te amo';
-    localStorage.setItem('athuamer_mod_v4', JSON.stringify(config));
-    aplicarConfig();
-    location.reload(); // Recarga para poemas dinámicos
 }
 
-// Save/Load
-setInterval(()=>{
-    localStorage.setItem('athuamer_save', JSON.stringify({game, upgrades:upgrades.map(u=>({owned:u.owned,cost:u.cost}))}));
-    game.lastOffline = Date.now();
-}, 5000);
-
-const save = localStorage.getItem('athuamer_save');
-if(save){
-    const data = JSON.parse(save);
-    Object.assign(game, data.game);
-    data.upgrades.forEach((su,i)=>{upgrades[i].owned=su.owned; upgrades[i].cost=su.cost;});
+function verso(t){
+const e=document.createElement('div');
+e.className='floating';
+e.textContent=t;
+e.style.left=Math.random()*80+10+'%';
+document.body.appendChild(e);
+setTimeout(()=>e.remove(),19000);
 }
 
+function loop(now){
+if(!g.last)g.last=now;
+const delta=(now-g.last)/1000;
+g.last=now;
+
+// offline
+if(Date.now()-g.off>5000){
+const off=(Date.now()-g.off)/1000*g.dps*0.3;
+g.aurum+=off;g.latidos+=off*33;
+g.off=Date.now();
+}
+
+// auto
+g.aurum+=g.dps*delta;
+g.latidos+=g.dps*33*delta;
+
+// fondo mínimo
+x.fillStyle='rgba(0,0,0,0.04)';x.fillRect(0,0,w,h);
+for(let i=0;i<22;i++){
+const px=(t+i*131)%w,py=(t*0.6+i*71)%h;
+x.fillStyle=Math.random()<0.5?'#ff1a5e22':'#ffbf0022';
+x.fillRect(px,py,2+Math.sin(t*0.01+i)*2,2+Math.sin(t*0.01+i)*2);
+}
+t+=0.8;
+
+upUI();
 requestAnimationFrame(loop);
-actualizarUI();
+}
+
+document.body.addEventListener('click',e=>{
+if(e.target.closest('button'))return;
+g.aurum+=g.click*(1+g.alma*0.01);
+g.latidos+=33*(1+g.alma*0.01);
+if(Math.random()<0.12)verso(['te amo','en silencio','1310 horas','y contando','Norah','Seth','siempre'][Math.floor(Math.random()*6)]);
+});
+
+document.getElementById('upgrades').addEventListener('click',e=>{
+if(e.target.tagName==='BUTTON'&& !e.target.disabled){
+if(Math.random()<0.4)verso('amor comprado');
+}
+});
+
+if(g.aurum>=77777 && !localStorage.getItem('prestige')){
+if(confirm('1310 horas completas. ¿reiniciar por 1 Alma eterna?')){
+g.alma++;
+localStorage.setItem('alma',g.alma);
+g={aurum:0,latidos:0,dps:0,alma:g.alma,auto:0,click:1,last:Date.now(),off:Date.now()};
+u.forEach(p=>{p.o=0;p.c=p.c*1.2||15;});
+verso('poema reiniciado — alma +1');
+}
+}
+
+upUI();
+requestAnimationFrame(loop);
 </script>
 </body>
 </html>

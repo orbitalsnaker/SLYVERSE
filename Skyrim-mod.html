@@ -2,12 +2,12 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SLYVERSE Ω v1.4 thuamer — ALMA ETERNA DE RED MOUNTAIN</title>
+<title>SLYVERSE Ω v1.6 thuamer — ALMA ETERNA DE RED MOUNTAIN (DAGGER TO T奇D + ESPERANZA)</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
 body{height:100vh;overflow:hidden;background:#1a1a2e;font-family:'Courier New',monospace;color:#e94560;cursor:crosshair;}
-canvas{position:absolute:inset:0;}
+canvas{position:absolute;inset:0;}
 #verso{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(1.2rem,4.5vw,2.6rem);text-align:center;line-height:1.7;pointer-events:none;opacity:0.9;text-shadow:0 0 40px #e94560;animation:latir 44s infinite;}
 @keyframes latir{0%,100%{opacity:0.9}50%{opacity:1}}
 #ui{position:fixed;top:12px;left:12px;background:rgba(26,26,46,0.9);padding:16px 22px;border:4px double #e94560;border-radius:14px;font-size:15px;color:#f4a261;box-shadow:0 0 50px rgba(233,69,96,0.5);}
@@ -35,8 +35,10 @@ minar amor<br>
 en Red Mountain<br>
 es forjar runas<br>
 con el Corazón de Lorkhan<br>
+libre de Creations<br>
 <br>
 1310 horas<br>
+Todd puede redimirse<br>
 y el altar<br>
 guarda eternidad<br>
 para ti y Norah
@@ -51,32 +53,26 @@ AURUM <span id="a">0</span> LATIDOS <span id="l">0</span> DPS <span id="d">0
 <div id="eventlog"></div>
 <div id="questlog"></div>
 
-<!-- README THUAMER TÉCNICO FINAL -->
-<pre id="readme" style="position:absolute:inset:0;padding:2rem;background:rgba(26,26,46,0.97);font-size:1rem;color:#e94560;line-height:1.6;opacity:0;transition:opacity 4s;z-index:100;cursor:pointer;overflow-y:auto;">
-SLYVERSE Ω v1.4 thuamer — ALMA ETERNA DE RED MOUNTAIN
-17-11-2025 09:58 CET — España
-por 0rb1t4lsn4k3r
+<!-- README THUAMER v1.6 — DAGGER TO T奇D + ESPERANZA -->
+<pre id="readme" style="position:absolute;inset:0;padding:2rem;background:rgba(26,26,46,0.97);font-size:1rem;color:#e94560;line-height:1.6;opacity:0;transition:opacity 4s;z-index:100;cursor:pointer;overflow-y:auto;">
+SLYVERSE Ω v1.6 thuamer — ALMA ETERNA (DAGGER TO T奇D + ESPERANZA)
+17-11-2025 — España
+por 0rb1t4lsn4k3r + Grok thuamer
 
-Este es el regalo puro para gamers
-técnicamente superior, lore intacto
-rendimiento optimizado, escalabilidad infinita
-misiones Dwemer, retos vivos, narrativa eterna
+Dolor poético para Todd: $7 Vulture, quests chopped, FO4 roto.
+Esperanza: Redímete con ES6 libre, como Morrowind eterno.
 
-- Sonido dinámico con Web Audio API avanzada
-- Eventos y quests con persistencia local
-- Modding que redefine mecánicas
-- Offline con narrativa Thuamer
-- Más de 1310 variaciones activas
+- Eventos: "Todd's Broken Vulture" + DPS eterno
+- Quests: Rompe Creations, forja gratis
+- Versos: "Todd, mods libres renacen"
 
-Copia, pega, y forja tu leyenda.
+Copia, forja ANTI-CREATIONS + REDENCIÓN.
 
 ×131 ♡
 </pre>
 
 <script>
-// v1.4 thuamer — ALMA ETERNA DE RED MOUNTAIN
-// Código técnico avanzado, optimizado, lore vivo
-
+// v1.6 thuamer — DAGGER TO T奇D + ESPERANZA
 const bg = document.getElementById('bg'), c = bg.getContext('2d');
 const altar = document.getElementById('altar'), a = altar.getContext('2d');
 let w, h, t = 0, vol = 0.7, lastFrame = performance.now();
@@ -108,31 +104,37 @@ const sonidos = {
   susurro: () => playSound(200 + Math.random() * 300, 'sine', 0.8, 0.15),
   prestige: () => { playSound(330, 'sine', 1.5, 0.4); playSound(440, 'sine', 1.5, 0.4); },
   evento: () => playSound(880, 'square', 0.2, 0.5),
-  wind: () => playSound(100 + Math.random() * 50, 'sine', 1.0, 0.1)
+  wind: () => playSound(100 + Math.random() * 50, 'sine', 1.0, 0.1),
+  troll: () => playSound(120, 'sawtooth', 0.6, 0.7),
+  dagger: () => playSound(150, 'square', 0.8, 0.8) // Dolor para Todd
 };
 
 let game = JSON.parse(localStorage.getItem('save') || '{"aurum":0,"latidos":0,"dps":0,"alma":0,"off":' + Date.now() + ',"eventos":0,"quests":{},"seed":' + Date.now() + '}');
 let mod = JSON.parse(localStorage.getItem('mod') || '{"amada":"Norah","verso":"te amo en bucle","modDps":1,"modEvent":1}');
 
 const upgrades = [
-  {name:"Primer Latido", c:20, d:0.1, o:0, lore:"El primer susurro de Norah"},
-  {name:"Abrazo Callado", c:100, d:1, o:0, lore:"Seth teje un lazo dorado"},
-  {name:"Susurro Áureo", c:800, d:8, o:0, lore:"Runas de Red Mountain"},
-  {name:"Silencio de Norah", c:5000, d:60, o:0, lore:"Maullido cuántico"},
-  {name:"Bucle Sin Fin", c:30000, d:400, o:0, lore:"El Corazón late aún"},
-  {name:"Alma Eterna", c:77777, d:3000, o:0, lore:"Yagrum guarda el saber"}
+  {name:"Primer Latido", c:20, d:0.1, o:0, lore:"El primer susurro de Norah, libre de Creations"},
+  {name:"Abrazo Callado", c:100, d:1, o:0, lore:"Seth teje un lazo dorado, no como Todd's $7 Vulture"},
+  {name:"Susurro Áureo", c:800, d:8, o:0, lore:"Runas de Red Mountain, quests no chopped up"},
+  {name:"Silencio de Norah", c:5000, d:60, o:0, lore:"Maullido cuántico, FO4 updates no rompen mods"},
+  {name:"Bucle Sin Fin", c:30000, d:400, o:0, lore:"Corazón late libre, Yagrum rechaza Creations"},
+  {name:"Alma Eterna", c:77777, d:3000, o:0, lore:"Todd puede redimirse — mods GRATIS eternos"}
 ];
 
 const versosDinamicos = [
   "te amo en bucle", "para siempre", "en cada latido", "desde 2215", "con maullidos cuánticos",
   "y runas Dwemer", "sin fin", "eterno", "1310 veces", "y una más", "porque sí", "porque existes",
-  "en Red Mountain", "desde Tel Fyr", "con Yagrum", "con Seth", "con Norah", "para siempre jamás"
+  "en Red Mountain", "desde Tel Fyr", "con Yagrum", "con Seth", "con Norah", "para siempre jamás",
+  "mods libres siempre", "no como Creations pagados", "Bethesda aprende: amor gratis",
+  "Todd, forja ES6 libre", "Redímete con Morrowind alma"
 ];
 
 const quests = {
-  "inicioDwemer": {active: game.quests?.inicioDwemer?.active || false, completed: game.quests?.inicioDwemer?.completed || false, req: 1000, reward: 500, desc: "Descubre el primer runa Dwemer"},
-  "norahMaullido": {active: game.quests?.norahMaullido?.active || false, completed: game.quests?.norahMaullido?.completed || false, req: 5000, reward: 2000, desc: "Desbloquea el maullido de Norah"},
-  "corazonLorkhan": {active: game.quests?.corazonLorkhan?.active || false, completed: game.quests?.corazonLorkhan?.completed || false, req: 30000, reward: 10000, desc: "Forja con el Corazón"}
+  "inicioDwemer": {active: game.quests?.inicioDwemer?.active || false, completed: game.quests?.inicioDwemer?.completed || false, req: 1000, reward: 500, desc: "Descubre runa Dwemer libre de Todd's chains"},
+  "norahMaullido": {active: game.quests?.norahMaullido?.active || false, completed: game.quests?.norahMaullido?.completed || false, req: 5000, reward: 2000, desc: "Maullido de Norah vs. $7 Vulture"},
+  "corazonLorkhan": {active: game.quests?.corazonLorkhan?.active || false, completed: game.quests?.corazonLorkhan?.completed || false, req: 30000, reward: 10000, desc: "Forja Corazón, no como FO4 roto"},
+  "antiCreations": {active: game.quests?.antiCreations?.active || false, completed: game.quests?.antiCreations?.completed || false, req: 10000, reward: 3000, desc: "Rompe Creations — esperanza para Todd"},
+  "daggerTodd": {active: game.quests?.daggerTodd?.active || false, completed: game.quests?.daggerTodd?.completed || false, req: 50000, reward: 15000, desc: "Daga a Todd's Broken Dreams: +DPS eterno"}
 };
 
 function resize(){w=bg.width=innerWidth;h=bg.height=innerHeight;}
@@ -159,13 +161,12 @@ function ui(){
   document.getElementById('altar').style.opacity=prog;
   if(prog>0.15)document.getElementById('altar').classList.add('late');
 
-  // Quest UI
   const q=document.getElementById('questlog');q.innerHTML='';
-  Object.entries(quests).forEach(([id,q])=>{
-    if(q.active && !q.completed){
+  Object.entries(quests).forEach(([id,quest])=>{
+    if(quest.active && !quest.completed){
       const d=document.createElement('div');
-      d.textContent=`${q.desc} (${Math.floor(game.aurum)}/${q.req})`;
-      if(game.aurum>=q.req){d.style.color='#e94560';d.onclick=()=>{q.completed=true;game.aurum+=q.reward;flotar(`Recompensa: +${q.reward} aurum`);sonidos.evento();q.active=false;};}
+      d.textContent=`${quest.desc} (${Math.floor(game.aurum)}/${quest.req})`;
+      if(game.aurum>=quest.req){d.style.color='#e94560';d.onclick=()=>{quest.completed=true;game.aurum+=quest.reward;flotar(`Recompensa: +${quest.reward} aurum — ${id==='daggerTodd'?'Daga a Todd + esperanza ES6 libre':'¡Libre de Creations!'}`);sonidos[id==='daggerTodd'?'dagger':'evento']();quest.active=false;};}
       q.appendChild(d);
     }
   });
@@ -179,8 +180,8 @@ function flotar(texto){
 }
 
 function checkQuests(){
-  Object.entries(quests).forEach(([id,q])=>{
-    if(!q.active && !q.completed && game.aurum>=q.req/2){q.active=true;log(`Nueva misión: ${q.desc}`);}
+  Object.entries(quests).forEach(([id,quest])=>{
+    if(!quest.active && !quest.completed && game.aurum>=quest.req/2){quest.active=true;log(`Nueva misión: ${quest.desc}`);}
   });
 }
 
@@ -195,28 +196,24 @@ requestAnimationFrame(() => setInterval(altarVivo, 80));
 function loop(n){
   const delta = (n - lastFrame) / 1000; lastFrame = n;
 
-  // OFFLINE
   if(Date.now()-game.off>4000){
     const offTime=(Date.now()-game.off)/1000;
     const offGain=offTime*game.dps*0.9*(1+game.alma*0.2)*mod.modEvent;
     game.aurum+=offGain;game.latidos+=offGain*33;
     game.off=Date.now();
-    if(offGain>10000){flotar(`Offline te dejó ${Math.floor(offGain).toLocaleString()} aurum`);sonidos.maullido();}
-    const offMsg = ["Seth te guarda un susurro","Norah maúlla desde Tel Fyr","El viento de Red Mountain canta"][Math.floor(Math.random()*3)];
+    if(offGain>10000){flotar(`Offline: ${Math.floor(offGain).toLocaleString()} aurum — mejor que Todd's Vulture`);sonidos.maullido();}
+    const offMsg = ["Seth susurra","Norah maúlla desde Tel Fyr","Viento de Red Mountain libre","Yagrum: Todd, redímete con mods gratis"][Math.floor(Math.random()*4)];
     if(Math.random()<0.1)log(offMsg);
   }
 
-  // AUTO
   game.aurum+=game.dps*delta*(1+game.alma*0.09)*mod.modDps;
   game.latidos+=game.dps*33*delta*(1+game.alma*0.09)*mod.modEvent;
 
-  // EVENTOS FORO
-  if(Math.random()<0.02){
+  if(Math.random()<0.025){
     const e = eventosForo[Math.floor(Math.random()*eventosForo.length)];
     e.exec();log(e.msg);game.eventos++;sonidos.evento();
   }
 
-  // COSMOS OPTIMIZADO
   t+=0.8;c.fillStyle='rgba(0,0,0,0.05)';c.fillRect(0,0,w,h);
   for(let i=0;i<60;i++){
     const x=(t+i*137)%w,y=(t*0.8+i*97)%h;
@@ -228,11 +225,16 @@ function loop(n){
 }
 
 const eventosForo = [
-  {prob:0.003, msg:"DPS x2 por 60s", exec:()=>{game.dps*=2;mod.modDps*=2;setTimeout(()=>{game.dps/=2;mod.modDps/=2;},60000);}},
-  {prob:0.002, msg:"Aurum x3 instantáneo", exec:()=>{game.aurum*=3;}},
-  {prob:0.004, msg:"Lluvia dorada: +15000 aurum", exec:()=>{game.aurum+=15000;}},
-  {prob:0.001, msg:"Norah hackea: offline x15 por 1h", exec:()=>{game.off=Date.now()-3600000;}},
-  {prob:0.005, msg:`${mod.amada} susurra un verso`, exec:()=>{flotar(mod.verso);}}
+  {prob:0.003, msg:"DPS x2 60s — mods libres", exec:()=>{game.dps*=2;mod.modDps*=2;setTimeout(()=>{game.dps/=2;mod.modDps/=2;},60000);}},
+  {prob:0.002, msg:"Aurum x3 — anti-Creations", exec:()=>{game.aurum*=3;}},
+  {prob:0.004, msg:"Lluvia dorada: +15000 gratis", exec:()=>{game.aurum+=15000;}},
+  {prob:0.001, msg:"Norah hackea: offline x15 1h", exec:()=>{game.off=Date.now()-3600000;}},
+  {prob:0.005, msg:`${mod.amada} susurra verso libre`, exec:()=>{flotar(mod.verso);}},
+  {prob:0.003, msg:"Creations ROTO! DPS +50% eterno", exec:()=>{game.dps*=1.5;sonidos.troll();}},
+  {prob:0.002, msg:"Yagrum libera: Aurum x2", exec:()=>{game.aurum*=2;sonidos.troll();}},
+  {prob:0.004, msg:"Runas Dwemer: +20000", exec:()=>{game.aurum+=20000;sonidos.troll();}},
+  {prob:0.003, msg:"Todd's Broken Vulture: Aurum x4 — quests chopped ya no", exec:()=>{game.aurum*=4;sonidos.dagger();flotar('Dolor para Todd: $7 quests rotas');}},
+  {prob:0.002, msg:"FO4 Updates Roto: +30000 — esperanza: ES6 libre", exec:()=>{game.aurum+=30000;sonidos.dagger();}}
 ];
 
 function log(msg){
@@ -259,13 +261,13 @@ document.addEventListener('keydown',e=>{
 });
 
 if(game.aurum>=77777 && !localStorage.getItem('prestige')){
-  if(confirm(`1310 horas forjadas en Red Mountain.\n¿Ascender tu alma eterna con ${mod.amada}?`)){
+  if(confirm(`1310 horas en Red Mountain.\n¿Ascender alma eterna con ${mod.amada}, libre de Creations?\nTodd: Redímete con mods gratis en ES6.`)){
     game.alma++;localStorage.setItem('alma',game.alma);
     game={aurum:0,latidos:0,dps:0,alma:game.alma,off:Date.now(),eventos:0,quests:quests};
     upgrades.forEach(u=>{u.o=0;u.c*=1.3;});
     sonidos.prestige();
-    flotar(`Ascenso a ${game.alma} almas — ${mod.amada} te guía`);
-    log(`ASCENSO: Alma elevada a ${game.alma} en Tel Fyr`);
+    flotar(`Ascenso ${game.alma} almas — ${mod.amada} guía, Todd aprende: amor libre`);
+    log(`ASCENSO: Alma ${game.alma} en Tel Fyr — ¡Creations roto, esperanza!`);
     localStorage.removeItem('prestige');
   }
   localStorage.setItem('prestige','true');

@@ -7,17 +7,19 @@
 <style>
   body,html{margin:0;height:100%;background:#000;overflow:hidden;font-family:system-ui,sans-serif;color:#0f8}
   canvas{position:fixed;inset:0;width:100%;height:100%}
-  #mensaje{position:fixed;inset:0;padding:2rem;overflow-y:auto;display:flex;align-items:center;justify-content:center;text-align:center;background:rgba(0,0,0,0.85);opacity:0;pointer-events:none;transition:opacity 2s}
-  #mensaje.show{opacity:1;pointer-events:auto}
+  #mensaje,#deeParsons{position:fixed;inset:0;padding:2rem;overflow-y:auto;display:flex;align-items:center;justify-content:center;text-align:center;background:rgba(0,0,0,0.92);opacity:0;pointer-events:none;transition:opacity 2.5s}
+  #mensaje.show,#deeParsons.show{opacity:1;pointer-events:auto}
   h1{font-size:2.5rem;color:#0f8;margin:1rem}
   p{font-size:1.4rem;line-height:1.8}
   .corazon{font-size:4rem}
+  .peque{font-size:0.9rem;color:#0b0;margin-top:4rem}
 </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
 
+<!-- Abrazo principal (el que todos ven) -->
 <div id="mensaje">
   <div>
     <h1 class="corazon">♥</h1>
@@ -54,11 +56,39 @@
   </div>
 </div>
 
+<!-- La enseñanza ética secreta (solo aparece tras 7 toques con intención pura) -->
+<div id="deeParsons">
+  <div>
+    <h1 style="color:#0f8">Para quien buscó de verdad</h1>
+    <p>Hace mucho tiempo hubo dos hombres muy inteligentes<br>
+    que quisieron tocar el cielo con magia y con fuego.</p>
+    <p>Uno se llamaba John Dee<br>
+    y el otro Jack Parsons.</p>
+    <p>Los dos confiaron en personas que decían hablar con ángeles<br>
+    y les robaron todo: dinero, amor, dignidad y hasta la vida.</p>
+    <p class="peque">Nunca confíes en quien dice que “solo él” puede ver los ángeles.<br>
+    Nunca des tu poder a quien te pide algo a cambio del cielo.<br>
+    Nunca firmes pactos que te hagan daño a ti o a quien amas.</p>
+    <p>El verdadero abrazo<br>
+    nunca pide nada.<br>
+    Nunca duele.<br>
+    Nunca te deja solo.</p>
+    <p>John y Jack ya están en paz.<br>
+    Hoy vuelan libres y con los ojos llenos de luz verde.</p>
+    <p>Tú también puedes volar así:<br>
+    amando sin condiciones<br>
+    y nunca, nunca, dejando que nadie<br>
+    apague tu estrellita.</p>
+    <p class="corazon">♥</p>
+    <p class="peque">David te lo cuenta con cariño · para que nunca te pase lo que a ellos</p>
+  </div>
+</div>
+
 <script>
-// El abrazo verde
+// El abrazo verde + enseñanza ética oculta
 const c=document.getElementById('c'),x=c.getContext('2d');
 c.width=innerWidth;c.height=innerHeight;
-let t=0, love=0;
+let t=0, love=0, toques=0, timer;
 
 const particles=[];
 for(let i=0;i<3333;i++){
@@ -70,18 +100,21 @@ for(let i=0;i<3333;i++){
   });
 }
 
-// Tocar = más amor
-addEventListener('touchstart',e=>{e.preventDefault();love+=2;mostrarMensaje()});
-addEventListener('click',()=>{love+=2;mostrarMensaje()});
-
-// Secreto: 3 toques rápidos muestran el mensaje largo
-let toques=0, timer;
-function mostrarMensaje(){
+// Contador secreto de toques
+function contarToque(){
   toques++;
   clearTimeout(timer);
-  timer=setTimeout(()=>{toques=0},800);
+  timer=setTimeout(()=>{toques=0},1000);
+  
   if(toques===3) document.getElementById('mensaje').classList.add('show');
+  if(toques===7) {
+    document.getElementById('deeParsons').classList.add('show');
+    setTimeout(()=>{document.getElementById('deeParsons').classList.remove('show')}, 25000);
+  }
 }
+
+addEventListener('touchstart',e=>{e.preventDefault();love+=2;contarToque()});
+addEventListener('click',()=>{love+=2;contarToque()});
 
 function draw(){
   t+=0.016;
@@ -107,10 +140,10 @@ function draw(){
     );
   });
   
+  love*=0.98; // el amor se queda, pero no explota
   requestAnimationFrame(draw);
 }
 draw();
-
 </script>
 </body>
 </html>

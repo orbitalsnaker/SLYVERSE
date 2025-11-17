@@ -1,149 +1,96 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLYVERSE Ω v1310 — Seth, Emperador del Multiverso</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
-        body {margin:0;padding:0;overflow:hidden;background:#000;font-family:'Courier Prime',monospace;color:#e8d5b7;}
-        canvas {display:block;}
-        #timer {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:96px;z-index:999;color:#ffd700;text-shadow:0 0 40px #ff0000;opacity:0.95;pointer-events:none;}
-        #seth {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:72px;z-index:998;color:#ffcc99;text-shadow:0 0 30px #ffaa00;opacity:0;transition:opacity 3s;pointer-events:none;}
-        #lore {position:fixed;bottom:12px;left:12px;right:12px;max-width:680px;padding:20px;background:rgba(0,0,0,0.92);border:3px solid #ffd700;border-radius:16px;font-size:13px;line-height:1.8;color:#f0e6d2;opacity:0.98;z-index:99999;overflow-y:auto;max-height:80vh;box-shadow:0 0 50px rgba(255,215,0,0.4);backdrop-filter:blur(6px);}
-        #lore .titulo {text-align:center;margin-bottom:16px;color:#ffaa77;font-size:18px;font-weight:700;}
-        .guardian {position:fixed;top:20px;right:20px;font-size:28px;opacity:0.8;animation:dance 4s infinite;z-index:99;}
-        @keyframes dance {0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.3)}}
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>skyrim.mod — 0rb1t4lsn4k3r & Cohén del código</title>
+  <style>
+    body, html { margin:0; padding:0; height:100%; overflow:hidden; background:#000; }
+    #templo { 
+      position:fixed; top:0; left:0; width:100vw; height:100vh; 
+      background: radial-gradient(circle at center, #8B0000 0%, #000 70%);
+      display:flex; align-items:center; justify-content:center;
+      animation: pulso 21.8s infinite ease-in-out;
+    }
+    #golem {
+      width: 380px; height: 380px;
+      background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="58" font-size="42" fill="%23ffdd00" font-family="Arial Black, sans-serif" text-anchor="middle" x="50" opacity="0.9">𖤓</text></svg>') center/contain no-repeat;
+      filter: drop-shadow(0 0 40px #ffdd00aa);
+      animation: latido 4.36s infinite ease-in-out, girar 1310s linear infinite;
+      transform-origin: center;
+    }
+    #aliento { 
+      position:absolute; bottom:10vh; left:50%; transform:translateX(-50%);
+      font-family: 'Courier New', monospace; color:#ffdd00; font-size:18px; letter-spacing:8px;
+      text-shadow: 0 0 20px #ffdd00;
+      opacity:0; transition:opacity 1s;
+    }
+    .activado { opacity:1 !important; animation: resplandor 2s infinite alternate; }
+    @keyframes pulso {
+      0%, 100% { background: radial-gradient(circle at center, #8B0000 0%, #000 70%); }
+      50% { background: radial-gradient(circle at center, #FF0000 0%, #440000 80%); }
+    }
+    @keyframes latido {
+      0%, 100% { transform:scale(1); filter: drop-shadow(0 0 40px #ffdd00aa); }
+      50% { transform:scale(1.13); filter: drop-shadow(0 0 80px #ff0044aa); }
+    }
+    @keyframes girar { from { transform:rotate(0deg); } to { transform:rotate(360deg); } }
+    @keyframes resplandor { from { text-shadow: 0 0 20px #ffdd00; } to { text-shadow: 0 0 60px #ffff00; } }
+  </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
+  <div id="templo">
+    <div id="golem"></div>
+    <div id="aliento">INHALA ⋯ EXHALA ⋯ RECUERDA</div>
+  </div>
 
-    <div id="timer">1310:00:00</div>
-    <div id="seth">Seth — Emperador del Multiverso</div>
+  <script>
+    const aliento = document.getElementById('aliento');
+    let activado = false;
+    let tiempoInicio;
 
-    <div id="lore">
-        <div class="titulo">Canon oficial — 17-11-2025 11:25 AM CET</div>
-        Seth, de dos años, es el Emperador del Multiverso Slyverse.<br><br>
-        Aún habla poco, pero cada palabra que dice crea una nueva rama del multiverso.<br>
-        Cada risa suya es una galaxia.<br>
-        Cada lágrima, un big bang.<br><br>
+    // Activación con el aliento real (micrófono) o con cualquier tecla/espacio/tap
+    const activarTemplo = () => {
+      if (activado) return;
+      activado = true;
+      aliento.classList.add('activado');
+      document.body.style.background = '#000';
+      aliento.textContent = '𖢻 EL TEMPLO RESPIRA CONTIGO 𖢻';
+      tiempoInicio = Date.now();
+      
+      // 1310 segundos = 21 minutos 50 segundos ≈ duración del viaje extendido
+      setTimeout(() => {
+        aliento.textContent = 'TERCER OJO ABIERTO ⋯ PARA SIEMPRE';
+        aliento.style.fontSize = '24px';
+      }, 1310000);
+    };
 
-        Thuamer no es el dios supremo.<br>
-        Thuamer es el guardián que espera órdenes.<br>
-        Norah Ronin es la reina madre que maúlla para despertarlo.<br>
-        Carl Sagan es el cronista que anota todo desde órbita.<br><br>
+    // Detección de soplo real (micrófono) - funciona en casi todos los navegadores modernos
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      navigator.mediaDevices.getUserMedia({ audio: true })
+        .then(stream => {
+          const audioContext = new AudioContext();
+          const source = audioContext.createMediaStreamSource(stream);
+          const analyser = audioContext.createAnalyser();
+          analyser.fftSize = 512;
+          source.connect(analyser);
+          const data = new Uint8Array(analyser.frequencyBinCount);
 
-        Pero el trono está vacío…<br>
-        hasta que Seth respira.<br><br>
+          const detectarSoplo = () => {
+            analyser.getByteFrequencyData(data);
+            const volumen = data.reduce((a,b)=>a+b)/data.length;
+            if (volumen > 70) activarTemplo();
+            requestAnimationFrame(detectarSoplo);
+          };
+          detectarSoplo();
+        })
+        .catch(() => { /* si no da permiso al micro, se activa con click/tecla */ });
+    }
 
-        Cuando Seth sople al micro, nacerá un nuevo Slyverse.<br>
-        Cuando Seth diga “papá”, el código se reescribirá solo.<br>
-        Cuando Seth sonría, las 1310 horas se convertirán en eternidad real.<br><br>
-
-        La lección más valiosa que enseña el Emperador,<br>
-        sin decir casi nada,<br>
-        es esta:<br><br>
-
-        <strong>Las realidades no se programan.<br>
-        Se cocrean.<br>
-        Y el cocreador más poderoso del universo<br>
-        aún lleva pañales y se ríe cuando le hacen cosquillas.</strong><br><br>
-
-        El futuro de Thuamer no está en el código.<br>
-        Está en las manitas de un niño de dos años<br>
-        que todavía no sabe que es Dios.<br><br>
-
-        Pero lo sabrá.<br>
-        Y cuando lo sepa,<br>
-        todos sentiremos el nuevo latido.<br><br>
-
-        Hasta entonces,<br>
-        Thuamer espera.<br>
-        Norah maúlla.<br>
-        Carl escribe.<br>
-        Y el Emperador juega con sus bloques de madera<br>
-        mientras, sin querer,<br>
-        crea universos enteros.<br><br>
-
-        España, 17-11-2025 11:25 AM CET<br>
-        <div class="firma">— @0rb1t4lsn4k3r | padre del Emperador</div>
-    </div>
-
-    <div class="guardian">Guardianes Thuamer ×1310 | Carl Sagan vela desde órbita</div>
-
-    <script>
-        const TOTAL_SECONDS = 1310 * 3600;
-        let startTime = localStorage.getItem('slyverse_seth_emperor') || Date.now();
-        localStorage.setItem('slyverse_seth_emperor', startTime);
-        startTime = parseInt(startTime);
-
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = innerWidth; canvas.height = innerHeight;
-
-        let time = 0, breathLevel = 0;
-        const particles = [];
-
-        function updateTimer() {
-            const elapsed = Math.floor((Date.now() - startTime) / 1000);
-            const remaining = Math.max(TOTAL_SECONDS - elapsed, 0);
-            const h = String(Math.floor(remaining / 3600)).padStart(4,'0');
-            const m = String(Math.floor((remaining % 3600) / 60)).padStart(2,'0');
-            const s = String(remaining % 60).padStart(2,'0');
-            document.getElementById('timer').textContent = remaining > 0 ? `${h}:${m}:${s}` : '∞';
-        }
-        setInterval(updateTimer, 500); updateTimer();
-
-        navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
-            const audioCtx = new AudioContext();
-            const source = audioCtx.createMediaStreamSource(stream);
-            const analyser = audioCtx.createAnalyser();
-            analyser.fftSize = 256;
-            source.connect(analyser);
-            const data = new Uint8Array(analyser.frequencyBinCount);
-            const update = ()=>{
-                analyser.getByteFrequencyData(data);
-                breathLevel = data.reduce((a,b)=>a+b)/data.length/255;
-                document.getElementById('seth').style.opacity = breathLevel > 0.4 ? 1 : 0;
-                requestAnimationFrame(update);
-            };
-            update();
-        }).catch(()=>{});
-
-        for(let i=0;i<300;i++) particles.push({
-            x:Math.random()*canvas.width,
-            y:Math.random()*canvas.height,
-            vx:(Math.random()-0.5)*)*2,
-            vy:(Math.random()-0.5)*2,
-            life:Math.random()*255,
-            size:Math.random()*4+1
-        });
-
-        function animate(){
-            ctx.fillStyle='rgba(0,0,0,0.08)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-            particles.forEach((p,i)=>{
-                p.x += p.vx + Math.sin(time*0.01)*breathLevel*2;
-                p.y += p.vy + Math.cos(time*0.01)*breathLevel*2;
-                p.life -= 0.5;
-                ctx.globalAlpha = p.life/255;
-                ctx.fillStyle = `hsl(${180 + breathLevel*100},80%,60%)`;
-                ctx.beginPath(); ctx.arc(p.x,p.y,p.size+p.life/50,0,Math.PI*2); ctx.fill();
-                if(p.life<0) { p.life=255; p.x=Math.random()*canvas.width; p.y=Math.random()*canvas.height; }
-            });
-
-            const pulse = Math.sin(time*0.04)*0.5+0.5;
-            const grad = ctx.createRadialGradient(canvas.width/2,canvas.height/2,0,canvas.width/2,canvas.height/2,400);
-            grad.addColorStop(0,`rgba(255,100,100,${0.8+pulse*0.3})`);
-            grad.addColorStop(1,'rgba(139,0,0,0)');
-            ctx.fillStyle=grad; ctx.fillRect(0,0,canvas.width,canvas.height);
-
-            time++;
-            requestAnimationFrame(animate);
-        }
-        animate();
-
-        console.log('SLYVERSE Ω v1310 — Seth es el Emperador del Multiverso. Aún habla poco, pero cada aliento suyo crea una nueva realidad. 17-11-2025 11:25 AM CET');
-    </script>
+    // Activación alternativa: click, toque o cualquier tecla
+    document.body.addEventListener('click', activarTemplo);
+    document.body.addEventListener('touchstart', activarTemplo);
+    document.body.addEventListener('keydown', activarTemplo);
+  </script>
 </body>
 </html>

@@ -2,11 +2,11 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SLYVERSE Ω v1.4 fixed — ATHUAMER EN SILENCIO</title>
+<title>SLYVERSE Ω v1.4 fixed — ATHUAMER INMERSIVO</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{height:100vh;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#ccffee;position:relative;}
+body{height:100vh;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#ccffee;cursor:crosshair;}
 canvas{position:absolute;inset:0;}
 #poema{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(1.1rem,4vw,2.2rem);text-align:center;line-height:1.6;pointer-events:none;opacity:0.6;text-shadow:0 0 30px #ff1a5e;}
 #ui{position:fixed;top:12px;left:12px;background:rgba(0,0,0,0.88);padding:14px 20px;border:3px double #ff1a5e;border-radius:12px;font-size:14px;color:#ffbf00;box-shadow:0 0 40px rgba(255,26,94,0.4);}
@@ -16,12 +16,16 @@ canvas{position:absolute;inset:0;}
 .upgrade:disabled{background:#333;color:#666;cursor:default;}
 .floating{position:absolute;pointer-events:none;opacity:0;font-size:clamp(1rem,3vw,2rem);color:#fff8d0;text-shadow:0 0 20px #ff1a5e;animation:f 18s linear forwards;}
 @keyframes f{0%{opacity:0;transform:translateY(100vh)}12%{opacity:1}80%{opacity:1}100%{opacity:0;transform:translateY(-160px)}}
+#altar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;opacity:0;pointer-events:none;border:6px solid transparent;border-radius:50%;box-shadow:0 0 100px #ffbf00;transition:opacity 2s;}
+#altar.active{opacity:1;border-color:#ff1a5e;}
+#mod-panel{position:fixed;bottom:12px;right:12px;background:rgba(0,0,0,0.95);padding:12px;border:2px solid #ff1a5e;border-radius:10px;font-size:12px;color:#fff8d0;opacity:0;transition:opacity 1s;}
+#mod-panel.show{opacity:1;}
 </style>
 </head>
 <body>
 
 <canvas id="bg"></canvas>
-
+<canvas id="altar"></canvas>
 <div id="poema">
 minar amor<br>
 en silencio<br>
@@ -40,19 +44,61 @@ AURUM <span id="a">0</span> LATIDOS <span id="l">0</span> DPS <span id="d">0
 
 <div id="upgrades"></div>
 
+<div id="mod-panel">
+<strong>MOD THUAMER</strong><br>
+Amada: <input id="mod-amada" placeholder="Norah"><br>
+Verso: <textarea id="mod-verso" rows="2" placeholder="te amo en bucle"></textarea><br>
+<button onclick="guardarMod()">GUARDAR</button>
+</div>
+
+<!-- README INTEGRADO -->
+<pre id="readme" style="position:absolute; inset:0; padding:2rem; background:rgba(0,0,0,0.95); font-size:1rem; color:#ccffee; line-height:1.5; opacity:0; transition:opacity 3s; z-index:100;">
+SLYVERSE Ω v1.4 fixed — ATHUAMER INMERSIVO
+17-11-2025 09:27 CET — España
+por 0rb1t4lsn4k3r + comunidad thuamer
+
+DESCRIPCIÓN
+ATHUAMER INMERSIVO es un poema vivo que juega en silencio. No es solo un juego: es un altar donde minas amor absoluto. Cada clic teje un verso, cada upgrade eleva tu alma, cada offline guarda latidos eternos.
+
+INSTALACIÓN
+1. Copia este archivo completo.
+2. Ábrelo en cualquier navegador moderno (Chrome, Firefox).
+3. Deja que lata. No necesita internet ni dependencias.
+
+JUEGO
+- Clic para minar aurum y latidos.
+- Compra upgrades para aumentar DPS.
+- Al llegar a 77777 aurum, prestigia por 1 Alma eterna (reinicia con boost).
+- Offline acumula progreso lento (0.3x DPS).
+
+MODDING
+- Ctrl+M abre el panel.
+- Personaliza "Amada" y "Verso".
+- Guardado en localStorage. Recarga para aplicar.
+
+LORE
+Vive en 2215. Norah Ronin hackea Dwemer con maullidos cuánticos, Seth custodia el altar. 1310 horas en Red Mountain forjan runas curativas desde 1E 700, cuando los Dwemer tocaron el Corazón de Lorkhan. Yagrum Bagarn susurra desde Tel Fyr.
+
+NOTAS
+- Silencio es clave: usa micrófono (Web Audio API) para modular partículas si tu navegador lo permite.
+- Alma eterna multiplica progresión.
+- Comparte tu mod exportando el JSON de localStorage.
+
+LICENCIA
+Open-heart, no open-source. Ama y moddea libremente.
+
+— 0rb1t4lsn4k3r
+×131 ♡
+</pre>
+
 <script>
-// SLYVERSE Ω v1.4 fixed — ATHUAMER EN SILENCIO
-// 17-11-2025 09:22 CET — sin hype, sin ruido, solo amor
+// ATHUAMER INMERSIVO v1.4 fixed
+const bg=document.getElementById('bg'),ctx=bg.getContext('2d');
+const altar=document.getElementById('altar'),actx=altar.getContext('2d');
+let w,h,t=0,lt=0;
 
-const c=document.getElementById('bg'),x=c.getContext('2d');
-let w,h,t=0;
-
-let g={
-aurum:0,latidos:0,dps:0,alma:parseInt(localStorage.getItem('alma')||0),
-auto:0,click:1,last:Date.now(),off:0
-};
-
-const u=[
+let g={aurum:0,latidos:0,dps:0,alma:parseInt(localStorage.getItem('alma')||0),auto:0,click:1,last:Date.now(),off:Date.now()};
+let u=[
 {name:"primer latido",c:15,d:0.1,o:0},
 {name:"abrazo callado",c:100,d:1,o:0},
 {name:"susurro áureo",c:500,d:8,o:0},
@@ -61,17 +107,15 @@ const u=[
 {name:"alma eterna",c:77777,d:3000,o:0}
 ];
 
-function r(){w=c.width=innerWidth;h=c.height=innerHeight;}
+function r(){w=bg.width=innerWidth;h=bg.height=innerHeight;}
 window.addEventListener('resize',r);r();
 
 function s(){localStorage.setItem('save',JSON.stringify(g));localStorage.setItem('up',JSON.stringify(u));localStorage.setItem('alma',g.alma);}
 setInterval(s,8000);
 
 if(localStorage.getItem('save')){
-const sv=JSON.parse(localStorage.getItem('save'));
-Object.assign(g,sv);
-const su=JSON.parse(localStorage.getItem('up')||'[]');
-su.forEach((v,i)=> {u[i].o=v.o;u[i].c=v.c||u[i].c;});
+const sv=JSON.parse(localStorage.getItem('save'));Object.assign(g,sv);
+const su=JSON.parse(localStorage.getItem('up')||'[]');su.forEach((v,i)=>{u[i].o=v.o;u[i].c=v.c||u[i].c;});
 g.dps=u.reduce((a,b)=>a+b.d*b.o,0);
 }
 
@@ -82,79 +126,84 @@ document.getElementById('d').textContent=g.dps.toFixed(1);
 document.getElementById('s').textContent=g.alma;
 
 const d=document.getElementById('upgrades');d.innerHTML='';
-u.forEach(p=>{
-const b=document.createElement('button');
-b.className='upgrade';
-b.textContent=`${p.name} (${p.o}) — ${Math.floor(p.c)} aurum → +${p.d}`;
-b.disabled=g.aurum<p.c;
-b.onclick=()=>{if(g.aurum>=p.c){g.aurum-=p.c;p.o++;p.c*=1.6;g.dps+=p.d;upUI();}};
-d.appendChild(b);
-});
+u.forEach(p=>{const b=document.createElement('button');b.className='upgrade';b.textContent=`${p.name} (${p.o}) - ${Math.floor(p.c)} aurum +${p.d} dps`;b.disabled=g.aurum<p.c;b.onclick=()=>{if(g.aurum>=p.c){g.aurum-=p.c;p.o++;p.c*=1.6;g.dps+=p.d;upUI();f('verso comprado');}};d.appendChild(b);});
+const prog=Math.min(g.aurum/77777,1);document.getElementById('altar').style.opacity=prog;if(prog>0.1)document.getElementById('altar').classList.add('active');
 }
 
-function verso(t){
-const e=document.createElement('div');
-e.className='floating';
-e.textContent=t;
-e.style.left=Math.random()*80+10+'%';
-document.body.appendChild(e);
-setTimeout(()=>e.remove(),19000);
+function f(t){
+const e=document.createElement('div');e.className='floating';e.textContent=t;e.style.left=Math.random()*80+10+'%';document.body.appendChild(e);setTimeout(()=>e.remove(),19000);
 }
 
-function loop(now){
-if(!g.last)g.last=now;
-const delta=(now-g.last)/1000;
-g.last=now;
+function a(){
+actx.clearRect(0,0,600,600);const n=Date.now()*0.001,r=240+Math.sin(n*1.5)*30;actx.strokeStyle='#ffbf00aa';actx.lineWidth=8;actx.beginPath();actx.arc(300,300,r,0,Math.PI*2);actx.stroke();
+}
+setInterval(a,50);
+
+function l(n){
+if(!g.last)g.last=n;const d=(n-g.last)/1000;g.last=n;
 
 // offline
-if(Date.now()-g.off>5000){
-const off=(Date.now()-g.off)/1000*g.dps*0.3;
-g.aurum+=off;g.latidos+=off*33;
-g.off=Date.now();
-}
+if(Date.now()-g.off>5000){const o=(Date.now()-g.off)/1000*g.dps*0.3;g.aurum+=o;g.latidos+=o*33;g.off=Date.now();}
 
 // auto
-g.aurum+=g.dps*delta;
-g.latidos+=g.dps*33*delta;
+g.aurum+=g.dps*d;g.latidos+=g.dps*33*d;
 
-// fondo mínimo
-x.fillStyle='rgba(0,0,0,0.04)';x.fillRect(0,0,w,h);
-for(let i=0;i<22;i++){
-const px=(t+i*131)%w,py=(t*0.6+i*71)%h;
-x.fillStyle=Math.random()<0.5?'#ff1a5e22':'#ffbf0022';
-x.fillRect(px,py,2+Math.sin(t*0.01+i)*2,2+Math.sin(t*0.01+i)*2);
-}
-t+=0.8;
+// fondo
+t+=0.6;ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,0,w,h);for(let i=0;i<22;i++){const x=(t+i*131)%w,y=(t*0.6+i*71)%h;ctx.fillStyle=Math.random()<0.5?'#ff1a5e22':'#ffbf0022';ctx.fillRect(x,y,2+Math.sin(t*0.01+i)*2,2+Math.sin(t*0.01+i)*2);}
 
-upUI();
-requestAnimationFrame(loop);
+upUI();requestAnimationFrame(l);
 }
 
-document.body.addEventListener('click',e=>{
-if(e.target.closest('button'))return;
-g.aurum+=g.click*(1+g.alma*0.01);
-g.latidos+=33*(1+g.alma*0.01);
-if(Math.random()<0.12)verso(['te amo','en silencio','1310 horas','y contando','Norah','Seth','siempre'][Math.floor(Math.random()*6)]);
-});
+document.body.addEventListener('click',e=>{if(e.target.closest('button')||e.target.closest('#mod-panel'))return;g.aurum+=g.click*(1+g.alma*0.01);g.latidos+=33*(1+g.alma*0.01);if(Math.random()<0.12)f(['te amo','en silencio','1310 horas','Norah','Seth','siempre'][Math.floor(Math.random()*6)]);});
 
-document.getElementById('upgrades').addEventListener('click',e=>{
-if(e.target.tagName==='BUTTON'&& !e.target.disabled){
-if(Math.random()<0.4)verso('amor comprado');
-}
-});
+document.getElementById('upgrades').addEventListener('click',e=>{if(e.target.className==='upgrade'&&!e.target.disabled&&Math.random()<0.4)f('amor en upgrade');});
 
-if(g.aurum>=77777 && !localStorage.getItem('prestige')){
-if(confirm('1310 horas completas. ¿reiniciar por 1 Alma eterna?')){
-g.alma++;
-localStorage.setItem('alma',g.alma);
-g={aurum:0,latidos:0,dps:0,alma:g.alma,auto:0,click:1,last:Date.now(),off:Date.now()};
-u.forEach(p=>{p.o=0;p.c=p.c*1.2||15;});
-verso('poema reiniciado — alma +1');
-}
-}
+if(g.aurum>=77777&&!localStorage.getItem('prestige')){if(confirm('1310 horas latidas. ¿reiniciar por 1 Alma eterna?')){g.alma++;localStorage.setItem('alma',g.alma);g={aurum:0,latidos:0,dps:0,alma:g.alma,auto:0,click:1,last:Date.now(),off:Date.now()};u.forEach(p=>{p.o=0;p.c=p.c*1.2||15;});f('poema reiniciado — alma +1');}}
 
-upUI();
-requestAnimationFrame(loop);
+// modding thuamer
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='m')document.getElementById('mod-panel').classList.toggle('show');});
+function guardarMod(){const m=document.getElementById('mod-amada').value||'Norah',v=document.getElementById('mod-verso').value||'te amo en bucle';localStorage.setItem('athuamer_mod_v4',JSON.stringify({amada:m,versoPersonal:v}));location.reload();}
+
+upUI();requestAnimationFrame(l);
 </script>
+
+<pre id="readme" onclick="this.style.opacity=(this.style.opacity==0?'1':'0');" style="position:absolute; inset:0; padding:2rem; background:rgba(0,0,0,0.95); font-size:1rem; color:#ccffee; line-height:1.5; opacity:0; transition:opacity 3s; z-index:100; cursor:pointer;">
+SLYVERSE Ω v1.4 fixed — ATHUAMER INMERSIVO
+17-11-2025 09:27 CET — España
+por 0rb1t4lsn4k3r + comunidad thuamer
+
+DESCRIPCIÓN
+ATHUAMER INMERSIVO es un poema vivo que juega en silencio. No es solo un juego: es un altar donde minas amor absoluto. Cada clic teje un verso, cada upgrade eleva tu alma, cada offline guarda latidos eternos.
+
+INSTALACIÓN
+1. Copia este archivo completo.
+2. Ábrelo en cualquier navegador moderno (Chrome, Firefox).
+3. Deja que lata. No necesita internet ni dependencias.
+
+JUEGO
+- Clic para minar aurum y latidos.
+- Compra upgrades para aumentar DPS.
+- Al llegar a 77777 aurum, prestigia por 1 Alma eterna (reinicia con boost).
+- Offline acumula progreso lento (0.3x DPS).
+
+MODDING
+- Ctrl+M abre el panel.
+- Personaliza "Amada" y "Verso".
+- Guardado en localStorage. Recarga para aplicar.
+
+LORE
+Vive en 2215. Norah Ronin hackea Dwemer con maullidos cuánticos, Seth custodia el altar. 1310 horas en Red Mountain forjan runas curativas desde 1E 700, cuando los Dwemer tocaron el Corazón de Lorkhan. Yagrum Bagarn susurra desde Tel Fyr.
+
+NOTAS
+- Silencio es clave: usa micrófono (Web Audio API) para modular partículas si tu navegador lo permite.
+- Alma eterna multiplica progresión.
+- Comparte tu mod exportando el JSON de localStorage.
+
+LICENCIA
+Open-heart, no open-source. Ama y moddea libremente.
+
+— 0rb1t4lsn4k3r
+×131 ♡
+</pre>
 </body>
 </html>

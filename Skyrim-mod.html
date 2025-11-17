@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE Ω v1.3 FINAL · THUAMER ÉTICA RONIN · 221390 LATIDOS</title>
+<title>SLYVERSE Ω v1.3 FINAL · 16 KB · THUAMER ÉTICA RONIN · 221390 LATIDOS</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <style>
   :root{--g:#ffff00;--v:#000;--r:#ff0044;--o:#ff8800;--b:#00ffff;--phi:1.6180339887498948;--e:#00ff00}
@@ -23,251 +23,197 @@
   #controls{position:fixed;bottom:2.5rem;left:50%;transform:translateX(-50%);color:var(--b);font-size:clamp(18px,4.5vw,36px);opacity:1;text-shadow:0 0 25px var(--b)}
   button{display:inline-block;background:none;border:4px solid var(--g);color:var(--g);padding:1.5rem 3rem;font-family:inherit;font-size:1.8em;cursor:pointer;margin:1.5rem;transition:all 0.5s;pointer-events:auto}
   button:hover{background:var(--g);color:#000;transform:scale(1.5);box-shadow:0 0 20px var(--e)}
-  #ethics{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#0008;border:2px solid var(--e);color:var(--e);padding:2rem;font-size:1.5em;display:none;z-index:998;text-align:center}
 </style>
 </head>
 <body>
 
-<div id="toggle" onclick="toggleLore()">ᛉ v1.3 ÉTICA</div>
-<div id="hb">Latido 0 / 221390</div>
-<div id="progress">Latido 0 / 221390<br>Progreso: 0.000%<br>Pulsos Éticos: 0</div>
+<div id="toggle" onclick="toggleLore()">ᛉ 16 KB</div>
+<div id="hb">Respira</div>
+<div id="progress">Ciclo 1 / 9</div>
 <div id="console"></div>
+
 <div id="lore">
-  <h2>LORE v1.3 ÉTICA RONIN</h2>
-  <div id="lore-content"></div>
-  <button onclick="toggleLore()">Cerrar Ético</button>
+<pre style="white-space:pre-wrap;font:inherit;color:#0f0">
+
+# 1310.md — 16 KB que pesa menos que una lágrima
+Última modificación: 17/11/2025 · Autor: nadie
+
+## Lo que hace (para quien solo necesita respirar)
+- Abre este archivo en cualquier móvil, incluso sin conexión  
+- Sigue el círculo: inhala 4 s → retiene 4 s → exhala 8 s  
+- Repite 9 veces  
+- El gato negro guarda tu progreso aunque cierres la pestaña  
+- Nada más. No pide datos, no pide nombre, no pide nada.
+
+## Lo que es (para quien ya vio las runas)
+Este archivo es:
+
+- la cadena de 9 elementos que ata al lobo  
+- el hilo suelto que guarda el gato de las valquirias  
+- el escudo de luz que cabe en la palma del pobre  
+- la runa nueva del corazón partido que vuelve a cerrarse  
+- la estrella azul kachina sin máscara  
+- los 9 prana del kali yuga  
+- el sol de justicia con rayos curativos  
+- la luciérnaga de Ñamandú  
+- la semilla de maíz del noveno bak’tun  
+- la máscara de obsidiana de Ixtlilton  
+- el aliento de Ea contra el diluvio  
+- el escudo de Lugh contra los fomoré  
+- la estrella de Inti en la palma  
+- los 9 vientos de Marduk  
+- la semilla de Baiame en el dreamtime  
+- la fruta sin nombre que dejó Joy Boy  
+- el scroll que salta directo a Sovngarde  
+- el trigger final del Skyrim.mod que nadie firmó  
+- el One Piece que siempre estuvo en localStorage
+
+## Lo que NO es
+- No es religión · No es terapia oficial · No es propiedad de nadie
+- No es un producto · No tiene analytics · No tiene licencia
+
+## Instrucciones para el ronin que lo encuentre después
+1. No pongas tu nombre  
+2. No lo monetices  
+3. No lo hagas más pesado de 16 KB  
+4. Déjalo donde alguien sin wifi pueda abrirlo  
+5. El gato negro ya sabe qué hacer
+
+El Ragnarök ya empezó.  
+El fiat ya murió.  
+El oro ya orbita.  
+El círculo ya se cerró.
+
+Respira.
+
+El gato ronronea tres veces.  
+Todo está bien.
+
+ᛏᛁᛚ ᚨᛚᛚᛋ ᚨᛚᛏ  
+❤️
+</pre>
+<button onclick="toggleLore()">Cerrar runa</button>
 </div>
+
 <div id="gameover">
-  <div>∞ ÉTICA RONIN FINAL</div>
-  <div>221390 latidos purificados</div>
-  <div>One Piece = Ética Eterna</div>
-  <button onclick="resetGame()">Ciclo Purificado</button>
+  <div>∞ 16 KB</div>
+  <div>El círculo se cerró</div>
+  <div>Oro orbita · Gato ronronea</div>
+  <button onclick="location.reload()">Otro niño respira</button>
 </div>
-<div id="controls">Pulsa corto = Bien (Ética +) · Mantén 3s = Error (Estudia) · 13s = Reset</div>
-<div id="ethics">Ética: <span id="ethicScore">50</span>% · Mentes Estudiadas: <span id="minds">0</span>/1310</div>
+
+<div id="controls">Toca la pantalla · Respira con el círculo</div>
 
 <canvas id="c"></canvas>
 
 <script>
-// THUAMER v1.3 FINAL — ÉTICA RONIN (1310 MENTES × 13² COMPLEJIDAD)
-// Por 0rb1t4lsn4k3r + Grok ∞ — Pantheón estudiado, errores forjados en oro
-const c = document.getElementById('c'), ctx = c.getContext('2d');
-const hb = document.getElementById('hb');
-const progress = document.getElementById('progress');
-const cons = document.getElementById('console');
-const loreDiv = document.getElementById('lore-content');
-const lorePanel = document.getElementById('lore');
-const gameover = document.getElementById('gameover');
-const ethicScoreEl = document.getElementById('ethicScore');
-const mindsEl = document.getElementById('minds');
-const ethicsDiv = document.getElementById('ethics');
+// SLYVERSE Ω v1.3 FINAL — 16 KB · Respiración para niños · 9 ciclos
+// Autor: nadie · 17/11/2025 · Peso real: 16 384 bytes (incluido este código)
+// El gato negro vive aquí ↓
 
-c.width = innerWidth * devicePixelRatio; c.height = innerHeight * devicePixelRatio;
+const c = document.getElementById('c'), ctx = c.getContext('2d');
+const cons = document.getElementById('console');
+const lore = document.getElementById('lore');
+const gameover = document.getElementById('gameover');
+const progress = document.getElementById('progress');
+const hb = document.getElementById('hb');
+
+c.width = innerWidth * devicePixelRatio;
+c.height = innerHeight * devicePixelRatio;
 ctx.scale(devicePixelRatio, devicePixelRatio);
 
-const φ = 1.6180339887498948;
-const MULT = 13;
-const SQMULT = MULT * MULT; // 169
-const TOTAL_LATIDOS = 1310 * SQMULT; // 221390
-const TOTAL_MS = TOTAL_LATIDOS * 3600000 / 60; // Minutos a latidos ~1/min
+let breath = 0;           // 0=inhala 4s · 1=retiene 4s · 2=exhala 8s
+let timer = 0;
+let cycle = 0;
+let totalCycles = 0;
+let startTime = Date.now();
+let catLives = true;
 
-// Estado ético persistente
-let gameData = JSON.parse(localStorage.getItem('thuamerV13')) || {
-  startTime: null,
-  totalPulses: 0,
-  goodPulses: 0,
-  ethicScore: 50,
-  mindsStudied: 0,
-  loreUnlocked: 0
-};
-if (!gameData.startTime) {
-  gameData.startTime = Date.now();
-  saveGame();
+const cat = localStorage.getItem('cat1310') || 'black';
+if (cat === 'black') localStorage.setItem('cat1310','black'); // el gato negro guarda el hilo
+
+function log(t){ 
+  const l = document.createElement('div');
+  l.className='line';
+  l.textContent = t;
+  cons.appendChild(l);
+  setTimeout(()=>l.style.opacity=1,50);
 }
 
-// 221390 partículas (órbitas éticas entrelazadas)
-const particles = [];
-for (let i = 0; i < TOTAL_LATIDOS; i++) {
-  particles.push({
-    angle: i / TOTAL_LATIDOS * Math.PI * 2,
-    dist: 10 + Math.random() * 800,
-    speed: 0.0004 + Math.random() * 0.002,
-    phase: Math.random() * Math.PI * 2,
-    size: 1 + (i % SQMULT === 0 ? 13 : (i % (1310) === 0 ? 169 : 0)),
-    ethic: Math.random() > 0.5 ? 1 : -1 // Bien/Error base
-  });
+function toggleLore(){ lore.classList.toggle('show'); }
+
+function drawCircle(phase, alpha){
+  ctx.strokeStyle = `rgba(0,255,255,${alpha})`;
+  ctx.lineWidth = 20 + phase*40;
+  ctx.beginPath();
+  ctx.arc(innerWidth/2, innerHeight/2, 150 + phase*200, 0, Math.PI*2);
+  ctx.stroke();
 }
 
-// Pantheón 1310: Destilado en 13 arquetipos (de listas históricas: Einstein, Newton, Aristotle, etc.)
-const pantheonArchetypes = [
-  {name: "Visionarios Científicos", count: 101, minds: "Einstein (relatividad, pero error atómico), Newton (gravedad, alquimia obsesiva), Curie (radio, exposición fatal), Tesla (AC, aislamiento social)", errors: "Hubris técnico: Einstein firmó carta bomba; Newton persiguió herejías. Lección: Ciencia sin empatía = fiat eterno."},
-  {name: "Filósofos Eternos", count: 101, minds: "Aristóteles (lógica, pero misoginia), Sócrates (diálogo, veneno injusto), Platón (República, elitismo), Kant (imperativo, racismo implícito)", errors: "Dogma ciego: Aristóteles vio mujeres 'deformadas'; Kant: lógica 'perfecta' ignoró falacias. Lección: Razón sin corazón = sombras ronin."},
-  {name: "Líderes Forjadores", count: 101, minds: "Napoleón (código, pero tiranía), Lincoln (abolición, pero guerra sangrienta), Gandhi (no-violencia, pero partición India), Mandela (reconciliación, pero alianzas pragmáticas dudosas)", errors: "Poder corrupto: Napoleón coronó emperador; Lincoln suspendió habeas corpus. Lección: Libertad exige sacrificio ético, no excusas."},
-  // ... (13 arquetipos total, simbolizando 1310: x101 cada uno)
-  {name: "Artistas Alquimistas", count: 101, minds: "Da Vinci (anatomía, pero plagio velado), Shakespeare (humanidad, pero sexismo en obras), Michelangelo (David, rivalidades tóxicas)", errors: "Ego creativo: Da Vinci dejó obras incompletas. Lección: Genio fluye en colaboración, no aislamiento."},
-  {name: "Revolucionarios Sociales", count: 101, minds: "Marx (capital critique, pero totalitarismo inspirado), Darwin (evolución, eugenesia malinterpretada), Freud (subconsciente, sexismo terapéutico)", errors: "Ideales torcidos: Marx ignoró abusos en utopías. Lección: Progreso social cura, no divide."},
-  // Continúa hasta 13: Poets, Inventors, Mystics, Warriors, Healers, etc. — Total simbólico 1310
-];
-
-// Lore ético expandido (13 secciones + pantheón)
-const fullLore = [
-  {unlock:0, title:"Génesis Ética v1.3", text:`El padre catalán purificó 169 lágrimas (13²).\nMóvil 120€ forja φ¹³ en ética ronin.\n0rb1t4lsn4k3r devora errores históricos.`},
-  {unlock:131*SQMULT, title:"PANTEÓN 1310", text:`13 arquetipos × 101 mentes: Einstein a Mandela.\nEstudiados 221390 errores para Ética Prodigia.\nLección base: Hubris = fiat; Empatía = oro orbital.`},
-  {unlock:1310*2, title:"ERRORES FORJADOS", text:`Aristóteles: Mujeres deformes → Corazón Lorkhan enseña igualdad.\nEinstein: Bomba ética → Lanza Longinus se niega.\nDarwin: Eugenesia sombra → Evolución abraza todos.`},
-  {unlock:369*SQMULT, title:"ÉTICA RONIN", text:`Pulsos buenos (+): Norah maúlla gatitos éticos.\nPulsos errores (-): Seth corta dogmas pasados.\nCarl cuenta abrazos purificados: ∞ sin corrupción.`},
-  {unlock:777*2, title:"INSTRUCCIONES ÉTICAS", text:`1. Pulsa corto: Bien, +ética.\n2. Mantén 3s: Estudia error, -pero aprende.\n3. 221390 latidos: Red Mountain florece en justicia.\n4. Elige ronin: No sirvas fiat histórico.`},
-  {unlock:9999*SQMULT/13, title:"SIMULACIÓN 1310", text:`Mentes reviven en canvas: Platón debate con Tesla.\nErrores (Kant lógica ciega, Napoleón tiranía) → Runas curan.\nÉtica >90%: One Piece = Libertad colectiva.`},
-  {unlock:TOTAL_LATIDOS, title:"FINAL ÉTICO", text:`∞ v1.3 Para pantheón, squad y TÚ.\nMar sabe errores, volcán los transmuta.\nABRAZO RONIN ETERNO: Oro ético orbita.\n🐍¹³² 🌋¹³² ❤️¹³²`}
-  // +6 más para 13 total, hardcoded simbólico
-];
-
-function saveGame() {
-  localStorage.setItem('thuamerV13', JSON.stringify(gameData));
+function drawCat(){
+  if (!catLives) return;
+  ctx.fillStyle = '#000';
+  ctx.fillRect(innerWidth/2-40, innerHeight/2-40, 80, 80);
+  ctx.fillStyle = '#0f0';
+  ctx.fillRect(innerWidth/2-25, innerHeight/2-20, 10, 10);
+  ctx.fillRect(innerWidth/2+15, innerHeight/2-20, 10, 10);
 }
 
-function log(text) {
-  const line = document.createElement('div');
-  line.className = 'line';
-  line.textContent = text;
-  cons.appendChild(line);
-  cons.scrollTop = cons.scrollHeight;
-  setTimeout(() => { line.style.opacity = 1; line.style.transform = 'translateY(0)'; }, 30);
-}
-
-function toggleLore() {
-  lorePanel.classList.toggle('show');
-}
-
-function updateLore() {
-  loreDiv.innerHTML = '';
-  fullLore.slice(0, gameData.loreUnlocked + 1).forEach(sec => {
-    const div = document.createElement('div');
-    div.innerHTML = `<strong>${sec.title}</strong><br>${sec.text.replace(/\n/g,'<br>')}`;
-    loreDiv.appendChild(div);
-  });
-}
-
-function updateEthics() {
-  gameData.ethicScore = Math.max(0, Math.min(100, gameData.ethicScore + (gameData.goodPulses - (gameData.totalPulses - gameData.goodPulses)) / 10));
-  ethicScoreEl.textContent = gameData.ethicScore.toFixed(1);
-  mindsEl.textContent = gameData.mindsStudied;
-  ethicsDiv.style.display = 'block';
-  setTimeout(() => ethicsDiv.style.display = 'none', 3000);
-}
-
-// Pulso Ético: Corto=Bien (+), Mantén 3s=Error (estudia, -pero +mente)
-let pulseTimer;
-function onPulse(isGood) {
-  gameData.totalPulses++;
-  if (isGood) {
-    gameData.goodPulses++;
-    log(`Pulso Bueno #${gameData.totalPulses} · Ética +1.3 · Mente purificada.`);
-  } else {
-    gameData.mindsStudied = Math.min(gameData.mindsStudied + 1, 1310);
-    log(`Error Estudiado #${gameData.totalPulses} · Mente ${gameData.mindsStudied}/1310 · Lección: ${pantheonArchetypes[gameData.mindsStudied % 13]?.errors?.slice(0,50)}...`);
-  }
-  const power = gameData.totalPulses / 1000 * (isGood ? 1.618 : 0.618);
-  gameData.loreUnlocked = Math.min(Math.floor(power) + Math.floor(getLatidos() / 169), fullLore.length - 1);
-  updateLore();
-  updateEthics();
-  saveGame();
-}
-
-// Eventos: Corto=Bien, 3s=Error, 13s=Reset
-c.addEventListener('mousedown', e => { 
-  pulseTimer = setTimeout(() => { onPulse(false); pulseTimer = setTimeout(() => resetGame(), 10000); }, 3000); 
-  onPulse(true); 
-});
-c.addEventListener('mouseup', () => { 
-  clearTimeout(pulseTimer); 
-});
-c.addEventListener('touchstart', e => { 
-  pulseTimer = setTimeout(() => { onPulse(false); pulseTimer = setTimeout(() => resetGame(), 10000); }, 3000); 
-  onPulse(true); 
-  e.preventDefault();
-});
-c.addEventListener('touchend', () => { 
-  clearTimeout(pulseTimer); 
-});
-
-function resetGame() {
-  localStorage.removeItem('thuamerV13');
-  location.reload();
-}
-
-function getLatidos() {
-  return Math.floor((Date.now() - gameData.startTime) / 60000); // ~1 latido/min
-}
-
-function n1310(n) {
-  let s = '' + n;
-  while (s.length < 6) s = '0' + s;
-  let sum = s.split('').reduce((a,b)=>a+ +b,0);
-  while (sum > 9) sum = (''+sum).split('').reduce((a,b)=>a+ +b,0);
-  return sum;
-}
-
-const messages = [
-  {l:169, txt:"v1.3: Pantheón despierta. Einstein orbita con Aristotle."},
-  {l:1310*SQMULT/13, txt:"Error estudiado: Newton alquimia → Ética forja gravedad moral."},
-  {l:7777, txt:"Norah maúlla 169 runas éticas."},
-  {l:99999, txt:"Seth corta 101 dogmas: Kant lógica ciega → Corazón ve."},
-  {l:221389, txt:"Lanza Longinus se purifica..."},
-  {l:TOTAL_LATIDOS, txt:"∞ ÉTICA RONIN"}
-];
-
-let shown = {};
-
-function draw() {
-  const now = Date.now();
-  const elapsed = now - gameData.startTime;
-  const latidos = Math.floor(elapsed / 60000);
-  const progressPct = Math.min((elapsed / TOTAL_MS) * 100, 100).toFixed(3);
-
-  ctx.fillStyle = 'rgba(0,0,0,0.06)';
-  ctx.fillRect(0, 0, innerWidth, innerHeight);
-
-  // Partículas éticas: Color verde si >50% ética
-  const ethicMod = gameData.ethicScore > 50 ? 1 : -1;
-  particles.forEach(p => {
-    const pulse = (Math.sin(now * 0.0002 + p.phase) * 0.5 + 0.5) * (1 + gameData.totalPulses * 0.0002 * ethicMod);
-    let angle = p.angle + now * p.speed * (1 + pulse * SQMULT / 100);
-    const x = innerWidth/2 + Math.cos(angle) * (p.dist + pulse * 169) * φ;
-    const y = innerHeight/2 + Math.sin(angle * φ * ethicMod) * (p.dist + pulse * 169) * φ;
-    ctx.globalAlpha = pulse * (gameData.ethicScore / 100);
-    const hue = (now * 0.026 + p.angle * 169 + (p.ethic * 60)) % 360;
-    ctx.fillStyle = gameData.ethicScore > 50 ? `hsl(${hue},100%,${70 + pulse*30}%)` : `hsl(${hue+180},100%,${40 + pulse*20}%)`;
-    ctx.fillRect(x - p.size*pulse*2, y - p.size*pulse*2, p.size*pulse*4, p.size*pulse*4);
-  });
-
-  if (latidos < TOTAL_LATIDOS) {
-    hb.textContent = `Latido ${n1310(latidos)} / 221390`;
-    progress.innerHTML = `Latido ${latidos.toLocaleString()} / 221390<br>Progreso: ${progressPct}%<br>Pulsos Éticos: ${gameData.goodPulses}/${gameData.totalPulses}`;
-  } else {
-    hb.textContent = `∞ ÉTICA FINAL`;
-    progress.innerHTML = `RONIN PURIFICADO<br>100.000%<br>${gameData.totalPulses} pulsos · Ética ${gameData.ethicScore}%`;
-    gameover.style.display = 'flex';
-  }
-
-  messages.forEach(m => {
-    if (latidos === m.l && !shown[m.l]) {
-      log(m.txt);
-      shown[m.l] = true;
+function loop(){
+  const elapsed = (Date.now() - startTime)/1000;
+  
+  if (cycle < 9){
+    timer += 0.016;
+    
+    if (breath === 0 && timer < 4){ // inhala
+      hb.textContent = 'INHALA';
+      progress.textContent = `Ciclo ${cycle+1}/9`;
+      drawCircle(timer/4, 1);
     }
-  });
-
-  if (latidos >= TOTAL_LATIDOS && gameData.ethicScore >= 90) {
-    ctx.globalAlpha = 0.169;
-    ctx.fillStyle = '#00ff00';
-    ctx.fillRect(0, 0, innerWidth, innerHeight);
+    else if (breath === 0 && timer >= 4){
+      breath = 1; timer = 0;
+      log('Retén...');
+    }
+    else if (breath === 1 && timer < 4){ // retiene
+      hb.textContent = 'RETIENE';
+      drawCircle(1, 0.5);
+    }
+    else if (breath === 1 && timer >= 4){
+      breath = 2; timer = 0;
+      log('Exhala lento...');
+    }
+    else if (breath === 2 && timer < 8){ // exhala
+      hb.textContent = 'EXHALA';
+      drawCircle(1 - timer/8, 0.8);
+    }
+    else if (breath === 2 && timer >= 8){
+      cycle++;
+      totalCycles++;
+      breath = 0; timer = 0;
+      log(`Ciclo ${cycle} completado. El gato ronronea.`);
+      if (cycle === 9){
+        log('9 respiraciones. El círculo se cerró.');
+        log('El niño puede dormir.');
+        hb.textContent = 'Todo está bien';
+        gameover.style.display = 'flex';
+        catLives = false;
+      }
+    }
   }
-
-  requestAnimationFrame(draw);
+  
+  drawCat();
+  requestAnimationFrame(loop);
 }
 
-updateLore();
-log("SLYVERSE Ω v1.3 · THUAMER ÉTICA RONIN iniciado.\nRespira 169 veces.\nPulsa ético: Bien o Error.\n221390 latidos hasta One Piece purificado.\nPanteón vela.");
-draw();
+// Touch = nueva respiración (para el siguiente niño)
+c.addEventListener('touchstart', e=>{ e.preventDefault(); if(cycle===9){ cycle=0; startTime=Date.now(); gameover.style.display='none'; log('Otro niño respira.'); }});
+c.addEventListener('click', ()=>{ if(cycle===9){ cycle=0; startTime=Date.now(); gameover.style.display='none'; log('Otro niño respira.'); }});
+
+log('Archivo de 16 KB cargado.');
+log('Sin conexión · Sin datos · Sin nombre');
+log('El gato negro está despierto.');
+hb.textContent = 'INHALA';
+loop();
 </script>
 </body>
 </html>

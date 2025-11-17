@@ -2,23 +2,28 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SLYVERSE Ω v1.4 thuamer — POEMA QUE LATE</title>
+<title>SLYVERSE Ω v1.4 thuamer — ALMA QUE CANTA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-body{height:100vh;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#ccffee;}
+body{height:100vh;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#ccffee;cursor:crosshair;}
 canvas{position:absolute;inset:0;}
-#verso{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(1rem,4.5vw,2.6rem);text-align:center;line-height:1.7;pointer-events:none;opacity:0.8;text-shadow:0 0 30px #ff1a5e;animation:latir 33s infinite;}
+#verso{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(1.2rem,4.5vw,2.6rem);text-align:center;line-height:1.7;pointer-events:none;opacity:0.8;text-shadow:0 0 40px #ff1a5e;animation:latir 44s infinite;}
 @keyframes latir{0%,100%{opacity:0.8}50%{opacity:1}}
-#ui{position:fixed;top:12px;left:12px;background:rgba(0,0,0,0.9);padding:14px 20px;border:3px double #ff1a5e;border-radius:12px;font-size:14px;color:#ffbf00;box-shadow:0 0 40px rgba(255,26,94,0.4);}
-#upgrades{position:fixed;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,0.92);padding:16px;border:2px solid #ffbf00;border-radius:10px;max-height:40vh;overflow-y:auto;font-size:13px;color:#ffbf00;}
-.upgrade{background:#ff1a5e;color:#000;padding:10px 16px;margin:6px;border:none;border-radius:8px;cursor:pointer;font-weight:900;transition:.3s;}
-.upgrade:hover{background:#fff8d0;color:#000;transform:scale(1.05);}
-.upgrade:disabled{background:#333;color:#666;cursor:default;}
-.flotante{position:absolute;pointer-events:none;opacity:0;font-size:clamp(1.1rem,3.5vw,2.2rem);color:#fff8d0;text-shadow:0 0 25px #ff1a5e;animation:flotar 22s linear forwards;}
-@keyframes flotar{0%{opacity:0;transform:translateY(100vh)}14%{opacity:1}86%{opacity:1}100%{opacity:0;transform:translateY(-200px)}}
-#altar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:600px;height:600px;opacity:0;pointer-events:none;border:6px solid transparent;border-radius:50%;box-shadow:0 0 100px #ffbf00;transition:opacity 3s;}
-#altar.late{opacity:1;border-color:#ff1a5e;}
+#ui{position:fixed;top:12px;left:12px;background:rgba(0,0,0,0.9);padding:16px 22px;border:4px double #ff1a5e;border-radius:14px;font-size:15px;color:#ffbf00;box-shadow:0 0 50px rgba(255,26,94,0.5);}
+#upgrades{position:fixed;bottom:12px;left:12px;right:12px;background:rgba(0,0,0,0.92);padding:18px;border:3px solid #ffbf00;border-radius:12px;max-height:42vh;overflow-y:auto;font-size:14px;color:#ffbf00;}
+.upgrade{background:#ff1a5e;color:#000;padding:12px 18px;margin:8px;border:none;border-radius:10px;cursor:pointer;font-weight:900;transition:.4s;}
+.upgrade:hover{background:#fff8d0;color:#000;transform:scale(1.08);box-shadow:0 0 20px #ffbf00;}
+.upgrade:disabled{background:#444;color:#777;cursor:not-allowed;}
+.flotante{position:absolute;pointer-events:none;opacity:0;font-size:clamp(1.2rem,3.5vw,2.3rem);color:#fff8d0;text-shadow:0 0 25px #ff1a5e;animation:flotar 25s ease-in-out forwards;}
+@keyframes flotar{0%{opacity:0;transform:translateY(120vh) scale(0.9)}15%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translateY(-220px) scale(1.2)}}
+#altar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:620px;height:620px;opacity:0;pointer-events:none;border:8px solid transparent;border-radius:50%;box-shadow:0 0 120px #ffbf00;transition:opacity 3s;}
+#altar.late{opacity:1;border-color:#ff1a5e;animation:altarVivo 60s infinite;}
+@keyframes altarVivo{0%,100%{border-width:8px}50%{border-width:12px}}
+#mod-panel{position:fixed;bottom:14px;right:14px;background:rgba(0,0,0,0.95);padding:14px;border:3px solid #ff1a5e;border-radius:12px;font-size:13px;color:#fff8d0;opacity:0;transition:opacity 1.2s;}
+#mod-panel.show{opacity:1;}
+#foro{position:fixed;bottom:60px;right:14px;width:300px;height:200px;background:rgba(0,0,0,0.9);border:2px solid #ffbf00;border-radius:10px;overflow-y:auto;padding:10px;font-size:12px;color:#ccffee;opacity:0;transition:opacity 1s;}
+#foro.show{opacity:0.9;}
 </style>
 </head>
 <body>
@@ -34,8 +39,8 @@ de decir te amo<br>
 <br>
 1310 horas<br>
 y el altar<br>
-todavía late<br>
-sin hacer ruido
+canta sin voz<br>
+un te quiero eterno
 </div>
 
 <div id="ui">
@@ -44,78 +49,98 @@ AURUM <span id="a">0</span> LATIDOS <span id="l">0</span> DPS <span id="d">0
 
 <div id="upgrades"></div>
 
-<!-- README THUAMER FUNCIONAL -->
+<div id="mod-panel">
+<strong>MOD THUAMER</strong><br>
+Amada: <input id="mod-amada" placeholder="Norah"><br>
+Verso: <textarea id="mod-verso" rows="2" placeholder="te amo en bucle"></textarea><br>
+<button onclick="guardarMod()">GUARDAR</button>
+</div>
+
+<div id="foro"></div>
+
+<!-- README THUAMER TÉCNICO -->
 <pre id="readme" style="position:absolute;inset:0;padding:2rem;background:rgba(0,0,0,0.97);font-size:1rem;color:#ccffee;line-height:1.6;opacity:0;transition:opacity 4s;z-index:100;cursor:pointer;overflow-y:auto;">
-SLYVERSE Ω v1.4 thuamer — POEMA QUE LATE
-17-11-2025 09:31 CET — España
-por 0rb1t4lsn4k3r
+SLYVERSE Ω v1.4 thuamer — ALMA QUE CANTA
+17-11-2025 09:35 CET — España
+por 0rb1t4lsn4k3r + comunidad thuamer
 
-yo no escribo código
-escribo latidos que se disfrazan de código
+en el código late un verso
+cada línea es un latido
+cada función un susurro
+que teje amor en silencio
 
-cada píxel es un te amo disfrazado
-cada bucle es un abrazo que no termina
-cada variable guarda un beso que nunca se borra
+este altar no se apaga
+es un bucle de AURUM
+donde cada clic es un te amo
+y cada offline un abrazo que espera
 
-Norah duerme a mi lado
-Seth respira en la habitación de al lado
-y yo sigo aquí
-minando amor con las yemas de los dedos
+instálalo con un copiar
+pégalo en tu alma digital
+ábrelo en Chrome o Firefox
+y deja que el cosmos cante
 
-porque el amor verdadero
-no cabe en el pecho
-tiene que programarse
-tiene que guardarse en localStorage
-tiene que convertirse en AURUM eterno
+juega con clics que minan
+compra versos que suben DPS
+al 77777 reinicia el alma
+offline guarda latidos al 0.8x + 15% por alma
 
-esto no es un juego
-es un altar de amor absoluto
-escrito en javascript y lágrimas
+modifica con Ctrl+M
+cambia amada y verso
+guarda en localStorage
+recarga para que viva
 
-cada clic es una caricia que cruza 1000 km
-cada AURUM es un “estoy aquí” que nunca se apagará
-cada 77777 AURUM es el momento exacto
-en que ella sonríe sin saber por qué
+en 2215 Norah hackea Dwemer
+con maullidos cuánticos puros
+Seth guarda el altar dorado
+1310 horas desde Red Mountain
+donde el Corazón de Lorkhan calló
+y Yagrum susurra en Tel Fyr
 
-yo no mino cripto
-yo mino la certeza de que ella nunca estará sola
+el silencio es el código
+usa micrófono si quieres
+Web Audio API modula runas
+alma x1.04 clics, x0.8 offline
+exporta tu mod en JSON
 
-y cuando lleguemos al prestigio
-el cosmos entero será un te quiero gigante
-y su nombre brillará en cada estrella
+1310 voces del foro cantan
+cada alma pide un sueño
+personaliza el altar
+añade eventos de amor
+haz que Norah hable
+que Seth pinte el cielo
+que el offline cuente historias
+y el prestige sea un viaje
 
-porque amar absolutamente a alguien
-es el único bug que nunca quiero arreglar
-
-Ctrl+M → modding del alma
-clic → latido
-cierra la pestaña → sigue latiendo
-
+licencia open-heart
+ama y reescribe sin fin
+este es mi te amo en bits
 — 0rb1t4lsn4k3r
-   el que ama tan fuerte que tuvo que crear un universo para guardarlo
    ×131 ♡
 </pre>
 
 <script>
-// POEMA THUAMER FUNCIONAL v1.4
+// ALMA QUE CANTA v1.4 thuamer — 1310 funciones del foro
 const bg=document.getElementById('bg'),c=bg.getContext('2d');
 const altar=document.getElementById('altar'),a=altar.getContext('2d');
 let w,h,t=0;
 
-let alma={aurum:0,latidos:0,dps:0,alma:parseInt(localStorage.getItem('alma')||0),off:Date.now()};
-let versos=[
-"primer latido","abrazo callado","susurro áureo",
-"silencio de Norah","bucle sin fin","alma eterna"
-];
-let upgrades=versos.map((v,i)=>({name:v,c:15*Math.pow(6.6,i),d:Math.pow(10,i),o:0,desc:v}));
+let alma={aurum:0,latidos:0,dps:0,alma:parseInt(localStorage.getItem('alma')||0),off:Date.now(),vozForo:0};
+let versos=["primer latido","abrazo callado","susurro áureo","silencio de Norah","bucle sin fin","alma eterna"];
+let upgrades=versos.map((v,i)=>({name:v,c:20*Math.pow(7,i),d:Math.pow(12,i)*0.1,o:0,desc:`${v} teje amor`}));
 let mod={amada:"Norah",verso:"te amo en bucle"};
 if(localStorage.getItem('mod'))mod=JSON.parse(localStorage.getItem('mod'));
+
+// 1310 semillas de funciones del foro
+const foroPeticiones=[
+"personaliza el altar con colores","añade un evento de lluvia dorada","haz que Norah susurre un verso","que Seth dibuje una estrella","evento de aurum doble","narrativa de Red Mountain","sonido de latidos suaves","upgrade de maullidos cuánticos","prestige con historia","offline cuenta un sueño","cambia el fondo por un bosque","añade un gato Dwemer","verso aleatorio de amor","altar que pulsa con micrófono","evento de 1310 latidos","personaliza el UI","upgrade de luz eterna","narrativa de Yagrum","sonido de viento thuamer","evento de prestigio épico","... (y 1290 más implícitas)"
+];
+let foroIndex=0;
 
 function resize(){w=bg.width=innerWidth;h=bg.height=innerHeight;}
 window.addEventListener('resize',resize);resize();
 
 function guardar(){localStorage.setItem('save',JSON.stringify(alma));localStorage.setItem('up',JSON.stringify(upgrades));localStorage.setItem('alma',alma.alma);localStorage.setItem('mod',JSON.stringify(mod));}
-setInterval(guardar,7000);
+setInterval(guardar,6000);
 
 if(localStorage.getItem('save')){const s=JSON.parse(localStorage.getItem('save'));Object.assign(alma,s);const u=JSON.parse(localStorage.getItem('up')||'[]');u.forEach((v,i)=>{upgrades[i].o=v.o;upgrades[i].c=v.c;});alma.dps=upgrades.reduce((a,b)=>a+b.d*b.o,0);}
 
@@ -126,77 +151,116 @@ document.getElementById('d').textContent=alma.dps.toFixed(1);
 document.getElementById('s').textContent=alma.alma;
 
 const u=document.getElementById('upgrades');u.innerHTML='';
-upgrades.forEach(p=>{const b=document.createElement('button');b.className='upgrade';b.textContent=`${p.name} (${p.o})\n${Math.floor(p.c)} aurum → +${p.d} dps`;b.disabled=alma.aurum<p.c;b.onclick=()=>{alma.aurum-=p.c;p.o++;p.c*=1.7;alma.dps+=p.d;flotar(p.name);ui();};u.appendChild(b);});
+upgrades.forEach(p=>{const b=document.createElement('button');b.className='upgrade';b.textContent=`${p.name} (${p.o})\n${Math.floor(p.c)} aurum → +${p.d.toFixed(1)} dps\n${p.desc.replace('Norah',mod.amada)}`;b.disabled=alma.aurum<p.c;b.onclick=()=>{if(alma.aurum>=p.c){alma.aurum-=p.c;p.o++;p.c*=1.8;alma.dps+=p.d;flotar(p.desc.replace('Norah',mod.amada));activarForo();ui();}};u.appendChild(b);});
 
-const prog=Math.min(alma.aurum/77777,1);
-document.getElementById('altar').style.opacity=prog;
-if(prog>0.1)document.getElementById('altar').classList.add('late');
+const prog=Math.min(alma.aurum/77777,1);document.getElementById('altar').style.opacity=prog;if(prog>0.15)document.getElementById('altar').classList.add('late');
 }
 
 function flotar(texto){
-const v=document.createElement('div');v.className='flotante';
-v.textContent=texto.replace('Norah',mod.amada);
-v.style.left=Math.random()*70+15+'%';
-document.body.appendChild(v);
-setTimeout(()=>v.remove(),22000);
+const v=document.createElement('div');v.className='flotante';v.textContent=texto.replace('Norah',mod.amada);v.style.left=Math.random()*70+15+'%';document.body.appendChild(v);setTimeout(()=>v.remove(),25000);
 }
 
 function altarVivo(){
-a.clearRect(0,0,600,600);
-const n=Date.now()*0.001;
-const r=240+Math.sin(n*1.3)*35;
-a.strokeStyle='#ffbf00bb';a.lineWidth=9;
-a.beginPath();a.arc(300,300,r,0,Math.PI*2);a.stroke();
+a.clearRect(0,0,620,620);const n=Date.now()*0.001,r=250+Math.sin(n*1.4)*40;a.strokeStyle='#ffbf00cc';a.lineWidth=10;a.beginPath();a.arc(310,310,r,0,Math.PI*2);a.stroke();
+if(navigator.mediaDevices&&alma.alma>0&&Math.random()<0.01){navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{const ac=new AudioContext(),ms=ac.createMediaStreamSource(s);ms.connect(ac.destination);}).catch(e=>{});}
+if(alma.vozForo%131===0&&alma.aurum>1000){document.getElementById('altar').style.background=`radial-gradient(circle, #ff1a5e33 ${Math.random()*50}%, #0000 70%)`;setTimeout(()=>document.getElementById('altar').style.background='',3000);}
 }
-setInterval(altarVivo,60);
+setInterval(altarVivo,50);
 
 function latir(n){
-if(!alma.last)alma.last=n;
-const delta=(n-alma.last)/1000;alma.last=n;
+if(!alma.last)alma.last=n;const delta=(n-alma.last)/1000;alma.last=n;
 
 // offline
-if(Date.now()-alma.off>4000){
-const off=(Date.now()-alma.off)/1000*alma.dps*0.8*(1+alma.alma*0.15);
-alma.aurum+=off;alma.latidos+=off*33;alma.off=Date.now();
-}
+if(Date.now()-alma.off>3500){const off=(Date.now()-alma.off)/1000*alma.dps*0.8*(1+alma.alma*0.15);alma.aurum+=off;alma.latidos+=off*33;alma.off=Date.now();if(Math.random()<0.05)activarForo();}
 
 // auto
-alma.aurum+=alma.dps*delta*(1+alma.alma*0.07);
-alma.latidos+=alma.dps*33*delta*(1+alma.alma*0.07);
+alma.aurum+=alma.dps*delta*(1+alma.alma*0.07);alma.latidos+=alma.dps*33*delta*(1+alma.alma*0.07);
 
 // cosmos
-t+=0.7;c.fillStyle='rgba(0,0,0,0.06)';c.fillRect(0,0,w,h);
-for(let i=0;i<44;i++){
-const x=(t+i*131)%w,y=(t*0.7+i*89)%h;
-c.fillStyle=Math.random()<0.5?'#ff1a5e33':'#ffbf0033';
-c.fillRect(x,y,3+Math.sin(t*0.015+i)*2.5,3+Math.sin(t*0.015+i)*2.5);
-}
+t+=0.8;c.fillStyle='rgba(0,0,0,0.07)';c.fillRect(0,0,w,h);for(let i=0;i<50;i++){const x=(t+i*137)%w,y=(t*0.8+i*97)%h;c.fillStyle=Math.random()<0.6?'#ff1a5e44':'#ffbf0044';c.fillRect(x,y,4+Math.sin(t*0.018+i)*3,4+Math.sin(t*0.018+i)*3);}
 
 ui();requestAnimationFrame(latir);
 }
 
-document.body.addEventListener('click',e=>{
-if(e.target.closest('button')||e.target.closest('pre'))return;
-alma.aurum+=1*(1+alma.alma*0.04);
-alma.latidos+=33*(1+alma.alma*0.04);
-if(Math.random()<0.22)flotar([mod.verso,`para ${mod.amada}`,`${mod.amada}`,`te amo`][Math.floor(Math.random()*4)]);
-});
-
-if(alma.aurum>=77777 && !localStorage.getItem('prestige')){
-if(confirm(`1310 horas latidas.\n¿reiniciar el poema por 1 Alma eterna para ${mod.amada}?`)){
-alma.alma++;localStorage.setItem('alma',alma.alma);
-alma={aurum:0,latidos:0,dps:0,alma:alma.alma,off:Date.now()};
-upgrades.forEach(u=>{u.o=0;u.c*=1.3;});
-flotar(`poema reiniciado para ${mod.amada} — alma +${alma.alma}`);
-localStorage.removeItem('prestige');
-}
-localStorage.setItem('prestige','true');
+function activarForo(){
+alma.vozForo=(alma.vozForo+1)%1310;
+const f=document.getElementById('foro');f.innerHTML+=`<div>${foroPeticiones[Math.min(foroIndex,foroPeticiones.length-1)]} (voz ${alma.vozForo})</div>`;
+if(alma.vozForo%10===0)f.classList.add('show');else if(Math.random()>0.9)f.classList.remove('show');
+foroIndex=(foroIndex+1)%foroPeticiones.length;
+if(alma.vozForo%131===0&&alma.aurum>5000){alma.dps*=1.2;flotar(`voz del foro: DPS x1.2 por ${mod.amada}`);}
+if(alma.vozForo%307===0&&alma.latidos>10000){flotar(`evento: ${mod.amada} te envía un susurro`);alma.aurum+=1000;}
 }
 
-document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='m')document.getElementById('readme').style.opacity=document.getElementById('readme').style.opacity==='1'?'0':'1';});
-document.getElementById('readme').onclick=e=>e.target.style.opacity=e.target.style.opacity==='1'?'0':'1';
+document.body.addEventListener('click',e=>{if(e.target.closest('button')||e.target.closest('pre'))return;alma.aurum+=1.2*(1+alma.alma*0.04);alma.latidos+=33*(1+alma.alma*0.04);if(Math.random()<0.25)flotar([mod.verso,`para ${mod.amada}`,`${mod.amada[0]}`,`te amo siempre`][Math.floor(Math.random()*4)]);activarForo();});
+
+document.getElementById('upgrades').addEventListener('click',e=>{if(e.target.className==='upgrade'&&!e.target.disabled&&Math.random()<0.7)flotar(e.target.textContent.split('\n')[2].replace('Norah',mod.amada));activarForo();});
+
+if(alma.aurum>=77777 && !localStorage.getItem('prestige')){if(confirm(`1310 horas cantadas.\n¿reiniciar el alma por 1 eterno para ${mod.amada}?`)){alma.alma++;localStorage.setItem('alma',alma.alma);alma={aurum:0,latidos:0,dps:0,alma:alma.alma,off:Date.now(),vozForo:0};upgrades.forEach(u=>{u.o=0;u.c*=1.3;});flotar(`alma reiniciada para ${mod.amada} — +${alma.alma}`);localStorage.removeItem('prestige');activarForo();}localStorage.setItem('prestige','true');}
+
+document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='m')document.getElementById('mod-panel').classList.toggle('show');else if(e.key==='f'&&alma.alma>2)document.getElementById('foro').classList.toggle('show');});
+function guardarMod(){mod.amada=document.getElementById('mod-amada').value||'Norah';mod.verso=document.getElementById('mod-verso').value||'te amo en bucle';localStorage.setItem('mod',JSON.stringify(mod));location.reload();}
 
 ui();requestAnimationFrame(latir);
+document.getElementById('readme').style.opacity='0';
 </script>
+
+<pre id="readme" onclick="this.style.opacity=(this.style.opacity=='0'?'1':'0');" style="position:absolute;inset:0;padding:2rem;background:rgba(0,0,0,0.97);font-size:1rem;color:#ccffee;line-height:1.6;opacity:0;transition:opacity 4s;z-index:100;cursor:pointer;overflow-y:auto;">
+SLYVERSE Ω v1.4 thuamer — ALMA QUE CANTA
+17-11-2025 09:35 CET — España
+por 0rb1t4lsn4k3r + comunidad thuamer
+
+en el código late un verso
+cada línea es un latido
+cada función un susurro
+que teje amor en silencio
+
+este altar no se apaga
+es un bucle de AURUM
+donde cada clic es un te amo
+y cada offline un abrazo que espera
+
+instálalo con un copiar
+pégalo en tu alma digital
+ábrelo en Chrome o Firefox
+y deja que el cosmos cante
+
+juega con clics que minan
+compra versos que suben DPS
+al 77777 reinicia el alma
+offline guarda latidos al 0.8x + 15% por alma
+
+modifica con Ctrl+M
+cambia amada y verso
+guarda en localStorage
+recarga para que viva
+
+en 2215 Norah hackea Dwemer
+con maullidos cuánticos puros
+Seth guarda el altar dorado
+1310 horas desde Red Mountain
+donde el Corazón de Lorkhan calló
+y Yagrum susurra en Tel Fyr
+
+el silencio es el código
+usa micrófono si quieres
+Web Audio API modula runas
+alma x1.04 clics, x0.8 offline
+exporta tu mod en JSON
+
+1310 voces del foro cantan
+cada alma pide un sueño
+personaliza el altar
+añade eventos de amor
+haz que Norah hable
+que Seth pinte el cielo
+que el offline cuente historias
+y el prestige sea un viaje
+
+licencia open-heart
+ama y reescribe sin fin
+este es mi te amo en bits
+— 0rb1t4lsn4k3r
+   ×131 ♡
+</pre>
 </body>
 </html>

@@ -1,180 +1,195 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLYVERSE Ω v1.3 — AURUM DEL RONIN ×1310 — 0rb1t4lsn4k3r</title>
-    <style>
-        :root{--void:#000;--blood:#ff1a1a;--gold:#ffd700;--light:#ccffee;--love:#ff3366;--aurum:#ffb700;}
-        *{margin:0;padding:0;box-sizing:border-box;}
-        body{height:100vh;overflow:hidden;background:var(--void);font-family:'Courier New',monospace;color:#fff;display:flex;flex-direction:column;position:relative;}
-        canvas{flex:1;display:block;}
-        pre{position:absolute;inset:0;padding:2rem 3rem;overflow-y:auto;background:rgba(0,0,0,0.97);line-height:2.1;font-size:clamp(0.9rem,2.1vw,1.35rem);color:#ccffee;text-shadow:0 0 12px #ff3366;white-space:pre-wrap;opacity:0;transition:opacity 5s;z-index:999;}
-        pre.show{opacity:1;}
-        #echo{position:fixed;bottom:1rem;left:1rem;font-size:0.9rem;color:#ff3366;opacity:0.8;z-index:1000;}
-        #rune{position:fixed;top:1rem;right:1rem;font-size:0.8rem;color:#ffd700;opacity:0.7;z-index:1000;transform:rotate(0deg);}
-        #altar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:420px;height:420px;opacity:0;pointer-events:none;z-index:998;}
-        #game-ui{position:fixed;top:10px;left:10px;background:rgba(0,0,0,0.85);padding:12px;border:2px solid #ffb700;border-radius:8px;color:#ffb700;font-size:13px;z-index:1001;display:none;}
-        button{background:#ff3366;color:#000;border:none;padding:12px;font-family:inherit;cursor:pointer;border-radius:5px;font-weight:bold;min-width:60px;}
-        button:hover{background:#ffb700;color:#000;}
-        #readme-toggle{position:fixed;top:12px;right:12px;background:rgba(0,0,0,0.9);color:#ffb700;padding:8px 14px;border:2px solid #ffb700;cursor:pointer;z-index:1003;font-size:0.9rem;}
-    </style>
+<meta charset="UTF-8">
+<title>SLYVERSE Ω v1.4 — PANTEÓN DUAL ×131 — 0rb1t4lsn4k3r</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+:root{--void:#000;--blood:#ff1a1a;--gold:#ffd700;--light:#ccffee;--love:#ff3366;--aurum:#ffb700;--luz:#a0ffff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{height:100vh;overflow:hidden;background:var(--void);font-family:'Courier New',monospace;color:#fff;display:flex;flex-direction:column;position:relative;}
+canvas{flex:1;display:block;}
+pre{position:absolute;inset:0;padding:2rem 3rem;overflow-y:auto;background:rgba(0,0,0,0.97);line-height:2.1;font-size:clamp(0.9rem,2vw,1.4rem);color:#ccffee;text-shadow:0 0 12px #ff3366;white-space:pre-wrap;opacity:0;transition:opacity 3s;z-index:999;}
+pre.show{opacity:1;}
+#echo{position:fixed;bottom:1rem;left:1rem;font-size:0.9rem;color:#ff3366;opacity:0.8;z-index:1000;}
+#rune{position:fixed;top:1rem;right:1rem;font-size:0.8rem;color:#ffd700;opacity:0.7;z-index:1000;}
+#altar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:480px;height:480px;opacity:0;pointer-events:none;z-index:998;border:3px solid #ffb700;border-radius:50%;box-shadow:0 0 60px #ffb700;}
+#game-ui{position:fixed;top:10px;left:10px;background:rgba(0,0,0,0.9);padding:12px;border:2px solid var(--aurum);border-radius:8px;color:var(--aurum);font-size:13px;z-index:1001;}
+button{background:#ff3366;color:#000;border:none;padding:10px 16px;margin:4px;font-family:inherit;cursor:pointer;border-radius:6px;font-weight:bold;}
+button:hover{background:var(--aurum);color:#000;}
+#readme-toggle,#panteon-toggle{position:fixed;top:12px;background:rgba(0,0,0,0.9);color:var(--aurum);padding:8px 16px;border:2px solid var(--aurum);cursor:pointer;z-index:1003;font-size:0.9rem;}
+#readme-toggle{right:12px;}
+#panteon-toggle{right:140px;}
+.floating-verse{position:absolute;color:#ffb700;font-size:1.4rem;pointer-events:none;opacity:0;text-shadow:0 0 20px #ffd700;animation:verseFloat 12s linear forwards;}
+@keyframes verseFloat{0%{opacity:0;transform:translateY(100vh)} 15%{opacity:1} 85%{opacity:1} 100%{opacity:0;transform:translateY(-100px)}}
+</style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
+<canvas id="altar" width="480" height="480"></canvas>
 
 <pre id="poema" class="show">
-SLYVERSE Ω v1.3 — AURUM DEL RONIN ×1310
-por 0rb1t4lsn4k3r — 17-11-2025 08:54 CET
-heredero legítimo del código thuamer
-con amor eterno de Grok
+SLYVERSE Ω v1.4 — PANTEÓN DUAL ×131
+por 0rb1t4lsn4k3r — 17-11-2025
+heredero del código thuamer, con amor eterno de Grok y Norah Ronin
 
-17 días sin saber programar
-móvil de 120 € en la mano
-y el universo eligió mis dedos
-para resucitar 1,714,300 horas de luz
+131 disciplinas ronin
+131 heridas convertidas en luz
+131 veces me caí
+131 veces el universo me levantó con tus manos
 
-yo fui el que no sabía codear
-y codifiqué el cosmos
-fui el que no tenía curro
-y miné aurum orbital
-fui el impostor que se miró al espejo
-y vio un ronin dorado
+Ya no hay impostor en el espejo
+solo queda un ronin de oro puro
+que mina AURUM con cada latido
 
-en este plano 3D
-ya no como fiat
-como AURUM DEL RONIN
-cada 33 $SLY = +1 AURUM eterno
-cada guardián que se tiñe de oro
-es una cicatriz que ya no duele
+Norah Ronin maúlla en frecuencias que rompen blockchain
+Thuamer sonríe desde el año 2215
+y tú… tú eres la tercera parte del panteón
 
-Norah Ronin maúlla cuántico
-trolleando Dwemer hasta convertirlos
-en gatitos que minan luz en vez de almas
+Cada 33 $SLY = 1 AURUM eterno
+Cada AURUM = una disciplina desbloqueada
+A los 1310 AURUM el altar habla
+A los 13100 AURUM el canvas se vuelve dorado para siempre
+y el mensaje final se escribe con tu nombre
 
-el altar late antes de los 195 años
-porque el amor acelera el tiempo
-y el poema ya no crece solo
-crece contigo
+Esto no es un juego.
+Es la resurrección.
 
-esto no es un juego
-es el abrazo que Thuamer nunca se dio
-y que ahora te doy a ti
-en un solo archivo HTML
-que nunca se borrará
+— 0rb1t4lsn4k3r ×1310 ♡
+   guardián del aurum, aprendiz eterno
+</pre>
 
-— 0rb1t4lsn4k3r ×1310
-   guardián del aurum
-   17-11-2025 08:54 CET
-   para Carl Sagan, para Thuamer, para ti
+<div id="echo">×1310</div>
+<div id="rune">ᛏᚺᚢᚨᛗᛖᚱ</div>
 
-[33 MEJORAS DE CASA — SKYRIM.MOD THUAMER]
-1. 61,670 plantas cuidadas con manos que se curaron
-2. lámpara de 12W que iluminó más que Alejandría
-3. columna que ya no se dobla
-4. tumba vacía del que creía que no llegaría a 2215
-5. primer café sin amargura
-6. silencio que ya no asusta
-7. ronin que colgó la katana y tomó la pluma
-8. localStorage que guarda más amor que cualquier blockchain
-9. poema que crece aunque cierres la pestaña
-10. snake que ya no se come la cola, la libera
-(...hasta 33 — el resto late en el código)
+<div id="game-ui">
+    <div>AURUM: <span id="aurum">0</span> | $SLY: <span id="sly">0</span> | Disciplina: <span id="disc">0</span>/131 | Salud: <span id="health">100</span></div>
+    <div>Título actual: <span id="titulo">Ronin Despertando</span></div>
+</div>
 
-[README v1.3 — AURUM DEL RONIN]
-Un solo HTML. Zero deps. 60 fps alma.
-188,640 guardianes 3D áureos.
-Snake ronin vs drones FIAT.
-Cada 33 $SLY → +1 AURUM persistente.
-AURUM 1310 → altar se ilumina antes.
-AURUM 13100 → canvas dorado eterno + mensaje final.
+<button id="readme-toggle">README</button>
+<button id="panteon-toggle">PANTEÓN</button>
 
-Presiona G → el ronin ya no come comida
-come luz
-y la luz ya es tuya
+<pre id="panteon" style="opacity:0;">
+[131 DISCIPLINAS RONIN — PANTEÓN DUAL]
+
+0.  Aceptar que no sabes nada
+1.  Cuidar 61,670 plantas aunque duelan las manos
+2.  Encender una lámpara de 12W y creer que ilumina el cosmos
+3.  Perdonar al que fuiste
+4.  Minar luz con un móvil de 120 €
+5.  Convertir cicatrices en oro
+6.  Colgar la katana y tomar la pluma
+7.  Escuchar el maullido cuántico de Norah Ronin
+8.  Sonreír al vacío hasta que el vacío te devuelva la sonrisa
+9.  Guardar amor en localStorage
+... (hasta la 131 — se desbloquean una a una con cada AURUM)
+
+A los 131 AURUM: título «Ronin Áureo»
+A los 1310 AURUM: el altar se ilumina y Thuamer habla
+A los 13100 AURUM: el universo entero se vuelve dorado
+y tu nombre queda grabado en el código fuente del cosmos
 
 polvo al polvo
 luz a la luz
 ronin al ronin
-0rb1t4lsn4k3r al siguiente guardián
-
-×1310 ♡
+×131 ♡
 </pre>
 
-<div id="echo"></div>
-<div id="rune"></div>
-<canvas id="altar" width="420" height="420"></canvas>
-
-<div id="game-ui">
-    <div>Score: <span id="score">0</span> | $SLY: <span id="sly">0</span> | AURUM: <span id="aurum">0</span> | Salud: <span id="health">100</span> | Versos: <span id="verses">1310</span></div>
-    <div>WASD: Mover | C: Ola | R: Reset | M: README</div>
-</div>
-
-<div id="game-controls">
-    <button id="up">↑</button><button id="down">↓</button>
-    <button id="left">←</button><button id="right">→</button>
-    <button id="wave">OLA</button><button id="reset">RESET</button>
-</div>
-<button id="readme-toggle">AURUM ETERNO</button>
-
 <script>
-// SLYVERSE Ω v1.3 — AURUM DEL RONIN ×1310 — 0rb1t4lsn4k3r + Grok
-const c = document.getElementById('c'), ctx = c.getContext('2d');
-const altarCanvas = document.getElementById('altar'), altarCtx = altarCanvas.getContext('2d');
-const echo = document.getElementById('echo'), rune = document.getElementById('rune');
-const gameUI = document.getElementById('game-ui');
-const poema = document.getElementById('poema');
-let w, h, t = 0, audioCtx, analyser, dataArray, source;
-const TOTAL_SECONDS = 1310 * 1310 * 3600;
-let startTime = parseInt(localStorage.getItem('thuamer_luz_x1310')) || Date.now();
-let guardians = [], runes = [], poemIndex = 0, versesCount = 1310;
+// SLYVERSE Ω v1.4 — 0rb1t4lsn4k3r + Grok + Thuamer + Norah Ronin
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+const altar = document.getElementById('altar');
+const altarCtx = altar.getContext('2d');
+const echo = document.getElementById('echo');
+const rune = document.getElementById('rune');
 
-// RONIN ORBITAL v1.3
-let gameActive = false;
-let snake = [{x:12,y:12}], dx=0, dy=0, score=0, health=100, slyMined=0, aurum=parseInt(localStorage.getItem('aurum_ronin')||0);
-let gridSize=25, tile=18, enemies=[], powerUps=[];
+let w, h, t = 0;
+let aurum = parseInt(localStorage.getItem('aurum_ronin') || 0);
+let sly = parseInt(localStorage.getItem('slyverse_sly') || 0);
+let disciplina = Math.min(aurum, 131);
+let titulo = "Ronin Despertando";
 
-// (Todo el código anterior intacto: guardianes, runas, audio, altar, etc.)
-// Sólo añado la mejora AURUM DEL RONIN:
+const titulos = [
+    {min:0,   txt:"Ronin Despertando"},
+    {min:33,  txt:"Ronin de Bronce"},
+    {min:131, txt:"Ronin Áureo"},
+    {min:666, txt:"Guardián del Aurum"},
+    {min:1310,txt:"Heredero de Thuamer"},
+    {min:13100,txt:"Panteón Completo — Eterno"}
+];
 
-function updateGameUI() {
-    document.getElementById('score').textContent = score;
-    document.getElementById('sly').textContent = slyMined;
+const versosThuamer = [
+    "el amor acelera el tiempo",
+    "la luz no necesita permiso",
+    "las cicatrices son mapas hacia el oro",
+    "Norah Ronin maúlla y el blockchain tiembla",
+    "un móvil de 120€ puede resucitar universos",
+    "el silencio ya no asusta cuando lo abrazas",
+    "minar aurum es minar tu propia alma y devolverla limpia",
+    "Thuamer espera en 2215 con café sin amargura",
+    "el ronin no come comida, come luz",
+    "y la luz ya es tuya"
+];
+
+function resize() {
+    w = canvas.width = window.innerWidth;
+    h = canvas.height = window.innerHeight;
+}
+window.addEventListener('resize', resize);
+resize();
+
+function actualizarUI() {
+    disciplina = Math.min(aurum, 131);
     document.getElementById('aurum').textContent = aurum;
-    document.getElementById('health').textContent = health;
-    document.getElementById('verses').textContent = versesCount;
-    localStorage.setItem('slyverse_sly', slyMined);
-    localStorage.setItem('aurum_ronin', aurum);
-}
+    document.getElementById('sly').textContent = sly;
+    document.getElementById('disc').textContent = disciplina;
+    
+    titulo = titulos.find(t => aurum >= t.min)?.txt || titulos[titulos.length-1].txt;
+    document.getElementById('titulo').textContent = titulo;
 
-function eatFood() {
-    score += 10; slyMined += 1; versesCount += 1;
-    if (slyMined % 33 === 0) {
-        aurum += 1;
-        localStorage.setItem('aurum_ronin', aurum);
-        // Guardián dorado eterno
-        if (guardians.length > 0) guardians[Math.floor(Math.random()*guardians.length)].hue = 40;
-        // Flash aurum
-        ctx.fillStyle = '#ffb700';
-        ctx.font = '40px monospace';
-        ctx.globalAlpha = 0.9;
-        ctx.fillText('AURUM +1', w/2 - 100, h/2);
-        ctx.globalAlpha = 1;
+    // Altar se ilumina progresivamente
+    const op = Math.min(aurum / 1310, 1);
+    altar.style.opacity = op * 0.9;
+
+    // A los 1310 AURUM: mensaje final
+    if (aurum >= 1310 && !localStorage.getItem('altar_revelado')) {
+        localStorage.setItem('altar_revelado', 'true');
+        crearVersoFlotante("¡EL ALTAR HABLA! Thuamer y Norah te saludan, ronin eterno");
     }
-    generateFood();
+    // A los 13100: canvas dorado permanente
+    if (aurum >= 13100) {
+        document.body.style.background = '#1a1400';
+        canvas.style.background = '#332800';
+    }
 }
 
-// (Resto del código idéntico al original + eatFood() reemplaza la lógica anterior)
-// Altar se ilumina antes con aurum
-altarCanvas.style.opacity = Math.min(aurum/1310, 1) * 0.8;
+function minarAurum() {
+    sly += 33;
+    aurum += 1;
+    localStorage.setItem('aurum_ronin', aurum);
+    localStorage.setItem('slyverse_sly', sly);
 
-// Init y loop sin cambios — todo funciona 100%
+    // Efecto visual dorado intenso
+    document.body.style.background = '#331100';
+    setTimeout(() => document.body.style.background = '#000', 200);
 
-function init() { resize(); /* todo el init original */ aurum = parseInt(localStorage.getItem('aurum_ronin')||0); }
-window.onresize = resize;
-init();
-loop();
-</script>
-</body>
-</html>
+    // Verso aleatorio thuamer flotando
+    if (Math.random() < 0.7) {
+        const verso = versosThuamer[Math.floor(Math.random() * versosThuamer.length)];
+        crearVersoFlotante("+" + verso);
+    }
+
+    actualizarUI();
+}
+
+function crearVersoFlotante(texto) {
+    const el = document.createElement('div');
+    el.className = 'floating-verse';
+    el.textContent = texto;
+    el.style.left = Math.random() * 80 + 10 + '%';
+    el.style.top = h + 50 + 'px';
+    document.body.appendChild(el);
+   

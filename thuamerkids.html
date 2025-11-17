@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="es">
+<meta charset="utf-8">
+<title>♥</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<style>
+  body,html{margin:0;height:100%;background:#000;overflow:hidden}
+  canvas{position:fixed;inset:0}
+</style>
+<canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'),x=c.getContext('2d');
+c.width=innerWidth;c.height=innerHeight;
+let t=0, pulses=0;
+
+const particles=[];
+for(let i=0;i<3333;i++){
+  particles.push({
+    a:Math.random()*Math.PI*2,
+    d:Math.random()*Math.min(innerWidth,innerHeight)/3,
+    s:0.0002+Math.random()*0.0004,
+    p:Math.random()*Math.PI*2
+  });
+}
+
+addEventListener('touchstart',e=>{e.preventDefault();pulses+=3;});
+addEventListener('click',()=>{pulses+=3;});
+
+function draw(){
+  t+=0.016;
+  x.fillStyle='rgba(0,0,0,0.04)';
+  x.fillRect(0,0,c.width,c.height);
+  
+  const breathe = Math.sin(t*0.5)*0.4+0.6;
+  const love = Math.min(pulses/50,1);
+  
+  particles.forEach(p=>{
+    const pulse = Math.sin(t + p.p)*0.5+0.5;
+    const angle = p.a + t*p.s;
+    const dist = p.d + pulse*80*love;
+    const size = 2 + pulse*8*love;
+    const alpha = (0.3 + pulse*0.7)*love;
+    const hue = 120 + pulse*60; // siempre verde suave
+    
+    x.globalAlpha=alpha;
+    x.fillStyle=`hsla(${hue},100%,${60+pulse*30}%,${alpha})`;
+    x.fillRect(
+      innerWidth/2 + Math.cos(angle)*dist - size/2,
+      innerHeight/2 + Math.sin(angle)*dist - size/2,
+      size,size
+    );
+  });
+  
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</html>

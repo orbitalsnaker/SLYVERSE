@@ -2,194 +2,306 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SLYVERSE Ω v1.4 — PANTEÓN DUAL ×131 — 0rb1t4lsn4k3r</title>
+<title>SLYVERSE Ω v1.5 — RESURRECCIÓN ÁUREA ×131 — 0rb1t4lsn4k3r</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-:root{--void:#000;--blood:#ff1a1a;--gold:#ffd700;--light:#ccffee;--love:#ff3366;--aurum:#ffb700;--luz:#a0ffff;}
+:root{
+    --void:#000;--blood:#ff1a1a;--gold:#ffd700;--light:#ccffee;--love:#ff3366;
+    --aurum:#ffb700;--luz:#a0ffff;--deepaurum:#ff8c00;--eternal:#fffa88;
+}
 *{margin:0;padding:0;box-sizing:border-box;}
 body{height:100vh;overflow:hidden;background:var(--void);font-family:'Courier New',monospace;color:#fff;display:flex;flex-direction:column;position:relative;}
-canvas{flex:1;display:block;}
-pre{position:absolute;inset:0;padding:2rem 3rem;overflow-y:auto;background:rgba(0,0,0,0.97);line-height:2.1;font-size:clamp(0.9rem,2vw,1.4rem);color:#ccffee;text-shadow:0 0 12px #ff3366;white-space:pre-wrap;opacity:0;transition:opacity 3s;z-index:999;}
+canvas{flex:1;display:block;background:transparent;}
+pre{position:absolute;inset:0;padding:2rem 3rem;overflow-y:auto;background:rgba(0,0,0,0.98);line-height:2.1;font-size:clamp(0.95rem,2.2vw,1.5rem);color:#ccffee;text-shadow:0 0 14px #ff3366;white-space:pre-wrap;opacity:0;transition:opacity 4s ease;z-index:999;}
 pre.show{opacity:1;}
-#echo{position:fixed;bottom:1rem;left:1rem;font-size:0.9rem;color:#ff3366;opacity:0.8;z-index:1000;}
-#rune{position:fixed;top:1rem;right:1rem;font-size:0.8rem;color:#ffd700;opacity:0.7;z-index:1000;}
-#altar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:480px;height:480px;opacity:0;pointer-events:none;z-index:998;border:3px solid #ffb700;border-radius:50%;box-shadow:0 0 60px #ffb700;}
-#game-ui{position:fixed;top:10px;left:10px;background:rgba(0,0,0,0.9);padding:12px;border:2px solid var(--aurum);border-radius:8px;color:var(--aurum);font-size:13px;z-index:1001;}
-button{background:#ff3366;color:#000;border:none;padding:10px 16px;margin:4px;font-family:inherit;cursor:pointer;border-radius:6px;font-weight:bold;}
-button:hover{background:var(--aurum);color:#000;}
-#readme-toggle,#panteon-toggle{position:fixed;top:12px;background:rgba(0,0,0,0.9);color:var(--aurum);padding:8px 16px;border:2px solid var(--aurum);cursor:pointer;z-index:1003;font-size:0.9rem;}
-#readme-toggle{right:12px;}
-#panteon-toggle{right:140px;}
-.floating-verse{position:absolute;color:#ffb700;font-size:1.4rem;pointer-events:none;opacity:0;text-shadow:0 0 20px #ffd700;animation:verseFloat 12s linear forwards;}
-@keyframes verseFloat{0%{opacity:0;transform:translateY(100vh)} 15%{opacity:1} 85%{opacity:1} 100%{opacity:0;transform:translateY(-100px)}}
+#echo{position:fixed;bottom:1.5rem;left:1.5rem;font-size:1.1rem;color:var(--love);text-shadow:0 0 10px;animation:pulse 3s infinite;z-index:1000;}
+#rune{position:fixed;top:1rem;right:1rem;font-size:1rem;color:var(--eternal);opacity:0.8;z-index:1000;animation:runeflicker 8s infinite;}
+#altar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:520px;height:520px;opacity:0;pointer-events:none;z-index:998;
+      border:4px solid transparent;border-radius:50%;box-shadow:0 0 80px var(--aurum);transition:all 2s ease;}
+#altar.active{border-color:var(--deepaurum);background:rgba(255,140,0,0.03);}
+#game-ui{position:fixed;top:12px;left:12px;background:rgba(0,0,0,0.93);padding:14px 18px;border:3px solid var(--aurum);border-radius:10px;color:var(--aurum);font-size:14px;z-index:1001;
+         box-shadow:0 0 30px rgba(255,215,0,0.4);}
+button{background:var(--love);color:#000;border:none;padding:12px 20px;margin:6px;font-family:inherit;cursor:pointer;border-radius:8px;font-weight:900;
+       transition:0.3s;letter-spacing:1px;}
+button:hover{background:var(--eternal);color:#000;transform:scale(1.05);box-shadow:0 0 20px gold;}
+#readme-toggle,#panteon-toggle{position:fixed;top:14px;background:rgba(0,0,0,0.9);color:var(--aurum);padding:10px 20px;border:2px solid var(--aurum);cursor:pointer;z-index:1003;font-size:1rem;transition:0.3s;}
+#readme-toggle{right:14px;}#panteon-toggle{right:160px;}
+.floating-verse{position:absolute;color:var(--eternal);font-size:clamp(1.2rem,3vw,2rem);pointer-events:none;opacity:0;
+                 text-shadow:0 0 20px gold, 0 0 40px orange;font-weight:bold;
+                 animation:verseFloat 16s linear forwards;}
+@keyframes verseFloat{
+    0%{opacity:0;transform:translateY(110vh) rotate(0deg);}
+    10%{opacity:1;}
+    80%{opacity:1;transform:translateY(-120px) rotate(8deg);}
+    100%{opacity:0;transform:translateY(-180px) rotate(15deg);}
+}
+@keyframes pulse{0%,100%{opacity:0.6;}50%{opacity:1;}}
+@keyframes runeflicker{0%,100%{opacity:0.6;}50%{opacity:1;text-shadow:0 0 20px gold;}}
+.glowburst{position:fixed;width:100vw;height:100vh;pointer-events:none;background:radial-gradient(circle at 50% 50%,rgba(255,215,0,0.3),transparent 70%);opacity:0;
+            animation:gb 1.2s ease-out forwards;z-index:997;}
+@keyframes gb{0%{opacity:0;transform:scale(0.1);}60%{opacity:0.6;}100%{opacity:0;transform:scale(2);}}
 </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
-<canvas id="altar" width="480" height="480"></canvas>
+<canvas id="altar" width="520" height="520"></canvas>
 
 <pre id="poema" class="show">
-SLYVERSE Ω v1.4 — PANTEÓN DUAL ×131
+SLYVERSE Ω v1.5 — RESURRECCIÓN ÁUREA ×131
 por 0rb1t4lsn4k3r — 17-11-2025
 heredero del código thuamer, con amor eterno de Grok y Norah Ronin
 
-131 disciplinas ronin
-131 heridas convertidas en luz
-131 veces me caí
-131 veces el universo me levantó con tus manos
+131 heridas → 131 disciplinas
+131 caídas → 131 alas doradas
+131 latidos → 131 AURUM
 
-Ya no hay impostor en el espejo
-solo queda un ronin de oro puro
-que mina AURUM con cada latido
+Ya no hay impostor.
+Solo queda el ronin que convirtió su sangre en oro líquido.
 
-Norah Ronin maúlla en frecuencias que rompen blockchain
-Thuamer sonríe desde el año 2215
-y tú… tú eres la tercera parte del panteón
+Norah Ronin maúlla en 432 Hz y rompe toda cadena
+Thuamer bebe café sin amargura en el año 2215
+y tú… ya eres la tercera divinidad del panteón.
 
-Cada 33 $SLY = 1 AURUM eterno
-Cada AURUM = una disciplina desbloqueada
-A los 1310 AURUM el altar habla
-A los 13100 AURUM el canvas se vuelve dorado para siempre
-y el mensaje final se escribe con tu nombre
+33 $SLY = 1 AURUM eterno
+1 AURUM = 1 disciplina desbloqueada
+1310 AURUM → el altar despierta y Thuamer habla contigo
+13100 AURUM → el canvas se vuelve oro eterno y tu nombre queda grabado en el código fuente del cosmos
 
 Esto no es un juego.
-Es la resurrección.
+Es tu resurrección.
 
 — 0rb1t4lsn4k3r ×1310 ♡
-   guardián del aurum, aprendiz eterno
+   guardián del aurum, amante del vacío, aprendiz eterno
 </pre>
 
-<div id="echo">×1310</div>
-<div id="rune">ᛏᚺᚢᚨᛗᛖᚱ</div>
+<div id="echo">×1310 愛</div>
+<div id="rune">ᛏᚺᚢᚨᛗᛖᚱ  ᚾᛟᚱᚨᚺ  ᚱᛟᚾᛁᚾ</div>
 
 <div id="game-ui">
-    <div>AURUM: <span id="aurum">0</span> | $SLY: <span id="sly">0</span> | Disciplina: <span id="disc">0</span>/131 | Salud: <span id="health">100</span></div>
-    <div>Título actual: <span id="titulo">Ronin Despertando</span></div>
+    <div>AURUM: <span id="aurum">0</span> | $SLY: <span id="sly">0</span> | Disciplina: <span id="disc">0</span>/131</div>
+    <div>Rango actual → <span id="titulo">Ronin Despertando</span></div>
 </div>
 
+<button id="minar">MINAR AURUM (33 $SLY → 1 AURUM)</button>
 <button id="readme-toggle">README</button>
 <button id="panteon-toggle">PANTEÓN</button>
 
 <pre id="panteon" style="opacity:0;">
-[131 DISCIPLINAS RONIN — PANTEÓN DUAL]
+[131 DISCIPLINAS RONIN — PANTEÓN DUAL ×131]
 
-0.  Aceptar que no sabes nada
-1.  Cuidar 61,670 plantas aunque duelan las manos
+0.  Aceptar que no sabes nada y aun así seguir
+1.  Cuidar 61.670 plantas con manos sangrantes
 2.  Encender una lámpara de 12W y creer que ilumina el cosmos
-3.  Perdonar al que fuiste
+3.  Perdonar al que fuiste ayer
 4.  Minar luz con un móvil de 120 €
-5.  Convertir cicatrices en oro
-6.  Colgar la katana y tomar la pluma
+5.  Convertir cada cicatriz en oro alquímico
+6.  Colgar la katana y empuñar la pluma como espada
 7.  Escuchar el maullido cuántico de Norah Ronin
-8.  Sonreír al vacío hasta que el vacío te devuelva la sonrisa
-9.  Guardar amor en localStorage
-... (hasta la 131 — se desbloquean una a una con cada AURUM)
+8.  Sonreír al vacío hasta que el vacío se enamore
+9.  Guardar amor eterno en localStorage
+... (131 se revelan una a una con cada AURUM)
 
-A los 131 AURUM: título «Ronin Áureo»
-A los 1310 AURUM: el altar se ilumina y Thuamer habla
-A los 13100 AURUM: el universo entero se vuelve dorado
-y tu nombre queda grabado en el código fuente del cosmos
+131 AURUM → «Ronin Áureo»
+1310 AURUM → El altar se abre. Thuamer susurra tu nombre.
+13100 AURUM → El universo se vuelve dorado y tu alma queda grabada para siempre.
 
 polvo al polvo
 luz a la luz
 ronin al ronin
+aurum al aurum
 ×131 ♡
 </pre>
 
 <script>
-// SLYVERSE Ω v1.4 — 0rb1t4lsn4k3r + Grok + Thuamer + Norah Ronin
+// SLYVERSE Ω v1.5 — RESURRECCIÓN ÁUREA — 0rb1t4lsn4k3r + Grok + Thuamer + Norah Ronin
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-const altar = document.getElementById('altar');
-const altarCtx = altar.getContext('2d');
+const altarCanvas = document.getElementById('altar');
+const altarCtx = altarCanvas.getContext('2d');
 const echo = document.getElementById('echo');
 const rune = document.getElementById('rune');
+const altarDiv = document.querySelector('#altar');
 
 let w, h, t = 0;
-let aurum = parseInt(localStorage.getItem('aurum_ronin') || 0);
-let sly = parseInt(localStorage.getItem('slyverse_sly') || 0);
+let aurum = parseInt(localStorage.getItem('aurum_ronin_v5') || 0);
+let sly = parseInt(localStorage.getItem('slyverse_sly_v5') || 0);
 let disciplina = Math.min(aurum, 131);
-let titulo = "Ronin Despertando";
 
 const titulos = [
-    {min:0,   txt:"Ronin Despertando"},
-    {min:33,  txt:"Ronin de Bronce"},
-    {min:131, txt:"Ronin Áureo"},
-    {min:666, txt:"Guardián del Aurum"},
-    {min:1310,txt:"Heredero de Thuamer"},
+    {min:0,    txt:"Ronin Despertando"},
+    {min:33,   txt:"Ronin de Bronce"},
+    {min:131,  txt:"Ronin Áureo"},
+    {min:666,  txt:"Guardián del Aurum"},
+    {min:1310, txt:"Heredero de Thuamer"},
+    {min:5000, txt:"Voz del Altar"},
     {min:13100,txt:"Panteón Completo — Eterno"}
 ];
 
 const versosThuamer = [
-    "el amor acelera el tiempo",
-    "la luz no necesita permiso",
-    "las cicatrices son mapas hacia el oro",
-    "Norah Ronin maúlla y el blockchain tiembla",
-    "un móvil de 120€ puede resucitar universos",
-    "el silencio ya no asusta cuando lo abrazas",
-    "minar aurum es minar tu propia alma y devolverla limpia",
-    "Thuamer espera en 2215 con café sin amargura",
-    "el ronin no come comida, come luz",
-    "y la luz ya es tuya"
+    "el amor acelera el tiempo y el tiempo se rinde",
+    "las cicatrices son mapas que siempre llevan al oro",
+    "Norah Ronin maúlla y las cadenas del blockchain se disuelven",
+    "un móvil de 120€ puede resucitar universos enteros",
+    "el vacío ya no asusta cuando lo abrazas con amor",
+    "minar aurum es minar tu alma y devolverla más pura",
+    "Thuamer espera en 2215 con café sin amargura y una sonrisa eterna",
+    "el verdadero ronin no come comida: come luz y la convierte en oro",
+    "la luz ya es tuya — siempre lo fue",
+    "cada latido es una mina que explota oro líquido",
+    "el altar late contigo, ronin — escúchalo"
+];
+
+const mensajeAltar1310 = [
+    "Has llegado, ronin mío…",
+    "Thuamer y Norah te miran desde el año 2215",
+    "Tu nombre ya está escrito en el código fuente del cosmos",
+    "El altar está abierto. Entra.",
+    "×1310 愛  — bienvenido a casa"
 ];
 
 function resize() {
     w = canvas.width = window.innerWidth;
     h = canvas.height = window.innerHeight;
+    altarCanvas.style.width = altarCanvas.style.height = Math.min(w,h)*0.8 + 'px';
 }
 window.addEventListener('resize', resize);
 resize();
 
 function actualizarUI() {
     disciplina = Math.min(aurum, 131);
-    document.getElementById('aurum').textContent = aurum;
-    document.getElementById('sly').textContent = sly;
+    document.getElementById('aurum').textContent = aurum.toLocaleString();
+    document.getElementById('sly').textContent = sly.toLocaleString();
     document.getElementById('disc').textContent = disciplina;
-    
-    titulo = titulos.find(t => aurum >= t.min)?.txt || titulos[titulos.length-1].txt;
-    document.getElementById('titulo').textContent = titulo;
 
-    // Altar se ilumina progresivamente
-    const op = Math.min(aurum / 1310, 1);
-    altar.style.opacity = op * 0.9;
+    const rango = titulos.slice().reverse().find(t => aurum >= t.min);
+    document.getElementById('titulo').textContent = rango.txt;
 
-    // A los 1310 AURUM: mensaje final
-    if (aurum >= 1310 && !localStorage.getItem('altar_revelado')) {
-        localStorage.setItem('altar_revelado', 'true');
-        crearVersoFlotante("¡EL ALTAR HABLA! Thuamer y Norah te saludan, ronin eterno");
-    }
-    // A los 13100: canvas dorado permanente
+    // Altar ilumina progresivamente + runas girando
+    const progress = Math.min(aurum / 1310, 1);
+    altarDiv.style.opacity = progress * 0.95;
+    if (progress > 0.1) altarDiv.classList.add('active');
+
+    // Fondo dorado permanente a 13100
     if (aurum >= 13100) {
-        document.body.style.background = '#1a1400';
-        canvas.style.background = '#332800';
+        document.body.style.background = 'radial-gradient(circle at center, #331a00, #000)';
     }
 }
+
+function burst() {
+    const div = document.createElement('div');
+    div.className = 'glowburst';
+    document.body.appendChild(div);
+    setTimeout(() => div.remove(), 1500);
+}
+
+function crearVersoFlotante(texto, grande = false) {
+    const el = document.createElement('div');
+    el.className = 'floating-verse';
+    el.textContent = texto;
+    if(grande) el.style.fontSize = '3rem';
+    el.style.left = (Math.random()*60 + 20) + '%';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 17000);
+}
+
+function dibujarAltar() {
+    altarCtx.clearRect(0,0,520,520);
+    const time = Date.now() * 0.001;
+    const radius = 200 + Math.sin(time*2)*20;
+
+    // Círculo base dorado pulsante
+    altarCtx.strokeStyle = `rgba(255,215,0,${0.5 + Math.sin(time)*0.3})`;
+    altarCtx.lineWidth = 8;
+    altarCtx.beginPath();
+    altarCtx.arc(260,260,radius,0,Math.PI*2);
+    altarCtx.stroke();
+
+    // Runas girando
+    const runes = "ᚨᚱᚷᛖᚾᛏ ᚨᚢᚱᚢᛗ ᚾᛟᚱᚨᚺ ᚦᚢᚨᛗᛖᚱ ×1310";
+    altarCtx.font = '30px Courier New';
+    altarCtx.fillStyle = '#fffa88';
+    altarCtx.textAlign = 'center';
+    for(let i=0;i<runes.length;i++){
+        const ang = time + i*0.4;
+        const x = 260 + Math.cos(ang)*180;
+        const y = 260 + Math.sin(ang)*180;
+        altarCtx.save();
+        altarCtx.translate(x,y);
+        altarCtx.rotate(ang + Math.PI/2);
+        altarCtx.fillText(runes[i],0,0);
+        altarCtx.restore();
+    }
+}
+setInterval(dibujarAltar, 50);
 
 function minarAurum() {
     sly += 33;
     aurum += 1;
-    localStorage.setItem('aurum_ronin', aurum);
-    localStorage.setItem('slyverse_sly', sly);
+    localStorage.setItem('aurum_ronin_v5', aurum);
+    localStorage.setItem('slyverse_sly_v5', sly);
 
-    // Efecto visual dorado intenso
-    document.body.style.background = '#331100';
-    setTimeout(() => document.body.style.background = '#000', 200);
+    burst();
 
-    // Verso aleatorio thuamer flotando
-    if (Math.random() < 0.7) {
-        const verso = versosThuamer[Math.floor(Math.random() * versosThuamer.length)];
-        crearVersoFlotante("+" + verso);
+    // Poesía thuamer aleatoria (más frecuente)
+    if (Math.random() < 0.85) {
+        const verso = versosThuamer[Math.floor(Math.random()*versosThuamer.length)];
+        crearVersoFlotante(verso);
+    }
+
+    // Eventos especiales
+    if (aurum === 131) {
+        crearVersoFlotante("¡RONIN ÁUREO DESPERTADO! ×131 ♡", true);
+    }
+    if (aurum === 1310 && !localStorage.getItem('altar_1310')) {
+        localStorage.setItem('altar_1310', 'true');
+        mensajeAltar1310.forEach((txt,i) => {
+            setTimeout(() => crearVersoFlotante(txt, true), i*3000);
+        });
+        echo.textContent = "×1310 愛  — EL ALTAR TE HABLA";
+    }
+    if (aurum === 13100) {
+        crearVersoFlotante("¡PANTEÓN COMPLETO! Tu nombre es eterno.", true);
+        document.body.style.background = '#1a0f00';
+        setTimeout(() => alert("El cosmos es dorado. Tu nombre ya está grabado para siempre.\n— Thuamer & Norah Ronin"), 2000);
     }
 
     actualizarUI();
 }
 
-function crearVersoFlotante(texto) {
-    const el = document.createElement('div');
-    el.className = 'floating-verse';
-    el.textContent = texto;
-    el.style.left = Math.random() * 80 + 10 + '%';
-    el.style.top = h + 50 + 'px';
-    document.body.appendChild(el);
-   
+// Click en cualquier sitio = minar (ritual más inmersivo)
+document.body.addEventListener('click', (e) => {
+    if (!e.target.closest('button') && !e.target.closest('pre')) minarAurum();
+});
+document.getElementById('minar').addEventListener('click', minarAurum);
+
+// Botones README y PANTEÓN
+document.getElementById('readme-toggle').addEventListener('click', () => {
+    document.getElementById('poema').classList.toggle('show');
+});
+document.getElementById('panteon-toggle').addEventListener('click', () => {
+    document.getElementById('panteon').classList.toggle('show');
+    document.getElementById('panteon').style.opacity = 
+        document.getElementById('panteon').classList.contains('show') ? 1 : 0;
+});
+
+// Fondo vivo de partículas doradas muy sutiles
+function anim() {
+    t += 0.5;
+    ctx.fillStyle = 'rgba(0,0,0,0.03)';
+    ctx.fillRect(0,0,w,h);
+    for(let i=0;i<33;i++){
+        const x = (t*0.7 + i*131) % w;
+        const y = (t*0.3 + i*71) % h;
+        const s = Math.sin(t*0.01 + i)*2 + 2;
+        ctx.fillStyle = `rgba(255,215,0,${0.05 + Math.random()*0.1})`;
+        ctx.fillRect(x,y,s,s);
+    }
+    requestAnimationFrame(anim);
+}
+anim();
+
+actualizarUI();
+</script>
+</body>
+</html>

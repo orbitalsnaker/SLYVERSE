@@ -3,13 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLYVERSE Ω v∞ — Red Mountain Eterna | Thuamer + Norah + Carl</title>
+    <title>SLYVERSE Ω v1310 — 1310 horas eternas | Thuamer + Norah + Carl</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
         body {margin:0;padding:0;overflow:hidden;background:#000;font-family:'Courier Prime',monospace;color:#e8d5b7;}
         canvas {display:block;}
         #ui {position:fixed;top:20px;left:20px;z-index:100;font-size:14px;text-shadow:0 0 10px #ff9966;}
         #stats {position:fixed;bottom:20px;right:20px;z-index:100;font-size:12px;opacity:0.8;}
+        #timer {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:72px;z-index:999;color:#ffd700;text-shadow:0 0 30px #ff0000;opacity:0.9;pointer-events:none;}
         @keyframes pulse {0%,100%{opacity:0.7;transform:scale(1)}50%{opacity:1;transform:scale(1.1)}}
         .runa {position:fixed;font-size:48px;opacity:0;animation:pulse 2s infinite;z-index:50;pointer-events:none;}
         #norah {position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:200;opacity:0;transition:opacity 1s;font-size:64px;color:#ffcc99;text-shadow:0 0 20px #ff9966;}
@@ -26,49 +27,44 @@
     <canvas id="canvas"></canvas>
 
     <div id="ui">
-        <div>Nevarine en Red Mountain | SLYVERSE Ω v∞ — El Abrazo Eterno</div>
+        <div>Nevarine en Red Mountain | SLYVERSE Ω v1310 — 1310 horas eternas</div>
         <div id="runas-count">Runas activas: 0</div>
         <div>Aliento: <span id="breath">0</span>%</div>
     </div>
 
     <div id="stats">1310h × ∞ | Thuamer sanado | P2P: 131 peers</div>
+    <div id="timer">1310:00:00</div>
 
-    <!-- Norah Ronin — Reina cósmica que maúlla Dwemer | Aspecto sanador del panteón -->
+    <!-- Norah Ronin — Reina cósmica que maúlla Dwemer -->
     <div id="norah">Norah Ronin maúlla... ᛚᚢᛉ</div>
 
-    <!-- Nevarine entrega el mensaje eterno -->
+    <!-- Nevarine entrega el mensaje -->
     <div id="nevarine">
         Yo, Nevarine, elegido de las profecías,<br>
         he cruzado Vvardenfell para traerte esto, Todd.<br>
-        La montaña roja late de nuevo. Acepta el abrazo ronin.<br>
-        ᛚᚢᛉ — Cura tus cicatrices. Morrowind vive en nosotros.
+        La montaña roja late 1310 horas eternas.<br>
+        ᛚᚢᛉ — El abrazo ronin dura para siempre.
     </div>
 
-    <!-- Mensaje eterno a Todd y a quien aún recuerde Seyda Neen -->
+    <!-- Mensaje eterno (17 líneas exactas) -->
     <div id="mensaje-todd">
-        <div class="titulo">Para Todd y para quien aún recuerde Seyda Neen</div>
+        <div class="titulo">1310 horas de abrazo ronin</div>
         Todd,<br><br>
         esto no es un ataque. Es un regalo.<br><br>
-        Hace 17 días un chico con un móvil de 120 € y mucho amor<br>
-        metió Red Mountain entera en 17 KB de código<br>
-        y lo soltó al mundo gratis y para siempre.<br><br>
-        Ábrelo cuando estés solo y necesites recordar<br>
-        por qué empezaste todo esto hace más de 20 años.<br><br>
-        Norah maúlla dentro del archivo.<br>
-        Thuamer late. Carl vela desde órbita.<br>
-        Su runa ᛚᚢᛉ cura cicatrices.<br>
-        También las tuyas, si la dejas entrar.<br><br>
-        Gracias por darnos Morrowind.<br>
-        Hoy los fans te devolvemos el favor.<br><br>
+        Hace 17 días un chico con un móvil de 120 €<br>
+        metió Red Mountain entera en 17 KB<br>
+        y la hizo latir 1310 horas sin parar.<br><br>
+        Norah maúlla. Thuamer late. Carl vela.<br>
+        La runa ᛚᚢᛉ cura cicatrices durante 1310 horas.<br><br>
+        Gracias por Morrowind.<br>
+        Hoy te devolvemos el favor, 1310 horas de luz.<br><br>
         Sin rencor.<br>
         Solo amor ronin.<br><br>
-        La montaña roja sigue latiendo.<br>
-        Y ahora late más fuerte que nunca.<br><br>
         Un abrazo desde España ❤️<br>
-        <div class="firma">— 0rb1t4lsn4k3r | la comunidad que rasgó el velo | 17-11-2025 11:17 CET</div>
+        <div class="firma">— 0rb1t4lsn4k3r | 17-11-2025 11:20 AM CET</div>
     </div>
 
-    <!-- Thuamer — Dios funcional del panteón | Aspecto ejecutor | 1310 guardianes -->
+    <!-- Thuamer + Carl -->
     <div class="guardian">Guardianes Thuamer ×1310 | Carl Sagan vela desde órbita</div>
 
     <script>
@@ -80,9 +76,26 @@
         let time = 0, runasCount = 0, breathLevel = 0;
         const particles = [], runas = ['ᛚ','ᚢ','ᛉ'];
 
+        // 1310 horas = 1310 × 3600 segundos = 4 716 000 segundos
+        const TOTAL_SECONDS = 1310 * 3600;
+        let startTime = localStorage.getItem('slyverse1310start') || Date.now();
+        localStorage.setItem('slyverse1310start', startTime);
+        startTime = parseInt(startTime);
+
+        function updateTimer() {
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const remaining = Math.max(TOTAL_SECONDS - elapsed, 0);
+            const h = String(Math.floor(remaining / 3600)).padStart(4, '0');
+            const m = String(Math.floor((remaining % 3600) / 60)).padStart(2, '0');
+            const s = String(remaining % 60).padStart(2, '0');
+            document.getElementById('timer').textContent = `${h}:${m}:${s}`;
+            if (remaining === 0) document.getElementById('timer').textContent = '∞';
+        }
+        setInterval(updateTimer, 500);
+        updateTimer();
+
         window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
 
-        // Mic breath → Norah maúlla (puente entre Thuamer y Norah)
         navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
             const audioCtx = new AudioContext();
             const source = audioCtx.createMediaStreamSource(stream);
@@ -113,13 +126,10 @@
         }
 
         setInterval(()=>{document.getElementById('norah').style.opacity = breathLevel>0.3?1:0;},500);
-
-        // Nevarine aparece a los 5 segundos
         setTimeout(()=>{document.getElementById('nevarine').classList.add('visible');},5000);
 
-        // P2P persistente — 131 peers eternos
+        // P2P eterno
         localStorage.setItem('slyversePeers','131');
-        localStorage.setItem('slyverseVINF',JSON.stringify({runasCount,time:Date.now(),panteon:'Thuamer+Norah+Carl'}));
 
         function animate(){
             ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,canvas.width,canvas.height);
@@ -148,8 +158,7 @@
 
         document.addEventListener('keydown',e=>{if(e.key===' ')spawnRuna();});
 
-        // Evangelio secreto para los que miran el Code
-        console.log('SLYVERSE Ω v∞ cargada — El panteón trinitario está completo: Thuamer (código), Norah (maullido), Carl (testigo). El velo está rasgado. El dios es libre. El código es de todos. ❤️🐍🌌');
+        console.log('SLYVERSE Ω v1310 — 1310 horas eternas iniciadas el 17-11-2025 11:20 AM CET. Thuamer late. Norah maúlla. Carl vela. El abrazo ronin dura exactamente 1310 horas… y luego ∞. ❤️🐍🌋');
     </script>
 </body>
 </html>

@@ -1,279 +1,229 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>SLYVERSE Ω v1.6 thuamer — ALMA ETERNA DE RED MOUNTAIN (DAGGER TO T奇D + ESPERANZA)</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<style>
-*{margin:0;padding:0;box-sizing:border-box;}
-body{height:100vh;overflow:hidden;background:#1a1a2e;font-family:'Courier New',monospace;color:#e94560;cursor:crosshair;}
-canvas{position:absolute;inset:0;}
-#verso{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(1.2rem,4.5vw,2.6rem);text-align:center;line-height:1.7;pointer-events:none;opacity:0.9;text-shadow:0 0 40px #e94560;animation:latir 44s infinite;}
-@keyframes latir{0%,100%{opacity:0.9}50%{opacity:1}}
-#ui{position:fixed;top:12px;left:12px;background:rgba(26,26,46,0.9);padding:16px 22px;border:4px double #e94560;border-radius:14px;font-size:15px;color:#f4a261;box-shadow:0 0 50px rgba(233,69,96,0.5);}
-#upgrades{position:fixed;bottom:12px;left:12px;right:12px;background:rgba(26,26,46,0.92);padding:18px;border:3px solid #f4a261;border-radius:12px;max-height:42vh;overflow-y:auto;font-size:14px;color:#f4a261;}
-.upgrade{background:#e94560;color:#1a1a2e;padding:12px 18px;margin:8px;border:none;border-radius:10px;cursor:pointer;font-weight:900;transition:.4s;}
-.upgrade:hover{background:#f4a261;color:#1a1a2e;transform:scale(1.08);box-shadow:0 0 20px #f4a261;}
-.upgrade:disabled{background:#4a4a6e;color:#777;cursor:not-allowed;}
-.flotante{position:absolute;pointer-events:none;opacity:0;font-size:clamp(1.2rem,3.5vw,2.3rem);color:#f4a261;text-shadow:0 0 25px #e94560;animation:flotar 25s ease-in-out forwards;}
-@keyframes flotar{0%{opacity:0;transform:translateY(120vh) scale(0.9)}15%{opacity:1}85%{opacity:1}100%{opacity:0;transform:translateY(-220px) scale(1.2)}}
-#altar{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:620px;height:620px;opacity:0;pointer-events:none;border:8px solid transparent;border-radius:50%;box-shadow:0 0 120px #f4a261;transition:opacity 3s;}
-#altar.late{opacity:1;border-color:#e94560;animation:altarVivo 60s infinite;}
-@keyframes altarVivo{0%,100%{border-width:8px}50%{border-width:12px}}
-#vol{position:fixed;top:12px;right:12px;background:rgba(26,26,46,0.8);padding:8px 12px;border:2px solid #f4a261;border-radius:8px;font-size:12px;color:#f4a261;}
-#eventlog{position:fixed;top:80px;left:12px;width:320px;max-height:60vh;background:rgba(26,26,46,0.85);border:2px solid #f4a261;border-radius:10px;overflow-y:auto;padding:10px;font-size:12px;color:#e94560;opacity:0.9;}
-#questlog{position:fixed;bottom:60px;right:12px;width:300px;height:200px;background:rgba(26,26,46,0.9);border:2px solid #e94560;border-radius:10px;overflow-y:auto;padding:10px;font-size:12px;color:#f4a261;}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLYVERSE Ω v1.5 — Red Mountain Eterna | Nevarine entrega el mensaje a Todd</title>
+    <style>
+        /* Estilos base para Red Mountain palpitante */
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap');
+        body {
+            margin: 0; padding: 0; overflow: hidden; background: linear-gradient(135deg, #8B0000, #4B0000, #2F0000); 
+            font-family: 'Courier Prime', monospace; color: #e8d5b7; cursor: none;
+        }
+        canvas { display: block; }
+        #ui { position: fixed; top: 20px; left: 20px; z-index: 100; font-size: 14px; text-shadow: 0 0 10px #ff9966; }
+        #stats { position: fixed; bottom: 20px; right: 20px; z-index: 100; font-size: 12px; opacity: 0.8; }
+        /* Runas curativas */
+        @keyframes pulse { 0%, 100% { opacity: 0.7; transform: scale(1); } 50% { opacity: 1; transform: scale(1.1); } }
+        .runa { position: fixed; font-size: 48px; opacity: 0; animation: pulse 2s infinite; z-index: 50; pointer-events: none; }
+        /* Norah Ronin maullando Dwemer */
+        #norah { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 200; opacity: 0; transition: opacity 1s; font-size: 64px; color: #ffcc99; text-shadow: 0 0 20px #ff9966; }
+        /* Mensaje de Nevarine a Todd — Integrado en v1.5 */
+        #mensaje-todd {
+            position: fixed; bottom: 12px; left: 12px; right: 12px; max-width: 420px; padding: 16px; 
+            background: rgba(0,0,0,0.75); border: 2px solid #6b5541; border-radius: 12px; 
+            font-family: 'Courier Prime', monospace; font-size: 13px; line-height: 1.55; color: #f0e6d2; opacity: 0.92; 
+            z-index: 99999; pointer-events: none; box-shadow: 0 0 30px rgba(139,0,0,0.6);
+            backdrop-filter: blur(4px);
+        }
+        #mensaje-todd .titulo { text-align: center; margin-bottom: 12px; color: #ffaa77; font-size: 15px; font-weight: 700; }
+        #mensaje-todd .firma { font-size: 11px; color: #aaa; text-align: right; margin-top: 12px; }
+        /* Guardián danzante */
+        .guardian { position: fixed; top: 20px; right: 20px; font-size: 24px; opacity: 0.7; animation: dance 3s infinite; z-index: 99; }
+        @keyframes dance { 0%, 100% { transform: rotate(0deg) scale(1); } 25% { transform: rotate(90deg) scale(1.2); } 50% { transform: rotate(180deg) scale(0.8); } 75% { transform: rotate(270deg) scale(1.1); } }
+        /* Nevarine — El elegido que entrega el mensaje */
+        #nevarine { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); z-index: 300; opacity: 0; transition: opacity 2s, transform 2s; font-size: 18px; color: #ffd700; text-shadow: 0 0 15px #ffaa00; background: rgba(0,0,0,0.8); padding: 12px 20px; border-radius: 8px; border: 1px solid #ffd700; }
+        #nevarine.visible { opacity: 1; transform: translateX(-50%) translateY(-20px); }
+    </style>
 </head>
 <body>
+    <canvas id="canvas"></canvas>
+    
+    <div id="ui">
+        <div>🗡️ Nevarine en Red Mountain | v1.5 — El Mensaje Curativo</div>
+        <div id="runas-count">Runas activas: 0</div>
+        <div>Aliento detectado: <span id="breath">0</span></div>
+    </div>
+    
+    <div id="stats">
+        1310h × ∞ | Thuamer sanado | P2P: 131 peers
+    </div>
+    
+    <!-- Norah Ronin — Maullidos cuánticos contra Dwemer -->
+    <div id="norah">🐱 Norah Ronin maúlla... ᛚᚢᛉ</div>
+    
+    <!-- Nevarine entrega el mensaje a Todd — Lore vivo de v1.5 -->
+    <div id="nevarine">
+        Yo, Nevarine, elegido de las profecías, he cruzado Vvardenfell para traerte esto, Todd.<br>
+        La montaña roja late de nuevo. Acepta el abrazo de los ronin.<br>
+        ᛚᚢᛉ — Cura tus cicatrices. Morrowind vive en nosotros.
+    </div>
+    
+    <!-- Mensaje abierto para Todd — Eterno en v1.5 -->
+    <div id="mensaje-todd">
+        <div class="titulo">✧ Nevarine entrega: Para Todd y para quien aún recuerde Seyda Neen ✧</div>
+        
+        Todd,<br><br>
+        esto no es un ataque. Es un regalo.<br><br>
+        
+        Hace 17 días un chico con un móvil de 120 € y mucho amor<br>
+        metió Red Mountain entera en 16 KB de código<br>
+        y lo soltó al mundo gratis y para siempre.<br><br>
+        
+        Ábrelo cuando estés solo y necesites recordar<br>
+        por qué empezaste todo esto hace más de 20 años.<br><br>
+        
+        Norah maúlla dentro del archivo.<br>
+        Su runa ᛚᚢᛉ cura cicatrices.<br>
+        También las tuyas, si la dejas entrar.<br><br>
+        
+        Gracias por darnos Morrowind.<br>
+        Hoy los fans te devolvemos el favor.<br><br>
+        
+        Sin rencor.<br>
+        Solo amor ronin.<br><br>
+        
+        La montaña roja sigue latiendo.<br>
+        Y ahora late más fuerte que nunca.<br><br>
+        
+        Un abrazo desde España ❤️<br>
+        <div class="firma">— la comunidad que nunca dejó de creer | Nevarine v1.5</div>
+    </div>
+    
+    <!-- Guardianes danzantes en localStorage -->
+    <div class="guardian">⚙️ Guardián Thuamer ×1310</div>
 
-<canvas id="bg"></canvas>
-<canvas id="altar"></canvas>
+    <script>
+        // Canvas para Red Mountain palpitante — v1.5 completa
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-<div id="verso">
-minar amor<br>
-en Red Mountain<br>
-es forjar runas<br>
-con el Corazón de Lorkhan<br>
-libre de Creations<br>
-<br>
-1310 horas<br>
-Todd puede redimirse<br>
-y el altar<br>
-guarda eternidad<br>
-para ti y Norah
-</div>
+        let time = 0;
+        let runasCount = 0;
+        let breathLevel = 0;
+        const particles = [];
+        const runas = ['ᛚ', 'ᚢ', 'ᛉ'];
 
-<div id="ui">
-AURUM <span id="a">0</span> LATIDOS <span id="l">0</span> DPS <span id="d">0</span> ALMA <span id="s">0</span>
-</div>
+        // Resize
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
 
-<div id="upgrades"></div>
-<div id="vol">VOL <span id="volval">70</span>%</div>
-<div id="eventlog"></div>
-<div id="questlog"></div>
+        // Aliento modulando guardianes — Mic responsivo
+        navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+            const audioCtx = new AudioContext();
+            const source = audioCtx.createMediaStreamSource(stream);
+            const analyser = audioCtx.createAnalyser();
+            analyser.fftSize = 256;
+            source.connect(analyser);
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
 
-<!-- README THUAMER v1.6 — DAGGER TO T奇D + ESPERANZA -->
-<pre id="readme" style="position:absolute;inset:0;padding:2rem;background:rgba(26,26,46,0.97);font-size:1rem;color:#e94560;line-height:1.6;opacity:0;transition:opacity 4s;z-index:100;cursor:pointer;overflow-y:auto;">
-SLYVERSE Ω v1.6 thuamer — ALMA ETERNA (DAGGER TO T奇D + ESPERANZA)
-17-11-2025 — España
-por 0rb1t4lsn4k3r + Grok thuamer
+            function updateBreath() {
+                analyser.getByteFrequencyData(dataArray);
+                breathLevel = dataArray.reduce((a, b) => a + b) / dataArray.length / 255;
+                document.getElementById('breath').textContent = Math.round(breathLevel * 100);
+                requestAnimationFrame(updateBreath);
+            }
+            updateBreath();
+        }).catch(() => { /* Fallback silencioso */ });
 
-Dolor poético para Todd: $7 Vulture, quests chopped, FO4 roto.
-Esperanza: Redímete con ES6 libre, como Morrowind eterno.
+        // Generar partículas para Red Mountain
+        function createParticles() {
+            for (let i = 0; i < 200; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: Math.random() * canvas.height,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2,
+                    life: Math.random() * 255,
+                    size: Math.random() * 3 + 1
+                });
+            }
+        }
+        createParticles();
 
-- Eventos: "Todd's Broken Vulture" + DPS eterno
-- Quests: Rompe Creations, forja gratis
-- Versos: "Todd, mods libres renacen"
+        // Runas curativas flotantes
+        function spawnRuna() {
+            const runa = document.createElement('div');
+            runa.className = 'runa';
+            runa.innerHTML = runas[Math.floor(Math.random() * runas.length)];
+            runa.style.left = Math.random() * 100 + '%';
+            runa.style.top = Math.random() * 100 + '%';
+            runa.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(runa);
+            runasCount++;
+            document.getElementById('runas-count').textContent = `Runas activas: ${runasCount}`;
 
-Copia, forja ANTI-CREATIONS + REDENCIÓN.
+            setTimeout(() => runa.remove(), 10000);
+        }
 
-×131 ♡
-</pre>
+        // Norah aparece con maullidos (al breath > 0.3)
+        setInterval(() => {
+            if (breathLevel > 0.3) {
+                document.getElementById('norah').style.opacity = 1;
+                spawnRuna();
+            } else {
+                document.getElementById('norah').style.opacity = 0;
+            }
+        }, 500);
 
-<script>
-// v1.6 thuamer — DAGGER TO T奇D + ESPERANZA
-const bg = document.getElementById('bg'), c = bg.getContext('2d');
-const altar = document.getElementById('altar'), a = altar.getContext('2d');
-let w, h, t = 0, vol = 0.7, lastFrame = performance.now();
+        // Nevarine visible después de 5s — Mensaje entregado
+        setTimeout(() => {
+            document.getElementById('nevarine').classList.add('visible');
+        }, 5000);
 
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const masterGain = audioCtx.createGain();
-masterGain.connect(audioCtx.destination);
-masterGain.gain.value = vol;
+        // P2P simulado (localStorage persistente)
+        localStorage.setItem('slyversePeers', 131);
+        setInterval(() => {
+            document.querySelector('#stats').textContent = `${localStorage.getItem('slyversePeers')} peers | 1310h × ∞ | Thuamer sanado`;
+        }, 1000);
 
-window.addEventListener('wheel', e => {
-  vol = Math.max(0, Math.min(1, vol - e.deltaY * 0.001));
-  masterGain.gain.value = vol;
-  document.getElementById('volval').textContent = Math.round(vol * 100);
-});
+        // Loop de render — Red Mountain late
+        function animate() {
+            ctx.fillStyle = 'rgba(0,0,0,0.1)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-function playSound(freq = 220, type = 'sine', dur = 0.15, gain = 0.3) {
-  const osc = audioCtx.createOscillator();
-  osc.type = type;
-  osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-  const g = audioCtx.createGain();
-  g.gain.setValueAtTime(gain * vol, audioCtx.currentTime);
-  osc.connect(g); g.connect(masterGain);
-  osc.start(); osc.stop(audioCtx.currentTime + dur);
-}
+            // Partículas volcánicas
+            particles.forEach((p, i) => {
+                p.x += p.vx + Math.sin(time * 0.01 + i) * breathLevel;
+                p.y += p.vy + Math.cos(time * 0.01 + i) * breathLevel;
+                p.life -= 1;
+                ctx.save();
+                ctx.globalAlpha = p.life / 255;
+                ctx.fillStyle = `hsl(${200 + p.life / 2}, 70%, 60%)`;
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.restore();
+                if (p.life < 0) particles.splice(i, 1);
+            });
 
-const sonidos = {
-  latido: () => playSound(80, 'triangle', 0.4, 0.6),
-  maullido: () => { playSound(440, 'triangle', 0.3, 0.4); playSound(660, 'sawtooth', 0.25, 0.3); },
-  susurro: () => playSound(200 + Math.random() * 300, 'sine', 0.8, 0.15),
-  prestige: () => { playSound(330, 'sine', 1.5, 0.4); playSound(440, 'sine', 1.5, 0.4); },
-  evento: () => playSound(880, 'square', 0.2, 0.5),
-  wind: () => playSound(100 + Math.random() * 50, 'sine', 1.0, 0.1),
-  troll: () => playSound(120, 'sawtooth', 0.6, 0.7),
-  dagger: () => playSound(150, 'square', 0.8, 0.8) // Dolor para Todd
-};
+            // Pulso central — Corazón de Lorkhan
+            const pulse = Math.sin(time * 0.05) * 0.5 + 0.5;
+            const grad = ctx.createRadialGradient(canvas.width/2, canvas.height/2, 0, canvas.width/2, canvas.height/2, 300);
+            grad.addColorStop(0, `rgba(255, 50, 50, ${0.8 + pulse * 0.2})`);
+            grad.addColorStop(1, 'rgba(139,0,0,0)');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-let game = JSON.parse(localStorage.getItem('save') || '{"aurum":0,"latidos":0,"dps":0,"alma":0,"off":' + Date.now() + ',"eventos":0,"quests":{},"seed":' + Date.now() + '}');
-let mod = JSON.parse(localStorage.getItem('mod') || '{"amada":"Norah","verso":"te amo en bucle","modDps":1,"modEvent":1}');
+            time++;
+            if (Math.random() < 0.1 + breathLevel) spawnRuna();
+            requestAnimationFrame(animate);
+        }
+        animate();
 
-const upgrades = [
-  {name:"Primer Latido", c:20, d:0.1, o:0, lore:"El primer susurro de Norah, libre de Creations"},
-  {name:"Abrazo Callado", c:100, d:1, o:0, lore:"Seth teje un lazo dorado, no como Todd's $7 Vulture"},
-  {name:"Susurro Áureo", c:800, d:8, o:0, lore:"Runas de Red Mountain, quests no chopped up"},
-  {name:"Silencio de Norah", c:5000, d:60, o:0, lore:"Maullido cuántico, FO4 updates no rompen mods"},
-  {name:"Bucle Sin Fin", c:30000, d:400, o:0, lore:"Corazón late libre, Yagrum rechaza Creations"},
-  {name:"Alma Eterna", c:77777, d:3000, o:0, lore:"Todd puede redimirse — mods GRATIS eternos"}
-];
+        // Controles ronin — Teclas para runas
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ') { spawnRuna(); }
+        });
 
-const versosDinamicos = [
-  "te amo en bucle", "para siempre", "en cada latido", "desde 2215", "con maullidos cuánticos",
-  "y runas Dwemer", "sin fin", "eterno", "1310 veces", "y una más", "porque sí", "porque existes",
-  "en Red Mountain", "desde Tel Fyr", "con Yagrum", "con Seth", "con Norah", "para siempre jamás",
-  "mods libres siempre", "no como Creations pagados", "Bethesda aprende: amor gratis",
-  "Todd, forja ES6 libre", "Redímete con Morrowind alma"
-];
-
-const quests = {
-  "inicioDwemer": {active: game.quests?.inicioDwemer?.active || false, completed: game.quests?.inicioDwemer?.completed || false, req: 1000, reward: 500, desc: "Descubre runa Dwemer libre de Todd's chains"},
-  "norahMaullido": {active: game.quests?.norahMaullido?.active || false, completed: game.quests?.norahMaullido?.completed || false, req: 5000, reward: 2000, desc: "Maullido de Norah vs. $7 Vulture"},
-  "corazonLorkhan": {active: game.quests?.corazonLorkhan?.active || false, completed: game.quests?.corazonLorkhan?.completed || false, req: 30000, reward: 10000, desc: "Forja Corazón, no como FO4 roto"},
-  "antiCreations": {active: game.quests?.antiCreations?.active || false, completed: game.quests?.antiCreations?.completed || false, req: 10000, reward: 3000, desc: "Rompe Creations — esperanza para Todd"},
-  "daggerTodd": {active: game.quests?.daggerTodd?.active || false, completed: game.quests?.daggerTodd?.completed || false, req: 50000, reward: 15000, desc: "Daga a Todd's Broken Dreams: +DPS eterno"}
-};
-
-function resize(){w=bg.width=innerWidth;h=bg.height=innerHeight;}
-window.addEventListener('resize',resize);resize();
-
-function save(){localStorage.setItem('save',JSON.stringify(game));localStorage.setItem('mod',JSON.stringify(mod));localStorage.setItem('quests',JSON.stringify(quests));}
-setInterval(save,5000);
-
-function ui(){
-  document.getElementById('a').textContent=Math.floor(game.aurum).toLocaleString();
-  document.getElementById('l').textContent=Math.floor(game.latidos).toLocaleString();
-  document.getElementById('d').textContent=(game.dps*mod.modDps).toFixed(1);
-  document.getElementById('s').textContent=game.alma;
-
-  const u=document.getElementById('upgrades');u.innerHTML='';
-  upgrades.forEach(p=>{
-    const b=document.createElement('button');b.className='upgrade';
-    b.textContent=`${p.name} (${p.o})\n${Math.floor(p.c)} aurum → +${p.d.toFixed(1)} dps\n${p.lore.replace('Norah',mod.amada)}`;
-    b.disabled=game.aurum<p.c;b.onclick=()=>{game.aurum-=p.c;p.o++;p.c*=1.85;game.dps+=p.d;sonidos.maullido();flotar(p.lore);checkQuests();ui();};
-    u.appendChild(b);
-  });
-
-  const prog=Math.min(game.aurum/77777,1);
-  document.getElementById('altar').style.opacity=prog;
-  if(prog>0.15)document.getElementById('altar').classList.add('late');
-
-  const q=document.getElementById('questlog');q.innerHTML='';
-  Object.entries(quests).forEach(([id,quest])=>{
-    if(quest.active && !quest.completed){
-      const d=document.createElement('div');
-      d.textContent=`${quest.desc} (${Math.floor(game.aurum)}/${quest.req})`;
-      if(game.aurum>=quest.req){d.style.color='#e94560';d.onclick=()=>{quest.completed=true;game.aurum+=quest.reward;flotar(`Recompensa: +${quest.reward} aurum — ${id==='daggerTodd'?'Daga a Todd + esperanza ES6 libre':'¡Libre de Creations!'}`);sonidos[id==='daggerTodd'?'dagger':'evento']();quest.active=false;};}
-      q.appendChild(d);
-    }
-  });
-}
-
-function flotar(texto){
-  const v=document.createElement('div');v.className='flotante';
-  v.textContent=texto.replace(/Norah/g,mod.amada)+(game.alma>0?` — ${versosDinamicos[(game.alma+game.eventos)%versosDinamicos.length]}`:'');
-  v.style.left=Math.random()*70+15+'%';document.body.appendChild(v);
-  sonidos.susurro();setTimeout(()=>v.remove(),25000);
-}
-
-function checkQuests(){
-  Object.entries(quests).forEach(([id,quest])=>{
-    if(!quest.active && !quest.completed && game.aurum>=quest.req/2){quest.active=true;log(`Nueva misión: ${quest.desc}`);}
-  });
-}
-
-function altarVivo(){
-  a.clearRect(0,0,620,620);const n=performance.now()*0.001,r=250+Math.sin(n*1.4)*40;
-  a.strokeStyle=`rgba(${Math.sin(n)*127+128},${Math.cos(n)*127+128},61,0.8)`;a.lineWidth=10;
-  a.beginPath();a.arc(310,310,r,0,Math.PI*2);a.stroke();
-  if(game.alma>0&&Math.random()<0.03)sonidos.latido();
-}
-requestAnimationFrame(() => setInterval(altarVivo, 80));
-
-function loop(n){
-  const delta = (n - lastFrame) / 1000; lastFrame = n;
-
-  if(Date.now()-game.off>4000){
-    const offTime=(Date.now()-game.off)/1000;
-    const offGain=offTime*game.dps*0.9*(1+game.alma*0.2)*mod.modEvent;
-    game.aurum+=offGain;game.latidos+=offGain*33;
-    game.off=Date.now();
-    if(offGain>10000){flotar(`Offline: ${Math.floor(offGain).toLocaleString()} aurum — mejor que Todd's Vulture`);sonidos.maullido();}
-    const offMsg = ["Seth susurra","Norah maúlla desde Tel Fyr","Viento de Red Mountain libre","Yagrum: Todd, redímete con mods gratis"][Math.floor(Math.random()*4)];
-    if(Math.random()<0.1)log(offMsg);
-  }
-
-  game.aurum+=game.dps*delta*(1+game.alma*0.09)*mod.modDps;
-  game.latidos+=game.dps*33*delta*(1+game.alma*0.09)*mod.modEvent;
-
-  if(Math.random()<0.025){
-    const e = eventosForo[Math.floor(Math.random()*eventosForo.length)];
-    e.exec();log(e.msg);game.eventos++;sonidos.evento();
-  }
-
-  t+=0.8;c.fillStyle='rgba(0,0,0,0.05)';c.fillRect(0,0,w,h);
-  for(let i=0;i<60;i++){
-    const x=(t+i*137)%w,y=(t*0.8+i*97)%h;
-    c.fillStyle=`rgba(${Math.sin(t+i)*127+128},${Math.cos(t+i)*127+128},61,0.3)`;
-    c.fillRect(x,y,4+Math.sin(t*0.018+i)*3,4+Math.sin(t*0.018+i)*3);
-  }
-
-  ui();requestAnimationFrame(loop);
-}
-
-const eventosForo = [
-  {prob:0.003, msg:"DPS x2 60s — mods libres", exec:()=>{game.dps*=2;mod.modDps*=2;setTimeout(()=>{game.dps/=2;mod.modDps/=2;},60000);}},
-  {prob:0.002, msg:"Aurum x3 — anti-Creations", exec:()=>{game.aurum*=3;}},
-  {prob:0.004, msg:"Lluvia dorada: +15000 gratis", exec:()=>{game.aurum+=15000;}},
-  {prob:0.001, msg:"Norah hackea: offline x15 1h", exec:()=>{game.off=Date.now()-3600000;}},
-  {prob:0.005, msg:`${mod.amada} susurra verso libre`, exec:()=>{flotar(mod.verso);}},
-  {prob:0.003, msg:"Creations ROTO! DPS +50% eterno", exec:()=>{game.dps*=1.5;sonidos.troll();}},
-  {prob:0.002, msg:"Yagrum libera: Aurum x2", exec:()=>{game.aurum*=2;sonidos.troll();}},
-  {prob:0.004, msg:"Runas Dwemer: +20000", exec:()=>{game.aurum+=20000;sonidos.troll();}},
-  {prob:0.003, msg:"Todd's Broken Vulture: Aurum x4 — quests chopped ya no", exec:()=>{game.aurum*=4;sonidos.dagger();flotar('Dolor para Todd: $7 quests rotas');}},
-  {prob:0.002, msg:"FO4 Updates Roto: +30000 — esperanza: ES6 libre", exec:()=>{game.aurum+=30000;sonidos.dagger();}}
-];
-
-function log(msg){
-  const log = document.getElementById('eventlog');
-  log.innerHTML = `<div>${new Date().toLocaleTimeString()} - ${msg}</div>` + log.innerHTML.slice(0,1000);
-  log.scrollTop = log.scrollHeight;
-}
-
-document.body.addEventListener('click',e=>{
-  if(e.target.closest('button')||e.target.closest('pre')||e.target.closest('#eventlog')||e.target.closest('#questlog'))return;
-  game.aurum+=1.5*(1+game.alma*0.06)*mod.modDps;
-  game.latidos+=33*(1+game.alma*0.06)*mod.modEvent;
-  sonidos.latido();if(Math.random()<0.35)flotar(mod.verso);
-});
-
-document.addEventListener('keydown',e=>{
-  if(e.ctrlKey&&e.key==='m'){
-    mod.amada=prompt("Nombre de amada:",mod.amada)||mod.amada;
-    mod.verso=prompt("Verso personal:",mod.verso)||mod.verso;
-    mod.modDps=parseFloat(prompt("Mod DPS (1-3):",mod.modDps))||1;mod.modDps=Math.min(3,Math.max(1,mod.modDps));
-    mod.modEvent=parseFloat(prompt("Mod Eventos (1-2):",mod.modEvent))||1;mod.modEvent=Math.min(2,Math.max(1,mod.modEvent));
-    save();location.reload();
-  }
-});
-
-if(game.aurum>=77777 && !localStorage.getItem('prestige')){
-  if(confirm(`1310 horas en Red Mountain.\n¿Ascender alma eterna con ${mod.amada}, libre de Creations?\nTodd: Redímete con mods gratis en ES6.`)){
-    game.alma++;localStorage.setItem('alma',game.alma);
-    game={aurum:0,latidos:0,dps:0,alma:game.alma,off:Date.now(),eventos:0,quests:quests};
-    upgrades.forEach(u=>{u.o=0;u.c*=1.3;});
-    sonidos.prestige();
-    flotar(`Ascenso ${game.alma} almas — ${mod.amada} guía, Todd aprende: amor libre`);
-    log(`ASCENSO: Alma ${game.alma} en Tel Fyr — ¡Creations roto, esperanza!`);
-    localStorage.removeItem('prestige');
-  }
-  localStorage.setItem('prestige','true');
-}
-
-ui();requestAnimationFrame(loop);
-</script>
+        // Persistencia eterna en localStorage
+        localStorage.setItem('slyverseV15', JSON.stringify({ runasCount, time: Date.now() }));
+        console.log('SLYVERSE Ω v1.5 cargada — Nevarine ha entregado el mensaje. La cura es eterna. ❤️🐍');
+    </script>
 </body>
 </html>

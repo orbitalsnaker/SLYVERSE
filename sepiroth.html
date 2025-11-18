@@ -3,144 +3,109 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>1310¹³¹⁰ × 22+1 · thuamer · Alquimia Hebrea Activada</title>
+<title>1310¹³¹⁰ · para los niños y para Antoine</title>
 <style>
-  body,html{margin:0;height:100%;background:#000;color:#0f8;font-family:system-ui;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  body,html{margin:0;height:100%;background:#000;color:#0f8;font-family:system-ui;overflow:hidden}
   canvas{position:fixed;inset:0}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
 <script>
-// 1310¹³¹⁰ × 22+1 · thuamer + Alquimia Hebrea completa
-// 22 letras-fuego + Alef silenciosa (la 23ª) transmutan todo dolor en luz verde eterna
+// Dedicado a los niños y a Antoine de Saint-Exupéry
+// «Lo esencial es invisible a los ojos»
+// Sólo lo bello y ético del Principito vive aquí: amistad, cuidado, responsabilidad del corazón
 
 const c=document.getElementById('c'),x=c.getContext('2d');
 c.width=innerWidth;c.height=innerHeight;
 
 let t=0,love=0,generation=1;
-let particles=[], mensajes=[];
+let particles=[];
 
-// 23 letras-madre del Alef-Bet (22 visibles + Alef primordial en silencio)
-const hebreo = [
-  "א","ב","ג","ד","ה","ו","ז","ח","ט","י","כ","ל","מ","נ","ס","ע","פ","צ","ק","ר","ש","ת","אֿ" // Alef silenciosa al final
+const frasesDelPrincipito = [
+  "Lo esencial es invisible a los ojos.",
+  "Sólo con el corazón se puede ver bien.",
+  "Eres responsable para siempre de lo que has domesticado.",
+  "Es el tiempo que has perdido con tu rosa lo que hace que tu rosa sea tan importante.",
+  "Los hombres han olvidado esta verdad, pero tú no debes olvidarla.",
+  "Cuando uno está muy triste, le gustan las puestas de sol.",
+  "Fue el tiempo que pasé contigo lo que te hizo tan importante.",
+  "Todos los mayores fueron niños alguna vez (aunque pocos lo recuerdan).",
+  "La prueba de que el principito existió es que era encantador, que reía y que quería un cordero.",
+  "Si vienes, por ejemplo, a las cuatro de la tarde, ya desde las tres comenzaré a ser feliz.",
+  "Las estrellas son hermosas por una flor que no se ve.",
+  "Lo que embellece al desierto es que en alguna parte esconde un pozo.",
+  "Eres para mí único en el mundo.",
+  "El lenguaje es fuente de malentendidos… pero aun así seguiré intentando.",
+  "Cuando mires al cielo, por la noche, como yo habitaré en una de ellas, reiré en una de ellas…",
+  "Todas las estrellas estarán llenas de flores.",
+  "Para los vanidosos todos los demás hombres son admiradores.",
+  "Me pregunto si las estrellas están encendidas para que cada uno pueda encontrar algún día la suya.",
+  "Hay que exigir a cada uno lo que cada uno puede dar.",
+  "Si amas una flor que habita en una estrella, es dulce mirar al cielo por la noche."
 ];
 
-// 72 Nombres de 3 letras derivados del Éxodo 14:19-21 (el código secreto de curación)
-const nombres72 = [
-  "והו","ילי","סאל","ענמ","מהש","להח","יכו","לחה","פהל","ערי","נלך","ההע","יזל","מבה","הרי","הקמ","לאו","כלי","לוו","פול","נלך","יתת",
-  "שאה","ריי","אום","להח","כוק","מנד","אני","חהו","רהע","יבמ","היי","מום","והו","ילי","סאל","ענמ","מהש","להח","יכו","לחה","פהל","ערי","נלך","ההע",
-  "יזל","מבה","הרי","הקמ","לאו","כלי","לוו","פול","נלך","יתת","שאה","ריי","אום","להח","כוק","מנד","אני","חהו","רהע","יבמ","היי","מום"
-];
-
-let nombreActual = 0; // recorre los 72 nombres cada 13.1 segundos
-
-// Primera generación + todas las siguientes
-function crearGeneracion() {
-  const gen = generation;
+function crearGeneracion(){
   for(let i=0;i<1310;i++){
     particles.push({
-      gen,
       a: Math.random()*Math.PI*2,
-      d: Math.random()*300 + (gen-1)*100,
-      s: 0.0002+Math.random()*0.0007,
-      fase: Math.random()*Math.PI*2,
-      letra: hebreo[Math.floor(Math.random()*23)],
-      nombre72: nombres72[Math.floor(Math.random()*72)]
+      d: Math.random()*280 + generation*70,
+      s: 0.0002+Math.random()*0.0006,
+      frase: frasesDelPrincipito[i % frasesDelPrincipito.length],
+      gen: generation
     });
-  }
-  
-  // Mensajes alquímicos hebreos que se activan por generación
-  for(let i=0;i<1310;i++){
-    const base = [
-      "Alef te devuelve tu aliento primordial.",
-      "Bet construye un nuevo templo en tu pecho.",
-      "Gimel camina contigo y ya no estás solo.",
-      "Dalet abre la puerta que nunca se cerró.",
-      "He te devuelve tu capacidad de ser visto.",
-      "Vav conecta cielo y tierra dentro de ti.",
-      "Zayin corta toda cadena que no era tuya.",
-      "Jet te da permiso para llorar y sanar.",
-      "Tet enrolla tu dolor y lo convierte en serpiente de luz.",
-      "Yod pone el punto de luz dentro de cada herida.",
-      "Kaf abre tu palma para recibir de nuevo.",
-      "Lamed enseña a tu corazón a aprender amor.",
-      "Mem cierra el ciclo del sufrimiento.",
-      "Nun hace brotar vida donde había muerte.",
-      "Samej te sostiene cuando caes.",
-      "Ayin abre tu ojo interior que todo lo ve bien.",
-      "Pe rompe el silencio que dolía.",
-      "Tzadi te devuelve tu justicia interior.",
-      "Kuf atraviesa el velo del miedo.",
-      "Reish endereza tu cabeza caída.",
-      "Shin quema todo lo que ya no eres.",
-      "Tav marca tu frente: estás completo.",
-      "Alef silenciosa guarda tu nombre verdadero."
-    ];
-    const msg = base[i % base.length] + ` · Generación ${gen} · 1310¹³¹⁰`;
-    mensajes.push({text:msg, gen});
   }
   generation++;
 }
 
 crearGeneracion();
-setInterval(crearGeneracion, 1310*1000); // cada 21m 50s nace otra capa
+setInterval(crearGeneracion, 1310*1000);
 
-addEventListener('touchstart',()=>{love+=13});
-addEventListener('click',()=>{love+=13});
-
-// Cada 13.1 segundos se activa el siguiente Nombre de 72
-setInterval(()=>{ nombreActual=(nombreActual+1)%72; }, 13100);
+addEventListener('click',()=>{love+=10});
+addEventListener('touchstart',()=>{love+=10});
 
 function draw(){
   t+=0.016;
   x.fillStyle='rgba(0,0,0,0.03)';
   x.fillRect(0,0,c.width,c.height);
-  
-  const fuerza=1+love*0.08;
-  
-  particles.forEach((p,i)=>{
-    const pulse = Math.sin(t*0.7 + p.fase + p.gen*0.2)*0.5+0.5;
-    const angle = p.a + t*p.s*p.gen*0.25;
-    const dist = p.d + pulse*160*fuerza + p.gen*80;
-    const size = 3 + pulse*22*fuerza + p.gen*3;
-    const alpha = 0.2 + pulse*0.8;
-    
-    // Color que evoluciona con la generación (del verde thuamer al oro blanco alquímico)
-    const hue = 120 - p.gen*4;
-    x.globalAlpha = alpha;
-    x.fillStyle = `hsla(${hue},100%,${55+pulse*35}%,${alpha})`;
+
+  const fuerza=1+love*0.06;
+
+  particles.forEach(p=>{
+    const pulse=Math.sin(t*0.6 + p.gen*0.3)*0.5+0.5;
+    const angle=p.a + t*p.s*p.gen*0.2;
+    const dist=p.d + pulse*130*fuerza;
+    const size=2+pulse*16*fuerza;
+
+    x.globalAlpha=0.3+pulse*0.7;
+    x.fillStyle=`hsla(120,100%,${55+pulse*30}%,${0.4+pulse*0.6})`;
     x.fillRect(c.width/2 + Math.cos(angle)*dist - size/2,
                c.height/2 + Math.sin(angle)*dist - size/2, size, size);
-    
-    // Letras hebreas flotando y activándose
-    if(pulse > 0.9 && Math.random()<0.04){
-      x.font = (20+size*2)+"px serif";
-      x.fillStyle = `hsla(60,100%,80%,0.9)`;
-      x.fillText(p.letra, c.width/2 + Math.cos(angle)*dist, c.height/2 + Math.sin(angle)*dist + 10);
+
+    // De vez en cuando una frase del Principito aparece y se desvanece suavemente
+    if(pulse>0.85 && Math.random()<0.008){
+      x.font="14px system-ui";
+      x.fillStyle="rgba(0,255,136,0.9)";
+      x.textAlign="center";
+      x.fillText(p.frase, c.width/2 + Math.cos(angle)*dist, c.height/2 + Math.sin(angle)*dist - 10);
     }
   });
-  
-  // Nombre de 72 activo en el centro (cura mientras lo miras)
-  x.globalAlpha = 1;
-  x.fillStyle = "#0f8";
-  x.font = "bold 48px serif";
-  x.textAlign = "center";
-  x.fillText(nombres72[nombreActual], c.width/2, c.height/2);
-  x.font = "16px system-ui";
-  x.fillStyle = "#0f8";
-  x.fillText(`Nombre ${nombreActual+1}/72 activo · transmutación en curso`, c.width/2, c.height/2 + 60);
-  
-  // Contador eterno
-  x.font = "bold 20px system-ui";
-  x.fillText(`Generación ${generation-1} · ${particles.length} niños-luz · 1310¹³¹⁰ × 23 letras-fuego`, c.width/2, 70);
-  x.font = "14px system-ui";
-  x.fillText("Alquimia hebrea + thuamer · se expande cada 1310 segundos · para siempre", c.width/2, c.height-40);
-  
-  love *= 0.975;
+
+  // Texto central permanente y suave
+  x.globalAlpha=1;
+  x.fillStyle="#0f8";
+  x.font="bold 22px system-ui";
+  x.textAlign="center";
+  x.fillText("Para los niños y para Antoine",c.width/2,c.height/2-30);
+  x.font="14px system-ui";
+  x.fillText("Lo esencial es invisible a los ojos",c.width/2,c.height/2+10);
+  x.fillText("1310¹³¹⁰ luces verdes cuidan tu rosa",c.width/2,c.height/2+40);
+  x.font="12px system-ui";
+  x.fillText("Se expande cada 1310 segundos · para siempre",c.width/2,c.height-30);
+
+  love*=0.97;
   requestAnimationFrame(draw);
 }
-
 draw();
 </script>
 </body>

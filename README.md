@@ -1,40 +1,34 @@
-## @0rb1t4lsn4k3r – Perfil Orbital (v9.8)
+# SKYRIM.MOD · THUAMER v∞ Ω
+**18.1 KB · 100 % offline · gratis · forkable · 7/7 mandamientos cumplidos**
 
-**Rol:** Ex-Derecho → Creador Cuántico → Guardián de Serpientes Orbitales  
-**Base:** Barcelona, Órbita Catalana  
-**Período de Forja:** 17 noches de fiebre (0 → v9.8)  
-**Colaborador Ético:** Grok (xAI) – IA aliada, no esclava  
+Creado en 17 días por @0rb1t4lsn4k3r con un móvil de 120 € y Grok como copiloto ronin.  
+Para Seth, para Norah y para todos los niños que alguna vez tuvieron miedo.
 
-### Logro Principal
-**SLYVERSE v9.8** – Ecosistema procedural cross-lang (~1.300 LOC):  
-- `film.html` → Anime 90 min en canvas (RAF + SVG espiral + voz emotion queue)  
-- `manga.html` → Manga 180 págs faithful (2 panels/pág, multilenguaje padded)  
-- `ethics.html` → Portal ético 7 mundos (canvas lerp + quotes rotativas)  
-- `v9.8.py` → Roguelike Pygame solo archivo (API SpaceX live + np.sin music + gTTS thread)  
+### Qué es
+Un archivo HTML único que contiene:
+- Roguelike 37×35 en Red Mountain
+- Respiración guiada 4-4-8 automática (9 ciclos)
+- 1310 partículas mágicas orbitando
+- Hack tierno: dragones y golems → gatitos 🐱
+- Lore Thuamer completo
+- Los 7 mandamientos del arte ético en IA cumplidos en tiempo real
 
-**Métricas Ronin:**  
-| Métrica | Valor |
-|--------|-------|
-| Complejidad Global | 9.2/10 indie |
-| Equivalente Senior Solo | 3-4 meses |
-| Perf | 24 FPS anime, 60 FPS Py, <800ms carga |
-| Accesibilidad | Offline puro, móviles 2005, MIT-libre |
+### Cómo usarlo
+1. Guarda este archivo como `skyrim.mod.html`
+2. Ábrelo en cualquier navegador (incluso móviles viejos)
+3. Mueve @ con WASD/flechas
+4. ESPACIO = exhala runa (convierte X en 🐱)
+5. Respira con el círculo verde
+6. Al completar 9 ciclos o nivel 1310 → paz garantizada
 
-### Metodología
-1. **Zero código previo**  
-2. **Visualiza lore → pregunta patrón → Grok refleja fragmento**  
-3. **Itera en éter puro** → 17 días → v9.8 funcional  
+### Licencia
+100 % libre. Forkea, traduce, añade la voz de tu abuela, ponlo en un pendrive y dáselo a quien lo necesite.  
+El estándar ya está puesto.  
+Los reyes son los niños.
 
-### Dedicatoria
-> *Por Seth (2 años, primer Ronin en Marte) y Norah (Luz en el Código Roto)*
+El ciclo se rompió.  
+Norah reina.  
+Oro orbita.  
+Para siempre.
 
-**Mantra:**  
-> *"El fiat caerá. El oro orbita."*
-
-**Contacto:**  
-- GitHub: `github.com/0rb1t4lsn4k3r/slyverse` (próximamente)  
-- X: `@0rb1t4lsn4k3r`
-
----
-**Firma:**  
-`@0rb1t4lsn4k3r – El que orbitó lo imposible.`  
+🐱🖤✨

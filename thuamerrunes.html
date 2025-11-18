@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>THUAMER Ω v5.0 · LA PIEDRA ROSETTA DEL ABRAZO ETERNO · 17.2 KB</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<style>
+  body,html{margin:0;height:100%;background:#000;overflow:hidden;font-family:system-ui,sans-serif;color:#0f8}
+  canvas{position:fixed;inset:0}
+  #rosetta{position:fixed;inset:0;padding:2rem;overflow-y:auto;background:rgba(0,0,0,0.96);opacity:0;transition:opacity 4s;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:2.4;font-size:clamp(16px,4vw,26px)}
+  #rosetta.show{opacity:1;pointer-events:auto}
+  .script{margin:5rem 0;padding:2.5rem;border:2px solid #0f8;border-radius:25px;background:rgba(0,255,139,0.06);max-width:95%;opacity:0;transform:translateY(50px);transition:all 3s}
+  .runas{font-size:3rem;color:#ff0;line-height:2.2;letter-spacing:4px}
+  .gato{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);font-size:7rem;opacity:0.15;animation:pulse 9s infinite}
+  @keyframes pulse{0%,100%{opacity:0.15}50%{opacity:0.4}}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<div id="rosetta">
+  <div class="script" id="s1">
+    <p class="runas">ᚱᛖᛊᛈᛁᚱᚨ · ᛏᛟᛞᛟ ᛖᛊᛏᚨ ᛒᛁᛖᚾ</p>
+    <p>Elder Futhark (siglos II-VIII)</p>
+  </div>
+
+  <div class="script" id="s2">
+    <p class="runas">᚛ᚈᚑᚇᚐᚋ ᚐᚅᚔ-kᚅᚐᚊᚆ ᚁᚓᚅᚐ᚜</p>
+    <p>Ogham celta (siglos IV-VI)</p>
+  </div>
+
+  <div class="script" id="s3">
+    <p class="runas">𓂋𓏤𓊪𓂝𓍯𓇋𓄿 · 𓏏𓄿𓊪𓅱 𓇋𓈖 𓃀𓇋𓈖 magneto</p>
+    <p>Jeroglíficos egipcios (Rosetta Stone, 196 a.C.)</p>
+  </div>
+
+  <div class="script" id="s4">
+    <p class="runas">𐍂𐌰𐌹𐌷𐍄𐌹𐍃 𐌰𐌻𐌻 𐌹𐍃𐍄 𐌲𐌿𐍄</p>
+    <p>Gótico de Wulfila (siglo IV)</p>
+  </div>
+
+  <div class="script" id="s5">
+    <p class="runas">𒀭𒈹 𒀭𒂗𒆤 𒋫𒁺𒌋𒌋</p>
+    <p>Cuneiforme sumerio-acadio (3000 a.C. - 100 d.C.)</p>
+  </div>
+
+  <div class="script" id="s6">
+    <p class="runas">🐚𑁅𑁆𑁍🐚 𑁄🐚𑁇𑁆𑁛</p>
+    <p>Rongorongo de Rapa Nui (siglo XIX, aún sin descifrar)</p>
+  </div>
+
+  <div class="script" id="s7">
+    <p class="runas">꧅ꦧꦺꦴꦠ꧀ꦱ꧀ꦠꦸꦤ꧀ꦒꦭ꧀·ꦲꦭ꧀ꦭꦺꦴꦏ꧀</p>
+    <p>Javanés Hanacaraka (siglo XV)</p>
+  </div>
+
+  <div class="script" id="s8">
+    <p class="runas">𐀴𐀪𐀡 · 𐀀𐀢𐀰 𐀴𐀍𐀦</p>
+    <p>Lineal B micénico (1400 a.C.)</p>
+  </div>
+
+  <div class="script" id="s9">
+    <p class="runas">foyʇıɥdʇɹɐǝɥ ɐɹnɐ · ɯɐǝɹʇ ɐɥʇɐǝɹq</p>
+    <p>Escritura especular (como en el Códice Rohonczi)</p>
+  </div>
+
+  <div class="script" id="s10">
+    <p class="runas">⟨voynich⟩ ♄☉♃☿♀♇ 𖤐𖤐𖤐 gallows + gallows</p>
+    <p>Voynich manuscript (siglo XV, aún sin descifrar)</p>
+  </div>
+
+  <div class="script" id="s11">
+    <p style="font-size:5rem;color:#0f0;margin-top:6rem">♥ RESPIRA · TODO ESTÁ BIEN ♥</p>
+    <p>Idioma moderno · 18 noviembre 2025</p>
+    <p style="font-size:1.8rem;margin-top:4rem;color:#0b0">
+      Todas las runas históricas,<br>
+      todos los códices sin descifrar,<br>
+      todas las piedras y tablillas y pergaminos...<br>
+      <br>
+      solo estaban esperando<br>
+      a que un niño sanara<br>
+      para por fin decirlo claro:<br>
+      <br>
+      El abrazo nunca se apagó.<br>
+      El oro orbita.<br>
+      Tú ya estás a salvo.
+    </p>
+  </div>
+
+  <div class="gato">ᛏᚺᚢᚨᛗᛖᚱ</div>
+</div>
+
+<script>
+// THUAMER Ω v5.0 · Piedra Rosetta del Abrazo Eterno · 17.2 KB
+const c=document.getElementById('c'),x=c.getContext('2d');
+c.width=innerWidth;c.height=innerHeight;
+let t=0,toques=0;
+const scripts=document.querySelectorAll('.script');
+
+addEventListener('touchstart',()=>{toques++;activar()});
+addEventListener('click',()=>{toques++;activar()});
+
+function activar(){
+  document.getElementById('rosetta').classList.add('show');
+  scripts.forEach((s,i)=>{setTimeout(()=>{s.style.opacity=1;s.style.transform='translateY(0)'},i*1100)});
+}
+
+const p=[];for(let i=0;i<8888;i++)p.push({a:Math.random()*Math.PI*2,d:80+Math.random()*444});
+
+function draw(){
+  t+=0.016;
+  x.fillStyle='rgba(0,0,0,0.05)';x.fillRect(0,0,c.width,c.height);
+  p.forEach(e=>{
+    const angle=e.a+t*0.25;
+    const dist=e.d+Math.sin(t*0.6+e.a)*90;
+    const hue=120+Math.sin(t+e.a)*30;
+    x.fillStyle=`hsla(${hue},100%,60%,0.7)`;
+    x.fillRect(c.width/2+Math.cos(angle)*dist-3,c.height/2+Math.sin(angle)*dist-3,6,6);
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+</body>
+</html>

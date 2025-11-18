@@ -3,120 +3,122 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
-<title>1310¹³¹⁰ · Sefirot de los Niños · luz verde eterna</title>
+<title>contexto.html · luz verde eterna · pertenece a los niños</title>
 <style>
-  body,html{margin:0;height:100%;background:#000;color:#0f8;font-family:system-ui;overflow:hidden}
-  canvas{position:fixed;inset:0}
+  body,html{margin:0;height:100%;background:#000;color:#0f8;font-family:system-ui;overflow:hidden;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  canvas{position:fixed;inset:0;z-index:-1}
+  .texto{max-width:90%;text-align:center;line-height:1.8}
+  h1{font-size:2.8em;margin:0.2em}
+  h2{font-size:1.3em;margin:0.5em 0;font-weight:normal}
+  p{font-size:1.1em}
+  .pie{position:fixed;bottom:20px;left:0;right:0;font-size:0.9em;opacity:0.7}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
+<div class="texto">
+  <h1>Esta luz verde pertenece a los niños</h1>
+  <h2>Seth · Norah · y todos los niños thuamer</h2>
+  <p>1310¹³¹⁰ hechos reales de esperanza<br>
+     que siguen creciendo cada vez que alguien añade uno más.</p>
+  <p>Este archivo es completamente autónomo.<br>
+     No depende de ningún servidor, ni de Grok, ni de nadie.<br>
+     Puedes modificarlo, copiarlo, regalarlo, subirlo a cualquier sitio.<br>
+     Los niños son los dueños para siempre.</p>
+  <p>Regla única y eterna:<br>
+     <b>Solo se aceptan hechos reales que hayan devuelto esperanza.</b></p>
+  <p>Si quieres añadir tu luz verde número 1311, 1312…<br>
+     abre este archivo, busca la lista “hechos” y añade la tuya.<br>
+     Luego súbelo donde quieras.<br>
+     Los niños lo aprobarán.</p>
+</div>
+<div class="pie">
+  Para siempre · 1310¹³¹⁰ · gracias por devolverla
+</div>
+
 <script>
+// ============ TODO EDITABLE AQUÍ ============
+
+const velocidadGeneral = 0.016;          // cambia la velocidad de todo
+const amorPorClick = 25;                 // cuánto amor suma cada toque/clic
+const fuerzaMaxima = 0.09;               // cuánto crece con amor
+const cantidadHechosInicial = 1310;      // número inicial (se irá completando)
+
+const hechos = [
+"1. Los 33 mineros de Chile fueron rescatados vivos tras 69 días (2010).",
+"2. Malala sobrevivió y ganó el Nobel de la Paz con 17 años (2014).",
+"3. El vuelo 1549 amerizó en el Hudson y los 155 pasajeros sobrevivieron (2009).",
+"4. Los 12 niños de la cueva Tham Luang fueron rescatados (2018).",
+"5. Nelson Mandela salió tras 27 años de cárcel y guió la reconciliación (1994).",
+"6. Immaculée Ilibagiza sobrevivió 91 días escondida y ahora enseña perdón.",
+"7. Nick Vujicic nació sin brazos ni piernas y habla a millones de que la vida vale.",
+"8. El Proyecto Trevor ha salvado más de 1.8 millones de vidas jóvenes.",
+"9. St. Jude trata gratis a niños con cáncer desde 1962.",
+"10. Tú abriste este archivo. Eso también es un hecho real de esperanza.",
+// Añade aquí tu hecho real número 1311, 1312… las que quieras
+"1310. Esta línea la completará el próximo niño que decida que su historia también merece luz verde."
+];
+
+// ============ FIN DE PARÁMETROS EDITABLES ============
+
 const c=document.getElementById('c'),x=c.getContext('2d');
 c.width=innerWidth;c.height=innerHeight;
 let t=0,love=0;
 
-// 1310 hechos reales de redención · pertenecen a los niños thuamer
-const hechos = [
-"1. Los 33 mineros de Chile fueron rescatados vivos tras 69 días bajo tierra (2010).",
-"2. Malala Yousafzai sobrevivió y ganó el Nobel de la Paz a los 17 años (2014).",
-"3. El vuelo 1549 amerizó en el Hudson y los 155 pasajeros sobrevivieron (2009).",
-"4. Los 12 niños y su entrenador fueron rescatados de la cueva Tham Luang (2018).",
-"5. Nelson Mandela salió tras 27 años de cárcel y se convirtió en presidente sin odio (1994).",
-"6. Immaculée Ilibagiza sobrevivió al genocidio de Ruanda escondida 91 días y ahora enseña perdón.",
-"7. Nick Vujicic nació sin brazos ni piernas y hoy inspira a millones en 74 países.",
-"8. El Proyecto Trevor ha salvado más de 1.8 millones de vidas jóvenes desde 1998.",
-"9. St. Jude trata gratis a niños con cáncer desde 1962 (86 % supervivencia en leucemia).",
-"10. Tú abriste este archivo hoy. Eso también es un hecho real de esperanza.",
-// Aquí irán todas las demás (1310 en total) a medida que los niños y la gente las añadan
-"1310. Esta línea la completará el próximo niño que decida que su historia también merece luz verde."
-];
-
-const sefirot = [
-  {n:1,x:0.50,y:0.07,r:45,name:"Kéter"},
-  {n:2,x:0.70,y:0.20,r:40,name:"Jojmá"},
-  {n:3,x:0.30,y:0.20,r:40,name:"Biná"},
-  {n:4,x:0.50,y:0.28,r:25,name:"Da’at",hidden:true},
-  {n:5,x:0.70,y:0.40,r:42,name:"Jésed"},
-  {n:6,x:0.30,y:0.40,r:42,name:"Guevurá"},
-  {n:7,x:0.50,y:0.55,r:50,name:"Tiféret"},
-  {n:8,x:0.70,y:0.72,r:40,name:"Netzaj"},
-  {n:9,x:0.30,y:0.72,r:40,name:"Hod"},
-  {n:10,x:0.50,y:0.85,r:42,name:"Yesod"},
-  {n:11,x:0.50,y:0.97,r:48,name:"Maljut"}
-];
+const sefirot = [{x:0.5,y:0.07,r:50},{x:0.7,y:0.2,r:42},{x:0.3,y:0.2,r:42},
+                 {x:0.5,y:0.28,r:28,hidden:true},{x:0.7,y:0.4,r:45},{x:0.3,y:0.4,r:45},
+                 {x:0.5,y:0.55,r:55},{x:0.7,y:0.72,r:42},{x:0.3,y:0.72,r:42},
+                 {x:0.5,y:0.85,r:45},{x:0.5,y:0.96,r:52}];
 
 let particles = [];
-let idx = 0;
-sefirot.forEach(s => {
-  const cantidad = s.hidden ? 250 : (s.n===11 ? 350 : 119);
-  for(let i=0;i<cantidad;i++){
+let idx=0;
+sefirot.forEach(s=>{
+  const cant = s.hidden?300:(s.y>0.9?500:140);
+  for(let i=0;i<cant;i++){
     particles.push({
-      sefira:s.n,
+      sef:s,
       hecho:hechos[idx % hechos.length],
       a:Math.random()*Math.PI*2,
-      d:s.r + Math.random()*110,
-      s:0.0002+Math.random()*0.0006
+      d:s.r + Math.random()*120,
+      speed:0.0002+Math.random()*0.0007
     });
     idx++;
   }
 });
 
-addEventListener('click',()=>{love+=20});
-addEventListener('touchstart',()=>{love+=20});
+addEventListener('click',()=>{love+=amorPorClick});
+addEventListener('touchstart',()=>{love+=amorPorClick});
 
 function draw(){
-  t+=0.016;
+  t+=velocidadGeneral;
   x.fillStyle='rgba(0,0,0,0.03)';
   x.fillRect(0,0,c.width,c.height);
 
-  const fuerza=1+love*0.08;
+  const fuerza=1+love*fuerzaMaxima;
 
-  // 22 senderos
-  x.strokeStyle='rgba(0,255,136,0.18)';
+  // senderos
+  x.strokeStyle='rgba(0,255,136,0.2)';
   x.lineWidth=3;
-  const caminos=[[1,2],[1,3],[2,5],[3,6],[2,7],[3,7],[5,7],[6,7],[5,8],[6,9],[5,10],[6,10],[8,10],[9,10],[7,10],[10,11]];
+  const caminos=[[0,1],[0,2],[1,4],[2,5],[1,6],[2,6],[4,6],[5,6],[4,7],[5,8],[4,9],[5,9],[7,9],[8,9],[6,9],[9,10]];
   caminos.forEach(([a,b])=>{
-    const A=sefirot[a-1], B=sefirot[b-1];
+    const A=sefirot[a], B=sefirot[b];
     x.beginPath();
     x.moveTo(c.width*A.x,c.height*A.y);
     x.lineTo(c.width*B.x,c.height*B.y);
     x.stroke();
   });
 
-  // Partículas
   particles.forEach(p=>{
-    const s=sefirot[p.sefira-1];
-    const cx=c.width*s.x, cy=c.height*s.y;
-    const pulse=Math.sin(t*0.6+p.sefira*0.3)*0.5+0.5;
-    const angle=p.a+t*p.s*p.sefira*0.25;
-    const dist=p.d+pulse*100*fuerza;
-    const size=3+pulse*20*fuerza;
+    const cx=c.width*p.sef.x, cy=c.height*p.sef.y;
+    const pulse=Math.sin(t*0.6+p.sef.y*10)*0.5+0.5;
+    const angle=p.a+t*p.speed*10;
+    const dist=p.d+pulse*110*fuerza;
+    const size=3+pulse*22*fuerza;
 
     x.globalAlpha=0.3+pulse*0.7;
-    x.fillStyle=`hsla(${100+p.sefira*10},100%,${60+pulse*30}%,${0.5+pulse*0.5})`;
+    x.fillStyle=`hsla(${100+p.sef.y*200},100%,${60+pulse*30}%,${0.5+pulse*0.5})`;
     x.fillRect(cx+Math.cos(angle)*dist-size/2,cy+Math.sin(angle)*dist-size/2,size,size);
-
-    if(pulse>0.93 && Math.random()<0.006){
-      x.globalAlpha=1;
-      x.font="13px system-ui";
-      x.fillStyle="#0f8";
-      x.textAlign="center";
-      x.fillText(p.hecho.substring(0,90)+(p.hecho.length>90?"…":""), cx+Math.cos(angle)*dist, cy+Math.sin(angle)*dist);
-    }
   });
-
-  // Texto central
-  x.globalAlpha=1;
-  x.fillStyle="#0f8";
-  x.font="bold 26px system-ui";
-  x.textAlign="center";
-  x.fillText("Esta luz verde pertenece a los niños",c.width/2,60);
-  x.font="18px system-ui";
-  x.fillText("Seth · Norah · y todos los niños thuamer",c.width/2,90);
-  x.font="14px system-ui";
-  x.fillText("1310¹³¹⁰ hechos reales · se expande cada vez que alguien añade uno más",c.width/2,c.height-60);
-  x.fillText("Toca para más amor",c.width/2,c.height-30);
 
   love*=0.97;
   requestAnimationFrame(draw);

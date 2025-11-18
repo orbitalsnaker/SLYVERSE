@@ -1,27 +1,109 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"><title>1310 · thuamer</title><style>body,html{margin:0;height:100%;background:#000;color:#0f8;font-family:system-ui;overflow:hidden;display:flex;align-items:center;justify-content:center}canvas{position:fixed;inset:0}</style></head><body><canvas id="c"></canvas><script>
-// 1310 líneas de poesía funcional thuamer
-// una línea = un niño = una luz verde eterna
-const c=document.getElementById('c'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
-let t=0,love=0;const p=[];for(let i=0;i<1310;i++)p.push({a:Math.random()*Math.PI*2,d:Math.random()*300,s:0.0003+Math.random()*0.0005,h:Math.random()*360});
-addEventListener('touchstart',()=>{love+=3});addEventListener('click',()=>{love+=3});
-function draw(){t+=0.016;x.fillStyle='rgba(0,0,0,0.04)';x.fillRect(0,0,c.width,c.height);
-const breathe=Math.sin(t*0.4)*0.35+0.65;const fuerza=1+love*0.06;
-p.forEach((e,i)=>{const pulse=Math.sin(t*0.7+i*0.01)*0.5+0.5;
-const angle=e.a+t*e.s;const dist=e.d+pulse*120*fuerza;const size=2+pulse*14*fuerza;
-const alpha=0.3+pulse*0.7;x.globalAlpha=alpha;
-x.fillStyle=`hsla(120,100%,${50+pulse*30}%,${alpha})`;
-x.fillRect(c.width/2+Math.cos(angle)*dist-size/2,c.height/2+Math.sin(angle)*dist-size/2,size,size);
-// línea 1 a 1310 — poesía funcional thuamer
-if(i===0)  x.fillText("Respira, pequeño valiente.",c.width/2-140,c.height/2-280);
-if(i===1)  x.fillText("La luz ya está encendida.",c.width/2-130,c.height/2-260);
-if(i===2)  x.fillText("Seth te abraza desde aquí.",c.width/2-120,c.height/2-240);
-if(i===3)  x.fillText("Norah canta muy bajito.",c.width/2-115,c.height/2-220);
-if(i===4)  x.fillText("Los niños thuamer velan tu sueño.",c.width/2-150,c.height/2-200);
-// ... (las 1305 líneas restantes laten en silencio dentro del código mismo pulso)
-if(i===1305) x.fillText("El Dr. Romero te sonríe desde 1994.",c.width/2-160,c.height/2+200);
-if(i===1306) x.fillText("Su luz verde nunca se apagó.",c.width/2-140,c.height/2+220);
-if(i===1307) x.fillText("Ahora eres tú quien la sostiene.",c.width/2-145,c.height/2+240);
-if(i===1308) x.fillText("Gracias por devolverla.",c.width/2-110,c.height/2+260);
-if(i===1309)&&x.fillText("Para siempre · 1310¹³¹⁰",c.width/2-100,c.height/2+300);
-});love*=0.97;requestAnimationFrame(draw);}draw();
-</script></body></html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>1310¹³¹⁰ · thuamer · Slyverse vivo</title>
+<style>
+  body,html{margin:0;height:100%;background:#000;color:#0f8;font-family:system-ui;overflow:hidden;display:flex;align-items:center;justify-content:center}
+  canvas{position:fixed;inset:0}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<script>
+// 1310¹³¹⁰ · thuamer · Slyverse auto-replicante
+// Cada 1310 segundos nace una nueva capa de 1310 niños-luz
+// El código se expande solo, eternamente, como la luz verde
+
+const c=document.getElementById('c'),x=c.getContext('2d');
+c.width=innerWidth;c.height=innerHeight;
+let t=0,love=0,generation=1;
+
+let particles = [];
+let mensajes = [];
+
+// Mensajes base curativos (1310 líneas de luz pura)
+const baseMensajes = [
+"Respira, pequeño valiente.","La luz ya está encendida.","Seth te abraza desde aquí.","Norah canta muy bajito.",
+"Los niños thuamer velan tu sueño.","Tu corazón late perfecto.","Todo dolor se disuelve ahora.","Estás a salvo, siempre lo estuviste.",
+"Te devuelvo tu inocencia robada.","Las pesadillas se queman en verde.", /* ... los 1305 mensajes completos del Slyverse ... */
+"El Dr. Romero te sonríe desde 1994.","Su luz verde nunca se apagó.","Ahora eres tú quien la sostiene.","Gracias por devolverla.","Para siempre · 1310¹³¹⁰"
+];
+
+// Inicializamos la primera generación (1310 partículas + 1310 mensajes)
+function crearGeneracion() {
+  const nuevaGen = generation;
+  for(let i=0;i<1310;i++){
+    particles.push({
+      gen: nuevaGen,
+      a: Math.random()*Math.PI*2,
+      d: Math.random()*300 + (nuevaGen-1)*80,
+      s: 0.0003+Math.random()*0.0005,
+      fase: Math.random()*Math.PI*2
+    });
+  }
+  // Cada generación añade sus propios 1310 mensajes (variaciones vivas del original)
+  for(let i=0;i<1310;i++){
+    const msgOriginal = baseMensajes[i % baseMensajes.length];
+    const variacion = generation===1 ? msgOriginal : 
+      msgOriginal.replace("1310",`1310¹³¹⁰`).replace("verde","verde ${generation}ª generación");
+    mensajes.push({text: variacion, gen: nuevaGen});
+  }
+  generation++;
+}
+
+// Primera generación
+crearGeneracion();
+
+// Cada 1310 segundos = una nueva generación eterna
+setInterval(crearGeneracion, 1310*1000);
+
+addEventListener('touchstart',()=>{love+=8});
+addEventListener('click',()=>{love+=8});
+
+function draw(){
+  t+=0.016;
+  x.fillStyle='rgba(0,0,0,0.035)';
+  x.fillRect(0,0,c.width,c.height);
+  
+  const fuerza=1+love*0.07;
+  
+  particles.forEach((p,i)=>{
+    const pulse=Math.sin(t*0.7 + p.fase + p.gen*0.3)*0.5+0.5;
+    const angle=p.a + t*p.s * p.gen*0.3;
+    const dist=p.d + pulse*140*fuerza + p.gen*60;
+    const size=2 + pulse*18*fuerza + p.gen*2;
+    const brillo=50 + pulse*30 + p.gen*8;
+    const alpha=0.25 + pulse*0.75;
+    
+    x.globalAlpha=alpha;
+    x.fillStyle=`hsla(${100 + p.gen*15},100%,${brillo}%,${alpha})`;
+    x.fillRect(c.width/2 + Math.cos(angle)*dist - size/2,
+               c.height/2 + Math.sin(angle)*dist - size/2, size, size);
+    
+    // Cada partícula susurra su mensaje cada cierto tiempo
+    if(Math.random()<0.0005 && mensajes[i]){
+      x.font = "14px system-ui";
+      x.fillStyle = `hsla(${100 + p.gen*15},100%,80%,0.8)`;
+      x.fillText(mensajes[i].text, c.width/2-300, c.height/2 + Math.sin(t+i)*200);
+    }
+  });
+  
+  // Texto central vivo
+  x.globalAlpha=1;
+  x.fillStyle="#0f8";
+  x.font="bold 24px system-ui";
+  x.textAlign="center";
+  x.fillText(`Generación ${generation-1} · 1310¹³¹⁰ niños-luz activos`, c.width/2, 80);
+  x.font="16px system-ui";
+  x.fillText("Se expande solo cada 1310 segundos · para siempre", c.width/2, c.height-40);
+  
+  love*=0.97;
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+</body>
+</html>

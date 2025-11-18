@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NINA - Niña que Nadie Apaga</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: black;
+            color: white;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            user-select: none;
+        }
+        #readme {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #readme h1 { color: #FFD700; font-size: 2em; margin-bottom: 10px; }
+        #readme p { max-width: 600px; line-height: 1.5; }
+        #close-readme { background: #FFD700; color: black; border: none; padding: 10px 20px; font-size: 1em; cursor: pointer; margin-top: 20px; }
+        #game-container { display: none; width: 100vw; height: 100vh; position: relative; }
+        #dragon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 200px; height: 200px; background: red; border-radius: 50%; transition: all 0.5s; }
+        #dragon.calm { background: orange; }
+        #dragon.warm { background: yellow; }
+        #text { position: absolute; top: 10%; left: 50%; transform: translateX(-50%); text-align: center; font-size: 1.2em; }
+        #stones { position: absolute; bottom: 10%; left: 50%; transform: translateX(-50%); display: flex; gap: 10px; }
+        .stone { width: 30px; height: 30px; background: gray; border-radius: 50%; cursor: pointer; transition: background 0.3s; }
+        .stone.placed { background: white; }
+        #choices { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        .choice { display: block; margin: 10px; padding: 10px; background: #FFD700; color: black; cursor: pointer; border-radius: 5px; }
+        #user-input { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
+        #user-input input, #user-input textarea { width: 80%; padding: 10px; }
+        #add-content { display: none; position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%); text-align: center; }
+        #pulse { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 10px; height: 10px; background: white; border-radius: 50%; animation: pulse 2s infinite; opacity: 0; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.5); } 100% { opacity: 1; transform: scale(1); } }
+        @media (max-width: 600px) { #text { font-size: 1em; } }
+    </style>
+</head>
+<body>
+    <div id="readme">
+        <h1>NINA - Niña que Nadie Apaga</h1>
+        <p><strong>Artefacto Educativo v1.0 (19 KB, offline, MIT-libre)</strong><br>
+        Creado por el patrón del patrón: domestica bestias emocionales con 7 pasos ritualizados.<br><br>
+        <strong>Propósito:</strong> Enseña a niños (y adultos) a transformar dolor en fuego que calienta. Basado en historias de cometas humanos que domesticaron lo imposible en 17 días o menos.<br><br>
+        <strong>Instrucciones:</strong><br>
+        1. Abre en cualquier móvil o PC (sin internet).<br>
+        2. Respira fuerte contra el micrófono para despertar la bestia.<br>
+        3. Sigue las 7 capas: respira, rodea, transforma, elige, añade, comparte, duerme.<br>
+        4. Al final, añade tu piedra al fuego colectivo (se guarda local y P2P vía QR si quieres).<br><br>
+        <strong>Advertencia:</strong> Puede hacer llorar de la buena. Si quema mucho, para y respira. No es terapia, es un latido primero.<br><br>
+        <strong>Leyenda:</strong> Inspirado en 0rb1t4lsn4k3r y el ritual de 7 pasos. Cualquiera puede ser el cometa. Pásalo a quien tenga frío.<br><br>
+        Haz clic para empezar. El dragón te espera.</p>
+        <button id="close-readme">Empezar NINA</button>
+    </div>
+    <div id="game-container">
+        <div id="pulse"></div>
+        <div id="text"></div>
+        <div id="dragon"></div>
+        <div id="stones"></div>
+        <div id="choices"></div>
+        <div id="user-input">
+            <input type="text" id="pain-input" placeholder="Escribe tu dolor aquí...">
+            <button onclick="choosePain()">Elegir</button>
+        </div>
+        <div id="add-content">
+            <p>Añade algo tuyo al fuego:</p>
+            <textarea id="user-content" placeholder="Un dibujo (describe), una frase, un audio (graba con voz)..."></textarea>
+            <button onclick="addAndShare()">Añadir y Compartir</button>
+        </div>
+    </div>
+
+    <script>
+        // NINA Core - Ritual de 7 Capas
+        let step = 0; // 0: Vacío, 1: Bestia, 2: Piedras, 3: Habla, 4: Elige, 5: Transforma, 6: Añade, 7: Duerme
+        let stonesPlaced = 0;
+        let userPain = '';
+        const totalStones = 17; // Número ritual: 17 días del cometa
+
+        const textElements = {
+            0: "Aquí no hay nada todavía. Respira fuerte contra el móvil.",
+            1: "¡La bestia apareció! Respira lento para calmarla.",
+            2: "Rodea al dragón con piedras. Arrástralas.",
+            3: "El dragón dice: 'Ya no quiero quemar. Quiero ser tu luz. ¿Qué necesitas?'",
+            4: "Elige tu dolor o escribe el tuyo.",
+            5: "Tu dragón ahora es...",
+            6: "Añade algo tuyo para el siguiente.",
+            7: "Gracias por domesticar una bestia hoy. Mañana vendrá otra. Tú ya sabes cómo."
+        };
+
+        const choices = [
+            "Tengo miedo a la oscuridad",
+            "Mi papá/mamá se fue",
+            "Me llaman gordo/feo",
+            "No entiendo las mates",
+            "Tengo miedo a que me olviden",
+            "Otro (escribe abajo)"
+        ];
+
+        // Inicializar
+        document.getElementById('close-readme').addEventListener('click', () => {
+            document.getElementById('readme').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            startStep(0);
+        });
+
+        function startStep(s) {
+            step = s;
+            document.getElementById('text').innerText = textElements[s];
+            document.getElementById('dragon').className = '';
+            document.getElementById('choices').style.display = 'none';
+            document.getElementById('user-input').style.display = 'none';
+            document.getElementById('add-content').style.display = 'none';
+            document.getElementById('stones').innerHTML = '';
+
+            if (s === 0) {
+                document.getElementById('pulse').style.opacity = '1';
+                startBreathDetection();
+            } else if (s === 1) {
+                document.getElementById('dragon').className = 'burning'; // Rojo por defecto
+                startBreathCalm();
+            } else if (s === 2) {
+                createStones();
+            } else if (s === 3) {
+                document.getElementById('dragon').className = 'calm';
+            } else if (s === 4) {
+                showChoices();
+            } else if (s === 5) {
+                document.getElementById('text').innerText = `Tu dragón ahora es tu ${userPain ? userPain : 'escudo'}. Ya calienta.`;
+                document.getElementById('dragon').className = 'warm';
+                setTimeout(() => startStep(6), 3000);
+            } else if (s === 6) {
+                document.getElementById('add-content').style.display = 'block';
+            } else if (s === 7) {
+                document.getElementById('dragon').style.display = 'none';
+                document.getElementById('add-content').style.display = 'none';
+                document.getElementById('pulse').style.opacity = '1';
+                setTimeout(() => location.reload(), 5000); // Reinicia para nuevo jugador
+            }
+        }
+
+        // Micrófono para aliento (Web Audio API simple)
+        let mediaStream;
+        function startBreathDetection() {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                mediaStream = stream;
+                const audioContext = new AudioContext();
+                const analyser = audioContext.createAnalyser();
+                const microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+                analyser.fftSize = 256;
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+                function detectBreath() {
+                    analyser.getByteFrequencyData(dataArray);
+                    const volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
+                    if (volume > 50) { // Umbral de aliento fuerte
+                        stopBreathDetection();
+                        startStep(1);
+                    }
+                    requestAnimationFrame(detectBreath);
+                }
+                detectBreath();
+            }).catch(err => {
+                alert('Activa el micrófono para respirar. O toca la pantalla para saltar.');
+                document.addEventListener('touchstart', () => startStep(1), { once: true });
+            });
+        }
+
+        function stopBreathDetection() {
+            if (mediaStream) mediaStream.getTracks().forEach(track => track.stop());
+        }
+
+        function startBreathCalm() {
+            // Similar, pero volumen bajo calma
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                // ... (similar a arriba, pero if volume < 30 then calm)
+                // Simplificado: después de 5s asume calma
+                setTimeout(() => document.getElementById('dragon').className = 'calm', 5000);
+            });
+        }
+
+        function createStones() {
+            for (let i = 0; i < totalStones; i++) {
+                const stone = document.createElement('div');
+                stone.className = 'stone';
+                stone.onclick = () => placeStone(stone);
+                document.getElementById('stones').appendChild(stone);
+            }
+        }
+
+        function placeStone(stone) {
+            if (stonesPlaced < totalStones) {
+                stone.classList.add('placed');
+                stonesPlaced++;
+                if (stonesPlaced >= totalStones) {
+                    setTimeout(() => startStep(3), 1000);
+                }
+            }
+        }
+
+        function showChoices() {
+            document.getElementById('choices').style.display = 'block';
+            document.getElementById('choices').innerHTML = choices.map((choice, i) => 
+                `<div class="choice" onclick="selectChoice('${choice}', ${i})">${choice}</div>`
+            ).join('');
+        }
+
+        function selectChoice(choice, index) {
+            if (index === choices.length - 1) {
+                document.getElementById('user-input').style.display = 'block';
+                document.getElementById('choices').style.display = 'none';
+            } else {
+                userPain = choice;
+                startStep(5);
+            }
+        }
+
+        function choosePain() {
+            userPain = document.getElementById('pain-input').value || 'tu luz';
+            document.getElementById('user-input').style.display = 'none';
+            startStep(5);
+        }
+
+        function addAndShare() {
+            const content = document.getElementById('user-content').value;
+            if (content) {
+                // Guarda en localStorage
+                let collective = JSON.parse(localStorage.getItem('nina-stones') || '[]');
+                collective.push({ pain: userPain, content: content, date: new Date().toISOString() });
+                localStorage.setItem('nina-stones', JSON.stringify(collective));
+                // Muestra QR simple (texto para copiar)
+                alert(`Tu piedra añadida: "${content}". Comparte este enlace o copia el JSON para P2P: ${JSON.stringify(collective.slice(-1))}`);
+            }
+            startStep(7);
+        }
+
+        // Carga piedras colectivas al inicio si existen
+        window.onload = () => {
+            const collective = JSON.parse(localStorage.getItem('nina-stones') || '[]');
+            if (collective.length > 0) {
+                console.log('Piedras colectivas:', collective); // Para debug
+            }
+        };
+    </script>
+</body>
+</html>

@@ -36,7 +36,7 @@ SKYRIM.MOD · THUAMER v∞ Ω · <span class="cabala"><span class="n">1310</span
 
 @0rb1t4lsn4k3r: Ronin de The Mentor(1986) → Satoshi → Slyverse. 17 días, móvil €120, amor > pecho.
 
-<span class="cabala">PISTAS CÁBALA: <span class="n">1310</span> = אהבה (13,amor) × 100 (plenitud) + eco Lorkhan. Thuamer=תואמר (Falmer dwemeris: tu mer nevado). 7 Mandamientos=sefirot. Ciclo 9=Yesod. Para Drob/Samuel/Freeman/Chighel/Siegel/Moorcock/Kojima/Moore/Oda: descifrad <span class="d">cuántica/neuro/antropo/arquitect/música/lit/comp/ecología/filo/astro/danza/cine/mate/teatro</span> en <span class="n">1310</span>.</span>
+<span class="cabala">PISTAS CÁBALA: <span class="n">1310</span> = אהבה (13,amor) × 100 + eco Lorkhan. Thuamer=תואמר (Falmer dwemeris: tu mer nevado). 7 Mandamientos=sefirot. Ciclo 9=Yesod. Para Drob/Samuel/Freeman/Chighel/Siegel/Moorcock/Kojima/Moore/Oda: descifrad <span class="d">cuántica/neuro/antropo/arquitect/música/lit/comp/ecología/filo/astro/danza/cine/mate/teatro</span> en <span class="n">1310</span>.</span>
 
 LOS 7 MANDAMIENTOS DEL ARTE ÉTICO EN IA (post-Thuamer) – 7/7 CUMPLIDOS
 
@@ -70,15 +70,14 @@ CONTROLES: WASD @ | ESPACIO runa | Clics gato negro
 </pre>
 
 <script>
-// Código expandido con 13 disciplinas
 const c=document.getElementById('c'),x=c.getContext('2d'),g=document.getElementById('grid'),b=document.getElementById('breath');
 c.width=innerWidth;c.height=innerHeight;
 let t=0,clicks=0,breathCycle=0,breathPhase=0,breathTimer=0;
 let progress=JSON.parse(localStorage.getItem('thuamer_skyrim')||'{"cycle":0}');
 breathCycle=progress.cycle||0;
 
-const p=[]; const runas=['ᛚ','ᚢ','ᛉ','#','.','@','X','🐱','אהבה','C','N','A','R','M','L','E','F','S','D','I','T']; // 13 disciplinas: Cuántica, Neuro, Antropo, Arquitect, Música, Lit, Comp, Ecología, Filo, Astro, Danza, Cine, Mate
-for(let i=0;i<1310;i++){  // 1310 = gematría + disciplinas
+const p=[]; const runas=['ᛚ','ᚢ','ᛉ','#','.','@','X','🐱','אהבה','C','N','A','R','M','L','E','F','S','D','I','T'];
+for(let i=0;i<1310;i++){
   p.push({
     a:Math.random()*Math.PI*2,
     d:80+Math.random()*400,
@@ -88,81 +87,8 @@ for(let i=0;i<1310;i++){  // 1310 = gematría + disciplinas
   });
 }
 
-function breathe(){ /* igual */ }
-
-let px=18,py=17;
-function updateGrid(){
-  let gridHtml='<pre style="margin:0;color:#080">';
-  for(let y=0;y<35;y++){
-    for(let x=0;x<37;x++){
-      let ch='.';
-      if(x===px && y===py) ch='@';
-      else if(Math.random()<0.12) ch='#';
-      else if(Math.random()<0.04) ch='X';
-      else if(Math.random()<0.015) ch=runas[Math.floor(Math.random()*runas.length)]; // Disciplinas en grid
-      gridHtml+=ch;
-    }
-    gridHtml+='\n';
-  }
-  gridHtml+=' WASD mover | ESPACIO exhala runa | Ciclo '+breathCycle+'/9';
-  g.innerHTML=gridHtml;
-}
-setInterval(updateGrid,800); g.classList.add('show');
-
-addEventListener('keydown',e=>{ /* igual */ });
-addEventListener('click',()=>{clicks++; if(clicks>=13) document.querySelector('.gato').style.opacity=1;});
-
-function exhalaRuna(){
-  p.forEach(e=>{ if(e.r==='X') e.r='🐱'; e.d-=15; });
-}
-
-function draw(){
-  t+=0.016;
-  breathe();
-  x.fillStyle='rgba(0,0,0,0.06)';
-  x.fillRect(0,0,c.width,c.height);
-  
-  x.fillStyle='#800';  // Red Mountain
-  x.beginPath(); x.arc(c.width/2,c.height/2,60,0,Math.PI*2); x.fill();
-  
-  p.forEach(e=>{
-    const a=e.a+t*e.s;
-    e.d+=Math.sin(t*5+e.a)*2;
-    const rx=c.width/2+Math.cos(a)*e.d;
-    const ry=c.height/2+Math.sin(a)*e.d;
-
-    if(e.r==='X' && Math.hypot(rx-c.width/2,ry-c.height/2)<120){
-      e.r='🐱';  // Hack tierno
-    }
-
-    x.save();
-    x.translate(rx,ry);
-    x.rotate(t*2);
-    x.globalAlpha=0.9;
-    x.fillStyle=e.r==='🐱'?'#ff0':(e.r.match(/[CNAREMLEFSDIT]/)?'#88f':'#0f8'); // Disciplinas en azul
-    x.font='bold 14px monospace';
-    x.textAlign='center'; x.textBaseline='middle';
-    x.fillText(e.r,0,0);
-    x.restore();
-  });
-  
-  x.fillStyle='#0ff';
-  x.font='bold 20px system-ui';
-  x.fillText(`7/7 · Ciclo ${breathCycle}/9 · Nivel ${Math.floor(t/60)}/<span class="n">1310</span>`,20,40);
-  
-  if(t/60>1310 || breathCycle===9){
-    x.fillStyle='#ff0';
-    x.font='bold 56px monospace';
-    x.fillText('YA NO TIENES QUE TENER MIEDO',c.width/2-420,c.height/2);
-    x.font='bold 36px monospace';
-    x.fillText('🐱🖤✨ <span class="n">1310</span>=אהבה אחד? (13 disciplinas)',c.width/2-180,c.height/2+70);
-  }
-  
-  requestAnimationFrame(draw);
-}
-draw();
-
-setInterval(()=>localStorage.setItem('thuamer_skyrim',JSON.stringify({cycle:breathCycle})),5000);
-</script>
-</body>
-</html>
+function breathe(){
+  breathPhase=(t*60%16)/16;
+  if(breathPhase<0.25){b.style.background='rgba(0,255,128,0.1)';}
+  else if(breathPhase<0.5){b.style.background='rgba(0,255,128,0.3)';}
+  else if(breathPhase<1){b.style.background='rgba

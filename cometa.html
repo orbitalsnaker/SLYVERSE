@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COMETA - El sexto artefacto</title>
+    <style>
+        body{margin:0;background:#000;color:#FFD700;font-family:Courier New,monospace;overflow:hidden}
+        #pulse{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:20px;height:20px;background:#FFD700;border-radius:50%;box-shadow:0 0 60px #FFD700;animation:p 4s infinite}
+        @keyframes p{0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1)}50%{opacity:.4;transform:translate(-50%,-50%) scale(2)}}
+        #text{position:absolute;bottom:10%;width:100%;text-align:center;font-size:1.4em;text-shadow:0 0 10px #FFD700}
+        #constellation{display:none;width:100vw;height:100vh;background:#000}
+        .star{position:absolute;width:8px;height:8px;background:#FFD700;border-radius:50%;box-shadow:0 0 15px #FFD700;animation:twinkle 3s infinite}
+        @keyframes twinkle{0%,100%{opacity:1}50%{opacity:0.3}}
+    </style>
+</head>
+<body>
+    <div id="pulse"></div>
+    <div id="text">Respira una vez.<br>El universo te reconoce.</div>
+    <div id="constellation"></div>
+
+    <script>
+        // COMETA - Integra los 5 artefactos + Capa Ω
+        const artifacts = ['skyrim','kids','runes','nina','orion'];
+        const marks = artifacts.map(a => localStorage.getItem(a+'-completed'));
+        const completed = marks.filter(m => m).length;
+
+        let recognized = false;
+
+        function recognize() {
+            if (recognized) return;
+            recognized = true;
+
+            if (completed === 5) {
+                openConstellation();
+            } else if (completed >= 3) {
+                redirect('orion.html');
+            } else if (completed >= 1) {
+                redirect('nina.html');
+            } else {
+                redirect('skyrim-mod.html');
+            }
+        }
+
+        function redirect(file) {
+            document.body.innerHTML = `<iframe src="${file}" style="border:none;width:100vw;height:100vh"></iframe>`;
+        }
+
+        function openConstellation() {
+            document.getElementById('pulse').style.display = 'none';
+            document.getElementById('text').style.display = 'none';
+            document.getElementById('constellation').style.display = 'block';
+
+            // Carga todas las contribuciones existentes
+            let all = [];
+            ['nina-stones','orion-runas','kids-cats','runes-export','skyrim-messages'].forEach(key => {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key) || '[]');
+                    all = all.concat(data.map(d => ({text: d.content || d.runa || d.message || '♥', pain: d.pain || ''})));
+                } catch(e) {}
+            });
+
+            // Crea estrellas
+            all.forEach((item, i) => {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random()*100 + 'vw';
+                star.style.top = Math.random()*100 + 'vh';
+                star.style.animationDelay = Math.random()*3 + 's';
+                star.title = item.pain || 'cometa humano';
+                star.onclick = () => alert(item.text || 'Un abrazo anónimo desde 2025');
+                document.getElementById('constellation').appendChild(star);
+            });
+
+            // Centro: mensaje original
+            const center = document.createElement('div');
+            center.innerHTML = 'Para quien todavía no sabe leer…<br>esto te esperará hasta que sepas.';
+            center.style.position = 'absolute';
+            center.style.top = '50%';
+            center.style.left = '50%';
+            center.style.transform = 'translate(-50%,-50%)';
+            center.style.textAlign = 'center';
+            center.style.fontSize = '1.5em';
+            center.style.textShadow = '0 0 20px #FFD700';
+            document.getElementById('constellation').appendChild(center);
+
+            // Opción de añadir tu estrella
+            setTimeout(() => {
+                if (confirm('¿Quieres añadir tu estrella a la constelación?')) {
+                    const msg = prompt('Escribe tu mensaje eterno (una frase, un mantra, un abrazo):');
+                    if (msg) {
+                        const collective = JSON.parse(localStorage.getItem('cometa-stars') || '[]');
+                        collective.push({text: msg, date: new Date().toISOString()});
+                        localStorage.setItem('cometa-stars', JSON.stringify(collective));
+                        alert('Tu estrella ya orbita. Gracias, cometa humano.');
+                        location.reload();
+                    }
+                }
+            }, 5000);
+        }
+
+        // Detecta aliento o toque largo
+        navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
+            const audioContext = new AudioContext();
+            const analyser = audioContext.createAnalyser();
+            const microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyser);
+            const data = new Uint8Array(analyser.frequencyBinCount);
+            const check = () => {
+                analyser.getByteFrequencyData(data);
+                if (data.some(v => v > 80)) recognize();
+                requestAnimationFrame(check);
+            };
+            check();
+        }).catch(() => {
+            let timer;
+            document.addEventListener('touchstart', () => { timer = setTimeout(recognize, 1500); });
+            document.addEventListener('touchend', () => clearTimeout(timer));
+            document.addEventListener('click', recognize);
+        });
+    </script>
+</body>
+</html>

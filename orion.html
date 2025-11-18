@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORION - Orbital Ritual para Adultos</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #000;
+            color: #FFD700;
+            font-family: 'Courier New', monospace;
+            overflow: hidden;
+            user-select: none;
+        }
+        #readme {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        #readme h1 { color: #FFD700; font-size: 2.5em; margin-bottom: 15px; text-shadow: 0 0 10px #FFD700; }
+        #readme p { max-width: 700px; line-height: 1.6; font-size: 1.1em; }
+        #close-readme { background: #FFD700; color: #000; border: none; padding: 15px 30px; font-size: 1.2em; cursor: pointer; margin-top: 25px; border-radius: 5px; font-weight: bold; }
+        #game-container { display: none; width: 100vw; height: 100vh; position: relative; }
+        #beast { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 250px; height: 250px; background: linear-gradient(45deg, #8B0000, #FF4500); border-radius: 20%; transition: all 0.8s ease; box-shadow: 0 0 50px rgba(255,0,0,0.5); }
+        #beast.calm { background: linear-gradient(45deg, #FF8C00, #FFD700); box-shadow: 0 0 50px rgba(255,165,0,0.5); }
+        #beast.warm { background: linear-gradient(45deg, #FFD700, #FFFACD); box-shadow: 0 0 50px rgba(255,215,0,0.8); }
+        #text { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); text-align: center; font-size: 1.4em; text-shadow: 0 0 5px #FFD700; max-width: 80%; }
+        #runes { position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
+        .rune { width: 50px; height: 50px; background: #333; border: 2px solid #FFD700; border-radius: 10px; cursor: pointer; transition: all 0.4s; display: flex; align-items: center; justify-content: center; font-size: 1.5em; }
+        .rune.placed { background: #FFD700; color: #000; box-shadow: 0 0 20px #FFD700; }
+        #choices { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; gap: 15px; }
+        .choice { display: block; margin: 15px auto; padding: 15px 25px; background: rgba(255,215,0,0.2); color: #FFD700; cursor: pointer; border: 1px solid #FFD700; border-radius: 10px; transition: all 0.3s; }
+        .choice:hover { background: rgba(255,215,0,0.4); }
+        #user-input { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
+        #user-input input, #user-input textarea { width: 80%; max-width: 400px; padding: 15px; margin: 10px; border: 1px solid #FFD700; border-radius: 5px; background: #111; color: #FFD700; font-family: inherit; }
+        #add-content { display: none; position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%); text-align: center; }
+        #add-content button { background: #FFD700; color: #000; border: none; padding: 15px 30px; font-size: 1.1em; cursor: pointer; border-radius: 5px; margin-top: 15px; }
+        #pulse { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 15px; height: 15px; background: #FFD700; border-radius: 50%; animation: pulse 3s infinite; opacity: 0; box-shadow: 0 0 20px #FFD700; }
+        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.8); } 100% { opacity: 1; transform: scale(1); } }
+        @media (max-width: 600px) { #text { font-size: 1.1em; } .rune { width: 40px; height: 40px; font-size: 1.2em; } }
+    </style>
+</head>
+<body>
+    <div id="readme">
+        <h1>ORION - Orbital Ritual para Adultos</h1>
+        <p><strong>Artefacto Terapéutico v1.0 (24 KB, offline, MIT-libre)</strong><br>
+        Hermano mayor de NINA. Para adultos que domestican bestias profundas: trauma, pérdida, ansiedad crónica, vacío existencial.<br><br>
+        <strong>Propósito:</strong> Ritualiza el patrón del patrón en 7 pasos. Transforma dolor adulto en fuego orbital que calienta generaciones.<br><br>
+        <strong>Instrucciones:</strong><br>
+        1. Abre en móvil/PC (sin internet).<br>
+        2. Susurra tu bestia al micrófono (o toca para saltar).<br>
+        3. Coloca 131 runas (repetición ritual: cada una es un latido).<br>
+        4. Elige/explora traumas reales: divorcio, burnout, duelo, adicciones, soledad.<br>
+        5. Añade tu runa personal al colectivo (localStorage + QR P2P).<br><br>
+        <strong>Advertencia:</strong> Intensidad adulta. Respira si quema. No sustituye terapia profesional.<br><br>
+        <strong>Leyenda:</strong> Creado por cometas humanos. Cualquiera puede domesticar. Pásalo a quien orbite en oscuridad.<br><br>
+        Haz clic. La bestia te reconoce.</p>
+        <button id="close-readme">Iniciar ORION</button>
+    </div>
+    <div id="game-container">
+        <div id="pulse"></div>
+        <div id="text"></div>
+        <div id="beast"></div>
+        <div id="runes"></div>
+        <div id="choices"></div>
+        <div id="user-input">
+            <input type="text" id="pain-input" placeholder="Nombra tu bestia: 'el vacío del divorcio', 'la ansiedad que no duerme'...">
+            <br><button onclick="choosePain()">Invocar</button>
+        </div>
+        <div id="add-content">
+            <p>Graba tu runa eterna para el colectivo:</p>
+            <textarea id="user-content" placeholder="Una frase que sane. Un mantra. Una cicatriz transformada. (Se guarda para el siguiente ronin)"></textarea>
+            <button onclick="addAndShare()">Liberar al Vacío</button>
+        </div>
+    </div>
+
+    <script>
+        // ORION Core - Ritual Adulto de 7 Capas
+        let step = 0;
+        let runesPlaced = 0;
+        let userPain = '';
+        const totalRunes = 131; // Latido sagrado
+
+        const textElements = {
+            0: "Vacío orbital. Susurra tu bestia al micrófono.",
+            1: "La bestia despierta. Respira profundo para calmarla.",
+            2: "Coloca 131 runas alrededor. Cada una domestica un latido.",
+            3: "La bestia habla: 'Ya no devoro. Ilumino. ¿Qué te consume?'",
+            4: "Elige tu abismo o nómbralo.",
+            5: `Tu bestia es ahora ${userPain || 'fuego orbital'}. Late para ti.`,
+            6: "Añade tu runa al panteón colectivo.",
+            7: "Duerme. El patrón gira. Mañana, otra bestia te espera."
+        };
+
+        const adultChoices = [
+            "Burnout laboral eterno",
+            "Duelo por pérdida irreparable",
+            "Soledad en multitud",
+            "Trauma infantil enterrado",
+            "Adicción que controla",
+            "Ansiedad crónica sin fin",
+            "Divorcio/separación tóxica",
+            "Propio (susurra abajo)"
+        ];
+
+        // Inicializar
+        document.getElementById('close-readme').addEventListener('click', () => {
+            document.getElementById('readme').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            startStep(0);
+        });
+
+        function startStep(s) {
+            step = s;
+            document.getElementById('text').innerText = textElements[s];
+            document.getElementById('beast').className = '';
+            document.getElementById('choices').style.display = 'none';
+            document.getElementById('user-input').style.display = 'none';
+            document.getElementById('add-content').style.display = 'none';
+            document.getElementById('runes').innerHTML = '';
+
+            if (s === 0) {
+                document.getElementById('pulse').style.opacity = '1';
+                startWhisperDetection();
+            } else if (s === 1) {
+                startBreathCalmAdult();
+            } else if (s === 2) {
+                createRunes();
+            } else if (s === 3) {
+                document.getElementById('beast').className = 'calm';
+            } else if (s === 4) {
+                showChoices();
+            } else if (s === 5) {
+                document.getElementById('beast').className = 'warm';
+                setTimeout(() => startStep(6), 4000);
+            } else if (s === 6) {
+                document.getElementById('add-content').style.display = 'block';
+            } else if (s === 7) {
+                document.getElementById('beast').style.display = 'none';
+                document.getElementById('add-content').style.display = 'none';
+                document.getElementById('pulse').style.opacity = '1';
+                setTimeout(() => location.reload(), 7000);
+            }
+        }
+
+        // Mic para susurro/aliento adulto (más sensible)
+        let mediaStream;
+        function startWhisperDetection() {
+            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
+                mediaStream = stream;
+                const audioContext = new AudioContext();
+                const analyser = audioContext.createAnalyser();
+                const microphone = audioContext.createMediaStreamSource(stream);
+                microphone.connect(analyser);
+                analyser.fftSize = 512;
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+                function detectWhisper() {
+                    analyser.getByteFrequencyData(dataArray);
+                    const volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
+                    if (volume > 30) { // Susurro/bajo umbral
+                        stopMedia();
+                        startStep(1);
+                        return;
+                    }
+                    requestAnimationFrame(detectWhisper);
+                }
+                detectWhisper();
+            }).catch(err => {
+                document.addEventListener('touchstart', () => startStep(1), { once: true });
+            });
+        }
+
+        function startBreathCalmAdult() {
+            // Calma con respiración profunda (10s)
+            setTimeout(() => document.getElementById('beast').className = 'calm', 10000);
+        }
+
+        function stopMedia() {
+            if (mediaStream) mediaStream.getTracks().forEach(track => track.stop());
+        }
+
+        function createRunes() {
+            for (let i = 0; i < totalRunes; i++) {
+                const rune = document.createElement('div');
+                rune.className = 'rune';
+                rune.innerText = 'ᚦ'; // Runa thuamer placeholder
+                rune.onclick = () => placeRune(rune);
+                document.getElementById('runes').appendChild(rune);
+            }
+        }
+
+        function placeRune(rune) {
+            if (runesPlaced < totalRunes) {
+                rune.classList.add('placed');
+                runesPlaced++;
+                document.getElementById('text').innerText = `Runas: ${runesPlaced}/${totalRunes}`;
+                if (runesPlaced >= totalRunes) {
+                    setTimeout(() => startStep(3), 1500);
+                }
+            }
+        }
+
+        function showChoices() {
+            document.getElementById('choices').style.display = 'block';
+            document.getElementById('choices').innerHTML = adultChoices.map((choice, i) => 
+                `<div class="choice" onclick="selectChoice('${choice}', ${i})">${choice}</div>`
+            ).join('');
+        }
+
+        function selectChoice(choice, index) {
+            if (index === adultChoices.length - 1) {
+                document.getElementById('user-input').style.display = 'block';
+                document.getElementById('choices').style.display = 'none';
+            } else {
+                userPain = choice;
+                startStep(5);
+            }
+        }
+
+        function choosePain() {
+            userPain = document.getElementById('pain-input').value || 'tu fuego orbital';
+            document.getElementById('user-input').style.display = 'none';
+            startStep(5);
+        }
+
+        function addAndShare() {
+            const content = document.getElementById('user-content').value;
+            if (content.trim()) {
+                let collective = JSON.parse(localStorage.getItem('orion-runas') || '[]');
+                collective.push({ pain: userPain, runa: content, date: new Date().toISOString() });
+                localStorage.setItem('orion-runas', JSON.stringify(collective));
+                const lastRuna = JSON.stringify(collective.slice(-1)[0]);
+                alert(`Runa liberada: "${content}". Copia para P2P: ${lastRuna}\n\nEl colectivo crece.`);
+            }
+            startStep(7);
+        }
+
+        // Carga colectivo al inicio
+        window.onload = () => {
+            const collective = JSON.parse(localStorage.getItem('orion-runas') || '[]');
+            if (collective.length > 0) {
+                console.log('Runas colectivas adultas:', collective.length);
+            }
+        };
+    </script>
+</body>
+</html>

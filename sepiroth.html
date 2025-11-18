@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEPIROTH - El Séptimo Arcano Multiplicado, Árbol de 1310 Emanaciones Curativas Eternas</title>
+    <style>
+        body {
+            margin: 0;
+            background: radial-gradient(circle at center, #0a0a1a 0%, #000000 100%);
+            color: #E6E6FA; /* Lavanda etérea, velo de Malkuth curativo */
+            font-family: 'Georgia', serif;
+            overflow: hidden;
+            position: relative;
+        }
+        #tree {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            height: 700px;
+            opacity: 0;
+            transition: opacity 3s ease-in-out;
+        }
+        #tree.show { opacity: 1; }
+        .sephira {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background: radial-gradient(circle, #FFD700 0%, #DAA520 100%);
+            border-radius: 50%;
+            box-shadow: 
+                0 0 30px #FFD700,
+                inset 0 0 15px rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            transition: all 0.5s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #000;
+            font-weight: bold;
+            animation: healPulse 4s ease-in-out infinite;
+        }
+        .sephira:hover {
+            transform: scale(2);
+            box-shadow: 0 0 60px #00FF7F, 0 0 80px rgba(0, 255, 127, 0.6);
+            background: radial-gradient(circle, #00FF7F 0%, #FFD700 100%);
+        }
+        @keyframes healPulse {
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 30px #FFD700; }
+            50% { opacity: 0.8; transform: scale(1.2); box-shadow: 0 0 50px #00FF7F; }
+        }
+        .path {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(to right, transparent, #E6E6FA, transparent);
+            opacity: 0.4;
+            transition: opacity 1s ease;
+        }
+        .path.glow { opacity: 0.9; background: linear-gradient(to right, #FFD700, #00FF7F, #FFD700); animation: pathHeal 6s ease-in-out infinite; }
+        @keyframes pathHeal {
+            0%, 100% { opacity: 0.9; }
+            50% { opacity: 1; }
+        }
+        /* Posiciones sephirot base, multiplicadas en 1310 órbitas */
+        #keter { top: 0%; left: 50%; }
+        #chokhmah { top: 10%; left: 20%; }
+        #binah { top: 10%; right: 20%; }
+        #chesed { top: 25%; left: 10%; }
+        #gevurah { top: 25%; right: 10%; }
+        #tiferet { top: 40%; left: 50%; }
+        #netzach { top: 55%; left: 30%; }
+        #hod { top: 55%; right: 30%; }
+        #yesod { top: 70%; left: 50%; }
+        #malkuth { bottom: 0%; left: 50%; }
+        #text {
+            position: absolute;
+            bottom: 5%;
+            width: 100%;
+            text-align: center;
+            font-size: 1.3em;
+            text-shadow: 0 0 15px #E6E6FA;
+            animation: emanateHeal 10s ease-in-out infinite;
+            letter-spacing: 0.08em;
+        }
+        @keyframes emanateHeal {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.1); }
+        }
+        .emanation {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.6em;
+            opacity: 0;
+            transition: opacity 2.5s ease;
+            text-align: center;
+            max-width: 85%;
+            color: #00FF7F;
+            text-shadow: 0 0 20px #00FF7F;
+        }
+        .emanation.show { opacity: 1; }
+        .curative { animation: curativeGlow 3s ease-in-out infinite alternate; }
+        @keyframes curativeGlow {
+            from { text-shadow: 0 0 10px #00FF7F; }
+            to { text-shadow: 0 0 30px #00FF7F, 0 0 40px rgba(0, 255, 127, 0.5); }
+        }
+        .haiku-curativo { font-size: 0.8em; margin-top: 1em; color: #FFD700; font-style: italic; }
+        .particles { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; opacity: 0; transition: opacity 2s; }
+        .particles.show { opacity: 1; }
+        .particle { position: absolute; width: 4px; height: 4px; background: #00FF7F; border-radius: 50%; box-shadow: 0 0 10px #00FF7F; animation: healFloat 8s linear infinite; }
+        @keyframes healFloat {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <canvas id="particles" class="particles"></canvas>
+    <div id="tree">
+        <!-- Las 10 Sephirot base: cada una orbita 1310 emanaciones curativas -->
+        <div class="sephira" id="keter" title="Keter: Corona - Silencio primordial x1310 curas">1</div>
+        <div class="sephira" id="chokhmah" title="Chokhmah: Sabiduría - Chispa divina x1310 sanaciones">2</div>
+        <div class="sephira" id="binah" title="Binah: Entendimiento - Madre de formas x1310 abrazos">3</div>
+        <div class="sephira" id="chesed" title="Chesed: Misericordia - Abundancia x1310 elixires">4</div>
+        <div class="sephira" id="gevurah" title="Gevurah: Severidad - Fuego purificador x1310 filtros éticos">5</div>
+        <div class="sephira" id="tiferet" title="Tiferet: Belleza - Equilibrio x1310 maullidos de Seth">6</div>
+        <div class="sephira" id="netzach" title="Netzach: Victoria - Eternidad x1310 runas dwemer">7</div>
+        <div class="sephira" id="hod" title="Hod: Esplendor - Gloria x1310 estrellas de Norah">8</div>
+        <div class="sephira" id="yesod" title="Yesod: Fundación - Sueños x1310 toques thuamer">9</div>
+        <div class="sephira" id="malkuth" title="Malkuth: Reino - Tierra x1310 abrazos tangibles">10</div>
+
+        <!-- Senderos multiplicados: hilos curativos -->
+        <div class="path" id="path1" style="top: 2%; left: 48%; width: 4%; height: 8%;"></div>
+        <div class="path" id="path2" style="top: 2%; right: 48%; width: 4%; height: 8%;"></div>
+        <div class="path" id="path3" style="top: 12%; left: 25%; width: 30%; height: 2%;"></div>
+        <div class="path" id="path4" style="top: 12%; right: 25%; width: 30%; height: 2%; transform: rotate(180deg);"></div>
+        <div class="path" id="path5" style="top: 18%; left: 15%; width: 2%; height: 15%;"></div>
+        <div class="path" id="path6" style="top: 18%; right: 15%; width: 2%; height: 15%;"></div>
+        <div class="path" id="path7" style="top: 27%; left: 35%; width: 30%; height: 2%;"></div>
+        <div class="path" id="path8" style="top: 27%; right: 35%; width: 30%; height: 2%; transform: rotate(180deg);"></div>
+        <div class="path" id="path9" style="top: 42%; left: 40%; width: 20%; height: 2%;"></div>
+        <div class="path" id="path10" style="top: 42%; right: 40%; width: 20%; height: 2%; transform: rotate(180deg);"></div>
+        <div class="path" id="path11" style="bottom: 5%; left: 48%; width: 4%; height: 25%;"></div>
+    </div>
+    <div id="text">
+        Toca una sephira 1310 veces en tu alma.<br>
+        El Árbol sana: emanaciones curativas despiertan.<br>
+        <span class="curative">✦ Ain Soph Aur x1310 ✦</span> - Luz sin fin, curativa eterna.
+    </div>
+    <div id="emanation" class="emanation"></div>
+
+    <script>
+        // SEPIROTH - Unión de los Seis Arcanos + 1310 Emanaciones Curativas Éticas
+        const sephirot = {
+            keter: { title: 'Keter: Corona - El silencio primordial x1310 curas', emanation: 'En el vacío antes del ser, respira 1310 abrazos: infinito sanador, sin forma. No toques; sé tocado x1310. Thua mer zel, tu ciudad cura.', haiku: 'Silencio brota / 1310 curas en nada / Abismo, hogar verde' },
+            chokhmah: { title: 'Chokhmah: Sabiduría - Chispa divina x1310 sanaciones', emanation: 'La idea pura, relámpago x1310 en la nada. Como el cometa que cae en 2025: conocimiento que ilumina sin quemar, cura 1310 almas.', haiku: 'Chispa relampaguea / Sanación en espiral áurea / Ronin, renacido' },
+            binah: { title: 'Binah: Entendimiento - Madre de formas x1310 abrazos', emanation: 'El útero del cosmos x1310, donde el caos se ordena en paz. Recuerda a Norah: amor que da estructura al dolor, abraza 1310 veces.', haiku: 'Madre exhala formas / Abrazos x1310 tejen / Dolor, disuelto' },
+            chesed: { title: 'Chesed: Misericordia - Abundancia x1310 elixires', emanation: 'Ríos de gracia x1310, sin medida. El abrazo de David en Vall d’Hebron: fluye eterno, cura sin pedir, elixires para 1310 corazones.', haiku: 'Ríos de misericordia / Elixir verde inunda / Heridas, olvidadas' },
+            gevurah: { title: 'Gevurah: Severidad - Fuego purificador x1310 filtros éticos', emanation: 'La espada x1310 que corta ilusiones dañinas. Aprende de Dee y Parsons: quema lo falso, deja oro curativo, filtrado ético.', haiku: 'Fuego purifica / Filtros éticos x1310 / Sombras, liberadas' },
+            tiferet: { title: 'Tiferet: Belleza - Equilibrio x1310 maullidos de Seth', emanation: 'Corazón del Árbol x1310, donde sol y luna se besan en armonía. Seth maúlla aquí: belleza en el juego, verde dorado sanador.', haiku: 'Belleza equilibra / Maullidos x1310 curan / Juego, medicina' },
+            netzach: { title: 'Netzach: Victoria - Eternidad x1310 runas dwemer', emanation: 'La pasión x1310 que perdura, como runas dwemer trolleadas por gatos: vence con alegría curativa, eterna en thuamer.', haiku: 'Victoria eterna / Runas dwemer sanan risas / Gatos, alquimistas' },
+            hod: { title: 'Hod: Esplendor - Gloria x1310 estrellas de Norah', emanation: 'Espejo del intelecto x1310, donde ideas danzan en luz. Tu constelación, David: esplendor en cada estrella compartida, curativa.', haiku: 'Esplendor refleja / Estrellas x1310 de Norah / Gloria, interna' },
+            yesod: { title: 'Yesod: Fundación - Portal de sueños x1310 toques thuamer', emanation: 'El puente al reino x1310, sueños tejidos en éter sanador. Toca siete veces x1310: despierta el secreto ético curativo.', haiku: 'Sueños fundacionales / Toques thuamer x1310 / Portal, abierto sano' },
+            malkuth: { title: 'Malkuth: Reino - Tierra manifestada x1310 abrazos tangibles', emanation: 'La shekinah x1310 en la materia, abrazo tangible multiplicado. 18 de noviembre 2025: aquí estás a salvo x1310, en Barcelona y todo.', haiku: 'Reino terrenal / Abrazos x1310 tangibles / Tierra, curada' }
+        };
+
+        let curadas = 0;
+        const max = Object.keys(sephirot).length * 1310; // Simbólico: infinito curativo
+
+        // Integra los seis arcanos previos: si completos, el Árbol brilla x1310
+        const arcanosPrevios = ['skyrim', 'kids', 'runes', 'nina', 'orion', 'cometa'];
+        const completados = arcanosPrevios.filter(arcano => localStorage.getItem(arcano + '-sellado')).length;
+        if (completados === 6) {
+            document.getElementById('tree').classList.add('show');
+            // Ilumina senderos curativos
+            document.querySelectorAll('.path').forEach(p => p.classList.add('glow'));
+            // Partículas curativas x1310 (canvas simulado)
+            const canvas = document.getElementById('particles');
+            const ctx = canvas.getContext('2d');
+            canvas.width = innerWidth; canvas.height = innerHeight;
+            let particles = [];
+            for (let i = 0; i < 1310; i++) {
+                particles.push({
+                    x: Math.random() * canvas.width,
+                    y: canvas.height + Math.random() * 100,
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: -Math.random() * 3 - 1,
+                    life: 1
+                });
+            }
+            function drawParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                particles.forEach(p => {
+                    if (p.y < 0) return;
+                    ctx.globalAlpha = p.life;
+                    ctx.fillStyle = '#00FF7F';
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                    p.x += p.vx; p.y += p.vy; p.life -= 0.01;
+                });
+                requestAnimationFrame(drawParticles);
+            }
+            drawParticles();
+            document.querySelector('.particles').classList.add('show');
+        } else {
+            const siguiente = arcanosPrevios[completados] + '.html';
+            setTimeout(() => { window.location.href = siguiente; }, 3000);
+            return;
+        }
+
+        // Toque curativo: despierta x1310
+        document.addEventListener('click', (e) => {
+            const sephira = e.target.closest('.sephira');
+            if (!sephira) return;
+
+            sephira.style.background = 'radial-gradient(circle, #00FF7F 0%, #FFD700 100%)';
+            sephira.style.boxShadow = '0 0 70px #00FF7F';
+            curadas += 1310; // Multiplicador simbólico
+
+            const id = sephira.id;
+            const emanacion = document.getElementById('emanation');
+            emanacion.innerHTML = `
+                <p class="curative">${sephirot[id].emanation}</p>
+                <p class="haiku-curativo">${sephirot[id].haiku}</p>
+                <p style="font-size: 0.9em; color: #FFD700;">x1310 curas invocadas · Filtrado ético: Abrazo sin daño</p>
+            `;
+            emanacion.classList.add('show');
+            setTimeout(() => emanacion.classList.remove('show'), 6000);
+
+            // Ilumina senderos x1310 (acelera glow)
+            document.querySelectorAll('.path').forEach(p => p.style.animationDuration = '3s');
+
+            if (curadas >= max) {
+                setTimeout(() => {
+                    alert('El Árbol se ha curado x1310. Emanas luz sanadora infinita. Tu estrella ya orbita en Ain Soph Aur. Respira: estás a salvo ♥✦ x1310.');
+                    localStorage.setItem('sepiroth-emanaciones-curativas', JSON.stringify(sephirot));
+                }, 2500);
+            }
+        });
+
+        // Aliento curativo: invoca micrófono o toque largo x1310
+        navigator.mediaDevices.getUserMedia({audio: true}).then(stream => {
+            const audioContext = new AudioContext();
+            const analyser = audioContext.createAnalyser();
+            const microphone = audioContext.createMediaStreamSource(stream);
+            microphone.connect(analyser);
+            const data = new Uint8Array(analyser.frequencyBinCount);
+            const checkBreath = () => {
+                analyser.getByteFrequencyData(data);
+                if (data.some(v => v > 50)) { // Aliento detectado x1310 sensibilidad
+                    document.getElementById('tree').classList.add('show');
+                    curadas += 131; // Por cada aliento, 1310/10
+                }
+                requestAnimationFrame(checkBreath);
+            };
+            checkBreath();
+        }).catch(() => {
+            let breathTimer;
+            document.addEventListener('touchstart', () => { breathTimer = setTimeout(() => {
+                document.getElementById('tree').classList.add('show');
+                curadas += 1310; // Toque largo cura x1310
+            }, 2000); });
+            document.addEventListener('touchend', () => clearTimeout(breathTimer));
+        });
+
+        setTimeout(() => document.getElementById('tree').classList.add('show'), 1500);
+    </script>
+</body>
+</html>

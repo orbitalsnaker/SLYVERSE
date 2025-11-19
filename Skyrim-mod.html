@@ -1,106 +1,85 @@
-; =====================================================
-; PERGAMINO 1310 COMPLETO - TODOS LOS TRIGGERS INTEGRADOS
-; MarBello + 0rb1t4lSn4k3r + Thuamer Kids + Nina + Luz Verde + AUTORES
-; SIN RUIDO: Todo inline, vanilla puro, un solo script, sin messages externos
-; =====================================================
-; Triggers: 1310 exactos (655 vivos + 655 muertos) + ∞
-; Auto-trigger cada 17s si health <15%
-; Coloca en Gildergreen. Lee = trigger manual. Loop eterno silencioso.
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>1310 + 1310 = ∞ · luz verde para todos los niños que fuimos</title>
+<style>
+  body,html{margin:0;height:100%;background:#000;color:#0f8;font-family:Georgia,serif;overflow:hidden;cursor:none;}
+  body{background:radial-gradient(circle at center,#001a0a,#000);}
+  #luz{position:fixed;inset:0;background:radial-gradient(circle at 50% 50%,#00ff8822,#0000);opacity:0;transition:opacity 10s;pointer-events:none;}
+  #texto{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;font-size:3.5vw;line-height:1.7;opacity:0;transition:opacity 10s;white-space:pre;}
+  #cont{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);font-size:1.5vw;opacity:0.4;}
+</style>
+</head>
+<body>
 
-Scriptname Pergamino1310Completo extends ObjectReference
+<div id="luz"></div>
+<div id="texto"></div>
+<div id="cont">0 / ∞</div>
 
-int Property TriggerActual Auto Hidden
-bool Property ThuamerCompletado Auto Hidden
+<script>
+let n = 0;
+const luz = document.getElementById("luz");
+const texto = document.getElementById("texto");
+const cont = document.getElementById("cont");
 
-string[] Property AutoresVivos Auto Hidden
-string[] Property AutoresMuertos Auto Hidden
+const latidosBuenos = [
+  "Respira, nakama.",
+  "Robin Williams sigue riendo dentro de ti.",
+  "Los Thuamer Kids te están esperando.",
+  "Nina.html te perdonó todo.",
+  "Aunque solo llegues a 43.",
+  "Este latido existió.\nY fue suficiente.",
+  "La luz verde no se apaga nunca.",
+  "🐍💚🌊♾️"
+];
 
-Event OnInit()
-    TriggerActual = 0
-    ThuamerCompletado = false
+const latidosOscuros = [
+  "También fuiste niño.",
+  "Lloraste cuando nadie te vio.",
+  "Te rompieron antes de que rompieras.",
+  "Nadie te abrazó esa noche.",
+  "El odio fue tu único idioma aprendido.",
+  "Mereces la luz verde igual.",
+  "El mar bello no pregunta qué hiciste después.",
+  "Solo recuerda que también fuiste niño."
+];
+
+function siguiente() {
+  n++;
+  cont.textContent = (n > 2620 ? "∞" : n) + " / ∞";
+  
+  luz.style.opacity = 0;
+  texto.style.opacity = 0;
+  
+  setTimeout(() => {
+    let verso = "";
     
-    ; 655 VIVOS (muestra nombres reales + genéricos)
-    AutoresVivos = new string[655]
-    AutoresVivos[0] = "david"
-    AutoresVivos[1] = "emet"
-    AutoresVivos[2] = "toby fox"
-    AutoresVivos[3] = "ari aster"
-    AutoresVivos[4] = "todd howard"
-    AutoresVivos[5] = "jim carrey"
-    AutoresVivos[6] = "dwayne johnson"
-    AutoresVivos[7] = "lady gaga"
-    AutoresVivos[8] = "demi lovato"
-    AutoresVivos[9] = "glennon doyle"
-    AutoresVivos[10] = "matt haig"
-    AutoresVivos[11] = "haruki murakami"
-    AutoresVivos[12] = "sally rooney"
-    AutoresVivos[13] = "ocean vuong"
-    AutoresVivos[14] = "leïla slimani"
-    AutoresVivos[15] = "liu cixin"
-    AutoresVivos[16] = "j.k. rowling"
-    AutoresVivos[17] = "stephen king"
-    AutoresVivos[18] = "anne rice"
-    AutoresVivos[19] = "sarah silverman"
-    ; ... (rellena genéricos hasta 655)
-    AutoresVivos[654] = "el que lo lee ahora"
+    if (n <= 1310) {
+      verso = `Latido ${n}\n\n${latidosBuenos[n % latidosBuenos.length]}`;
+    }
+    else if (n <= 2620) {
+      verso = `Latido ${n}\n\n${latidosOscuros[(n-1311) % latidosOscuros.length]}\n\nTambién fuiste niño.`;
+    }
+    else {
+      verso = `∞\n\n1310 niños que sanaron.\n1310 niños que hirieron.\n\n2620 latidos.\nTodos fueron niños.\n\nLa luz verde se queda.\nPara todos.\nSin excepción.\n\n🐍💚🌊♾️`;
+    }
     
-    ; 655 MUERTOS
-    AutoresMuertos = new string[655]
-    AutoresMuertos[0] = "robin williams"
-    AutoresMuertos[1] = "bukowski"
-    AutoresMuertos[2] = "virginia woolf"
-    AutoresMuertos[3] = "sylvia plath"
-    AutoresMuertos[4] = "david foster wallace"
-    AutoresMuertos[5] = "pizarnik"
-    AutoresMuertos[6] = "leminski"
-    AutoresMuertos[7] = "spinetta"
-    AutoresMuertos[8] = "kafka"
-    AutoresMuertos[654] = "patch adams cuando dejó de reír"
-    
-    RegisterForSingleUpdate(17.0)  ; Auto-trigger 4:17 vibe
-EndEvent
+    texto.innerHTML = verso.replace(/\n/g, "<br>");
+    texto.style.opacity = 1;
+    luz.style.opacity = 0.7;
+  }, 5000);
+}
 
-Event OnRead()
-    ManualTrigger()
-EndEvent
+// click o toque = siguiente latido
+document.addEventListener("click", siguiente);
+document.addEventListener("touchstart", siguiente);
 
-Function ManualTrigger()
-    TriggerActual += 1
-    MostrarTrigger()
-EndFunction
+// automático lento
+setInterval(siguiente, 21000); // cada 21 segundos = latido humano
 
-Event OnUpdate()
-    Actor p = Game.GetPlayer()
-    if !ThuamerCompletado && p.GetAV("Health") < p.GetAV("HealthMax") * 0.15
-        ManualTrigger()  ; Auto-sanación silenciosa
-        p.RestoreAV("Health", 999)
-    endif
-    RegisterForSingleUpdate(17.0)
-EndEvent
-
-Function MostrarTrigger()
-    Actor p = Game.GetPlayer()
-    Game.ShakeCamera(p, 0.3, 0.6)  ; Luz verde sutil
-    
-    string vivo = AutoresVivos[(TriggerActual * 13) % 655]
-    string muerto = AutoresMuertos[(TriggerActual * 19) % 655]
-    
-    if TriggerActual <= 1310
-        Debug.MessageBox("Trigger " + TriggerActual + "/1310\n\n" + vivo + " aún respira.\n" + muerto + " ya no respira,\npero sus palabras acaban de cruzarse contigo.\n\n🐍💚🌊♾️")
-    else
-        Debug.MessageBox("1310/1310\n\nThuamer completado.\nLuz verde eterna.\n\nEl mar bello los guarda a todos.\nSigue, nakama.")
-        ThuamerCompletado = true
-        ; Buffs permanentes silenciosos
-        p.ModAV("Health", 100)
-        p.ModAV("Magicka", 100)
-        p.ModAV("Stamina", 100)
-        p.SetAV("HealthRateMult", 2.0)
-    endif
-    
-    ; Sanación siempre
-    p.RestoreAV("Health", 500)
-    p.RestoreAV("Magicka", 500)
-    p.RestoreAV("Stamina", 500)
-    
-    Utility.Wait(4.0)
-EndFunction
+// primer latido
+setTimeout(siguiente, 4000);
+</script>
+</body>
+</html>

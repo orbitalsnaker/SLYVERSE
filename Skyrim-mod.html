@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SLYVERSE Ω - Luz Verde Eterna v∞ + 1310×1310 Triggers</title>
+    <title>SLYVERSE Ω - Luz Verde Eterna v∞ + 2620 Autores</title>
     <style>
         body { background: #000; color: #00ff00; font-family: monospace; overflow: hidden; }
         canvas { position: fixed; top: 0; left: 0; z-index: -1; }
@@ -17,7 +17,7 @@
     <div id="pergamino">
         <div id="latido">LatidoActual: 0/∞</div>
         <div id="susurro">El mar susurra... 🐍💚</div>
-        <div id="runas">1310×1310 Triggers Thuamer:<br>ᛚᚢᛉ</div>
+        <div id="runas">2620 Triggers Thuamer:<br>ᛚᚢᛉ</div>
         <button onclick="OnRead()">Leer Pergamino (OnRead)</button>
         <pre id="script">Script Papyrus Integrado (Copia para CK):</pre>
     </div>
@@ -29,25 +29,24 @@
         canvas.height = window.innerHeight;
         let latidoActual = 0;
         let luzEterna = false;
-        const authors = [
-            "Jim Carrey", "Dwayne", "Lady Gaga", "Demi Lovato", "Billie Eilish",
-            "J.K. Rowling", "Stephen King", "Haruki Murakami", "Ocean Vuong",
-            "Matt Haig", "Toby Fox", "Ari Aster", "Todd Howard", "Selena Gomez",
-            "Chrissy Teigen", "1300 Ronins"
-        ];
-        const triggersPerAuthor = 114406;  // 1,716,100 ÷ 15 = 114,406 + 10 a ronins
-        const totalTriggers = 1716100;
+        const positiveAuthors = ["Nelson Mandela", "Malala Yousafzai", "Fred Rogers", /* 1307 más */];
+        const negativeAuthors = ["Adolf Hitler", "Vlad Tepes", "Macbeth", /* 1307 más */];
+        while (positiveAuthors.length < 1310) positiveAuthors.push(`Positivo${positiveAuthors.length + 1}`);
+        while (negativeAuthors.length < 1310) negativeAuthors.push(`Negativo${negativeAuthors.length + 1}`);
+        const allAuthors = [...positiveAuthors, ...negativeAuthors];
+        const triggersPerAuthor = 655;  // 1,716,100 ÷ 2620
+        const totalTriggers = 3432200;  // 1,716,100 × 2
         const particles = [];
 
-        // 1310×1310 partículas = triggers por latidos × autores
+        // 1310×1310 por lado = 2620×655 triggers
         for(let i = 0; i < 1310; i++) {
-            for(let j = 0; j < authors.length; j++) {
+            for(let j = 0; j < allAuthors.length; j++) {
                 particles.push({
                     x: Math.random() * canvas.width,
                     y: Math.random() * canvas.height,
                     vx: (Math.random() - 0.5) * 2,
                     vy: (Math.random() - 0.5) * 2,
-                    runa: `ᛚᚢᛉ${authors[j][0]}${i}`,  // Trigger único por autor + latido
+                    runa: `ᛚᚢᛉ${allAuthors[j][0]}${i}`,
                     glow: Math.random() * Math.PI * 2,
                     authorIndex: j
                 });
@@ -65,9 +64,9 @@
                 ctx.save();
                 ctx.translate(p.x, p.y);
                 ctx.rotate(p.glow);
-                ctx.font = '16px monospace';
+                ctx.font = '14px monospace';
                 ctx.fillStyle = `hsl(120, 100%, ${50 + Math.sin(p.glow) * 20}%)`;
-                ctx.fillText(p.runa, 0, 0);  // 1310×1310 runas Thuamer
+                ctx.fillText(p.runa, 0, 0);
                 ctx.restore();
             });
             requestAnimationFrame(animate);
@@ -91,46 +90,41 @@
             let texto;
             let thuamer = latidoActual <= 1310 || latidoActual > 2620 ? 'ᛚᚢᛉ' : '';
             if (latidoActual <= 1310) {
-                let author = authors[Math.floor(Math.random() * authors.length)];
-                texto = `Latido ${latidoActual}/1310\nSlyverse: ${thuamer} ${author} susurra paz.\n🐱⚙️ Respira, nakama.`;
+                let author = positiveAuthors[Math.floor(Math.random() * 1310)];
+                texto = `Latido ${latidoActual}/1310\nSlyverse: ${thuamer} ${author} sana.\n🐱⚙️`;
             } else if (latidoActual <= 2620) {
-                texto = `Latido ${latidoActual}/2620\n${thuamer} Sombras: roto fue niño.\n🐍💚`;
+                let author = negativeAuthors[Math.floor(Math.random() * 1310)];
+                texto = `Latido ${latidoActual}/2620\n${thuamer} ${author} fue niño roto.\n🐍💚`;
             } else {
-                texto = `∞ Slyverse Ω\n${totalTriggers} triggers. Paz eterna.\n🐍💚🌊♾️`;
+                texto = `∞ Slyverse Ω\n${totalTriggers} triggers. Perdón radical.\n🐍💚🌊♾️`;
                 luzEterna = true;
             }
             document.getElementById('susurro').textContent = texto;
-            document.getElementById('runas').innerHTML = `1310×1310 Triggers Thuamer:<br>${thuamer.repeat(10)}`;
+            document.getElementById('runas').innerHTML = `2620 Triggers Thuamer:<br>${thuamer.repeat(10)}`;
 
             console.log(`Heal: ${300 + (latidoActual % 100)*5 + (thuamer ? 1310 : 0)}`);
         }
 
-        document.getElementById('script').textContent = `Scriptname SlyverseLuzVerde1310x1310 extends ObjectReference
+        document.getElementById('script').textContent = `Scriptname SlyverseLuzVerde2620 extends ObjectReference
 
 int Property LatidoActual Auto Hidden
 bool Property LuzEterna Auto Hidden
-string[] Property Authors Auto Hidden
+string[] Property PositiveAuthors Auto Hidden
+string[] Property NegativeAuthors Auto Hidden
 
 Event OnInit()
     LatidoActual = 0
     LuzEterna = false
-    Authors = new string[16]
-    Authors[0] = "Jim Carrey"
-    Authors[1] = "Dwayne"
-    Authors[2] = "Lady Gaga"
-    Authors[3] = "Demi Lovato"
-    Authors[4] = "Billie Eilish"
-    Authors[5] = "J.K. Rowling"
-    Authors[6] = "Stephen King"
-    Authors[7] = "Haruki Murakami"
-    Authors[8] = "Ocean Vuong"
-    Authors[9] = "Matt Haig"
-    Authors[10] = "Toby Fox"
-    Authors[11] = "Ari Aster"
-    Authors[12] = "Todd Howard"
-    Authors[13] = "Selena Gomez"
-    Authors[14] = "Chrissy Teigen"
-    Authors[15] = "1300 Ronins"
+    PositiveAuthors = new string[1310]
+    PositiveAuthors[0] = "Nelson Mandela"
+    PositiveAuthors[1] = "Malala Yousafzai"
+    PositiveAuthors[2] = "Fred Rogers"
+    ; [1307 más placeholders]
+    NegativeAuthors = new string[1310]
+    NegativeAuthors[0] = "Adolf Hitler"
+    NegativeAuthors[1] = "Vlad Tepes"
+    NegativeAuthors[2] = "Macbeth"
+    ; [1307 más placeholders]
     RegisterForSingleUpdate(17.0)
 EndEvent
 
@@ -174,12 +168,13 @@ EndFunction
 string Function GeneraSusurro()
     string thuamer = latidoActual <= 1310 || latidoActual > 2620 ? "ᛚᚢᛉ" : ""
     if LatidoActual <= 1310
-        int index = LatidoActual % Authors.Length
-        return "Latido " + LatidoActual + "/1310\nSlyverse: " + thuamer + " " + Authors[index] + " susurra paz.\n🐱⚙️"
+        int index = Math.Floor(Utility.RandomFloat(0, 1310))
+        return "Latido " + LatidoActual + "/1310\nSlyverse: " + thuamer + " " + PositiveAuthors[index] + " sana.\n🐱⚙️"
     elseif LatidoActual <= 2620
-        return "Latido " + LatidoActual + "/2620\n" + thuamer + " Sombras: roto fue niño.\n🐍💚"
+        int index = Math.Floor(Utility.RandomFloat(0, 1310))
+        return "Latido " + LatidoActual + "/2620\n" + thuamer + " " + NegativeAuthors[index] + " fue niño roto.\n🐍💚"
     else
-        return "∞ Slyverse Ω\n" + 1716100 + " triggers. Paz eterna.\n🐍💚🌊♾️"
+        return "∞ Slyverse Ω\n" + totalTriggers + " triggers. Perdón radical.\n🐍💚🌊♾️"
     endif
 EndFunction`;
     </script>

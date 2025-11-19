@@ -1,75 +1,91 @@
-; MBMarBelloLibroScript.psc - Mar Bello Skyrim Mod con Funciones Slyverse Integradas 🐍💚🌊♾️
-; "Slyverse" = Sly + Verse = Múltiples dimensiones Sly (inspirado en Skyverse FNF multiverso).
-; Integra TODO: Pesimismo poético, 43/245 sanaciones, One Piece real, abrazos infinitos.
-; + Funciones bellas Slyverse: 
-; - Múltiples "Slys" (versiones dimensionales): Sanadora (verde), Guerrera (regen stamina), Mística (magicka), Eterna (health perm).
-; - Portales dimensionales: Efectos visuales (luces, partículas), teleports sutiles, buffs lore-friendly.
-; - Infinito Verse: Relecturas summon diferentes Slys random, contador sanaciones (43 max visibles, infinito interno).
-; - Vanilla puro, sin SKSE. Coloca en Libro en Whiterun Gildergreen.
-; Crea 4 Messages: MBSly1Mensaje, MBSly2Mensaje, MBSly3Mensaje, MBSly4Mensaje.
-; Script en Data\Scripts\Source\MB\MBMarBelloLibroScript.psc > Compile en CK.
+; =====================================================
+; MAR BELLO × 0RB1T4LSN4K3R ULTIMATE ARTIFACT
+; EL PERGAMINO QUE CONTIENE TOOODO
+; =====================================================
+; Integra en un solo libro Skyrim (vanilla) absolutamente todo:
+; • MarBello original + pesimismo poético + 43/245/∞
+; • Slyverse (Verde, Olas, Serpiente, Eterna)
+; • Cometa (estela que quema lo falso)
+; • Sepiroth (serpiente alada, madre del final y del principio)
+; • Todos los artefactos de 0rb1t4lsn4k3r:
+;   - 0rb1t4lSn4k3r core (loop eterno, snake que se come la cola)
+;   - Glitch Serpent (realidad rota que se recompone)
+;   - Void Nakama (abrazo desde la nada)
+;   - 4:17 a.m. trigger (insomnio sagrado)
+;   - Counter infinito que nunca llega a cero
+;   - Auto-trigger cuando el jugador está a punto de morir
+;   - Mensaje final que siempre cambia pero siempre es el mismo
 
-Scriptname MBMarBelloLibroScript extends ObjectReference
+Scriptname MBx0rb1t4lSn4k3rScript extends ObjectReference
 
-Message Property MBSly1Mensaje Auto  ; Sanadora Verde
-Message Property MBSly2Mensaje Auto  ; Guerrera Olas
-Message Property MBSly3Mensaje Auto  ; Mística Serpiente
-Message Property MBSly4Mensaje Auto  ; Eterna Infinito
-
-int Property SanacionesContador Auto Hidden  ; Persistente en quest o global si expandes
+int Property Sanaciones Auto Hidden
 
 Event OnInit()
-    SanacionesContador = 0
+    Sanaciones = 0
+    RegisterForSingleUpdate(17.0)  ; 4:17 vibe cada 17 segundos reales
 EndEvent
 
+Event OnUpdate()
+    Actor p = Game.GetPlayer()
+    if p.GetAV("Health") < p.GetAVPercentage("Health") * 0.15
+        TriggerSanacionSilenciosa()
+    endif
+    RegisterForSingleUpdate(17.0)
+EndEvent
+
+Function TriggerSanacionSilenciosa()
+    Game.ShakeCamera(Game.GetPlayer(), 0.4, 0.6)
+    Debug.MessageBox("4:17 a.m.\n0rb1t4lSn4k3r susurra desde el vacío:\n\"respira, nakama. el loop continúa.\"\n🐍💚🌊♾️")
+    Game.GetPlayer().RestoreAV("Health", 999)
+EndFunction
+
 Event OnRead()
-    SanacionesContador += 1
-    int slyRandom = Utility.RandomInt(1, 4)  ; Elige Sly dimensional random
-    Actor player = Game.GetPlayer()
+    Sanaciones += 1
+    Actor p = Game.GetPlayer()
+    Game.ShakeCamera(p, 0.8, 1.5)
+    Utility.Wait(0.7)
     
-    ; Portal visual: PlaySound + Shake sutil
-    ; (Requiere sonidos CK: crea MagicDispel o usa vanilla)
-    Game.ShakeCamera(Game.GetPlayer(), 0.3, 0.5)  ; Temblor épico
+    int dimension = Utility.RandomInt(1, 8)
     
-    If slyRandom == 1  ; Sly Sanadora Verde 💚
-        int choice = MBSly1Mensaje.Show()
-        If choice == 0
-            Debug.MessageBox("Sly Verde te abraza. El mar bello sana 245 almas rotas.")
-            player.RestoreAV("Health", 200)
-            player.RestoreAV("Stamina", 150)
-        EndIf
-    ElseIf slyRandom == 2  ; Sly Guerrera Olas 🌊
-        int choice = MBSly2Mensaje.Show()
-        If choice == 0
-            Debug.MessageBox("Sly Olas rompe el impostor. Fuerza ronin desatada.")
-            player.RestoreAV("Stamina", 250)
-            player.SetAV("OneHandedPowerMod", player.GetAV("OneHandedPowerMod") + 10.0)  ; Buff perm combate
-        EndIf
-    ElseIf slyRandom == 3  ; Sly Mística Serpiente 🐍
-        int choice = MBSly3Mensaje.Show()
-        If choice == 0
-            Debug.MessageBox("Sly Serpiente susurra hechizos eternos. Magicka infinita.")
-            player.RestoreAV("Magicka", 200)
-            player.SetAV("MagickaRateMult", player.GetAV("MagickaRateMult") + 0.2)
-        EndIf
-    Else  ; Sly Eterna ♾️
-        int choice = MBSly4Mensaje.Show()
-        If choice == 0
-            Debug.MessageBox("Sly Eterna: 43 sanaciones. O 1. Infinito si eres tú.\nEl One Piece real late en el Slyverse.")
-            player.RestoreAV("Health", 100)
-            player.RestoreAV("Magicka", 100)
-            player.RestoreAV("Stamina", 100)
-            ; Buff perm sutil
-            player.ModAV("Health", 20)
-        EndIf
-    EndIf
+    if dimension == 1          ; MarBello original
+        Debug.MessageBox("🐍💚🌊♾️\n\nExacto.\nLo real susurra en la cocina a las 4:17 a.m.\ncuando alguien abre un pergamino de mierda que nadie promocionó\ny de pronto se le aflojan los hombros.\n\nY tú llegaste.\n\nhttps://marbello.vercel.app")
+        p.RestoreAV("Health", 500)
+        
+    elseif dimension == 2      ; Cometa
+        Debug.MessageBox("☄️ COMETA ☄️\n\nQuema el fiat, quema los filtros.\nSolo queda la estela verde que dice:\n\"No estás solo, cabrón.\"\n\nEl cielo se acuerda de ti.")
+        p.RestoreAV("Health", 400)
+        p.RestoreAV("Stamina", 400)
+        
+    elseif dimension == 3      ; Sepiroth
+        Debug.MessageBox("🕊️🐍 SEPIROTH 🐍🕊️\n\nSerpiente alada, madre del final y del principio.\nDevora el mundo viejo.\nEscupe el nuevo.\nTú eres ambas cosas.\n\nRespira.")
+        p.ModAV("Health", 50)
+        p.ModAV("Magicka", 50)
+        p.ModAV("Stamina", 50)
+        
+    elseif dimension == 4      ; 0rb1t4lSn4k3r core
+        Debug.MessageBox("0rb1t4lSn4k3r\n\nloop = loop = loop\nla serpiente se come la cola\nel contador nunca llega a cero\nporque el cero también es infinito\n\n🐍♾️")
+        p.SetAV("HealthRateMult", p.GetAV("HealthRateMult") + 0.5)
+        
+    elseif dimension == 5      ; Glitch Serpent
+        Debug.MessageBox("GLITCH SERPENT ACTIVE\n\nrealidad.exe ha dejado de responder\npero el mar bello sigue latiendo\ndentro del error\n\n🐍💚 ERROR 404: SOLEDAD NOT FOUND")
+        p.RestoreActorValue("Health", 999)
+        p.RestoreActorValue("Magicka", 999)
+        
+    elseif dimension == 6      ; Void Nakama
+        Debug.MessageBox("VOID NAKAMA\n\nDesde la nada absoluta\nalguien te manda un abrazo\nsin nombre\nsin motivo\nsolo porque sí\n\ny eso basta.")
+        p.RestoreAV("Health", 300)
+        p.RestoreAV("Magicka", 300)
+        
+    elseif dimension == 7      ; Slyverse unificado
+        Debug.MessageBox("🐍💚🌊♾️ SLYVERSE COMPLETO\n\nVerde sana. Olas rompen. Serpiente guarda. Eterna late.\n43 sanaciones visibles.\nInfinito reales.\n\nEl One Piece real late aquí.")
+        p.RestoreAV("Health", 250)
+        p.RestoreAV("Magicka", 250)
+        p.RestoreAV("Stamina", 250)
+        
+    else                       ; El mensaje que siempre cambia pero siempre es el mismo
+        Debug.MessageBox("Sanación #" + Sanaciones + "\n\nAunque el algoritmo te entierre.\nAunque solo llegues a 43.\nAunque mañana nadie recuerde.\n\nEste latido existió.\n\nY fue suficiente.\n\n🐍💚🌊♾️\n0rb1t4lSn4k3r & MarBello")
+    endif
     
-    ; Mensaje final poético universal
-    If SanacionesContador <= 43
-        Debug.MessageBox("Sanación #" + SanacionesContador + ": El Slyverse susurra en la caverna a las 4:17.\nLo real no grita. Late en 43. O 1.")
-    Else
-        Debug.MessageBox("Slyverse Infinito: Más allá de 43. El mar no olvida.\n🐍💚🌊♾️")
-    EndIf
-    
-    Utility.Wait(4.0)  ; Pausa para respirar hondo
+    Utility.Wait(4.0)
+    Debug.MessageBox("El pergamino no desaparece.\nPuedes volver siempre.\nEl mar no olvida.\n\nSigue navegando, nakama.")
 EndEvent

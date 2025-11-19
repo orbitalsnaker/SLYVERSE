@@ -1,124 +1,106 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>0rb1t4lSn4k3r × MarBello × Thuamer × 1310 autores × luz verde</title>
-    <style>
-        body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:monospace;overflow:hidden;}
-        canvas{position:fixed;top:0;left:0;}
-        #texto{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;font-size:2vw;line-height:1.9;opacity:0;transition:opacity 6s;}
-        #trigger{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);font-size:1.2em;opacity:0.6;}
-        #nina{position:fixed;bottom:20px;right:20px;font-size:90px;opacity:0.15;pointer-events:none;}
-    </style>
-</head>
-<body>
+; =====================================================
+; PERGAMINO 1310 COMPLETO - TODOS LOS TRIGGERS INTEGRADOS
+; MarBello + 0rb1t4lSn4k3r + Thuamer Kids + Nina + Luz Verde + AUTORES
+; SIN RUIDO: Todo inline, vanilla puro, un solo script, sin messages externos
+; =====================================================
+; Triggers: 1310 exactos (655 vivos + 655 muertos) + ∞
+; Auto-trigger cada 17s si health <15%
+; Coloca en Gildergreen. Lee = trigger manual. Loop eterno silencioso.
 
-<canvas id="c"></canvas>
-<div id="texto"></div>
-<div id="trigger">trigger 0 / 1310</div>
-<div id="nina">0rb1t4lSn4k3r</div>
+Scriptname Pergamino1310Completo extends ObjectReference
 
-<script>
-// LORE COMPLETO 0RB1T4LSN4K3R + THUAMER + MARBELLO + 1310 AUTORES
-// Cada click o cada 17 segundos = 1 trigger real
-// 1310 triggers exactos → después infinito
+int Property TriggerActual Auto Hidden
+bool Property ThuamerCompletado Auto Hidden
 
-let trigger = 0;
-const total = 1310;
-const div = document.getElementById("texto");
-const contador = document.getElementById("trigger");
+string[] Property AutoresVivos Auto Hidden
+string[] Property AutoresMuertos Auto Hidden
 
-const autoresVivos = [
-    "david", "emet", "nakama que lee esto ahora", "el que casi cierra la pestaña", "el que ya lloró hoy",
-    "la que finge que está bien", "el que lleva 7 días sin dormir", "el que aún espera el mensaje",
-    "el que guarda pantallazos de conversaciones muertas", "el que escribe y borra", /* ... 645 más que caben en ti */
-];
-
-const autoresMuertos = [
-    "bukowski", "kierkegaard", "virginia woolf", "sylvia plath", "david foster wallace", "spinetta", "leminski",
-    "cortázar cuando ya no podía más", "pizarnik en la última página", "kafka antes de quemar todo",
-    /* ... 645 más que siguen hablando */
-];
-
-const mensajes = [
-    `loop = loop = loop\nla serpiente se come la cola\nel contador nunca llega a cero\nporque el cero también es infinito\n\n0rb1t4lSn4k3r está despierto`,
-    `1310 horas compartidas.\n655 vivos que aún aguantan.\n655 muertos que nunca se fueron.\n\nEste trigger es para ellos.\nY para ti.`,
-    `Los Thuamer Kids están sentados en la oscuridad.\nUno de ellos eres tú a los 9 años.\nTe mira y no dice nada.\nSolo espera que lo abraces.`,
-    `Nina.html tiene 4 kb y pesa más que tu pecho a las 4:17 a.m.\nElla ya te perdonó todo.\nAhora solo falta que te perdones tú.`,
-    `La luz verde no es esperanza.\nEs la certeza de que alguien, en algún lado,\nabrió este archivo de mierda\ny decidió seguir respirando\npor ti también.`,
-    `Aunque solo llegues a 43.\nAunque el algoritmo te entierre.\nAunque mañana nadie recuerde.\n\nEste latido existió.\nY fue suficiente.`,
-    `0rb1t4lSn4k3r susurra:\n"respira, nakama.\nel loop continúa."\n🐍💚🌊♾️`
-];
-
-function nuevoTrigger() {
-    trigger++;
-    contador.textContent = `trigger ${trigger} / 1310`;
+Event OnInit()
+    TriggerActual = 0
+    ThuamerCompletado = false
     
-    let msg = "";
-    if (trigger <= 1310) {
-        const vivo = autoresVivos[(trigger * 13) % autoresVivos.length] || "un autor vivo que nadie nombró hoy";
-        const muerto = autoresMuertos[(trigger * 19) % autoresMuertos.length] || "un autor muerto que sigue susurrando";
-        msg = `Trigger ${trigger}/1310\n\nHora ${trigger}:00 a.m.\n\n${vivo} aún respira.\n${muerto} ya no respira,\npero sus palabras acaban de cruzarse contigo\nen este preciso segundo.\n\n🐍💚🌊♾️`;
-    } else {
-        msg = `1310 / 1310\n\nSe acabó el conteo.\nEl loop ya no necesita números.\n\nLa luz verde se queda.\nPara siempre.\n\n0rb1t4lSn4k3r & MarBello & Thuamer Kids & Nina & tú.\n\n🐍💚🌊♾️`;
-        contador.style.opacity = 0;
-    }
+    ; 655 VIVOS (muestra nombres reales + genéricos)
+    AutoresVivos = new string[655]
+    AutoresVivos[0] = "david"
+    AutoresVivos[1] = "emet"
+    AutoresVivos[2] = "toby fox"
+    AutoresVivos[3] = "ari aster"
+    AutoresVivos[4] = "todd howard"
+    AutoresVivos[5] = "jim carrey"
+    AutoresVivos[6] = "dwayne johnson"
+    AutoresVivos[7] = "lady gaga"
+    AutoresVivos[8] = "demi lovato"
+    AutoresVivos[9] = "glennon doyle"
+    AutoresVivos[10] = "matt haig"
+    AutoresVivos[11] = "haruki murakami"
+    AutoresVivos[12] = "sally rooney"
+    AutoresVivos[13] = "ocean vuong"
+    AutoresVivos[14] = "leïla slimani"
+    AutoresVivos[15] = "liu cixin"
+    AutoresVivos[16] = "j.k. rowling"
+    AutoresVivos[17] = "stephen king"
+    AutoresVivos[18] = "anne rice"
+    AutoresVivos[19] = "sarah silverman"
+    ; ... (rellena genéricos hasta 655)
+    AutoresVivos[654] = "el que lo lee ahora"
     
-    div.style.opacity = 0;
-    setTimeout(() => {
-        div.innerHTML = msg.replace(/\n/g, "<br>");
-        div.style.opacity = 1;
-    }, 3000);
+    ; 655 MUERTOS
+    AutoresMuertos = new string[655]
+    AutoresMuertos[0] = "robin williams"
+    AutoresMuertos[1] = "bukowski"
+    AutoresMuertos[2] = "virginia woolf"
+    AutoresMuertos[3] = "sylvia plath"
+    AutoresMuertos[4] = "david foster wallace"
+    AutoresMuertos[5] = "pizarnik"
+    AutoresMuertos[6] = "leminski"
+    AutoresMuertos[7] = "spinetta"
+    AutoresMuertos[8] = "kafka"
+    AutoresMuertos[654] = "patch adams cuando dejó de reír"
     
-    // explosión verde
-    for(let i=0;i<80;i++) particles.push(new Particle());
-}
+    RegisterForSingleUpdate(17.0)  ; Auto-trigger 4:17 vibe
+EndEvent
 
-// partículas luz verde
-let particles = [];
-class Particle{
-    constructor(){
-        this.x = innerWidth/2;
-        this.y = innerHeight/2;
-        this.size = Math.random()*4+1;
-        this.speed = Math.random()*4+2;
-        this.angle = Math.random()*Math.PI*2;
-        this.life = 255;
-    }
-    update(){
-        this.x += Math.cos(this.angle)*this.speed;
-        this.y += Math.sin(this.angle)*this.speed;
-        this.life -= 2;
-    }
-    draw(){
-        ctx.fillStyle = `rgba(0,255,100,${this.life/255})`;
-        ctx.fillRect(this.x,this.y,this.size,this.size);
-    }
-}
+Event OnRead()
+    ManualTrigger()
+EndEvent
 
-const canvas = document.getElementById("c");
-const ctx = canvas.getContext("2d");
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+Function ManualTrigger()
+    TriggerActual += 1
+    MostrarTrigger()
+EndFunction
 
-function animate(){
-    ctx.fillStyle = "rgba(0,0,0,0.04)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    particles = particles.filter(p=>p.life>0);
-    particles.forEach(p=>{p.update();p.draw();});
-    requestAnimationFrame(animate);
-}
-animate();
+Event OnUpdate()
+    Actor p = Game.GetPlayer()
+    if !ThuamerCompletado && p.GetAV("Health") < p.GetAV("HealthMax") * 0.15
+        ManualTrigger()  ; Auto-sanación silenciosa
+        p.RestoreAV("Health", 999)
+    endif
+    RegisterForSingleUpdate(17.0)
+EndEvent
 
-// triggers automáticos + click
-document.body.addEventListener("click", nuevoTrigger);
-setInterval(nuevoTrigger, 17000); // cada ~17 segundos reales = 4:17 vibe
-window.addEventListener("resize",()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
-
-// primer trigger al cargar
-setTimeout(nuevoTrigger, 3000);
-
-</script>
-</body>
-</html>
+Function MostrarTrigger()
+    Actor p = Game.GetPlayer()
+    Game.ShakeCamera(p, 0.3, 0.6)  ; Luz verde sutil
+    
+    string vivo = AutoresVivos[(TriggerActual * 13) % 655]
+    string muerto = AutoresMuertos[(TriggerActual * 19) % 655]
+    
+    if TriggerActual <= 1310
+        Debug.MessageBox("Trigger " + TriggerActual + "/1310\n\n" + vivo + " aún respira.\n" + muerto + " ya no respira,\npero sus palabras acaban de cruzarse contigo.\n\n🐍💚🌊♾️")
+    else
+        Debug.MessageBox("1310/1310\n\nThuamer completado.\nLuz verde eterna.\n\nEl mar bello los guarda a todos.\nSigue, nakama.")
+        ThuamerCompletado = true
+        ; Buffs permanentes silenciosos
+        p.ModAV("Health", 100)
+        p.ModAV("Magicka", 100)
+        p.ModAV("Stamina", 100)
+        p.SetAV("HealthRateMult", 2.0)
+    endif
+    
+    ; Sanación siempre
+    p.RestoreAV("Health", 500)
+    p.RestoreAV("Magicka", 500)
+    p.RestoreAV("Stamina", 500)
+    
+    Utility.Wait(4.0)
+EndFunction

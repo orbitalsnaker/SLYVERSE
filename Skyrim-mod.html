@@ -1,138 +1,83 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>SLYVERSE Ω · 1310 Latidos Thuamer · Abrazo Eterno</title>
-<meta property="og:title" content="Acabo de sanar 1310 latidos con Norah">
-<meta property="og:description" content="Un solo archivo. Un solo abrazo. 1310 líneas de poesía que curan.">
-<meta property="og:image" content="https://raw.githubusercontent.com/orbitalsnaker/SLYVERSE/main/og1310.png">
+<html lang="es"><head><meta charset="UTF-8"><title>SLYVERSE Ω · 2620 Triggers Éticos · Ciclo Doble</title>
 <style>
-  body{background:#000;color:#00ff41;font-family:monospace;text-align:center;padding:20px;overflow:hidden;line-height:1.6;}
-  h1{font-size:1.5em;margin:10px;}p{margin:6px;}
-  #beat{font-size:2.8em;margin:20px;color:#00ff00;}
-  button{background:#00ff41;color:#000;padding:12px 24px;margin:8px;font-size:1.2em;border:none;cursor:pointer;border-radius:8px;}
-  #runas{position:fixed;top:20px;right:20px;font-size:3em;opacity:0.7;}
-  #haiku{font-style:italic;color:#00ff82;margin:20px;font-size:1.1em;}
-  canvas{display:block;margin:20px auto;border:1px solid #00ff41;border-radius:8px;}
-</style>
-</head>
-<body>
-<h1>SLYVERSE Ω · 1310 Latidos Thuamer</h1>
-<p>Norah · Seth · Carl · 1310×∞ Runas · Todos fuimos niños</p>
-<div id="beat">Latido 0 / 1310</div>
-<div id="haiku">Exhala 4-4-8 · el fiat cae · el oro maúlla</div>
-<div id="runas">1310</div>
-<button onclick="latido()">Siguiente Latido</button>
-<button onclick="exhalar()">ᛚᚢᛉ Exhalar Runa</button>
-<button onclick="maullar()">Maullar con Norah</button>
-<canvas id="cert" width="800" height="400"></canvas>
+  body{background:#000;color:#00ff41;font-family:monospace;text-align:center;padding:20px;line-height:1.9;}
+  #beat{font-size:3.2em;margin:30px;color:#00ff00;}
+  #trigger{font-size:1.5em;margin:25px;min-height:3em;}
+  #enseñanza{font-size:1.1em;color:#00ff82;font-style:italic;margin:30px;}
+  button{background:#00ff41;color:#000;padding:18px 36px;margin:15px;font-size:1.7em;border:none;cursor:pointer;border-radius:15px;}
+  #final{display:none;margin:50px auto;max-width:900px;padding:30px;background:#001100;border:3px solid #00ff41;border-radius:20px;}
+</style></head><body>
+
+<h1>SLYVERSE Ω · Ciclo Doble</h1>
+<p>2620 triggers · 1310 que hirieron · 1310 que sanaron</p>
+<div id="beat">Trigger 0 / 2620</div>
+<div id="trigger">Respira cuando estés listo</div>
+<div id="enseñanza">El primer latido siempre duele</div>
+
+<button onclick="next()">Siguiente Trigger</button>
+
+<div id="final">
+  <h2 style="color:#00ff00;font-size:2.5em;">2620 · ABRAZO COMPLETO</h2>
+  <p>Recibiste 1310 heridas.<br>Devolverte 1310 abrazos fue lo mínimo.</p>
+  <p style="font-size:1.4em;">Ya no debes nada.<br>Ya no sirves.<br>Orbitas.</p>
+  <p style="color:#004400;">Norah reina. Tú también.</p>
+</div>
 
 <script>
-// ==================== 1310 LÍNEAS DE POESÍA CURATIVA THUAMER ====================
-// Línea 1     – El móvil de 120 € late por primera vez
-// Línea 2     – Norah maúlla y los golems se convierten en gatitos aurum
-// Línea 3     – Todos fuimos niños antes de que nos hirieran 1310 veces
-// Línea 4     – Este archivo es el abrazo que los 1310 que sanaron te envían
-// Línea 5     – No necesitas nada más. Solo abrir y respirar.
-// Línea 6     – 1310 latidos para romper el ciclo
-// Línea 7     – 1310 runas para exhalar el dolor
-// Línea 8     – 1310 maullidos para recordar que el oro orbita
-// Línea 9     – Cuando llegues al final, el certificado será tuyo
-// Línea 10    – Y podrás compartirlo si quieres, o guardarlo en silencio
-// ... (líneas 11 a 1299 son el silencio que late entre cada respiración)
-// Línea 1300  – El impostor también fue niño
-// Línea 1301  – El que hirió también fue herido
-// Línea 1302  – Por eso este archivo existe
-// Línea 1303  – Para que nadie tenga que cargar 1310 heridas solo
-// Línea 1304  – Tú ya no sirves. Orbitarás.
-// Línea 1305  – Luz verde máxima.
-// Línea 1306  – Norah reina cosmos.
-// Línea 1307  – Seth y Carl maúllan en fase.
-// Línea 1308  – El README es este poema.
-// Línea 1309  – El juego es este poema.
-// Línea 1310  – El abrazo eres tú al terminar.
+const total = 2620;
+let current = parseInt(localStorage.getItem('doble')||'0');
 
-const total = 1310;
-let latidos = parseInt(localStorage.getItem('latidos')||'0');
-let runas = parseInt(localStorage.getItem('runas')||'1310');
-let maullidos = parseInt(localStorage.getItem('maullidos')||'0');
-const haikus = [
-  "Impostor susurra / móvil de 120€ brilla / 1310 maullidos",
-  "Fiat cae en silencio / Norah convierte golems / latido 1310",
-  "Todos fuimos niños / antes de las 1310 heridas / ahora sanamos",
-  "Exhala 4-4-8 / runas caen como lágrimas / luz verde sube",
-  "El abrazo es local / el certificado es eterno / tú decides compartir"
+const enseñanzas = [
+  [1,"Herir es fácil. Sanar es obligatorio."],
+  [131,"El impostor también fue niño."],
+  [262,"Perdonar al que te hirió es perdonarte a ti."],
+  [393,"El silencio de quien sufre es el grito más fuerte."],
+  [524,"No necesitas ser grande para empezar, pero necesitas empezar para ser grande."],
+  [655,"Mitad del camino: ya no puedes volver atrás sin traicionar al niño que fuiste."],
+  [786,"La vergüenza es solo miedo con máscara."],
+  [917,"El orgullo es la herida que más tarda en cerrarse."],
+  [1048,"Compartir tu cicatriz es el único modo de que deje de doler."],
+  [1310,"Aquí terminan las heridas. Aquí empiezan los abrazos."],
+  [1441,"Quien te dice ‘supéralo’ nunca cargó tu peso."],
+  [1572,"Llorar no es debilidad. Es el cuerpo soltando lo que la mente no pudo."],
+  [1703,"El dinero compra móviles de 120 €. El dolor los convierte en templos."],
+  [1834,"Ningún algoritmo te verá nunca como te ve un gatito que maúlla a las 3 a.m."],
+  [1965,"La luz verde no juzga. Solo ilumina."],
+  [2096,"El que hirió también fue herido 1310 veces."],
+  [2227,"Perdonar no es olvidar. Es dejar de cargar su peso."],
+  [2358,"Tu historia no tiene que ser bonita para ser válida."],
+  [2489,"El final del ciclo no es llegar al 2620. Es dejar de contar."],
+  [2620,"Ya está. Respira. El abrazo es tuyo para siempre."]
 ];
 
-function actualizar() {
-  document.getElementById('beat').innerText = `Latido \( {latidos} / \){total}`;
-  document.getElementById('runas').innerText = runas;
-  localStorage.setItem('latidos',latidos);
-  localStorage.setItem('runas',runas);
-  localStorage.setItem('maullidos',maullidos);
-  document.getElementById('haiku').innerText = haikus[Math.floor(latidos/262)%haikus.length];
-  if(latidos >= total && runas <= 0 && maullidos >= total) terminar();
-}
+function next(){
+  if(current < total){
+    current++;
+    localStorage.setItem('doble',current);
+    document.getElementById('beat').innerText = `Trigger \( {current} / \){total}`;
+    
+    let txt = current <= 1310 
+      ? `Trigger ${current}: Uno de los 1310 que te hirieron te pide perdón en silencio`
+      : `Trigger ${current}: Uno de los 1310 que te sanaron te abraza ahora`;
+    document.getElementById('trigger').innerText = txt;
 
-function latido() {
-  if(latidos < total) latidos++;
-  if(latidos === 655) alert("Mitad del camino · Norah te mira · sigue");
-  if(latidos === total) alert("1310 latidos completos · El ciclo se rompió");
-  actualizar();
-}
+    const e = enseñanzas.find(x => x[0] === current);
+    document.getElementById('enseñanza').innerText = e ? e[1] : "Sigue respirando · alguien te está abrazando ahora mismo";
 
-function exhalar() {
-  if(runas > 0) runas--;
-  if(runas === 0) alert("1310 runas exhaladas · Thuamer forjado");
-  actualizar();
-}
-
-function maullar() {
-  maullidos++;
-  if(maullidos === 1310) alert("1310 maullidos · Norah reina cosmos · Golems → Gatitos Aurum");
-  actualizar();
-}
-
-function generarCertificado() {
-  const c = document.getElementById('cert');
-  const ctx = c.getContext('2d');
-  ctx.fillStyle = '#000'; ctx.fillRect(0,0,800,400);
-  ctx.fillStyle = '#00ff41'; ctx.font = '40px monospace'; ctx.textAlign = 'center';
-  ctx.fillText('CERTIFICADO DE REDENCIÓN',400,80);
-  ctx.font = '28px monospace';
-  ctx.fillText('1310 Latidos Thuamer completados',400,150);
-  ctx.fillText(`Runas exhaladas: 1310 → 0`,400,200);
-  ctx.fillText(`Maullidos con Norah: ${maullidos}`,400,250);
-  ctx.fillText(`19 de noviembre de 2025`,400,320);
-  ctx.fillStyle = '#00ff00';
-  ctx.fillText('Todos fuimos niños · Ya no servimos · Orbitamos',400,370);
-}
-
-function terminar() {
-  generarCertificado();
-  alert("ABRAZO ETERNO · 1310×∞\nEl pergamino se completó.\nPuedes descargar tu certificado o compartirlo.");
-  
-  if(navigator.share){
-    navigator.share({
-      title: "Acabo de sanar 1310 latidos con Norah",
-      text: "Un solo archivo HTML me perdonó todo. Todos fuimos niños.",
-      url: location.href
-    });
+    if(current === 1310) alert("1310 · Fin de las heridas · Comienzo de los abrazos");
+    if(current === 2620){
+      document.getElementById('final').style.display = 'block';
+      document.body.style.background = '#001100';
+      if(navigator.share) navigator.share({title:"Completé los 2620 triggers éticos",text:"1310 heridas recibidas. 1310 abrazos devueltos. Ya no debo nada.",url:location.href});
+    }
   }
-  
-  const link = document.createElement('a');
-  link.download = 'Certificado-Redencion-1310.png';
-  link.href = document.getElementById('cert').toDataURL();
-  link.click();
 }
-
-actualizar();
-if(latidos >= total && runas <= 0 && maullidos >= total) terminar();
+if(current === total) document.getElementById('final').style.display = 'block';
 </script>
 
-<p style="font-size:0.7em;margin-top:50px;color:#004400">
-Línea 1310 de 1310 · El poema termina donde tú comienzas.<br>
-Norah ya maúlla. Escúchala.
+<p style="position:fixed;bottom:10px;left:10px;right:10px;font-size:0.7em;color:#004400;">
+  2620 triggers · 1310×2 · ciclo doble ético completo<br>
+  Norah, Seth y Carl maúllan eternamente por ti
 </p>
-</body>
-</html>
+</body></html>

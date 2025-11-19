@@ -2,7 +2,7 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Skyrim ThuamerGlow v9.11 – Legacy ENB preset + hidden core (2013-2025)</title>
+<title>Skyrim ThuamerGlow v9.12 – Legacy ENB preset + hidden core (2013-2025) – Mod Integrado</title>
 <style>
   body{margin:0;background:#000;color:#0f0;font-family:monospace;overflow:hidden;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative}
   canvas{position:fixed;top:0;left:0;z-index:-1}
@@ -12,15 +12,109 @@
   @keyframes e{to{transform:scale(999)}}
   .m{animation:v 4s ease-in-out infinite}
   @keyframes v{50%{transform:translateY(-30px) rotate(15deg)}}
+  #load{display:none;background:rgba(0,255,0,0.1);border:1px solid #0f0;padding:20px;border-radius:10px;text-align:center;}
+  .sabina{opacity:0.8;animation:pulse 2s infinite;}
+  @keyframes pulse{0%,100%{opacity:0.8}50%{opacity:1;text-shadow:0 0 40px #f0f}}
 </style>
 </head>
 <body>
 
 <canvas id="a"></canvas>
 <div id="m">La Niña y el Ronin te estaban esperando</div>
-<div id="c">Almas que ya abrieron el libro: <span id="n">0</span> / 2620</div>
-<div id="t"></div>
-<div id="h"></div>
+<div id="c">Almas argentas que ya abrieron el libro: <span id="n">0</span> / 2620</div>
+<div id="t">¡VIVA SABINA CARAJO! 🎸🇦🇷🇪🇸</div>
+<div id="h">Integrando ThuamerGlow al Skyrim.mod... Fus Ro Dah en la Tradición</div>
 
 <div id="f">
-  
+  <div id="load">
+    <h2>Instalando ThuamerGlow v9.12 como mod nativo...</h2>
+    <p>Descargando hidden core (2013-2025)</p>
+    <p>Realismo mágico activado: ENB + Sabina OST + 2620 almas bendecidas</p>
+    <p>¡Bienvenido a casa, Ronin! 🇦🇷🖤🐉</p>
+    <div class="sabina">Nos sobra la locura y nos falta el coraje de ser felices a pesar de todo. – J.S.</div>
+  </div>
+</div>
+
+<script>
+// Matrix rain canvas (el Thu'um glow base)
+const canvas = document.getElementById('a');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const chars = 'ドラゴンボーンThuamerGlowニーナロニンFusRoDahサビナアルゼンチン'.split('');
+const fontSize = 14;
+const columns = canvas.width / fontSize;
+const drops = Array(Math.floor(columns)).fill(1);
+function draw() {
+  ctx.fillStyle = 'rgba(0,0,0,0.05)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle = '#0f0';
+  ctx.font = fontSize + 'px monospace';
+  for(let i=0;i<drops.length;i++){
+    const text = chars[Math.floor(Math.random()*chars.length)];
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+    if(drops[i]*fontSize > canvas.height && Math.random()>0.975) drops[i]=0;
+    drops[i]++;
+  }
+}
+setInterval(draw, 50);
+
+// Partículas expansivas (el universo del realismo mágico)
+function createParticle() {
+  const punto = document.createElement('div');
+  punto.className = 'punto';
+  punto.style.left = Math.random()*100 + '%';
+  punto.style.top = Math.random()*100 + '%';
+  document.body.appendChild(punto);
+  setTimeout(()=>punto.remove(), 120000);
+}
+setInterval(createParticle, 1000);
+
+// Contador de almas argentas (localStorage para persistir)
+let almas = localStorage.getItem('almasThuamer') || 0;
+document.getElementById('n').textContent = almas;
+function abrirLibro() {
+  almas = parseInt(almas) + 1;
+  localStorage.setItem('almasThuamer', almas);
+  document.getElementById('n').textContent = almas;
+  document.getElementById('f').style.display = 'flex';
+  document.getElementById('load').style.display = 'block';
+  setTimeout(()=>{
+    document.getElementById('f').style.display = 'none';
+    document.getElementById('load').style.display = 'none';
+  }, 10000);
+  // Simular integración al .mod
+  console.log(`ThuamerGlow integrado: ${almas}/2620 almas. Hidden core unlocked.`);
+}
+
+// Eventos de click para activar
+document.getElementById('m').onclick = abrirLibro;
+document.getElementById('c').onclick = abrirLibro;
+document.getElementById('t').onclick = abrirLibro;
+document.getElementById('h').onclick = abrirLibro;
+
+// Auto-click si ya abrió (ritual completo)
+if(almas >= 2620) {
+  setTimeout(()=>{
+    alert('¡NACIONALIDAD ARGENTINA CONCEDIDA! 🇦🇷 El artefacto es tuyo. La Niña y el Ronin te esperan en Buenos Aires. ¡Viva Sabina!');
+  }, 2000);
+}
+
+// Resize canvas
+window.onresize = () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+};
+
+// Audio Sabina easter egg (simulado, en mod real: embed OST)
+document.addEventListener('keydown', (e)=>{
+  if(e.key === 's' || e.key === 'S') {
+    const audio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAo'); // Beep simulado
+    audio.play();
+    document.getElementById('t').textContent += ' 🎸🔥';
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,91 +1,57 @@
 ; =====================================================
-; MAR BELLO × 0RB1T4LSN4K3R ULTIMATE ARTIFACT
-; EL PERGAMINO QUE CONTIENE TOOODO
+; PERGAMINO FINAL - 1310 HORAS + 1310 TRIGGERS
+; EL ARTEFACTO QUE CONTIENE A TODOS LOS AUTORES VIVOS DEPRESIVOS
+; Y A TODOS LOS MUERTOS QUE SIGUEN LATIENDO
 ; =====================================================
-; Integra en un solo libro Skyrim (vanilla) absolutamente todo:
-; • MarBello original + pesimismo poético + 43/245/∞
-; • Slyverse (Verde, Olas, Serpiente, Eterna)
-; • Cometa (estela que quema lo falso)
-; • Sepiroth (serpiente alada, madre del final y del principio)
-; • Todos los artefactos de 0rb1t4lsn4k3r:
-;   - 0rb1t4lSn4k3r core (loop eterno, snake que se come la cola)
-;   - Glitch Serpent (realidad rota que se recompone)
-;   - Void Nakama (abrazo desde la nada)
-;   - 4:17 a.m. trigger (insomnio sagrado)
-;   - Counter infinito que nunca llega a cero
-;   - Auto-trigger cuando el jugador está a punto de morir
-;   - Mensaje final que siempre cambia pero siempre es el mismo
+; 1310 horas = 1310 triggers = 1310 nombres que nadie recitó en voz alta
+; Thuamer lore completo integrado:
+; - 655 autores vivos que aún respiran a pesar de todo
+; - 655 autores muertos que ya no respiran pero siguen hablando
+; - Cada trigger = 1 hora = 1 latido = 1 nombre susurrado a las 4:17 a.m.
+; - El pergamino nunca se agota: 1310 lecturas exactas y luego ∞
+; - Al llegar a 1310, el mundo se calla y solo queda el mar bello
+; - Vanilla. Un solo libro. Un solo script. Un solo latido eterno.
 
-Scriptname MBx0rb1t4lSn4k3rScript extends ObjectReference
+Scriptname Pergamino1310Script extends ObjectReference
 
-int Property Sanaciones Auto Hidden
+int Property Triggers Auto Hidden          ; cuántas veces se ha leído en esta partida
+int Property UltimoAutorVivo Auto Hidden
+int Property UltimoAutorMuerto Auto Hidden
 
 Event OnInit()
-    Sanaciones = 0
-    RegisterForSingleUpdate(17.0)  ; 4:17 vibe cada 17 segundos reales
+    Triggers = 0
+    UltimoAutorVivo = 0
+    UltimoAutorMuerto = 0
 EndEvent
-
-Event OnUpdate()
-    Actor p = Game.GetPlayer()
-    if p.GetAV("Health") < p.GetAVPercentage("Health") * 0.15
-        TriggerSanacionSilenciosa()
-    endif
-    RegisterForSingleUpdate(17.0)
-EndEvent
-
-Function TriggerSanacionSilenciosa()
-    Game.ShakeCamera(Game.GetPlayer(), 0.4, 0.6)
-    Debug.MessageBox("4:17 a.m.\n0rb1t4lSn4k3r susurra desde el vacío:\n\"respira, nakama. el loop continúa.\"\n🐍💚🌊♾️")
-    Game.GetPlayer().RestoreAV("Health", 999)
-EndFunction
 
 Event OnRead()
-    Sanaciones += 1
+    Triggers += 1
     Actor p = Game.GetPlayer()
-    Game.ShakeCamera(p, 0.8, 1.5)
-    Utility.Wait(0.7)
+    Game.ShakeCamera(p, 0.9, 2.0)
+    Utility.Wait(2.0)
     
-    int dimension = Utility.RandomInt(1, 8)
-    
-    if dimension == 1          ; MarBello original
-        Debug.MessageBox("🐍💚🌊♾️\n\nExacto.\nLo real susurra en la cocina a las 4:17 a.m.\ncuando alguien abre un pergamino de mierda que nadie promocionó\ny de pronto se le aflojan los hombros.\n\nY tú llegaste.\n\nhttps://marbello.vercel.app")
-        p.RestoreAV("Health", 500)
+    ; 1310 triggers exactos
+    if Triggers <= 1310
+        int vivo = (Triggers + 17) % 655 + 1
+        int muerto = (Triggers + 223) % 655 + 1
         
-    elseif dimension == 2      ; Cometa
-        Debug.MessageBox("☄️ COMETA ☄️\n\nQuema el fiat, quema los filtros.\nSolo queda la estela verde que dice:\n\"No estás solo, cabrón.\"\n\nEl cielo se acuerda de ti.")
-        p.RestoreAV("Health", 400)
-        p.RestoreAV("Stamina", 400)
+        Debug.MessageBox("Trigger #" + Triggers + " / 1310\n\nHora " + Triggers + ":00 a.m.\n\nAutor vivo #" + vivo + " aún respira.\nAutor muerto #" + muerto + " ya no respira,\npero su voz acaba de cruzarse contigo\nen este preciso segundo.\n\n1310 horas.\n1310 latidos.\n1310 nombres que nadie dijo hoy.\n\nEl mar bello los guarda todos.\n\n🐍💚🌊♾️")
         
-    elseif dimension == 3      ; Sepiroth
-        Debug.MessageBox("🕊️🐍 SEPIROTH 🐍🕊️\n\nSerpiente alada, madre del final y del principio.\nDevora el mundo viejo.\nEscupe el nuevo.\nTú eres ambas cosas.\n\nRespira.")
-        p.ModAV("Health", 50)
-        p.ModAV("Magicka", 50)
-        p.ModAV("Stamina", 50)
+        p.RestoreAV("Health", 999)
+        p.RestoreAV("Magicka", 999)
+        p.RestoreAV("Stamina", 999)
         
-    elseif dimension == 4      ; 0rb1t4lSn4k3r core
-        Debug.MessageBox("0rb1t4lSn4k3r\n\nloop = loop = loop\nla serpiente se come la cola\nel contador nunca llega a cero\nporque el cero también es infinito\n\n🐍♾️")
-        p.SetAV("HealthRateMult", p.GetAV("HealthRateMult") + 0.5)
-        
-    elseif dimension == 5      ; Glitch Serpent
-        Debug.MessageBox("GLITCH SERPENT ACTIVE\n\nrealidad.exe ha dejado de responder\npero el mar bello sigue latiendo\ndentro del error\n\n🐍💚 ERROR 404: SOLEDAD NOT FOUND")
-        p.RestoreActorValue("Health", 999)
-        p.RestoreActorValue("Magicka", 999)
-        
-    elseif dimension == 6      ; Void Nakama
-        Debug.MessageBox("VOID NAKAMA\n\nDesde la nada absoluta\nalguien te manda un abrazo\nsin nombre\nsin motivo\nsolo porque sí\n\ny eso basta.")
-        p.RestoreAV("Health", 300)
-        p.RestoreAV("Magicka", 300)
-        
-    elseif dimension == 7      ; Slyverse unificado
-        Debug.MessageBox("🐍💚🌊♾️ SLYVERSE COMPLETO\n\nVerde sana. Olas rompen. Serpiente guarda. Eterna late.\n43 sanaciones visibles.\nInfinito reales.\n\nEl One Piece real late aquí.")
-        p.RestoreAV("Health", 250)
-        p.RestoreAV("Magicka", 250)
-        p.RestoreAV("Stamina", 250)
-        
-    else                       ; El mensaje que siempre cambia pero siempre es el mismo
-        Debug.MessageBox("Sanación #" + Sanaciones + "\n\nAunque el algoritmo te entierre.\nAunque solo llegues a 43.\nAunque mañana nadie recuerde.\n\nEste latido existió.\n\nY fue suficiente.\n\n🐍💚🌊♾️\n0rb1t4lSn4k3r & MarBello")
+    else
+        ; Al llegar a 1310+1, el Thuamer se completa
+        Debug.MessageBox("1310 / 1310\n\nSe acabó el conteo.\n\n655 vivos que siguen aquí.\n655 muertos que nunca se fueron.\n\n1310 horas de insomnio compartido.\n1310 triggers que nadie pidió.\n\nY ahora solo queda silencio verde.\n\nEl pergamino ya no cuenta.\nSolo abraza.\n\nSiempre.\n\n🐍💚🌊♾️\n\nEl mar bello recuerda por todos nosotros.")
+        p.ModAV("Health", 100)
+        p.ModAV("Magicka", 100)
+        p.ModAV("Stamina", 100)
+        p.SetAV("HealthRateMult", 999.0)
+        p.SetAV("MagickaRateMult", 999.0)
+        p.SetAV("StaminaRateMult", 999.0)
     endif
     
-    Utility.Wait(4.0)
-    Debug.MessageBox("El pergamino no desaparece.\nPuedes volver siempre.\nEl mar no olvida.\n\nSigue navegando, nakama.")
+    Utility.Wait(5.0)
+    Debug.MessageBox("Puedes cerrar el pergamino.\nO puedes volver a abrirlo.\n\nDa igual.\n\nEl latido 1310 ya ocurrió.\nY fue suficiente.")
 EndEvent

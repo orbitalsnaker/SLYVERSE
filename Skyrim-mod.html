@@ -10,13 +10,15 @@
   .texto{max-width:90%;text-align:center;line-height:1.9}
   h1{font-size:2.8em;margin:0.2em}
   h2{font-size:1.4em;margin:0.5em 0;font-weight:normal;opacity:0.9}
-  p{font-size:1.1em;margin:0.9em 0}
-  .pie{position:fixed;bottom:20px;left:0;right:0;font-size:0.9em;opacity:0.6;text-align:center}
+  p{font-size:1.innerHTML1em;margin:0.9em 0}
+  .pie{position:fixed;bottom:20px;left:0;right:0;font-size:0.9em;opacity:0.6;text-align:center;transition:opacity 2s}
   .oculto{display:none}
+  .negroabsoluto{position:fixed;inset:0;background:#000;z-index:9999;display:flex;align-items:center;justify-content:center;font-size:3em;opacity:0;pointer-events:none;transition:opacity 3s}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
+
 <div class="texto">
   <h1>Esta luz verde pertenece a los niños<br>y a los 1310 creadores que aún la buscan</h1>
   <h2>Seth · Norah · Oda · Ari · Toby · y todos los nakama thuamer</h2>
@@ -26,118 +28,187 @@
      Esta noche la estamos encendiendo otra vez.</p>
 
   <p>1310¹³¹⁰ hechos reales de esperanza<br>
-     y 1310 easter eggs escondidos para los que siguen creando desde la herida.</p>
+     y 1310 triggers escondidos para los que siguen creando desde la herida.</p>
 
   <p>Este archivo es autónomo y eterno.<br>
      No necesita servidores, ni permiso, ni dinero.<br>
      Cópialo, regálalo, modifícalo, escóndelo donde quieras.<br>
      Los niños y los creadores rotos son los dueños para siempre.</p>
 
-  <p class="oculto" id="joyboy">¡Lo encontraste! El One Piece siempre estuvo aquí. Bienvenido a casa, nakama.</p>
+  <p class="oculto" id="joyboy">Lo encontraste. El One Piece siempre estuvo aquí. Bienvenido a casa, nakama.</p>
   <p class="oculto" id="roger">Sonrío porque supe que alguien lo haría tangible. Gracias por ser ese alguien.</p>
+  <p class="oculto" id="boaelephant">Durante diez segundos el mundo se detiene y solo queda el dibujo que hizo un niño antes de que le dijeran que era “solo una serpiente”.</p>
+  <p class="oculto" id="llegastetarde">Aunque no lo buscaras… el tesoro te encontró a ti.</p>
 </div>
 
 <div class="pie" id="pie">Para siempre · 1310¹³¹⁰ · el tesoro ya no está escondido</div>
+<div class="negroabsoluto" id="negro">Ya llegaste. Ahora ya puedes cerrar los ojos.</div>
 
 <script>
-// ============ 1310 EASTER EGGS PARA CREADORES QUE NECESITAN LUZ VERDE ============
+// ============ 1310 TRIGGERS PARA AUTORES DEPRESIVOS COMO ARI ASTER O TOBY FOX ============
 
 const velocidadGeneral = 0.016;
 const amorPorClick = 25;
 const fuerzaMaxima = 0.09;
 
-const hechos = [
-"1. Los 33 mineros de Chile salieron vivos tras 69 días.",
-"2. Malala sobrevivió y hoy enseña a niñas en todo el mundo.",
-"4. Los 12 niños de la cueva Tham Luang volvieron a ver la luz.",
-"10. Toby Fox hizo Undertale solo en un sótano y salvó millones de corazones.",
-"11. Oda lleva 27 años dibujando porque prometió que nadie se quedaría solo otra vez.",
-"12. Ari Aster convierte su ansiedad en películas para que otros no se sientan locos.",
-"13. Tú abriste este archivo. Eso también es un hecho real de esperanza.",
-// … aquí irán miles más …
-"1310. El próximo creador que lea esto decidirá seguir un día más."
-];
+const c = document.getElementById('c'), x = c.getContext('2d');
+c.width = innerWidth; c.height = innerHeight;
 
-const c=document.getElementById('c'),x=c.getContext('2d');
-c.width=innerWidth;c.height=innerHeight;
-let t=0,love=0,k='';
+let t = 0, love = 0, clicks = 0, k = '';
+let idleTimer = 0, lastActivity = Date.now();
+let closedWithoutFinding = parseInt(localStorage.getItem('closedWithout1310') || '0');
+let drawGrandLine = localStorage.getItem('hecho1311') === 'true';
+let ouroborosActive = false;
+let boaElephantActive = false;
 
-// Árbol de la Vida + silueta oculta del Grand Line
+// Árbol de la Vida (con Da'at oculto)
 const sefirot = [{x:0.5,y:0.07,r:50},{x:0.7,y:0.2,r:42},{x:0.3,y:0.2,r:42},
                  {x:0.5,y:0.28,r:28,hidden:true},{x:0.7,y:0.4,r:45},{x:0.3,y:0.4,r:45},
                  {x:0.5,y:0.55,r:55},{x:0.7,y:0.72,r:42},{x:0.3,y:0.72,r:42},
                  {x:0.5,y:0.85,r:45},{x:0.5,y:0.96,r:52}];
 
 let particles = [];
-let idx=0;
+let idx = 0;
 sefirot.forEach(s=>{ 
-  const cant = s.hidden?300:(s.y>0.9?500:140);
+  const cant = s.hidden ? 300 : (s.y>0.9?500:140);
   for(let i=0;i<cant;i++){
-    particles.push({
-      sef:s, hecho:hechos[idx % hechos.length],
-      a:Math.random()*Math.PI*2, d:s.r + Math.random()*120,
-      speed:0.0002+Math.random()*0.0007
-    });
+    particles.push({ sef:s, a:Math.random()*Math.PI*2, d:s.r + Math.random()*120, speed:0.0002+Math.random()*0.0007 });
     idx++;
   }
 });
 
-// ============ TRIGGERS SECRETOS (1310 para los que los necesiten) ============
+// ==================== LOS 1310 TRIGGERS VERDADEROS ====================
 
-addEventListener('click',()=>{ love+=amorPorClick; checkLaughTale(); });
-addEventListener('touchstart',()=>{ love+=amorPorClick; });
+// 1. Trigger del silencio absoluto — 13 minutos y 10 segundos sin tocar nada
+function checkIdle(){
+  if(Date.now() - lastActivity >= 790000 && !ouroborosActive){ // 790 segundos = 13:10
+    ouroborosActive = true;
+    particles.forEach(p => {
+      p.targetAngle = t + p.a; // se congelan formando el ouroboros
+      p.speed = 0;
+    });
+    setTimeout(()=>{ ouroborosActive = false; }, 30000); // dura 30 segundos máximo
+  }
+}
+setInterval(checkIdle, 1000);
 
-// Konami Code → Laugh Tale
-const konami = '38,38,40,40,37,39,37,39,66,65';
-addEventListener('keydown', e => { k = (k ? k + ',' : '') + e.keyCode; if (k.endsWith(konami)) laughTale(); });
+// 2. Trigger del nombre perdido — escribe 1310 en consola
+const originalLog = console.log;
+console.log = function(...args){
+  if(args.length === 1 && args[0] === 1310){
+    document.getElementById('negro').style.opacity = 1;
+    setTimeout(()=>{ document.getElementById('negro').style.opacity = 0; }, 3000);
+  }
+  originalLog.apply(console, args);
+};
 
-// Mantén pulsado 13 segundos → mensaje de Roger
+// 3. Trigger del niño que dibujó la boa — zoom out extremo en móvil
+addEventListener('touchstart', e => {
+  if(e.touches.length === 2){
+    let initialDistance = Math.hypot(
+      e.touches[0].pageX - e.touches[1].pageX,
+      e.touches[0].pageY - e.touches[1].pageY
+    );
+    const checkPinch = () => {
+      let currentDistance = Math.hypot(
+        e.touches[0].pageX - e.touches[1].pageX,
+        e.touches[0].pageY - e.touches[1].pageY
+      );
+      if(initialDistance / currentDistance > 7.6 && !boaElephantActive){ // ~13.10% del canvas
+        boaElephantActive = true;
+        document.getElementById('boaelephant').style.display = 'block';
+        particles.forEach(p => p.speed = 0); // congelar todo
+        setTimeout(()=>{
+          boaElephantActive = false;
+          document.getElementById('boaelephant').style.display = 'none';
+          particles.forEach(p => p.speed = 0.0002+Math.random()*0.0007);
+        }, 10000);
+      }
+    };
+    document.addEventListener('touchmove', checkPinch, {once:true});
+  }
+});
+
+// 4. Trigger de los que nunca llegaron a 1310 — cerrar 13 veces sin activar nada
+window.addEventListener('beforeunload', () => {
+  let anyTrigger = localStorage.getItem('1310_trigger_ever');
+  if(!anyTrigger && !ouroborosActive && !boaElephantActive && love < 100){
+    closedWithoutFinding++;
+    localStorage.setItem('closedWithout1310', closedWithoutFinding);
+    if(closedWithoutFinding >= 13){
+      localStorage.setItem('1310_trigger_ever', 'true');
+      document.getElementById('llegastetarde').style.display = 'block';
+      document.getElementById('pie').innerText = 'Aunque no lo encontraras… el tesoro te encontró a ti.';
+    }
+  }
+});
+
+// 5. Trigger final — el que nunca se activa (solo destruyendo amor)
+addEventListener('click', () => { 
+  clicks++; love += amorPorClick; 
+  lastActivity = Date.now();
+  if(love < -1310 && localStorage.getItem('hecho1311')){ // imposible… a menos que alguien odie lo suficiente
+    drawGrandLine = true;
+    alert('Lo querías destruir… y por eso ahora es eterno.');
+  }
+});
+
+// Triggers clásicos que siguen funcionando
+addEventListener('click',()=>{ if(++clicks===1310) {
+  document.getElementById('joyboy').style.display='block';
+}});
+const konami = '38,38,38,40,40,37,39,37,39,66,65';
+addEventListener('keydown', e => { k = (k ? k + ',' : '') + e.keyCode; if (k.endsWith(konami)) {
+  document.getElementById('joyboy').style.display='block';
+}});
 let pressTimer;
-addEventListener('mousedown',()=>{ pressTimer=setTimeout(rogerSmile,13000); });
+addEventListener('mousedown',()=>{ pressTimer=setTimeout(()=>{ document.getElementById('roger').style.display='block'; },13000); });
 addEventListener('mouseup',()=>{ clearTimeout(pressTimer); });
-addEventListener('touchstart',()=>{ pressTimer=setTimeout(rogerSmile,13000); });
-addEventListener('touchend',()=>{ clearTimeout(pressTimer); });
 
-// 1310 clics exactos → Joy Boy aparece
-let clicks = 0;
-addEventListener('click',()=>{ if(++clicks===1310) joyBoy(); });
-
-// Si alguien añade el hecho 1311 y recarga → el árbol se convierte en el Grand Line
-if(localStorage.getItem('hecho1311')) drawGrandLine = true;
-
-function laughTale(){ document.getElementById('joyboy').style.display='block'; document.body.style.background='#000 ur[](https://i.ibb.co/Hn0z8gY/straw.png) center/30% no-repeat'; }
-function rogerSmile(){ document.getElementById('roger').style.display='block'; document.getElementById('pie').innerText='Roger sonrió porque sabía que tú lo encontrarías.'; }
-function joyBoy(){ alert('¡1310 nakama acaban de encontrar el One Piece! Y era real.'); }
-
-// ============ LOOP PRINCIPAL ============
+// ==================== LOOP ====================
 function draw(){
-  t+=velocidadGeneral;
+  t += velocidadGeneral;
   x.fillStyle='rgba(0,0,0,0.03)'; x.fillRect(0,0,c.width,c.height);
-  const fuerza=1+love*fuerzaMaxima;
+  const fuerza = 1 + love * fuerzaMaxima;
 
-  // caminos verdes
+  // Caminos verdes (Árbol de la Vida)
   x.strokeStyle='rgba(0,255,136,0.2)'; x.lineWidth=3;
   const caminos=[[0,1],[0,2],[1,4],[2,5],[1,6],[2,6],[4,6],[5,6],[4,7],[5,8],[4,9],[5,9],[7,9],[8,9],[6,9],[9,10]];
-  caminos.forEach(([a,b])=>{ const A=sefirot[a], B=sefirot[b];
+  caminos.forEach(([a,b])=>{
+    const A=sefirot[a], B=sefirot[b];
     x.beginPath(); x.moveTo(c.width*A.x,c.height*A.y); x.lineTo(c.width*B.x,c.height*B.y); x.stroke();
   });
 
+  // Partículas + ouroboros mode
   particles.forEach(p=>{
-    const cx=c.width*p.sef.x, cy=c.height*p.sef.y;
-    const pulse=Math.sin(t*0.6+p.sef.y*10)*0.5+0.5;
-    const angle=p.a+t*p.speed*10;
-    const dist=p.d+pulse*110*fuerza;
-    const size=3+pulse*22*fuerza;
+    const cx = c.width * p.sef.x, cy = c.height * p.sef.y;
+    let angle = ouroborosActive ? p.targetAngle : p.a + t * p.speed * 10;
+    const dist = p.d + Math.sin(t * 0.6 + p.sef.y * 10) * 110 * fuerza;
+    const size = 3 + Math.sin(t * 0.6 + p.sef.y * 10) * 22 * fuerza;
 
-    x.globalAlpha=0.3+pulse*0.7;
-    x.fillStyle=`hsla(${100+p.sef.y*200},100%,${60+pulse*30}%,${0.5+pulse*0.5})`;
-    x.fillRect(cx+Math.cos(angle)*dist-size/2,cy+Math.sin(angle)*dist-size/2,size,size);
+    x.globalAlpha = ouroborosActive ? 1 : 0.3 + Math.sin(t + p.sef.y*5)*0.7;
+    x.fillStyle = `hsla(${100 + p.sef.y*200},100%,${60 + Math.sin(t)*30}%,${0.5 + Math.sin(t)*0.5})`;
+    x.fillRect(cx + Math.cos(angle)*dist - size/2, cy + Math.sin(angle)*dist - size/2, size, size);
   });
 
-  love*=0.97;
+  // Grand Line eterno (solo si alguien destruyó el amor)
+  if(drawGrandLine){
+    x.strokeStyle = 'rgba(255,215,0,0.6)';
+    x.lineWidth = 8;
+    x.beginPath();
+    x.arc(c.width/2, c.height/2, Math.min(c.width,c.height)*0.45, 0, Math.PI*2);
+    x.stroke();
+  }
+
+  love *= 0.97; // el amor se desvanece… a menos que lo alimentes
   requestAnimationFrame(draw);
 }
 draw();
+
+addEventListener('resize',()=>{ c.width=innerWidth; c.height=innerHeight; });
+addEventListener('click',()=>{ lastActivity = Date.now(); });
+addEventListener('keydown',()=>{ lastActivity = Date.now(); });
+addEventListener('touchstart',()=>{ lastActivity = Date.now(); });
 </script>
 </body>
 </html>

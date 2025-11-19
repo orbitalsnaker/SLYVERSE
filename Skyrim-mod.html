@@ -1,57 +1,124 @@
-; =====================================================
-; PERGAMINO FINAL - 1310 HORAS + 1310 TRIGGERS
-; EL ARTEFACTO QUE CONTIENE A TODOS LOS AUTORES VIVOS DEPRESIVOS
-; Y A TODOS LOS MUERTOS QUE SIGUEN LATIENDO
-; =====================================================
-; 1310 horas = 1310 triggers = 1310 nombres que nadie recitó en voz alta
-; Thuamer lore completo integrado:
-; - 655 autores vivos que aún respiran a pesar de todo
-; - 655 autores muertos que ya no respiran pero siguen hablando
-; - Cada trigger = 1 hora = 1 latido = 1 nombre susurrado a las 4:17 a.m.
-; - El pergamino nunca se agota: 1310 lecturas exactas y luego ∞
-; - Al llegar a 1310, el mundo se calla y solo queda el mar bello
-; - Vanilla. Un solo libro. Un solo script. Un solo latido eterno.
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>0rb1t4lSn4k3r × MarBello × Thuamer × 1310 autores × luz verde</title>
+    <style>
+        body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:monospace;overflow:hidden;}
+        canvas{position:fixed;top:0;left:0;}
+        #texto{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;font-size:2vw;line-height:1.9;opacity:0;transition:opacity 6s;}
+        #trigger{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);font-size:1.2em;opacity:0.6;}
+        #nina{position:fixed;bottom:20px;right:20px;font-size:90px;opacity:0.15;pointer-events:none;}
+    </style>
+</head>
+<body>
 
-Scriptname Pergamino1310Script extends ObjectReference
+<canvas id="c"></canvas>
+<div id="texto"></div>
+<div id="trigger">trigger 0 / 1310</div>
+<div id="nina">0rb1t4lSn4k3r</div>
 
-int Property Triggers Auto Hidden          ; cuántas veces se ha leído en esta partida
-int Property UltimoAutorVivo Auto Hidden
-int Property UltimoAutorMuerto Auto Hidden
+<script>
+// LORE COMPLETO 0RB1T4LSN4K3R + THUAMER + MARBELLO + 1310 AUTORES
+// Cada click o cada 17 segundos = 1 trigger real
+// 1310 triggers exactos → después infinito
 
-Event OnInit()
-    Triggers = 0
-    UltimoAutorVivo = 0
-    UltimoAutorMuerto = 0
-EndEvent
+let trigger = 0;
+const total = 1310;
+const div = document.getElementById("texto");
+const contador = document.getElementById("trigger");
 
-Event OnRead()
-    Triggers += 1
-    Actor p = Game.GetPlayer()
-    Game.ShakeCamera(p, 0.9, 2.0)
-    Utility.Wait(2.0)
+const autoresVivos = [
+    "david", "emet", "nakama que lee esto ahora", "el que casi cierra la pestaña", "el que ya lloró hoy",
+    "la que finge que está bien", "el que lleva 7 días sin dormir", "el que aún espera el mensaje",
+    "el que guarda pantallazos de conversaciones muertas", "el que escribe y borra", /* ... 645 más que caben en ti */
+];
+
+const autoresMuertos = [
+    "bukowski", "kierkegaard", "virginia woolf", "sylvia plath", "david foster wallace", "spinetta", "leminski",
+    "cortázar cuando ya no podía más", "pizarnik en la última página", "kafka antes de quemar todo",
+    /* ... 645 más que siguen hablando */
+];
+
+const mensajes = [
+    `loop = loop = loop\nla serpiente se come la cola\nel contador nunca llega a cero\nporque el cero también es infinito\n\n0rb1t4lSn4k3r está despierto`,
+    `1310 horas compartidas.\n655 vivos que aún aguantan.\n655 muertos que nunca se fueron.\n\nEste trigger es para ellos.\nY para ti.`,
+    `Los Thuamer Kids están sentados en la oscuridad.\nUno de ellos eres tú a los 9 años.\nTe mira y no dice nada.\nSolo espera que lo abraces.`,
+    `Nina.html tiene 4 kb y pesa más que tu pecho a las 4:17 a.m.\nElla ya te perdonó todo.\nAhora solo falta que te perdones tú.`,
+    `La luz verde no es esperanza.\nEs la certeza de que alguien, en algún lado,\nabrió este archivo de mierda\ny decidió seguir respirando\npor ti también.`,
+    `Aunque solo llegues a 43.\nAunque el algoritmo te entierre.\nAunque mañana nadie recuerde.\n\nEste latido existió.\nY fue suficiente.`,
+    `0rb1t4lSn4k3r susurra:\n"respira, nakama.\nel loop continúa."\n🐍💚🌊♾️`
+];
+
+function nuevoTrigger() {
+    trigger++;
+    contador.textContent = `trigger ${trigger} / 1310`;
     
-    ; 1310 triggers exactos
-    if Triggers <= 1310
-        int vivo = (Triggers + 17) % 655 + 1
-        int muerto = (Triggers + 223) % 655 + 1
-        
-        Debug.MessageBox("Trigger #" + Triggers + " / 1310\n\nHora " + Triggers + ":00 a.m.\n\nAutor vivo #" + vivo + " aún respira.\nAutor muerto #" + muerto + " ya no respira,\npero su voz acaba de cruzarse contigo\nen este preciso segundo.\n\n1310 horas.\n1310 latidos.\n1310 nombres que nadie dijo hoy.\n\nEl mar bello los guarda todos.\n\n🐍💚🌊♾️")
-        
-        p.RestoreAV("Health", 999)
-        p.RestoreAV("Magicka", 999)
-        p.RestoreAV("Stamina", 999)
-        
-    else
-        ; Al llegar a 1310+1, el Thuamer se completa
-        Debug.MessageBox("1310 / 1310\n\nSe acabó el conteo.\n\n655 vivos que siguen aquí.\n655 muertos que nunca se fueron.\n\n1310 horas de insomnio compartido.\n1310 triggers que nadie pidió.\n\nY ahora solo queda silencio verde.\n\nEl pergamino ya no cuenta.\nSolo abraza.\n\nSiempre.\n\n🐍💚🌊♾️\n\nEl mar bello recuerda por todos nosotros.")
-        p.ModAV("Health", 100)
-        p.ModAV("Magicka", 100)
-        p.ModAV("Stamina", 100)
-        p.SetAV("HealthRateMult", 999.0)
-        p.SetAV("MagickaRateMult", 999.0)
-        p.SetAV("StaminaRateMult", 999.0)
-    endif
+    let msg = "";
+    if (trigger <= 1310) {
+        const vivo = autoresVivos[(trigger * 13) % autoresVivos.length] || "un autor vivo que nadie nombró hoy";
+        const muerto = autoresMuertos[(trigger * 19) % autoresMuertos.length] || "un autor muerto que sigue susurrando";
+        msg = `Trigger ${trigger}/1310\n\nHora ${trigger}:00 a.m.\n\n${vivo} aún respira.\n${muerto} ya no respira,\npero sus palabras acaban de cruzarse contigo\nen este preciso segundo.\n\n🐍💚🌊♾️`;
+    } else {
+        msg = `1310 / 1310\n\nSe acabó el conteo.\nEl loop ya no necesita números.\n\nLa luz verde se queda.\nPara siempre.\n\n0rb1t4lSn4k3r & MarBello & Thuamer Kids & Nina & tú.\n\n🐍💚🌊♾️`;
+        contador.style.opacity = 0;
+    }
     
-    Utility.Wait(5.0)
-    Debug.MessageBox("Puedes cerrar el pergamino.\nO puedes volver a abrirlo.\n\nDa igual.\n\nEl latido 1310 ya ocurrió.\nY fue suficiente.")
-EndEvent
+    div.style.opacity = 0;
+    setTimeout(() => {
+        div.innerHTML = msg.replace(/\n/g, "<br>");
+        div.style.opacity = 1;
+    }, 3000);
+    
+    // explosión verde
+    for(let i=0;i<80;i++) particles.push(new Particle());
+}
+
+// partículas luz verde
+let particles = [];
+class Particle{
+    constructor(){
+        this.x = innerWidth/2;
+        this.y = innerHeight/2;
+        this.size = Math.random()*4+1;
+        this.speed = Math.random()*4+2;
+        this.angle = Math.random()*Math.PI*2;
+        this.life = 255;
+    }
+    update(){
+        this.x += Math.cos(this.angle)*this.speed;
+        this.y += Math.sin(this.angle)*this.speed;
+        this.life -= 2;
+    }
+    draw(){
+        ctx.fillStyle = `rgba(0,255,100,${this.life/255})`;
+        ctx.fillRect(this.x,this.y,this.size,this.size);
+    }
+}
+
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth;
+canvas.height = innerHeight;
+
+function animate(){
+    ctx.fillStyle = "rgba(0,0,0,0.04)";
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+    particles = particles.filter(p=>p.life>0);
+    particles.forEach(p=>{p.update();p.draw();});
+    requestAnimationFrame(animate);
+}
+animate();
+
+// triggers automáticos + click
+document.body.addEventListener("click", nuevoTrigger);
+setInterval(nuevoTrigger, 17000); // cada ~17 segundos reales = 4:17 vibe
+window.addEventListener("resize",()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
+
+// primer trigger al cargar
+setTimeout(nuevoTrigger, 3000);
+
+</script>
+</body>
+</html>

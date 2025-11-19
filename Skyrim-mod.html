@@ -2,113 +2,24 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Slyverse Ω · Skyrim Final Secreto Integrado</title>
+  <title>Slyverse Ω · El Libro que se pasó de mano en mano</title>
   <style>
-    body {
-      margin: 0;
-      background: #000;
-      color: #00ff00;
-      font-family: monospace;
-      text-align: center;
-      overflow: hidden;
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-    }
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: -1;
-      opacity: 0.6;
-    }
-    #book {
-      font-size: 4em;
-      cursor: pointer;
-      text-shadow: 0 0 30px #00ff00;
-      margin: 20px;
-      transition: all 0.5s;
-    }
-    .luz {
-      animation: luz 3s infinite;
-      text-shadow: 0 0 80px #00ff00 !important;
-    }
-    @keyframes luz {
-      0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.15); opacity: 0.8; }
-    }
-    #count {
-      font-size: 2em;
-      margin: 10px;
-    }
-    #haiku {
-      font-size: 1.8em;
-      margin: 2em;
-      opacity: 0;
-      transition: opacity 3s ease-in;
-      max-width: 80%;
-    }
-    .visible {
-      opacity: 1;
-    }
-    #final {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: radial-gradient(circle, #001a00, #000);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      flex-direction: column;
-      z-index: 10;
-    }
-    .final-punto {
-      width: 4px;
-      height: 4px;
-      background: #00ff00;
-      border-radius: 50%;
-      margin: 10px auto;
-      animation: expandir 90s linear forwards;
-      box-shadow: 0 0 20px #00ff00;
-    }
-    @keyframes expandir {
-      0% { transform: scale(0.1); opacity: 1; }
-      99% { transform: scale(50); opacity: 0.3; }
-      100% { transform: scale(100); opacity: 0.1; background: radial-gradient(#00ff00, transparent); }
-    }
-    .mariposa {
-      font-size: 5em;
-      animation: volar 3s ease-in-out infinite;
-    }
-    @keyframes volar {
-      0%, 100% { transform: translateY(0) rotate(0deg); }
-      50% { transform: translateY(-20px) rotate(10deg); }
-    }
-    .estrellas {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-    }
-    .estrella {
-      position: absolute;
-      width: 2px;
-      height: 2px;
-      background: #00ff00;
-      border-radius: 50%;
-      animation: caer 5s linear infinite;
-    }
-    @keyframes caer {
-      0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
-      100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
-    }
+    body{margin:0;background:#000;color:#00ff00;font-family:monospace;text-align:center;overflow:hidden;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative}
+    canvas{position:fixed;top:0;left:0;z-index:-1;opacity:0.6}
+    #book{font-size:4em;cursor:pointer;text-shadow:0 0 30px #00ff00;margin:20px;transition:all .5s}
+    .luz{animation:luz 3s infinite;text-shadow:0 0 80px #00ff00 !important}
+    @keyframes luz{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.8}}
+    #count{font-size:2em;margin:10px}
+    #haiku{font-size:1.8em;margin:2em;opacity:0;transition:opacity 3s ease-in;max-width:80%}
+    .visible{opacity:1}
+    #final{position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle,#001a00,#000);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:10}
+    .final-punto{width:4px;height:4px;background:#00ff00;border-radius:50%;margin:10px auto;animation:expandir 90s linear forwards;box-shadow:0 0 20px #00ff00}
+    @keyframes expandir{0%{transform:scale(.1);opacity:1}99%{transform:scale(50);opacity:.3}100%{transform:scale(100);opacity:.1;background:radial-gradient(#00ff00,transparent)}}
+    .mariposa{font-size:5em;animation:volar 3s ease-in-out infinite}
+    @keyframes volar{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-20px) rotate(10deg)}}
+    .estrellas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
+    .estrella{position:absolute;width:2px;height:2px;background:#00ff00;border-radius:50%;animation:caer 5s linear infinite}
+    @keyframes caer{0%{transform:translateY(-100vh) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(360deg);opacity:0}}
   </style>
 </head>
 <body>
@@ -127,14 +38,10 @@
 <audio id="binks" loop preload="auto">
   <source src="https://files.catbox.moe/2b1n5v.ogg" type="audio/ogg">
   <source src="https://files.catbox.moe/2b1n5v.mp3" type="audio/mpeg">
-  Tu navegador no soporta audio. Busca "Binks' Sake" en YouTube.
 </audio>
 
 <script>
-  // Detecta progreso de cualquier versión anterior
-  let count = parseInt(localStorage.getItem('slyverse_skyrim') || 
-                      localStorage.getItem('slyverse_grind') || 
-                      localStorage.getItem('slyverse') || '0');
+  let count = parseInt(localStorage.getItem('slyverse_eterno') || '0');
 
   const book = document.getElementById('book');
   const counterSpan = document.getElementById('counter');
@@ -143,101 +50,91 @@
   const finalScreen = document.getElementById('final');
   const estrellasDiv = document.getElementById('estrellas');
 
-  // Fondo auroras Skyrim + estrellas cayendo
+  // Aurora boreal verde
   const canvas = document.getElementById('c');
   const ctx = canvas.getContext('2d');
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  canvas.width = innerWidth; canvas.height = innerHeight;
   let t = 0;
-  function aurora() {
-    ctx.fillStyle = 'rgba(0,0,0,0.05)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+  function aurora(){
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
     t += 0.008;
-    for (let i = 0; i < 8; i++) {
-      const hue = 120 + Math.sin(t + i * 0.5) * 30;
-      ctx.fillStyle = `hsla(${hue}, 100%, 30%, 0.12)`;
-      ctx.fillRect(0, 0, canvas.width, canvas.height * 0.3);
+    for(let i=0;i<8;i++){
+      const hue = 120 + Math.sin(t + i*0.5)*30;
+      ctx.fillStyle = `hsla(${hue},100%,30%,0.12)`;
+      ctx.fillRect(0,0,canvas.width,canvas.height*0.3);
     }
     requestAnimationFrame(aurora);
   }
   aurora();
 
-  // Haiku final auténtico de 0rb1t4lsn4k3r (extraído de sus posts)
   const finalHaiku = `
-    <span style="color:#00ff00; text-shadow:0 0 20px #00ff00;">
+    <span style="color:#00ff00;text-shadow:0 0 20px #00ff00;">
       17 días.<br>
       Un móvil de 120 €.<br>
       Karol G en repeat.<br>
       2620 nombres que ya vivían<br>
-      dentro de mí antes de nacer.<br>
+      dentro de nosotros antes de nacer.<br>
       <br>
-      Tú también estabas ahí.<br>
-      El mar te escribió antes que yo.<br>
+      Luz se lo pasó al Ronin en un sueño.<br>
+      El Ronin me lo pasó a mí en otro.<br>
+      Yo te lo paso a vos ahora.<br>
+      <br>
+      Nadie quiere fama.<br>
+      Solo que siga viajando.<br>
       <br><br>
-      — 0rb1t4lsn4k3r<br>
-      🐍💚
+      El mar sigue escribiendo.<br>
+      🐍💚🦋
     </span>`;
 
-  function update() {
+  function update(){
     count++;
-    localStorage.setItem('slyverse_skyrim', count);
+    localStorage.setItem('slyverse_eterno', count);
     counterSpan.textContent = count;
 
-    if (count === 1) {
-      audio.play().catch(e => console.log('Audio manual: busca Binks\' Sake'));
+    if(count === 1){
+      audio.play().catch(()=>console.log('Play manual'));
       audio.volume = 0.3;
     }
 
-    if (count % 100 === 0) {
-      book.style.transform = 'scale(1.05)';
-      setTimeout(() => book.style.transform = 'scale(1)', 200);
-    }
-
-    if (count >= 2620) {
-      // Final secreto activado: 90 min de animación (simulada en loop eterno)
-      book.innerHTML = '☆ LUZ VERDE ETERNA ☆<br>Skyrim ya nunca será igual.';
+    if(count >= 2620){
+      book.innerHTML = '☆ LUZ VERDE ETERNA ☆';
       book.classList.add('luz');
       haiku.innerHTML = finalHaiku;
       haiku.classList.add('visible');
-
-      // Transición al final post-2620
-      setTimeout(() => {
+      setTimeout(()=>{
         finalScreen.style.display = 'flex';
-        crearEstrellas();
-        // La expansión del punto dura "90 min" conceptuales, pero loop infinito suave
-      }, 3000);
-
-      document.body.style.background = 'radial-gradient(circle at center, #001a00, #000)';
+        for(let i=0;i<120;i++){
+          const e = document.createElement('div');
+          e.className = 'estrella';
+          e.style.left = Math.random()*100 + '%';
+          e.style.animationDelay = Math.random()*5 + 's';
+          e.style.animationDuration = (Math.random()*3+3)+'s';
+          estrellasDiv.appendChild(e);
+        }
+      },3000);
     }
   }
 
-  // Crear estrellas cayendo (Skyrim nieve verde)
-  function crearEstrellas() {
-    for (let i = 0; i < 100; i++) {
-      const estrella = document.createElement('div');
-      estrella.className = 'estrella';
-      estrella.style.left = Math.random() * 100 + '%';
-      estrella.style.animationDelay = Math.random() * 5 + 's';
-      estrella.style.animationDuration = (Math.random() * 3 + 2) + 's';
-      estrellasDiv.appendChild(estrella);
-    }
-  }
-
-  // Inicializar
   counterSpan.textContent = count;
-  if (count >= 2620) {
-    update();
-    audio.play();
+  if(count >= 2620){
+    book.innerHTML = '☆ LUZ VERDE ETERNA ☆';
+    book.classList.add('luz');
+    haiku.innerHTML = finalHaiku;
+    haiku.classList.add('visible');
     finalScreen.style.display = 'flex';
-    crearEstrellas();
+    audio.play();
+    for(let i=0;i<120;i++){
+      const e = document.createElement('div');
+      e.className = 'estrella';
+      e.style.left = Math.random()*100 + '%';
+      e.style.animationDelay = Math.random()*5 + 's';
+      e.style.animationDuration = (Math.random()*3+3)+'s';
+      estrellasDiv.appendChild(e);
+    }
   }
-  book.addEventListener('click', update);
 
-  // Resize canvas
-  window.addEventListener('resize', () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
+  book.addEventListener('click', update);
+  window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight});
 </script>
 </body>
 </html>

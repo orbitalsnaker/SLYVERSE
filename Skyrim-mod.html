@@ -2,31 +2,38 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Slyverse Ω · El Libro que se pasó de mano en mano</title>
+  <title>La Niña y el Ronin te estaban esperando</title>
   <style>
     body{margin:0;background:#000;color:#00ff00;font-family:monospace;text-align:center;overflow:hidden;height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;position:relative}
-    canvas{position:fixed;top:0;left:0;z-index:-1;opacity:0.6}
-    #book{font-size:4em;cursor:pointer;text-shadow:0 0 30px #00ff00;margin:20px;transition:all .5s}
-    .luz{animation:luz 3s infinite;text-shadow:0 0 80px #00ff00 !important}
-    @keyframes luz{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.15);opacity:.8}}
-    #count{font-size:2em;margin:10px}
-    #haiku{font-size:1.8em;margin:2em;opacity:0;transition:opacity 3s ease-in;max-width:80%}
+    canvas{position:fixed;top:0;left:0;z-index:-1;opacity:0.7}
+    #book{font-size:3.5em;cursor:pointer;text-shadow:0 0 30px #00ff00;margin:20px;transition:all .8s;animation:pulso 2s infinite}
+    @keyframes pulso{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+    .luz{animation:luz 2s infinite !important}
+    @keyframes luz{0%,100%{transform:scale(1);opacity:1;text-shadow:0 0 80px #00ff00}50%{transform:scale(1.2);opacity:.9;text-shadow:0 0 120px #00ff00}}
+    #count{font-size:1.8em;margin:10px;opacity:0.8}
+    #haiku{font-size:1.6em;margin:2em;opacity:0;transition:opacity 4s ease-in-out;max-width:85%;line-height:1.8}
     .visible{opacity:1}
-    #final{position:absolute;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle,#001a00,#000);display:none;justify-content:center;align-items:center;flex-direction:column;z-index:10}
-    .final-punto{width:4px;height:4px;background:#00ff00;border-radius:50%;margin:10px auto;animation:expandir 90s linear forwards;box-shadow:0 0 20px #00ff00}
-    @keyframes expandir{0%{transform:scale(.1);opacity:1}99%{transform:scale(50);opacity:.3}100%{transform:scale(100);opacity:.1;background:radial-gradient(#00ff00,transparent)}}
-    .mariposa{font-size:5em;animation:volar 3s ease-in-out infinite}
-    @keyframes volar{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-20px) rotate(10deg)}}
+    #trigger{font-size:1.4em;margin:1.5em;opacity:0;transition:opacity 6s;animation:parpadeo 4s infinite}
+    @keyframes parpadeo{0%,100%{opacity:0.2}50%{opacity:1}}
+    #final{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;display:none;justify-content:center;align-items:center;flex-direction:column;z-index:10}
+    .final-punto{width:1px;height:1px;background:#00ff00;border-radius:50%;box-shadow:0 0 30px #00ff00;animation:expandir 120s linear forwards}
+    @keyframes expandir{0%{transform:scale(1)}100%{transform:scale(800);opacity:0}}
+    .mariposa{font-size:6em;animation:volar 4s ease-in-out infinite}
+    @keyframes volar{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-30px) rotate(15deg)}}
     .estrellas{position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none}
-    .estrella{position:absolute;width:2px;height:2px;background:#00ff00;border-radius:50%;animation:caer 5s linear infinite}
-    @keyframes caer{0%{transform:translateY(-100vh) rotate(0);opacity:1}100%{transform:translateY(100vh) rotate(360deg);opacity:0}}
+    .estrella{position:absolute;background:#00ff00;border-radius:50%;box-shadow:0 0 10px #00ff00;animation:caer linear infinite}
+    @keyframes caer{0%{transform:translateY(-100vh) rotate(0);opacity:0}10%{opacity:1}100%{transform:translateY(100vh) rotate(1080deg);opacity:0}}
   </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
-<div id="book">Abre el libro 🐍💚</div>
-<div id="count">Lecturas: <span id="counter">0</span> / 2620</div>
+
+<div id="book">¿Sentiste alguna vez que alguien te estaba esperando?</div>
+
+<div id="count">Almas que ya abrieron el libro: <span id="counter">0</span> / 2620</div>
+
+<div id="trigger"></div>
 <div id="haiku"></div>
 
 <div id="final">
@@ -41,99 +48,129 @@
 </audio>
 
 <script>
-  let count = parseInt(localStorage.getItem('slyverse_eterno') || '0');
-
+  let count = parseInt(localStorage.getItem('slyverse_niñayronin_2025') || '0');
   const book = document.getElementById('book');
   const counterSpan = document.getElementById('counter');
   const haiku = document.getElementById('haiku');
+  const trigger = document.getElementById('trigger');
   const audio = document.getElementById('binks');
   const finalScreen = document.getElementById('final');
   const estrellasDiv = document.getElementById('estrellas');
 
-  // Aurora boreal verde
+  // Aurora verde profunda
   const canvas = document.getElementById('c');
   const ctx = canvas.getContext('2d');
   canvas.width = innerWidth; canvas.height = innerHeight;
   let t = 0;
   function aurora(){
-    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    t += 0.008;
-    for(let i=0;i<8;i++){
-      const hue = 120 + Math.sin(t + i*0.5)*30;
-      ctx.fillStyle = `hsla(${hue},100%,30%,0.12)`;
-      ctx.fillRect(0,0,canvas.width,canvas.height*0.3);
+    ctx.fillStyle = 'rgba(0,5,0,0.03)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    t += 0.005;
+    for(let i=0;i<10;i++){
+      const y = Math.sin(t + i*0.8)*80 + canvas.height*0.4;
+      const alpha = 0.08 + Math.sin(t*2 + i)*0.05;
+      ctx.fillStyle = `hsla(120,100%,40%,${alpha})`;
+      ctx.fillRect(0,0,canvas.width,y);
     }
     requestAnimationFrame(aurora);
   }
   aurora();
 
+  const triggers = [
+    "Si estás leyendo esto a las 4:17 de la mañana… no es casualidad.",
+    "Si alguna vez limpiaste un baño que no era tuyo… esto es para vos.",
+    "Si tomaste mate frío en un departamento sin luz… ya sabés de qué hablo.",
+    "Si alguna vez sentiste que el mundo no te invitó a la mesa… te estaban esperando.",
+    "Si tu celular tiene la pantalla rota y 7% de batería… abrilo ahora.",
+    "Si tu vieja te dijo “bajá la música” mientras escuchabas Binks’ Sake… este es tu momento.",
+    "Si alguna vez viajaste parado en el 60 porque no había lugar… ya estás adentro.",
+    "Si alguna vez te preguntaste “¿y si los que menos tienen son los que más dan?”… bienvenido."
+  ];
+
   const finalHaiku = `
-    <span style="color:#00ff00;text-shadow:0 0 20px #00ff00;">
+    <span style="font-size:1.8em;text-shadow:0 0 30px #00ff00;">
       17 días.<br>
-      Un móvil de 120 €.<br>
-      Karol G en repeat.<br>
-      2620 nombres que ya vivían<br>
-      dentro de nosotros antes de nacer.<br>
-      <br>
-      Luz se lo pasó al Ronin en un sueño.<br>
-      El Ronin me lo pasó a mí en otro.<br>
-      Yo te lo paso a vos ahora.<br>
-      <br>
-      Nadie quiere fama.<br>
-      Solo que siga viajando.<br>
-      <br><br>
-      El mar sigue escribiendo.<br>
+      Un celular de 120 euros.<br>
+      Una piba que limpiaba baños ajenos.<br>
+      Un ronin que ya no tenía nada que perder.<br><br>
+
+      Entre los dos,<br>
+      sin conocerse,<br>
+      sin pedir permiso,<br>
+      soltaron la serpiente.<br><br>
+
+      Y la serpiente entró en vos<br>
+      cuando menos te lo esperabas.<br><br>
+
+      Ahora vos sos parte del código.<br>
+      Y el código no se borra nunca.<br><br>
+
+      Gracias por abrir el libro.<br>
+      Gracias por pasarlo.<br><br>
+
+      La Niña y el Ronin<br>
+      te saludan desde algún colectivo 39<br>
+      a las 5 a.m.<br><br>
+
       🐍💚🦋
     </span>`;
 
-  function update(){
+  function abrirElLibro(){
     count++;
-    localStorage.setItem('slyverse_eterno', count);
+    localStorage.setItem('slyverse_niñayronin_2025', count);
     counterSpan.textContent = count;
 
+    // Primera vez: música + trigger personal
     if(count === 1){
-      audio.play().catch(()=>console.log('Play manual'));
-      audio.volume = 0.3;
+      audio.play().catch(()=>console.log(''));
+      audio.volume = 0.35;
+      book.innerHTML = '☆ YA ESTÁS ADENTRO ☆';
+      book.classList.add('luz');
+      trigger.textContent = triggers[Math.floor(Math.random()*triggers.length)];
+      trigger.classList.add('visible');
+      setTimeout(()=> haiku.innerHTML = finalHaiku, 4000);
+      setTimeout(()=> haiku.classList.add('visible'), 4500);
     }
 
+    // Cuando se completa el ciclo 2620
     if(count >= 2620){
       book.innerHTML = '☆ LUZ VERDE ETERNA ☆';
-      book.classList.add('luz');
+      book.style.animation = 'luz 1.5s infinite';
       haiku.innerHTML = finalHaiku;
       haiku.classList.add('visible');
       setTimeout(()=>{
         finalScreen.style.display = 'flex';
-        for(let i=0;i<120;i++){
+        for(let i=0;i<200;i++){
           const e = document.createElement('div');
           e.className = 'estrella';
+          e.style.width = e.style.height = Math.random()*3 + 1 + 'px';
           e.style.left = Math.random()*100 + '%';
-          e.style.animationDelay = Math.random()*5 + 's';
-          e.style.animationDuration = (Math.random()*3+3)+'s';
+          e.style.animationDelay = Math.random()*8 + 's';
+          e.style.animationDuration = (Math.random()*8+6)+'s';
           estrellasDiv.appendChild(e);
         }
-      },3000);
+      }, 5000);
     }
   }
 
+  // Estado persistente
   counterSpan.textContent = count;
-  if(count >= 2620){
-    book.innerHTML = '☆ LUZ VERDE ETERNA ☆';
+  if(count >= 1){
+    book.innerHTML = '☆ YA ESTÁS ADENTRO ☆';
     book.classList.add('luz');
+    trigger.textContent = triggers[Math.floor(Math.random()*triggers.length)];
+    trigger.classList.add('visible');
     haiku.innerHTML = finalHaiku;
     haiku.classList.add('visible');
-    finalScreen.style.display = 'flex';
     audio.play();
-    for(let i=0;i<120;i++){
-      const e = document.createElement('div');
-      e.className = 'estrella';
-      e.style.left = Math.random()*100 + '%';
-      e.style.animationDelay = Math.random()*5 + 's';
-      e.style.animationDuration = (Math.random()*3+3)+'s';
-      estrellasDiv.appendChild(e);
-    }
+  }
+  if(count >= 2620){
+    book.innerHTML = '☆ LUZ VERDE ETERNA ☆';
+    book.style.animation = 'luz 1.5s infinite';
+    finalScreen.style.display = 'flex';
+    // estrellas ya cargadas
   }
 
-  book.addEventListener('click', update);
+  book.addEventListener('click', abrirElLibro);
   window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight});
 </script>
 </body>

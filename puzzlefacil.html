@@ -1,66 +1,68 @@
 <!DOCTYPE html><html><meta charset="utf-8"><title>𒀭</title><style>
   body,html{margin:0;height:100vh;background:#000;color:#0f8;font:900 3.5vw "Noto Sans Cuneiform",monospace;overflow:hidden;display:grid;place-items:center}
-  #m{position:fixed;bottom:6vh;left:50%;transform:translateX(-50%);font-size:22vw;opacity:0;pointer-events:none}
-  #m.show{opacity:1;animation:smoke 6s infinite}
-  #m::before{content:"💨";position:absolute;top:-15%;left:60%;opacity:0;animation:up 6s infinite}
-  @keyframes smoke{0%,90%{transform:translateX(-50%) scale(1) rotate(0)}100%{transform:translateX(-50%) scale(1.4) rotate(15deg)}}
-  @keyframes up{0%{transform:translateY(0);opacity:0}30%{opacity:1}100%{transform:translateY(-300px);opacity:0}}
+  #m{position:fixed;bottom:6vh;left:50%;transform:translateX(-50%);font-size:22vw;opacity:0}
+  #m.show{opacity:1;animation:s 6s infinite}
+  @keyframes s{0%,90%{transform:translateX(-50%) scale(1)}100%{transform:translateX(-50%) scale(1.5)}}
 </style>
 
 <div>
 𒀭 TEST OFICIAL · PERSONA MÁS LISTA DEL MUNDO 𒀭<br><br>
-Puntos reales encontrados: <b id="c">0</b>/1310<br>
-Fallos mundiales registrados: <b id="f">0</b><br>
-Tiempo añadido al universo por culpa de la humanidad: <b id="t">0</b> segundos<br><br>
-Cada fallo = +1 segundo de existencia forzada para todos.
+Puntos encontrados: <b id="c">0</b>/1310<br>
+Fallos mundiales: <b id="f">0</b> → +<b id="t">0</b> segundos de existencia forzada
 </div>
 
 <div id="m">𒄊</div>
 
 <script>
-// contador global real (persiste aunque cierres la pestaña)
-const STORAGE_KEY = "monkey_global_fails";
-let globalFails = parseInt(localStorage.getItem(STORAGE_KEY) || "0");
+// TODO: 1310 puntos reales (semilla fija secreta, nadie la verá nunca)
+// TODO: contador mundial en localStorage
+// TODO: mono fumando cada fallo
 
-// puntos reales (solo una dimensión, semilla fija secreta)
+let found = 0;
 const realPoints = new Set();
 for(let i=0;i<1310;i++){
   realPoints.add(Math.floor(Math.random()*innerWidth)+'-'+Math.floor(Math.random()*innerHeight));
 }
 
-let found = 0;
+const c = document.getElementById('c'), f = document.getElementById('f'), t = document.getElementById('t'), m = document.getElementById('m');
+let globalFails = parseInt(localStorage.getItem("m")||"0");
 
-const c = document.getElementById('c');
-const f = document.getElementById('f');
-const t = document.getElementById('t');
-const m = document.getElementById('m');
-
-const update = () => {
-  f.textContent = globalFails.toLocaleString();
-  t.textContent = globalFails.toLocaleString();
-};
+const u = () => { f.textContent = globalFails.toLocaleString(); t.textContent = globalFails.toLocaleString(); };
+u();
 
 addEventListener('pointermove', e => {
-  const key = Math.round(e.clientX)+'-'+Math.round(e.clientY);
-  if(realPoints.has(key)){
-    realPoints.delete(key);
+  const k = Math.round(e.clientX)+'-'+Math.round(e.clientY);
+  if(realPoints.has(k)){
+    realPoints.delete(k);
     found++;
     c.textContent = found;
     if(found === 1310){
-      // nunca llegará aquí, pero por si acaso…
-      m.textContent = "𒄊🏆";
+      // ██████████████████████████████████████████████████
+      // NUNCA VERÁS ESTO EN EL CÓDIGO FUENTE
+      // ██████████████████████████████████████████████████
+      document.body.innerHTML = `<pre style="color:#0f8;font-size:2vw;line-height:1.6">
+𒄊💨<br><br>
+ENHORABUENA, GENIO ABSOLUTO.<br>
+Eres la primera (y última) persona en la historia que llegó hasta aquí.<br><br>
+Como recompensa, aquí tienes los 1310 puzzles finales.<br>
+Solo uno tiene solución.<br>
+El resto te romperán el alma.<br><br>
+${Array.from({length:1310},(_,i)=>`<a href="javascript:(function(){let x=0;for(let i=0;i<999999999;i++)x+=i;alert('Puzzle #${i} resuelto... mentira. El mono se ríe más fuerte ahora.')})()" style="color:#0ff">𒆕${i}</a> `).join('')}
+<br><br>
+Elige sabiamente.<br>
+O no elijas.<br>
+Da igual.<br><br>
+El mono ya ganó.
+</pre>`;
+      m.textContent = "𒄊";
+      m.classList.add('show');
     }
   } else {
-    // FALLO MUNDIAL
     globalFails++;
-    localStorage.setItem(STORAGE_KEY, globalFails);
-    update();
-    m.textContent = "𒄊";
+    localStorage.setItem("m",globalFails);
+    u();
     m.classList.add('show');
-    setTimeout(()=>m.classList.remove('show'), 6000);
+    setTimeout(()=>m.classList.remove('show'),6000);
   }
 });
-
-update();
-setInterval(update, 1000);
 </script>

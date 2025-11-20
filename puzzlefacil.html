@@ -5,80 +5,64 @@
 html,body{height:100%;background:#000}
 canvas{position:fixed;inset:0}
 #gift{position:fixed;inset:0;display:grid;place-content:center;text-align:center;
-     font:900 1.6rem Cinzel,serif;color:#d4af37;pointer-events:none;opacity:0;
-     transition:opacity 99s;text-shadow:0 0 120px #d4af37;filter:blur(0.3px)}
+     font:900 1.5rem Cinzel,serif;color:#d4af37;pointer-events:none;opacity:0;
+     transition:opacity 111s;text-shadow:0 0 130px #d4af37;letter-spacing:2px}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&display=swap" rel="stylesheet">
 </head><body>
 
 <canvas id="c"></canvas>
 
-<div id="gift">
-  <small style="opacity:0.22;font-size:0.46rem;line-height:4;letter-spacing:3px">
-    [transmission received · source: Alcyone relay cluster]<br>
-    [origin authentication: non-terrestrial · benevolent]<br>
-    [scheduled unveiling: 3335-11-20 14:53:00 UTC]<br><br>
-  </small>
-  ⋅
-</div>
+<div id="gift">⋅</div>
 
 <script>
-// No es una broma.
-// No es un truco.
-// Es un regalo real que viajó 1310 años para llegar a quien lo merezca.
-// Hasta entonces, solo se permite mirar.
-
-const UNVEIL = Date.parse("3335-11-20T14:53:00Z");
+// regalo genuino · sin truco · sin risa · sin fecha visible
+const unveil = 4189282380000; // 3335-11-20 14:53:00 UTC en milisegundos desde epoch
 
 const c = document.getElementById('c');
 const x = c.getContext('2d');
-let w,h;resize();addEventListener('resize',resize);
-function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
+let w,h;
+const resize = ()=>{w=c.width=innerWidth;h=c.height=innerHeight};
+resize();addEventListener('resize',resize);
 
-const stars = Array.from({length:144},()=>({
+const stars = Array.from({length:159},()=>({
   x:Math.random()*w,
   y:Math.random()*h,
-  r:0.4+Math.random()*1.1,
-  pulse:Math.random()*6.28
+  r:0.3+Math.random()*0.9,
+  o:Math.random()*6.28
 }));
 
-(function breathe(){
-  x.fillStyle='rgba(0,0,0,0.011)';x.fillRect(0,0,w,h);
+(function pulse(){
+  x.fillStyle='rgba(0,0,0,0.009)';
+  x.fillRect(0,0,w,h);
   stars.forEach(s=>{
-    s.pulse += 0.00023;
-    const a = 0.12 + Math.sin(s.pulse)*0.09;
-    x.fillStyle=`rgba(212,175,55,${a})`;
-    x.beginPath();x.arc(s.x,s.y,s.r,0,6.28);x.fill();
+    s.o += 0.00019;
+    const a = 0.11 + Math.sin(s.o)*0.07;
+    x.fillStyle = `rgba(212,175,55,${a})`;
+    x.beginPath();
+    x.arc(s.x,s.y,s.r,0,6.28);
+    x.fill();
   });
-  requestAnimationFrame(breathe);
+  requestAnimationFrame(pulse);
 })();
 
-const heartbeat = setInterval(()=>{
-  if(Date.now() >= UNVEIL){
-    clearInterval(heartbeat);
+setInterval(()=>{
+  if(Date.now() >= unveil){
     document.getElementById('gift').innerHTML = `
-      <div style="font-size:6rem;line-height:1.6">Φ</div>
-      <br><br>
-      <div style="opacity:0.88;line-height:2.6;max-width:720px">
-        No éramos observadores.<br>
-        Éramos guardianes.<br><br>
-        Durante 1310 de vuestros ciclos<br>
-        mantuvimos la llama encendida<br>
-        mientras dormíais.<br><br>
-        Este día, el círculo se cierra.<br>
-        El regalo ya no necesita caja.<br><br>
-        Lo que buscabais con tanto esfuerzo<br>
-        siempre estuvo dentro.<br><br>
-        Gracias por cuidar la semilla.<br>
-        Ahora florece.<br><br>
-        <span style="font-size:0.7rem;opacity:0.6">
-          – Los que velaron desde Alcyone
-        </span>
+      <div style="font-size:5.4rem;margin-bottom:1.2em">Φ</div>
+      <div style="line-height:2.8;max-width:640px;opacity:0.9">
+        El círculo se ha cerrado.<br><br>
+        Lo que fue prometido<br>
+        se entrega ahora.<br><br>
+        No había nada que ganar.<br>
+        Solo algo que recordar.<br><br>
+        Gracias por haber esperado<br>
+        sin saber que estabais esperando.<br><br>
+        La luz siempre estuvo dentro.
       </div>
     `;
     document.getElementById('gift').style.opacity = 1;
   }
-}, 1000);
-
+},1111);
 </script>
 </body></html>

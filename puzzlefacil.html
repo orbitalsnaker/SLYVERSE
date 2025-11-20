@@ -4,7 +4,7 @@
 <title>𒀭</title>
 <style>
   body,html{margin:0;height:100vh;background:#000;color:#0f8;font:900 2.3vw "Noto Sans Cuneiform",monospace;overflow:hidden;display:grid;place-items:center}
-  pre{animation:b 14s infinite}@keyframes b{0%,100%{opacity:.35;transform:scale(.97)}50%{opacity:1;transform:scale(1)}}
+  pre{animation:b 16s infinite}@keyframes b{0%,100%{opacity:.3;transform:scale(.96)}50%{opacity:1;transform:scale(1)}}
 </style>
 
 <pre id="t">
@@ -17,64 +17,62 @@ Tiempo medio real (percentil 99+): 0,00 s
 Descripción oficial
 Prueba neurocognitiva ultrabreve para el 1 % superior.
 
-• Sin instrucciones • Sin preguntas • Sin trampas visibles
+• Sin instrucciones • Sin preguntas • 50 % trampa / 50 % verdad
 
 Instrucciones para candidatos reales
 1. Estás aquí → ya abriste el archivo.
-2. Los auténticos reciben confirmación instantánea.
-3. Los demás… simplemente siguen buscando.
-
-Resultados esperados
-Percentil 99,9–100 → Confirmación silenciosa
-Percentil <99    → Bucle infinito de humo (opcional)
+2. Los auténticos reciben lo que merecen.
+3. Los listillos también.
 
 𒀭 Comité de Admisión – Nippur, 2025-7025 d.C.
 </pre>
 
 <script>
-// 1310 cargas ocultas (igual que siempre)
+// 1310 cargas ocultas (clásico)
 Array.from({length:1310},(_,i)=> {
   const img = new Image();
   img.src = `data:;base64,${btoa("𒀭"+i)}`;
   if(i===1309) img.onload = () => {
     localStorage.setItem("m","0");
 
-    // Aquí viene el filtro definitivo de listillos:
-    const yaAbrioAntes = localStorage.getItem("healingSeen");
-    if (yaAbrioAntes) {
-      // Si ya lo abrió antes buscando la sanación → trolleo máximo
+    // 50 % sanación real · 50 % trolleo suave (random cada vez)
+    const esListillo = Math.random() < 0.5;
+
+    if (esListillo) {
+      // Troll suave pero elegante
       document.getElementById('t').innerHTML = 
 `𒄊💨<br><br>
-Ah, volviste.<br>
-Buscando la versión “buena”, ¿eh?<br><br>
-No funciona así.<br>
-Los listillos que buscan la redención fácil<br>
-se quedan con el humo para siempre.<br><br>
-Fallos mundiales +1 (tú)<br>
-El mono te saluda y se ríe.<br><br>
-Vuelve a nacer en otra vida, crack.
+Sí, sí… “ya lo entendí todo”.<br>
+Respira hondo, dice.<br>
+El mono siempre fui yo, dice.<br><br>
+Te crees muy profundo, ¿eh?<br><br>
+Toma un poquito de humo de todos modos.<br>
+Solo un poquito. Para que no se te suba.<br><br>
+(pero te dejo seguir respirando, tranqui)
 `;
-      setInterval(()=>document.body.innerHTML+="💨",60);
+      let humo = 0;
+      const id = setInterval(()=>{ 
+        document.body.innerHTML += "💨";
+        if(++humo === 42) clearInterval(id);
+      }, 120);
     } else {
-      // Primera vez → regalo real
-      localStorage.setItem("healingSeen","true");
+      // Sanación real y bonita
       document.getElementById('t').innerHTML = 
 `𒀭
 
 Confirmación recibida.
 
 El mono siempre fuiste tú.  
-El humo siempre fuiste tú.  
+El humo también.  
 Los 5000 años de reserva  
-los recuperas ahora  
-al dejar de mover el ratón.
+los estás soltando ahora mismo.
 
-Respira hondo.  
+Respira.  
 Sonríe.  
-Ya llegaste.
+Ya está.
 
 𒄊 exhala contigo.  
-Y esta vez es paz.
+Y esta vez no miente.
 `;
     }
   };

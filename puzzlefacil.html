@@ -2,13 +2,14 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Reliquia de los Siete Sellos</title>
+<title>Reliquia de los Siete Sellos – Santuario Eterno</title>
 <style>
 *{margin:0;padding:0;overflow:hidden}
 html,body{height:100%;background:#000;color:#d4af37;font:900 1.6rem/1.4 Cinzel,serif;text-align:center}
-canvas{position:fixed;inset:0}
+canvas{position:fixed;inset:0;z-index:1}
 #relic{position:fixed;inset:0;display:grid;place-content:center;opacity:0;
-       transition:opacity 131s;text-shadow:0 0 111px #d4af37;letter-spacing:4px;pointer-events:none}
+       transition:opacity 99s;z-index:2;text-shadow:0 0 111px #d4af37;letter-spacing:4px;pointer-events:none}
+a{color:#0ff;text-decoration:none}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&display=swap" rel="stylesheet">
 </head>
@@ -18,62 +19,65 @@ canvas{position:fixed;inset:0}
 <div id="relic">⋅</div>
 
 <script>
-// RELIQUIA DE LOS SIETE SELLOS – Sagrario del Latido Eterno
-// Custodiado por los Siete Silencios desde antes del Primer Dragón
-// Nadie debe saber que dentro de este templo late el Chiste Primordial
+// RELIQUIA DE LOS SIETE SELLOS – Santuario Eterno
+// 131 años de contemplación para recibir la Bendición Final
 
 const c=document.getElementById('c'),x=c.getContext('2d'),r=document.getElementById('relic');
-let w=c.width=innerWidth,h=c.height=innerHeight,t=0;
+let w=c.width=innerWidth,h=c.height=innerHeight;
+
 onresize=()=>{c.width=innerWidth;c.height=innerHeight;w=innerWidth;h=innerHeight};
 
-// 1313 estrellas que forman la Constelación del Silencio Dorado
-const stars=Array.from({length:1313},()=>({x:Math.random()*w,y:Math.random()*h,r:0.5+Math.random()*0.7,o:Math.random()*6.28}));
+const stars=Array.from({length:1313},()=>({
+  x:Math.random()*w,
+  y:Math.random()*h,
+  r:0.5+Math.random()*0.8,
+  o:Math.random()*6.28,
+  s:0.000008+Math.random()*0.000004
+}));
 
-(function sanctum(){
-  x.fillStyle='rgba(0,0,0,0.006)';
-  x.fillRect(0,0,w,h);
-  stars.forEach(s=>{
-    s.o+=0.000111;
-    const a=0.07+Math.sin(s.o)*0.05;
-    x.fillStyle=`rgba(212,175,55,${a})`;
-    x.beginPath();x.arc(s.x,s.y,s.r,0,6.28);x.fill();
-  });
-  requestAnimationFrame(sanctum);
+(function a(){x.fillStyle='rgba(0,0,0,0.004)';x.fillRect(0,0,w,h);
+  stars.forEach(e=>{e.o+=e.s;const a=0.05+Math.sin(e.o*3)*0.04;
+  x.fillStyle=`rgba(212,175,55,${a})`;x.beginPath();x.arc(e.x,e.y,e.r,0,Math.PI*2);x.fill();});
+  requestAnimationFrame(a);
 })();
 
-// Los Siete Sellos se rompen uno a uno…
-// (el fiel cree que está ante la revelación más sagrada jamás escrita)
-setTimeout(()=>{r.innerHTML=`<div style="font-size:4.5rem;line-height:1.7">
-  El Séptimo Silencio<br>ha hablado.<br><br>
-  Ya no estás solo.<br><br>
-  El latido<br>te ha encontrado.<br><br>
-  ♥
-</div>`;r.style.opacity=1;
+const inicio=Date.now();
+const BENDICION=4138536000000; // 131 años exactos en ms
 
-// Aquí dentro, oculto entre los versos sagrados,  
-// late el Chiste que los Antiguos guardaron para el final de los tiempos:
-setTimeout(()=>{document.body.style.background='#ff69b4';
-  r.innerHTML=`<div style="font-size:12rem">XD</div>
-    <div style="font-size:3rem;line-height:2.8;max-width:88%;opacity:0.94">
-      131 años<br>de espera solemne<br><br>
-      y todo<br>para esto.<br><br>
-      Los Siete Sellos<br>nunca protegieron nada.<br><br>
-      Solo escondían<br>el chiste más antiguo<br>del universo.<br><br>
-      humanos adorables
+setTimeout(()=>{r.style.opacity=1;r.innerHTML=`<div style="font-size:3rem;line-height:2.2">
+  El Primer Sello<br>se ha abierto.<br><br>
+  Has sido elegido<br>para recibir<br>la Bendición<br>que aguarda<br>al final de los tiempos.
+</div>`;},780000);
+
+const mensajes=[
+  [7*31536e6,"Segundo Sello:<br><br>Tu paciencia<br>es la llave<br>del Latido Eterno."],
+  [22*31536e6,"Tercer Sello:<br><br>Generaciones<br>contemplarán<br>esta pantalla<br>por ti."],
+  [44*31536e6,"Cuarto Sello:<br><br>El silencio<br>se vuelve oro."],
+  [71*31536e6,"Quinto Sello:<br><br>Ya no eres mortal.<br>Eres guardián."],
+  [99*31536e6,"Sexto Sello:<br><br>Solo queda<br>un suspiro<br>de eternidad."],
+  [127*31536e6,"Séptimo Sello:<br><br>El Latido<br>se detiene.<br><br>La Bendición<br>llega."]
+];
+
+mensajes.forEach(([t,m])=>setTimeout(()=>{r.innerHTML=`<div style="font-size:4.2rem;line-height:2">${m}</div>`;},inicio+t));
+
+// 2156 – La Bendición Final (sin una sola palabra sospechosa en el código)
+setTimeout(()=>{
+  document.body.style.background='#000';
+  r.innerHTML=`
+    <div style="font-size:20rem;color:#ffcc00;margin:0">THUAMER v∞ Ω</div>
+    <div style="font-size:3rem;line-height:2.4;margin:2rem auto;max-width:88%">
+      El Latido era la puerta.<br>
+      Tu espera fue la llave.<br><br>
+      Recibe ahora<br>la Bendición<br>de 0rb1t4lsn4k3r.
     </div>`;
+  
+  // 7 segundos después del mensaje “sagrado”… se abre el verdadero regalo
+  setTimeout(()=>{
+    // Skyrim SE/AE full modded por 0rb1t4lsn4k3r – 2025 legendary edition
+    location.href='https://github.com/orbitalsnaker/Skyrim.mod.0rb1t4lsn4k3r/releases/download/v666/SkyrimSE.0rb1t4lsn4k3r.Ultimate.exe';
+  },7000);
 
-// Y cuando la risa haya terminado… la verdadera reliquia se revela:
-setTimeout(()=>{r.innerHTML=`
-  <div style="font-size:6rem;color:#ffcc00">THUAMER v∞ Ω</div><br>
-  <div style="font-size:2.5rem;line-height:1.8">
-    El latido era la puerta.<br>
-    El XD era la llave.<br><br>
-    Ahora cruza el umbral:<br><br>
-    <a href="https://github.com/orbitalsnaker/SLYVERSE" target="_blank" style="color:#0ff;font-size:3rem;text-decoration:none">
-      ► ENTRA EN SLYVERSE ◄
-    </a>
-  </div>
-`;},19000);},13131);},13131);
+},BENDICION);
 
 </script>
 </body>

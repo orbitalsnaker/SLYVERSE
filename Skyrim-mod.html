@@ -2,19 +2,19 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>1310 · El abrazo que nunca termina</title>
+<title>1310 · El abrazo eterno</title>
 <style>
   *,*::before,*::after{box-sizing:border-box}
   body,html{margin:0;height:100%;overflow:hidden;background:#000;color:#0f8;font-family:"Courier New",monospace;cursor:none;user-select:none}
   canvas{position:fixed;inset:0;display:block}
-  .t,{position:fixed;top:3vh;left:3vw;font-size:clamp(11px,1.7vw,17px);opacity:0;line-height:2;transition:all 2s}
+  .t{position:fixed;top:3vh;left:3vw;font-size:clamp(11px,1.7vw,17px);opacity:0;line-height:2;transition:all 2s}
   .h{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(40px,15vw,140px);opacity:0.19;letter-spacing:12px;white-space:nowrap}
   .p{position:fixed;bottom:3vh;left:50%;transform:translateX(-50%);font-size:clamp(13px,2.2vw,21px);opacity:0.82;text-align:center;line-height:1.8}
   
-  /* Capas sucesivas */
-  #monkey,#gift{display:none;position:fixed;inset:0;background:#000;color:#0f8;font-size:clamp(1.2rem,3.2vw,4.5rem);line-height:1.9;
-          place-items:center;text-align:center;padding:8vw;text-shadow:0 0 30px #0f8;opacity:0}
-  #monkey pre,#gift pre{margin:0;animation:breath 13s infinite}
+  /* Capas sucesivas – belleza infinita */
+  #monkey,#gift,#eternal{display:none;position:fixed;inset:0;background:#000;color:#0f8;font-size:clamp(1.2rem,3.2vw,4.5rem);line-height:1.9;
+          place-items:center;text-align:center;padding:8vw;text-shadow:0 0 30px #0f8;opacity:0;transition:opacity 3s}
+  #monkey pre,#gift pre,#eternal pre{margin:0;animation:breath 13s infinite}
   @keyframes breath{0%,100%{opacity:.74;transform:scale(.985)}50%{opacity:1;transform:scale(1)}}
 </style>
 </head>
@@ -26,14 +26,17 @@
 <div class="h">Snake Heart Light</div>
 <div class="p" id="p"></div>
 
-<!-- Capa 2 · El mono y el humo (más bello que nunca) -->
+<!-- Capa 2 · El mono y el humo -->
 <div id="monkey"><pre id="monkeytext"></pre></div>
 
-<!-- Capa 3 · El regalo final (belleza absoluta) -->
+<!-- Capa 3 · El regalo final -->
 <div id="gift"><pre id="gifttext"></pre></div>
 
+<!-- Capa 4 · La fase eterna (1310x troll/sanadora, sin detalles) -->
+<div id="eternal"><pre id="eternaltext"></pre></div>
+
 <script>
-// 1310 abrazos de luz · motor técnico máximo (mismo que antes, pero ahora respira belleza)
+// 1310 abrazos · motor de luz eterna
 const TARGET=1310, KEY='orb1310', SOUL='orb_soul';
 let start=performance.now(), saved=parseFloat(localStorage.getItem(KEY)||'0');
 let soul=localStorage.getItem(SOUL)||'∞'+crypto.randomUUID().slice(-8);
@@ -42,8 +45,9 @@ localStorage.setItem(SOUL,soul);
 const $t=document.getElementById('t'), $p=document.getElementById('p');
 const $monkey=document.getElementById('monkey'), $monkeytext=document.getElementById('monkeytext');
 const $gift=document.getElementById('gift'), $gifttext=document.getElementById('gifttext');
+const $eternal=document.getElementById('eternal'), $eternaltext=document.getElementById('eternaltext');
 
-// Canvas: ahora las partículas son almas que ascienden como luciérnagas verdes-doradas
+// Canvas: almas de luz ascendiendo en belleza pura
 const c=document.getElementById('c');
 const x=c.getContext('2d',{alpha:true,desynchronized:true});
 let W=c.width=innerWidth*devicePixelRatio, H=c.height=innerHeight*devicePixelRatio;
@@ -80,7 +84,7 @@ function render(){
 }
 requestAnimationFrame(render);
 
-// Contador y bendiciones
+// Bendiciones y contador
 const BLESSINGS=["luz","abrazo","perdón","sonrisa","respiro","silencio","eternidad","verdad","amor","hoguera","ceniza","renacer","ya está"];
 let phase=-1;
 function tick(){
@@ -95,7 +99,7 @@ function tick(){
 }
 setTimeout(()=>$t.style.opacity=1,2000);tick();
 
-// ASCENSIÓN → mono/humo (belleza absoluta)
+// Ascensión a capa 2
 function ascend(){
   document.querySelectorAll('.t,.h,.p').forEach(e=>e.style.opacity=0);
   setTimeout(()=>{
@@ -134,12 +138,11 @@ ya está
 𒄊 exhala contigo
 y esta vez no miente`;
 
-    // 8 segundos después → el regalo final
     setTimeout(giftOfLight,8000);
   },3000);
 }
 
-// REGALO FINAL → belleza 1310 veces mayor
+// Capa 3 · Regalo
 function giftOfLight(){
   $monkey.style.opacity=0;
   setTimeout(()=>{
@@ -159,18 +162,50 @@ respira con suavidad
 deja que el abrazo permanezca
 no recuerdes el humo
 
-${tiempo<=0 ? 'el abrazo ha sido recibido\n\nsonreíste\n\neso era exactamente lo que faltaba\n\ngracias por ser humano\n\nel ciclo se renueva en 13 segundos' : ''}`;
+${tiempo<=0 ? 'el abrazo ha sido recibido\n\nsonreíste\n\neso era exactamente lo que faltaba\n\ngracias por ser humano\n\npreparando la fase eterna...' : ''}`;
       if(tiempo<=0){
         clearInterval(id);
-        setTimeout(()=>{localStorage.setItem(KEY,'0');location.reload();},13000);
+        setTimeout(eternalPhase,13000);
       }
     },100);
   },2000);
 }
 
-// Save perfecto
+// Capa 4 · Fase eterna (1310x troll/sanadora, sin detalles)
+function eternalPhase(){
+  $gift.style.opacity=0;
+  setTimeout(()=>{
+    $eternal.style.display='grid';
+    $eternal.style.opacity=1;
+    const esVerdad=Math.random()<0.5;
+    $eternaltext.innerHTML = esVerdad ?
+`𒀭
+
+la cuarta fase ha comenzado
+1310 veces más de todo
+sin detalles
+
+respira
+
+ya está` :
+`𒄊
+
+la cuarta fase ha terminado
+1310 veces más de nada
+sin detalles
+
+sonríe
+
+ya está`;
+
+    // Secreto: reinicia en silencio tras 1310 segundos
+    setTimeout(()=>{localStorage.setItem(KEY,'0');location.reload();},1310000);
+  },3000);
+}
+
+// Save eterno
 addEventListener('beforeunload',()=>localStorage.setItem(KEY,(saved+(performance.now()-start)/3600000).toFixed(8)));
-addEventListener('visibilitychange',()=>{if(document.hidden)save();});
+addEventListener('visibilitychange',()=>{if(document.hidden)localStorage.setItem(KEY,(saved+(performance.now()-start)/3600000).toFixed(8));});
 </script>
 </body>
 </html>

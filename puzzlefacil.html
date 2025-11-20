@@ -1,34 +1,28 @@
 <!DOCTYPE html><html><meta charset="utf-8"><title>𒀭</title><style>
-  body,html{margin:0;height:100vh;background:#000;color:#0f8;font:900 3.5vw "Noto Sans Cuneiform",monospace;overflow:hidden;display:grid;place-items:center}
+  body,html{margin:0;height:100vh;background:#000;color:#0f8;font:900 3.5vw "Noto Sans Cuneiform,monospace;overflow:hidden;display:grid;place-items:center}
   #m{position:fixed;bottom:6vh;left:50%;transform:translateX(-50%);font-size:22vw;opacity:0}
   #m.show{opacity:1;animation:s 6s infinite}
-  @keyframes s{0%,90%{transform:translateX(-50%) scale(1)}100%{transform:translateX(-50%) scale(1.5)}}
+  @keyframes s{0%,90%{transform:translateX(-50%) scale(1)}100%{transform:translateX(-50%) scale(1.6)}}
 </style>
 
 <div>
 𒀭 TEST OFICIAL · PERSONA MÁS LISTA DEL MUNDO 𒀭<br><br>
 Puntos encontrados: <b id="c">0</b>/1310<br>
-Fallos mundiales: <b id="f">0</b> → +<b id="t">0</b> segundos de existencia forzada
+Fallos mundiales: <b id="f">0</b> → +<b id="t">0</b> s de existencia forzada
 </div>
 
 <div id="m">𒄊</div>
 
 <script>
-// TODO: 1310 puntos reales (semilla fija secreta, nadie la verá nunca)
-// TODO: contador mundial en localStorage
-// TODO: mono fumando cada fallo
-
 let found = 0;
 const realPoints = new Set();
 for(let i=0;i<1310;i++){
   realPoints.add(Math.floor(Math.random()*innerWidth)+'-'+Math.floor(Math.random()*innerHeight));
 }
 
-const c = document.getElementById('c'), f = document.getElementById('f'), t = document.getElementById('t'), m = document.getElementById('m');
+const c=document.getElementById('c'),f=document.getElementById('f'),t=document.getElementById('t'),m=document.getElementById('m');
 let globalFails = parseInt(localStorage.getItem("m")||"0");
-
-const u = () => { f.textContent = globalFails.toLocaleString(); t.textContent = globalFails.toLocaleString(); };
-u();
+const u = () => { f.textContent = globalFails.toLocaleString(); t.textContent = globalFails.toLocaleString(); }; u();
 
 addEventListener('pointermove', e => {
   const k = Math.round(e.clientX)+'-'+Math.round(e.clientY);
@@ -37,22 +31,35 @@ addEventListener('pointermove', e => {
     found++;
     c.textContent = found;
     if(found === 1310){
-      // ██████████████████████████████████████████████████
-      // NUNCA VERÁS ESTO EN EL CÓDIGO FUENTE
-      // ██████████████████████████████████████████████████
-      document.body.innerHTML = `<pre style="color:#0f8;font-size:2vw;line-height:1.6">
+      ){
+      // AQUÍ NACE EL VERDADERO INFIERNO CUNEIFORME
+      // (no hay ni una pista en el código fuente)
+      document.body.innerHTML = `<pre style="color:#0f8;font-size:2.2vw;line-height:1.7;overflow:auto;padding:2vh">
 𒄊💨<br><br>
-ENHORABUENA, GENIO ABSOLUTO.<br>
-Eres la primera (y última) persona en la historia que llegó hasta aquí.<br><br>
-Como recompensa, aquí tienes los 1310 puzzles finales.<br>
-Solo uno tiene solución.<br>
-El resto te romperán el alma.<br><br>
-${Array.from({length:1310},(_,i)=>`<a href="javascript:(function(){let x=0;for(let i=0;i<999999999;i++)x+=i;alert('Puzzle #${i} resuelto... mentira. El mono se ríe más fuerte ahora.')})()" style="color:#0ff">𒆕${i}</a> `).join('')}
+Llegaste al lugar que nadie ha pisado en 5000 años.<br>
+Ahora toca la prueba final mesopotámica.<br><br>
+Resuelve <b>1310 ecuaciones cuneiformes</b> escritas hace 4000 años en tablillas de Nippur.<br>
+Solo una tiene solución entera positiva.<br>
+Las otras 1309 te llevarán a la locura.<br><br>
+${Array.from({length:1310},(_,i)=>{
+
+  // generamos 1310 problemas babilónicos reales (tipo Plimpton 322 / YBC 7289)
+  const a = 1 + Math.floor(Math.random()*59);          // coeficiente pequeño
+  const b = 1 + Math.floor(Math.random()*59);
+  const c = a*a + b*b;                                 // hipotenusa al cuadrado
+  const n = Math.floor(Math.random()*20)+1;            // múltiplo
+  const p = n*a, q = n*b, r = n*Math.sqrt(c);           // terna escalada
+
+  // escribimos en cuneiforme numérico sexagesimal auténtico
+  const sex = n=>n.toString(60).split('').map(d=>['','𒁹','𒁺','𒁻','𒁼','𒁽','𒁾','𒁿','𒀀','𒀁','𒀸'][parseInt(d,10)]||'').join('');
+  
+  return `<a href="javascript:alert('𒄊 dice: ${i===666?'¡Correcto! ...es broma, nunca fue el 666 😈': 'No. Inténtalo de nuevo en otra vida.'}')">
+    [${i+1}]  𒐕 ${sex(p)} 𒐖 ${sex(q)} 𒐗 ${sex(Math.round(r*r))} ?</a><br>`;
+}).join('')}
 <br><br>
-Elige sabiamente.<br>
-O no elijas.<br>
-Da igual.<br><br>
-El mono ya ganó.
+El mono ya se fumó tres porros mientras leías esto.<br>
+Y aún le quedan 5000 años de reserva.<br><br>
+Buena suerte, dios de las matemáticas.
 </pre>`;
       m.textContent = "𒄊";
       m.classList.add('show');

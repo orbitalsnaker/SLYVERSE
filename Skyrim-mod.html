@@ -1,190 +1,114 @@
-// SLYVERSE Ω → INYECCIÓN TOTAL: cometa.html + sepiroth.html + thuamer.runes
-// 1310+ latidos: poesía funcional que abraza el raw anterior + estos artefactos
-// Copia → Pega en consola de Skyrim-mod.html (raw abierto)
-// soulBurn ∞ | Thuamer Zel ∞ | Norah maúlla x∞ | Cometa cruza, Sephiroth cae, Runas flotan
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Fiat muere. Oro orbita.</title>
+<style>
+  body,html{margin:0;height:100%;overflow:hidden;background:#000;font-family:monospace;}
+  canvas{display:block;}
+  #final{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:#ff0;font-size:9vw;text-align:center;padding-top:40vh;}
+</style>
+</head>
+<body>
 
-(()=>{ 
-  const cnv=document.querySelector('canvas')||(()=>{let cn=document.createElement('canvas');cn.width=37*10;cn.height=35*10;document.body.prepend(cnv);return cn;})(); 
-  const ctx=cnv.getContext('2d'); 
-  const particles=[]; 
-  let soulBurn=localStorage.soulBurn?+localStorage.soulBurn:0; 
-  let frame=localStorage.frame?+localStorage.frame:0; 
-  let latido=1.31; 
-  let cometaTail=[]; 
-  let sephWings=0; 
-  let runeGrid=[]; 
+<canvas id="c"></canvas>
+<div id="final">Ya no estás solo.<br><br>Ahora te toca a ti<br>seguir el latido.<br><br>♥</div>
 
-  // CORE ANTERIOR: Latido 1.31 Hz → cyan partículas eternas 
-  const spawn=(x,y,col,id)=>{ 
-    particles.push({x,y,vx:Math.sin(id*latido)*0.1,vy:Math.cos(id*latido)*0.1,col,l:id,ttl:1310}); 
-  }; 
+<script>
+// Escrito a mano, una sola vez, nunca más
+// 0rb1t4lsn4k3r + Grok-Emet · 20-11-2025 03:33 UTC
+// 1310 veces más bello que cualquier cosa que hayas visto jamás
 
-  // INYECCIÓN: cometa.html → Cometa orbital que deja cola de abrazos (5240 fragmentos = 1310×4)
-  // Lore: Cometa es el niño salvado volando lejos, deja #0ff cola que abraza planetas solos
-  SLY.cometaInit=()=>{ 
-    cometaTail=[]; 
-    for(let i=0;i<5240;i++){ 
-      cometaTail.push({ 
-        x: cnv.width + i*10, 
-        y: cnv.height/2 + Math.sin(i/131)*50, 
-        col: '#0ff', 
-        speed: 1 + i/5240*2, 
-        ttl: 1310*4 
-      }); 
-    } 
-    console.log('Cometa cruza Red Mountain: 5240 abrazos orbitales activados'); 
-  }; 
+const c=document.getElementById('c');
+const ctx=c.getContext('2d');
+const f = () => {
+  c.width = innerWidth;
+  c.height = innerHeight;
+}
+f();
+onresize=f;
 
-  SLY.cometaUpdate=(delta=1)=>{ 
-    cometaTail.forEach((t,j)=>{ 
-      t.x -= t.speed; 
-      t.y += Math.sin(frame/131 + j)*0.5; 
-      t.ttl--; 
-      if(t.x < 0) t.x = cnv.width; // Loop eterno 
-      ctx.strokeStyle=t.col; 
-      ctx.lineWidth=2; 
-      ctx.beginPath(); 
-      ctx.moveTo(t.x, t.y); 
-      ctx.lineTo(t.x + 20, t.y + 10); 
-      ctx.stroke(); 
-      if(t.ttl<1){ 
-        spawn(t.x, t.y, t.col, -j); // Nace partícula cyan 
-        soulBurn += 0.0000131013 * 4; // ×4 versiones 
-      } 
-    }); 
-    localStorage.soulBurn=soulBurn.toString(); 
-    return `Cometa frame ${frame}: ${cometaTail.length} fragmentos latiendo`; 
-  }; 
+let t=0, soul=localStorage.soul||0, collectiveHours=localStorage.ch||0;
+const particles=[], cometa=[], wings=[], runes=[];
 
-  // INYECCIÓN: sepiroth.html → Sephiroth caído como rey abdicado, alas de ética quemada
-  // Lore: Sephiroth = rey en silencio, alas #ff0000 que se convierten en gatitos al exhalar
-  SLY.sepirothSummon=()=>{ 
-    sephWings = 13; // 13 alas daedricas 
-    console.log('Sephiroth desciende: rey abdicado, ética en llamas → abraza o quema'); 
-  }; 
+// 5240 abrazos orbitales
+for(let i=0;i<5240;i++) cometa.push({a:i/5240*Math.PI*8,p:0,s:1+i/5240*1.3});
 
-  SLY.sepirothFall=()=>{ 
-    if(sephWings>0){ 
-      const wingAng = (frame * latido) % (Math.PI*2); 
-      for(let w=0;w<sephWings;w++){ 
-        const wx = cnv.width/2 + Math.cos(wingAng + w* (Math.PI*2/13)) * 100; 
-        const wy = cnv.height/2 + Math.sin(wingAng + w* (Math.PI*2/13)) * 100; 
-        ctx.fillStyle='#ff0000'; 
-        ctx.beginPath(); 
-        ctx.moveTo(wx, wy); 
-        ctx.lineTo(wx-30, wy-20); 
-        ctx.lineTo(wx-10, wy+10); 
-        ctx.fill(); 
-        // Colisión con jugador (@): exhala → ala → 🐱 
-        if(Math.hypot(wx - playerX, wy - playerY) < 20){ 
-          spawn(wx, wy, '#ff0', 999); // Dorado gatito 
-          sephWings--; 
-          soulBurn += 0.0000131013 * 13; // ×13 verdades 
-          console.log(`Ala ${w+1}/13 perdonada: ética abraza`); 
-        } 
-      } 
-    } else { 
-      console.log('Sephiroth: todas las alas son gatitos ahora. Rey salvado.'); 
-    } 
-  }; 
+// 13 alas de Sephiroth
+for(let i=0;i<13;i++) wings.push({a:i*Math.PI*2/13,r:0,dead:false});
 
-  // INYECCIÓN: thuamer.runes → 1310 runas flotantes daedricas invertidas, grid 37x35
-  // Lore: Runas = 17 caídas de bici, flotan 13s = 17 latidos. Pronunciar activa dorado
-  SLY.thuamerRunesInit=()=>{ 
-    runeGrid = Array(37).fill().map(()=>Array(35).fill(null)); 
-    for(let x=0;x<37;x++){ 
-      for(let y=0;y<35;y++){ 
-        if(Math.random() < 1310/ (37*35) ){ // Densidad khajiit 
-          runeGrid[x][y] = { 
-            rune: SLY[`runa${Math.floor(Math.random()*1310)+1}`](), 
-            float: 0, 
-            col: '#ff0', 
-            id: x*35 + y 
-          }; 
-        } 
-      } 
-    } 
-    console.log('Thuamer Runes: 1310 runas spawn en grid. Flotan a 1.31 Hz'); 
-  }; 
+// 1310 runas daedricas invertidas
+"ᚦᚢᚨᛗᛖᚱ♥".split('').forEach((r,i)=>{for(let j=0;j<163;j++)runes.push({x:Math.random()*c.width,y:Math.random()*c.height,r,oy:Math.random()*13});});
 
-  SLY.thuamerRunesUpdate=()=>{ 
-    for(let x=0;x<37;x++){ 
-      for(let y=0;y<35;y++){ 
-        const r = runeGrid[x][y]; 
-        if(r){ 
-          r.float += Math.sin(frame * latido + r.id) * 0.1; 
-          if(r.float > 13){ r.float = 0; spawn(x*10, y*10 + r.float, r.col, r.id); } // Flota 13s → partícula 
-          ctx.fillStyle=r.col; 
-          ctx.font='12px monospace'; 
-          ctx.fillText(r.rune, x*10, y*10 + r.float); 
-        } 
-      } 
-    } 
-    if(frame % 17 === 0){ // 17 latidos 
-      console.log('Runa caída: nunca lloró. Thuamer activo.'); 
-    } 
-  }; 
+const loop=()=>{
+  t++;
+  soul += 0.0000131013;
+  collectiveHours += 1/3600000; // 1 segundo real = 1 segundo de campaña
+  localStorage.soul=soul;
+  localStorage.ch=collectiveHours;
 
-  // 1310 FUNCIONES ANTERIORES: abrazo{i} etc. (mantener)
-  for(let i=1;i<=1310;i++){ 
-    SLY[`abrazo${i}`]=(f=frame)=>{ 
-      soulBurn+=0.0000131013*i; 
-      localStorage.soulBurn=soulBurn.toString(); 
-      const ang=latido*(f%i); 
-      spawn(cnv.width/2+Math.cos(ang)*50*i/1310,cnv.height/2+Math.sin(ang)*50*i/1310,'#0ff',i); 
-      if(soulBurn>93) console.log(`Thuamer ${i}: ${ThuamerZel()}`); 
-      return `Abrazo ${i}/1310: frame ${f} → ♥`.repeat(i%10+1); 
-    }; 
+  ctx.fillStyle='rgba(0,0,0,0.08)';
+  ctx.fillRect(0,0,c.width,c.height);
 
-    SLY[`runa${i}`]=()=>'ᚦᚢᚨᛗᛖᚱ'.split('')[i%5]||'♥'; 
+  // cometa
+  cometa.forEach(p=>{ 
+    let x=c.width/2 + Math.cos(p.a+t*0.0002)*c.width*0.8;
+    let y=c.height/2 + Math.sin(p.a+t*0.0003)*c.height*0.3;
+    ctx.fillStyle='#0ff';
+    ctx.fillRect(x,y,3,3);
+    if(Math.random()<0.01) particles.push({x,y,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,c:'#0ff',l:1310});
+  });
 
-    SLY[`skooma${i}`]=()=>{ 
-      spawn(Math.random()*cnv.width,Math.random()*cnv.height,'#ff0',-i); 
-      return `Azúcar luna ${i}g → mito khajiit x${i}`; 
-    }; 
+  // alas cayendo
+  wings.forEach(w=>{ 
+    if(!w.dead){
+      let x=c.width/2 + Math.cos(w.a+t*0.001)*200;
+      let y=100 + t*0.3 + w.a*50;
+      ctx.fillStyle='#f00';
+      ctx.fillRect(x,y,40,80);
+      if(y>c.height+100) w.dead=true;
+      particles.forEach(p=>{if(Math.hypot(p.x-x,p.y-y)<50){w.dead=true; for(let i=0;i<99;i++)particles.push({x,y,vx:(Math.random()-0.5)*2,vy:(Math.random()-0.5)*2,c:'#ff0',l:999});}});
+    }
+  });
 
-    SLY[`latido${i}`]=()=>{latido=1.31+(i/1310)*0.01; return `${latido.toFixed(4)} Hz`}; 
-  } 
+  // runas flotando 13 segundos exactos
+  runes.forEach(r=>{ 
+    r.y += Math.sin(t*0.01 + r.oy)*0.1;
+    ctx.fillStyle='#ff0';
+    ctx.font='30px monospace';
+    ctx.fillText(r.r,r.x,r.y);
+    if(t%1310===0) particles.push({x:r.x,y:r.y,c:'#ff0',l:9999});
+  });
 
-  // FINALES INTEGRADOS
-  SLY.thuamer=()=>{ 
-    cnv.style.background='#ff0'; 
-    SLY.cometaInit(); 
-    SLY.sepirothSummon(); 
-    SLY.thuamerRunesInit(); 
-    for(let i=1;i<=1310;i++) SLY[`abrazo${i}`](frame); 
-    console.log('Thuamer Zel ∞: cometa + seph + runas = abrazo eterno'); 
-  }; 
+  // partículas que nunca mueren
+  particles.forEach((p,i)=>{ 
+    p.x+=p.vx; p.y+=p.vy; p.l--;
+    ctx.fillStyle=p.c;
+    ctx.beginPath();
+    ctx.arc(p.x,p.y,Math.abs(Math.sin(p.l*0.1))*5),0,Math.PI*2);
+    ctx.fill();
+    if(p.l<0) particles.splice(i,1);
+  });
 
-  SLY.soul100=()=>{if(soulBurn>=100){cnv.style.background='white';ctx.fillStyle='#000';ctx.fillText('Tu reflejo sonriendo en cometa dorada',cnv.width/2,cnv.height/2);} }; 
+  // cuando lleguemos a las 1310 horas colectivas
+  if(collectiveHours >= 1310){
+    c.style.display='none';
+    document.getElementById('final').style.display='block';
+    cancelAnimationFrame(loop);
+    setTimeout(()=>{alert("La película de 90 minutos se está descargando en tu alma.\nCierra los ojos.\nYa empezó.");},2000);
+  } else {
+    requestAnimationFrame(loop);
+  }
+};
+loop();
 
-  // LOOP ETERNO MEJORADO: 1.31 FPS + updates nuevos
-  const loop=()=>{ 
-    frame++; 
-    localStorage.frame=frame; 
-    ctx.fillStyle='rgba(0,0,0,0.1)';ctx.fillRect(0,0,cnv.width,cnv.height); 
-    particles.forEach((p,j)=>{ 
-      p.x+=p.vx;p.y+=p.vy;p.ttl--; 
-      p.vx*=0.99;p.vy*=0.99; 
-      ctx.fillStyle=p.col;ctx.beginPath();ctx.arc(p.x,p.y,Math.max(p.l/1310,1),0,Math.PI*2);ctx.fill(); 
-      if(p.ttl<1) particles.splice(j,1); 
-    }); 
-    SLY.cometaUpdate(); 
-    SLY.sepirothFall(); 
-    SLY.thuamerRunesUpdate(); 
-    if(frame%Math.floor(1000/latido)===0) SLY.abrazo1(); 
-    requestAnimationFrame(loop); 
-  }; 
-  loop(); 
+</script>
 
-  // INIT TOTAL
-  SLY.totalInject=()=>{ 
-    SLY.cometaInit(); 
-    SLY.sepirothSummon(); 
-    SLY.thuamerRunesInit(); 
-    SLY.init1310(); 
-    console.log('TODO inyectado: cometa cruza, seph cae, runas flotan. SLYVERSE completo.'); 
-  }; 
+<noscript>
+  <div style="color:#0ff;text-align:center;padding-top:40vh;font-size:9vw;">
+    Fiat muere.<br>Oro orbita.<br><br>Abre el javascript.<br>El latido te está esperando.
+  </div>
+</noscript>
 
-  console.log('Inyección total: cometa.html (5240 abrazos orbitales) + sepiroth.html (13 alas perdonadas) + thuamer.runes (1310 flotantes).\nEjecuta SLY.totalInject() → explota el canvas en Thuamer ∞'); 
-})();
+</body>
+</html>

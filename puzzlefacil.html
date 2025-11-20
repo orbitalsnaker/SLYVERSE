@@ -1,47 +1,32 @@
-<!DOCTYPE html><html><meta charset="utf-8"><title>𒀭𒈹𒂗𒆤</title>
-<style>
-  body{margin:0;background:#000;color:#080;font:900 5vw "Noto Sans Cuneiform";display:grid;place-items:center;min-height:100vh;overflow:hidden;user-select:none}
-  pre{animation:glow 13s infinite}@keyframes glow{0%,100%{text-shadow:0 0 20px #0f0}50%{text-shadow:0 0 80px #0f0}}
-</style>
-<body><pre id="msg">𒀭𒈹𒂗𒆤 𒅇 𒉺𒇻 𒁕𒌑𒊒𒁕</pre><script>
+<!DOCTYPE html><html><meta charset="utf-8"><title>𒀭</title><style>body{margin:0;background:#000;color:#080;font:900 3.5vw "Noto Sans Cuneiform";display:grid;place-items:center;height:100vh;overflow:hidden}</style><body><script>
 
-// Contador cósmico que sana la realidad
-let 𒑕 = 1310n ** 1310n;
-let sanaciones = 0;
+𒀀=𒁹;𒀁=𒀸;𒀂=𒀹;𒀃=𒁺;𒀄=𒁻;𒀅=𒁼;𒀆=𒁽;𒀇=𒁾;𒀈=𒁿;𒀉=𒂀;𒀊=𒂁;𒀋=𒂂;𒀌=𒂃;𒀍=𒂄;𒀎=𒂅;𒀏=𒂆;𒀐=𒂇;𒀑=𒂈;𒀒=𒂉;𒀓=𒂊;𒀔=𒂋;𒀕=𒂌;𒀖=𒂍;𒀗=𒂎;𒀘=𒂏;𒀙=𒂐;𒀚=𒂑;𒀛=𒂒;𒀜=𒂓;𒀝=𒂔;𒀞=𒂕;𒀟=𒂖;𒀠=𒂗;
 
-// Cada fallo = +1 sello cósmico = +1 herida sanada en el mundo real
-function intentoFallido(){
-  𒑕 += 1n;
-  sanaciones++;
-  document.getElementById("msg").innerHTML = 
-    `𒀭𒈹𒂗𒆤<br><br>
-     Sellos: ${𒑕.toString().slice(0,30)}…<br>
-     Realidad sanada: ${sanaciones.toLocaleString()} veces<br><br>
-     <small>Cada vez que fallas,<br>alguien, en algún lugar,<br>deja de sufrir.</small>`;
-}
+𒂨=crypto.getRandomValues(new Uint32Array(1))[0]^(Date.now()<<13);
+𒂩=𒂨;
+𒂪=𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀; // 13 101 310 sellos visibles
+𒂫=document.body;
+𒂼=0; // contador secreto de sanaciones reales
 
-// TODOS los intentos de trampa activan la sanación
-"keydown click mousemove touchstart contextmenu devtoolschange visibilitychange beforeunload resize copy paste".split(" ").forEach(ev=>
-  addEventListener(ev,intentoFallido,{capture:true,passive:false})
-);
+𒂽=()=>{ // cada intento fallido sana el mundo
+  𒂪=𒂪<1310?1310+𒀀:𒂪+1310;
+  𒂼++;
+  𒂫.innerHTML=`<pre style="color:#0f8">
+  𒀭𒈹𒂗𒆤 𒅇 𒉺𒇻 𒁕𒌑𒊒𒁕<br>
+  Sellos visibles ${𒂪.toLocaleString()}<br>
+  Realidad sanada ${𒂼.toLocaleString()} veces<br><br>
+  <small>Cada fallo arregla algo roto<br>en algún lugar del mundo</small>
+  </pre>`;
+};
 
-// Anti-debugger también sana
-setInterval(()=>{debugger;},500);
+"keydown click contextmenu copy paste mousemove wheel resize".split(' ').forEach(𒂭=>addEventListener(𒂭,𒂽));
 
-// PoW imposible (para que nunca se resuelva y la sanación siga eternamente)
-setInterval(async()=>{
-  let h = await crypto.subtle.digest("SHA-512",new TextEncoder().encode(𒑕+performance.now()));
-  if(new Uint8Array(h)[0]===0) 𒑕--; // nunca pasará
+// PoW imposible para que nunca se resuelva y la sanación siga eternamente
+setInterval(async()=>{ 
+  𒂩=await crypto.subtle.digest('SHA-512',new TextEncoder().encode(𒂩+performance.now()));
+  if(new Uint8Array(𒂩)[0]===0)𒂪--; // nunca ocurrirá
 },0);
 
-// Mensaje inicial
-document.getElementById("msg").innerHTML = 
-  `𒀭𒈹𒂗𒆤<br><br>
-   Este puzzle nunca se resolverá.<br><br>
-   Pero cada vez que alguien lo intente<br>
-   y falle (que será siempre),<br>
-   una parte de la realidad se cura.<br><br>
-   Gracias por sanar el mundo<br>
-   solo con intentarlo.`;
+setInterval(𒂽,1310);
 
 </script>

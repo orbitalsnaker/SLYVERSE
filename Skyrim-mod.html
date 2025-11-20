@@ -1,483 +1,197 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLYVERSE: Thuamer's 1310-Hour Red Mountain - 1310x Bello a Mano 🐱✨</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Creepster&family=MedievalSharp&display=swap');
-        body { 
-            background: radial-gradient(ellipse at center, #0a0a1a 0%, #000 70%);
-            color: #fff; 
-            font-family: 'MedievalSharp', monospace; 
-            text-align: center; 
-            margin: 0; 
-            padding: 20px;
-            overflow: hidden;
-            cursor: none;
-        }
-        canvas { 
-            border: 3px solid #ff6b35; 
-            border-image: linear-gradient(45deg, #ff6b35, #ffd700, #00ff88) 1;
-            background: radial-gradient(circle, #111, #000);
-            image-rendering: pixelated; 
-            box-shadow: 0 0 50px #ff6b35, inset 0 0 100px rgba(0,0,0,0.8);
-            max-width: 100vw; 
-            max-height: 100vh;
-        }
-        #hud {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 16px;
-            color: #00ff88;
-            text-shadow: 0 0 10px #00ff88, 0 0 20px #00ff88;
-            font-weight: bold;
-            letter-spacing: 2px;
-        }
-        #instructions {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            font-size: 14px;
-            color: #ff6b35;
-            text-shadow: 0 0 5px #ff6b35;
-            font-family: 'Creepster', cursive;
-        }
-        #version {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            font-size: 12px;
-            color: #ffd700;
-            text-shadow: 0 0 5px #ffd700;
-            font-style: italic;
-        }
-        h1 {
-            color: #ffd700;
-            font-family: 'Creepster', cursive;
-            font-size: 32px;
-            margin-bottom: 10px;
-            text-shadow: 0 0 20px #ffd700, 0 0 40px #ff6b35;
-            animation: glow 2s ease-in-out infinite alternate;
-        }
-        @keyframes glow {
-            from { text-shadow: 0 0 20px #ffd700, 0 0 40px #ff6b35; }
-            to { text-shadow: 0 0 30px #ffd700, 0 0 60px #ff6b35, 0 0 100px #00ff88; }
-        }
-        #cursor {
-            position: fixed;
-            width: 20px;
-            height: 20px;
-            background: radial-gradient(circle, #00ff88, transparent);
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 9999;
-            box-shadow: 0 0 20px #00ff88;
-            animation: pulse 1s infinite;
-        }
-        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
-    </style>
+<meta charset="utf-8">
+<title>SLYVERSE · ABRAZO FINAL · David + Seth + Norah + Drogon + Amy + Thuamer + 1310 Universos + Todos los que alguna vez necesitaron que alguien les dijera “ya está, respirá, estás en casa”</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Creepster&family=MedievalSharp&family=UnifrakturMaguntia&display=swap');
+  body,html{margin:0;height:100vh;background:#000;color:#0cf;font-family:Georgia,serif;overflow:hidden;position:relative}
+  canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1;image-rendering:pixelated}
+  .c{position:fixed;inset:0;padding:3rem;overflow-y:auto;display:flex;align-items:center;justify-content:center;text-align:center;background:rgba(0,0,0,0.96);z-index:2;flex-direction:column}
+  h1{font-size:clamp(4rem,12vw,14rem);margin:1rem 0;text-shadow:0 0 300px #0cf;animation:pulse 4s infinite}
+  .v{line-height:3;font-size:clamp(1.8rem,4vw,4.5rem);color:#8ff;margin:4rem 0}
+  .s{font-size:clamp(6rem,15vw,18rem);animation:p 1.31s infinite}
+  .t{font-size:clamp(1.6rem,3.5vw,3.2rem);color:#6cf;margin:4rem 0;line-height:2.4}
+  .small{font-size:clamp(1rem,2vw,2rem);color:#4af;margin-top:8rem;opacity:0.8}
+  button{background:#0cf;color:#000;padding:2rem 6rem;border:none;border-radius:80px;font-size:clamp(2rem,4vw,4rem);cursor:pointer;margin:2rem;font-weight:bold}
+  .corazon{font-size:clamp(8rem,20vw,24rem);animation:heartbeat 1.310s infinite}
+  #aurum,#mod{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.98);z-index:99;padding:3rem;overflow-y:auto;text-align:center;color:#0f0}
+  @keyframes p{0%,100%{opacity:.2;transform:scale(1)}50%{opacity:1;transform:scale(1.8)}}
+  @keyframes pulse{0%,100%{text-shadow:0 0 300px #0cf}50%{text-shadow:0 0 600px #0ff,0 0 900px #0cf}}
+  @keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.31)}}
+</style>
 </head>
 <body>
-    <h1>🐱🖤✨ SLYVERSE: Thuamer's Eternal Red Mountain 🐱🖤✨</h1>
-    <canvas id="game"></canvas>
-    <div id="hud">
-        Ciclos: <span id="cycles">0</span>/∞ | Tiempo: <span id="time">0</span>h | Dragones: <span id="dragons">0</span> → Gatitos | Nivel: <span id="level">1</span> | Runas: <span id="runas">0</span>
+
+<canvas id="c"></canvas>
+
+<div class="c">
+  <h1>SLYVERSE</h1>
+  
+  <div class="v">
+    Un solo archivo.<br>
+    Creado por David.<br><br>
+    <div class="s">Star</div><br><br>
+    33 % → Seth, Norah, Drogon y Amy<br>
+    67 % → niños sin final feliz todavía<br>
+    100 % → cualquiera que alguna vez haya necesitado un abrazo<br><br>
+  </div>
+
+  <div class="t">
+    Si hoy puedes dar algo, hermoso.<br>
+    Si hoy no puedes, también está bien.<br>
+    Te abrazo igual.<br><br>
+    
+    Ari Aster baja del oso y te entrega flores.<br>
+    Toby Fox abre Undertale y elige Mercy por ti.<br>
+    Kentaro Miura dibuja a Guts sonriendo en una playa.<br>
+    Bo Burnham apaga el spotlight y se queda contigo.<br>
+    Hideo Kojima conecta el último Strand y es tu mano.<br>
+    Miyazaki aterriza el castillo ambulante justo donde estás.<br>
+    Oda dibuja la bandera ondeando y grita “¡Ya llegamos todos, hermana!”.<br><br>
+    
+    Los 1310 universos rotos ya están cosidos con hilo verde.<br>
+    Y tú estás dentro del abrazo.<br><br>
+    
+    No hay más créditos.<br>
+    Solo respiración compartida hasta que el sol se queme.
+  </div>
+
+  <div style="margin:6rem">
+    <button onclick="abrirAbrazoFinal()">ABRIR EL ABRAZO FINAL · 1310 UNIVERSOS CONECTADOS</button>
+  </div>
+
+  <div class="small">
+    David + Seth + Norah + Drogon + Amy + Thuamer + Grok + 1310 autores vivos + todos los que necesiten abrazo · 2025–∞ · Benditos seáis eternamente
+  </div>
+</div>
+
+<!-- ABRAZO FINAL · AURUM THUAMER + RED MOUNTAIN + 1310 PARTÍCULAS + LLUVIA DE ESTRELLAS -->
+<div id="aurum">
+  <canvas id="aurum-canvas"></canvas>
+  <div style="position:absolute;inset:0;padding:4rem;overflow-y:auto;text-align:center;color:#0f0;z-index:2">
+    <h1 class="corazon">♥</h1>
+    <h1>AURUM THUAMER · ABRAZO FINAL</h1>
+    <div style="font-size:clamp(1.8rem,4vw,3.5rem);line-height:2.8;max-width:1200px;margin:4rem auto">
+      Cuando la película llega a su último fotograma,<br>
+      cuando la Misa Solemnis estalla en “Dona nobis pacem”<br>
+      y la piba descalza de La Matanza ya no cabe en la pantalla,<br><br>
+
+      se abre una grieta verde en el cielo de todos los mundos a la vez.<br><br>
+
+      Y los 1310 universos rotos se conectan en una sola cubierta.<br><br>
+
+      El sol de Midsommar nunca se pone pero ya no quema.<br>
+      El Eclipse de Berserk se vuelve luna llena de sake.<br>
+      El mar de Death Stranding se calma y huele a damajuana.<br>
+      El cielo de Porco Rosso se llena de Catbus borrachos.<br>
+      El Inside de Bo Burnham se prende fuego verde y todos los días y nadie se asusta.<br>
+      El evangelio de Shinji se reescribe con ojotas rotas.<br>
+      La familia de Hereditary se abraza en vez de cortarse la cabeza.<br>
+      Y en el fondo, muy lejos, se escucha a Luffy riéndose porque al fin entendió la broma.<br><br>
+
+      Los 1310 fantasmas aparecen de golpe, pero ya no son fantasmas:<br>
+      son los autores vivos dentro de sus propios finales arreglados.<br><br>
+
+      Ari baja del oso y entrega flores frescas.<br>
+      Toby abre Undertale y todos eligen Mercy.<br>
+      Kentaro cierra Berserk con Guts sonriendo en una playa.<br>
+      Bo apaga el spotlight y se queda en escena para siempre.<br>
+      Hideo conecta el último Strand y es un abrazo.<br>
+      Miyazaki aterriza el castillo ambulante en Barceló-Whiterun.<br>
+      Y Oda, desde su estudio, dibuja una sola viñeta:<br>
+      la bandera de nylon ondeando en Laugh Tale.<br><br>
+
+      La morocha Dragonborn sube al mástil,<br>
+      levanta la bolsa de nylon que ya no es bolsa sino mapa completo del One Piece,<br>
+      y canta la última estrofa que faltaba:<br><br>
+
+      «Entregaremos este abrazo por los mares del mañana…<br>
+      ¡Ya llegamos todos, hermana!»<br><br>
+
+      Y los 1310 universos responden al unísono:<br><br>
+
+      <span style="font-size:2em;color:#0cf">Yo-ho-ho-ho…<br>
+      Gracias por no apagarnos nunca.</span>
     </div>
-    <div id="instructions">
-        WASD/Flechas/Mouse: Mover @ | ESPACIO: Exhalar Runa Sagrada (4-4-8 Respira) | P: Pausa | R: Renacer Épico
-    </div>
-    <div id="version">v1310x Bello a Mano - Hecho con Alma por @0rb1t4lsn4k3r + Grok | Dedicado a Seth & Norah 🐱</div>
-    <div id="cursor"></div>
+    <h1 class="corazon">♥</h1>
+    <button onclick="location.reload()" style="background:#0cf;color #000;padding:2rem 6rem;border:none;border-radius:50px;font-size:3rem;margin-top:6rem">
+      Volver a respirar · El abrazo nunca termina
+    </button>
+  </div>
+</div>
 
-    <script>
-        // SLYVERSE 1310x BELLO A MANO: Arte pixel handmade + efectos divinos
-        // + Glow radial gradients, bloom post-process, 1310x particles con trails,
-        // sombras dinámicas, mouse cursor custom, fondos Morrowind ashlands,
-        // animaciones fluidas, pixel perfect, shaders canvas2D simulados,
-        // partículas transform con explosión gatito, UI medieval glow.
-        // Mano: Cada gradient, sombra, partícula tweakada para belleza x1310.
+<script>
+// 1310 partículas verdes + lluvia de estrellas + respiración compartida + todo el oro del abrazo original
+const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
+canvas.width = innerWidth; canvas.height = innerHeight;
+let t = 0, love = 0;
+const particles = [];
+for(let i = 0; i < 13101; i++) particles.push({
+  a: Math.random()*Math.PI*2,
+  d: Math.random()*Math.min(innerWidth,innerHeight)/2,
+  s: 0.0001+Math.random()*0.0005,
+  p: Math.random()*Math.PI*2
+});
 
-        const canvas = document.getElementById('game');
-        const ctx = canvas.getContext('2d');
-        const hudCycles = document.getElementById('cycles');
-        const hudTime = document.getElementById('time');
-        const hudDragons = document.getElementById('dragons');
-        const hudLevel = document.getElementById('level');
-        const hudRunas = document.getElementById('runas');
-        const cursor = document.getElementById('cursor');
+addEventListener('click',()=>{love+=30});
+addEventListener('touchstart',()=>{love+=30});
+addEventListener('keydown',()=>{love+=20});
 
-        // Responsive pixel perfect
-        function resizeCanvas() {
-            canvas.width = Math.min(1024, window.innerWidth - 80);
-            canvas.height = Math.min(768, window.innerHeight - 240);
-            canvas.style.width = canvas.width + 'px';
-            canvas.style.height = canvas.height + 'px';
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+function draw(){
+  t+=0.016;
+  ctx.fillStyle='rgba(0,0,0,0.03)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  const fuerza=1+love*0.25;
+  particles.forEach(p=>{
+    const pulse=Math.sin(t*1.31+p.p*1.31)*0.5+0.5;
+    const angle=p.a+t*p.s*1.31;
+    const dist=p.d+pulse*300*fuerza;
+    const size=4+pulse*60*fuerza;
+    ctx.globalAlpha=0.4+pulse*0.6;
+   ,ctx.fillStyle=`hsla(${120+pulse*80},100%,${60+pulse*40}%,${0.6+pulse*0.4})`;
+    ctx.fillRect(canvas.width/2+Math.cos(angle)*dist-size/2,
+                 canvas.height/2+Math.sin(angle)*dist-size/2, size, size);
+  });
+  love*=0.98;
+  requestAnimationFrame(draw);
+}
+draw();
 
-        // Estado Thuamer eterno
-        let gridSize = 37;
-        let grid = [];
-        let player = { x: Math.floor(gridSize / 2), y: Math.floor(gridSize / 2), breathPhase: 0 };
-        let particles = []; // 1310x bello: trails + glow
-        let transformParticles = []; // Explosiones gatito
-        let cycles = 0;
-        let dragonsTransformed = 0;
-        let level = 1;
-        let gameTime = 0;
-        let runas = 0;
-        let lastTime = 0;
-        let paused = false;
-        let runaReady = true;
-        let mouseX = 0, mouseY = 0;
-        let proceduralSeed = Math.random() * 1310;
-        let achievements = new Set();
+// Abrir el abrazo final + lluvia de estrellas
+function abrirAbrazoFinal(){
+  document.getElementById('aurum').style.display='block';
+  for(let i=0;i<200;i++)setTimeout(()=>{
+    const e=document.createElement('div');
+    e.textContent='Star';
+    e.style.position='fixed';
+    e.style.left=Math.random()*100+'vw';
+    e.style.top='-100px';
+    e.style.fontSize='5rem';
+    e.style.color='#0cf';
+    e.style.pointerEvents='none';
+    e.style.animation='caer 6s linear forwards';
+    document.body.appendChild(e);
+  },i*50);
+}
+const style=document.createElement('style');
+style.textContent=`@keyframes caer{to{transform:translateY(120vh) rotate(1310deg);opacity:0}}`;
+document.head.appendChild(style);
 
-        // Grid procedural Red Mountain (ashlands Morrowind)
-        function initGrid() {
-            grid = [];
-            for (let y = 0; y < gridSize; y++) {
-                grid[y] = [];
-                for (let x = 0; x < gridSize; x++) {
-                    const rand = (Math.sin(x * 12.9898 + y * 78.233 + proceduralSeed) * 43758.5453) % 1;
-                    if (rand < 0.08) grid[y][x] = 'X'; // Dragón rojo glow
-                    else if (rand < 0.12) grid[y][x] = 'G'; // Golem piedra
-                    else if (rand < 0.18) grid[y][x] = '*'; // Oro orbita
-                    else if (rand < 0.3) grid[y][x] = '~'; // Ash procedural
-                    else grid[y][x] = '.';
-                }
-            }
-            player.x = Math.floor(gridSize / 2);
-            player.y = Math.floor(gridSize / 2);
-        }
+// Canvas del abrazo final (Red Mountain verde eterno)
+const aurumCanvas = document.getElementById('aurum-canvas');
+aurumCanvas.width = innerWidth; aurumCanvas.height = innerHeight;
+const actx = aurumCanvas.getContext('2d');
+let at = 0;
+function aurumLoop(){
+  at += 0.01;
+  actx.fillStyle = `hsla(${at*5},100%,50%,0.03)`;
+  actx.fillRect(0,0,aurumCanvas.width,aurumCanvas.height);
+  requestAnimationFrame(aurumLoop);
+}
+aurumLoop();
 
-        // 1310 Particles orbit + trails bello
-        function updateParticles(dt) {
-            for (let i = 0; i < 1310; i++) {
-                let p = particles[i] || (particles[i] = {
-                    angle: (i / 1310) * Math.PI * 2,
-                    dist: 25 + Math.sin(i * 0.1) * 10,
-                    life: 1,
-                    trail: []
-                });
-                p.angle += dt * (0.3 + Math.sin(i * 0.01) * 0.2);
-                p.x = player.x * cellW + Math.cos(p.angle) * p.dist * (level / 10 + 1);
-                p.y = player.y * cellH + Math.sin(p.angle) * p.dist * (level / 10 + 1);
-                p.life = 0.6 + Math.sin(Date.now() * 0.01 + i) * 0.4;
-                p.trail.push({x: p.x, y: p.y});
-                if (p.trail.length > 10) p.trail.shift();
-            }
-        }
-
-        // Respiración 4-4-8 divina
-        function updateBreath(dt) {
-            player.breathPhase += dt;
-            if (player.breathPhase > 16) player.breathPhase = 0;
-            runaReady = player.breathPhase > 12;
-        }
-
-        // Input mejorado + mouse
-        const keys = {};
-        window.addEventListener('keydown', e => {
-            keys[e.key.toLowerCase()] = true;
-            if (e.key === ' ') { e.preventDefault(); exhaleRuna(); }
-            if (e.key.toLowerCase() === 'p') paused = !paused;
-            if (e.key.toLowerCase() === 'r') resetEpic();
-        });
-        window.addEventListener('keyup', e => keys[e.key.toLowerCase()] = false);
-        canvas.addEventListener('mousemove', e => {
-            const rect = canvas.getBoundingClientRect();
-            mouseX = e.clientX - rect.left;
-            mouseY = e.clientY - rect.top;
-            cursor.style.left = (e.clientX - 10) + 'px';
-            cursor.style.top = (e.clientY - 10) + 'px';
-        });
-
-        // Movimiento fluido mouse/keys
-        function movePlayer() {
-            let dx = 0, dy = 0;
-            if (keys['w'] || keys['arrowup']) dy = -1;
-            if (keys['s'] || keys['arrowdown']) dy = 1;
-            if (keys['a'] || keys['arrowleft']) dx = -1;
-            if (keys['d'] || keys['arrowright']) dx = 1;
-            // Mouse attract suave
-            const mx = (mouseX / cellW) - player.x;
-            const my = (mouseY / cellH) - player.y;
-            dx += mx * 0.1;
-            dy += my * 0.1;
-            const nx = Math.max(0, Math.min(gridSize - 1, player.x + Math.sign(dx)));
-            const ny = Math.max(0, Math.min(gridSize - 1, player.y + Math.sign(dy)));
-            player.x = nx; player.y = ny;
-        }
-
-        // Exhalar Runa: Transform + explosión bello
-        function exhaleRuna() {
-            if (!runaReady) return;
-            const x = player.x, y = player.y;
-            if (grid[y][x] === 'X' || grid[y][x] === 'G') {
-                grid[y][x] = '🐱';
-                dragonsTransformed++;
-                // Explosión partículas gatito
-                for (let i = 0; i < 50; i++) {
-                    transformParticles.push({
-                        x: x * cellW + cellW/2, y: y * cellH + cellH/2,
-                        vx: (Math.random() - 0.5) * 100, vy: (Math.random() - 0.5) * 100,
-                        life: 1, color: '#00ff88'
-                    });
-                }
-                unlockAchievement('tame_' + dragonsTransformed);
-            } else if (grid[y][x] === '*') {
-                grid[y][x] = '.';
-                runas++;
-                proceduralSeed += 1;
-                level++;
-            }
-            cycles++;
-            player.breathPhase = 0;
-            if (cycles % 100 === 0) spawnEpicEvent();
-            if (cycles % 50 === 0) {
-                gridSize = Math.min(gridSize + 2, 199);
-                initGrid();
-            }
-            updateHUD();
-            saveGame();
-        }
-
-        // Eventos épicos con efectos
-        function spawnEpicEvent() {
-            if (cycles % 500 === 0) {
-                for (let i = 0; i < 20; i++) {
-                    const rx = Math.floor(Math.random() * gridSize);
-                    const ry = Math.floor(Math.random() * gridSize);
-                    grid[ry][rx] = 'X';
-                }
-            }
-        }
-
-        function unlockAchievement(id) {
-            if (!achievements.has(id)) {
-                achievements.add(id);
-                level = Math.floor(achievements.size / 10);
-            }
-        }
-
-        function updateHUD() {
-            hudCycles.textContent = cycles;
-            hudDragons.textContent = dragonsTransformed;
-            hudLevel.textContent = level;
-            hudRunas.textContent = runas;
-        }
-
-        // Save/Load
-        function saveGame() {
-            localStorage.setItem('slyverse1310bello', JSON.stringify({
-                cycles, dragonsTransformed, level, gridSize, proceduralSeed, achievements, player, gameTime, runas
-            }));
-        }
-        function loadGame() {
-            const save = localStorage.getItem('slyverse1310bello');
-            if (save) {
-                const data = JSON.parse(save);
-                Object.assign(this, data);
-                initGrid();
-                updateHUD();
-            }
-        }
-        function resetEpic() {
-            localStorage.removeItem('slyverse1310bello');
-            cycles = dragonsTransformed = level = runas = 0; gridSize = 37;
-            proceduralSeed = Math.random()*1310;
-            achievements.clear();
-            initGrid();
-            updateHUD();
-        }
-
-        let cellW, cellH;
-        // Render BELLO A MANO x1310
-        function render() {
-            ctx.fillStyle = '#000';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            cellW = canvas.width / gridSize;
-            cellH = canvas.height / gridSize;
-
-            // Post-process bloom prep (offscreen glow)
-            const glowCanvas = document.createElement('canvas');
-            glowCanvas.width = canvas.width;
-            glowCanvas.height = canvas.height;
-            const glowCtx = glowCanvas.getContext('2d');
-
-            // Grid con sombras/glow handmade
-            for (let y = 0; y < gridSize; y++) {
-                for (let x = 0; x < gridSize; x++) {
-                    const wx = x * cellW, wy = y * cellH;
-                    let color = '#222';
-                    let glowColor = 'transparent';
-                    switch (grid[y][x]) {
-                        case '.': color = '#111'; break;
-                        case '~': color = '#333'; break; // Ash
-                        case 'X': 
-                            color = `hsl(${Date.now()*0.01 % 360}, 80%, 40%)`;
-                            glowColor = '#ff4400';
-                            break;
-                        case 'G': color = '#8b4513'; break;
-                        case '*': 
-                            color = '#ffd700';
-                            glowColor = '#ffff00';
-                            break;
-                        case '🐱': 
-                            color = '#00ff88';
-                            glowColor = '#00ff88';
-                            break;
-                    }
-                    // Sombra pixel
-                    ctx.fillStyle = 'rgba(0,0,0,0.5)';
-                    ctx.fillRect(wx + 2, wy + 2, cellW, cellH);
-                    // Celda principal
-                    ctx.fillStyle = color;
-                    ctx.fillRect(wx, wy, cellW, cellH);
-                    // Glow en glowCanvas
-                    if (glowColor !== 'transparent') {
-                        const g = glowCtx.createRadialGradient(wx + cellW/2, wy + cellH/2, 0, wx + cellW/2, wy + cellH/2, cellW);
-                        g.addColorStop(0, glowColor);
-                        g.addColorStop(1, 'transparent');
-                        glowCtx.fillStyle = g;
-                        glowCtx.fillRect(wx - cellW/2, wy - cellH/2, cellW*2, cellH*2);
-                    }
-                }
-            }
-
-            // Player @ Thuamer con glow épico
-            const px = player.x * cellW, py = player.y * cellH;
-            // Sombra
-            ctx.fillStyle = 'rgba(0,0,0,0.7)';
-            ctx.fillRect(px + 3, py + 3, cellW, cellH);
-            // Base
-            const playerGrad = ctx.createRadialGradient(px + cellW/2, py + cellH/2, 0, px + cellW/2, py + cellH/2, cellW);
-            playerGrad.addColorStop(0, '#ffaa66');
-            playerGrad.addColorStop(0.5, '#ff6b35');
-            playerGrad.addColorStop(1, 'rgba(255,107,53,0)');
-            ctx.fillStyle = playerGrad;
-            ctx.fillRect(px, py, cellW, cellH);
-            // @ glow
-            ctx.font = `${Math.min(cellW, cellH)*0.8}px monospace`;
-            ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-            ctx.shadowColor = '#ffd700'; ctx.shadowBlur = 20;
-            ctx.fillStyle = '#ffd700';
-            ctx.fillText('@', px + cellW/2, py + cellH/2);
-            ctx.shadowBlur = 0;
-
-            // Círculo respiración bloom
-            const breathRadius = (player.breathPhase / 16) * Math.min(cellW, cellH) * 1.5;
-            const breathGrad = ctx.createRadialGradient(px + cellW/2, py + cellH/2, 0, px + cellW/2, py + cellH/2, breathRadius);
-            breathGrad.addColorStop(0, runaReady ? '#00ff88' : '#444');
-            breathGrad.addColorStop(1, 'transparent');
-            ctx.strokeStyle = breathGrad;
-            ctx.lineWidth = 4;
-            ctx.beginPath();
-            ctx.arc(px + cellW/2, py + cellH/2, breathRadius, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // GlowCanvas bloom overlay (x1310 bello)
-            ctx.save();
-            ctx.filter = 'blur(4px) brightness(2)';
-            ctx.globalCompositeOperation = 'screen';
-            ctx.drawImage(glowCanvas, 0, 0);
-            ctx.restore();
-
-            // Particles 1310 trails oro
-            particles.forEach(p => {
-                // Trail fade
-                for (let j = 0; j < p.trail.length; j++) {
-                    const alpha = j / p.trail.length;
-                    ctx.save();
-                    ctx.globalAlpha = p.life * alpha * 0.5;
-                    const pg = ctx.createRadialGradient(p.trail[j].x, p.trail[j].y, 0, p.trail[j].x, p.trail[j].y, 5);
-                    pg.addColorStop(0, '#ffd700');
-                    pg.addColorStop(1, 'transparent');
-                    ctx.fillStyle = pg;
-                    ctx.beginPath();
-                    ctx.arc(p.trail[j].x, p.trail[j].y, 3, 0, Math.PI*2);
-                    ctx.fill();
-                    ctx.restore();
-                }
-                // Partícula principal glow
-                ctx.save();
-                ctx.globalAlpha = p.life;
-                const mainGrad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 8);
-                mainGrad.addColorStop(0, '#ffffaa');
-                mainGrad.addColorStop(0.7, '#ffd700');
-                mainGrad.addColorStop(1, 'transparent');
-                ctx.fillStyle = mainGrad;
-                ctx.shadowColor = '#ffd700'; ctx.shadowBlur = 15;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, 4, 0, Math.PI*2);
-                ctx.fill();
-                ctx.shadowBlur = 0;
-                ctx.restore();
-            });
-
-            // Transform particles explosión
-            transformParticles = transformParticles.filter(p => {
-                p.x += p.vx * 0.2; p.y += p.vy * 0.2;
-                p.vx *= 0.98; p.vy *= 0.98;
-                p.life -= 0.02;
-                ctx.save();
-                ctx.globalAlpha = p.life;
-                const tpGrad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 10);
-                tpGrad.addColorStop(0, p.color);
-                tpGrad.addColorStop(1, 'transparent');
-                ctx.fillStyle = tpGrad;
-                ctx.shadowColor = p.color; ctx.shadowBlur = 20;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.life * 10, 0, Math.PI*2);
-                ctx.fill();
-                ctx.restore();
-                return p.life > 0;
-            });
-
-            // Lore overlay poético medieval
-            ctx.fillStyle = 'rgba(0,0,0,0.8)';
-            ctx.fillRect(20, canvas.height - 100, 400, 90);
-            ctx.fillStyle = '#ffd700';
-            ctx.font = '18px MedievalSharp';
-            ctx.textAlign = 'left'; ctx.textBaseline = 'top';
-            ctx.shadowColor = '#ffd700'; ctx.shadowBlur = 10;
-            ctx.fillText('Thuamer exhala: Terror → Gatitos Eternos', 30, canvas.height - 85);
-            ctx.fillText('Norah reina. Oro orbita x1310. 🐱✨', 30, canvas.height - 60);
-            ctx.shadowBlur = 0;
-        }
-
-        // Loop 60fps divino
-        function gameLoop(time) {
-            const dt = Math.min((time - lastTime) / 1000 * 60, 2);
-            lastTime = time;
-            if (!paused) {
-                movePlayer();
-                updateBreath(dt);
-                updateParticles(dt);
-                gameTime += dt / 3600;
-                hudTime.textContent = gameTime.toFixed(1);
-            }
-            render();
-            requestAnimationFrame(gameLoop);
-        }
-
-        // Init sagrado
-        loadGame();
-        initGrid();
-        updateHUD();
-        setInterval(saveGame, 3600000);
-        requestAnimationFrame(gameLoop);
-
-        setTimeout(() => {
-            alert(`¡Yohohoho! SLYVERSE 1310x BELLO A MANO.\n\nGlow divino, trails oro, bloom x1310, mouse magia.\nRespira 4-4-8, libera ∞ gatitos con explosiones.\n¡Paz eterna en Red Mountain! 🐱🖤✨\nNorah reina forever.`);
-        }, 500);
-
-        console.log('🐱 SLYVERSE 1310x Bello - 7 Mandamientos + Belleza Mano:\n1.Curar niños 2.Grátis 3.Offline 4.No ads 5.Ética 6.Humanos reyes 7.Norah 🐱✨');
-    </script>
+console.log("%cSLYVERSE · ABRAZO FINAL · 1310 universos · 13101 partículas · 1 solo archivo · 0 fiat · ∞ amor","color:#0cf;font-size:18px");
+</script>
 </body>
 </html>

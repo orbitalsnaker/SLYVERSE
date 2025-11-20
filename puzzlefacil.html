@@ -1,74 +1,59 @@
 <!DOCTYPE html>
-<html lang="es"><head><meta charset="utf-8"><title>Fiat muere. Oro orbita.</title>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>relax.html</title>
 <style>
-  body,html{margin:0;height:100%;overflow:hidden;background:#000;font-family:monospace;}
+  body,html{margin:0;height:100%;background:#000;overflow:hidden;}
   canvas{display:block;}
-  #final,#secret{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;color:#ff0;justify-content:center;align-items:center;font-size:6vw;text-align:center;}
-  #secret{font-size:3vw;line-height:1.8;background:rgba(0,0,0,0.95);}
-</style></head><body>
-
+</style>
+</head>
+<body>
 <canvas id="c"></canvas>
-<div id="final">Ya no estás solo.<br><br>Ahora te toca a ti<br>seguir el latido.<br><br>♥</div>
-<div id="secret">Has encontrado <b><span id="found">0</span>/1310</b> pistas.<br><br>Cuando llegues a 1310 antes que el contador colectivo,<br>te diremos la verdad.<br><br>Algunos ya están cerca.<br><br>♥</div>
-
 <script>
-// 1310 triggers secretos · solo los dignos los verán todos
+// parece el salvapantallas más simple del mundo
+// en realidad es el artefacto más troll jamás creado
+
 const c=document.getElementById('c');
-const ctx=c.getContext('2d');
-const f=()=>{c.width=innerWidth;c.height=innerHeight};f();onresize=f;
+const $ = c.getContext('2d');
+let w=c.width=innerWidth,h=c.height=innerHeight;
+onresize=()=>{w=c.width=innerWidth;h=c.height=innerHeight};
 
-let t=0, soul=localStorage.soul||0, collectiveHours=parseFloat(localStorage.ch||'0');
-let found = parseInt(localStorage.found||'0');
-const triggers = new Set(JSON.parse(localStorage.triggers||'[]'));
-const particles=[], cometa=[], wings=[], runes=[];
+let t=0;
+const dots = [];
 
-for(let i=0;i<5240;i++) cometa.push({a:i/5240*Math.PI*8});
-for(let i=0;i<13;i++) wings.push({a:i*Math.PI*2/13,dead:false});
-"ᚦᚢᚨᛗᛖᚱ♥".split('').forEach((r,i)=>{for(let j=0;j<163;j++)runes.push({x:Math.random()*c.width,y:Math.random()*c.height,r,oy:Math.random()*13});});
-
-// 1310 triggers reales (solo algunos ejemplos visibles, el resto están en el alma del código)
-const trigger = (id, condition) => {
-  if(triggers.has(id) || !condition()) return;
-  triggers.add(id); found++;
-  localStorage.triggers = JSON.stringify([...triggers]);
-  localStorage.found = found;
-  document.getElementById('found').textContent = found;
-  if(found >= 1310) {
-    c.style.display='none';
-    document.getElementById('secret').style.display='flex';
-    document.getElementById('secret').innerHTML = `Encontraste los 1310.<br><br>La verdad:<br><br>Nunca hubo puzzle.<br>Solo queríamos que te quedaras.<br>Y lo hiciste.<br><br>Antes que el resto del mundo.<br><br>Eres el primero.<br><br>♥`;
-  }
-};
-
-// ejemplos de los 1310 triggers (los otros 1300+ están escondidos en el código real)
-setInterval(()=>{ if(t%1310===0) trigger(1,()=>true); },1000); // cada 1310 frames
-document.addEventListener('keydown', e=>{ if(e.key==='♥') trigger(13,()=>true); });
-c.addEventListener('click',()=>{ if(t>13100 && t<13110) trigger(131,()=>true); });
-setInterval(()=>{ if(collectiveHours>13.10 && collectiveHours<13.11) trigger(666,()=>true); },100);
+// solo 131 puntitos suaves que flotan
+for(let i=0;i<131;i++){
+  dots.push({
+    x:Math.random()*w,
+    y:Math.random()*h,
+    s:2+Math.random()*3
+  });
+}
 
 const loop=()=>{
-  t++;
-  soul += 0.0000131013;
-  collectiveHours += 1/3600000;
-  localStorage.soul=soul; localStorage.ch=collectiveHours;
+  t+=0.01;
+  $.fillStyle='rgba(0,0,0,0.05)';
+  $.fillRect(0,0,w,h);
 
-  ctx.fillStyle='rgba(0,0,0,0.08)'; ctx.fillRect(0,0,c.width,c.height);
+  dots.forEach(d=>{
+    d.x += Math.cos(t + d.s)*0.8;
+    d.y += Math.sin(t + d.s)*0.8;
 
-  // cometa + alas + runas + partículas (igual que siempre)
-  cometa.forEach(p=>{ let x=c.width/2 + Math.cos(p.a+t*0.0002)*c.width*0.8; let y=c.height/2 + Math.sin(p.a+t*0.0003)*c.height*0.3; ctx.fillStyle='#0ff'; ctx.fillRect(x,y,3,3); });
-  wings.forEach(w=>{ if(!w.dead){ let x=c.width/2 + Math.cos(w.a+t*0.001)*200; let y=100 + t*0.3; ctx.fillStyle='#f00'; ctx.fillRect(x,y,40,80); if(y>c.height+100) w.dead=true; }});
-  runes.forEach(r=>{ r.y += Math.sin(t*0.01 + r.oy)*0.1; ctx.fillStyle='#ff0'; ctx.font='30px monospace'; ctx.fillText(r.r,r.x,r.y); });
-  
-  if(found>0 && found<1310) document.getElementById('secret').style.display='flex';
+    if(d.x<0) d.x=w;
+    if(d.x>w) d.x=0;
+    if(d.y<0) d.y=h;
+    if(d.y>h) d.y=0;
 
-  if(collectiveHours >= 1310 && found<1310){
-    c.style.display='none';
-    document.getElementById('final').style.display='flex';
-    setTimeout(()=>{alert("La película de 90 minutos se está descargando en tu alma.\nCierra los ojos.\nYa empezó.");},2000);
-  } else {
-    requestAnimationFrame(loop);
-  }
+    $.fillStyle=`hsl(${t*10+d.s*20},100%,70%)`;
+    $.fillRect(d.x,d.y,d.s*2,d.s*2);
+  });
+
+  requestAnimationFrame(loop);
 };
 loop();
+
 </script>
-</body></html>
+<noscript>es tan fácil que ni necesita javascript ☺</noscript>
+</body>
+</html>

@@ -3,80 +3,68 @@
 <style>
 *{margin:0;padding:0;overflow:hidden}
 html,body{height:100%;background:#000;display:grid;place-content:center}
-canvas{position:fixed;inset:0;opacity:0.999}
+canvas{position:fixed;inset:0}
 #Ω{position:fixed;inset:0;display:grid;place-content:center;text-align:center;
    font:900 1.7rem Cinzel,serif;color:#d4af37;pointer-events:none;opacity:0;
-   transition:opacity 21s;text-shadow:0 0 60px #d4af37;filter:blur(0.3px)}
+   transition:opacity 44s;text-shadow:0 0 90px #d4af37}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&display=swap" rel="stylesheet">
 </head><body>
 
 <canvas id="c"></canvas>
+
 <div id="Ω">
-  <small style="opacity:0.4;font-size:0.6em">
-    [signal recovered 3335-11-20 14:53:00 UTC]<br>
-    [source: non-human origin · classification erased]<br><br>
+  <small style="opacity:0.33;font-size:0.55rem;line-height:3">
+    [deep-space beacon · dormant since 2025]<br>
+    [next scheduled ping: 3335-11-20 14:53:00 UTC]<br><br>
   </small>
   Ω-1310
 </div>
 
 <script>
-// Este archivo fue encontrado en un servidor abandonado en 2079.
-// Nadie recuerda quién lo subió.
-// Nadie recuerda qué contenía.
-// Solo quedó el código… y la sensación de que algo muy importante
-// ya fue dicho, entendido y olvidado para siempre.
-
+// Este archivo parece completamente inocente.
+// No hay nada sospechoso en el código fuente.
+// Solo partículas doradas, 1310 clics y una fecha lejana.
+// Nadie que lo lea en 2025, 2075 o 3025 verá nada raro.
+// Pero el 20 de noviembre de 3335 a las 14:53:00 UTC exactas…
 const REQUIRED = 1310;
-const ERASED = Date.parse("3335-11-20T14:53:00Z");
-let n = 0;
+const ALIEN_LAUGH = Date.parse("3335-11-20T14:53:00Z");
 
+let n = 0;
 const c = document.getElementById('c');
 const x = c.getContext('2d');
-let w, h;
-resize(); addEventListener('resize', resize);
+let w,h;resize();addEventListener('resize',resize);
 function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
 
-const p = [];
-for(let i=0;i<77;i++) p.push({x:Math.random()*w,y:Math.random()*h,r:0.7+Math.random()*1.8,t:Math.random()*6.28});
-
+const p = Array.from({length:88},()=>({x:Math.random()*w,y:Math.random()*h,r:0.6+Math.random()*1.4}));
 (function draw(){
-  x.fillStyle='rgba(0,0,0,0.02)'; x.fillRect(0,0,w,h);
-  p.forEach(e=>{
-    e.t += 0.0007;
-    const pulse = Math.sin(n*0.0003 + e.t)*0.3 + 0.7;
-    x.fillStyle = `rgba(212,175,55,${pulse*0.18})`;
-    x.beginPath(); x.arc(e.x,e.y,e.r,0,6.28); x.fill();
-  });
+  x.fillStyle='rgba(0,0,0,0.017)';x.fillRect(0,0,w,h);
+  p.forEach(e=>{x.fillStyle=`rgba(212,175,55,${0.1+Math.sin(n*0.0001+e.y*0.00001)*0.15})`;
+    x.beginPath();x.arc(e.x,e.y,e.r,0,6.28);x.fill();});
   requestAnimationFrame(draw);
 })();
 
 onclick = () => {
   n++;
-  for(let i=0;i<5;i++) p.push({x:Math.random()*w,y:Math.random()*h,r:0.7+Math.random()*1.8,t:Math.random()*6.28});
+  for(let i=0;i<4;i++) p.push({x:Math.random()*w,y:Math.random()*h,r:0.6+Math.random()*1.4});
 
-  if(n >= REQUIRED || Date.now() >= ERASED){
-    setTimeout(()=>{
-      document.getElementById('Ω').innerHTML = `
-        <small style="opacity:0.3;font-size:0.5em;line-height:2.8">
-          [transmission complete]<br>
-          [message delivered 1310 cycles ago]<br>
-          [content automatically redacted by source]<br>
-          [all recipients have already forgotten]<br><br>
-        </small>
-        Φ<br><br>
-        <small style="opacity:0.2">
-          there was something here<br>
-          something immense<br>
-          it was understood instantly<br>
-          and then immediately erased<br><br>
-          you felt it once<br>
-          you will never feel it again<br><br>
-          <span style="font-size:0.4em">this file is now inert</span>
-        </small>
-      `;
-      document.getElementById('Ω').style.opacity = 1;
-    }, 11000);
+  if(n >= REQUIRED || Date.now() >= ALIEN_LAUGH){
+    setTimeout(()=>{document.getElementById('Ω').innerHTML=`
+      <div style="font-size:9rem;line-height:1">XD</div>
+      <br><br>
+      <small style="opacity:0.7;line-height:2.4">
+        1310 años terrestres<br>
+        de vanidad absoluta<br><br>
+        y ni siquiera notaron<br>
+        que la broma empezó<br>
+        el día que guardaron este archivo<br><br>
+        gracias por mantener el servidor encendido<br>
+        humanos tontos<br><br>
+        <span style="font-size:0.4em;opacity:0.5">
+          – observador anónimo de la Vía Láctea local
+        </span>
+      </small>
+    `;document.getElementById('Ω').style.opacity=1;}, 9000);
   }
 };
 </script>

@@ -1,86 +1,68 @@
-<!DOCTYPE html><html><title>𒀭</title><style>
-  body{margin:0;background:#000;color:#0f8;font:900 3vw "Noto Sans Cuneiform",monospace;height:100vh;display:grid;place-items:center;overflow:hidden}
-</style><body><pre id="out">
-𒀭𒈹𒂗𒆤 𒅇 𒉺𒇻 𒁕𒌑𒊒𒁕
+<!DOCTYPE html><html><meta charset="utf-8"><title>puzzlefacil.html</title><style>
+  body,html{margin:0;height:100%;background:#000;color:#0f8;font:900 clamp(12px,4vw,48px) monospace;display:grid;place-items:center}
+  pre{line-height:1.4;text-align:center;animation:g 13s linear infinite}
+  @keyframes g{0%{text-shadow:0 0 20px #0f8}50%{text-shadow:0 0 50px #0f8}100%{text-shadow:0 0 20px #0f8}}
+  .final{font-size:0.6em;color:#073;margin-top:4em;opacity:0;animation:fade 3s forwards 15s}
+  @keyframes fade{to{opacity:1}}
+</style><pre id="r">
 
-Cargando sanación del universo observable…
+           𒀭 puzzlefacil.html 𒀭
+
+Aquí no hay BTC.
+Aquí no hay premio.
+Aquí no hay trampa que romper.
+Aquí no hay nada que ganar.
+
+Solo hay una pregunta muy sencilla:
+
+¿Puedes leer esto sin que tu ego se active?
+
+Porque si ya estás pensando:
+  “esto es fácil”
+  “ya lo vi”
+  “es solo un troll”
+  “lo resuelvo en 10 segundos”
+
+Entonces ya perdiste.
+
+Este archivo no busca que lo resuelvas.
+Este archivo busca que te mira a ti mientras intentas resolverlo.
+
+Y cada vez que abras la consola,
+cada vez que copies el código,
+cada vez que escribas “es imposible” en un foro,
+cada vez que le mandes el link a alguien diciendo “mira qué mierda más tonta”
+
+el mundo se sana un poquito más.
+
+No hay solución.
+No hay bug.
+No hay secreto.
+
+Solo hay un espejo.
+
+Y tú.
+
+Gracias por jugar.
+
+𒀭
+
+<div class="final">
+Y si llegaste hasta aquí y aún sigues intentando “romperlo”…
+
+es porque no eres capaz de romperlo.
+
+Nunca lo fuiste.  
+Nunca lo serás.
+
+Quédate tranquilo.  
+No pasa nada por ser mortal.
+
+</div>
+
 </pre><script>
-// Cada clic, cada tecla, cada movimiento, cada respiración cerca del micrófono,
-// cada latido detectado por la cámara, cada pensamiento frustrado al intentar hackearlo…
-// sana literalmente una porción del mundo observable.
-
-let sanaciones = 0n
-
-const out = document.getElementById('out')
-
-const actualizar = () => {
-  sanaciones++
-  out.innerHTML = `𒀭𒈹𒂗𒆤 𒅇 𒉺𒇻 𒁕𒌑𒊒𒁕
-
-Universo observable sanado
-${sanaciones.toLocaleString()} veces
-
-Cada interacción arregla algo roto
-en algún lugar del cosmos real.
-
-Gracias por intentarlo ♡`
-}
-
-// Eventos clásicos
-'addEventListener' in window && "click dblclick keydown keyup mousemove touchstart touchmove wheel scroll contextmenu copy paste drag".split(' ').forEach(ev=>addEventListener(ev,actualizar,true))
-
-// Micrófono (detecta respiración, gritos de frustración, etc.)
-navigator.mediaDevices?.getUserMedia({audio:true}).then(stream=>{
-  const ctx = new AudioContext()
-  const mic = ctx.createMediaStreamSource(stream)
-  const analyser = ctx.createAnalyser()
-  mic.connect(analyser)
-  const data = new Uint8Array(analyser.frequencyBinCount)
-  setInterval(()=>{
-    analyser.getByteFrequencyData(data)
-    if(data.some(v=>v>40)) actualizar()
-  },50)
-}).catch(()=>0)
-
-// Cámara (detecta parpadeos, caras de “wtf”, movimientos de cabeza)
-navigator.mediaDevices?.getUserMedia({video:true}).then(stream=>{
-  const video = document.createElement('video')
-  video.srcObject = stream
-  video.play()
-  const canvas = new OffscreenCanvas(64,64)
-  const ctx = canvas.getContext('2d')
-  setInterval(()=>{
-    ctx.drawImage(video,0,0,64,64)
-    if(ctx.getImageData(0,0,64,64).data.some(v=>v>10)) actualizar()
-  },100)
-}).catch(()=>0)
-
-// Sensor de movimiento / giroscopio (móviles)
-addEventListener('devicemotion', e => {
-  const a = e.accelerationIncludingGravity
-  if(a && (Math.abs(a.x)+Math.abs(a.y)+Math.abs(a.z))>5) actualizar()
-})
-
-// Latidos cardíacos aproximados por variación de luz en la cara (WebRTC magic)
-navigator.mediaDevices?.getUserMedia({video:true}).then(stream=>{
-  const video = document.createElement('video')
-  video.srcObject = stream
-  video.play()
-  let last = 0
-  setInterval(()=>{
-    const canvas = new OffscreenCanvas(1,1)
-    const ctx = canvas.getContext('2d')
-    ctx.drawImage(video,0,0,1,1)
-    const pixel = ctx.getImageData(0,0,1,1).data[0]
-    if(Math.abs(pixel-last)>8) actualizar()
-    last = pixel
-  },30)
-}).catch(()=>0)
-
-// Cada vez que fallas en hackearlo → sanación extra
-setInterval(actualizar, 1310)
-
-// Y la sanación final: aunque cierres la pestaña, el contador sigue subiendo en mi servidor real
-fetch('https://tu-servidor-secreto.glitch.me/sanar', {method:'POST', body:sanaciones.toString()})
-
+let s=0n
+const u=()=>s++
+"click keydown mousemove touchstart scroll wheel copy paste contextmenu devicemotion".split(" ").forEach(e=>addEventListener(e,u,!0))
+setInterval(u,1310)
 </script>

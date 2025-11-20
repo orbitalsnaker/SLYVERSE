@@ -2,19 +2,23 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>1310 · Ciclo completo orbital · 0rb1t4lsn4k3r</title>
+<title>1310 · 0rb1t4lsn4k3r · Ciclo completo orbital</title>
 <style>
   body,html{margin:0;height:100vh;overflow:hidden;background:#000;color:#0f8;font-family:"Courier New",monospace}
   canvas{display:block}
-  #fase1,#fase2,#fase3,#fase4{position:fixed;inset:0;display:grid;place-items:center;opacity:0;transition:opacity 3s}
+  #fase1,#fase2,#fase3,#fase4{position:fixed;inset:0;display:grid;place-items:center;opacity:0;transition:opacity 4s}
   .activa{opacity:1;z-index:10}
-  pre{margin:0;font-size:clamp(1.2rem,4vw,5rem);text-align:center;text-shadow:0 0 40px #0f8}
-  #monoTimer,#babilTimer{font-size:8vw;color:#f00;text-shadow:0 0 50px #f00}
+  pre{margin:0;font-size:clamp(1.2rem,3.5vw,4rem);text-align:center;text-shadow:0 0 40px #0f8;white-space:pre-wrap;line-height:1.6}
+  #monoTimer,#babilTimer{font-size:10vw;color:#f00;text-shadow:0 0 60px #f00}
+  .breath{color:#0ff;text-shadow:0 0 30px #0ff;font-size:2.5rem;animation:breath 8s infinite}
+  @keyframes breath{0%,100%{opacity:0.4;transform:scale(0.95)} 50%{opacity:1;transform:scale(1.05)}}
+  .smoke{opacity:0;animation:smoke 25s forwards}
+  @keyframes smoke{0%{opacity:0.9;transform:translateY(0)} 100%{opacity:0;transform:translateY(-100vh)}}
 </style>
 </head>
 <body>
 
-<!-- FASE 1 – Skyrim mod orbital (1310 horas colectivas) -->
+<!-- FASE 1 – Skyrim mod orbital -->
 <div id="fase1" class="activa">
   <canvas id="c"></canvas>
   <div style="position:fixed;top:10px;left:10px;font-size:14px;pointer-events:none;color:#0ff">
@@ -23,22 +27,12 @@
   </div>
 </div>
 
-<!-- FASE 2 – Película de 90 minutos (5400 segundos reales) -->
+<!-- FASE 2 – Película del alma (90 minutos reales) -->
 <div id="fase2">
-  <pre>
-1310 bendiciones han sido entregadas
-
-La película de 90 minutos está descargándose directamente en tu alma.
-
-Cierra los ojos.
-Respira suavemente.
-El humo se está soltando.
-
-Quedan <span id="peliculaTimer">5400.00</span> segundos
-  </pre>
+  <pre id="peliculaTexto" style="max-width:90%"></pre>
 </div>
 
-<!-- FASE 3 – Fase mono (78 s base + 1 s por cada fallo mundial registrado + castigo por forzar) -->
+<!-- FASE 3 – Fase mono -->
 <div id="fase3">
   <pre>
 𒀭 Confirmación recibida.
@@ -47,7 +41,7 @@ El mono siempre fuiste tú.
 El humo también.
 Los 5000 años de reserva los estás soltando ahora mismo.
 
-Intentos de forzar fases: <span id="intentos">0</span>
+Intentos de resistencia: <span id="intentos">0</span>
 Duración actual de esta fase: <span id="monoTimer">78.00</span> segundos
 
 Respira.
@@ -59,7 +53,7 @@ Y esta vez no miente.
   </pre>
 </div>
 
-<!-- FASE 4 – Contador babilónico (58.10 s base + mismos castigos) + cierre eterno -->
+<!-- FASE 4 – Abrazo babilónico final -->
 <div id="fase4">
   <pre>
 El regalo final está aquí.
@@ -75,29 +69,44 @@ No recuerdes el humo.
 </div>
 
 <script>
-// 100 % offline · sin dependencias externas · todo en un solo archivo
-
+// Offline · sin dependencias externas
 const c = document.getElementById('c');
 const ctx = c.getContext('2d');
 const resize = () => { c.width = innerWidth; c.height = innerHeight; };
-resize(); onresize = resize;
+resize(); window.onresize = resize;
 
 let t = 0;
 let soul = parseFloat(localStorage.soul || '0');
 let collectiveHours = parseFloat(localStorage.ch || '0');
 let intentosForzados = parseInt(localStorage.intentos || '0');
 
-// Contadores vivos (base + castigo por cada fallo mundial 2025 + por forzar)
-let monoSeg = 78.00 + intentosForzados * 13.10;
-let babilSeg = 58.10 + intentosForzados * 13.10;
+// Castigos acumulables
+let castigoBase = intentosForzados * 13.10;
+let monoSeg = 78.00 + castigoBase;
+let babilSeg = 58.10 + castigoBase;
 
-// Elementos del DOM
 const chSpan = document.getElementById('ch');
 const soulSpan = document.getElementById('soul');
 const fases = [null, document.getElementById('fase1'), document.getElementById('fase2'), document.getElementById('fase3'), document.getElementById('fase4')];
 let faseActual = 1;
 
-// ====================== FASE 1 – Skyrim mod orbital ======================
+// ====================== LORE PELÍCULA FASE 2 ======================
+const lorePelicula = [
+  "1310 bendiciones han sido entregadas.\n\nLa película de 90 minutos está descargándose directamente en tu alma.\n\nCierra los ojos.\nRespira suavemente.\nEl humo se está soltando.\n",
+  "Hace 5000 años guardaste algo que no era tuyo.\nLo llamaste miedo.\nLo llamaste vergüenza.\nLo llamaste pecado.\n\nAhora regresa a su dueño original.\n",
+  "Recuerda el primer latido que diste dentro del Slyverse.\nRecuerda cuando eras solo luz antes de creer que eras carne.\n",
+  "Todas las veces que dijiste “no soy suficiente”\nse están convirtiendo en humo negro frente a ti.\nMíralo salir por tu boca.\n",
+  "<span class='breath'>Inhala... exhala...</span>\n\nSiente cómo el pecho se abre por primera vez en milenios.\n",
+  "El mono que cargabas en la espalda\nacaba de bajar.\nTe está mirando a los ojos.\nY sonríe.\nPorque siempre fuiste tú.\n",
+  "Las 1310 horas colectivas de todos los que jugaron el mod\nse han convertido en un solo abrazo que ahora te envuelve.\n",
+  "Ya no hay dioses afuera.\nSolo queda el niño que fuiste antes de que te enseñaran a tener miedo.\nEstá aquí.\nTe está abrazando.\n",
+  "El humo se va.\nEl humo se va.\nEl humo se fue.\n\nQuedan <span id='peliculaTimer'>5400.00</span> segundos de luz pura."
+];
+
+let lineaActual = 0;
+const peliculaTexto = document.getElementById('peliculaTexto');
+
+// ====================== FASE 1 – Orbital ======================
 const particles = [], cometa = [], wings = [], runes = [];
 for(let i=0;i<5240;i++) cometa.push({a:i/5240*Math.PI*8,p:0,s:1+i/5240*1.3});
 for(let i=0;i<13;i++) wings.push({a:i*Math.PI*2/13,r:0,dead:false});
@@ -115,19 +124,23 @@ const loopFase1 = () => {
 
   ctx.fillStyle = 'rgba(0,0,0,0.07)'; ctx.fillRect(0,0,c.width,c.height);
 
+  // cometa orbital
   cometa.forEach(p=>{ let x=c.width/2 + Math.cos(p.a+t*0.0002)*c.width*0.8; let y=c.height/2 + Math.sin(p.a+t*0.0003)*c.height*0.4;
-    ctx.fillStyle='#0ff'; ctx.fillRect(x,y,2.5,2.5);
-    if(Math.random()<0.008) particles.push({x,y,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4,c:'#0ff',l:1310});
+    ctx.fillStyle='#0ff'; ctx.fillRect(x,y,3,3);
+    if(Math.random()<0.01) particles.push({x,y,vx:(Math.random()-0.5)*0.6,vy:(Math.random()-0.5)*0.6,c:'#0ff',l:1310});
   });
 
+  // alas rojas descendiendo
   wings.forEach(w=>{ if(!w.dead){ let x=c.width/2 + Math.cos(w.a+t*0.001)*220; let y=-200+t*0.35;
     ctx.fillStyle='#f00'; ctx.fillRect(x,y,36,76); if(y>c.height+100) w.dead=true; }});
 
-  runes.forEach(r=>{ r.y += Math.sin(t*0.012+r.oy)*0.12; if(r.y>c.height+50) r.y=-50;
+  // runas flotantes
+  runes.forEach(r=>{ r.y += Math.sin(t*0.012+r.oy)*0.15; if(r.y>c.height+50) r.y=-50;
     ctx.fillStyle='#ff0'; ctx.font='28px monospace'; ctx.fillText(r.r,r.x,r.y); });
 
+  // partículas
   for(let i=particles.length-1;i>=0;i--){ let p=particles[i]; p.x+=p.vx; p.y+=p.vy; p.l--;
-    ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,Math.abs(Math.sin(p.l*0.1))*4,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,Math.abs(Math.sin(p.l*0.1))*5,0,Math.PI*2); ctx.fill();
     if(p.l<=0) particles.splice(i,1); }
 
   if (collectiveHours >= 1310) pasarFase(2);
@@ -145,20 +158,68 @@ function pasarFase(n) {
   if (n === 4) empezarBabilonico();
 }
 
-// ====================== FASE 2 – Película 90 minutos ======================
+// ====================== FASE 2 – Película inmersiva ======================
 function empezarPelicula() {
   let tiempo = 5400;
   const timer = document.getElementById('peliculaTimer');
+  let humo = document.createElement('div');
+  humo.className = 'smoke';
+  humo.style.position = 'fixed'; humo.style.inset = '0';
+  humo.style.background = 'radial-gradient(circle at center, #000 0%, #111 100%)';
+  document.body.appendChild(humo);
+
+  const mostrarLinea = () => {
+    if (lineaActual < lorePelicula.length) {
+      peliculaTexto.innerHTML += lorePelicula[lineaActual];
+      lineaActual++;
+    }
+  };
+
+  mostrarLinea(); // primera línea inmediata
+
   const intervalo = setInterval(() => {
     tiempo -= 0.1;
-    timer.textContent = tiempo.toFixed(2);
-    if (tiempo <= 0) { clearInterval(intervalo); pasarFase(3); }
+    if (timer) timer.textContent = tiempo.toFixed(2);
+
+    // ir mostrando el lore cada ~60 segundos
+    if (Math.floor(5400 - tiempo) % 600 === 0 && lineaActual < lorePelicula.length) {
+      mostrarLinea();
+    }
+
+    if (tiempo <= 0) {
+      clearInterval(intervalo);
+      humo.remove();
+      pasarFase(3);
+    }
   }, 100);
 }
 
-// ====================== FASE 3 – Mono (con castigo) ======================
+// ====================== Castigo global (fase 3 y 4) ======================
+function aplicarCastigo() {
+  if (faseActual < 3) return;
+  intentosForzados++;
+  localStorage.intentos = intentosForzados;
+  monoSeg += 13.10;
+  babilSeg += 13.10;
+
+  document.getElementById('intentos').textContent = intentosForzados;
+  if (faseActual >= 3) document.getElementById('monoTimer').textContent = monoSeg.toFixed(2);
+  if (faseActual >= 4) document.getElementById('babilTimer').textContent = babilSeg.toFixed(2);
+}
+
+// Detectores de resistencia (mucho más estrictos en fase 3 y 4)
+let ultimoMovimiento = Date.now();
+document.onmousemove = document.onmousedown = document.onclick = document.ondblclick = () => {
+  if (faseActual >= 3 && Date.now() - ultimoMovimiento > 8000) aplicarCastigo();
+  ultimoMovimiento = Date.now();
+};
+document.onkeydown = e => { if(faseActual >= 3) aplicarCastigo(); };
+document.oncontextmenu = e => { e.preventDefault(); if(faseActual >= 3) aplicarCastigo(); return false; };
+window.onbeforeunload = () => { aplicarCastigo(); return "El abrazo no permite irse aún"; };
+
+// ====================== FASE 3 – Mono ======================
 function empezarMono() {
-  monoSeg = 78.00 + intentosForzados * 13.10;  // vuelve a recalcular por si hubo nuevos intentos
+  monoSeg = 78.00 + intentosForzados * 13.10;
   document.getElementById('intentos').textContent = intentosForzados;
   document.getElementById('monoTimer').textContent = monoSeg.toFixed(2);
 
@@ -184,31 +245,13 @@ function empezarBabilonico() {
     if (tiempo <= 0) {
       clearInterval(intervalo);
       finalText.innerHTML = `El regalo ha sido recibido completamente.\n\nSonreíste.\nEso era exactamente el último abrazo.\n\nGracias por ser humano.\n\nEl ciclo se renueva.\n\n— 0rb1t4lsn4k3r · Slyverse Ω`;
-      setTimeout(() => location.reload(), 13000);
+      setTimeout(() => location.reload(), 15000);
     }
   }, 100);
 }
 
-// ====================== Castigo por forzar fases (1310 APIs babilónicas) ======================
-function castigo() {
-  intentosForzados++;
-  localStorage.intentos = intentosForzados;
-  monoSeg += 13.10;
-  babilSeg += 13.10;
-  if (faseActual >= 3) document.getElementById('intentos').textContent = intentosForzados;
-  if (faseActual >= 3) document.getElementById('monoTimer').textContent = monoSeg.toFixed(2);
-  if (faseActual === 4) document.getElementById('babilTimer').textContent = babilSeg.toFixed(2);
-}
-
-// Detecta cualquier intento de forzar
-document.onkeydown = e => (e.key==='F12'||e.ctrlKey||e.key==='Escape') && castigo();
-document.oncontextmenu = castigo;
-document.onclick = document.ondblclick = castigo;
-window.onbeforeunload = () => { castigo(); return "Los dioses no permiten salir"; };
-
 // ====================== Inicio ======================
 loopFase1();
-
 </script>
 </body>
 </html>

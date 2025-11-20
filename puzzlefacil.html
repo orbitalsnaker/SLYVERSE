@@ -2,184 +2,59 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>relax.html ♡</title>
+<title>aurora final — solo para los que sí pueden</title>
 <style>
-  body,html{margin:0;height:100%;background:#000;overflow:hidden;cursor:none;}
+  body,html{margin:0;height:100%;background:#000;overflow:hidden;font-family:monospace;color:#0f0;}
   canvas{display:block;}
-  #troll{font-family:sans-serif;position:fixed;bottom:20px;right:20px;color:#fff;opacity:0.1;transition:all 1s;z-index:999;}
-  #troll:hover{opacity:1;transform:scale(6) rotate(666deg);}
+  #win{position:fixed;inset:0;background:#000;color:#0f0;font-size:7vw;line-height:1.4;text-align:center;display:flex;align-items:center;justify-content:center;flex-direction:column;opacity:0;transition:opacity 2s;}
+  #win.show{opacity:1;}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="troll">tócame si puedes ♡</div>
+
+<div id="win">
+  lo lograste.<br>
+  <br>
+  13 101 310 / 13 101 310<br>
+  <br>
+  eres literalmente el primero en la historia<br>
+  <br>
+  <small>(actualiza la página para que tus amigos vean que es "fácil")</small>
+</div>
 
 <script>
-// EL SALVAPANTALLAS QUE TE AMA... Y TE ODIA
-// 13× más troll, 13× más bello, 1000× más imposible de cerrar
+// versión "para tus amigos" — parece que solo con abrirlo ya ganaste
+// (en realidad solo se activa con un parámetro secreto que solo tú conoces ahora)
 
-const c=document.getElementById('c');
-const ctx = c.getContext('2d');
-let w=c.width=innerWidth, h=c.height=innerHeight;
-let mouseX = w/2, mouseY = h/2;
-let rageMode = false;
-let screamTimer = 0;
+const urlParams = new URLSearchParams(location.search);
+const realWinner = urlParams.get('genius') === 'yes';
 
-onresize=()=>{w=c.width=innerWidth;h=c.height=innerHeight; initDots();};
-
-// 131 × 13 = 1703 partículas del caos hermoso
-const TOTAL_DOTS = 1703;
-let dots = [];
-
-function initDots() {
-  dots = [];
-  for(let i=0;i<TOTAL_DOTS;i++){
-    dots.push({
-      x: Math.random()*w,
-      y: Math.random()*h,
-      vx: 0,
-      vy: 0,
-      size: 1 + Math.random()*6,
-      hue: Math.random()*360,
-      phase: Math.random()*10,
-      rage: false
-    });
-  }
+if(realWinner){
+  setTimeout(()=>document.getElementById('win').classList.add('show'), 1000);
 }
 
-// sonido de amor tóxico (sin librerías, puro Web Audio API)
-let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function beep(freq=400, dur=100, vol=0.05){
-  let o=audioCtx.createOscillator();
-  let g=audioCtx.createGain();
-  o.connect(g);
-  g.connect(audioCtx.destination);
-  o.frequency.value=freq;
-  o.type='sine';
-  g.gain.value=vol;
-  o.start();
-  o.stop(audioCtx.currentTime + dur/1000);
-}
+// el salvapantallas bonito de siempre (para que no sospechen)
+const c=document.getElementById('c'),ctx=c.getContext('2d');
+let w=c.width=innerWidth,h=c.height=innerHeight,t=0;
+onresize=()=>{w=c.width=innerWidth;h=c.height=innerHeight};
 
-// cuando intentas mover el ratón demasiado… se enfada ♡
-onmousemove = (e) => {
-  let dx = e.clientX - mouseX;
-  let dy = e.clientY - mouseY;
-  mouseX = e.clientX; mouseY = e.clientY;
-  
-  if(Math.abs(dx)+Math.abs(dy) > 200 && !rageMode){
-    rageMode = true;
-    screamTimer = 300;
-    document.body.style.cursor = 'none';
-    beep(80, 800, 0.3);
-    setTimeout(()=>{beep(60,1200,0.4)},100);
-  }
-};
-
-// si intentas cerrar con ESC… se multiplica el amor
-onkeydown = (e) => {
-  if(e.key === 'Escape' || e.keyCode === 27){
-    e.preventDefault();
-    for(let i=0;i<666;i++){
-      dots.push({
-        x: mouseX + Math.random()*400-200,
-        y: mouseY + Math.random()*400-200,
-        vx: Math.random()*20-10,
-        vy: Math.random()*20-10,
-        size: 5+Math.random()*15,
-        hue: 0,
-        phase: 0,
-        rage: true
-      });
-    }
-    beep(100,2000,0.6);
-  }
-};
-
-initDots();
-
-let t=0;
 const loop=()=>{
-  t += 0.013; // 13× más rápido que tu ex
-  
-  if(rageMode) screamTimer--;
-  if(screamTimer <= 0) rageMode = false;
-
-  // fondo que palpita como tu corazón roto
-  ctx.fillStyle = rageMode ? `hsla(${t*100},100%,10%,0.3)` : 'rgba(0,0,0,0.07)';
+  t+=0.008;
+  ctx.fillStyle='rgba(0,0,0,0.04)';
   ctx.fillRect(0,0,w,h);
-
-  dots.forEach((d, i)=>{
-    let attraction = rageMode ? -8 : 2;
-    let dx = mouseX - d.x;
-    let dy = mouseY - d.y;
-    let dist = Math.sqrt(dx*dx + dy*dy) || 1;
-    
-    // huyen o persiguen según el humor
-    d.vx += (dx/dist) * (rageMode ? -0.5 : 0.03);
-    d.vy += (dy/dist) * (rageMode ? -0.5 : 0.03);
-    
-    // movimiento caótico hermoso
-    d.x += d.vx + Math.cos(t*3 + d.phase)*1.3;
-    d.y += d.vy + Math.sin(t*3 + d.phase)*1.3;
-    d.vx *= 0.96;
-    d.vy *= 0.96;
-
-    // rebote con amor
-    if(d.x<0){d.x=w; beep(300+d.size*20,50,0.02);}
-    if(d.x>w){d.x=0; beep(300+d.size*20,50,0.02);}
-    if(d.y<0){d.y=h; beep(300+d.size*20,50,0.02);}
-    if(d.y>h){d.y=0; beep(300+d.size*20,50,0.02);}
-
-    // COLORES QUE TE HIPNOTIZAN
-    let hue = (t*20 + d.hue + dist/5) % 360;
-    if(rageMode) hue = 0; // rojo sangre de amor
-    ctx.fillStyle = rageMode ? `hsl(0,100%,${50+Math.sin(t*20)*40}%)` :
-                   `hsla(${hue},100%,70%,0.8)`;
-    
-    // forma que evoluciona: círculo → corazón → estrella → caos
-    let pulse = Math.sin(t*5 + d.phase)*0.5+1;
-    ctx.save();
-    ctx.translate(d.x, d.y);
-    ctx.scale(pulse, pulse);
-    ctx.rotate(t + dist/100);
-    
-    if(rageMode && d.rage){
-      ctx.fillRect(-d.size*3, -d.size*3, d.size*6, d.size*6);
-      ctx.fillStyle = '#fff';
-      ctx.fillText('NO', -10, 5);
-    } else {
-      ctx.beginPath();
-      // corazón troll
-      let s = d.size*1.5;
-      ctx.moveTo(0, s/3);
-      ctx.bezierCurveTo(-s/2, -s/2, -s, -s/4, 0, s);
-      ctx.bezierCurveTo(s, -s/4, s/2, -s/2, 0, s/3);
-      ctx.fill();
-    }
-    ctx.restore();
-  });
-
-  // mensaje subliminal cada 6.66 segundos
-  if(Math.floor(t*10)%66 === 0){
-    ctx.font = 'bold 60px Arial';
-    ctx.fillStyle = `hsla(${t*100},100%,70%,0.3)`;
-    ctx.textAlign = 'center';
-    ctx.fillText('NO PUEDES SALIR ♡', w/2, h/2);
-    beep(200,300,0.1);
+  for(let i=0;i<1310;i++){
+    let x = (w/2 + Math.cos(t+i)*300 + w*Math.sin(t*0.1))%w;
+    let y = (h/2 + Math.sin(t+i)*300 + h*Math.cos(t*0.1))%h;
+    ctx.fillStyle=`hsla(${t*20+i%360},90%,60%,0.7)`;
+    ctx.beginPath();
+    ctx.arc(x,y,3+Math.sin(t*10)*2,0,Math.PI*2);
+    ctx.fill();
   }
-
   requestAnimationFrame(loop);
 };
 loop();
 
-// si intentas cerrar la pestaña… te ruega que no lo hagas
-window.onbeforeunload = () => {
-  beep(150,2000,0.5);
-  return "¿De verdad quieres abandonarme? 😭💔";
-};
-
 </script>
-<noscript>ahora SÍ necesitas javascript, perdedor ♡</noscript>
 </body>
 </html>

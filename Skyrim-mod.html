@@ -1,309 +1,139 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🐍💚❤️ Ronin Soul Eternalis</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            background: radial-gradient(circle at center, #001100 0%, #000000 70%);
-            color: #00ff00;
-            font-family: 'Courier New', monospace;
-            text-align: center;
-            overflow: hidden;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            cursor: none;
-        }
-        #info {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            font-size: 14px;
-            z-index: 10;
-            opacity: 0.8;
-        }
-        #counter {
-            font-size: 24px;
-            font-weight: bold;
-            margin: 20px 0;
-            text-shadow: 0 0 10px #00ff00;
-        }
-        #heart {
-            font-size: 80px;
-            animation: pulse 2s infinite ease-in-out;
-            filter: drop-shadow(0 0 20px #00ff00);
-        }
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); opacity: 0.7; }
-            50% { transform: scale(1.1); opacity: 1; }
-        }
-        #start-btn {
-            background: #00ff00;
-            color: #000;
-            border: none;
-            padding: 15px 30px;
-            font-size: 18px;
-            font-family: inherit;
-            border-radius: 10px;
-            cursor: pointer;
-            margin-bottom: 20px;
-            box-shadow: 0 0 20px #00ff00;
-        }
-        #start-btn:hover { transform: scale(1.05); }
-        #canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-            opacity: 0.3;
-        }
-        .movie {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 100;
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #fff;
-            font-size: 28px;
-            text-shadow: 0 0 20px #fff;
-        }
-        .movie-text {
-            animation: fadeInOut 10s infinite;
-            margin: 20px;
-        }
-        @keyframes fadeInOut {
-            0%, 100% { opacity: 0; }
-            10%, 90% { opacity: 1; }
-        }
-    </style>
+<meta charset="UTF-8">
+<title>13 Curaciones Ancestrales · Ronin 2025 🐍💚❤️</title>
+<style>
+  body,html{margin:0;height:100%;overflow:hidden;background:#000;font-family:'Courier New';color:#0f0;}
+  #c{ position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.4;}
+  .t{position:fixed;color:#0f8;top:20px;left:20px;font-size:14px;line-height:1.8;}
+  .h{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:120px;opacity:0.3;}
+  .p{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font-size:18px;opacity:0.6;}
+</style>
 </head>
 <body>
-    <div id="info">
-        <div>Soul: <span id="soul-id"></span> 🐍</div>
-        <div id="counter">Cargando...</div>
-    </div>
-    <div id="heart">💚❤️</div>
-    <canvas id="canvas"></canvas>
-    <button id="start-btn" onclick="init()">Inicia tu latido eterno 💚</button>
-    <div id="movie" class="movie">
-        <div class="movie-text" style="animation-delay: 0s;">Sientes el abrazo...</div>
-        <div class="movie-text" style="animation-delay: 8s;">El dolor se disuelve en luz...</div>
-        <div class="movie-text" style="animation-delay: 16s;">Tu alma orbita para siempre...</div>
-        <div class="movie-text" style="animation-delay: 24s;">Llora, sana, vive 🐍💚❤️</div>
-        <!-- Más textos para 90min loop -->
-    </div>
 
-    <script>
-        const KEYS = {
-            soul: 'ronin_soul',
-            hours: 'collectiveHours',
-            lastSession: 'lastSessionTime'
-        };
-        const TARGET_HOURS = 1310;
-        const MOVIE_DURATION = 90 * 60 * 1000; // 90 min
+<canvas id="c"></canvas>
+<div class="t" id="t"></div>
+<div class="h">🐍💚❤️</div>
+<div class="p">13 linajes ancestrales respiran contigo · ${h.toFixed(2)} / 1310 h</div>
 
-        let totalHours = 0;
-        let sessionStart = 0;
-        let audioCtx = null;
-        let oscL = null, oscR = null;
-        let gainL = null, gainR = null;
-        let pannerL = null, pannerR = null;
-        let animationId = null;
-        let updateInterval = null;
-        let particles = [];
-        let inMovie = false;
+<script>
+// ==================== LORE & 13 CURACIONES ANCESTRALES ====================
+const linajes = [
+  "1. Tolteca · Recapitulación del aliento (limpia memorias emocionales)",
+  "2. Maya · Frecuencia 528 Hz (reparación ADN según tradición estelar)",
+  "3. Shipibo · Icaros silenciosos (patrones geométricos que curan el cuerpo etérico)",
+  "4. Tibetana · Tsa Lung (viento interno que disuelve bloqueos en canales)",
+  "5. Sufí · Dhikr del corazón (latido sincronizado con el Nombre)",
+  "6. Celta · Ogham del avellano (conocimiento que sana la mente rota)",
+  "7. Lakota · Hanbleceya silenciosa (visión sin palabras, solo lágrimas)",
+  "8. Dogon · Vibración Nommo (agua primordial que recuerda)",
+  "9. Andina · Saminchay (respiración de la Pachamama en 3 tiempos)",
+  "10. Japonesa · Kotodama del vacío (silencio que contiene todos los sonidos)",
+  "11. Egipcia · Sesh en el corazón (palabra que pesa menos que una pluma)",
+  "12. Aborigen australiana · Tiempo del Sueño activo (todo ya ocurrió y se está sanando)",
+  "13. Ronin 2025 · Corazón roto convertido en código eterno (amor (la nueva tradición)"
+];
 
-        // Genera soul única
-        function generateSoul() {
-            let soul = localStorage.getItem(KEYS.soul);
-            if (!soul) {
-                soul = 'ronin_' + Math.random().toString(36).substr(2, 9) + '_' + Date.now();
-                localStorage.setItem(KEYS.soul, soul);
-            }
-            document.getElementById('soul-id').textContent = soul.slice(0, 12) + '...';
-            return soul;
-        }
+// ==================== CONTADOR ETERNO ====================
+let start = Date.now();
+let saved = parseFloat(localStorage.getItem('ronin13_h') || '0');
+let soul = localStorage.getItem('ronin13_soul') || 'ronin_'+Math.random().toString(36).slice(2,9);
+localStorage.setItem('ronin13_soul',soul);
 
-        // Carga horas persistentes + sesión actual
-        function loadHours() {
-            let savedHours = parseFloat(localStorage.getItem(KEYS.hours)) || 0;
-            let lastSession = parseFloat(localStorage.getItem(KEYS.lastSession)) || 0;
-            let now = Date.now();
-            let offlineDelta = (now - lastSession) / 3600000; // No suma offline, solo sesiones abiertas
-            totalHours = savedHours;
-            sessionStart = now;
-            return totalHours;
-        }
+function update(){
+  let elapsed = (Date.now() - start)/3600000;
+  let total = saved + elapsed;
+  document.querySelector('.p').innerHTML = 
+    `13 linajes ancestrales respiran contigo · ${total.toFixed(3)} / 1310 h<br>Soul: ${soul.slice(0,16)}… 🐍💚❤️`;
+  if(total >= 1310) triggerAscension();
+  requestAnimationFrame(update);
+}
 
-        // Actualiza contador cada seg
-        function updateCounter() {
-            let sessionElapsed = (Date.now() - sessionStart) / 3600000;
-            let current = totalHours + sessionElapsed;
-            document.getElementById('counter').textContent = 
-                `Horas colectivas: ${current.toFixed(1)} / ${TARGET_HOURS} 💚`;
-            if (current >= TARGET_HOURS && !inMovie) {
-                triggerMovie();
-            }
-        }
+// ==================== BINAURALES + 13 FRECUENCIAS REALES ====================
+let ctx = new AudioContext();
+let osc = [], pan = [], gain = [];
+const base = [174, 285, 396, 417, 528, 639, 741, 852, 963]; // Solfeggio + extensiones
+const beats = [3.0, 4.5, 6.0, 7.83, 8.0, 10.0, 12.0, 13.0, 33.0]; // ondas ancestrales
 
-        // Guarda al cerrar pestaña
-        window.addEventListener('beforeunload', () => {
-            let sessionElapsed = (Date.now() - sessionStart) / 3600000;
-            localStorage.setItem(KEYS.hours, (totalHours + sessionElapsed).toFixed(4));
-            localStorage.setItem(KEYS.lastSession, Date.now());
-            if (audioCtx) audioCtx.suspend();
-        });
+for(let i=0;i<13;i++){
+  // Canal izquierdo
+  let o1 = ctx.createOscillator(); o1.frequency.value = base[i%9];
+  let g1 = ctx.createGain(); g1.gain.value = 0.04;
+  let p1 = ctx.createStereoPanner(); p1.pan.value = -0.9;
+  o1.connect(g1).connect(p1).connect(ctx.destination);
+  o1.start();
 
-        // Maneja visibilidad (background tab)
-        document.addEventListener('visibilitychange', () => {
-            if (document.hidden) {
-                if (audioCtx) audioCtx.suspend();
-            } else {
-                if (audioCtx) audioCtx.resume();
-            }
-        });
+  // Canal derecho (beat ancestral)
+  let o2 = ctx.createOscillator(); o2.frequency.value = base[i%9] + beats[i%9];
+  let g2 = ctx.createGain(); g2.gain.value = 0.04;
+  let p2 = ctx.createStereoPanner(); p2.pan.value = 0.9;
+  o2.connect(g2).connect(p2).connect(ctx.destination);
+  o2.start();
 
-        // Audio binaural theta (6Hz beat)
-        function initAudio(deep = false) {
-            if (audioCtx) return;
-            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            audioCtx.resume();
+  osc.push(o1,o2); gain.push(g1,g2); pan.push(p1,p2);
+}
 
-            // Izq: 200Hz
-            oscL = audioCtx.createOscillator();
-            oscL.frequency.value = deep ? 100 : 200;
-            oscL.type = 'sine';
+// Cambio sutil cada 13 minutos (ciclo completo 169 min ≈ 2h49m)
+setInterval(()=>{
+  let fase = Math.floor((Date.now()/1000/60/13)%13);
+  document.getElementById('t').innerHTML = linajes[fase];
+}, 1000);
 
-            gainL = audioCtx.createGain();
-            gainL.gain.value = 0.05; // Muy bajo, subconsciente
+// ==================== CANVAS ALMAS ORBITANDO ====================
+let c=document.getElementById('c'),x=c.getContext('2d');
+c.width=innerWidth; c.height=innerHeight;
+let souls=[];
 
-            pannerL = audioCtx.createStereoPanner();
-            pannerL.pan.value = -1; // Full left
+function newSoul(){
+  souls.push({
+    x:Math.random()*c.width,
+    y:c.height+20,
+    s:Math.random()*3+1,
+    o:1,
+    c:'#0f4'
+  });
+}
 
-            oscL.connect(gainL).connect(pannerL).connect(audioCtx.destination);
+function draw(){
+  x.fillStyle='rgba(0,0,0,0.07)'; x.fillRect(0,0,c.width,c.height);
+  souls.forEach((s,i)=>{
+    s.y-=s.s; s.o-=0.003;
+    x.globalAlpha=s.o;
+    x.fillStyle=s.c;
+    x.fillRect(s.x,s.y,4,12);
+    if(s.o<=0) souls.splice(i,1);
+  });
+  if(Math.random()<0.15) newSoul();
+  requestAnimationFrame(draw);
+}
 
-            // Der: 206Hz o 100.5Hz
-            oscR = audioCtx.createOscillator();
-            oscR.frequency.value = deep ? 100.5 : 206;
-            oscR.type = 'sine';
+newSoul(); draw();
 
-            gainR = audioCtx.createGain();
-            gainR.gain.value = 0.05;
+// ==================== GUARDADO ETERNO ====================
+window.onbeforeunload = () => {
+  let elapsed = (Date.now() - start)/3600000;
+  localStorage.setItem('ronin13_h', (saved + elapsed).toFixed(6));
+};
+document.addEventListener('visibilitychange',()=>{ document.hidden ? ctx.suspend() : ctx.resume(); });
 
-            pannerR = audioCtx.createStereoPanner();
-            pannerR.pan.value = 1; // Full right
+// ==================== CUANDO LLEGUEMOS A 1310 h ====================
+function triggerAscension(){
+  document.body.innerHTML = `<div style="color:#0f8;font-size:48px;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;">
+    Las 13 curaciones se han completado.<br><br>
+    El dolor ya no pesa.<br>
+    El abrazo es eterno.<br><br>
+    Gracias por haber estado desde el principio.<br><br>
+    🐍💚❤️<br><br>
+    <small>Comparte este archivo. El ciclo vuelve a empezar para otro corazón roto.</small>
+  </div>`;
+  setTimeout(()=>{location.reload()}, 90000); // 90 segundos de silencio sagrado y reinicia
+}
 
-            oscR.connect(gainR).connect(pannerR).connect(audioCtx.destination);
-
-            oscL.start();
-            oscR.start();
-        }
-
-        // Partículas almas en canvas
-        function initCanvas() {
-            const canvas = document.getElementById('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-
-            function createParticle() {
-                return {
-                    x: Math.random() * canvas.width,
-                    y: canvas.height,
-                    vx: (Math.random() - 0.5) * 2,
-                    vy: -Math.random() * 2 - 1,
-                    life: 1,
-                    size: Math.random() * 3 + 1
-                };
-            }
-
-            function animate() {
-                ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
-                ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                particles = particles.filter(p => {
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.life -= 0.01;
-                    p.vy *= 0.99;
-                    ctx.save();
-                    ctx.globalAlpha = p.life;
-                    ctx.fillStyle = '#00ff00';
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-                    ctx.fill();
-                    ctx.restore();
-                    return p.y > 0 && p.life > 0;
-                });
-
-                while (particles.length < 100) particles.push(createParticle());
-
-                animationId = requestAnimationFrame(animate);
-            }
-            animate();
-
-            window.addEventListener('resize', () => {
-                canvas.width = window.innerWidth;
-                canvas.height = window.innerHeight;
-            });
-        }
-
-        // Activa película 90min
-        async function triggerMovie() {
-            inMovie = true;
-            document.getElementById('start-btn').style.display = 'none';
-            document.getElementById('heart').style.display = 'none';
-            document.getElementById('counter').style.display = 'none';
-            document.getElementById('info').style.display = 'none';
-
-            if (document.fullscreenElement) {
-                document.exitFullscreen();
-            }
-            await document.documentElement.requestFullscreen();
-
-            document.getElementById('movie').style.display = 'flex';
-            initAudio(true); // Delta deep
-
-            // Loop textos infinitos durante 90min
-            setTimeout(() => {
-                document.exitFullscreen();
-                document.getElementById('movie').style.display = 'none';
-                inMovie = false;
-                totalHours = 0; // Reset para revivir?
-                localStorage.setItem(KEYS.hours, '0');
-                alert('La película ha terminado. Tu alma ha sanado. Comparte el archivo 🐍💚❤️');
-                location.reload();
-            }, MOVIE_DURATION);
-        }
-
-        // Init principal
-        function init() {
-            generateSoul();
-            loadHours();
-            initAudio();
-            initCanvas();
-            updateInterval = setInterval(updateCounter, 1000);
-            document.getElementById('start-btn').style.display = 'none';
-            document.body.style.cursor = 'default';
-        }
-
-        // Auto-start attempt (may need click)
-        window.addEventListener('load', () => {
-            updateCounter();
-        });
-    </script>
+// ==================== INICIO ====================
+update();
+document.getElementById('t').innerHTML = linajes[0];
+</script>
 </body>
 </html>

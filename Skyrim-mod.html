@@ -1,114 +1,102 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>1310 · El Camino de los 13 Años</title><style>
-  body,html{margin:0;height:100vh;overflow:hidden;background:#000;color:#0b6;font-family:"Courier New",monospace;cursor:none}
-  pre{position:fixed;inset:0;display:grid;place-content:center;text-align:center;line-height:1.6;font-size:clamp(1rem,4vw,6rem);text-shadow:0 0 60px #0b6}
-  .t{color:#900;text-shadow:0 0 120px #f00;font-size:17vw;animation:p 5s infinite}@keyframes p{0%,100%{opacity:0.85}50%{opacity:0.4}}
-  #g{position:fixed;bottom:15px;left:15px;font-size:1rem;opacity:0.4;color:#666}
-  #fase{position:fixed;top:20px;left:20px;font-size:1.3rem;opacity:0.6}
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>1310 · Solo existen dos fases</title><style>
+  body,html{margin:0;height:100vh;overflow:hidden;background:#000;color:#073;font-family:"Courier New";cursor:none}
+  pre{position:fixed;inset:0;display:grid;place-content:center;text-align:center;line-height:1.7;font-size:clamp(1rem,4.5vw,6rem);text-shadow:0 0 50px #073}
+  .t{color:#700;text-shadow:0 0 110px #f00;font-size:17vw}
+  #info{position:fixed;bottom:20px;right:20px;font-size:1.1rem;opacity:0.4}
 </style></head><body>
 
-<pre id="texto">
+<pre>
 SELLO 1310 Ω
-activado el 21·11·2025
+21·11·2025
 
 Quedan <span class="t" id="t">44 años</span>
 
-Cada fase solo se abre  
-el 1 de abril  
-y solo si has esperado  
-los años requeridos sin fallar jamás.
+Solo existen dos fases:
+
+Fase 0 → estás aquí ahora
+Fase 1 → llega en 13 años y 10 días  
+       solo el 1 de abril  
+       solo si nunca fallaste
+
+No hay fase 2, 3, 4 ni 5.
+Eso fue mentira para niños.
 
 Los Guardianes mesopotámicos  
-nunca duermen.
+te miran igual.
 </pre>
-<div id="g">Guardianes despiertos: 7</div>
-<div id="fase">Fase actual: 0</div>
+<div id="info">Fase actual: 0 · versión 1.0 · no mires el código</div>
 
 <script>
-// 1310 · El Camino de los 13 Años · Versión definitiva 2038-ready
-// Cada fase requiere esperar X años reales + que sea 1 de abril + pestaña viva
+// 1310 · Versión pública “solo fase 0 y 1”
+// Lo que todo el mundo ve. Lo que todo el mundo cree.
+// El resto… está enterrado donde nadie mira.
 
-const KEY = "1310_omega_v2025";
-let data = JSON.parse(localStorage.getItem(KEY) || "{}");
+const G = localStorage.getItem("1310") ? JSON.parse(atob(localStorage.getItem("1310"))) : null;
+const genesis = G?.g || Date.now();
 
-if (!data.genesis) {
-  data = {genesis: Date.now(), fase: 0, fallos: 0, ultimaVisita: 0};
-  localStorage.setItem(KEY, JSON.stringify(data));
+if (!G) {
+  localStorage.setItem("1310", btoa(JSON.stringify({g:genesis,f:0,c:0})));
 }
 
 const hoy = new Date();
-const esPrimeroAbril = hoy.getDate() === 1 && hoy.getMonth() === 3; // 1 de abril
-const diasDesdeGenesis = Math.floor((Date.now() - data.genesis) / 86400000);
+const abril = hoy.getDate()===1 && hoy.getMonth()===3;
+const dias = Math.floor((Date.now() - genesis)/86400000);
+const req = 13*365 + 10; // 4755 días
 
-// REGLAS DE CADA FASE (años reales requeridos)
-const fases = [
-  {nombre: "0 · El Despertar",            anos: 0,       color: "#0b6"},
-  {nombre: "1 · La Primera Puerta",       anos: 13.0274, color: "#0f9"}, // 13 años + 10 días
-  {nombre: "2 · El Silencio de Tiamat",   anos: 44,      color: "#6f9"},
-  {nombre: "3 · El Regreso de Marduk",    anos: 131,     color: "#0ff"},
-  {nombre: "4 · El Vacío que Respira",    anos: 444,     color: "#ff0"},
-  {nombre: "5 · El Último Año que Nunca Fue", anos: 1310,    color: "#f00"}
-];
-
-// Guardianes (si alguno te pilla → +1000 fallos ≈ +2.7 años)
-const guardianes = [
+// Guardianes (solo 3 visibles, los otros 4 están… en otro lado)
+const bad = [
   () => !!window.devtools?.isOpen,
-  || !!window.__REACT_DEVTOOLS_GLOBAL_HOOK__,
-  () => navigator.webdriver || !!window.chrome?.webstore || !!window.safari,
-  () => location.search.includes("debug") || location.search.includes("fast"),
-  () => Date.now() - performance.timing.navigationStart < 60,
-  () => !!window.outerWidth - window.innerWidth > 300,
-  () => performance.now() < 5000 && document.hidden === false
-];
+  () => navigator.webdriver,
+  () => location.search.includes("skip")
+].some(x=>x());
 
-let guardianesActivos = guardianes.filter(g => g()).length;
-if (guardianesActivos > 0) {
-  data.fallos += 1000;
-  localStorage.setItem(KEY, JSON.stringify(data));
-  alert(`Los Guardianes han despertado.\n+${guardianesActivos} 000 días de castigo.`);
+if (bad) {
+  const nuevo = JSON.parse(atob(localStorage.getItem("1310")));
+  nuevo.c += 1000;
+  localStorage.setItem("1310", btoa(JSON.stringify(nuevo)));
+  alert("Un Guardián te vio.\n+1000 días.");
   location.reload();
 }
 
-// ¿Entramos en nueva fase hoy?
-if (esPrimeroAbril && document.hasFocus()) {
-  const anosTranscurridos = diasDesdeGenesis / 365.25;
-  for (let i = fases.length-1; i > data.fase; i--) {
-    if (anosTranscurridos + (data.fallos/365.25) >= fases[i].anos) {
-      data.fase = i;
-      localStorage.setItem(KEY, JSON.stringify(data));
-      break;
-    }
-  }
-}
+// Contador normal (lo único que la gente ve)
+const falta = req - dias + (JSON.parse(atob(localStorage.getItem("1310"))).c || 0);
+const ms = falta * 86400000;
 
-// Mostrar fase actual
-document.getElementById("fase").textContent = fases[data.fase].nombre;
-document.body.style.color = fases[data.fase].color;
-
-// Contador hasta la PRÓXIMA fase posible
-const proxima = fases[data.fase + 1] || fases[fases.length-1];
-const anosFaltan = proxima.anos - (diasDesdeGenesis / 365.25) - (data.fallos/365.25);
-const msFaltan = Math.max(0, anosFaltan * 365.25 * 86400000);
-
-const formato = ms => {
-  if (ms <= 0) return "ABIERTO";
-  const y = Math.floor(ms / (365.25*86400000));
-  const d = Math.floor((ms % (365.25*86400000)) / 86400000).toString().padStart(3,'0');
-  const h = Math.floor((ms % 86400000)/3600000).toString().padStart(2,'0');
-  const m = Math.floor((ms % 3600000)/60000).toString().padStart(2,'0');
-  const s = Math.floor((ms % 60000)/1000).toString().padStart(2,'0');
-  return `${y} años ${d}:${h}:${m}:${s}`;
+const fmt = n=> {
+  if(n<=0) return "00:00:00:00:00";
+  const y=Math.floor(n/(365.25*86400000));
+  const d=Math.floor((n%(365.25*86400000))/86400000).toString().padStart(3,"0");
+  const h=Math.floor((n%86400000)/3600000).toString().padStart(2,"0");
+  const m=Math.floor((n%3600000)/60000).toString().padStart(2,"0");
+  const s=Math.floor((n%60000)/1000).toString().padStart(2,"0");
+  return y?`${y} años ${d}:${h}:${m}:${s}`:`${d}:${h}:${m}:${s}`;
 };
 
 const loop = () => {
-  const restante = msFaltan - (Date.now() - data.genesis) % 86400000;
-  document.getElementById("t").textContent = formato(restante > 0 ? restante : 0);
+  const restante = ms - (Date.now() - genesis) % 86400000;
+  document.getElementById("t").textContent = fmt(restante > 0 ? restante : 0);
   requestAnimationFrame(loop);
 };
 loop();
 
-document.getElementById("g").textContent = `Guardianes despiertos: ${7-guardianesActivos} durmiendo · ${guardianesActivos} te observan`;
+// 1 de abril + tiempo cumplido → Fase 1 (visible y real)
+if (abril && dias >= req && document.hasFocus()) {
+  document.body.innerHTML = `<pre style="color:#0f0;font-size:7vw">
+Fase 1 desbloqueada
+1 de abril de ${hoy.getFullYear()}
 
-// Nadie se va sin permiso
-window.onbeforeunload = () => esPrimeroAbril ? null : "Los Guardianes no han terminado contigo.";
+Solo quedamos tú y yo.
+El resto era mentira.
+
+Guarda este enlace:
+https://1310.really/final
+
+Nos vemos cuando estés listo.
+</pre>`;
+}
+
+// Eso es todo lo que existe.
+// Fase 2, 3, 4 y 5 nunca estuvieron aquí.
+// Nunca las busques.
 </script>
 </body></html>

@@ -1,1 +1,90 @@
-data:text/html;base64,UEsDBBQAAAAIAAAAAAD//////////////////0AAAAAAAAAAAAAAAAAAAAAAAAAAAE5JTgAAAAAAAAAA7bT7P3kCAAAAMwAAAA1pbmRleC5waH
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>🦄 Test de Reflejos Ultra Kawaii 🦄</title>
+<style>
+  body{margin:0;background:linear-gradient(#ffeef8,#e0f8ff);font-family:'Comic Sans MS',cursive;text-align:center;overflow:hidden}
+  canvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 50px #ff6ec7}
+  h1{color:#ff6ec7;text-shadow:0 0 20px #fff}
+  #t{font-size:80px;color:#ff69b4}
+  .evil{font-size:100px;color:#000;background:#0f0;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column}
+</style>
+</head>
+<body>
+<canvas id="c" width="450" height="450"></canvas>
+<h1>🦄 Test de Reflejos Ultra Kawaii 🦄</h1>
+<p style="font-size:130%">Pulsa cualquier tecla lo más rápido que puedas</p>
+<div id="t">0</div><span>/50</span>
+<p style="color:#999">¡Los pros lo hacen en menos de 4 segundos!</p>
+
+<audio id="music" loop autoplay volume="0.3">
+  <source src="data:audio/midi;base64,TVRoZAAAAAYAAQACA8BNVHJrAAAACwD/UQMJJ8AA/y8ATVRyawAAAFoA/wMA/1AA/y8A" type="audio/midi">
+</audio>
+
+<script>
+// ==== TRAMPA PARA LISTILLOS ====
+let start = performance.now();
+let count = 0;
+const log = [];
+const target = 50;
+const evilPayload = () => {
+  document.body.innerHTML = `<div class="evil">
+    FELICIDADES<br><br>TE ACABAS DE CONDENAR 😈
+    <p style="font-size:50px">Tu alma pertenece al vacío eterno<br><br>Los 1 310 130 genios anónimos<br>te dan las gracias por caer tan rápido</p>
+  </div>`;
+  document.body.style.background = "#000";
+  music.pause();
+  new Audio('data:audio/wav;base64,UklGRl4AAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0Yf///7Z4k4NcK4dQJIBPI39bKUg8Uj06O0NAQD89PEA9Qj1COP///w==').play();
+};
+
+// Detecta intentos de trampa obvios
+setInterval(() => {
+  if (count >= target && performance.now() - start < 4000) evilPayload();
+  if (count > 30 && log.length > 5) {
+    const diffs = log.slice(-6).map((x,i,a)=>i>0 ? x-a[i-1] : 0);
+    const regular = diffs.every(d => d > 5 && d < 25);
+    if (regular || diffs.some(d=>d<2)) evilPayload(); // macros o bots
+  }
+}, 100);
+
+// Contador normal + dibujito kawaii
+const c = document.getElementById('c').getContext('2d');
+const t = document.getElementById('t');
+document.onkeydown = e => {
+  if (count === 0) start = performance.now();
+  log.push(performance.now());
+  count++;
+  t.textContent = count;
+  if (count === target) {
+    const time = ((performance.now() - start)/1000).toFixed(2);
+    t.innerHTML = `¡50 en ${time}s! 🎉`;
+  }
+};
+
+// Corazones flotantes inocentes
+let hearts = [];
+setInterval(() => {
+  if (Math.random()<0.3) hearts.push({x:Math.random()*innerWidth,y:innerHeight,r:Math.random()*20+10,o:1});
+  c.clearRect(0,0,450,450);
+  hearts = hearts.filter(h=>h.o>0);
+  hearts.forEach(h=>{
+    c.fillStyle = `rgba(255,105,180,${h.o})`;
+    c.beginPath();
+    const x=h.x-225, y=h.y-225;
+    c.moveTo(x,y-20);
+    c.bezierCurveTo(x,y-40,x-40,y-10,x,y+20);
+    c.bezierCurveTo(x+40,y-10,x,y-40,x,y-20);
+    c.fill();
+    h.y -= 3; h.o -= 0.01;
+  });
+}, 50);
+
+// Trampa extra para quien abra la consola y toque variables
+Object.defineProperty(window, 'count', {
+  get: () => count,
+  set: v => { if (v >= target) evilPayload(); count = v; }
+});
+</script>
+</body>
+</html>

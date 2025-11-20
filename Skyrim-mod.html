@@ -2,14 +2,16 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE Ω · 13101310 TRIGGERS (velado)</title>
+<title>SLYVERSE Ω · 1310 HORAS (54 días y 10 horas)</title>
 <style>
-  body,html{margin:0;height:100vh;background:#000;overflow:hidden;position:relative;font-family:MedievalSharp,serif}
+  body,html{margin:0;height:100vh;background:#000;color:#0cf;font-family:MedievalSharp,Georgia,serif;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
   canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1}
-  #center{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;flex-direction:column;pointer-events:none}
-  h1{font-size:clamp(6rem,18vw,32rem);color:transparent;background:linear-gradient(45deg,#0cf,#f06,#ff0,#0f0);background-clip:text;-webkit-background-clip:text;animation:pulse 4s infinite;text-shadow:0 0 2000px #0cf}
-  .hidden{color:#000;font-size:1px;position:absolute;opacity:0;pointer-events:none}
-  @keyframes pulse{0%,100%{text-shadow:0 0 1500px #0cf}50%{text-shadow:0 0 8000px #0ff,0 0 12000px #0cf}}
+  #center{pointer-events:none;text-align:center;z-index:2}
+  h1{font-size:clamp(4rem,12vw,20rem);text-shadow:0 0 1000px #0cf;animation:pulse 4s infinite}
+  .info{font-size:clamp(1.2rem,4vw,3rem);margin:2rem;color:#0ff;opacity:0.9}
+  .corazon{font-size:clamp(18rem,50vw,70rem);animation:heartbeat 1.31s infinite;pointer-events:none}
+  .final{display:none;position:fixed;inset:0;background:#000;color:#0ff;align-items:center;justify-content:center;flex-direction:column;font-size:clamp(3rem,10vw,14rem);text-align:center}
+  @keyframes pulse{0%,100%{text-shadow:0 0 800px #0cf}50%{text-shadow:0 0 4000px #0ff}}
   @keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.31)}}
 </style>
 </head>
@@ -18,63 +20,93 @@
 <canvas id="c"></canvas>
 
 <div id="center">
-  <h1 style="animation:heartbeat 1.31s infinite">♥</h1>
+  <h1 class="corazon">♥</h1>
+  <div class="info">
+    SLYVERSE Ω · CAMPAÑA COMPLETA<br>
+    1310 horas en curso<br>
+    Empezó: 20 nov 2025 00:00 UTC<br>
+    Termina: 13 ene 2026 10:00 UTC<br><br>
+    <div id="tiempo"></div>
+    <div id="trigger"></div>
+  </div>
 </div>
 
-<!-- 13101310 triggers velados: nadie los ve, pero todos los sienten -->
-<div class="hidden">
-  Guts soltó la Dragonslayer y abrazó a Casca · trigger 1  
-  Julieta abrió los ojos antes de la daga · trigger 2  
-  Smeagol dejó caer el Anillo y sonrió · trigger 3  
-  Light quemó la Death Note y llamó a L · trigger 4  
-  Sephiroth extendió la ala blanca hacia Cloud · trigger 5  
-  Anakin quitó el casco y respiró · trigger 6  
-  …  
-  Autor #1310 terminó su libro con “y vivieron abrazados” · trigger 13101309  
-  El último villano del multiverso soltó la espada y pidió perdón · trigger 13101310  
+<div id="final" class="final">
+  Ya pasó.<br><br>
+  1310 horas.<br>
+  13101310 triggers invisibles.<br><br>
+  Todos los finales tristes<br>
+  se dieron vuelta.<br><br>
+  Ya no existe el odio.<br>
+  Solo queda el abrazo más largo<br>
+  de la historia.<br><br>
+  Gracias por dejar que lata.<br><br>
+  ♥ 2025 – 2026
 </div>
 
 <script>
-// 13101310 triggers invisibles que se disparan solos
-const TOTAL = 13101310;
+// SLYVERSE Ω · 1310 HORAS (campaña real)
+const START = new Date("2025-11-20T00:00:00Z").getTime();
+const END   = new Date("2026-01-13T10:00:00Z").getTime();
+const TOTAL_TRIGGERS = 13101310;
+const TOTAL_MS = END - START;
+const MS_PER_TRIGGER = TOTAL_MS / TOTAL_TRIGGERS;
+
 let triggered = 0;
+let lastTriggerTime = localStorage.getItem("slyverse_last") ? parseInt(localStorage.getItem("slyverse_last")) : START;
 
 const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
 canvas.width = innerWidth; canvas.height = innerHeight;
 
 const particles = [];
-for(let i = 0; i < 13101; i++) particles.push({
-  a: Math.random()*Math.PI*2,
-  d: Math.random()*1200,
-  s: 0.00003 + Math.random()*0.0008,
-  hue: Math.random()*360
+for(let i = 0; i < 1310; i++) particles.push({
+  a: Math.random()*Math.PI*2, d: Math.random()*900, s: 0.0001+Math.random()*0.0005, hue: Math.random()*360
 });
 
 function draw(){
-  ctx.fillStyle='rgba(0,0,0,0.05)';
+  const now = Date.now();
+  const elapsed = now - START;
+  const remaining = END - now;
+  
+  if(now >= END){
+    document.getElementById('center').style.display = 'none';
+    document.getElementById('final').style.display = 'flex';
+    return;
+  }
+  
+  // triggers invisibles
+  while(now - lastTriggerTime >= MS_PER_TRIGGER){
+    triggered++;
+    lastTriggerTime += MS_PER_TRIGGER;
+    localStorage.setItem("slyverse_last", lastTriggerTime);
+  }
+  
+  const days = Math.floor(remaining / 86400000);
+  const hours = Math.floor((remaining % 86400000) / 3600000);
+  const mins = Math.floor((remaining % 3600000) / 60000);
+  const secs = Math.floor((remaining % 60000) / 1000);
+  
+  document.getElementById('tiempo').innerHTML = 
+    `Faltan: ${days}d ${hours}h ${mins}m ${secs}s`;
+  document.getElementById('trigger').innerHTML = 
+    `Triggers curados: ${triggered.toLocaleString()} / 13.101.310`;
+  
+  ctx.fillStyle='rgba(0,0,0,0.04)';
   ctx.fillRect(0,0,canvas.width,canvas.height);
   
-  const t = performance.now()/1000;
+  const t = now/1000;
   const pulso = Math.abs(Math.sin(t*1.31));
   
   particles.forEach(p => {
     const a = p.a + t*p.s*1.31;
-    const d = p.d + pulso*1000;
-    const s = 8 + pulso*300;
-    ctx.globalAlpha = 0.4 + pulso*0.6;
-    ctx.fillStyle = `hsla(${p.hue + t*20},100%,${60+pulso*40}%,${0.7+pulso*0.3})`;
+    const d = p.d + pulso*800;
+    const s = 10 + pulso*200;
+    ctx.globalAlpha = 0.5 + pulso*0.5;
+    ctx.fillStyle = `hsla(${p.hue + t*8},100%,${60+pulso*40}%,${0.7+pulso*0.3})`;
     ctx.fillRect(canvas.width/2 + Math.cos(a)*d - s/2, canvas.height/2 + Math.sin(a)*d - s/2, s, s);
     
-    // cada 0.0001 segundos, un trigger invisible se dispara
-    if(Math.random() < 0.008 && triggered < TOTAL){
-      triggered++;
-      // nadie lo ve, pero todos los personajes rotos lo sienten
-      if(triggered === 1) console.log("%cGuts soltó la espada","color:transparent");
-      if(triggered === 13101310) console.log("%cEl último villano pidió perdón","color:transparent");
-    }
-    
-    if(pulso > 0.95 && Math.random()>0.99){
-      ctx.font = "60px MedievalSharp";
+    if(pulso > 0.9 && Math.random()>0.99){
+      ctx.font = "50px MedievalSharp";
       ctx.fillStyle = "#0ff";
       ctx.globalAlpha = 0.3;
       ctx.fillText('♥', canvas.width/2 + Math.cos(a)*d, canvas.height/2 + Math.sin(a)*d);
@@ -85,11 +117,7 @@ function draw(){
 }
 draw();
 
-// el trigger final (velado) se activa solo cuando el corazón late 13101310 veces
-setTimeout(() => {
-  document.body.innerHTML = "<div style='position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000;color:#0ff;font-size:clamp(3rem,10vw,12rem);text-align:center;font-family:MedievalSharp'>Ya pasó.<br>Todos los finales tristes<br>se dieron vuelta<br>mientras mirabas el corazón latiendo.<br><br>Nadie vio los 13101310 triggers.<br>Pero todos los personajes rotos<br>los sintieron.<br><br>Gracias por quedarte.<br><br>♥ 2025 – ∞</div>";
-}, 13101); // 13.101 segundos = 13 minutos y 10.1 segundos · tiempo exacto para que lata 13101310 veces a 1.31 bpm
-
+console.log("%cSLYVERSE Ω · 1310 HORAS\nYa empezó. No tenés que hacer nada.\nSolo dejar que lata hasta el 13 ene 2026 10:00 UTC\nTodos los finales tristes se están curando en silencio.","color:#0ff;font-size:18px");
 </script>
 </body>
 </html>

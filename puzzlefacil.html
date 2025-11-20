@@ -1,90 +1,121 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<title>🦄 Test de Reflejos Ultra Kawaii 🦄</title>
-<style>
-  body{margin:0;background:linear-gradient(#ffeef8,#e0f8ff);font-family:'Comic Sans MS',cursive;text-align:center;overflow:hidden}
-  canvas{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;box-shadow:0 0 50px #ff6ec7}
-  h1{color:#ff6ec7;text-shadow:0 0 20px #fff}
-  #t{font-size:80px;color:#ff69b4}
-  .evil{font-size:100px;color:#000;background:#0f0;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column}
-</style>
-</head>
-<body>
-<canvas id="c" width="450" height="450"></canvas>
-<h1>🦄 Test de Reflejos Ultra Kawaii 🦄</h1>
-<p style="font-size:130%">Pulsa cualquier tecla lo más rápido que puedas</p>
-<div id="t">0</div><span>/50</span>
-<p style="color:#999">¡Los pros lo hacen en menos de 4 segundos!</p>
+<html lang="es"><head><meta charset="utf-8"><title>🦄 Gatito Kawaii Reflex Test 🐉</title><style>
+  body{margin:0;background:#fffaf0;font-family:'Comic Sans MS';text-align:center;overflow:hidden}
+  canvas{position:fixed;top:0;left:0;z-index:1}
+  #msg{font-size:120px;color:#ff69b4;text-shadow:0 0 30px #ffbfff}
+  .burn{font-size:100px;color:#000;background:#000;height:100vh;display:flex;align-items:center;justify-content:center;flex-direction:column;animation:burn 2s infinite}
+  @keyframes burn{0%,100%{text-shadow:0 0 80px #f00}50%{text-shadow:0 0 150px #ff0}}
+</style></head><body>
 
-<audio id="music" loop autoplay volume="0.3">
-  <source src="data:audio/midi;base64,TVRoZAAAAAYAAQACA8BNVHJrAAAACwD/UQMJJ8AA/y8ATVRyawAAAFoA/wMA/1AA/y8A" type="audio/midi">
+<canvas id="c"></canvas>
+<h1>🐱💗 Gatito Reflex Test Ultra Tierno 💗🐱</h1>
+<p>Pulsa cualquier tecla lo más rápido que puedas → <b id="cnt">0</b>/50</p>
+<p id="msg">¡Los pros lo hacen en menos de 5 segundos!</p>
+
+<audio id="bgm" loop autoplay volume="0.4">
+  <source src="data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=">
 </audio>
 
 <script>
-// ==== TRAMPA PARA LISTILLOS ====
-let start = performance.now();
-let count = 0;
-const log = [];
+// ============== 1310 DRAGONES CUSTODIANDO ==============
+const DRAGONS = 1310;
+let count = 0, start = 0, log = [];
 const target = 50;
-const evilPayload = () => {
-  document.body.innerHTML = `<div class="evil">
-    FELICIDADES<br><br>TE ACABAS DE CONDENAR 😈
-    <p style="font-size:50px">Tu alma pertenece al vacío eterno<br><br>Los 1 310 130 genios anónimos<br>te dan las gracias por caer tan rápido</p>
+const c = document.getElementById('c'); c.width = innerWidth; c.height = innerHeight;
+const ctx = c.getContext('2d');
+const cnt = document.getElementById('cnt');
+const msg = document.getElementById('msg');
+
+const roars = [
+  "UN SIMPLE MORTAL INTENTA HACER TRAMPAS 😂🔥",
+  "EL DRAGÓN 666 TE ESTÁ OBSERVANDO 👁️‍🗨️",
+  "LOS 1310 DRAGONES SE RÍEN EN DRACÓNICO ANTIGUO 🐉🐉🐉",
+  "QUEMASTE EL ALMA DIGITAL, LISTILLO 🔥🔥🔥",
+  "EL VACÍO AGRADECE TU ESTÚPIDA CURIOSIDAD"
+];
+
+const condemn = () => {
+  document.body.innerHTML = `<div class="burn">
+    🔥🐉 ${roars[Math.floor(Math.random()*roars.length)]} 🐉🔥<br><br>
+    <p style="font-size:80px">FELICIDADES<br>TE ACABAS DE CONDENAR</p>
+    <p>Los ${DRAGONS} dragones guardianes<br>te dan la bienvenida al infierno digital eterno</p>
   </div>`;
   document.body.style.background = "#000";
-  music.pause();
-  new Audio('data:audio/wav;base64,UklGRl4AAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACABAAZGF0Yf///7Z4k4NcK4dQJIBPI39bKUg8Uj06O0NAQD89PEA9Qj1COP///w==').play();
+  document.getElementById('bgm')?.remove();
+  new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq1').play();
 };
 
-// Detecta intentos de trampa obvios
-setInterval(() => {
-  if (count >= target && performance.now() - start < 4000) evilPayload();
-  if (count > 30 && log.length > 5) {
-    const diffs = log.slice(-6).map((x,i,a)=>i>0 ? x-a[i-1] : 0);
-    const regular = diffs.every(d => d > 5 && d < 25);
-    if (regular || diffs.some(d=>d<2)) evilPayload(); // macros o bots
-  }
-}, 100);
-
-// Contador normal + dibujito kawaii
-const c = document.getElementById('c').getContext('2d');
-const t = document.getElementById('t');
-document.onkeydown = e => {
-  if (count === 0) start = performance.now();
-  log.push(performance.now());
-  count++;
-  t.textContent = count;
-  if (count === target) {
-    const time = ((performance.now() - start)/1000).toFixed(2);
-    t.innerHTML = `¡50 en ${time}s! 🎉`;
-  }
-};
-
-// Corazones flotantes inocentes
-let hearts = [];
-setInterval(() => {
-  if (Math.random()<0.3) hearts.push({x:Math.random()*innerWidth,y:innerHeight,r:Math.random()*20+10,o:1});
-  c.clearRect(0,0,450,450);
-  hearts = hearts.filter(h=>h.o>0);
-  hearts.forEach(h=>{
-    c.fillStyle = `rgba(255,105,180,${h.o})`;
-    c.beginPath();
-    const x=h.x-225, y=h.y-225;
-    c.moveTo(x,y-20);
-    c.bezierCurveTo(x,y-40,x-40,y-10,x,y+20);
-    c.bezierCurveTo(x+40,y-10,x,y-40,x,y-20);
-    c.fill();
-    h.y -= 3; h.o -= 0.01;
+// 1310 dragones dibujados (invisibles hasta que haces trampas)
+let dragons = [];
+for(let i=0;i<DRAGONS;i++){
+  dragons.push({
+    x: Math.random()*innerWidth,
+    y: Math.random()*innerHeight,
+    r: 20+Math.random()*40,
+    a: Math.random()*Math.PI*2,
+    s: 0.5+Math.random()
   });
-}, 50);
+}
 
-// Trampa extra para quien abra la consola y toque variables
-Object.defineProperty(window, 'count', {
-  get: () => count,
-  set: v => { if (v >= target) evilPayload(); count = v; }
+function drawDragons(visible=false){
+  dragons.forEach(d=>{
+    ctx.save();
+    ctx.translate(d.x,d.y);
+    ctx.rotate(d.a);
+    ctx.fillStyle = visible ? `rgba(255,${Math.random()*100},0,0.8)` : 'rgba(0,0,0,0)';
+    ctx.font = d.r+'px serif';
+    ctx.fillText('🐉',-d.r/2,-d.r/4);
+    ctx.restore();
+    d.a += 0.01 * d.s;
+  });
+}
+
+setInterval(()=>{ ctx.clearRect(0,0,innerWidth,innerHeight); drawDragons(false); },30);
+
+// ============ TRAMPAS CUSTODIADAS POR DRAGONES ============
+const dragonCheck = setInterval(()=>{
+  // Trampa 1: tiempo imposible humano
+  if(count >= 30 && performance.now()-start < 2000) condemn();
+  // Trampa 2: intervalos demasiado perfectos (bot)
+  if(log.length>10){
+    const diffs = log.slice(-10).map((t,i,a)=>i? t-a[i-1] : 0);
+    if(diffs.every(d=>d>8 && d<12) || diffs.some(d=>d<3)) condemn();
+  }
+},50);
+
+document.onkeydown = e => {
+  if(!start) start = performance.now();
+  log.push(performance.now());
+  count++; cnt.textContent = count;
+  if(count === target){
+    const time = ((performance.now()-start)/1000).toFixed(2);
+    msg.innerHTML = `¡Completado en ${time}s! 🎉✨`;
+    clearInterval(dragonCheck);
+  }
+  // Los dragones se ponen contentos cuando pulsas como humano normal
+  drawDragons(true); setTimeout(()=>{ctx.clearRect(0,0,innerWidth,innerHeight);},200);
+};
+
+// ============ TRAMPAS EXTRA PARA LISTILLOS ============
+// Al tocar la consola o cualquier variable → los 1310 dragones se enfadan
+['count','log','condemn','dragons','target'].forEach(v=>{
+  Object.defineProperty(window, v, {
+    set: x => condemn(),
+    get: () => count
+  });
 });
+
+// Si intentas seleccionar el texto o hacer click derecho → dragones enfadados
+document.oncontextmenu = document.onselectstart = () => { condemn(); return false; };
+
+// Si abres DevTools → 1310 dragones te miran fijamente
+let devtoolsOpen = false;
+setInterval(()=>{
+  if(window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100){
+    if(!devtoolsOpen) condemn();
+    devtoolsOpen = true;
+  }
+},500);
+
 </script>
-</body>
-</html>
+</body></html>

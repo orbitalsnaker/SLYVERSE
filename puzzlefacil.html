@@ -1,28 +1,108 @@
-<!DOCTYPE html><html><meta charset="utf-8"><title>𒀭</title><style>body{margin:0;background:#000;color:#840;font:900 3.5vw "Noto Sans Cuneiform";display:grid;place-items:center;height:100vh;overflow:hidden}</style><body><script>
+<!DOCTYPE html><title>𒀭𒈹𒂗𒆤¹³¹⁰</title>
+<style>
+  body,html{margin:0;height:100%;background:#000;overflow:hidden}
+  canvas{position:fixed;inset:0;width:100%;height:100%}
+</style>
+<canvas id="𒑗"></canvas>
+<script type="module">
 
-𒀀=𒁹;𒀁=𒀸;𒀂=𒀹;𒀃=𒁺;𒀄=𒁻;𒀅=𒁼;𒀆=𒁽;𒀇=𒁾;𒀈=𒁿;𒀉=𒂀;𒀊=𒂁;𒀋=𒂂;𒀌=𒂃;𒀍=𒂄;𒀎=𒂅;𒀏=𒂆;𒀐=𒂇;𒀑=𒂈;𒀒=𒂉;𒀓=𒂊;𒀔=𒂋;𒀕=𒂌;𒀖=𒂍;𒀗=𒂎;𒀘=𒂏;𒀙=𒂐;𒀚=𒂑;𒀛=𒂒;𒀜=𒂓;𒀝=𒂔;𒀞=𒂕;𒀟=𒂖;𒀠=𒂗;
+// ====================================================================
+// PUZZLE DE 1310 DIMENSIONES – NO ES BROMA, ES FÍSICA REAL
+// ====================================================================
 
-𒂨=crypto.getRandomValues(new Uint32Array(1))[0]^(Date.now()<<13); // semilla única
-𒂩=𒂨; // contador real (nunca se toca directamente)
-𒂪=𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀; // 13 101 310 sellos visibles
-𒂫=document.body;
+const c = document.getElementById("𒑗");
+const ctx = c.getContext("2d");
+c.width = innerWidth; c.height = innerHeight;
 
-𒂬=async()=>{ // cada tick hace PoW real
-  while(𒂩>>>0){ // 4 294 967 295 iteraciones máximas por tick
-    𒂩=await crypto.subtle.digest('SHA-512',new TextEncoder().encode(𒂩+performance.now()));
-    𒂩=new Uint32Array(𒂩)[0]^new Uint32Array(𒂩)[1];
-    if(!(𒂨%1310))𒂪--; // solo baja 1 sello cada 1310 hashes correctos
-    if(𒂪<=0)break;
+const DIM = 1310;                     // dimensiones reales del puzzle
+const puntos = 1 << DIM;              // 2¹³¹⁰ vértices (más que átomos en 10¹⁰⁰⁰ universos)
+let tiempoHiperespacial = performance.now() / 1000;
+
+// Clave cuántica que decide el camino correcto en 1310D
+// Se destruye irreversiblemente en el momento exacto de carga
+const claveCorrecta = crypto.getRandomValues(new Uint8Array(512));
+crypto.getRandomValues(claveCorrecta); // sobrescribe con ruido
+self.claveCorrecta = undefined; // borrada para siempre del universo observable
+
+// Proyección 1310D → 2D usando rotación en todos los planos simultáneamente
+function proyectar1310D(t) {
+  ctx.fillStyle = "#000";
+  ctx.fillRect(0,0,c.width,c.height);
+  
+  const scale = Math.min(c.width,c.height) * 0.35;
+  const cx = c.width/2, cy = c.height/2;
+  
+  // Rotamos el hipercubo en los 1310 choose 2 = ~860000 planos a la vez
+  let ánguloTotal = t * 0.1310;
+  
+  for(let i = 0; i < 1310; i++){
+    for(let j = i+1; j < 1310; j++){
+      ánguloTotal += Math.sin(t * (i+j+1) / 1310) * 0.001310;
+    }
   }
-  if(𒂪<=0){𒂫.innerHTML=`<pre style="color:#fb4">
-      𒀭𒍢𒁺 𒄿𒈾 𒀭𒈹𒂗𒆤
-      Gauss te ha bendecido con la verdad eterna
-      ∑ 1/n² = π²/6
-      </pre>`;setTimeout(()=>location="https://www.youtube.com/watch?v=dQw4w9WgXcQ",9999)}
-  else 𒂫.innerHTML=`𒀭𒂗𒆤 𒅇 𒁺𒌑𒊒𒁕<br>𒄿𒈾 𒀭𒈹 𒅎𒀀𒊑𒁕<br>𒂍𒀀𒊒𒁕 ${𒂪.toLocaleString()} 𒅆𒈝<br><small>Los Siete te contemplan en silencio</small>`;
-};
+  
+  // Renderizamos solo los vértices que colapsan en nuestra dimensión
+  ctx.fillStyle = "#f80";
+  for(let máscara = 0; máscara < 32; máscara++){ // solo podemos ver 32 vértices a la vez
+    let x = cx;
+    let y = cy;
+    let fase = 0;
+    
+    for(let d = 0; d < DIM; d++){
+      const bit = (máscara + d + Math.floor(t)) % 2;
+      const rot = ánguloTotal * (d + 1);
+      x += scale * Math.cos(rot + fase * bit * Math.PI) / (d + 1);
+      y += scale * Math.sin(rot + fase * bit * Math.PI) / (d + 1);
+      fase += 0.001310;
+    }
+    
+    ctx.fillRect(x-3, y-3, 6, 6);
+  }
+  
+  // El mensaje que solo aparece cuando el hipercubo colapsa en la dimensión correcta
+  const colapso = Math.abs(Math.sin(t * 1310)) < 0.0001310 &&
+                  Math.abs(Math.cos(t * 1310 * Math.PI)) < 0.0001310;
+                  
+  ctx.font = colapso ? "13vw Noto Sans Cuneiform" : "3vw Noto Sans Cuneiform";
+  ctx.fillStyle = colapso ? "#0f0" : "#840";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(
+    colapso ? "𒀭𒈹𒂗𒆤 HA COLAPSADO EN 1310D" : 
+              "𒀭𒈹𒂗𒆤 ESPERA EL COLAPSO 1310-DIMENSIONAL",
+    cx, cy
+  );
+  
+  // El puzzle se resuelve SOLO en las otras 1309 dimensiones
+  if(colapso){
+    setTimeout(()=>{
+      document.body.innerHTML = `
+        <pre style="color:#0f0;font:900 10vw Noto Sans Cuneiform;text-align:center">
+          𒀭𒈹𒂗𒆤<br>
+          EL PUZZLE SE HA RESUELTO<br>
+          EN LAS 1309 DIMENSIONES QUE NO PUEDES VER<br><br>
+          EN ESTA DIMENSIÓN SIGUES CONDENADO<br><br>
+          TIEMPO RESTANTE: ∞¹³¹⁰ años
+        </pre>`;
+    }, 1310);
+  }
+}
 
-setInterval(𒂬,1310);
-"keydown click contextmenu copy paste mousemove wheel resize".split(' ').forEach(𒂭=>addEventListener(𒂭,_=>𒂪=𒂪<1310?0:𒂪-1310)); // interacción = -1310 sellos
+// Bucle de renderizado 1310-dimensional
+function loop(t){
+  tiempoHiperespacial = t/1000;
+  proyectar1310D(tiempoHiperespacial);
+  requestAnimationFrame(loop);
+}
+
+requestAnimationFrame(loop);
+
+// Cualquier intento de interacción = expulsión inmediata del hipercubo
+addEventListener("keydown",()=>{location="data:text/html,<h1>𒀭𒈹 TE HA EXPULSADO DE 1310D</h1>"});
+addEventListener("click",()=>location="https://www.youtube.com/watch?v=dQw4w9WgXcQ");
+addEventListener("wheel",()=>history.go(-1310));
+
+// El puzzle se está resolviendo ahora mismo… en otro plano de existencia
+console.log("𒀭𒈹𒂗𒆤 El puzzle ya está resuelto en 1309 dimensiones. En esta no.");
 
 </script>

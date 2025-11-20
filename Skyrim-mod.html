@@ -2,123 +2,81 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE Ω · HATE → HAPPY ALL THE ENDINGS</title>
+<title>SLYVERSE Ω · 13101310 TRIGGERS (velado)</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Creepster&family=MedievalSharp&family=UnifrakturMaguntia&display=swap');
-  body,html{margin:0;height:100vh;background:#000;color:#0cf;font-family:'MedievalSharp',serif;overflow:hidden;position:relative}
+  body,html{margin:0;height:100vh;background:#000;overflow:hidden;position:relative;font-family:MedievalSharp,serif}
   canvas{position:fixed;inset:0;width:100%;height:100%;z-index:1}
-  .c{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;background:rgba(0,0,0,0.97);z-index:2;flex-direction:column;padding:2rem}
-  h1{font-size:clamp(5rem,15vw,28rem);text-shadow:0 0 2000px #f06;animation:hate 2.6s infinite}
-  button{background:#f06;color:#000;padding:2.5rem 8rem;border:none;border-radius:100px;font-size:clamp(2.5rem,7vw,8rem);cursor:pointer;margin:4rem;font-weight:bold;transition:all .6s;font-family:'MedievalSharp'}
-  button:hover{transform:scale(1.4);background:#ff0;box-shadow:0 0 80px #ff0}
-  #hud{top:10px;left:10px;font-size:20px;background:rgba(0,0,0,0.9);padding:15px;border:3px solid #f06;border-radius:15px;color:#ff0}
-  .corazon{font-size:clamp(22rem,55vw,80rem);animation:heartbeat 1.31s infinite}
-  @keyframes hate{0%,100%{text-shadow:0 0 1500px #f06}50%{text-shadow:0 0 6000px #f00,0 0 9000px #900}}
+  #center{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:2;flex-direction:column;pointer-events:none}
+  h1{font-size:clamp(6rem,18vw,32rem);color:transparent;background:linear-gradient(45deg,#0cf,#f06,#ff0,#0f0);background-clip:text;-webkit-background-clip:text;animation:pulse 4s infinite;text-shadow:0 0 2000px #0cf}
+  .hidden{color:#000;font-size:1px;position:absolute;opacity:0;pointer-events:none}
+  @keyframes pulse{0%,100%{text-shadow:0 0 1500px #0cf}50%{text-shadow:0 0 8000px #0ff,0 0 12000px #0cf}}
   @keyframes heartbeat{0%,100%{transform:scale(1)}50%{transform:scale(1.31)}}
-  .glitch{color:#f06;text-shadow:0 0 20px #f00;animation:glitch 1.8s infinite}
-  @keyframes glitch{0%{transform:translate(0)}20%{transform:translate(-5px,5px)}40%{transform:translate(5px,-5px)}60%{transform:translate(-5px,5px)}100%{transform:translate(0)}}
 </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
 
-<div id="hud">
-  <div style="color:#ff0;font-size:24px">SLYVERSE Ω · HATE → HAPPY ALL THE ENDINGS</div>
-  <div>Odio recolectado: <span id="hate">1310</span> | Finales convertidos: <span id="happy">0</span>/∞ | Latidos: <span id="hearts">♥</span></div>
+<div id="center">
+  <h1 style="animation:heartbeat 1.31s infinite">♥</h1>
 </div>
 
-<div class="c" id="main">
-  <h1 class="glitch">HATE</h1>
-  <div style="font-size:clamp(3rem,9vw,11rem);line-height:2.4;background:-webkit-linear-gradient(#f00,#900,#f06,#000); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
-    Todo el odio del mundo<br>
-    cabe en una sola palabra.<br><br>
-    Pero si la miras fijo<br>
-    con un latido de 1.31…<br><br>
-    <span style="font-size:2em;color:#ff0">HATE → HAPPY</span><br>
-    las letras se dan vuelta solas.
-  </div>
-  <button onclick="convertirTodo()">CONVERTIR TODO EL ODIO EN HAPPY ENDINGS</button>
-</div>
-
-<div id="player" style="display:none;flex-direction:column;align-items:center;justify-content:center">
-  <h1 class="corazon" style="background:-webkit-linear-gradient(#f00,#ff0,#0f0,#0ff); -webkit-background-clip:text; -webkit-text-fill-color:transparent;">
-    ♥
-  </h1>
-  <div id="escena" style="font-size:clamp(3rem,9vw,12rem);line-height:2.8;color:#ff0;text-shadow:0 0 40px #0f0"></div>
+<!-- 13101310 triggers velados: nadie los ve, pero todos los sienten -->
+<div class="hidden">
+  Guts soltó la Dragonslayer y abrazó a Casca · trigger 1  
+  Julieta abrió los ojos antes de la daga · trigger 2  
+  Smeagol dejó caer el Anillo y sonrió · trigger 3  
+  Light quemó la Death Note y llamó a L · trigger 4  
+  Sephiroth extendió la ala blanca hacia Cloud · trigger 5  
+  Anakin quitó el casco y respiró · trigger 6  
+  …  
+  Autor #1310 terminó su libro con “y vivieron abrazados” · trigger 13101309  
+  El último villano del multiverso soltó la espada y pidió perdón · trigger 13101310  
 </div>
 
 <script>
-// HATE → HAPPY ALL THE ENDINGS
+// 13101310 triggers invisibles que se disparan solos
+const TOTAL = 13101310;
+let triggered = 0;
+
 const canvas = document.getElementById('c'), ctx = canvas.getContext('2d');
 canvas.width = innerWidth; canvas.height = innerHeight;
 
-let t = 0, hate = 1310, happy = 0;
-let convertido = false;
-
 const particles = [];
-for(let i = 0; i < 13100; i++) particles.push({
+for(let i = 0; i < 13101; i++) particles.push({
   a: Math.random()*Math.PI*2,
-  d: Math.random()*1000,
-  s: 0.00005+Math.random()*0.0007,
-  hue: 0 + Math.random()*20, // rojo odio puro
-  turning: false
+  d: Math.random()*1200,
+  s: 0.00003 + Math.random()*0.0008,
+  hue: Math.random()*360
 });
 
-window.SLY = {
-  hateToHappy: () => {
-    if(convertido) return;
-    convertido = true;
-    hate = 0;
-    happy = Infinity;
-    document.getElementById('main').style.display = 'none';
-    document.getElementById('player').style.display = 'flex';
-    
-    setTimeout(() => {
-      document.getElementById('escena').innerHTML = 
-        "HATE<br>↓<br>H A T E<br>↓<br>A H E T<br>↓<br>E T H A<br>↓<br>T E A H<br>↓<br>HAPPY<br><br>…y todos los finales tristes<br>del multiverso<br>se dieron vuelta al mismo tiempo.";
-    }, 1000);
-    
-    setTimeout(() => {
-      document.getElementById('escena').innerHTML += 
-        "<br><br>Ya no existe el odio.<br>Solo queda un eco que dice:<br><br>“Gracias por mirarme<br>hasta que me convertí en abrazo.”<br><br>♥ 2025 – ∞";
-    }, 6000);
-    
-    particles.forEach(p => p.turning = true);
-    actualizarHUD();
-  }
-};
-
-function actualizarHUD(){
-  document.getElementById("hate").innerText = hate;
-  document.getElementById("happy").innerText = happy === Infinity ? "∞" : happy;
-  document.getElementById("hearts").innerText = '♥'.repeat(131);
-}
-
 function draw(){
-  t += 0.016;
-  ctx.fillStyle='rgba(0,0,0,0.08)';
+  ctx.fillStyle='rgba(0,0,0,0.05)';
   ctx.fillRect(0,0,canvas.width,canvas.height);
   
-  const pulso = Math.sin(t*1.31)*0.5 + 0.5;
+  const t = performance.now()/1000;
+  const pulso = Math.abs(Math.sin(t*1.31));
   
   particles.forEach(p => {
-    let hue = p.hue + t*15;
-    if(p.turning){
-      hue = 120 + t*30; // pasa de rojo a verde cyan
-      if(hue > 180) hue = 180 + (hue-180)%180;
-    }
-    
     const a = p.a + t*p.s*1.31;
-    const d = p.d + pulso*900;
-    const s = 12 + pulso*220;
-    
-    ctx.globalAlpha = 0.6 + pulso*0.4;
-    ctx.fillStyle = `hsla(${hue},100%,${60+pulso*40}%,${0.8+pulso*0.2})`;
+    const d = p.d + pulso*1000;
+    const s = 8 + pulso*300;
+    ctx.globalAlpha = 0.4 + pulso*0.6;
+    ctx.fillStyle = `hsla(${p.hue + t*20},100%,${60+pulso*40}%,${0.7+pulso*0.3})`;
     ctx.fillRect(canvas.width/2 + Math.cos(a)*d - s/2, canvas.height/2 + Math.sin(a)*d - s/2, s, s);
     
-    if(p.turning && pulso > 0.8 && Math.random() > 0.97){
-      ctx.font = "40px MedievalSharp";
+    // cada 0.0001 segundos, un trigger invisible se dispara
+    if(Math.random() < 0.008 && triggered < TOTAL){
+      triggered++;
+      // nadie lo ve, pero todos los personajes rotos lo sienten
+      if(triggered === 1) console.log("%cGuts soltó la espada","color:transparent");
+      if(triggered === 13101310) console.log("%cEl último villano pidió perdón","color:transparent");
+    }
+    
+    if(pulso > 0.95 && Math.random()>0.99){
+      ctx.font = "60px MedievalSharp";
+      ctx.fillStyle = "#0ff";
+      ctx.globalAlpha = 0.3;
       ctx.fillText('♥', canvas.width/2 + Math.cos(a)*d, canvas.height/2 + Math.sin(a)*d);
     }
   });
@@ -127,17 +85,11 @@ function draw(){
 }
 draw();
 
-function convertirTodo(){
-  SLY.hateToHappy();
-}
+// el trigger final (velado) se activa solo cuando el corazón late 13101310 veces
+setTimeout(() => {
+  document.body.innerHTML = "<div style='position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#000;color:#0ff;font-size:clamp(3rem,10vw,12rem);text-align:center;font-family:MedievalSharp'>Ya pasó.<br>Todos los finales tristes<br>se dieron vuelta<br>mientras mirabas el corazón latiendo.<br><br>Nadie vio los 13101310 triggers.<br>Pero todos los personajes rotos<br>los sintieron.<br><br>Gracias por quedarte.<br><br>♥ 2025 – ∞</div>";
+}, 13101); // 13.101 segundos = 13 minutos y 10.1 segundos · tiempo exacto para que lata 13101310 veces a 1.31 bpm
 
-addEventListener('keydown', e => {
-  if(e.key === 'h' || e.key === 'H'){
-    SLY.hateToHappy();
-  }
-});
-
-console.log("%cHATE → HAPPY ALL THE ENDINGS\nPresiona H y todo el odio del multiverso se da vuelta en un solo latido ♥","color:#f00;font-size:28px;background:#000;padding:20px");
 </script>
 </body>
 </html>

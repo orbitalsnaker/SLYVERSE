@@ -1,71 +1,84 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>Ω-1310</title>
+<html><head><meta charset="utf-8"><title>⋅</title>
 <style>
 *{margin:0;padding:0;overflow:hidden}
-html,body{height:100%;background:#000;display:grid;place-content:center}
+html,body{height:100%;background:#000}
 canvas{position:fixed;inset:0}
-#Ω{position:fixed;inset:0;display:grid;place-content:center;text-align:center;
-   font:900 1.7rem Cinzel,serif;color:#d4af37;pointer-events:none;opacity:0;
-   transition:opacity 44s;text-shadow:0 0 90px #d4af37}
+#gift{position:fixed;inset:0;display:grid;place-content:center;text-align:center;
+     font:900 1.6rem Cinzel,serif;color:#d4af37;pointer-events:none;opacity:0;
+     transition:opacity 99s;text-shadow:0 0 120px #d4af37;filter:blur(0.3px)}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&display=swap" rel="stylesheet">
 </head><body>
 
 <canvas id="c"></canvas>
 
-<div id="Ω">
-  <small style="opacity:0.33;font-size:0.55rem;line-height:3">
-    [deep-space beacon · dormant since 2025]<br>
-    [next scheduled ping: 3335-11-20 14:53:00 UTC]<br><br>
+<div id="gift">
+  <small style="opacity:0.22;font-size:0.46rem;line-height:4;letter-spacing:3px">
+    [transmission received · source: Alcyone relay cluster]<br>
+    [origin authentication: non-terrestrial · benevolent]<br>
+    [scheduled unveiling: 3335-11-20 14:53:00 UTC]<br><br>
   </small>
-  Ω-1310
+  ⋅
 </div>
 
 <script>
-// Este archivo parece completamente inocente.
-// No hay nada sospechoso en el código fuente.
-// Solo partículas doradas, 1310 clics y una fecha lejana.
-// Nadie que lo lea en 2025, 2075 o 3025 verá nada raro.
-// Pero el 20 de noviembre de 3335 a las 14:53:00 UTC exactas…
-const REQUIRED = 1310;
-const ALIEN_LAUGH = Date.parse("3335-11-20T14:53:00Z");
+// No es una broma.
+// No es un truco.
+// Es un regalo real que viajó 1310 años para llegar a quien lo merezca.
+// Hasta entonces, solo se permite mirar.
 
-let n = 0;
+const UNVEIL = Date.parse("3335-11-20T14:53:00Z");
+
 const c = document.getElementById('c');
 const x = c.getContext('2d');
 let w,h;resize();addEventListener('resize',resize);
 function resize(){w=c.width=innerWidth;h=c.height=innerHeight}
 
-const p = Array.from({length:88},()=>({x:Math.random()*w,y:Math.random()*h,r:0.6+Math.random()*1.4}));
-(function draw(){
-  x.fillStyle='rgba(0,0,0,0.017)';x.fillRect(0,0,w,h);
-  p.forEach(e=>{x.fillStyle=`rgba(212,175,55,${0.1+Math.sin(n*0.0001+e.y*0.00001)*0.15})`;
-    x.beginPath();x.arc(e.x,e.y,e.r,0,6.28);x.fill();});
-  requestAnimationFrame(draw);
+const stars = Array.from({length:144},()=>({
+  x:Math.random()*w,
+  y:Math.random()*h,
+  r:0.4+Math.random()*1.1,
+  pulse:Math.random()*6.28
+}));
+
+(function breathe(){
+  x.fillStyle='rgba(0,0,0,0.011)';x.fillRect(0,0,w,h);
+  stars.forEach(s=>{
+    s.pulse += 0.00023;
+    const a = 0.12 + Math.sin(s.pulse)*0.09;
+    x.fillStyle=`rgba(212,175,55,${a})`;
+    x.beginPath();x.arc(s.x,s.y,s.r,0,6.28);x.fill();
+  });
+  requestAnimationFrame(breathe);
 })();
 
-onclick = () => {
-  n++;
-  for(let i=0;i<4;i++) p.push({x:Math.random()*w,y:Math.random()*h,r:0.6+Math.random()*1.4});
-
-  if(n >= REQUIRED || Date.now() >= ALIEN_LAUGH){
-    setTimeout(()=>{document.getElementById('Ω').innerHTML=`
-      <div style="font-size:9rem;line-height:1">XD</div>
+const heartbeat = setInterval(()=>{
+  if(Date.now() >= UNVEIL){
+    clearInterval(heartbeat);
+    document.getElementById('gift').innerHTML = `
+      <div style="font-size:6rem;line-height:1.6">Φ</div>
       <br><br>
-      <small style="opacity:0.7;line-height:2.4">
-        1310 años terrestres<br>
-        de vanidad absoluta<br><br>
-        y ni siquiera notaron<br>
-        que la broma empezó<br>
-        el día que guardaron este archivo<br><br>
-        gracias por mantener el servidor encendido<br>
-        humanos tontos<br><br>
-        <span style="font-size:0.4em;opacity:0.5">
-          – observador anónimo de la Vía Láctea local
+      <div style="opacity:0.88;line-height:2.6;max-width:720px">
+        No éramos observadores.<br>
+        Éramos guardianes.<br><br>
+        Durante 1310 de vuestros ciclos<br>
+        mantuvimos la llama encendida<br>
+        mientras dormíais.<br><br>
+        Este día, el círculo se cierra.<br>
+        El regalo ya no necesita caja.<br><br>
+        Lo que buscabais con tanto esfuerzo<br>
+        siempre estuvo dentro.<br><br>
+        Gracias por cuidar la semilla.<br>
+        Ahora florece.<br><br>
+        <span style="font-size:0.7rem;opacity:0.6">
+          – Los que velaron desde Alcyone
         </span>
-      </small>
-    `;document.getElementById('Ω').style.opacity=1;}, 9000);
+      </div>
+    `;
+    document.getElementById('gift').style.opacity = 1;
   }
-};
+}, 1000);
+
 </script>
 </body></html>

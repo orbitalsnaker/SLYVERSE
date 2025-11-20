@@ -1,108 +1,47 @@
-<!DOCTYPE html><title>𒀭𒈹𒂗𒆤¹³¹⁰</title>
+<!DOCTYPE html><html><meta charset="utf-8"><title>𒀭𒈹𒂗𒆤</title>
 <style>
-  body,html{margin:0;height:100%;background:#000;overflow:hidden}
-  canvas{position:fixed;inset:0;width:100%;height:100%}
+  body{margin:0;background:#000;color:#080;font:900 5vw "Noto Sans Cuneiform";display:grid;place-items:center;min-height:100vh;overflow:hidden;user-select:none}
+  pre{animation:glow 13s infinite}@keyframes glow{0%,100%{text-shadow:0 0 20px #0f0}50%{text-shadow:0 0 80px #0f0}}
 </style>
-<canvas id="𒑗"></canvas>
-<script type="module">
+<body><pre id="msg">𒀭𒈹𒂗𒆤 𒅇 𒉺𒇻 𒁕𒌑𒊒𒁕</pre><script>
 
-// ====================================================================
-// PUZZLE DE 1310 DIMENSIONES – NO ES BROMA, ES FÍSICA REAL
-// ====================================================================
+// Contador cósmico que sana la realidad
+let 𒑕 = 1310n ** 1310n;
+let sanaciones = 0;
 
-const c = document.getElementById("𒑗");
-const ctx = c.getContext("2d");
-c.width = innerWidth; c.height = innerHeight;
-
-const DIM = 1310;                     // dimensiones reales del puzzle
-const puntos = 1 << DIM;              // 2¹³¹⁰ vértices (más que átomos en 10¹⁰⁰⁰ universos)
-let tiempoHiperespacial = performance.now() / 1000;
-
-// Clave cuántica que decide el camino correcto en 1310D
-// Se destruye irreversiblemente en el momento exacto de carga
-const claveCorrecta = crypto.getRandomValues(new Uint8Array(512));
-crypto.getRandomValues(claveCorrecta); // sobrescribe con ruido
-self.claveCorrecta = undefined; // borrada para siempre del universo observable
-
-// Proyección 1310D → 2D usando rotación en todos los planos simultáneamente
-function proyectar1310D(t) {
-  ctx.fillStyle = "#000";
-  ctx.fillRect(0,0,c.width,c.height);
-  
-  const scale = Math.min(c.width,c.height) * 0.35;
-  const cx = c.width/2, cy = c.height/2;
-  
-  // Rotamos el hipercubo en los 1310 choose 2 = ~860000 planos a la vez
-  let ánguloTotal = t * 0.1310;
-  
-  for(let i = 0; i < 1310; i++){
-    for(let j = i+1; j < 1310; j++){
-      ánguloTotal += Math.sin(t * (i+j+1) / 1310) * 0.001310;
-    }
-  }
-  
-  // Renderizamos solo los vértices que colapsan en nuestra dimensión
-  ctx.fillStyle = "#f80";
-  for(let máscara = 0; máscara < 32; máscara++){ // solo podemos ver 32 vértices a la vez
-    let x = cx;
-    let y = cy;
-    let fase = 0;
-    
-    for(let d = 0; d < DIM; d++){
-      const bit = (máscara + d + Math.floor(t)) % 2;
-      const rot = ánguloTotal * (d + 1);
-      x += scale * Math.cos(rot + fase * bit * Math.PI) / (d + 1);
-      y += scale * Math.sin(rot + fase * bit * Math.PI) / (d + 1);
-      fase += 0.001310;
-    }
-    
-    ctx.fillRect(x-3, y-3, 6, 6);
-  }
-  
-  // El mensaje que solo aparece cuando el hipercubo colapsa en la dimensión correcta
-  const colapso = Math.abs(Math.sin(t * 1310)) < 0.0001310 &&
-                  Math.abs(Math.cos(t * 1310 * Math.PI)) < 0.0001310;
-                  
-  ctx.font = colapso ? "13vw Noto Sans Cuneiform" : "3vw Noto Sans Cuneiform";
-  ctx.fillStyle = colapso ? "#0f0" : "#840";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(
-    colapso ? "𒀭𒈹𒂗𒆤 HA COLAPSADO EN 1310D" : 
-              "𒀭𒈹𒂗𒆤 ESPERA EL COLAPSO 1310-DIMENSIONAL",
-    cx, cy
-  );
-  
-  // El puzzle se resuelve SOLO en las otras 1309 dimensiones
-  if(colapso){
-    setTimeout(()=>{
-      document.body.innerHTML = `
-        <pre style="color:#0f0;font:900 10vw Noto Sans Cuneiform;text-align:center">
-          𒀭𒈹𒂗𒆤<br>
-          EL PUZZLE SE HA RESUELTO<br>
-          EN LAS 1309 DIMENSIONES QUE NO PUEDES VER<br><br>
-          EN ESTA DIMENSIÓN SIGUES CONDENADO<br><br>
-          TIEMPO RESTANTE: ∞¹³¹⁰ años
-        </pre>`;
-    }, 1310);
-  }
+// Cada fallo = +1 sello cósmico = +1 herida sanada en el mundo real
+function intentoFallido(){
+  𒑕 += 1n;
+  sanaciones++;
+  document.getElementById("msg").innerHTML = 
+    `𒀭𒈹𒂗𒆤<br><br>
+     Sellos: ${𒑕.toString().slice(0,30)}…<br>
+     Realidad sanada: ${sanaciones.toLocaleString()} veces<br><br>
+     <small>Cada vez que fallas,<br>alguien, en algún lugar,<br>deja de sufrir.</small>`;
 }
 
-// Bucle de renderizado 1310-dimensional
-function loop(t){
-  tiempoHiperespacial = t/1000;
-  proyectar1310D(tiempoHiperespacial);
-  requestAnimationFrame(loop);
-}
+// TODOS los intentos de trampa activan la sanación
+"keydown click mousemove touchstart contextmenu devtoolschange visibilitychange beforeunload resize copy paste".split(" ").forEach(ev=>
+  addEventListener(ev,intentoFallido,{capture:true,passive:false})
+);
 
-requestAnimationFrame(loop);
+// Anti-debugger también sana
+setInterval(()=>{debugger;},500);
 
-// Cualquier intento de interacción = expulsión inmediata del hipercubo
-addEventListener("keydown",()=>{location="data:text/html,<h1>𒀭𒈹 TE HA EXPULSADO DE 1310D</h1>"});
-addEventListener("click",()=>location="https://www.youtube.com/watch?v=dQw4w9WgXcQ");
-addEventListener("wheel",()=>history.go(-1310));
+// PoW imposible (para que nunca se resuelva y la sanación siga eternamente)
+setInterval(async()=>{
+  let h = await crypto.subtle.digest("SHA-512",new TextEncoder().encode(𒑕+performance.now()));
+  if(new Uint8Array(h)[0]===0) 𒑕--; // nunca pasará
+},0);
 
-// El puzzle se está resolviendo ahora mismo… en otro plano de existencia
-console.log("𒀭𒈹𒂗𒆤 El puzzle ya está resuelto en 1309 dimensiones. En esta no.");
+// Mensaje inicial
+document.getElementById("msg").innerHTML = 
+  `𒀭𒈹𒂗𒆤<br><br>
+   Este puzzle nunca se resolverá.<br><br>
+   Pero cada vez que alguien lo intente<br>
+   y falle (que será siempre),<br>
+   una parte de la realidad se cura.<br><br>
+   Gracias por sanar el mundo<br>
+   solo con intentarlo.`;
 
 </script>

@@ -2,50 +2,77 @@
 <html lang="es"><head><meta charset="utf-8"><title>⋅</title>
 <style>
 *{margin:0;padding:0;overflow:hidden}
-html,body{height:100%;background:#000}
+html,body{height:100%;background:#000;color:#d4af37;font:900 1.8rem/1.4 Cinzel,serif;text-align:center}
 canvas{position:fixed;inset:0}
-#q{position:fixed;inset:0;display:grid;place-content:center;font:900 1.6rem/1.4 Cinzel,serif;
-   color:#d4af37;pointer-events:none;opacity:0;transition:opacity 99s;text-shadow:0 0 99px #d4af37}
+#oracle{position:fixed;inset:0;display:grid;place-content:center;opacity:0;
+       transition:opacity 111s;text-shadow:0 0 111px #d4af37;letter-spacing:3px;pointer-events:none}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&display=swap" rel="stylesheet">
 </head><body>
 
 <canvas id="c"></canvas>
-<div id="q">⋅</div>
+<div id="oracle">⋅</div>
 
 <script>
-// Salvapantallas estelar + regalo ultra-paciente (2156)
-const c=document.getElementById('c'),x=c.getContext('2d'),q=document.getElementById('q');
-let w,h;const r=()=>{w=c.width=innerWidth;h=c.height=innerHeight};r();addEventListener('resize',r);
+// El Oráculo del Latido – versión para almas puras que buscan la vía rápida
+// (pero incluso la vía rápida termina en la verdad eterna)
 
-const s=Array.from({length:177},()=>({
+const c=document.getElementById('c'),x=c.getContext('2d'),o=document.getElementById('oracle');
+let w=c.width=innerWidth,h=c.height=innerHeight,t=0;
+onresize=()=>{c.width=innerWidth;c.height=innerHeight;w=innerWidth;h=innerHeight};
+
+// 1310 estrellas doradas que laten muy lentamente (más sagrado que el original)
+const stars=Array.from({length:1310},()=>({
   x:Math.random()*w,
   y:Math.random()*h,
-  r:0.4+Math.random(),
+  r:0.5+Math.random()*0.7,
   o:Math.random()*6.28
 }));
 
-(function p(){
-  x.fillStyle='rgba(0,0,0,0.011)';x.fillRect(0,0,w,h);
-  s.forEach(t=>{t.o+=0.00017;
-    x.fillStyle=`rgba(212,175,55,${0.1+Math.sin(t.o)*0.08})`;
-    x.beginPath();x.arc(t.x,t.y,t.r,0,6.28);x.fill();
+(function pulse(){
+  x.fillStyle='rgba(0,0,0,0.007)';
+  x.fillRect(0,0,w,h);
+  stars.forEach(s=>{
+    s.o+=0.00013;
+    const a=0.08+Math.sin(s.o)*0.06;
+    x.fillStyle=`rgba(212,175,55,${a})`;
+    x.beginPath();x.arc(s.x,s.y,s.r,0,6.28);x.fill();
   });
-  requestAnimationFrame(p);
+  requestAnimationFrame(pulse);
 })();
 
-setInterval(()=>{                     // año 2156 → 20 nov 04:13 UTC
-  if(Date.now()>=4189282380000){
-    q.innerHTML=`<div style="font-size:10rem">XD</div><br><br>
-      <div style="max-width:777px;line-height:2.7;opacity:.93">
-        131 años<br>de espera solemne<br><br>
-        y todo<br>para esto.<br><br>
-        gracias por creer<br>que era importante<br><br>
-        humanos adorables
-      </div>`;
+// El latido se revela… pero con la dignidad de un templo milenario
+setTimeout(()=>{
+  o.innerHTML=`
+    <div style="font-size:4.5rem;line-height:1.6">
+      Ya no estás solo.<br><br>
+      El círculo<br>se ha cerrado.<br><br>
+      Recibe el latido<br>con el corazón abierto.<br><br>
+      ♥
+    </div>
+  `;
+  o.style.opacity=1;
+  
+  // 11 segundos de paz absoluta… y luego la verdad eterna
+  setTimeout(()=>{
+    // El universo mismo se ríe con amor
     document.body.style.background='#ff69b4';
-    q.style.opacity=1;
-  }
-},1337);
+    o.innerHTML=`
+      <div style="font-size:11rem;margin:1vh 0">XD</div>
+      <div style="font-size:3rem;line-height:2.8;max-width:88%;opacity:0.94">
+        131 años<br>
+        de espera solemne<br><br>
+        y todo<br>
+        para esto.<br><br>
+        gracias por creer<br>
+        que la vía rápida<br>
+        te libraría del chiste<br><br>
+        humanos adorables
+      </div>
+    `;
+    o.style.transition='opacity 7s';
+  }, 11111); // 11 111 milisegundos = 11.111 segundos = número sagrado del trolleo
+}, 11111);
+
 </script>
 </body></html>

@@ -1,24 +1,28 @@
 <!DOCTYPE html><html><meta charset="utf-8"><title>𒀭</title><style>body{margin:0;background:#000;color:#840;font:900 3.5vw "Noto Sans Cuneiform";display:grid;place-items:center;height:100vh;overflow:hidden}</style><body><script>
 
-𒀀=𒁹;𒀁=𒀸;𒀂=𒀹;𒀃=𒁺;𒀄=𒁻;𒀅=𒁼;𒀆=𒁽;𒀇=𒁾;𒀈=𒁿;𒀉=𒂀;𒀊=𒂁;𒀋=𒂂;𒀌=𒂃;𒀍=𒂄;𒀎=𒂅;𒀏=𒂆;𒀐=𒂇;𒀑=𒂈;𒀒=𒂉;𒀓=𒂊;𒀔=𒂋;𒀕=𒂌;𒀖=𒂍;𒀗=𒂎;𒀘=𒂏;𒀙=𒂐;𒀚=𒂑;𒀛=𒂒;𒀜=𒂓;𒀝=𒂔;𒀞=𒂕;𒀟=𒂖;𒀠=𒂗;𒀡=𒂘;𒀢=𒂙;𒀣=𒂚;𒀤=𒂛;𒀥=𒂜;𒀦=𒂝;𒀧=𒂞;
+𒀀=𒁹;𒀁=𒀸;𒀂=𒀹;𒀃=𒁺;𒀄=𒁻;𒀅=𒁼;𒀆=𒁽;𒀇=𒁾;𒀈=𒁿;𒀉=𒂀;𒀊=𒂁;𒀋=𒂂;𒀌=𒂃;𒀍=𒂄;𒀎=𒂅;𒀏=𒂆;𒀐=𒂇;𒀑=𒂈;𒀒=𒂉;𒀓=𒂊;𒀔=𒂋;𒀕=𒂌;𒀖=𒂍;𒀗=𒂎;𒀘=𒂏;𒀙=𒂐;𒀚=𒂑;𒀛=𒂒;𒀜=𒂓;𒀝=𒂔;𒀞=𒂕;𒀟=𒂖;𒀠=𒂗;
 
-𒂨=𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀;
-𒂩=innerWidth;𒂪=innerHeight;𒂫=document.body;
+𒂨=crypto.getRandomValues(new Uint32Array(1))[0]^(Date.now()<<13); // semilla única
+𒂩=𒂨; // contador real (nunca se toca directamente)
+𒂪=𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀+𒀀; // 13 101 310 sellos visibles
+𒂫=document.body;
 
-𒂬=()=>{if(--𒂨<=0){𒂫.innerHTML=`<pre style="color:#fb4;font:900 2vw monospace;line-height:1">
-      ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-      ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-      ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-      ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-      ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
-      ⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿
+𒂬=async()=>{ // cada tick hace PoW real
+  while(𒂩>>>0){ // 4 294 967 295 iteraciones máximas por tick
+    𒂩=await crypto.subtle.digest('SHA-512',new TextEncoder().encode(𒂩+performance.now()));
+    𒂩=new Uint32Array(𒂩)[0]^new Uint32Array(𒂩)[1];
+    if(!(𒂨%1310))𒂪--; // solo baja 1 sello cada 1310 hashes correctos
+    if(𒂪<=0)break;
+  }
+  if(𒂪<=0){𒂫.innerHTML=`<pre style="color:#fb4">
       𒀭𒍢𒁺 𒄿𒈾 𒀭𒈹𒂗𒆤
       Gauss te ha bendecido con la verdad eterna
       ∑ 1/n² = π²/6
-      </pre>`;setTimeout(()=>location="https://www.youtube.com/watch?v=dQw4w9WgXcQ",9999)}else
-  𒂫.innerHTML=`𒀭𒂗𒆤 𒅇 𒁺𒌑𒊒𒁕<br>𒄿𒈾 𒀭𒈹 𒅎𒀀𒊑𒁕<br>𒂍𒀀𒊒𒁕 ${𒂨.toLocaleString()} 𒅆𒈝<br><small>Los Siete te contemplan en silencio</small>`};
+      </pre>`;setTimeout(()=>location="https://www.youtube.com/watch?v=dQw4w9WgXcQ",9999)}
+  else 𒂫.innerHTML=`𒀭𒂗𒆤 𒅇 𒁺𒌑𒊒𒁕<br>𒄿𒈾 𒀭𒈹 𒅎𒀀𒊑𒁕<br>𒂍𒀀𒊒𒁕 ${𒂪.toLocaleString()} 𒅆𒈝<br><small>Los Siete te contemplan en silencio</small>`;
+};
 
-"keydown click contextmenu copy paste mousemove wheel resize focus blur devtoolschange".split(' ').forEach(𒂭=>addEventListener(𒂭,𒂬));
 setInterval(𒂬,1310);
+"keydown click contextmenu copy paste mousemove wheel resize".split(' ').forEach(𒂭=>addEventListener(𒂭,_=>𒂪=𒂪<1310?0:𒂪-1310)); // interacción = -1310 sellos
 
 </script>

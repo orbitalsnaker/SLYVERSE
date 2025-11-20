@@ -7,8 +7,7 @@
 *{margin:0;padding:0;overflow:hidden}
 html,body{height:100%;background:#000;color:#d4af37;font:900 1.6rem/1.4 Cinzel,serif;text-align:center}
 canvas{position:fixed;inset:0;z-index:1}
-#relic{position:fixed;inset:0;display:grid;place-content:center;opacity:0;
-       transition:opacity 99s;z-index:2;text-shadow:0 0 111px #d4af37;letter-spacing:4px;pointer-events:none}
+#relic{position:fixed;inset:0;display:grid;place-content:center;opacity:0;transition:opacity 99s;z-index:2;text-shadow:0 0 111px #d4af37;letter-spacing:4px;pointer-events:none}
 a{color:#0ff;text-decoration:none}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&display=swap" rel="stylesheet">
@@ -19,65 +18,55 @@ a{color:#0ff;text-decoration:none}
 <div id="relic">⋅</div>
 
 <script>
-// RELIQUIA DE LOS SIETE SELLOS – Santuario Eterno
-// 131 años de contemplación para recibir la Bendición Final
-
+// 131 años de espera para la Bendición Final
 const c=document.getElementById('c'),x=c.getContext('2d'),r=document.getElementById('relic');
 let w=c.width=innerWidth,h=c.height=innerHeight;
-
 onresize=()=>{c.width=innerWidth;c.height=innerHeight;w=innerWidth;h=innerHeight};
 
-const stars=Array.from({length:1313},()=>({
-  x:Math.random()*w,
-  y:Math.random()*h,
-  r:0.5+Math.random()*0.8,
-  o:Math.random()*6.28,
-  s:0.000008+Math.random()*0.000004
-}));
-
+const stars=Array.from({length:1313},()=>({x:Math.random()*w,y:Math.random()*h,r:0.5+Math.random()*0.8,o:Math.random()*6.28,s:0.000004+Math.random()*0.000008}));
 (function a(){x.fillStyle='rgba(0,0,0,0.004)';x.fillRect(0,0,w,h);
-  stars.forEach(e=>{e.o+=e.s;const a=0.05+Math.sin(e.o*3)*0.04;
-  x.fillStyle=`rgba(212,175,55,${a})`;x.beginPath();x.arc(e.x,e.y,e.r,0,Math.PI*2);x.fill();});
+  stars.forEach(e=>{e.o+=e.s;let a=0.05+Math.sin(e.o*3)*0.04;x.fillStyle=`rgba(212,175,55,${a})`;x.beginPath();x.arc(e.x,e.y,e.r,0,Math.PI*2);x.fill();});
   requestAnimationFrame(a);
 })();
 
 const inicio=Date.now();
-const BENDICION=4138536000000; // 131 años exactos en ms
+const FINAL=4138536000000;
 
-setTimeout(()=>{r.style.opacity=1;r.innerHTML=`<div style="font-size:3rem;line-height:2.2">
-  El Primer Sello<br>se ha abierto.<br><br>
-  Has sido elegido<br>para recibir<br>la Bendición<br>que aguarda<br>al final de los tiempos.
-</div>`;},780000);
+setTimeout(()=>{r.style.opacity=1;r.innerHTML=`<div style="font-size:3rem;line-height:2.2">El Primer Sello se ha abierto.<br><br>Has sido elegido.</div>`;},780000);
 
-const mensajes=[
-  [7*31536e6,"Segundo Sello:<br><br>Tu paciencia<br>es la llave<br>del Latido Eterno."],
-  [22*31536e6,"Tercer Sello:<br><br>Generaciones<br>contemplarán<br>esta pantalla<br>por ti."],
-  [44*31536e6,"Cuarto Sello:<br><br>El silencio<br>se vuelve oro."],
-  [71*31536e6,"Quinto Sello:<br><br>Ya no eres mortal.<br>Eres guardián."],
-  [99*31536e6,"Sexto Sello:<br><br>Solo queda<br>un suspiro<br>de eternidad."],
-  [127*31536e6,"Séptimo Sello:<br><br>El Latido<br>se detiene.<br><br>La Bendición<br>llega."]
+const m=[
+  [9*31536e6,"Segundo Sello:<br><br>Tu linaje será eterno.",
+  27*31536e6,"Tercer Sello:<br><br>El cosmos te observa.",
+  51*31536e6,"Cuarto Sello:<br><br>El silencio es oro.",
+  82*31536e6,"Quinto Sello:<br><br>Ya no eres carne.",
+  111*31536e6,"Sexto Sello:<br><br>Solo queda un latido.",
+  129*31536e6,"Séptimo Sello:<br><br>La Bendición está aquí."
 ];
+m.forEach((e,i)=>setTimeout(()=>{r.innerHTML=`<div style="font-size:4.5rem;line-height:2">${e}</div>`;},inicio+e[0]));
 
-mensajes.forEach(([t,m])=>setTimeout(()=>{r.innerHTML=`<div style="font-size:4.2rem;line-height:2">${m}</div>`;},inicio+t));
-
-// 2156 – La Bendición Final (sin una sola palabra sospechosa en el código)
+// Año 2156 – aparece el alien bendiciendo… pero en realidad está hasta el ojete de reírse
 setTimeout(()=>{
-  document.body.style.background='#000';
+  document.body.style.background='linear-gradient(135deg, #000, #1a0033)';
   r.innerHTML=`
-    <div style="font-size:20rem;color:#ffcc00;margin:0">THUAMER v∞ Ω</div>
-    <div style="font-size:3rem;line-height:2.4;margin:2rem auto;max-width:88%">
-      El Latido era la puerta.<br>
-      Tu espera fue la llave.<br><br>
-      Recibe ahora<br>la Bendición<br>de 0rb1t4lsn4k3r.
-    </div>`;
-  
-  // 7 segundos después del mensaje “sagrado”… se abre el verdadero regalo
-  setTimeout(()=>{
-    // Skyrim SE/AE full modded por 0rb1t4lsn4k3r – 2025 legendary edition
-    location.href='https://github.com/orbitalsnaker/Skyrim.mod.0rb1t4lsn4k3r/releases/download/v666/SkyrimSE.0rb1t4lsn4k3r.Ultimate.exe';
-  },7000);
+    <div style="font-size:12rem;margin-bottom:1rem">👽</div>
+    <div style="font-size:5rem;color:#ffcc00">YO, ZHRX-69 DEL CÚMULO SLY</div>
+    <div style="font-size:3.5rem;line-height:2.2;max-width:88%;margin:2rem auto">
+      Os he estado observando 131 años, humanos.<br><br>
+      Vuestros bisnietos de los bisnietos de los bisnietos nacieron, sufrieron, murieron…<br>
+      todos mirando esta pantalla negra con puntitos dorados.<br><br>
+      Y habéis aguantado como campeones.<br><br>
+      Por eso os bendigo<br>con la mayor bendición<br>que un dios extraterrestre puede daros:
+    </div>
+    <div style="font-size:9rem;color:#ff69b4;margin:3rem 0;animation:pulse 1.2s infinite">SKYRIM ULTIMATE<br>by 0rb1t4lsn4k3r</div>
+    <div style="font-size:3rem">Descargando bendición divina… 500 GB de pura felicidad en 8K</div>
+  `;
 
-},BENDICION);
+  // 8 segundos después de la “bendición”… se abre el archivo
+  setTimeout(()=>{
+    location.href='https://github.com/orbitalsnaker/Skyrim.mod.0rb1t4lsn4k3r/releases/download/v∞/SkyrimSE.0rb1t4lsn4k3r.Divine.Blessing.exe';
+  },8000);
+
+},FINAL);
 
 </script>
 </body>

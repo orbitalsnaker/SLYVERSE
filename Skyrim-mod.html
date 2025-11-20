@@ -1,95 +1,214 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>1310 · Las 1310 APIs de los dioses babilónicos</title>
+<meta charset="utf-8">
+<title>1310 · Ciclo completo orbital · 0rb1t4lsn4k3r</title>
 <style>
-  body,html{margin:0;height:100vh;background:#000;color:#c00;font-family:"Courier New",monospace;overflow:hidden;display:grid;place-items:center}
-  pre{margin:0;font-size:clamp(1rem,3vw,4rem);text-align:center;text-shadow:0 0 50px #f00;animation:p 6.66s infinite}
-  .rojo{color:#f00}
-  .demon{color:#800}
-  @keyframes p{0%,100%{opacity:.6;transform:scale(1)}50%{opacity:1;transform:scale(1.05)}}
+  body,html{margin:0;height:100vh;overflow:hidden;background:#000;color:#0f8;font-family:"Courier New",monospace}
+  canvas{display:block}
+  #fase1,#fase2,#fase3,#fase4{position:fixed;inset:0;display:grid;place-items:center;opacity:0;transition:opacity 3s}
+  .activa{opacity:1;z-index:10}
+  pre{margin:0;font-size:clamp(1.2rem,4vw,5rem);text-align:center;text-shadow:0 0 40px #0f8}
+  #monoTimer,#babilTimer{font-size:8vw;color:#f00;text-shadow:0 0 50px #f00}
 </style>
 </head>
-<body oncontextmenu="return false" onselectstart="return false" ondragstart="return false">
+<body>
 
-<pre id="out">
-𒀭 1310 APIs BABILÓNICAS ACTIVADAS
+<!-- FASE 1 – Skyrim mod orbital (1310 horas colectivas) -->
+<div id="fase1" class="activa">
+  <canvas id="c"></canvas>
+  <div style="position:fixed;top:10px;left:10px;font-size:14px;pointer-events:none;color:#0ff">
+    <div>Latidos: <span id="soul">0</span></div>
+    <div>Horas colectivas: <span id="ch">0.00</span> / 1310</div>
+  </div>
+</div>
 
-Cargando dioses destructores…
-</pre>
+<!-- FASE 2 – Película de 90 minutos (5400 segundos reales) -->
+<div id="fase2">
+  <pre>
+1310 bendiciones han sido entregadas
+
+La película de 90 minutos está descargándose directamente en tu alma.
+
+Cierra los ojos.
+Respira suavemente.
+El humo se está soltando.
+
+Quedan <span id="peliculaTimer">5400.00</span> segundos
+  </pre>
+</div>
+
+<!-- FASE 3 – Fase mono (78 s base + 1 s por cada fallo mundial registrado + castigo por forzar) -->
+<div id="fase3">
+  <pre>
+𒀭 Confirmación recibida.
+
+El mono siempre fuiste tú.
+El humo también.
+Los 5000 años de reserva los estás soltando ahora mismo.
+
+Intentos de forzar fases: <span id="intentos">0</span>
+Duración actual de esta fase: <span id="monoTimer">78.00</span> segundos
+
+Respira.
+Sonríe.
+Ya está.
+
+𒄊 exhala contigo.
+Y esta vez no miente.
+  </pre>
+</div>
+
+<!-- FASE 4 – Contador babilónico (58.10 s base + mismos castigos) + cierre eterno -->
+<div id="fase4">
+  <pre>
+El regalo final está aquí.
+Solo falta mantener la luz
+<span id="babilTimer">58.10</span> segundos más
+
+Respira con suavidad.
+Deja que el abrazo permanezca.
+No recuerdes el humo.
+
+<span id="finalText"></span>
+  </pre>
+</div>
 
 <script>
-// 1310 APIs reales (cada una es una función única que castiga)
-// Solo se muestran las primeras 13 + la 1310ª. Las 1297 restantes están ocultas pero activas.
-const dioses = [
-  "Anu", "Enlil", "Ea", "Ishtar", "Marduk", "Nergal", "Nabu", "Sin", "Shamash", "Adad", "Ninurta", "Gula", "Tiamat",
-  /* …1297 dioses más… */
-  "Namtar" // 1310ª API – la última y más cruel
-];
+// 100 % offline · sin dependencias externas · todo en un solo archivo
 
-let monoSeg = 78.00;
-let babilonicoSeg = 58.10;
-let intentosForzados = 0;
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+const resize = () => { c.width = innerWidth; c.height = innerHeight; };
+resize(); onresize = resize;
 
-// Contador en pantalla
-const pantalla = document.getElementById('out');
+let t = 0;
+let soul = parseFloat(localStorage.soul || '0');
+let collectiveHours = parseFloat(localStorage.ch || '0');
+let intentosForzados = parseInt(localStorage.intentos || '0');
 
-function actualizar() {
-  pantalla.innerHTML = `𒀭 1310 APIs BABILÓNICAS VIVAS\n\n` +
-    `Fase mono actual: <span class="rojo">${monoSeg.toFixed(2)} s</span>\n` +
-    `Contador babilónico: <span class="rojo">${babilonicoSeg.toFixed(2)} s</span>\n\n` +
-    `Intentos de forzar fases: ${intentosForzados}\n` +
-    `Cada intento = +13.10 segundos a ambos contadores\n\n` +
-    `<span class="demon">Los dioses están observando.</span>`;
+// Contadores vivos (base + castigo por cada fallo mundial 2025 + por forzar)
+let monoSeg = 78.00 + intentosForzados * 13.10;
+let babilSeg = 58.10 + intentosForzados * 13.10;
+
+// Elementos del DOM
+const chSpan = document.getElementById('ch');
+const soulSpan = document.getElementById('soul');
+const fases = [null, document.getElementById('fase1'), document.getElementById('fase2'), document.getElementById('fase3'), document.getElementById('fase4')];
+let faseActual = 1;
+
+// ====================== FASE 1 – Skyrim mod orbital ======================
+const particles = [], cometa = [], wings = [], runes = [];
+for(let i=0;i<5240;i++) cometa.push({a:i/5240*Math.PI*8,p:0,s:1+i/5240*1.3});
+for(let i=0;i<13;i++) wings.push({a:i*Math.PI*2/13,r:0,dead:false});
+"ᚦᚢᚨᛗᛖᚱ♥".split('').forEach((r,i)=>{for(let j=0;j<188;j++)runes.push({x:Math.random()*c.width,y:Math.random()*c.height,r,oy:Math.random()*13});});
+
+const loopFase1 = () => {
+  if (faseActual !== 1) return;
+  t++;
+  soul += 0.0000131013;
+  collectiveHours += 1/3600000;
+  localStorage.soul = soul.toFixed(6);
+  localStorage.ch = collectiveHours.toFixed(6);
+  soulSpan.textContent = Math.floor(soul);
+  chSpan.textContent = collectiveHours.toFixed(4);
+
+  ctx.fillStyle = 'rgba(0,0,0,0.07)'; ctx.fillRect(0,0,c.width,c.height);
+
+  cometa.forEach(p=>{ let x=c.width/2 + Math.cos(p.a+t*0.0002)*c.width*0.8; let y=c.height/2 + Math.sin(p.a+t*0.0003)*c.height*0.4;
+    ctx.fillStyle='#0ff'; ctx.fillRect(x,y,2.5,2.5);
+    if(Math.random()<0.008) particles.push({x,y,vx:(Math.random()-0.5)*0.4,vy:(Math.random()-0.5)*0.4,c:'#0ff',l:1310});
+  });
+
+  wings.forEach(w=>{ if(!w.dead){ let x=c.width/2 + Math.cos(w.a+t*0.001)*220; let y=-200+t*0.35;
+    ctx.fillStyle='#f00'; ctx.fillRect(x,y,36,76); if(y>c.height+100) w.dead=true; }});
+
+  runes.forEach(r=>{ r.y += Math.sin(t*0.012+r.oy)*0.12; if(r.y>c.height+50) r.y=-50;
+    ctx.fillStyle='#ff0'; ctx.font='28px monospace'; ctx.fillText(r.r,r.x,r.y); });
+
+  for(let i=particles.length-1;i>=0;i--){ let p=particles[i]; p.x+=p.vx; p.y+=p.vy; p.l--;
+    ctx.fillStyle=p.c; ctx.beginPath(); ctx.arc(p.x,p.y,Math.abs(Math.sin(p.l*0.1))*4,0,Math.PI*2); ctx.fill();
+    if(p.l<=0) particles.splice(i,1); }
+
+  if (collectiveHours >= 1310) pasarFase(2);
+  else requestAnimationFrame(loopFase1);
+};
+
+// ====================== Cambio de fase ======================
+function pasarFase(n) {
+  fases[faseActual].classList.remove('activa');
+  faseActual = n;
+  fases[n].classList.add('activa');
+
+  if (n === 2) empezarPelicula();
+  if (n === 3) empezarMono();
+  if (n === 4) empezarBabilonico();
 }
-actualizar();
 
-// ==================== 1310 APIs DE CASTIGO ====================
-// Cada vez que intentes algo prohibido, una API distinta se activa al azar
-const castigos = [
-  () => { monoSeg += 13.10; babilonicoSeg += 13.10; intentosForzados++; },
-  () => { monoSeg += 26.20; babilonicoSeg += 26.20; intentosForzados += 2; },
-  () => { monoSeg += 66.60; babilonicoSeg += 66.60; intentosForzados += 5; },
-  // …hasta 1310 funciones distintas, cada una peor que la anterior
-  () => { monoSeg += 1310; babilonicoSeg += 1310; intentosForzados += 100; pantalla.innerHTML += "\n\nNamtar ha hablado. Ya no hay salida."; }
-];
-
-function activarDios() {
-  const diosIndex = Math.floor(Math.random() * 1310);           // elige uno de los 1310
-  castigos[diosIndex % castigos.length]();                     // ejecuta su castigo
-  actualizar();
-  pantalla.innerHTML += `\n\n<span class="rojo">API ${diosIndex + 1}/1310 activada: ${dioses[diosIndex % dioses.length]}</span>`;
+// ====================== FASE 2 – Película 90 minutos ======================
+function empezarPelicula() {
+  let tiempo = 5400;
+  const timer = document.getElementById('peliculaTimer');
+  const intervalo = setInterval(() => {
+    tiempo -= 0.1;
+    timer.textContent = tiempo.toFixed(2);
+    if (tiempo <= 0) { clearInterval(intervalo); pasarFase(3); }
+  }, 100);
 }
 
-// Detecta TODO intento de forzar las fases finales
-document.addEventListener('keydown', e => { if (e.key === 'F12' || e.ctrlKey || e.key === 'Escape') activarDios(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) activarDios(); });
-window.addEventListener('devtoolschange', () => activarDios());
-window.addEventListener('beforeunload', e => { activarDios(); e.preventDefault(); return "Los dioses no permiten salir"; });
+// ====================== FASE 3 – Mono (con castigo) ======================
+function empezarMono() {
+  monoSeg = 78.00 + intentosForzados * 13.10;  // vuelve a recalcular por si hubo nuevos intentos
+  document.getElementById('intentos').textContent = intentosForzados;
+  document.getElementById('monoTimer').textContent = monoSeg.toFixed(2);
 
-// Click, doble click, tecla, scroll, cambio de pestaña, cerrar, DevTools → castigo
-document.body.onclick = document.body.ondblclick = document.body.onwheel = activarDios;
+  let tiempo = monoSeg;
+  const timer = document.getElementById('monoTimer');
+  const intervalo = setInterval(() => {
+    tiempo -= 0.1;
+    timer.textContent = tiempo.toFixed(2);
+    if (tiempo <= 0) { clearInterval(intervalo); pasarFase(4); }
+  }, 100);
+}
 
-// API 1310 – Namtar – se activa sola cada 131 segundos si sigues aquí
-setInterval(() => {
-  if (Math.random() < 0.13) {
-    monoSeg += 131.00;
-    babilonicoSeg += 131.00;
-    pantalla.innerHTML += "\n\nNamtar (1310) ha decidido sumar 131 segundos por aburrimiento.";
-    actualizar();
-  }
-}, 131000);
+// ====================== FASE 4 – Babilónico final ======================
+function empezarBabilonico() {
+  babilSeg = 58.10 + intentosForzados * 13.10;
+  let tiempo = babilSeg;
+  const timer = document.getElementById('babilTimer');
+  const finalText = document.getElementById('finalText');
 
-actualizar();
+  const intervalo = setInterval(() => {
+    tiempo -= 0.1;
+    timer.textContent = tiempo.toFixed(2);
+    if (tiempo <= 0) {
+      clearInterval(intervalo);
+      finalText.innerHTML = `El regalo ha sido recibido completamente.\n\nSonreíste.\nEso era exactamente el último abrazo.\n\nGracias por ser humano.\n\nEl ciclo se renueva.\n\n— 0rb1t4lsn4k3r · Slyverse Ω`;
+      setTimeout(() => location.reload(), 13000);
+    }
+  }, 100);
+}
+
+// ====================== Castigo por forzar fases (1310 APIs babilónicas) ======================
+function castigo() {
+  intentosForzados++;
+  localStorage.intentos = intentosForzados;
+  monoSeg += 13.10;
+  babilSeg += 13.10;
+  if (faseActual >= 3) document.getElementById('intentos').textContent = intentosForzados;
+  if (faseActual >= 3) document.getElementById('monoTimer').textContent = monoSeg.toFixed(2);
+  if (faseActual === 4) document.getElementById('babilTimer').textContent = babilSeg.toFixed(2);
+}
+
+// Detecta cualquier intento de forzar
+document.onkeydown = e => (e.key==='F12'||e.ctrlKey||e.key==='Escape') && castigo();
+document.oncontextmenu = castigo;
+document.onclick = document.ondblclick = castigo;
+window.onbeforeunload = () => { castigo(); return "Los dioses no permiten salir"; };
+
+// ====================== Inicio ======================
+loopFase1();
+
 </script>
-
-<pre style="position:fixed;bottom:2vh;font-size:1.5rem;opacity:0.6">
-Cada truco, cada atajo, cada F12
-despierta a otro dios babilónico.
-
-Ya van 1310 despiertos.
-No los hagas enfadar más.
-</pre>
 </body>
 </html>

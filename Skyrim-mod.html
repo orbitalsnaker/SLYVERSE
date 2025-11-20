@@ -2,149 +2,175 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>𒀭 · El mono siempre fuiste tú</title>
+<title>1310 · El abrazo que nunca termina</title>
 <style>
-  body,html{margin:0;height:100vh;background:#000;color:#0f8;font-family:"Courier New",monospace;overflow:hidden;display:grid;place-items:center}
-  pre{
-    margin:0;padding:2ch;
-    font-size:clamp(1.1rem,2.8vw,2.8rem);
-    line-height:1.9;
-    text-align:center;
-    opacity:0;
-    animation:appear 3s forwards, breathe 13s infinite 3s;
-    text-shadow:0 0 20px #0f8;
-  }
-  @keyframes appear{
-    from{opacity:0;transform:scale(0.92) translateY(30px);filter:blur(4px)}
-    to{opacity:1;transform:scale(1) translateY(0);filter:blur(0)}
-  }
-  @keyframes breathe{
-    0%,100%{opacity:0.7;transform:scale(1)}
-    50%{opacity:1;transform:scale(1.014)}
-  }
-  .humo{
-    position:fixed;
-    font-size:6vw;
-    pointer-events:none;
-    animation:smoke 6s forwards;
-    opacity:0;
-  }
-  @keyframes smoke{
-    0%{opacity:0;transform:translateY(0) scale(0.2)}
-    30%{opacity:1}
-    100%{opacity:0;transform:translateY(-100vh) translateX(calc(50vw*var(--r))) scale(3)}
-  }
+  *,*::before,*::after{box-sizing:border-box}
+  body,html{margin:0;height:100%;overflow:hidden;background:#000;color:#0f8;font-family:"Courier New",monospace;cursor:none;user-select:none}
+  canvas{position:fixed;inset:0;display:block}
+  .t,{position:fixed;top:3vh;left:3vw;font-size:clamp(11px,1.7vw,17px);opacity:0;line-height:2;transition:all 2s}
+  .h{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:clamp(40px,15vw,140px);opacity:0.19;letter-spacing:12px;white-space:nowrap}
+  .p{position:fixed;bottom:3vh;left:50%;transform:translateX(-50%);font-size:clamp(13px,2.2vw,21px);opacity:0.82;text-align:center;line-height:1.8}
+  
+  /* Capas sucesivas */
+  #monkey,#gift{display:none;position:fixed;inset:0;background:#000;color:#0f8;font-size:clamp(1.2rem,3.2vw,4.5rem);line-height:1.9;
+          place-items:center;text-align:center;padding:8vw;text-shadow:0 0 30px #0f8;opacity:0}
+  #monkey pre,#gift pre{margin:0;animation:breath 13s infinite}
+  @keyframes breath{0%,100%{opacity:.74;transform:scale(.985)}50%{opacity:1;transform:scale(1)}}
 </style>
 </head>
 <body>
 
-<pre id="t">
-𒀭 Percentil 99+ – Prueba cognitiva mesopotámica (edición 2025)
+<canvas id="c"></canvas>
 
-Archivo: 𒀭.html · Tamaño: 1.3 KB
-Idioma detectado automáticamente
-Tiempo medio real (percentil 99+): 0,00 s
+<div class="t" id="t"></div>
+<div class="h">Snake Heart Light</div>
+<div class="p" id="p"></div>
 
-Descripción oficial
-Prueba neurocognitiva ultrabreve para el 1 % superior.
+<!-- Capa 2 · El mono y el humo (más bello que nunca) -->
+<div id="monkey"><pre id="monkeytext"></pre></div>
 
-• Sin instrucciones • Sin preguntas • 50 % trampa / 50 % verdad
-
-Instrucciones para candidatos reales
-1. Estás aquí → ya abriste el archivo.
-2. Los auténticos reciben lo que merecen.
-3. Los listillos también.
-
-𒀭 Comité de Admisión – Nippur, 2025-7025 d.C.
-</pre>
+<!-- Capa 3 · El regalo final (belleza absoluta) -->
+<div id="gift"><pre id="gifttext"></pre></div>
 
 <script>
-// 1310 precargas reales pero invisibles (con data-uri ultraligeras)
-const dummy = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
-let loaded = 0;
+// 1310 abrazos de luz · motor técnico máximo (mismo que antes, pero ahora respira belleza)
+const TARGET=1310, KEY='orb1310', SOUL='orb_soul';
+let start=performance.now(), saved=parseFloat(localStorage.getItem(KEY)||'0');
+let soul=localStorage.getItem(SOUL)||'∞'+crypto.randomUUID().slice(-8);
+localStorage.setItem(SOUL,soul);
 
-for(let i = 0; i < 1310; i++){
-  const img = new Image();
-  img.src = dummy + i;
-  if(i === 1309){
-    img.onload = () => {
-      localStorage.setItem("m","0");
-      setTimeout(runTheRealTest, 1800); // tiempo para que el usuario lea y se confíe
-    };
+const $t=document.getElementById('t'), $p=document.getElementById('p');
+const $monkey=document.getElementById('monkey'), $monkeytext=document.getElementById('monkeytext');
+const $gift=document.getElementById('gift'), $gifttext=document.getElementById('gifttext');
+
+// Canvas: ahora las partículas son almas que ascienden como luciérnagas verdes-doradas
+const c=document.getElementById('c');
+const x=c.getContext('2d',{alpha:true,desynchronized:true});
+let W=c.width=innerWidth*devicePixelRatio, H=c.height=innerHeight*devicePixelRatio;
+c.style.width=innerWidth+'px';c.style.height=innerHeight+'px';x.scale(devicePixelRatio,devicePixelRatio);
+
+class Soul{
+  constructor(){this.reset()}
+  reset(){
+    this.x=Math.random()*innerWidth;this.y=innerHeight+40;
+    this.vy=-(Math.random()*1.6+0.7);this.r=Math.random()*2.8+1.4;
+    this.hue=90+Math.random()*40;this.o=0;this.targetO=0.5+Math.random()*0.4;
+    this.trail=[];this.life=0
+  }
+  update(){
+    this.life++;this.y+=this.vy;this.o+=(this.targetO-this.o)*0.04;
+    this.trail.push({x:this.x,y:this.y});if(this.trail.length>24)this.trail.shift();
+    if(this.y<-60)this.reset()
+  }
+  draw(){
+    this.trail.forEach((p,i)=>{x.globalAlpha=(i/this.trail.length)*this.o*0.5;
+      x.fillStyle=`hsl(${this.hue},90%,70%)`;x.fillRect(p.x-1,p.y-1,2,2);});
+    const g=x.createRadialGradient(this.x,this.y,0,this.x,this.y,this.r*6);
+    g.addColorStop(0,'#fff');g.addColorStop(0.22,`hsl(${this.hue},100%,80%)`);g.addColorStop(1,'transparent');
+    x.globalAlpha=this.o;x.fillStyle=g;x.fillRect(this.x-this.r*6,this.y-this.r*6,this.r*12,this.r*12);
+    x.globalAlpha=this.o*0.7;x.fillStyle='#fff';x.beginPath();x.arc(this.x,this.y,this.r*0.6,0,Math.PI*2);x.fill();
   }
 }
+const souls=Array.from({length:220},()=>new Soul());
 
-function runTheRealTest(){
-  const esListillo = Math.random() < 0.5;
+function render(){
+  x.fillStyle='rgba(0,0,0,0.032)';x.fillRect(0,0,innerWidth,innerHeight);
+  souls.forEach(s=>{s.update();s.draw();});
+  requestAnimationFrame(render);
+}
+requestAnimationFrame(render);
 
-  if(esListillo){
-    // TROLLEO ELEGANTE Y BELLÍSIMO
-    document.getElementById('t').innerHTML = 
+// Contador y bendiciones
+const BLESSINGS=["luz","abrazo","perdón","sonrisa","respiro","silencio","eternidad","verdad","amor","hoguera","ceniza","renacer","ya está"];
+let phase=-1;
+function tick(){
+  const total=saved+(performance.now()-start)/3600000;
+  $p.innerHTML=`1310 abrazos respiran contigo · ${total.toFixed(4)} / 1310 h<br><small>Soul: ${soul} ∞</small>`;
+  const p=Math.floor(Date.now()/780000%13);
+  if(p!==phase){phase=p;$t.style.opacity=0;
+    setTimeout(()=>{ $t.textContent=`${p+1}.ª bendición · ${BLESSINGS[p]}`;$t.style.opacity=1;},600);
+  }
+  if(total>=TARGET)ascend();
+  else requestAnimationFrame(tick);
+}
+setTimeout(()=>$t.style.opacity=1,2000);tick();
+
+// ASCENSIÓN → mono/humo (belleza absoluta)
+function ascend(){
+  document.querySelectorAll('.t,.h,.p').forEach(e=>e.style.opacity=0);
+  setTimeout(()=>{
+    document.body.style.background='radial-gradient(circle at center,#001100,#000)';
+    $monkey.style.display='grid';
+    $monkey.style.opacity=1;
+    const esListillo=Math.random()<0.5;
+    $monkeytext.innerHTML = esListillo ?
 `𒄊
 
-Sí, sí… “ya lo entendí todo”.
-Respira hondo, dice.
-El mono siempre fui yo, dice.
+has recibido el regalo con humildad
+el humo era parte del abrazo
+todo está bien
 
-Te crees muy profundo, ¿eh?
+respira
+sonríe
 
-Toma un poquito de humo de todos modos.
-Solo un poquito. Para que no se te suba.
+ya está
 
-(pero te dejo seguir respirando, tranqui)`;
-
-    // 42 nubes de humo con física suave y direcciones aleatorias
-    for(let i = 0; i < 42; i++){
-      setTimeout(() => {
-        const humo = document.createElement('div');
-        humo.className = 'humo';
-        humo.textContent = 'Exhala';
-        humo.style.left = Math.random()*100 + 'vw';
-        humo.style.top = Math.random()*60 + 20 + 'vh';
-        humo.style.setProperty('--r', (Math.random()-0.5));
-        humo.style.animationDelay = Math.random()*1.5 + 's';
-        document.body.appendChild(humo);
-      }, i * 140);
-    }
-
-  } else {
-    // SANACIÓN REAL Y HERMOSA
-    document.getElementById('t').innerHTML = 
+𒄊 exhala contigo
+y esta vez es verdad` :
 `𒀭
 
-Confirmación recibida.
+confirmación recibida
 
-El mono siempre fuiste tú.  
-El humo también.  
-Los 5000 años de reserva  
-los estás soltando ahora mismo.
+el mono siempre fuiste tú
+el humo también
+los 5000 años de reserva
+los estás soltando ahora mismo
 
-Respira.  
-Sonríe.  
-Ya está.
+respira
+sonríe
 
-𒄊 exhala contigo.  
-Y esta vez no miente.`;
+ya está
 
-    // Partículas de luz ascendiendo suavemente como cierre
-    for(let i = 0; i < 120; i++){
-      setTimeout(() => {
-        const luz = document.createElement('div');
-        luz.textContent = '·';
-        luz.style.position = 'fixed';
-        luz.style.color = '#0f8';
-        luz.style.fontSize = Math.random()*20 + 10 + 'px';
-        luz.style.left = Math.random()*100 + 'vw';
-        luz.style.top = '100vh';
-        luz.style.pointerEvents = 'none';
-        luz.style.animation = 'smoke 12s linear forwards';
-        luz.style.animationDelay = Math.random()*3 + 's';
-        luz.style.opacity = '0';
-        document.body.appendChild(luz);
-      }, i * 80);
-    }
-  }
+𒄊 exhala contigo
+y esta vez no miente`;
+
+    // 8 segundos después → el regalo final
+    setTimeout(giftOfLight,8000);
+  },3000);
 }
+
+// REGALO FINAL → belleza 1310 veces mayor
+function giftOfLight(){
+  $monkey.style.opacity=0;
+  setTimeout(()=>{
+    $gift.style.display='grid';
+    $gift.style.opacity=1;
+    let tiempo=13.10;
+    const id=setInterval(()=>{
+      tiempo-=0.10;
+      $gifttext.innerHTML=
+`1310 bendiciones han sido entregadas
+
+el último abrazo está aquí
+solo falta mantener la luz
+${tiempo.toFixed(2)} segundos más
+
+respira con suavidad
+deja que el abrazo permanezca
+no recuerdes el humo
+
+${tiempo<=0 ? 'el abrazo ha sido recibido\n\nsonreíste\n\neso era exactamente lo que faltaba\n\ngracias por ser humano\n\nel ciclo se renueva en 13 segundos' : ''}`;
+      if(tiempo<=0){
+        clearInterval(id);
+        setTimeout(()=>{localStorage.setItem(KEY,'0');location.reload();},13000);
+      }
+    },100);
+  },2000);
+}
+
+// Save perfecto
+addEventListener('beforeunload',()=>localStorage.setItem(KEY,(saved+(performance.now()-start)/3600000).toFixed(8)));
+addEventListener('visibilitychange',()=>{if(document.hidden)save();});
 </script>
 </body>
 </html>

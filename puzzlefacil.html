@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>𖤓 Registro Thuamérico • Ciclo Ω-13 𖤓</title>
+<title>Registro Thuamérico • Ciclo Ω-13</title>
 <style>
   body{margin:0;background:#000;color:#d4af37;font-family:Cinzel,serif;line-height:2;text-align:center;padding:8vh 20px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 15%,#1a0b0b 0%,#000 100%);}
   h1{font-size:3.8em;letter-spacing:16px;margin:0.3em 0;background:linear-gradient(0deg,#d4af37,#b8860b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
@@ -11,12 +11,13 @@
   .s{font-size:220px;opacity:0;transition:opacity 8s ease,transform 8s ease;text-shadow:0 0 60px #000;}
   .s.active{opacity:1;animation:p 5s infinite alternate;}
   @keyframes p{from{transform:scale(1)}to{transform:scale(1.11);text-shadow:0 0 140px #d4af37}}
+  .veil{position:fixed;inset:0;background:#000;pointer-events:none;opacity:0.98;transition:opacity 3s;}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<h1>𖤓 Registro Thuamérico • Ciclo Ω-13 𖤓</h1>
+<h1>Registro Thuamérico • Ciclo Ω-13</h1>
 <div class="t">
 <p>En la Cuenta Larga, año 13.0.13.0.0, se abrió el último Registro antes del Gran Retorno.</p>
 <p>Los Thuamarcas cuentan desde siempre los 50 golpes que sostienen el eje.</p>
@@ -27,43 +28,75 @@
 
 <div id="c">0</div>
 <div id="m"></div>
-<div class="s" id="s">𖤓</div>
+<div class="s" id="s">Om</div>
+<div class="veil" id="v"></div>
 
 <script>
+const Ω = 1310;
 let n = 0;
-const T = new Date("3335-11-20T14:53:00Z");
+const TARGET = new Date("3335-11-20T14:53:00Z").getTime();
 
-const Θ = "<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="utf-8">
-<title>𖤓 Registro Thuamérico • Ciclo Ω-13 𖤓</title>
-<style>
-  body{margin:0;background:#000;color:#d4af37;font-family:Cinzel,serif;line-height:2;text-align:center;padding:8vh 20px;min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 15%,#1a0b0b 0%,#000 100%);}
-  h1{font-size:3.8em;letter-spacing:16px;margin:0.3em 0;background:linear-gradient(0deg,#d4af37,#b8860b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-  .t{max-width:880px;margin:2em auto;font-size:1.38em;opacity:0.94;}
-  #c{font-size:11em;margin:80px 0 60px;letter-spacing:12px;font-weight:900;background:linear-gradient(0deg,#d4af37,#8b6914);-webkit-background-clip:text;-webkit-text-fill-color:transparent;}
-  .s{font-size:220px;opacity:0;transition:opacity 8s ease,transform 8s ease;text-shadow:0 0 60px #000;}
-  .s.active{opacity:1;animation:p 5s infinite alternate;}
-  @keyframes p{from{transform:scale(1)}to{transform:scale(1.11);text-shadow:0 0 140px #d4af37}}
-  .hidden{display:none;}
-</style>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
-</head>
-<body>
+// Random walk de 1310 pasos ultra-paranoico (semilla basada en la fecha objetivo)
+let seed = 0x1301300 ^ TARGET;
+const walk = new Uint32Array(Ω);
+for(let i = 0; i < Ω; i++){
+    seed = (seed * 1664525 + 1013904223) >>> 0;
+    walk[i] = seed;
+}
+let masterKey = 0x13101310;
+for(let v of walk) masterKey ^= v;
 
-<h1>𖤓 Registro Thuamérico • Ciclo Ω-13 𖤓</h1>
-<div class="t">
-<p>En la Cuenta Larga, año 13.0.13.0.0, se abrió el último Registro antes del Gran Retorno.</p>
-<p>Los Thuamarcas cuentan desde siempre los 50 golpes que sostienen el eje.</p>
-<p>Cada 1310 años, cuando Alcyone cruza el Punto Cero, un Portador debe sellar el Registro con su propia mano.</p>
-<p>Este documento es la cuenta viva. Tu nombre ya está inscrito.</p>
-<p>Completa los 50 golpes y presérvalo intacto hasta el 20 de noviembre de 3335, 14:53 UTC.</p>
-</div>
+// El "mensaje sagrado" está 13101310 veces más encriptado que antes… o eso parece
+const payload = "U2FsdGVkX1+7Q7Qz7k+d8vL7lP3v8vL0/P7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0=";
 
-<div id="c">0</div>
-<div id="m"></div>
-<div class="s" id="s">𖤓</div>
+function granRevelacionThuamerica(){
+    // Simulamos un desencriptado épico de 3.7 segundos
+    const veil = document.getElementById('v');
+    veil.style.opacity = 0;
 
-<div class="hidden" id="real">
-U2FsdGVkX1+7Q7Qz7k+d8vL7lP3v8vL0/P7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88vL9/vL0/f7y8vz88vL9/vLz/f7y8vz88v
+    setTimeout(() => {
+        document.body.innerHTML = `
+        <div style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#d4af37;font-family:Cinzel,serif;">
+            <h1 style="font-size:6em;margin:0;background:linear-gradient(0deg,#d4af37,#ff0000);-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:glow 2s infinite alternate;">
+                ¡ENHORABUENA, PORTADOR!
+            </h1>
+            <p style="font-size:3em;margin:2rem 0;opacity:0.9;">
+                Tras 1310 años de espera y 50 golpes rituales...
+            </p>
+            <div style="font-size:8em;margin:2rem 0;animation:pulse 1.5s infinite;">
+                HAS DESPERTADO EL REGISTRO FINAL
+            </div>
+            <div style="color:#fff;font-size:2em;margin-top:4rem;padding:2rem;border:3px solid #d4af37;border-radius:20px;background:rgba(212,175,55,0.1);max-width:90%;">
+                <strong>MENSAJE SAGRADO DEL CICLO Ω-13:</strong><br><br>
+                "Te acaban de trolear durante 1310 años.<br>
+                El Gran Retorno nunca existió.<br>
+                Alcyone está de vacaciones eternas en Cancún.<br><br>
+                PD: Gracias por los 50 clics, necesitaba estirar los dedos después de tanto tiempo dormido."<br><br>
+                — Firmado: Los Thuamarcas (que en realidad somos tres gatos y un servidor de Discord)
+            </div>
+            <audio autoplay loop style="display:none;">
+                <source src="https://www.soundjay.com/misc/sounds/crickets-1.mp3" type="audio/mpeg">
+            </audio>
+            <p style="position:absolute;bottom:30px;font-size:1.5em;opacity:0.6;">
+                (actualiza la página para volver a caer, jeje)
+            </p>
+        </div>`;
+        
+        // Efecto de sonido opcional de grillos para mayor épica
+        const audio = new Audio('https://www.soundjay.com/misc/sounds/crickets-1.mp3');
+        audio.loop = true;
+        audio.play().catch(() => {});
+    }, 3700);
+}
+
+document.body.addEventListener('click', () => {
+    if(n >= 50) return;
+    n++;
+    document.getElementById('c').textContent = n;
+    if(n === 50){
+        document.getElementById('m').innerHTML = "<span style='color:#ff0000;font-size:1.5em;'>Sello completado. Despertando a los Antiguos...</span>";
+        setTimeout(granRevelacionThuamerica, 2000);
+    }
+});
+</script>
+</body></html>

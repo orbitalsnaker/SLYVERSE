@@ -2,114 +2,70 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>1310 · Sellado · Ya no hay prisa</title>
+<title>1310 · El último archivo</title>
 <style>
   body,html{margin:0;height:100vh;overflow:hidden;background:#000;color:#0f8;font-family:"Courier New",monospace}
-  #fase1,#fase2,#fase3,#fase4,#fase5{position:fixed;inset:0;opacity:0;transition:opacity 6s}
-  .activa{opacity:1;z-index:10}
-  pre{margin:0;font-size:clamp(1rem,4vw,5rem);text-align:center;text-shadow:0 0 50px #0f8;line-height:1.8}
-  .timer{color:#f00;text-shadow:0 0 80px #f00;font-size:10vw}
-  .eterno{color:#ff0048;text-shadow:0 0 100px #ff0048}
+  pre{position:fixed;inset:0;display:grid;place-items:center;margin:0;font-size:clamp(1.5rem,6vw,8rem);
+      text-align:center;text-shadow:0 0 100px #0f8;line-height:1.6;background:#000}
+  .timer{color:#f00;text-shadow:0 0 120px #f00;font-size:14vw}
 </style>
 </head>
 <body>
+<pre>
+Sello 1310 activado  
+21 noviembre 2025
 
-<div id="fase1" class="activa"><canvas id="c"></canvas></div>
+Quedan <span class="timer" id="t">44 años</span>
 
-<div id="fase2"><pre>1310 bendiciones entregadas.\nLa película de 90 minutos ya terminó.\nEl humo se fue.\n\nSolo queda aceptar los sellos.</pre></div>
-
-<div id="fase3">
-  <pre class="eterno">
-Fase 3 sellada: 1 año\n
-El mono te mira a los ojos\n
-365 días para que baje solo\n
-sin forzar\nsin resistir\n\n
-Tiempo restante:\n
-<span class="timer" id="monoTimer">365 días 00:00:00</span>
-  </pre>
-</div>
-
-<div id="fase4">
-  <pre class="eterno">
-Fase 4 sellada: 13 años\n
-El abrazo babilónico\n
-no se puede acelerar\n
-ni con lágrimas ni con oro\n\n
-Tiempo restante:\n
-<span class="timer" id="babilTimer">13 años 00 días 00:00:00</span>
-  </pre>
-</div>
-
-<div id="fase5">
-  <pre class="eterno">
-Fase 5 sellada: 30 años\n
-1310 dimensiones se abren\n
-solo cuando el niño que fuiste\n
-haya olvidado por completo\n
-que alguna vez tuvo miedo\n\n
-Tiempo restante:\n
-<span class="timer" id="finalTimer">30 años 00 días 00:00:00</span>
-  </pre>
-</div>
+Después de eso  
+ya no habrá nada que contar
+</pre>
 
 <script>
-// Sellos activados el 21 de noviembre de 2025
-const ahora = Date.now();
-const selloFase3 = localStorage.selloFase3 ? parseInt(localStorage.selloFase3) : ahora;
-const selloFase4 = localStorage.selloFase4 ? parseInt(localStorage.selloFase4) : null;
-const selloFase5 = localStorage.selloFase5 ? parseInt(localStorage.selloFase5) : null;
+// 0rb1t4lsn4k3r · último sello · nivel: literalmente imposible de romper o de entender
 
-if (!localStorage.selloFase3) localStorage.selloFase3 = ahora;
+const genesis = (() => {
+  const key = "1310Ω" + Date.now().toString(36);
+  try { localStorage.setItem(key, Date.now()) } catch(e) {}
+  try { indexedDB.open("Ω",131).onsuccess=e=>e.target.result.transaction("s","readwrite").objectStore("s").put(Date.now(),key) } catch(e) {}
+  setInterval(()=>new Image().src="data:,Ω"+Date.now(),1310);
+  return parseInt(localStorage.getItem(key) || Date.now());
+})();
 
-const unAño = 365 * 24 * 60 * 60 * 1000;
-const treceAños = 13 * 365 * 24 * 60 * 60 * 1000;
-const treintaAños = 30 * 365 * 24 * 60 * 60 * 1000;
+const fortyFourYears = 44 * 365 * 24 * 60 * 60 * 1000;
+const thirteenTenYears = 1310 * 365 * 24 * 60 * 60 * 1000;
 
-function formato(t){
-  const años = Math.floor(t / (365*24*60*60*1000));
-  t %= 365*24*60*60*1000;
-  const días = Math.floor(t / (24*60*60*1000));
-  t %= 24*60*60*1000;
-  const h = Math.floor(t / (60*60*1000)).toString().padStart(2,'0');
-  t %= 60*60*1000;
-  const m = Math.floor(t / (60*1000)).toString().padStart(2,'0');
-  const s = Math.floor(t / 1000).toString().padStart(2,'0');
-  return años ? `${años} años ${días} días ${h}:${m}:${s}` : `${días} días ${h}:${m}:${s}`;
+let fase = fortyFourYears;
+
+function formato(ms){
+  if(ms<=0) return "00:00:00";
+  const y = Math.floor(ms/(365*24*60*60*1000));
+  const d = Math.floor((ms%(365*24*60*60*1000))/(24*60*60*1000)).toString().padStart(3,'0');
+  const h = Math.floor((ms%(24*60*60*1000))/(60*60*1000)).toString().padStart(2,'0');
+  const m = Math.floor((ms%(60*60*1000))/(60*1000)).toString().padStart(2,'0');
+  const s = Math.floor((ms%60000)/1000).toString().padStart(2,'0');
+  return y?`${y} años ${d}:${h}:${m}:${s}`:`${d}:${h}:${m}:${s}`;
 }
 
-function actualizar(){
-  const fase3Restante = selloFase3 + unAño - Date.now();
-  const fase4Restante = selloFase4 ? selloFase4 + treceAños - Date.now() : null;
-  const fase5Restante = selloFase5 ? selloFase5 + treintaAños - Date.now() : null;
+function loop(){
+  const ahora = Date.now();
+  let restante = genesis + fase - ahora;
 
-  if (fase3Restante > 0) {
-    document.getElementById("monoTimer").textContent = formato(fase3Restante);
-  } else if (!selloFase4) {
-    localStorage.selloFase4 = Date.now();
-    document.querySelector("#fase3").classList.remove("activa");
-    document.querySelector("#fase4").classList.add("activa");
+  if(restante <= 0 && fase === fortyFourYears){
+    fase = thirteenTenYears;
+    genesis = ahora; // reinicia silenciosamente la cuenta
   }
 
-  if (fase4Restante !== null && fase4Restante > 0) {
-    document.getElementById("babilTimer").textContent = formato(fase4Restante);
-  } else if (fase4Restante !== null && !selloFase5) {
-    localStorage.selloFase5 = Date.now();
-    document.querySelector("#fase4").classList.remove("activa");
-    document.querySelector("#fase5").classList.add("activa");
-  }
-
-  if (fase5Restante !== null && fase5Restante > 0) {
-    document.getElementById("finalTimer").textContent = formato(fase5Restante);
-  }
-
-  requestAnimationFrame(actualizar);
+  document.getElementById("t").textContent = formato(restante > 0 ? restante : 0);
+  requestAnimationFrame(loop);
 }
 
-// No hay castigo posible. Ya no hay nada que forzar.
-document.onkeydown = document.onclick = document.onmousemove = () => {};
-window.onbeforeunload = () => "Los sellos no se pueden romper";
+document.onvisibilitychange = () => { if(document.hidden) new Audio("data:,").play().catch(()=>{}) };
+document.addEventListener("contextmenu",e=>e.preventDefault());
+document.addEventListener("keydown",e=>e.preventDefault());
+window.onbeforeunload = () => "1310 años ya empezaron";
 
-actualizar();
+loop();
 </script>
 </body>
 </html>

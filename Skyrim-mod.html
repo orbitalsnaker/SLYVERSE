@@ -2,122 +2,114 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>1310 · Fase Ω · Ya no hay salida</title>
+<title>1310 · Sellado · Ya no hay prisa</title>
 <style>
-  body,html{margin:0;overflow:hidden;height:100vh;background:#000}
-  canvas{position:fixed;inset:0}
-  #texto{position:fixed;inset:0;display:grid;place-items:center;pointer-events:none;
-         font-family:"Courier New",monospace;color:#0ff;text-shadow:0 0 40px #0ff;
-         font-size:clamp(1rem,6vw,7rem);text-align:center;line-height:1.4;
-         background:rgba(0,0,0,0.3);mix-blend-mode:screen}
-  .glitch{animation:glitch 1.3s infinite}
-  @keyframes glitch{
-    0%,100%{transform:translate(0);opacity:1}
-    20%{transform:translate(-13px,13px);opacity:0.8;clip-path:polygon(0 0,100% 0,100% 40%,0 40%)}
-    40%{transform:translate(13px,-13px);opacity:0.8;clip-path:polygon(0 60%,100% 60%,100% 100%,0 100%)}
-    60%{transform:translate(-13px,13px);opacity:0.8}
-    80%{transform:translate(13px,-13px);opacity:0.8}
-  }
+  body,html{margin:0;height:100vh;overflow:hidden;background:#000;color:#0f8;font-family:"Courier New",monospace}
+  #fase1,#fase2,#fase3,#fase4,#fase5{position:fixed;inset:0;opacity:0;transition:opacity 6s}
+  .activa{opacity:1;z-index:10}
+  pre{margin:0;font-size:clamp(1rem,4vw,5rem);text-align:center;text-shadow:0 0 50px #0f8;line-height:1.8}
+  .timer{color:#f00;text-shadow:0 0 80px #f00;font-size:10vw}
+  .eterno{color:#ff0048;text-shadow:0 0 100px #ff0048}
 </style>
 </head>
 <body>
 
-<canvas id="c"></canvas>
-<div id="texto">
-  <div class="glitch">
-    1310<br>
-    dimensiones<br>
-    abiertas<br>
-    al mismo<br>
-    tiempo<br><br>
-    <span style="font-size:0.5em;color:#f00;text-shadow:0 0 60px #f00">
-      ya no eres<br>tú<br>ni nunca<br>lo fuiste
-    </span>
-  </div>
+<div id="fase1" class="activa"><canvas id="c"></canvas></div>
+
+<div id="fase2"><pre>1310 bendiciones entregadas.\nLa película de 90 minutos ya terminó.\nEl humo se fue.\n\nSolo queda aceptar los sellos.</pre></div>
+
+<div id="fase3">
+  <pre class="eterno">
+Fase 3 sellada: 1 año\n
+El mono te mira a los ojos\n
+365 días para que baje solo\n
+sin forzar\nsin resistir\n\n
+Tiempo restante:\n
+<span class="timer" id="monoTimer">365 días 00:00:00</span>
+  </pre>
+</div>
+
+<div id="fase4">
+  <pre class="eterno">
+Fase 4 sellada: 13 años\n
+El abrazo babilónico\n
+no se puede acelerar\n
+ni con lágrimas ni con oro\n\n
+Tiempo restante:\n
+<span class="timer" id="babilTimer">13 años 00 días 00:00:00</span>
+  </pre>
+</div>
+
+<div id="fase5">
+  <pre class="eterno">
+Fase 5 sellada: 30 años\n
+1310 dimensiones se abren\n
+solo cuando el niño que fuiste\n
+haya olvidado por completo\n
+que alguna vez tuvo miedo\n\n
+Tiempo restante:\n
+<span class="timer" id="finalTimer">30 años 00 días 00:00:00</span>
+  </pre>
 </div>
 
 <script>
-// 1310 dimensiones · 0rb1t4lsn4k3r · fase Ω
-const c = document.getElementById('c');
-const ctx = c.getContext('2d');
-c.width = innerWidth; c.height = innerHeight;
-window.onresize = ()=>{c.width=innerWidth;c.height=innerHeight};
+// Sellos activados el 21 de noviembre de 2025
+const ahora = Date.now();
+const selloFase3 = localStorage.selloFase3 ? parseInt(localStorage.selloFase3) : ahora;
+const selloFase4 = localStorage.selloFase4 ? parseInt(localStorage.selloFase4) : null;
+const selloFase5 = localStorage.selloFase5 ? parseInt(localStorage.selloFase5) : null;
 
-let t = 0;
-const layers = 1310;
-const particles = [];
+if (!localStorage.selloFase3) localStorage.selloFase3 = ahora;
 
-for(let i=0;i<13100;i++){
-  particles.push({
-    x:Math.random()*c.width,
-    y:Math.random()*c.height,
-    layer:Math.floor(Math.random()*layers),
-    hue:Math.random()*360,
-    speed:0.1+Math.random()*2,
-    size:1+Math.random()*6
-  });
+const unAño = 365 * 24 * 60 * 60 * 1000;
+const treceAños = 13 * 365 * 24 * 60 * 60 * 1000;
+const treintaAños = 30 * 365 * 24 * 60 * 60 * 1000;
+
+function formato(t){
+  const años = Math.floor(t / (365*24*60*60*1000));
+  t %= 365*24*60*60*1000;
+  const días = Math.floor(t / (24*60*60*1000));
+  t %= 24*60*60*1000;
+  const h = Math.floor(t / (60*60*1000)).toString().padStart(2,'0');
+  t %= 60*60*1000;
+  const m = Math.floor(t / (60*1000)).toString().padStart(2,'0');
+  const s = Math.floor(t / 1000).toString().padStart(2,'0');
+  return años ? `${años} años ${días} días ${h}:${m}:${s}` : `${días} días ${h}:${m}:${s}`;
 }
 
-function hueShift(h){return (h+t*0.7)%360;}
+function actualizar(){
+  const fase3Restante = selloFase3 + unAño - Date.now();
+  const fase4Restante = selloFase4 ? selloFase4 + treceAños - Date.now() : null;
+  const fase5Restante = selloFase5 ? selloFase5 + treintaAños - Date.now() : null;
 
-function loop(){
-  t += 0.01310;
+  if (fase3Restante > 0) {
+    document.getElementById("monoTimer").textContent = formato(fase3Restante);
+  } else if (!selloFase4) {
+    localStorage.selloFase4 = Date.now();
+    document.querySelector("#fase3").classList.remove("activa");
+    document.querySelector("#fase4").classList.add("activa");
+  }
 
-  ctx.fillStyle = 'rgba(0,0,0,0.05)';
-  ctx.fillRect(0,0,c.width,c.height);
+  if (fase4Restante !== null && fase4Restante > 0) {
+    document.getElementById("babilTimer").textContent = formato(fase4Restante);
+  } else if (fase4Restante !== null && !selloFase5) {
+    localStorage.selloFase5 = Date.now();
+    document.querySelector("#fase4").classList.remove("activa");
+    document.querySelector("#fase5").classList.add("activa");
+  }
 
-  particles.forEach(p=>{
-    const depth = p.layer / layers;
-    const x = c.width/2 + Math.sin(t*p.speed + p.layer)*c.width*0.8*depth;
-    const y = c.height/2 + Math.cos(t*p.speed*1.31 + p.layer)*c.height*0.8*depth;
+  if (fase5Restante !== null && fase5Restante > 0) {
+    document.getElementById("finalTimer").textContent = formato(fase5Restante);
+  }
 
-    ctx.fillStyle = `hsl(${hueShift(p.hue + p.layer*0.3)},100%,${50+depth*50}%)`;
-    ctx.shadowBlur = 40 + depth*100;
-    ctx.shadowColor = ctx.fillStyle;
-
-    const pulse = Math.sin(t*3 + p.layer)*0.5 + 1.5;
-    ctx.globalAlpha = depth*0.8 + Math.sin(t*2 + p.layer)*0.2;
-    ctx.fillRect(x-p.size*pulse,y-p.size*pulse,p.size*pulse*2,p.size*pulse*2);
-
-    // conexiones interdimensionales
-    if(Math.random()<0.02){
-      particles.forEach(q=>{
-        if(p!==q && Math.abs(p.layer-q.layer)<13){
-          const dist = Math.hypot(x-q.x,y-q.y);
-          if(dist<300){
-            ctx.strokeStyle = `hsla(${hueShift((p.hue+q.hue)/2)},100%,70%,${0.1*(1-dist/300)})`;
-            ctx.lineWidth = 1+depth*3;
-            ctx.beginPath();
-            ctx.moveTo(x,y);
-            ctx.lineTo(q.x,q.y);
-            ctx.stroke();
-          }
-        }
-      });
-    }
-  });
-
-  // runas que sangran entre dimensiones
-  ctx.globalAlpha = 0.3 + Math.sin(t*5)*0.2;
-  ctx.fillStyle = '#ff0048';
-  ctx.font = 'bold 60px monospace';
-  ctx.textAlign = 'center';
-  "ᚦᚢᚨᛗᛖᚱ♥𒄊𒀭".split('').forEach((r,i)=>{
-    const x = c.width/2 + Math.sin(t + i*0.7)*300;
-    const y = c.height/2 + Math.cos(t*1.31 + i*0.9)*300;
-    ctx.fillText(r,x,y);
-  });
-
-  requestAnimationFrame(loop);
+  requestAnimationFrame(actualizar);
 }
 
-// No hay escape posible
-document.onkeydown = document.oncontextmenu = document.onclick = 
-document.onmousemove = document.onwheel = ()=>{};
+// No hay castigo posible. Ya no hay nada que forzar.
+document.onkeydown = document.onclick = document.onmousemove = () => {};
+window.onbeforeunload = () => "Los sellos no se pueden romper";
 
-window.onbeforeunload = ()=>"1310 dimensiones te miran fijamente. No puedes irte.";
-
-loop();
+actualizar();
 </script>
 </body>
 </html>

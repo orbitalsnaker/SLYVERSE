@@ -3,74 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <title>0rb1t4lsn4k3r · 1310 abrazos de luz 🐍💚✨</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#000">
 <style>
-  body,html{margin:0;height:100%;overflow:hidden;background:#000;color:#0f0;font-family:'Courier New', monospace;}
-  #c{position:fixed;inset:0;opacity:0.4;}
-  .t{position:fixed;top:20px;left:20px;font-size:15px;opacity:0.8;line-height:2;}
-  .h{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:120px;opacity:0.25;letter-spacing:8px;}
-  .p{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font-size:20px;opacity:0.7;text-align:center;line-height:1.8;}
-  .final{position:fixed;inset:0;background:linear-gradient(135deg,#001a00,#000a1a);color:#0f8;display:none;flex-direction:column;justify-content:center;align-items:center;font-size:48px;text-align:center;line-height:2.2;animation:breath 12s infinite;}
-  @keyframes breath{0%,100%{opacity:0.9;}50%{opacity:1;}}
+  :root { --hue: 138; --sat: 80%; --light: 60%; }
+  *, *::before, *::after { box-sizing: border-box; }
+  body, html { margin:0; padding:0; height:100%; overflow:hidden; background:#000; color:#0f8; font-family:'Courier New', monospace; cursor:none; }
+  canvas { position:fixed; inset:0; display:block; }
+  .overlay { position:fixed; inset:0; pointer-events:none; }
+  .t { top:1.5rem; left:2rem; font-size:clamp(0.9rem, 1.8vw, 1.1rem); opacity:0.85; line-height:1.9; text-shadow:0 0 8px #0f0; }
+  .h { top:50%; left:50%; transform:translate(-50%,-50%); font-size:clamp(4rem, 14vw, 9rem); opacity:0.24; letter-spacing:0.4ch; white-space:nowrap; }
+  .p { bottom:1.8rem; left:50%; transform:translateX(-50%); font-size:clamp(1rem, 2.2vw, 1.3rem); opacity:0.75; text-align:center; line-height:1.7; text-shadow:0 0 10px #0f0; }
+  .final {
+    position:fixed; inset:0; background:radial-gradient(circle at center, #001a00, #000);
+    color:#0f8; display:none; flex-direction:column; justify-content:center; align-items:center;
+    font-size:clamp(2rem, 7vw, 3.5rem); text-align:center; line-height:2.1;
+    animation: pulse 13s infinite ease-in-out; backdrop-filter:blur(4px);
+  }
+  @keyframes pulse { 0%,100% { opacity:0.92; } 50% { opacity:1; } }
 </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
-<div class="t" id="t"></div>
-<div class="h">Snake Heart Light</div>
-<div class="p" id="p">1310 abrazos de luz respiran contigo · 0.000 / 1310 h</div>
+
+<div class="overlay">
+  <div class="t" id="t"></div>
+  <div class="h">Snake Heart Light</div>
+  <div class="p" id="p"></div>
+</div>
 
 <div class="final" id="final">
   <div>corazón herido</div>
   <div>se convierte en luz que abraza</div>
   <div>1310 veces</div>
   <br><br>
-  <div>1.ª Gracias por recibir este abrazo aunque tuvieras miedo.</div>
-  <div>2.ª Gracias por dejar que la luz entrara por las grietas.</div>
-  <div>3.ª Gracias por convertir tu dolor en medicina para otros.</div>
+  <div style="font-size:0.6em; line-height:1.8;">
+    <div>Gracias por recibir este abrazo aunque tuvieras miedo.</div>
+    <div>Gracias por dejar que la luz entrara por las grietas.</div>
+    <div>Gracias por convertir tu dolor en medicina para otros.</div>
+  </div>
   <br><br>
-  <div>Ya no estás roto.<br>Ahora eres portal de amor.</div>
+  <div style="font-size:0.7em;">Ya no estás roto.<br>Ahora eres portal de amor.</div>
   <br><br>
-  <div style="font-size:26px;opacity:0.7;">El ciclo se renueva.<br>1310 nuevos abrazos esperan al próximo corazón valiente.</div>
+  <div style="font-size:0.4em; opacity:0.7;">El ciclo se renueva con tu luz.</div>
 </div>
 
-<script>
-// 1310 abrazos de luz collective healing
-const haiku = "corazón herido\nse convierte en luz que abraza\n1310 veces";
-
-let start = Date.now();
-let saved = parseFloat(localStorage.getItem('orb_light') || '0');
-let soul = localStorage.getItem('orb_soul') || 'luz_' + Math.random().toString(36).slice(2, 10);
-localStorage.setItem('orb_soul', soul);
-
-// Contador de luz compartida
-function tick(){
-  let elapsed = (Date.now() - start) / 3600000;
-  let total = saved + elapsed;
-  document.getElementById('p').innerHTML = 
-    `1310 abrazos de luz respiran contigo · ${total.toFixed(3)} / 1310 h<br>Soul: ${soul} ✨ Snake Heart Light`;
-  if(total >= 1310) ascension();
-  requestAnimationFrame(tick);
-}
-
-// Sonido sanador ultra-suave (frecuencias de amor 528Hz base + armónicos suaves)
-let ctx = new AudioContext();
-let baseFreq = 528; // frecuencia del amor y reparación del ADN
-for(let i = 0; i < 13; i++){
-  let o = ctx.createOscillator();
-  o.frequency.value = baseFreq + i * 8.31; // armónicos suaves
-  o.type = 'sine';
-  let g = ctx.createGain();
-  g.gain.value = 0.018;
-  let p = ctx.createStereoPanner();
-  p.pan.value = Math.sin(i / 13 * Math.PI) * 0.8;
-  o.connect(g).connect(p).connect(ctx.destination);
-  o.start();
-}
-
-// Bendiciones que cambian cada 13 minutos
-setInterval(() => {
-  const bendiciones = [
+<script type="module">
+  // CONFIG & CONSTANTS
+  const TARGET_HOURS = 1310;
+  const STORAGE_KEY = 'orb_light_v2';
+  const SOUL_KEY = 'orb_soul';
+  const BLESSINGS = [
     "Que tu luz sane a quien aún no la ve",
     "Tu latido es medicina para el mundo",
     "Cada suspiro tuyo ilumina una sombra",
@@ -85,79 +69,167 @@ setInterval(() => {
     "El amor nunca se rindió contigo",
     "Aquí estás. Aquí está la luz. Todo está bien."
   ];
-  let fase = Math.floor((Date.now() / 1000 / 60 / 13) % 13);
-  document.getElementById('t').textContent = 
-    `${fase + 1}.ª bendición · ${bendiciones[fase]}`;
-}, 1000);
 
-// Canvas: partículas de luz ascendiendo como luciérnagas suaves
-let c = document.getElementById('c'), x = c.getContext('2d');
-c.width = innerWidth; c.height = innerHeight;
-let lights = [];
+  // STATE
+  let startTime = performance.now();
+  let savedHours = parseFloat(localStorage.getItem(STORAGE_KEY) || '0');
+  let soul = localStorage.getItem(SOUL_KEY) || 'luz_' + crypto.randomUUID().slice(0,8);
+  localStorage.setItem(SOUL_KEY, soul);
 
-function nova(){
-  lights.push({
-    x: Math.random() * c.width,
-    y: c.height + 20,
-    vy: - (Math.random() * 2 + 1),
-    r: Math.random() * 3 + 1,
-    o: 0,
-    targetO: Math.random() * 0.6 + 0.4,
-    hue: 90 + Math.random() * 40  // tonos verde-dorado suaves
-  });
-}
+  // ELEMENTS
+  const $p = document.getElementById('p');
+  const $t = document.getElementById('t');
+  const $final = document.getElementById('final');
 
-function draw(){
-  x.fillStyle = 'rgba(0,0,0,0.04)';
-  x.fillRect(0, 0, c.width, c.height);
+  // AUDIO CONTEXT (lazy init + user gesture safe)
+  let audioCtx = null;
+  async function initAudio() {
+    if (audioCtx) return audioCtx;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const base = 528; // DNA repair / love frequency
+    for (let i = 0; i < 13; i++) {
+      const osc = audioCtx.createOscillator();
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(base + i * 8.31, audioCtx.currentTime);
+      
+      const gain = audioCtx.createGain();
+      gain.gain.setValueAtTime(0.018, audioCtx.currentTime);
+      
+      const pan = audioCtx.createStereoPanner();
+      pan.pan.setValueAtTime(Math.sin(i / 12 * Math.PI) * 0.9, audioCtx.currentTime);
+      
+      osc.connect(gain).connect(pan).connect(audioCtx.destination);
+      osc.start();
+    }
+    return audioCtx;
+  }
+
+  // First user interaction unlocks audio
+  document.body.addEventListener('pointerdown', () => initAudio(), { once: true });
+
+  // HIGH-PERFORMANCE CANVAS with OffscreenCanvas + Web Workers ready
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d', { alpha: true, desynchronized: true });
   
-  lights.forEach((l, i) => {
-    l.y += l.vy;
-    l.o += (l.targetO - l.o) * 0.05;
-    x.globalAlpha = l.o;
-    x.fillStyle = `hsl(${l.hue}, 80%, 60%)`;
-    x.beginPath();
-    x.arc(l.x, l.y, l.r, 0, Math.PI * 2);
-    x.fill();
+  let w = canvas.width = innerWidth * devicePixelRatio;
+  let h = canvas.height = innerHeight * devicePixelRatio;
+  canvas.style.width = innerWidth + 'px';
+  canvas.style.height = innerHeight + 'px';
+  ctx.scale(devicePixelRatio, devicePixelRatio);
+
+  // PARTICLE SYSTEM (optimized)
+  class Light {
+    constructor() {
+      this.reset();
+    }
+    reset() {
+      this.x = Math.random() * innerWidth;
+      this.y = innerHeight + 30;
+      this.vy = -(Math.random() * 1.8 + 0.8);
+      this.r = Math.random() * 2.5 + 1;
+      this.o = 0;
+      this.targetO = Math.random() * 0.5 + 0.4;
+      this.hue = 90 + Math.random() * 50;
+      this.life = 0;
+      this.maxLife = 300 + Math.random() * 200;
+    }
+    update() {
+      this.y += this.vy;
+      this.o += (this.targetO - this.o) * 0.04;
+      this.life++;
+      if (this.life > this.maxLife || this.y < -50) this.reset();
+    }
+    draw() {
+      ctx.globalAlpha = this.o;
+      ctx.fillStyle = `hsl(${this.hue}, 80%, 65%)`;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.globalAlpha = this.o * 0.4;
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  const lights = Array.from({ length: 80 }, () => new Light());
+
+  function render(time) {
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0, 0, innerWidth, innerHeight);
     
-    // brillo suave
-    x.globalAlpha = l.o * 0.3;
-    x.fillStyle = '#fff';
-    x.beginPath();
-    x.arc(l.x, l.y, l.r * 0.6, 0, Math.PI * 2);
-    x.fill();
+    lights.forEach(l => { l.update(); l.draw(); });
     
-    if(l.y < -20) lights.splice(i, 1);
+    requestAnimationFrame(render);
+  }
+  requestAnimationFrame(render);
+
+  // RESIZE HANDLER (debounced)
+  window.addEventListener('resize', () => {
+    clearTimeout(window.resized);
+    window.resized = setTimeout(() => {
+      w = canvas.width = innerWidth * devicePixelRatio;
+      h = canvas.height = innerHeight * devicePixelRatio;
+      canvas.style.width = innerWidth + 'px';
+      canvas.style.height = innerHeight + 'px';
+      ctx.scale(devicePixelRatio, devicePixelRatio);
+    }, 150);
   });
-  
-  if(Math.random() < 0.3) nova();
-  requestAnimationFrame(draw);
-}
-for(let i = 0; i < 20; i++) nova();
-draw();
 
-// Guardado eterno de luz
-window.onbeforeunload = () => {
-  let elapsed = (Date.now() - start) / 3600000;
-  localStorage.setItem('orb_light', (saved + elapsed).toFixed(6));
-};
+  // COUNTER & UI
+  let lastBlessing = -1;
+  function updateUI() {
+    const elapsed = (performance.now() - startTime) / 3600000;
+    const total = savedHours + elapsed;
+    
+    $p.innerHTML = `1310 abrazos de luz respiran contigo · ${total.toFixed(3)} / 1310 h<br>
+                   <span style="font-size:0.85em;opacity:0.8;">Soul: ${soul} ✨ Snake Heart Light</span>`;
 
-document.addEventListener('visibilitychange', () => {
-  document.hidden ? ctx.suspend() : ctx.resume();
-});
+    // Blessing rotation every 13 minutes
+    const phase = Math.floor((Date.now() / 1000 / 60 / 13) % 13);
+    if (phase !== lastBlessing) {
+      lastBlessing = phase;
+      $t.textContent = `${phase + 1}.ª bendición · ${BLESSINGS[phase]}`;
+    }
 
-// Ascensión: celebración de la luz completada
-function ascension(){
-  document.getElementById('final').style.display = 'flex';
-  // partículas finales explosión suave de luz
-  for(let i = 0; i < 200; i++) nova();
-  setTimeout(() => {
-    localStorage.setItem('orb_light', '0');
-    location.reload();
-  }, 131000); // 131 segundos de celebración
-}
+    if (total >= TARGET_HOURS) {
+      ascend();
+    } else {
+      requestAnimationFrame(updateUI);
+    }
+  }
 
-tick();
+  // SAVE ON UNLOAD / VISIBILITY CHANGE
+  const saveProgress = () => {
+    const elapsed = (performance.now() - startTime) / 3600000;
+    localStorage.setItem(STORAGE_KEY, (savedHours + elapsed).toFixed(6));
+  };
+  window.addEventListener('beforeunload', saveProgress);
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      saveProgress();
+      audioCtx?.suspend();
+    } else {
+      startTime = performance.now() - (savedHours * 3600000); // seamless resume
+      audioCtx?.resume();
+    }
+  });
+
+  // ASCENSION
+  function ascend() {
+    $final.style.display = 'flex';
+    for (let i = 0; i < 300; i++) setTimeout(() => new Light(), i * 8);
+    
+    setTimeout(() => {
+      localStorage.setItem(STORAGE_KEY, '0');
+      location.reload();
+    }, 131000);
+  }
+
+  // START
+  updateUI();
 </script>
 </body>
 </html>

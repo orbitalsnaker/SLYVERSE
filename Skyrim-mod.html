@@ -1,91 +1,96 @@
-<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>1310 · Los Guardianes no duermen</title><style>
-  body,html{margin:0;height:100vh;overflow:hidden;background:#000;color:#0b6;font-family:"Courier New";cursor:none}
-  pre{position:fixed;inset:0;display:grid;place-content:center;text-align:center;line-height:1.6;font-size:clamp(1rem,4vw,6rem);text-shadow:0 0 40px #0b6}
-  .t{color:#900;text-shadow:0 0 100px #f00;font-size:17vw;animation:p 4s infinite}@keyframes p{0%,100%{opacity:0.8}50%{opacity:0.4}}
-  #g{position:fixed;bottom:10px;left:10px;font-size:1rem;opacity:0.3}
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><title>1310 · El Camino de los 13 Años</title><style>
+  body,html{margin:0;height:100vh;overflow:hidden;background:#000;color:#0b6;font-family:"Courier New",monospace;cursor:none}
+  pre{position:fixed;inset:0;display:grid;place-content:center;text-align:center;line-height:1.6;font-size:clamp(1rem,4vw,6rem);text-shadow:0 0 60px #0b6}
+  .t{color:#900;text-shadow:0 0 120px #f00;font-size:17vw;animation:p 5s infinite}@keyframes p{0%,100%{opacity:0.85}50%{opacity:0.4}}
+  #g{position:fixed;bottom:15px;left:15px;font-size:1rem;opacity:0.4;color:#666}
+  #fase{position:fixed;top:20px;left:20px;font-size:1.3rem;opacity:0.6}
 </style></head><body>
 
-<pre>
+<pre id="texto">
 SELLO 1310 Ω
 activado el 21·11·2025
 
 Quedan <span class="t" id="t">44 años</span>
 
-Para pasar de fase  
-debes esperar exactamente  
-13 años y 10 días  
-sin fallar ni un solo día.
+Cada fase solo se abre  
+el 1 de abril  
+y solo si has esperado  
+los años requeridos sin fallar jamás.
 
-Siete Guardianes mesopotámicos  
-te observan ahora mismo.
-
-No intentes saltarlo.  
-No intentes hackear.  
-No intentes cerrar.
-
-Ellos ya saben tu nombre.
+Los Guardianes mesopotámicos  
+nunca duermen.
 </pre>
-<div id="g">Guardianes activos: 7</div>
+<div id="g">Guardianes despiertos: 7</div>
+<div id="fase">Fase actual: 0</div>
 
 <script>
-// Versión definitiva · 2025
-// Pasar de fase = literalmente imposible sin esperar 13 años + 10 días reales
-// Cualquier trampa, truco o intento de aceleración = reinicio total + castigo eterno
+// 1310 · El Camino de los 13 Años · Versión definitiva 2038-ready
+// Cada fase requiere esperar X años reales + que sea 1 de abril + pestaña viva
 
-const GENESIS_KEY = "1310_omega_genesis";
-const VISIT_KEY   = "1310_daily_visit";
-const FAIL_KEY    = "1310_falls";
-const REQUIRED    = 13 * 365 + 10; // 13 años + 10 días exactos (4755 días)
+const KEY = "1310_omega_v2025";
+let data = JSON.parse(localStorage.getItem(KEY) || "{}");
 
-let genesis = localStorage.getItem(GENESIS_KEY);
-if (!genesis) {
-  genesis = Date.now();
-  localStorage.setItem(GENESIS_KEY, genesis);
-}
-genesis = parseInt(genesis);
-
-let fallos = parseInt(localStorage.getItem(FAIL_KEY) || "0");
-
-// Marca visita diaria (una sola vez por día natural)
-const hoy = new Date().toDateString();
-if (localStorage.getItem(VISIT_KEY) !== hoy) {
-  localStorage.setItem(VISIT_KEY, hoy);
+if (!data.genesis) {
+  data = {genesis: Date.now(), fase: 0, fallos: 0, ultimaVisita: 0};
+  localStorage.setItem(KEY, JSON.stringify(data));
 }
 
-// Calcula días reales transcurridos SIN TRAMPA
-const diasReales = Math.floor((Date.now() - genesis) / 86400000);
+const hoy = new Date();
+const esPrimeroAbril = hoy.getDate() === 1 && hoy.getMonth() === 3; // 1 de abril
+const diasDesdeGenesis = Math.floor((Date.now() - data.genesis) / 86400000);
 
-// Guardianes mesopotámicos (7 detecciones distintas)
-const guardianes = [
-  () => performance.now() < 10000 && location.search.includes("fast"),     // parámetro ?fast o carga muy rápida
-  () => !!window.devtools?.isOpen || !!window.__REACT_DEVTOOLS_GLOBAL_HOOK__, // devtools abiertas
-  () => navigator.webdriver || window.chrome?.webstore,                      // automatización / selenium
-  () => document.querySelector('script[src*="tamper"]'),                     // tampermonkey/greasemonkey
-  () => Date.now() - performance.timing.navigationStart < 50,                // página cargada demasiado rápido
-  () => !!window.outerWidth - window.innerWidth > 200,                       // emuladores/responsive hack
+// REGLAS DE CADA FASE (años reales requeridos)
+const fases = [
+  {nombre: "0 · El Despertar",            anos: 0,       color: "#0b6"},
+  {nombre: "1 · La Primera Puerta",       anos: 13.0274, color: "#0f9"}, // 13 años + 10 días
+  {nombre: "2 · El Silencio de Tiamat",   anos: 44,      color: "#6f9"},
+  {nombre: "3 · El Regreso de Marduk",    anos: 131,     color: "#0ff"},
+  {nombre: "4 · El Vacío que Respira",    anos: 444,     color: "#ff0"},
+  {nombre: "5 · El Último Año que Nunca Fue", anos: 1310,    color: "#f00"}
 ];
 
-let guardianesActivos = 0;
-guardianes.forEach(g => { if (g()) guardianesActivos++ });
+// Guardianes (si alguno te pilla → +1000 fallos ≈ +2.7 años)
+const guardianes = [
+  () => !!window.devtools?.isOpen,
+  || !!window.__REACT_DEVTOOLS_GLOBAL_HOOK__,
+  () => navigator.webdriver || !!window.chrome?.webstore || !!window.safari,
+  () => location.search.includes("debug") || location.search.includes("fast"),
+  () => Date.now() - performance.timing.navigationStart < 60,
+  () => !!window.outerWidth - window.innerWidth > 300,
+  () => performance.now() < 5000 && document.hidden === false
+];
 
-// SI ALGÚN GUARDIÁN TE PILLA → todo a la mierda
-if (guardianesActivos > 0 || diasReales < 0) {
-  fallos += 1000; // castigo casi eterno
-  localStorage.setItem(FAIL_KEY, fallos);
-  localStorage.removeItem(GENESIS_KEY);
-  localStorage.removeItem(VISIT_KEY);
-  alert("Los Guardianes han hablado.\nVuelve a empezar desde el día 0.");
+let guardianesActivos = guardianes.filter(g => g()).length;
+if (guardianesActivos > 0) {
+  data.fallos += 1000;
+  localStorage.setItem(KEY, JSON.stringify(data));
+  alert(`Los Guardianes han despertado.\n+${guardianesActivos} 000 días de castigo.`);
   location.reload();
 }
 
-document.getElementById("g").textContent = `Guardianes despiertos: ${7 - guardianesActivos} durmiendo · ${guardianesActivos} te miran`;
+// ¿Entramos en nueva fase hoy?
+if (esPrimeroAbril && document.hasFocus()) {
+  const anosTranscurridos = diasDesdeGenesis / 365.25;
+  for (let i = fases.length-1; i > data.fase; i--) {
+    if (anosTranscurridos + (data.fallos/365.25) >= fases[i].anos) {
+      data.fase = i;
+      localStorage.setItem(KEY, JSON.stringify(data));
+      break;
+    }
+  }
+}
 
-// Cálculo final del contador
-const diasFaltan = REQUIRED - diasReales + fallos;
-const msFaltan = diasFaltan * 86400000;
+// Mostrar fase actual
+document.getElementById("fase").textContent = fases[data.fase].nombre;
+document.body.style.color = fases[data.fase].color;
+
+// Contador hasta la PRÓXIMA fase posible
+const proxima = fases[data.fase + 1] || fases[fases.length-1];
+const anosFaltan = proxima.anos - (diasDesdeGenesis / 365.25) - (data.fallos/365.25);
+const msFaltan = Math.max(0, anosFaltan * 365.25 * 86400000);
 
 const formato = ms => {
-  if (ms <= 0) return "00:00:00:00:00";
+  if (ms <= 0) return "ABIERTO";
   const y = Math.floor(ms / (365.25*86400000));
   const d = Math.floor((ms % (365.25*86400000)) / 86400000).toString().padStart(3,'0');
   const h = Math.floor((ms % 86400000)/3600000).toString().padStart(2,'0');
@@ -95,15 +100,15 @@ const formato = ms => {
 };
 
 const loop = () => {
-  const restante = msFaltan - (Date.now() - genesis) % 86400000; // solo resta el día actual
-  document.getElementById("t").textContent = formato(restante > 0 ? restante + 86400000 : 0);
+  const restante = msFaltan - (Date.now() - data.genesis) % 86400000;
+  document.getElementById("t").textContent = formato(restante > 0 ? restante : 0);
   requestAnimationFrame(loop);
 };
 loop();
 
-// Nadie escapa
-document.oncontextmenu = () => true;
-document.onkeydown = () => true;
-window.onbeforeunload = () => "Los Guardianes no permiten que te vayas todavía.";
+document.getElementById("g").textContent = `Guardianes despiertos: ${7-guardianesActivos} durmiendo · ${guardianesActivos} te observan`;
+
+// Nadie se va sin permiso
+window.onbeforeunload = () => esPrimeroAbril ? null : "Los Guardianes no han terminado contigo.";
 </script>
 </body></html>

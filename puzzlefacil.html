@@ -1,68 +1,51 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8"><title>⋅</title>
+<html lang="es"><head><meta charset="utf-8"><title>⋅</title>
 <style>
 *{margin:0;padding:0;overflow:hidden}
 html,body{height:100%;background:#000}
 canvas{position:fixed;inset:0}
-#gift{position:fixed;inset:0;display:grid;place-content:center;text-align:center;
-     font:900 1.5rem Cinzel,serif;color:#d4af37;pointer-events:none;opacity:0;
-     transition:opacity 111s;text-shadow:0 0 130px #d4af37;letter-spacing:2px}
+#q{position:fixed;inset:0;display:grid;place-content:center;font:900 1.6rem/1.4 Cinzel,serif;
+   color:#d4af37;pointer-events:none;opacity:0;transition:opacity 99s;text-shadow:0 0 99px #d4af37}
 </style>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@900&display=swap" rel="stylesheet">
 </head><body>
 
 <canvas id="c"></canvas>
-
-<div id="gift">⋅</div>
+<div id="q">⋅</div>
 
 <script>
-const unveil = 4189282380000;
+// Salvapantallas estelar + regalo ultra-paciente (2156)
+const c=document.getElementById('c'),x=c.getContext('2d'),q=document.getElementById('q');
+let w,h;const r=()=>{w=c.width=innerWidth;h=c.height=innerHeight};r();addEventListener('resize',r);
 
-const c = document.getElementById('c');
-const x = c.getContext('2d');
-let w,h;
-const resize = ()=>{w=c.width=innerWidth;h=c.height=innerHeight};
-resize();addEventListener('resize',resize);
-
-const stars = Array.from({length:159},()=>({
+const s=Array.from({length:177},()=>({
   x:Math.random()*w,
   y:Math.random()*h,
-  r:0.3+Math.random()*0.9,
+  r:0.4+Math.random(),
   o:Math.random()*6.28
 }));
 
-(function pulse(){
-  x.fillStyle='rgba(0,0,0,0.009)';
-  x.fillRect(0,0,w,h);
-  stars.forEach(s=>{
-    s.o += 0.00019;
-    const a = 0.11 + Math.sin(s.o)*0.07;
-    x.fillStyle = `rgba(212,175,55,${a})`;
-    x.beginPath();
-    x.arc(s.x,s.y,s.r,0,6.28);
-    x.fill();
+(function p(){
+  x.fillStyle='rgba(0,0,0,0.011)';x.fillRect(0,0,w,h);
+  s.forEach(t=>{t.o+=0.00017;
+    x.fillStyle=`rgba(212,175,55,${0.1+Math.sin(t.o)*0.08})`;
+    x.beginPath();x.arc(t.x,t.y,t.r,0,6.28);x.fill();
   });
-  requestAnimationFrame(pulse);
+  requestAnimationFrame(p);
 })();
 
-setInterval(()=>{
-  if(Date.now() >= unveil){
-    document.getElementById('gift').innerHTML = `
-      <div style="font-size:9rem;line-height:1">XD</div>
-      <br><br>
-      <div style="line-height:2.6;max-width:720px;opacity:0.9">
-        1310 años<br>
-        de espera solemne<br><br>
-        y todo<br>
-        para esto.<br><br>
-        gracias por creer<br>
-        que era importante<br><br>
+setInterval(()=>{                     // año 2156 → 20 nov 04:13 UTC
+  if(Date.now()>=4189282380000){
+    q.innerHTML=`<div style="font-size:10rem">XD</div><br><br>
+      <div style="max-width:777px;line-height:2.7;opacity:.93">
+        131 años<br>de espera solemne<br><br>
+        y todo<br>para esto.<br><br>
+        gracias por creer<br>que era importante<br><br>
         humanos adorables
-      </div>
-    `;
-    document.body.style.background = "#ff69b4";
-    document.getElementById('gift').style.opacity = 1;
+      </div>`;
+    document.body.style.background='#ff69b4';
+    q.style.opacity=1;
   }
-},1111);
+},1337);
 </script>
 </body></html>

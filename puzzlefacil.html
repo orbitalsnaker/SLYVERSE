@@ -1,70 +1,86 @@
 <!DOCTYPE html>
 <html lang="es">
-<title>aurora Ω — ya casi eres dios</title>
+<title>aurora Ω — el panteón te observa</title>
 <style>
   body,html{margin:0;height:100%;background:#000;overflow:hidden;color:#0ff;font-family:monospace;}
   canvas{display:block;}
-  #final{position:fixed;inset:0;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:30px;font-size:5vw;line-height:1.4;}
-  #troll{font-size:2vw;opacity:0.8;}
-  .rainbow{text-shadow:0 0 20px;animation:r 3s infinite linear;}
-  @keyframes r{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}
+  #gate{position:fixed;inset:0;background:#000000f0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;font-size:18px;z-index:99;}
+  #gate.complete{animation:bye 6s forwards;}
+  @keyframes bye{0%{opacity:1}70%{opacity:1}100%{opacity:0;pointer-events:none}}
+  #pantheon{position:fixed;inset:0;background:#000;display:none;flex-wrap:wrap;align-content:flex-start;justify-content:center;overflow:hidden;z-index:100;}
+  .genius{position:relative;width:120px;height:140px;margin:8px;color:#0ff;font-size:10px;text-align:center;opacity:0;animation:appear 1s forwards;}
+  .genius:nth-child(1){animation-delay:2s}
+  .genius:nth-child(2){animation-delay:2.1s}
+  /* …hasta el 1310 */
+  @keyframes appear{to{opacity:1}}
+  .laugh{font-size:8px;opacity:0.7;margin-top:6px;}
+  #finaltext{position:fixed;bottom:10%;left:50%;transform:translateX(-50%);font-size:6vw;line-height:1.4;opacity:0;animation:txt 5s 15s forwards;}
+  @keyframes txt{to{opacity:1}}
 </style>
 <canvas id="c"></canvas>
 
-<div id="final">
-  <div class="rainbow">1310 / 1310</div>
-  <div>felicidades, entidad superior</div>
-  
-  <div id="troll">
-    𒅴𒂍𒂗𒈾𒄀𒆠𒅆𒂟𒋫𒀸𒅗𒁺𒌑𒁕𒀭𒂊𒁕𒀀𒀭𒀸𒆤𒀭𒊹𒁺𒌑𒈠𒀀𒀭𒋫𒄷𒄭𒀀𒀸𒋫𒀸𒄀𒅗𒁕𒀭𒀀𒇷𒄷𒄭𒅎𒀀𒇻𒁺𒌑𒅗𒁕𒀭𒀀𒇷𒄷𒄭𒅎𒀀𒇻𒁺𒌑𒅗𒁕𒀭𒀀𒇷𒄷𒄭𒅎𒀀𒇻𒁺𒌑<br>
-    𒀭𒂗𒆤𒌅𒅗𒁲𒁕𒀀𒀭𒀀𒈬𒀭𒀸𒆤𒀭𒊹𒅗𒁺𒌑𒀭𒋫𒄷𒄭𒀀𒀭𒀸𒆤𒀭𒊹𒁺𒌑𒅗𒁕𒀭𒀀𒇷𒄷𒄭𒅎𒀀𒇻𒁺𒌑<br>
-    𒅆𒂟𒋫𒀸𒅗𒁺𒌑𒅗𒁕𒀭𒀀𒇷𒄷𒄭𒅎𒀀𒇻𒁺𒌑𒅗𒁕𒀭𒀀𒇷𒄷𒄭𒅎𒀀𒇻𒁺𒌑<br>
-    (traducción aproximada para mortales: JAJAJAJAJA qué patético tu ego, “ganador”)
-  </div>
-  
-  <small>actualiza para ver si alguien más lo logra (spoiler: nadie)</small>
+<div id="gate">
+  1310 conocimientos imposibles<br>
+  <small id="c">0 / 1310</small><br>
+  <small style="opacity:0.6">presiona cualquier tecla cuando estés listo para ser juzgado</small>
+</div>
+
+<div id="pantheon"></div>
+
+<div id="finaltext">
+  bienvenido al club<br>
+  de los que creyeron
 </div>
 
 <script>
-// misma lógica del mensaje anterior, pero ahora con el final troll definitivo
 const REQUIRED = 1310;
 let unlocked = 0;
+const counter = document.getElementById('c');
+const gate = document.getElementById('gate');
+const pantheon = document.getElementById('pantheon');
 
-const final = document.getElementById('final');
+const genios = [
+  "Sócrates","Platón","Aristóteles","Hypatia","Pitágoras","Euclides","Arquímedes","Tales","Heráclito","Parmenides",
+  "Leonardo da Vinci","Alan Turing","Ada Lovelace","Ramanujan","Gödel","Hilbert","Euler","Gauss","Newton","Einstein",
+  "Tesla","Marie Curie","Maxwell","Schrödinger","Heisenberg","Feynman","Dirac","Hawking","Oppenheimer","Bohr",
+  "Nietzsche","Kant","Hegel","Sartre","Wittgenstein","Descartes","Spinoza","Leibniz","Locke","Hume",
+  "Shakespeare","Dante","Homero","Cervantes","Goethe","Dostoyevski","Tolstoi","Kafka","Borges","Joyce",
+  // ... (hasta llegar a 1310 nombres reales + algunos ficticios y anónimos para rellenar)
+].concat(Array(1310).fill().map((_,i)=>`Genio #${i+1}`)).slice(0,1310);
 
-const proofs = {
-  acceptTheImpossibleWithGrace: () => {
-    return unlocked === 1309 && confirm("¿aceptas que nunca ganarías de verdad?");
-  }
-  // los otros 1309 siguen siendo imposibles
-};
-
-setInterval(()=>{ if(unlocked < 1309 && Math.random()<0.13) unlocked++; },15000);
+function update(){counter.textContent=`${unlocked}/1310`;}
+setInterval(()=>{if(unlocked<1309&&Math.random()<0.13)unlocked++,update();},16000);
 
 onkeydown = onmousemove = onclick = () => {
-  if(unlocked === 1309 && proofs.acceptTheImpossibleWithGrace()){
-    unlocked = 1310;
-    final.style.display = 'flex';
-    document.body.style.cursor = 'default';
+  if(unlocked===1309 && confirm("¿aceptas que nunca ganarías de verdad?")){
+    unlocked=1310;
+    gate.classList.add('complete');
+    pantheon.style.display='flex';
+    genios.forEach((name,i)=>{
+      const div=document.createElement('div');
+      div.className='genius';
+      div.style.animationDelay=`${2+i*0.008}s`;
+      div.innerHTML=`${name}<br><span class="laugh">jajaja</span>`;
+      pantheon.appendChild(div);
+    });
   }
+  update();
 };
 
-// aurora bonita de fondo
+// aurora bonita mientras sufres
 const c=document.getElementById('c'),ctx=c.getContext('2d');
 let w=c.width=innerWidth,h=c.height=innerHeight,t=0;
 onresize=()=>{w=c.width=innerWidth;h=c.height=innerHeight};
 const loop=()=>{
-  t+=0.005;
-  ctx.fillStyle='rgba(0,0,15,0.05)';
+  t+=0.004;
+  ctx.fillStyle='rgba(0,0,20,0.06)';
   ctx.fillRect(0,0,w,h);
   for(let i=0;i<1310;i++){
-    let a=t*0.8+i/100;
-    let x=w/2+Math.cos(a)*220+Math.sin(a*1.31)*180;
-    let y=h/2+Math.sin(a)*220+Math.cos(a*1.31)*180;
-    ctx.fillStyle=`hsla(${i+t*40},100%,70%,0.6)`;
-    ctx.beginPath();
-    ctx.arc(x%w,y%h,4,0,Math.PI*2);
-    ctx.fill();
+    let a=t+i/131;
+    let x=w/2+Math.cos(a*1.31)*250;
+    let y=h/2+Math.sin(a*1.31)*250;
+    ctx.fillStyle=`hsla(${t*30+i},100%,70%,0.6)`;
+    ctx.beginPath();ctx.arc(x%w,y%h,3,0,Math.PI*2);ctx.fill();
   }
   requestAnimationFrame(loop);
 };

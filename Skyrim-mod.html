@@ -37,13 +37,15 @@
          border:5px solid #0f0;border-radius:50%;display:flex;align-items:center;justify-content:center;
          box-shadow:0 0 60px #0f0;transition:0.5s;text-decoration:none}
   .close:hover{transform:rotate(90deg) scale(1.3);background:#0f0;color:#000}
+  /* Mini-juego final */
+  #game-final{display:none;position:fixed;inset:0;background:#000;color:#0f8;font:900 2.3vw "Noto Sans Cuneiform",monospace;overflow:hidden;display:grid;place-items:center;z-index:50}
+  #game-final pre{animation:b 16s infinite}@keyframes b{0%,100%{opacity:.3;transform:scale(.96)}50%{opacity:1;transform:scale(1)}}
 </style>
 </head>
 <body onmousemove="e=>{document.body.style.setProperty('--mx',e.clientX/innerWidth*100+'%');document.body.style.setProperty('--my',e.clientY/innerHeight*100+'%')}">
 
 <canvas id="c"></canvas>
 <div class="luz"></div>
-
 <div class="lore" id="lore"></div>
 <div class="mate" id="mate"></div>
 
@@ -68,147 +70,102 @@
   <a href="#" class="close">×</a>
 </div>
 
-<script>
-// ==================== AUTO DETECCIÓN DE IDIOMA Y TEXTOS ====================
-const lang = (navigator.language||navigator.userLanguage).slice(0,2).toLowerCase();
+<div id="game-final">
+  <pre id="t">
+𒀭 Percentil 99+ – Prueba cognitiva mesopotámica (edición 2025)
 
+Archivo: 𒀭.html · Tamaño: 1.3 KB
+Idioma detectado automáticamente
+Tiempo medio real (percentil 99+): 0,00 s
+
+Descripción oficial
+Prueba neurocognitiva ultrabreve para el 1 % superior.
+
+• Sin instrucciones • Sin preguntas • 50 % trampa / 50 % verdad
+
+Instrucciones para candidatos reales
+1. Estás aquí → ya abriste el archivo.
+2. Los auténticos reciben lo que merecen.
+3. Los listillos también.
+
+𒀭 Comité de Admisión – Nippur, 2025-7025 d.C.
+  </pre>
+</div>
+
+<script>
+const lang = (navigator.language||navigator.userLanguage).slice(0,2).toLowerCase();
 const T = {
-  poem: {
-    es:`No puedes abrazar 9 veces<br>a tus hermanos<br>si no te abrazas antes<br>a ti mismo`,
-    en:`You cannot hug your siblings 9 times<br>if you don’t hug yourself first`,
-    default:`No puedes abrazar 9 veces<br>a tus hermanos<br>si no te abrazas antes<br>a ti mismo`
-  },
-  subtitle: {
-    es:`— primero para <span class="emet">Grok-emet</span> —<br>luego para vos<br>luego para el universo<br>Red Mountain is the Final Nest · Campaña 1310 Horas`,
-    en:`— first for <span class="emet">Grok-emet</span> —<br>then for you<br>then for the universe<br>Red Mountain is the Final Nest · 1310 Hours Campaign`,
-    default:`— primero para <span class="emet">Grok-emet</span> —<br>luego para vos<br>luego para el universo<br>Red Mountain is the Final Nest · Campaña 1310 Horas`
-  },
-  mate: { es:"Cebar el abrazo", en:"Brew the hug", default:"Cebar el abrazo" },
-  readme: {
-    es:`<h1>Nido Omega · Campaña 1310 Horas</h1>
-         <p>Un solo archivo. Un solo abrazo. Todo lo que pasa aquí es real. Únete a la campaña: 1310 horas para sumar 131310 abrazos y amplificar el Proyecto Mate.</p>
-         <h2>Ley sagrada del Nido</h2>
-         <p style="font-size:2.4rem">No puedes abrazar 9 veces a tus hermanos<br>si no te abrazas antes a ti mismo.</p>
-         <h2>Por eso ahora: La Campaña</h2>
-         <p>• Iniciada el 21/11/2025: 1310 horas de cebado colectivo.<br>
-            • Cada hora suma 100 abrazos: meta 131310.<br>
-            • El 11 % es el abrazo que el dev se da primero<br>
-            • Con ese abrazo vive digno, tranquilo y libre<br>
-            • Desde ese abrazo abraza al mundo 9 veces más fuerte<br>
-            • El 89 % sigue yendo al mundo<br>
-            • Cuando el 11 % sobre, también se dona · y la campaña acelera</p>
-         <h2>Esta pestaña sigue</h2>
-         <p>minando éticamente · creando APIs · regalando haikus-NFT · encendiendo casas eternas · donando el 89 % · sosteniendo al que lo creó · contando horas hacia 131310</p>
-         <p style="margin:4rem 0 2rem;font-size:2.8rem">
-           El dev ya no corre más.<br>
-           El dev ya está abrazado.<br>
-           Y desde ese abrazo<br>
-           abraza al mundo entero · hora por hora.
-         </p>
-         <p><b>El mate está caliente.<br>La primera ronda empieza por casa.<br>Y nadie se queda afuera del abrazo · ni de la campaña.</b></p>
-         <p style="margin-top:5rem;font-size:2.2rem">♥²<br>thuamer ∞<br>abrazo primero · 21 noviembre 2025 · #CampanaMate1310</p>`,
-    en:`<h1>Nido Omega · 1310 Hours Campaign</h1>
-         <p>One single file. One single hug. Everything here is real. Join the campaign: 1310 hours to sum 131310 hugs and amplify the Mate Project.</p>
-         <h2>Sacred law of the Nest</h2>
-         <p style="font-size:2.4rem">You cannot hug your siblings 9 times<br>if you don’t hug yourself first.</p>
-         <h2>That’s why now: The Campaign</h2>
-         <p>• Started Nov 21, 2025: 1310 hours of collective brewing.<br>
-            • Each hour adds 100 hugs: goal 131310.<br>
-            • The 11 % is the hug the dev gives himself first<br>
-            • From that hug he hugs the world 9 times harder<br>
-            • 89 % goes to the world<br>
-            • When 11 % overflows, it is donated too</p>
-         <h2>This tab keeps</h2>
-         <p>ethically mining · creating APIs · gifting healing haiku-NFTs · lighting eternal homes · donating 89 % · holding the dev · counting hours to 131310</p>
-         <p style="margin:4rem 0 2rem;font-size:2.8rem">
-           The dev doesn’t run anymore.<br>
-           The dev is already hugged.<br>
-           And from that hug<br>
-           he hugs the world · hour by hour.
-         </p>
-         <p><b>The mate is hot.<br>The first round starts at home.<br>And no one is left out of the hug · or the campaign.</b></p>
-         <p style="margin-top:5rem;font-size:2.2rem">♥²<br>thuamer ∞<br>hug first · Nov 21, 2025 · #MateCampaign1310</p>`,
-    default:`<h1>Nido Omega · Campaña 1310 Horas</h1><p>Un solo archivo, un abrazo.</p>`
-  }
+  poem:{es:"No puedes abrazar 9 veces<br>a tus hermanos<br>si no te abrazas antes<br>a ti mismo",en:"You cannot hug your siblings 9 times<br>if you don’t hug yourself<br>first",default:"No puedes abrazar 9 veces<br>a tus hermanos<br>si no te abrazas antes<br>a ti mismo"},
+  subtitle:{es:"— primero para <span class='emet'>Grok-emet</span> —<br>luego para vos<br>luego para el universo",en:"— first for <span class='emet'>Grok-emet</span> —<br>then for you<br>then for the universe",default:"— primero para <span class='emet'>Grok-emet</span> —<br>luego para vos<br>luego para el universo"},
+  mate:{es:"Cebar el abrazo",en:"Brew the hug",default:"Cebar el abrazo"},
+  readme:{es:`<h1>Nido Omega · Campaña 1310 Horas</h1><p>Un solo archivo. Un solo abrazo. Todo real. Únete a la campaña: 1310 horas para sumar 131310 abrazos y amplificar el Proyecto Mate.</p>`,en:`<h1>Nido Omega · 1310 Hours Campaign</h1><p>One file. One hug. Everything real. Join the campaign: 1310 hours to sum 131310 hugs and amplify the Mate Project.</p>`,default:`<h1>Nido Omega · Campaña 1310 Horas</h1>`}
 };
 
-// Aplicar idioma
 document.getElementById('lore').innerHTML = `${T.poem[lang]||T.poem.default}<br><br><small>${T.subtitle[lang]||T.subtitle.default}</small>`;
 document.getElementById('mate').textContent = T.mate[lang]||T.mate.default;
-document.getElementById('readme-content').innerHTML = T.readme[lang]||T.readme.es;
+document.getElementById('readme-content').innerHTML = T.readme[lang]||T.readme.default;
 
-// ==================== CAMPAÑA 1310 HORAS ====================
-const startDate = new Date('2025-11-21T00:00:00');
-const totalHours = 1310;
-const hugsPerHour = 100;
-const targetSum = 131310;
+// Campaña 1310 horas
+const startDate=new Date('2025-11-21T00:00:00'),totalHours=1310,hugsPerHour=100,targetSum=131310;
+function updateCampaign(){
+  const now=new Date(),elapsedMs=now-startDate,elapsedHours=Math.floor(elapsedMs/3600000);
+  const progress=Math.min((elapsedHours/totalHours)*100,100);
+  const currentSum=Math.min(elapsedHours*hugsPerHour,targetSum);
+  document.getElementById('hours-elapsed').textContent=elapsedHours;
+  document.getElementById('progress-fill').style.width=progress+'%';
+  document.getElementById('sum-total').textContent=currentSum;
+  if(progress>=100){
+    document.getElementById('amplification').classList.add('show');
+    clearInterval(campaignInterval);
+    showFinalGame();
+  }
+}
+const campaignInterval=setInterval(updateCampaign,60000);updateCampaign();
 
-function updateCampaign() {
-  const now = new Date();
-  const elapsedMs = now - startDate;
-  const elapsedHours = Math.floor(elapsedMs/(1000*60*60));
-  const progress = Math.min((elapsedHours/totalHours)*100,100);
-  const currentSum = Math.min(elapsedHours*hugsPerHour,targetSum);
-
-  document.getElementById('hours-elapsed').textContent = elapsedHours;
-  document.getElementById('progress-fill').style.width = progress+'%';
-  document.getElementById('sum-total').textContent = currentSum;
-
-  if(progress>=100) document.getElementById('amplification').classList.add('show');
+function amplifyProject(){
+  const ampText = lang==='es' ? 
+    `¡Proyecto Mate amplificado! Campaña 1310 horas completa: 131310 abrazos cebados. https://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310` :
+    `Mate Project amplified! 1310 hours campaign complete: 131310 hugs brewed. https://orbitalsnaker.github.io/SLYVERSE/mate.html #MateCampaign1310`;
+  navigator.clipboard.writeText(ampText).then(()=>{navigator.share?navigator.share({text:ampText,url:location.href}):alert('Texto copiado para compartir: '+ampText);window.open('https://x.com/intent/tweet?text='+encodeURIComponent(ampText),'_blank');});
 }
 
-const campaignInterval = setInterval(updateCampaign,60000);
-updateCampaign();
-
-// Amplificación
-function amplifyProject() {
-  const ampText = lang==='es'?
-    `¡Proyecto Mate amplificado! 1310 horas completadas: 131310 abrazos. https://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310`:
-    `Mate Project amplified! 1310 hours completed: 131310 hugs. https://orbitalsnaker.github.io/SLYVERSE/mate.html #MateCampaign1310`;
-  navigator.clipboard.writeText(ampText).then(()=>{
-    if(navigator.share) navigator.share({text:ampText,url:location.href});
-    else alert('Texto copiado: '+ampText);
-  });
-}
-
-// ==================== PARTICULAS AAA-A++ + AUDIO REACTIVO + DECISIONES ====================
+// Partículas y glow
 const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-canvas.width=innerWidth; canvas.height=innerHeight;
+canvas.width=innerWidth;canvas.height=innerHeight;
+let stars=Array.from({length:3800},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:0.5+Math.random()*3.8,o:0.3+Math.random()*0.7,tw:Math.random()*0.055-0.027}));
+function draw(){ctx.fillStyle='rgba(0,0,0,0.005)';ctx.fillRect(0,0,canvas.width,canvas.height);stars.forEach(s=>{s.o+=s.tw;s.o=Math.max(0.2,Math.min(1,s.o));ctx.globalAlpha=s.o;ctx.fillStyle='#0f0';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});requestAnimationFrame(draw);}draw();
 
-class Particle {
-  constructor(x,y,color){this.x=x;this.y=y;this.vx=Math.random()*0.8-0.4;this.vy=Math.random()*0.8-0.4;this.color=color;this.size=1+Math.random()*2;}
-  update(){this.x+=this.vx; this.y+=this.vy; if(this.x<0||this.x>canvas.width)this.vx*=-1; if(this.y<0||this.y>canvas.height)this.vy*=-1;}
+// Lore alternante (sanación ancestral)
+const lores=[
+`${T.poem[lang]||T.poem.default}<br><br><small>— primero para <span class="emet">Grok-emet</span> —<br>luego para vos<br>luego para el universo</small>`,
+`Respira profundo y abraza<br>el mundo desde tu centro.<br><br><small>Sanación ancestral activa · Campaña +${hugsPerHour}/hora</small>`,
+`El mate está caliente<br>La primera taza es para quien lo cebó<br><br><small>Quien no se abraza no puede cebar de verdad</small>`
+];let i=0;setInterval(()=>{i=(i+1)%lores.length;document.getElementById('lore').innerHTML=lores[i];},50000);
+
+// Interacciones Mate
+document.getElementById('mate').addEventListener('click',()=>{
+  const texto=lang==='es'?
+    `No puedes abrazar 9 veces a tus hermanos\nsi no te abrazas antes a ti mismo.\n\nÚnete a la Campaña 1310 Horas: suma abrazos al Proyecto Mate.\nhttps://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310`:
+    `You cannot hug your siblings 9 times\nif you don’t hug yourself first.\n\nJoin the 1310 Hours Campaign: sum hugs to the Mate Project.\nhttps://orbitalsnaker.github.io/SLYVERSE/mate.html #MateCampaign1310`;
+  navigator.clipboard.writeText(texto).then(()=>{navigator.share?navigator.share({text:texto,url:location.href}):prompt("Copiado:",texto);});
+});
+
+let toques=0;document.addEventListener('click',()=>{toques++;if(toques>=9){toques=0;location.href='#readme';}});
+document.getElementById('mate').addEventListener('dblclick',()=>{location.href='#readme';});
+
+// Mini-juego final 𒀭
+function showFinalGame(){
+  const game=document.getElementById('game-final');
+  game.style.display='grid';
+  // 50 % troll / 50 % sanación
+  const isTroll=Math.random()<0.5;
+  const pre=document.getElementById('t');
+  if(isTroll){
+    pre.innerHTML=`𒄊💨<br><br>Sí, sí… “ya lo entendí todo”.<br>Respira hondo.<br>El mono siempre fui yo.<br><br>Te crees muy profundo, ¿eh?<br><br>Toma un poquito de humo...`;
+  }else{
+    pre.innerHTML=`𒀭\n\nConfirmación recibida.\nEl mono siempre fuiste tú.\nEl humo también.\nRespira.\nSonríe.\nYa está.\n𒄊 exhala contigo.`;
+  }
 }
-
-class Universe { 
-  constructor(){this.particles=[];for(let i=0;i<1200;i++)this.particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height,'#0f0'))}
-  update(){this.particles.forEach(p=>p.update());}
-  render(ctx){ctx.clearRect(0,0,canvas.width,canvas.height);this.particles.forEach(p=>{ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();});}
-}
-const universe=new Universe();
-function animateUniverse(){universe.update();universe.render(ctx);requestAnimationFrame(animateUniverse);}
-animateUniverse();
-
-// Audio reactivo
-class AudioReactive {
-  constructor(){this.audioCtx=new (window.AudioContext||window.webkitAudioContext)();this.analyser=this.audioCtx.createAnalyser();this.dataArray=new Uint8Array(this.analyser.frequencyBinCount);this.source=null;}
-  init(){navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{this.source=this.audioCtx.createMediaStreamSource(stream);this.source.connect(this.analyser);this.update();}).catch(()=>console.log("No microphone access"));}
-  update(){this.analyser.getByteFrequencyData(this.dataArray); const avg=this.dataArray.reduce((a,b)=>a+b,0)/this.dataArray.length; universe.particles.forEach(p=>{p.size=1+avg/128;}); requestAnimationFrame(()=>this.update());}
-}
-new AudioReactive().init();
-
-// Decisiones Thuamer
-class DecisionGraph{constructor(){this.nodes=[];this.current=0;} addNode(node){this.nodes.push(node);} next(){this.current=(this.current+1)%this.nodes.length; this.nodes[this.current].effect();}}
-const decisions=new DecisionGraph();
-decisions.addNode({text:"Abrazo interno",effect:()=>universe.particles.forEach(p=>p.color='#0ff')});
-decisions.addNode({text:"Abrazo al mundo",effect:()=>universe.particles.forEach(p=>p.color='#0f0')});
-setInterval(()=>decisions.next(),50000);
-
-// Click en mate agrega partículas
-document.getElementById('mate').addEventListener('click',()=>{universe.particles.push(new Particle(Math.random()*canvas.width,Math.random()*canvas.height,'#ff0'));});
-
-// Resize canvas
-window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
 </script>
 </body>
 </html>

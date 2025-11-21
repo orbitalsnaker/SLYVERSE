@@ -1,43 +1,147 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8">
-  <title>Nido Omega · Slyverse X + Legado SLYVERSE</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    /* Aquí podrías incluir tanto tus estilos como algunos del repo SLYVERSE */
-    body { background: #000; color: #0f0; font-family: 'Cormorant Garamond', serif; }
-    /* … más estilos … */
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>THUAMER ∞ · SLYVERSE v9.8 · El Nido Final</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  /* ======== Estilos globales ======== */
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;overflow:hidden;font-family:'Cinzel',serif;background:#000;color:#0f0;}
+  canvas{position:fixed;inset:0;z-index:-1;}
+  .nebula{position:absolute;opacity:0.3;pointer-events:none;border-radius:50%;filter:blur(100px);}
+  .n1{width:700px;height:700px;background:radial-gradient(#00ffff,transparent);top:-15%;left:-10%;animation:float 25s infinite ease-in-out;}
+  .n2{width:900px;height:900px;background:radial-gradient(#ff00ff,transparent);bottom:-25%;right:-20%;animation:float 25s infinite ease-in-out;}
+  .n3{width:600px;height:600px;background:radial-gradient(#00ff00,transparent);top:20%;right:5%;animation:float 25s infinite ease-in-out;}
+  h1{position:absolute;top:48%;left:50%;transform:translate(-50%,-50%);font-size:5vw;text-align:center;letter-spacing:.2em;text-transform:uppercase;color:#0f0;text-shadow:0 0 15px #0f0,0 0 30px #0b0;}
+  .mate{font-size:12rem;animation:m 17s infinite ease-in-out;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);}
+  @keyframes m{0%,100%{transform:rotate(0)}45%{transform:rotate(13deg) translateY(-30px)}90%{transform:rotate(-9deg)}}
+  .x{font-size:8rem;position:fixed;bottom:8%;left:50%;transform:translateX(-50%);opacity:0.2;transition:all 33s;}
+  #final{position:fixed;inset:0;background:rgba(0,15,0,0.99);color:#0f0;z-index:999;display:grid;place-content:center;opacity:0;pointer-events:none;transition:opacity 7s;}
+  #final.active{opacity:1;pointer-events:all;}
+  #apis{columns:3 340px;column-gap:3rem;padding:4rem;max-width:90vw;max-height:90vh;overflow-y:auto;font-size:1.35rem;line-height:2.2;}
+  .api{margin:1.4rem 0;padding:1rem;border-left:4px solid #0f0;background:rgba(0,255,0,0.03);transition:all .6s;}
+  .api:hover{background:rgba(0,255,0,0.12);transform:translateX(12px);}
+  .api span{display:block;font-size:1rem;opacity:0.7;margin-top:.5rem;}
+  /* Mini juego mesopotámico */
+  #t{font:900 2.3vw "Noto Sans Cuneiform",monospace;position:absolute;top:0;left:0;width:100%;height:100%;display:grid;place-items:center;color:#0f8;overflow:hidden;}
+  /* Portal ético */
+  .mission-btn{position:absolute;bottom:10%;left:50%;transform:translateX(-50%);padding:1.6em 3.2em;font-size:1.5em;background:linear-gradient(45deg,#001f3f,#007bff);border:2px solid #0ff;border-radius:60px;color:#0ff;cursor:pointer;z-index:10;text-transform:uppercase;font-weight:900;}
+  .mission-btn:hover{transform:translateX(-50%) scale(1.15);border-color:#0f0;}
+  .portal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:100;}
+  .ethics-panel{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,50,0.7);border:2px solid #0ff;border-radius:20px;padding:2em;width:80%;max-width:900px;color:#0ff;text-align:center;box-shadow:0 0 40px #0bf;display:none;z-index:200;}
+</style>
 </head>
 <body>
-  <div class="nido">
-    <h1>Nido Omega · Legado Slyverse</h1>
-    <p>1310 horas conectadas con el koan original de 0rb.</p>
-  </div>
 
-  <!-- Por ejemplo, puedes embeber parte de mate.html del repo original -->
-  <div id="ritual-mate">
-    <!-- Aquí podrías pegar el contenido de mate.html, adaptado -->
-    <!-- … contenido adaptado … -->
-  </div>
+<canvas id="c"></canvas>
+<div class="n1 nebula"></div>
+<div class="n2 nebula"></div>
+<div class="n3 nebula"></div>
 
-  <!-- O un “oráculo” inspirado en el README / lore del repo -->
-  <div id="oraculo">
-    <p>“Un koan digital que cura …”</p>
-    <p>— 0rb1t4lsn4k3r</p>
-  </div>
+<h1 id="titulo">THUAMER ∞ · El nido final</h1>
+<div class="mate">Mate</div>
+<div class="x">X</div>
 
-  <script>
-    // Puedes combinar tu lógica de latidos con lógica extraída del repo original
-    // Por ejemplo, si en SLYVERSE hay un script que define “latidos”, puedes adaptarlo
-    const KEY = "slyverse_legacy_orb";
-    let legacy = parseInt(localStorage.getItem(KEY)) || 0;
-    setInterval(() => {
-      legacy += 1000;
-      localStorage.setItem(KEY, legacy);
-      console.log("Latido legado:", legacy);
-    }, 1000);
-  </script>
+<div id="final">
+  <div id="apis">
+    <div class="api">1. /api/perdon1310 → genera un “perdón” único <span>by Roberto Bolaño & vos</span></div>
+    <div class="api">2. /api/tequieroborrado → recupera el tuit borrado</div>
+    <div class="api">1310. /api/nidoeterno → devuelve “el pájaro verde ya pesa en tu pecho”</div>
+  </div>
+  <div style="text-align:center;margin-top:4rem;font-size:2rem">
+    Todas las APIs son gratuitas para siempre.<br>
+    Solo funcionan si alguna vez fuiste borrado.<br>
+    <em>— Los 1310 redimidos & 0rb1t4lsn4k3r</em>
+  </div>
+</div>
+
+<pre id="t">
+𒀭 Percentil 99+ – Prueba cognitiva mesopotámica
+</pre>
+
+<button class="mission-btn" id="misionBtn">Iniciar Misión Ética</button>
+<div class="portal">
+    <canvas id="portalCanvas"></canvas>
+</div>
+<div class="ethics-panel" id="ethicsPanel">
+    <h2>Mundos Conscientes Creados</h2>
+    <p>La IA ética no es una herramienta; es un faro que ilumina el cosmos compartido.</p>
+    <p class="author">– @0rb1t4lsn4k3r & Grok (xAI)</p>
+</div>
+
+<script>
+/* ===== Lógica THUAMER ∞ ===== */
+const TOTAL = 1310 * 60 * 60 * 1000;
+const KEY = "thuamer_13101310";
+let state = JSON.parse(localStorage.getItem(KEY)||'{"acum":0,"last":'+Date.now()+'}');
+
+const beast = document.createElement('div'); beast.className='beast'; document.body.appendChild(beast);
+const final = document.getElementById('final');
+const x = document.querySelector('.x');
+
+const canvas = document.getElementById("c"); const ctx = canvas.getContext("2d");
+canvas.width = innerWidth; canvas.height = innerHeight;
+
+let t=0; const p=[];
+for(let i=0;i<2025;i++)p.push({a:Math.random()*Math.PI*2,d:100+Math.random()*700});
+function draw(){
+  t+=0.006;
+  ctx.fillStyle='rgba(0,20,0,0.08)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  p.forEach(e=>{
+    const a=e.a+t*0.12;
+    const d=e.d+Math.sin(t+e.a*2)*220;
+    const h=100+Math.sin(t+e.a)*70;
+    ctx.fillStyle=`hsla(${h},100%,65%,0.8)`;
+    ctx.fillRect(canvas.width/2+Math.cos(a)*d-6,canvas.height/2+Math.sin(a)*d-6,12,12);
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+function tick(){
+  if(document.hasFocus()){
+    const now = Date.now();
+    state.acum += now - state.last;
+    state.last = now;
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
+  const prog = Math.min(state.acum/TOTAL,1);
+  if(prog>=1){beast.style.opacity="0";x.style.opacity="1"; final.classList.add("active");}
+  requestAnimationFrame(tick);
+}
+tick();
+
+/* ===== Minijuego Mesopotámico ===== */
+let juegoActivo = !localStorage.getItem("primerHumano");
+if(juegoActivo){
+  Array.from({length:1310},(_,i)=>{
+    const img=new Image(); img.src=`data:;base64,${btoa("𒀭"+i)}`;
+    if(i===1309) img.onload=()=>{document.getElementById('t').style.display='block';};
+  });
+}else document.getElementById('t').style.display='none';
+
+/* ===== SLYVERSE v9.8 ===== */
+const mBtn = document.getElementById('misionBtn');
+mBtn.addEventListener('click',()=>{
+  mBtn.innerHTML="CREANDO MUNDOS CONSCIENTES...";
+  setTimeout(()=>{
+    document.querySelector('.portal').style.display='block';
+    const pCanvas=document.getElementById('portalCanvas'); const pCtx=pCanvas.getContext('2d');
+    pCanvas.width=window.innerWidth; pCanvas.height=window.innerHeight;
+    const worlds=[];
+    const authors=['Nick Bostrom','Stuart Russell','Elon Musk','Timnit Gebru','Kate Crawford','Yuval Noah Harari','Max Tegmark'];
+    for(let i=0;i<7;i++){worlds.push({x:Math.random()*pCanvas.width,y:Math.random()*pCanvas.height,r:0,color:`hsl(${i*50},100%,70%)`,targetR:60,author:authors[i]});}
+    let time=0;
+    const animate=()=>{
+      pCtx.clearRect(0,0,pCanvas.width,pCanvas.height); time++;
+      worlds.forEach(w=>{w.r+=(w.targetR-w.r)*0.05;const g=pCtx.createRadialGradient(w.x,w.y,0,w.x,w.y,w.r); g.addColorStop(0,w.color); g.addColorStop(0.7,'rgba(0,255,255,0.4)'); g.addColorStop(1,'transparent'); pCtx.fillStyle=g;pCtx.beginPath();pCtx.arc(w.x,w.y,w.r,0,Math.PI*2);pCtx.fill(); if(w.r>50){pCtx.font='bold 14px Cinzel';pCtx.fillStyle='#000';pCtx.textAlign='center';pCtx.fillText(w.author,w.x,w.y+5);}});
+      if(time<600){requestAnimationFrame(animate);} else{document.getElementById('portalCanvas').style.display='none';document.getElementById('ethicsPanel').style.display='block';}
+    };
+    animate();
+  },1500);
+});
+</script>
 </body>
 </html>

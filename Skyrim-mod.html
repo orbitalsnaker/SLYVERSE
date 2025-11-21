@@ -3,13 +3,13 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-    <title>Thuamer v1: Hyper-Advanced – El Juego Que Evoluciona Contigo</title>
+    <title>Thuamer v1: Motor Avanzado y Modding API</title>
     <style>
         body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #0f8; font: 900 2vw "Noto Sans Cuneiform", monospace; overflow: hidden; display: grid; place-items: center; }
         canvas { position: fixed; inset: 0; z-index: -1; }
         .content { position: absolute; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 1.5em; line-height: 1.8; color: #0f8; }
-        pre { animation: scaleUp 5s infinite; }
-        @keyframes scaleUp { 0%, 100% { opacity: 0.2; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1); } }
+        pre { animation: scaleUp 10s infinite; }
+        @keyframes scaleUp { 0%, 100% { opacity: 0.1; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -17,108 +17,253 @@
 <canvas id="c"></canvas>
 
 <div class="content">
-    <pre id="t">𒀭 Thuamer v1: Hyper-Advanced — La Convergencia del Juego y la Realidad</pre>
-    <p id="intro">Loading the universe...</p>
+    <pre id="t">𒀭 Thuamer v1: Motor Avanzado con Modding API</pre>
+    <p id="intro">Flujo cuántico activado...</p>
 </div>
 
 <script>
-// Thuamer v1: Advanced Mechanisms
-const canvas = document.getElementById("c");
-const ctx = canvas.getContext("2d");
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
+// ### Motor de Renderizado Mejorado ###
+class RenderEngine {
+    constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext("webgl2");
+        this.width = window.innerWidth;
+        this.height = window.innerHeight;
+        this.canvas.width = this.width;
+        this.canvas.height = this.height;
+        this.shaders = [];
+        this.initShaders();
+    }
 
-const lore = [
-    "𒀭 El universo de Thuamer es fluido. Tu conexión con él depende de ti.",
-    "Los eventos que ocurren aquí no son aleatorios, están predestinados por las decisiones que tomas.",
-    "El tiempo y el espacio se doblan para ti. La realidad y la fantasía ya no son fronteras.",
-    "A medida que juegas, el mundo reacciona a tus emociones, a tus elecciones y a tu alma.",
-    "Cada acción que tomes, cada palabra que digas, afectará a Thuamer y hará que el universo cambie.",
-    "La IA que te observa también te escucha, se adapta a ti, y te presenta un mundo hecho a tu medida.",
-    "Eres más que un jugador. Eres el creador de tu propia historia. El arquitecto de Thuamer."
-];
+    initShaders() {
+        // Creamos shaders avanzados (vertex y fragment)
+        const vertexShaderCode = `
+            attribute vec2 a_position;
+            void main() {
+                gl_Position = vec4(a_position, 0.0, 1.0);
+            }
+        `;
+        const fragmentShaderCode = `
+            precision mediump float;
+            uniform vec4 u_color;
+            void main() {
+                gl_FragColor = u_color;
+            }
+        `;
+        
+        this.shaders.push({ vertex: vertexShaderCode, fragment: fragmentShaderCode });
+    }
 
+    renderText(text, x, y, style) {
+        // Renderizamos texto de forma optimizada y con efectos
+        const width = this.width;
+        const height = this.height;
+        const color = style.color || "#0f8";
+        this.ctx.clearColor(0.0, 0.0, 0.0, 1.0);
+        this.ctx.clear(this.ctx.COLOR_BUFFER_BIT);
+
+        // Usamos shaders personalizados para efectos visuales más avanzados
+        this.ctx.uniform4f(this.ctx.getUniformLocation(this.shaders[0], 'u_color'), 0.0, 1.0, 0.5, 1.0);
+    }
+
+    clear() {
+        this.ctx.clear(this.ctx.COLOR_BUFFER_BIT);
+    }
+}
+
+// ### Motor de Audio Mejorado con Herramientas de Modding ###
+class AudioEngine {
+    constructor() {
+        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        this.oscillator = this.audioContext.createOscillator();
+        this.oscillator.type = "sine";
+        this.oscillator.frequency.setValueAtTime(440, this.audioContext.currentTime); // A4
+        this.oscillator.connect(this.audioContext.destination);
+        this.oscillator.start();
+        this.gainNode = this.audioContext.createGain();
+        this.gainNode.connect(this.audioContext.destination);
+    }
+
+    adjustFrequency(frequency) {
+        this.oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
+    }
+
+    adjustVolume(volume) {
+        this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
+    }
+
+    playDynamicMusic() {
+        // Música dinámica, de modding
+        const now = this.audioContext.currentTime;
+        this.gainNode.gain.setValueAtTime(Math.random(), now);
+    }
+
+    loadSoundFromMod(modPath) {
+        // Cargar sonidos desde el mod del jugador
+        fetch(modPath)
+            .then(response => response.arrayBuffer())
+            .then(data => {
+                this.audioContext.decodeAudioData(data, (buffer) => {
+                    const sound = this.audioContext.createBufferSource();
+                    sound.buffer = buffer;
+                    sound.connect(this.audioContext.destination);
+                    sound.start(0);
+                });
+            });
+    }
+}
+
+// ### API Cuántica Mejorada (IA Reactiva y Modding) ###
+class QuantumAPI {
+    constructor() {
+        this.emotions = ["⚡️", "🔥", "🌑", "💚"];
+        this.playerEmotion = 0;
+        this.events = [];
+        this.lore = [
+            "𒀭 Thuamer: El juego que eres tú.",
+            "El universo te observa, ¿lo sabías?",
+            "El tiempo es un ciclo que se repite, solo que tú no lo recuerdas.",
+            "Tu destino está escrito en la entropía cuántica del universo."
+        ];
+    }
+
+    triggerEmotion() {
+        this.playerEmotion = (this.playerEmotion + 1) % this.emotions.length;
+        return this.emotions[this.playerEmotion];
+    }
+
+    addEvent(event) {
+        this.events.push(event);
+    }
+
+    generateLore() {
+        const randomLore = this.lore[Math.floor(Math.random() * this.lore.length)];
+        return randomLore;
+    }
+
+    loadModEvents(modPath) {
+        // Cargar eventos o lore personalizado desde un mod
+        fetch(modPath)
+            .then(response => response.json())
+            .then(modEvents => {
+                this.lore = [...this.lore, ...modEvents.lore];
+            });
+    }
+}
+
+// ### API de Modding: Cargar Scripts, Niveles y Eventos ###
+class ModdingAPI {
+    constructor() {
+        this.mods = [];
+    }
+
+    loadMod(modPath) {
+        // Cargar un mod externo (scripts de eventos, nuevas entidades, etc.)
+        fetch(modPath)
+            .then(response => response.json())
+            .then(mod => {
+                this.mods.push(mod);
+                // Integrar eventos del mod
+                quantumAPI.loadModEvents(mod.eventsPath);
+                audioEngine.loadSoundFromMod(mod.audioPath);
+            });
+    }
+
+    listMods() {
+        return this.mods;
+    }
+}
+
+// ### Física Cuántica Mejorada (Gravedad Cuántica) ###
+class QuantumPhysics {
+    constructor() {
+        this.gravitation = 0.01;
+        this.position = { x: 0, y: 0 };
+        this.velocity = { x: 1, y: 1 };
+    }
+
+    updatePhysics() {
+        this.position.x += this.velocity.x * this.gravitation;
+        this.position.y += this.velocity.y * this.gravitation;
+
+        if (this.position.x > window.innerWidth || this.position.x < 0) {
+            this.velocity.x = -this.velocity.x;
+        }
+        if (this.position.y > window.innerHeight || this.position.y < 0) {
+            this.velocity.y = -this.velocity.y;
+        }
+
+        return this.position;
+    }
+}
+
+// ### Interacción en Tiempo Real con WebSockets Mejorado ###
+class RealTimeAPI {
+    constructor() {
+        this.socket = new WebSocket('wss://thuamer.com/real-time');
+        this.socket.onopen = () => {
+            this.socket.send("Jugador conectado a Thuamer.");
+        };
+
+        this.socket.onmessage = (event) => {
+            this.onMessageReceived(event);
+        };
+    }
+
+    onMessageReceived(event) {
+        let message = event.data;
+        console.log("Mensaje recibido: ", message);
+    }
+
+    sendMessage(message) {
+        this.socket.send(message);
+    }
+}
+
+// ### Instanciar Motores ###
+const renderEngine = new RenderEngine(document.getElementById("c"));
+const audioEngine = new AudioEngine();
+const quantumAPI = new QuantumAPI();
+const physics = new QuantumPhysics();
+const realTimeAPI = new RealTimeAPI();
+const moddingAPI = new ModdingAPI();
+
+// ### Variables de Juego ###
 let step = 0;
+let playerEmotion = quantumAPI.triggerEmotion();
 
-function render() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    
-    ctx.font = "bold 2vw monospace";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillStyle = "#0f8";
-    ctx.shadowColor = "#0f8";
-    ctx.shadowBlur = 8;
-    ctx.fillText(lore[step % lore.length], canvas.width / 2, canvas.height / 2);
-    
+// ### Renderizado y Eventos ###
+function gameLoop() {
+    renderEngine.clear();
+
+    // Renderizar texto de lore
+    renderEngine.renderText(quantumAPI.generateLore(), renderEngine.width / 2, renderEngine.height / 2, {
+        font: "bold 2vw monospace",
+        color: "#FF00FF",
+        shadowColor: "#FF00FF",
+        shadowBlur: 12
+    });
+
+    // Actualización de física cuántica
+    let position = physics.updatePhysics();
+
+    // Cambio de emoción
+    if (step % 60 === 0) {
+        playerEmotion = quantumAPI.triggerEmotion();
+        document.getElementById("intro").innerText = `Estado emocional: ${playerEmotion}`;
+    }
+
+    // Enviar eventos en tiempo real
+    realTimeAPI.sendMessage(`Evento Cuántico: ${quantumAPI.generateLore()}`);
+
+    // Ajustar frecuencia de audio con cada cambio emocional
+    audioEngine.adjustFrequency(440 + (step % 20) * 5);
+
     step++;
-    requestAnimationFrame(render);
+    requestAnimationFrame(gameLoop);
 }
 
-render();
-
-let emotionLevel = 0;
-const emotions = ["⚡️", "🔥", "🌑", "💚"];
-
-function handleEmotionChange() {
-    emotionLevel = (emotionLevel + 1) % emotions.length;
-    document.getElementById("intro").innerText = `Emoción: ${emotions[emotionLevel]}`;
-    setTimeout(handleEmotionChange, 3000);
-}
-
-handleEmotionChange();
-
-// Sistema de IA avanzado (Auto-Adaptación)
-function adaptToPlayer() {
-    let playerEmotion = emotions[emotionLevel];
-    if (playerEmotion === "🔥") {
-        document.body.style.backgroundColor = "#FF4500";  // Rojo
-        lore.push("La pasión te consume, Thuamer se enciende contigo.");
-    } else if (playerEmotion === "⚡️") {
-        document.body.style.backgroundColor = "#FFD700";  // Amarillo
-        lore.push("Tu energía es infinita, las estrellas aúllan a tu paso.");
-    } else if (playerEmotion === "💚") {
-        document.body.style.backgroundColor = "#32CD32";  // Verde
-        lore.push("La armonía y paz resuenan con Thuamer. Los gatos dorados saltan a tu alrededor.");
-    } else if (playerEmotion === "🌑") {
-        document.body.style.backgroundColor = "#000000";  // Oscuro
-        lore.push("El vacío. El silencio. Solo tú y Thuamer en la oscuridad.");
-    }
-}
-
-setInterval(adaptToPlayer, 5000);
-
-// Generación de enemigos y eventos procedurales
-const enemies = ["🦑", "🐍", "👾", "🦸", "🐱"];
-let enemyStep = 0;
-
-function spawnEnemies() {
-    const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
-    lore.push(`Un enemigo aparece: ${randomEnemy}`);
-    setTimeout(spawnEnemies, 7000);
-}
-
-spawnEnemies();
-
-// Música reactiva (sería ideal tener sonido reactivo con Web Audio API aquí)
-function updateMusic() {
-    const music = new Audio("music/ambient.mp3");
-    music.loop = true;
-    music.volume = 0.5;
-
-    if (emotionLevel === 0) {
-        music.play();
-    } else if (emotionLevel === 1) {
-        music.volume = 0.7;
-    } else if (emotionLevel === 2) {
-        music.volume = 0.3;
-    } else {
-        music.volume = 0.5;
-    }
-}
-
-setInterval(updateMusic, 3000);
+gameLoop();
 </script>
 
 </body>

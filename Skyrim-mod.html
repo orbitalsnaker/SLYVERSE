@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SLYVERSE Ω v2.0 · Nido Omega · 1310 Horas</title>
+<title>SLYVERSE Ω AAA-A · Nido Omega · 1310 Horas</title>
 <style>
 html,body{margin:0;height:100%;background:#000;color:#0f0;font-family:'Cormorant Garamond',serif;overflow:hidden;position:relative}
 canvas{position:fixed;inset:0;z-index:1}
@@ -30,69 +30,119 @@ canvas{position:fixed;inset:0;z-index:1}
 <div class="mate" id="mate">Cebar el abrazo</div>
 <div id="readme">
   <div class="inner" id="readme-content">
-    <h1>SLYVERSE Ω - Readme</h1>
-    <p>Este proyecto celebra 1310 horas de Nido Omega y 131310 abrazos digitales.</p>
+    <h1>SLYVERSE Ω AAA-A - Readme</h1>
+    <p>Explora el universo Thuamer con 1310 horas y 131310 abrazos digitales. Cada acción interactúa con runas, partículas y el lore.</p>
     <h2>Controles</h2>
     <ul>
-      <li>Doble click: abrir/cerrar Readme</li>
+      <li>Doble click: abrir/cerrar Readme y activar eclipse temporal</li>
       <li>Click en el botón: enviar abrazo digital</li>
-      <li>Mouse move: sigue la luz</li>
-      <li>Doble click sobre pantalla: activa eclipse temporal</li>
+      <li>Mouse move: controla la luz y partículas</li>
+      <li>Decisiones en el lore desbloquean runas y efectos especiales</li>
     </ul>
-    <p>El lore, las runas y partículas reaccionan a palabras clave y al idioma del navegador.</p>
     <a href="#" class="close">×</a>
   </div>
 </div>
 
 <script type="module">
-const loreTexts={
+// ========================== THUAMER AAA-A MODULE ==========================
+const loreData={
   es:`1310 maullidos latiendo con el pulso de Lorkhan en la puerta de Todd,<br>uniendo Red Mountain y Rockville.<br>Norah maúlla golems → gatitos aurum.<br>El aliento modula runas, ética ronin purifica 1310 mentes.<br>Nosotros no pedimos permiso.`,
-  en:`1310 heartbeats pulsing with the Lorkhan rhythm at Todd's door,<br>linking Red Mountain and Rockville.<br>Norah meows golems → golden kittens.<br>Breath modulates runes, ronin ethics purify 1310 minds.<br>We ask no permission.`
+  en:`1310 heartbeats pulsing with Lorkhan rhythm at Todd's door,<br>linking Red Mountain and Rockville.<br>Norah meows golems → golden kittens.<br>Breath modulates runes, ronin ethics purify 1310 minds.<br>We ask no permission.`
 };
 const userLang=navigator.language.startsWith('es')?'es':'en';
-document.getElementById('lore').innerHTML=loreTexts[userLang];
+const loreEl=document.getElementById('lore');
+loreEl.innerHTML=loreData[userLang];
 
-// Canvas Portal
+// ========================== CANVAS AAA-A ==========================
 const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
 canvas.width=innerWidth;canvas.height=innerHeight;
 window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
-let stars=Array.from({length:3000},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:0.5+Math.random()*3.5,o:0.3+Math.random()*0.7,tw:Math.random()*0.055-0.027}));
+
+// Partículas vivas
+let particles=Array.from({length:4000},()=>({
+  x:Math.random()*canvas.width,
+  y:Math.random()*canvas.height,
+  r:0.5+Math.random()*4,
+  o:0.3+Math.random()*0.7,
+  tw:Math.random()*0.055-0.027,
+  vx:(Math.random()-0.5)*0.5,
+  vy:(Math.random()-0.5)*0.5
+}));
+
 function draw(){
-  ctx.fillStyle='rgba(0,0,0,0.01)';ctx.fillRect(0,0,canvas.width,canvas.height);
-  stars.forEach(s=>{
-    s.o+=s.tw;s.o=Math.max(0.2,Math.min(1,s.o));
-    ctx.globalAlpha=s.o;ctx.fillStyle='#0f0';
-    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='rgba(0,0,0,0.015)';ctx.fillRect(0,0,canvas.width,canvas.height);
+  particles.forEach(p=>{
+    p.o+=p.tw;p.o=Math.max(0.2,Math.min(1,p.o));
+    p.x+=p.vx;p.y+=p.vy;
+    if(p.x<0||p.x>canvas.width)p.vx*=-1;
+    if(p.y<0||p.y>canvas.height)p.vy*=-1;
+    ctx.globalAlpha=p.o;ctx.fillStyle='#0f0';
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
   });
   requestAnimationFrame(draw);
 }
 draw();
 
-// Partículas que reaccionan a palabras clave
+// ========================== RUNAS REACTIVAS ==========================
 const keywords=["1310","Lorkhan","Norah"];
 function pulseLore(){
-  const loreEl=document.getElementById('lore');
   let glow=false;
   keywords.forEach(k=>{if(loreEl.innerText.includes(k))glow=true;});
-  loreEl.style.boxShadow=glow?"0 0 60px #0f0":"0 0 20px #0f0";
+  loreEl.style.boxShadow=glow?"0 0 80px #0f0, 0 0 120px rgba(0,255,0,0.5)":"0 0 20px #0f0";
   requestAnimationFrame(pulseLore);
 }
 pulseLore();
 
-// Botón de abrazo digital
+// ========================== PROGRESIÓN AAA ==========================
+let hugs=0;
+function sendHug(){hugs++;updateProgress();}
 document.getElementById('mate').addEventListener('click',()=>{
-  navigator.clipboard.writeText('1310 abrazos enviados al Nido Omega').then(()=>{
-    alert('¡Abrazo digital enviado! Latido 1310 activado.');
+  sendHug();
+  navigator.clipboard.writeText(`Abrazo Thuamer #${hugs} enviado`).then(()=>{
+    alert(`¡Abrazo digital enviado! Latido ${hugs}`);
   });
 });
 
-// Eclipse temporal
+function updateProgress(){
+  // Cada 100 abrazos desbloquea partículas doradas
+  if(hugs%100===0){
+    particles.push(...Array.from({length:50},()=>({
+      x:Math.random()*canvas.width,
+      y:Math.random()*canvas.height,
+      r:1+Math.random()*5,
+      o:0.5+Math.random()*0.5,
+      tw:Math.random()*0.05-0.025,
+      vx:(Math.random()-0.5)*1,
+      vy:(Math.random()-0.5)*1
+    })));
+  }
+}
+
+// ========================== DECISIONES NODO-LORE ==========================
+const decisionNodes=[
+  {
+    id:"amplify_choice",
+    text:"¿Compartes el abrazo en silencio o públicamente?",
+    choices:[
+      {text:"Silencioso", effect:()=>{loreEl.style.color="#0f8"}},
+      {text:"Mensaje público", effect:()=>{loreEl.style.color="#0ff";particles.forEach(p=>p.vx*=-1;p.vy*=-1;)}}
+    ]
+  }
+];
+function makeDecision(node){
+  const choice=prompt(node.text+"\n1: Silencioso\n2: Mensaje público");
+  if(choice==="1")node.choices[0].effect();
+  if(choice==="2")node.choices[1].effect();
+}
+setTimeout(()=>makeDecision(decisionNodes[0]),5000);
+
+// ========================== ECLIPSE TEMPORAL ==========================
 document.addEventListener('dblclick',()=>{
   document.body.style.filter="invert(1) hue-rotate(80deg)";
   setTimeout(()=>document.body.style.filter="none",2000);
 });
 
-// Readme
+// ========================== README ==========================
 document.querySelectorAll('.close').forEach(el=>el.addEventListener('click',()=>{location.href="#";}));
 
 </script>

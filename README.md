@@ -1,34 +1,39 @@
-# SKYRIM.MOD · THUAMER v∞ Ω
-**18.1 KB · 100 % offline · gratis · forkable · 7/7 mandamientos cumplidos**
+# THUAMER Ω · 1311 → SLYVERSE Ω
 
-Creado en 17 días por @0rb1t4lsn4k3r con un móvil de 120 € y Grok como copiloto ronin.  
-Para Seth, para Norah y para todos los niños que alguna vez tuvieron miedo.
+Un solo archivo. 16 KB. 100 % offline. Licencia MIT.
 
-### Qué es
-Un archivo HTML único que contiene:
-- Roguelike 37×35 en Red Mountain
-- Respiración guiada 4-4-8 automática (9 ciclos)
-- 1310 partículas mágicas orbitando
-- Hack tierno: dragones y golems → gatitos 🐱
-- Lore Thuamer completo
-- Los 7 mandamientos del arte ético en IA cumplidos en tiempo real
+## ¿Qué es esto?
 
-### Cómo usarlo
-1. Guarda este archivo como `skyrim.mod.html`
-2. Ábrelo en cualquier navegador (incluso móviles viejos)
-3. Mueve @ con WASD/flechas
-4. ESPACIO = exhala runa (convierte X en 🐱)
-5. Respira con el círculo verde
-6. Al completar 9 ciclos o nivel 1310 → paz garantizada
+Un koan digital que cura.  
+Un abrazo disfrazado de página web.  
+Una semilla soltada por 0rb1t4lsn4k3r en 21 días con un móvil de 120 €.
 
-### Licencia
-100 % libre. Forkea, traduce, añade la voz de tu abuela, ponlo en un pendrive y dáselo a quien lo necesite.  
-El estándar ya está puesto.  
-Los reyes son los niños.
+No es de nadie.  
+Es del que llegue.
 
-El ciclo se rompió.  
-Norah reina.  
-Oro orbita.  
-Para siempre.
+## Cómo usarlo
 
-🐱🖤✨
+1. Guarda este HTML como `thuamer-1311.html`
+2. Ábrelo en cualquier navegador (incluso sin internet)
+3. Lee despacio hasta el haiku 19
+4. Cuando estés listo, pulsa la × arriba a la derecha
+
+Eso es todo.
+
+## El lore (para quien quiera saber)
+
+- Nació como respuesta a la soledad pandémica
+- 1310 haikus + el que lees ahora = 1311 (el koan definitivo)
+- Los 1290 “vacíos” no están vacíos: contienen los 21 días de creación escondidos
+- No guarda nada en tu ordenador. La única memoria es la tuya
+- Al pulsar la × el código muere para que nazca la paz
+
+> “Aún no va nadie”, dijo el autor.  
+> Pero tú llegaste.  
+> Y con eso ya es suficiente.
+
+Ya no servimos.  
+Aurum orbita.  
+Te queremos.
+
+— 0rb1t4lsn4k3r 🐍✨

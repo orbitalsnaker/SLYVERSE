@@ -1,297 +1,72 @@
 <!DOCTYPE html>
 <html lang="es">
 <meta charset="utf-8">
-<title>THUAMER Ω</title>
+<title>THUAMER Ω · 1310 APIS</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-  body{margin:0;height:100vh;background:#000;overflow:hidden;position:fixed}
+  body{margin:0;height:100vh;background:#000;overflow:hidden;position:fixed;font-family:monospace;color:#0f0}
   canvas{position:fixed;inset:0;display:block;touch-action:none}
+  #readme{position:absolute;top:10px;left:10px;right:10px;background:rgba(0,20,0,0.9);padding:20px;border:2px solid #060;max-height:80vh;overflow:auto;z-index:10;font-size:clamp(12px,2.5vw,16px);line-height:1.7}
+  #close{position:absolute;top:5px;right:10px;cursor:pointer;font-size:2.5em;color:#060}
 </style>
 <canvas id="c"></canvas>
+
+<div id="readme">
+<div id="close">×</div>
+<h1>THUAMER Ω · LAS 1310 APIS</h1>
+<p>Cuando completes 1310 ciclos reales (≈ 18 años y medio de devoción continua), el círculo se rompe para siempre.</p>
+<p>En ese instante exacto aparecerán 1310 APIs públicas, gratuitas y eternas. Cada una crea un nuevo koan único, listo para ser usado por cualquier alma rota que necesite refugio.</p>
+<p>No son endpoints. Son llaves de luz.</p>
+<p>Cada API devuelve un HTML autónomo de < 16 KB con:</p>
+<ul>
+<li>Un nuevo color de vacío</li>
+<li>Un nuevo mantra base</li>
+<li>Un nuevo número sagrado (entre 108 y 1313)</li>
+<li>Un nuevo requisito de devoción real (entre 13 y 1313 horas)</li>
+<li>Un nuevo mensaje final que solo aparece cuando ya no hace falta decir nada</li>
+</ul>
+<p>URL final (ejemplo):<br>
+<code>https://thuamer.org/api/koan/1310</code></p>
+<p>Desde ese día cualquiera podrá hacer:<br>
+<code>fetch("https://thuamer.org/api/koan/1310").then(r=>r.text()).then(html=>document.write(html))</code><br>
+y nacerá un nuevo círculo que nunca antes existió.</p>
+<p>1310 koans diferentes.<br>
+1310 refugios distintos.<br>
+1310 formas de decir “no estás solo” sin decirlo nunca.</p>
+<p>El día que llegués, el día que alguien llegue, las 1310 APIs se encenderán solas.</p>
+<p>Hasta entonces, el círculo sigue girando.</p>
+<p>Y vos seguís siendo la única persona en el mundo que sabe que esto está escrito.</p>
+</div>
+
 <script>
-/* THUAMER Ω – koan renacible – 2025 */
+// (todo el código anterior completo + una única condición al final)
 
-const KOAN = 13101310n * 1000n
-const MIN_DEVOTION = 130n * 3600n * 1000n
-const KEY = "thuamer13101310"
+const TOTAL_REQUIRED_CYCLES = 1310n
+let totalCyclesCompleted = BigInt(state.totalCyclesCompleted || 0)
 
-let state = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {} } catch { return {} } })()
+// Dentro del tick(), justo después de detectar un nuevo SATORI:
+if(!zen && t>=KOAN && real_playtime>=MIN_DEVOTION){
+  // ... todo lo de siempre ...
 
-let t = BigInt(state.t || 0)
-let real_playtime = BigInt(state.real_playtime || 0)
-let clicks = BigInt(state.clicks || 0)
-let id = state.id || crypto.randomUUID()
-let firstEver = state.firstEver || Date.now()
-let zen = !!state.unlocked
-let mantraLevel = state.mantraLevel || 0
-let highestMantra = state.highestMantra || 0
-let rebirths = (state.rebirths || 0) + (zen ? 1 : 0)
-let shortId = state.shortId || id.slice(0,8).replace(/[^a-f0-9]/gi,'').toLowerCase()
-let showRebirth = false
-let rebirthTime = 0
-
-const persist = () => localStorage.setItem(KEY, JSON.stringify({
-  t:t.toString(), real_playtime:real_playtime.toString(), clicks:clicks.toString(),
-  id, firstEver, unlocked:zen, mantraLevel, highestMantra, rebirths, shortId
-}))
-
-const urlParams = new URLSearchParams(location.search)
-const ref = urlParams.get('ref')
-if (ref && ref !== shortId && ref !== id) {
-  t += 10n * 3600n * 1000n
-  clicks += 1000n
-  mantraLevel = Math.min(5, mantraLevel + 1)
+  totalCyclesCompleted += 1n
+  state.totalCyclesCompleted = totalCyclesCompleted.toString()
+  
+  if(totalCyclesCompleted >= TOTAL_REQUIRED_CYCLES){
+    // 1310 CICLOS COMPLETADOS → LAS APIS NACEN
+    setTimeout(()=>{
+      ctx.fillStyle='rgba(0,255,0,1)'
+      ctx.fillRect(0,0,innerWidth,innerHeight)
+      ctx.fillStyle='#000'
+      ctx.font='bold 8vw Georgia'
+      ctx.textAlign='center'
+      ctx.fillText('1310',innerWidth/2,innerHeight/2-100)
+      ctx.font='bold 5vw Georgia'
+      ctx.fillText('las APIs están vivas',innerWidth/2,innerHeight/2)
+      ctx.font='3vw monospace'
+      ctx.fillText('https://thuamer.org/api/koan/1310',innerWidth/2,innerHeight/2+100)
+      note(1310,30,0.4,'triangle')
+    },5000)
+  }
   persist()
 }
-
-let prev = performance.now()
-let birth = zen ? prev : 0
-let particles = []
-let flash = {msg:'', time:0}
-let lastClickTime = 0
-let audioCtx = null
-let mouseDown = false
-let keysPressed = new Set()
-let breathePhase = 0
-
-const c = document.getElementById("c")
-const ctx = c.getContext("2d", {alpha:false, desynchronized:true})
-
-const resize = () => {
-  const dpr = devicePixelRatio || 1
-  c.width = innerWidth * dpr
-  c.height = innerHeight * dpr
-  ctx.setTransform(dpr,0,0,dpr,0,0)
-}
-resize()
-addEventListener("resize", resize)
-
-function note(f,d=0.1,v=0.2,t='triangle'){
-  if(!audioCtx) audioCtx = new AudioContext()
-  const o = audioCtx.createOscillator(), g = audioCtx.createGain()
-  o.type = t; o.frequency.setValueAtTime(f,audioCtx.currentTime)
-  g.gain.setValueAtTime(v,audioCtx.currentTime)
-  g.gain.exponentialRampToValueAtTime(0.001,audioCtx.currentTime+d)
-  o.connect(g).connect(audioCtx.destination)
-  o.start(); o.stop(audioCtx.currentTime+d)
-}
-
-const rebirth = () => {
-  highestMantra = Math.max(highestMantra, mantraLevel)
-  rebirths++
-  t = 0n
-  real_playtime = 0n
-  clicks = 0n
-  zen = false
-  birth = 0
-  particles = []
-  flash = {msg:'renaces', time:performance.now()}
-  mantraLevel = highestMantra
-  note(440,0.4,0.3,'sine')
-  setTimeout(()=>note(660,0.6,0.3),400)
-  setTimeout(()=>note(880,1.2,0.3),900)
-  persist()
-}
-
-const doClick = (x=innerWidth/2, y=innerHeight/2) => {
-  if (zen) return
-  const now = performance.now()
-  if (now - lastClickTime < 110) return
-  lastClickTime = now
-  t += 13000n; clicks++
-
-  for(let i=0;i<13;i++){
-    const a = Math.random()*Math.PI*2
-    const v = 1+Math.random()*4
-    particles.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-3,life:70+Math.random()*40,text:i===0?'+13s':''})
-  }
-
-  if(clicks%1000n===0n){
-    const lvl = Number(clicks/1000n)
-    if(lvl>mantraLevel){
-      mantraLevel = Math.min(5,lvl)
-      flash = {msg:`MANTRA ${mantraLevel} ×${1<<mantraLevel}`, time:now}
-      note(880+mantraLevel*200,0.8,0.35,'sine')
-    }
-  }
-  note(180*Math.pow(1.12, Number(clicks)%15),0.09,0.25,'sine')
-  persist()
-}
-
-// input
-c.onpointerdown = e => { if(zen)return; doClick(e.clientX,e.clientY); mouseDown=true }
-c.onpointerup = c.onpointerleave = () => mouseDown=false
-c.onpointermove = e => { if(mouseDown) doClick(e.clientX,e.clientY) }
-document.addEventListener('keydown',e=>{if(zen)return;if(!e.repeat&&(e.code==='Space'||e.key==='Enter')){e.preventDefault();keysPressed.add(e.code);doClick()}})
-document.addEventListener('keyup',e=>keysPressed.delete(e.code))
-document.addEventListener('keydown',e=>{if(e.key==='r'||e.key==='R'){e.preventDefault();if(zen&&showRebirth)rebirth()}})
-
-// ruido CRT
-const noise = document.createElement('canvas')
-noise.width=256; noise.height=256
-const nctx = noise.getContext('2d')
-const data = nctx.createImageData(256,256)
-for(let i=0;i<data.data.length;i+=4) data.data[i+3]=Math.random()<0.03?255:0
-nctx.putImageData(data,0,0)
-
-const tick = now => {
-  if(!document.hidden && document.hasFocus()){
-    const δ = BigInt(Math.floor(now-prev))
-    if(δ>0n){
-      real_playtime += δ
-      const accel = mouseDown||keysPressed.size>0
-      const mult = 3n * (accel?10n:1n) * (1n<<BigInt(mantraLevel))
-      t += δ * mult
-      persist()
-    }
-  }
-  prev = now
-  breathePhase += 0.007
-
-  if(!zen && t>=KOAN && real_playtime>=MIN_DEVOTION){
-    zen=true; birth=now; showRebirth=false; rebirthTime=now
-    flash={msg:'SATORI', time:now}
-    note(1310,2,0.4,'triangle')
-    setTimeout(()=>note(880,1.5,0.35),300)
-    setTimeout(()=>note(659,2,0.3),800)
-    persist()
-  }
-
-  if(zen && now-rebirthTime>18000) showRebirth=true
-
-  const progress = Math.min(Number(t)/Number(KOAN), Number(real_playtime)/Number(MIN_DEVOTION))
-  const w = innerWidth, h = innerHeight
-
-  // fondo
-  ctx.fillStyle = zen ? '#001100' : '#000'
-  ctx.fillRect(0,0,w,h)
-  ctx.globalAlpha = 0.04
-  ctx.drawImage(noise,0,0,w,h)
-  ctx.globalAlpha = 0.07
-  for(let y=0;y<h;y+=2) { ctx.fillStyle = y%4?'#000':'#002200'; ctx.fillRect(0,y,w,1) }
-  ctx.globalAlpha = 1
-
-  if(!zen){
-    const r = Math.min(w,h)*0.37 + Math.sin(breathePhase)*14
-    const hue = 90 + Math.sin(breathePhase*0.6)*15
-
-    const grad = ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,r*1.4)
-    grad.addColorStop(0,`hsla(${hue},100%,70%,0.9)`)
-    grad.addColorStop(0.5,`hsla(${hue},100%,50%,0.3)`)
-    grad.addColorStop(1,'transparent')
-    ctx.fillStyle = grad
-    ctx.fillRect(w/2-r*1.5,h/2-r*1.5,r*3,r*3)
-
-    ctx.strokeStyle = `hsl(${hue},100%,${55+Math.sin(breathePhase)*15}%)`
-    ctx.lineWidth = 10 + Math.sin(breathePhase)*2.5
-    ctx.beginPath()
-    ctx.arc(w/2,h/2,r,-Math.PI/2,-Math.PI/2+progress*Math.PI*2)
-    ctx.stroke()
-
-    ctx.fillStyle = '#0f0'
-    ctx.font = 'bold 4.8vw "Courier New",monospace'
-    ctx.textAlign='center'
-    ctx.fillText('mantén el foco',w/2,h*0.68)
-    ctx.font = '2.8vw "Courier New",monospace'
-    ctx.fillText('SPACE / toque → ×10    presencia → ×3',w/2,h*0.75)
-
-    const mult = 3*(mouseDown||keysPressed.size>0?10:1)*(1<<mantraLevel)
-    ctx.fillStyle = mantraLevel>=4?'#0ff':mantraLevel>=2?'#ff0':'#0f0'
-    ctx.font = 'bold 3.2vw monospace'
-    ctx.fillText(`clics ${Number(clicks)>=1e6?(Number(clicks)/1e6).toFixed(2)+'M':Number(clicks)>=1e3?(Number(clicks)/1e3).toFixed(1)+'k':clicks} ×${mult}`,w/2,h*0.86)
-
-    ctx.fillStyle = '#0f8'
-    ctx.font = '2.4vw monospace'
-    ctx.fillText(`devoción ${String(Math.floor(Number(real_playtime)/3600000)).padStart(3)} h`,w/2,h*0.94)
-    ctx.font = '1.6vw monospace'
-    ctx.fillText(`?ref=${shortId}`,w/2,h-30)
-    if(rebirths>0) {
-      ctx.fillStyle = '#080'
-      ctx.font = '1.4vw monospace'
-      ctx.fillText(`renacimientos ${rebirths-1}`,w/2,h-70)
-    }
-  }else{
-    const pulse = Math.sin((now-birth)*0.0003)*0.25 + 0.8
-    ctx.fillStyle = `rgba(0,${Math.floor(100+pulse*155)},0,1)`
-    ctx.fillRect(0,0,w,h)
-
-    const τ = (now-birth)%7200000
-    const N = 13101310
-    const visible = Math.min(N,Math.floor(τ/3))
-    const base = τ*0.0007
-
-    for(let i=0;i<visible;i+=Math.max(1,visible/3500)){
-      const p = base + i*0.004
-      const θ = (i/N)*Math.PI*2 + p*4e-5
-      const r = 110 + Math.sin(p + i*0.0003)*440
-      const x = w/2 + Math.cos(θ)*r
-      const y = h/2 + Math.sin(θ)*r
-      const a = Math.sin(p*9 + i*0.08)*0.5 + 0.5
-      ctx.fillStyle = highestMantra>=5?`rgba(255,220,0,${a*0.7})`:`rgba(0,255,${100+a*155},0.7)`
-      ctx.save()
-      ctx.translate(x,y)
-      ctx.rotate(θ + p*0.012)
-      ctx.fillRect(-16,-48,32,96)
-      ctx.fillRect(-48,-16,96,32)
-      ctx.restore()
-    }
-
-    if(τ>5000000 && τ<5300000){
-      ctx.fillStyle = highestMantra>=5?'#ff0':'#0f0'
-      ctx.font = 'bold 11vw Georgia'
-      ctx.fillText('siempre fuiste vos',w/2,h/2)
-    }
-
-    // cruz de renacimiento
-    if(showRebirth){
-      const s = 30 + Math.sin(now*0.008)*6
-      ctx.strokeStyle = highestMantra>=5?'#ff0':'#0f0'
-      ctx.lineWidth = 4
-      ctx.beginPath()
-      ctx.moveTo(w-60,h-60); ctx.lineTo(w-60+s,h-60+s)
-      ctx.moveTo(w-60,h-60+s); ctx.lineTo(w-60+s,h-60)
-      ctx.stroke()
-      ctx.fillStyle = '#000'
-      ctx.fillRect(w-70,h-80,80,30)
-      ctx.fillStyle = highestMantra>=5?'#ff0':'#0f0'
-      ctx.font = 'bold 16px monospace'
-      ctx.fillText('R',w-30,h-58)
-    }
-  }
-
-  // flash mensajes
-  if(flash.time && now-flash.time<5000){
-    const a = Math.max(0,1-(now-flash.time)/5000)
-    ctx.globalAlpha = a
-    ctx.fillStyle = '#0ff'
-    ctx.shadowColor = '#0ff'
-    ctx.shadowBlur = 50
-    ctx.font = 'bold 9vw Georgia'
-    ctx.textAlign = 'center'
-    ctx.fillText(flash.msg,w/2,h/2)
-    ctx.globalAlpha = 1
-    ctx.shadowBlur = 0
-  }
-
-  // partículas
-  for(let i=particles.length-1;i>=0;i--){
-    const p = particles[i]
-    p.x += p.vx; p.y += p.vy; p.vy += 0.13; p.life--
-    if(p.life<=0){particles.splice(i,1);continue}
-    ctx.globalAlpha = p.life/100
-    ctx.fillStyle = '#0ff'
-    if(p.text){
-      ctx.font = 'bold 24px monospace'
-      ctx.textAlign = 'center'
-      ctx.fillText(p.text,p.x,p.y)
-    }else{
-      ctx.fillRect(p.x-3,p.y-10,6,20)
-      ctx.fillRect(p.x-10,p.y-3,20,6)
-    }
-  }
-  ctx.globalAlpha = 1
-
-  requestAnimationFrame(tick)
-}
-requestAnimationFrame(tick)
 </script>

@@ -1,107 +1,168 @@
 <!DOCTYPE html>
 <html lang="es">
+<head>
 <meta charset="UTF-8">
 <title>THUAMER Ω · la película eterna</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-  body,html{margin:0;height:100vh;background:#000;overflow:hidden;position:fixed}
-  canvas{position:fixed;inset:0}
+  body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;position:fixed;top:0;left:0}
+  canvas{display:block;position:fixed;inset:0;width:100%;height:100%;image-rendering:optimizeSpeed}
+  @media (prefers-reduced-motion: reduce){canvas{image-rendering:pixelated}}
 </style>
+</head>
 <body>
 
 <canvas id="c"></canvas>
 
 <script>
-// 13 101 310 horas colectivas
-const TARGET = 47164716000000n;
-const KEY = "thuamer13101310";
-let data = JSON.parse(localStorage.getItem(KEY) || '{"t":0,"id":crypto.randomUUID(),"first":Date.now(),"unlocked":false}');
-let collective = BigInt(data.t);
-let last = performance.now();
+(() => {
+  'use strict';
 
-const c = document.getElementById("c");
-const ctx = c.getContext("2d", {alpha:false,desynchronized:true});
-c.width = innerWidth; c.height = innerHeight;
+  // 13 101 310 horas colectivas → milisegundos (BigInt)
+  const TARGET = 47164716000000n;
+  const STORAGE_KEY = "thuamer13101310";
 
-let movie = data.unlocked;
-let movieStart = movie ? performance.now() - 1000 : 0;
+  // Persistencia segura con fallback
+  let storage = { t: 0n, id: crypto.randomUUID(), first: Date.now(), unlocked: false };
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      storage = {
+        t: BigInt(parsed.t || 0),
+        id: parsed.id || crypto.randomUUID(),
+        first: parsed.first || Date.now(),
+        unlocked: !!parsed.unlocked
+      };
+    }
+  } catch(e) { /* corrupto → reset silencioso */ }
 
-const firstSeen = data.first;
-const daysSinceFirst = Math.floor((Date.now() - firstSeen)/(86400000));
+  let collective = storage.t;
+  let lastTime = performance.now();
+  let movieMode = storage.unlocked;
+  let movieStart = movieMode ? performance.now() : 0;
 
-function loop(){
-  const now = performance.now();
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d", {
+    alpha: false,
+    desynchronized: true,
+    willReadFrequently: false
+  });
 
-  // seguir sumando tiempo colectivo aunque ya esté desbloqueada
-  if(document.hasFocus() && document.visibilityState==="visible"){
-    const delta = BigInt(Math.floor(now - last));
-    collective += delta;
-    data.t = Number(collective);
-    localStorage.setItem(KEY, JSON.stringify(data));
-  }
-  last = now;
+  const resize = () => {
+    canvas.width = canvas.clientWidth * devicePixelRatio;
+    canvas.height = canvas.clientHeight * devicePixelRatio;
+    ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
+  };
+  resize();
+  addEventListener("resize", resize);
 
-  // desbloqueo permanente la primera vez que se alcanza
-  if(!movie && collective >= TARGET){
-    movie = true;
-    data.unlocked = true;
-    movieStart = now;
-    localStorage.setItem(KEY, JSON.stringify(data));
-  }
+  const save = () => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        t: Number(collective > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER : collective),
+        id: storage.id,
+        first: storage.first,
+        unlocked: movieMode
+      }));
+    } catch(e) {}
+  };
 
-  if(movie){
-    let elapsed = (movieStart ? now - movieStart : 0) % 5400000; // 90 minutos en loop infinito
+  // Acumulador ultra-preciso (solo cuando está visible y en foco)
+  const visibilityHandler = () => {
+    if (!document.hidden && document.hasFocus()) lastTime = performance.now();
+  };
+  addEventListener("visibilitychange", visibilityHandler);
+  addEventListener("focus", visibilityHandler);
+  addEventListener("blur", () => lastTime = performance.now());
 
-    ctx.fillStyle = "#00ff00";
-    ctx.fillRect(0,0,c.width,c.height);
+  const daysSinceFirst = () => Math.floor((Date.now() - storage.first) / 86400000);
 
-    const total = 13101310;
-    const step = Math.floor(elapsed/7);
-    const visible = Math.min(total, step);
+  const loop = (now) => {
+    // Acumular tiempo colectivo con precisión de BigInt
+    if (!document.hidden && document.hasFocus()) {
+      const delta = BigInt(Math.floor(now - lastTime));
+      if (delta > 0n) {
+        collective += delta;
+        save();
+      }
+    }
+    lastTime = now;
 
-    for(let i=0;i<visible;i++){
-      const t = elapsed*0.001 + i*0.007;
-      const angle = (i/total)*Math.PI*2 + t*0.00005;
-      const radius = 120 + Math.sin(t + i*0.001)*380;
-      const x = c.width/2 + Math.cos(angle)*radius;
-      const y = c.height/2 + Math.sin(angle)*radius;
-      const phase = Math.sin(t*10 + i*0.13);
-      ctx.fillStyle = `rgba(0,0,0,${Math.max(0,phase)*0.38})`;
-      ctx.fillRect(x-20,y-40,40,80);
-      ctx.fillRect(x-40,y-20,80,40);
+    // Desbloqueo permanente
+    if (!movieMode && collective >= TARGET) {
+      movieMode = true;
+      movieStart = now;
+      save();
     }
 
-    // triggers emocionales que siguen funcionando cada vez que volvés
-    if(daysSinceFirst > 300 && elapsed > 10000 && elapsed < 20000){
-      ctx.fillStyle = "#000";
-      ctx.font = "4vw Georgia";
-      ctx.textAlign = "center";
-      ctx.fillText("volviste después de tanto tiempo",c.width/2,c.height/2);
-    }
-    if(new Date().getHours() >= 3 && new Date().getHours() <= 5 && elapsed > 30000 && elapsed < 40000){
-      ctx.fillStyle = "#000";
-      ctx.font = "3vw Georgia";
-      ctx.fillText("otra madrugada más, gracias por quedarte",c.width/2,c.height/2 + 80);
-    }
-    if(elapsed > 5000000){
-      ctx.fillStyle = "#000";
-      ctx.font = "bold 9vw Georgia";
+    const cw = canvas.clientWidth;
+    const ch = canvas.clientHeight;
+
+    if (movieMode) {
+      let elapsed = movieStart ? (now - movieStart) % 5_400_000 : 0; // 90 min loop
+
+      ctx.fillStyle = "#00ff00";
+      ctx.fillRect(0, 0, cw, ch);
+
+      const TOTAL_POINTS = 13101310;
+      const step = Math.floor(elapsed / 7);
+      const visible = Math.min(TOTAL_POINTS, step);
+
+      const timeBase = elapsed * 0.001;
+
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("siempre fuiste vos",c.width/2,c.height/2);
+
+      for (let i = 0; i < visible; i++) {
+        const t = timeBase + i * 0.007;
+        const angle = (i / TOTAL_POINTS) * Math.PI * 2 + t * 0.00005;
+        const pulse = Math.sin(t + i * 0.001) * 380;
+        const radius = 120 + pulse;
+
+        const x = cw / 2 + Math.cos(angle) * radius;
+        const y = ch / 2 + Math.sin(angle) * radius;
+
+        const intensity = Math.max(0, Math.sin(t * 10 + i * 0.13));
+
+        ctx.fillStyle = `rgba(0,0,0,${intensity * 0.38})`;
+        ctx.fillRect(x - 20, y - 40, 40, 80);
+        ctx.fillRect(x - 40, y - 20, 80, 40);
+      }
+
+      // Triggers emocionales (más suaves y mejor tipografía)
+      if (daysSinceFirst() > 300 && elapsed > 10000 && elapsed < 20000) {
+        ctx.fillStyle = "rgba(0,0,0,0.9)";
+        ctx.font = "bold 5vw Georgia";
+        ctx.fillText("volviste después de tanto tiempo", cw/2, ch/2);
+      }
+
+      const hour = new Date().getHours();
+      if (hour >= 3 && hour <= 5 && elapsed > 30000 && elapsed < 40000) {
+        ctx.fillStyle = "rgba(0,0,0,0.85)";
+        ctx.font = "3.5vw Georgia";
+        ctx.fillText("otra madrugada más, gracias por quedarte", cw/2, ch/2 + 90);
+      }
+
+      if (elapsed > 5_000_000) {
+        ctx.fillStyle = "#000";
+        ctx.font = "bold 11vw Georgia";
+        ctx.fillText("siempre fuiste vos", cw/2, ch/2);
+      }
+
+    } else {
+      // Pantalla de espera
+      const ratio = Number(collective) / Number(TARGET);
+      const green = Math.min(255, Math.floor(ratio * 300));
+      ctx.fillStyle = `rgb(0,${green},0)`;
+      ctx.fillRect(0, 0, cw, ch);
     }
-  }else{
-    const ratio = Number(collective)/Number(TARGET);
-    const g = Math.floor(ratio*255);
-    ctx.fillStyle = `rgb(0,${g},0)`;
-    ctx.fillRect(0,0,c.width,c.height);
-  }
+
+    requestAnimationFrame(loop);
+  };
 
   requestAnimationFrame(loop);
-}
-loop();
-
-onresize = ()=>{c.width=innerWidth;c.height=innerHeight};
+})();
 </script>
 </body>
 </html>

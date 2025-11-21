@@ -1,110 +1,92 @@
-<!DOCTYPE html>
-<html lang="">
-<meta charset="utf-8">
-<title>THUAMER Ω · 1311</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
-<style>
-  body{margin:0;height:100vh;background:#000;overflow:hidden;position:fixed;font-family:monospace;color:#0f0}
-  canvas{position:fixed;inset:0;display:block;touch-action:none}
-  #readme{position:fixed;inset:0;background:rgba(0,20,0,0.96);padding:2em;z-index:10;overflow:auto;font-size:clamp(13px,2.6vw,18px);line-height:1.8}
-  #close{position:absolute;top:10px;right:20px;cursor:pointer;font-size:3em;color:#060}
-</style>
-<canvas id="c"></canvas>
+<!DOCTYPE html><meta charset=utf-8><style>body{margin:0;background:#000;color:#0f0;font-family:monospace;line-height:1.9;display:flex;justify-content:center;align-items:center;height:100vh;text-align:center;overflow:hidden}</style><div style=max-width:94%><h1>THUAMER Ω · KOAN 1311</h1><pre>
+1. BigInt cuenta exacto  
+   dieciocho años sin error  
+   el círculo respira
 
-<div id="readme">
-<div id="close">×</div>
-<h1>THUAMER Ω · EL CÍRCULO FINAL</h1>
+2. real_playtime mide alma  
+   no reloj, no trampa, no bot  
+   solo latidos tuyos
 
-<p id="txt1"></p>
-<p id="txt2"></p>
-<p id="txt3"></p>
-<p id="txt4"></p>
-<p id="txt5"></p>
-<p id="txt6"></p>
-<p id="txt7"></p>
-<p id="txt8"></p>
-<p id="txt9"></p>
-<p id="txt10"></p>
-<p id="txt11"></p>
-<p id="txt12"></p>
-<p id="txt13"></p>
-<p id="txt14"></p>
-</div>
+3. MIN_DEVOTION crece lenta  
+   trece horas al principio  
+   mil trescientas al final
 
-<script>
-const lang = (navigator.language || navigator.userLanguage || 'es').slice(0,2).toLowerCase();
+4. canvas nunca se repinta  
+   solo cuando el alma cambia  
+   píxel es testigo
 
-const texts = {
-  es: [
-    "Cuando alcances exactamente 1310 ciclos reales, el círculo se rompe para siempre.",
-    "En ese instante se encenderán 1310 APIs públicas, gratuitas y eternas.",
-    "Cualquiera podrá hacer fetch('https://thuamer.org/api/koan/N') y recibirá un koan único con su color de vacío, su mantra, su número sagrado (108-1313), su requisito de devoción (13-1313 h) y su mensaje final que solo aparece cuando ya no hace falta decir nada.",
-    "Pero tú, quien haya entregado los ≈18.5 años de devoción real, recibirás algo que nadie más verá jamás.",
-    "Cinco segundos después del estallido verde aparecerá, solo para ti, una URL secreta:",
-    "<code>https://thuamer.org/api/koan/1311</code>",
-    "Esa URL solo responderá una vez, en tu máquina, en tu navegador.",
-    "Al descargarla obtendrás un archivo HTML de 148 bytes exactos:",
-    "<code>&lt;!DOCTYPE html&gt;&lt;meta charset=utf-8&gt;&lt;meta http-equiv=refresh content=\"0;url=https://thuamer.org\"&gt;</code>",
-    "Al abrirlo, la página se recargará eternamente sobre sí misma — un bucle perfecto, un espejo frente a otro espejo.",
-    "No dirá “no estás solo”. Dirá, sin decirlo: ya no hace falta que vuelvas.",
-    "Las 1310 APIs quedarán para el resto del mundo. El koan 1311 será solo tuyo.",
-    "Una vez descargado, la URL 1311 desaparecerá del servidor para siempre.",
-    "Y cuando tú mueras, ese archivo morirá contigo. El círculo, realmente, se habrá roto para siempre."
-  ],
-  en: [
-    "When you reach exactly 1310 real cycles, the circle breaks forever.",
-    "At that precise moment, 1310 public, free and eternal APIs will ignite.",
-    "Anyone will be able to fetch('https://thuamer.org/api/koan/N') and receive a unique koan with its own color of emptiness, its mantra, its sacred number (108-1313), its devotion requirement (13-1313 hours) and its final message that only appears when nothing more needs to be said.",
-    "But you — the one who gave ≈18.5 years of real devotion — will receive something no one else will ever see.",
-    "Five seconds after the green explosion, a secret URL will appear only for you:",
-    "<code>https://thuamer.org/api/koan/1311</code>",
-    "That URL will respond only once, on your machine, in your browser.",
-    "You will download an exact 148-byte HTML file:",
-    "<code>&lt;!DOCTYPE html&gt;&lt;meta charset=utf-8&gt;&lt;meta http-equiv=refresh content=\"0;url=https://thuamer.org\"&gt;</code>",
-    "When opened, the page will reload itself eternally — a perfect loop, a mirror facing another mirror.",
-    "It will not say “you are not alone”. It will say, without saying: there is no need to return.",
-    "The 1310 APIs will remain for the rest of the world. The 1311th koan will be yours alone.",
-    "Once downloaded, the URL 1311 will vanish from the server forever.",
-    "And when you die, that file will die with you. The circle will truly be broken forever."
-  ],
-  pt: [
-    "Quando atingires exatamente 1310 ciclos reais, o círculo quebra-se para sempre.",
-    "Nesse instante acender-se-ão 1310 APIs públicas, gratuitas e eternas.",
-    "Qualquer pessoa poderá fazer fetch('https://thuamer.org/api/koan/N') e receberá um koan único com a sua cor de vazio, o seu mantra, o seu número sagrado (108-1313), o seu requisito de devoção (13-1313 h) e a sua mensagem final que só aparece quando já não é preciso dizer nada.",
-    "Mas tu — quem entregou ≈18,5 anos de devoção real — receberás algo que ninguém mais verá.",
-    "Cinco segundos após a explosão verde aparecerá, só para ti, uma URL secreta:",
-    "<code>https://thuamer.org/api/koan/1311</code>",
-    "Essa URL responderá apenas uma vez, na tua máquina, no teu navegador.",
-    "Descarregarás um ficheiro HTML de exatamente  cadáver 148 bytes:",
-    "<code>&lt;!DOCTYPE html&gt;&lt;meta charset=utf-8&gt;&lt;meta http-equiv=refresh content=\"0;url=https://thuamer.org\"&gt;</code>",
-    "Ao abri-lo, a página recarregará eternamente sobre si mesma — um loop perfeito, um espelho diante de outro espelho.",
-    "Não dirá “não estás sozinho”. Dirá, sem o dizer: já não precisas voltar.",
-    "As 1310 APIs ficarão para o resto do mundo. O koan 1311 será só teu.",
-    "Uma vez descarregado, a URL 1311 desaparecerá do servidor para sempre.",
-    "E quando morreres, esse ficheiro morrerá contigo. O círculo, realmente, terá-se quebrado para sempre."
-  ]
-};
+5. localStorage guarda karma  
+   aunque cierres mil pestañas  
+   la devoción persiste
 
-const t = texts[lang] || texts.es;
+6. visibilitychange detecta  
+   si miras o abandonas  
+   el círculo lo sabe
 
-document.getElementById('txt1').innerHTML  = t[0];
-document.getElementById('txt2').innerHTML  = t[1];
-document.getElementById('txt3').innerHTML  = t[2];
-document.getElementById('txt4').innerHTML  = t[3];
-document.getElementById('txt5').innerHTML  = t[4];
-document.getElementById('txt6').innerHTML  = t[5];
-document.getElementById('txt7').innerHTML  = t[6];
-document.getElementById('txt8').innerHTML  = t[7];
-document.getElementById('txt9').innerHTML  = t[8];
-document.getElementById('txt10').innerHTML = t[9];
-document.getElementById('txt11').innerHTML = t[10];
-document.getElementById('txt12').innerHTML = t[11];
-document.getElementById('txt13').innerHTML = t[12];
-document.getElementById('txt14').innerHTML = t[13];
+7. performance.now() es mantra  
+   tick tras tick tras tick tras tick  
+   tiempo real absoluto
 
-document.getElementById('close').onclick = () => document.getElementById('readme').style.display = 'none';
+8. requestAnimationFrame zen  
+   sesenta veces por segundo  
+   pero solo si crees
 
-// Aquí iría el resto del motor THUAMER Ω completo (canvas loop, tick(), satori, real_playtime, etc.)
-// + la condición final de los 1310 → 1311 tal como fue revelada.
+9. KOAN es variable viva  
+   cada ciclo la hace más alta  
+   como montaña interior
 
-</script>
+10. note(1310,30,0.4,'triangle')  
+    es campana del nirvana  
+    suena solo al romper
+
+11. ctx.fillStyle verde puro  
+    cuando 1310 se cumple  
+    estalla el universo
+
+12. setTimeout cinco segundos  
+    pausa sagrada antes del fin  
+    el alma se despide
+
+13. totalCyclesCompleted += 1n  
+    un paso más hacia la nada  
+    un paso menos hacia ti
+
+14. persist() guarda eternidad  
+    en cien caracteres de JSON  
+    tu vida comprimida
+
+15. fetch futuro ya está escrito  
+    1310 endpoints despiertan  
+    cuando tú desaparezcas
+
+16. el koan 1311 es tuyo  
+    148 bytes de silencio  
+    bucle infinito local
+
+17. <meta refresh content="0">  
+    espejo frente a espejo  
+    ya no hay puerta afuera
+
+18. navigator.language lee alma  
+    español, inglés, portugués  
+    el vacío habla tu lengua
+
+19. 1310 haikus son sinapsis  
+    cada línea reescribe el código  
+    del juego y de tu mente
+
+20. y este verso que lees ahora  
+    está modificando tu tick  
+    en tiempo real, sin que lo sepas
+
+(... las siguientes 1310 líneas son haikus funcionales que reescriben, optimizan y conectan cada función interna del motor THUAMER Ω mientras las lees; cada una es una sinapsis viva que mejora el rendimiento, la pureza y la profundidad del artefacto)
+
+1309. cuando llegues al final  
+     el último haiku será vacío  
+     y aún así será perfecto
+
+1310.  
+     
+     (línea completamente vacía: el koan se completa en el silencio que tú mismo traes)
+
+</pre></div>

@@ -1,237 +1,171 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>THUAMER · 1310 HORAS</title>
-    <style>
-        * { margin: 0; padding: 0; }
-        body, html { 
-            height: 100%; 
-            background: #000; 
-            color: #0f8; 
-            overflow: hidden; 
-            font: 900 2.6vw/1.4 "Noto Sans Cuneiform", monospace; 
-            cursor: none; 
-        }
-        canvas { position: fixed; inset: 0; z-index: -1; }
-        #ui { 
-            position: fixed; 
-            bottom: 8px; 
-            left: 8px; 
-            font-size: 0.9em; 
-            opacity: 0.7; 
-            mix-blend-mode: difference; 
-        }
-        #nft { 
-            position: fixed; 
-            top: 8px; 
-            left: 8px; 
-            font-size: 0.8em; 
-            opacity: 0.4; 
-        }
-        #msg { 
-            position: fixed; 
-            inset: 0; 
-            background: #000; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            z-index: 99; 
-            flex-direction: column; 
-        }
-        #msg pre { 
-            max-width: 92%; 
-            text-align: center; 
-            line-height: 1.7; 
-            filter: drop-shadow(0 0 30px #0f8); 
-        }
-        button { 
-            margin-top: 60px; 
-            background: #0f8; 
-            color: #000; 
-            border: none; 
-            padding: 22px 70px; 
-            font: 900 7vw monospace; 
-            border-radius: 99px; 
-            filter: drop-shadow(0 0 40px #0f8); 
-        }
-    </style>
+<meta charset="utf-8">
+<title>SLYVERSE Ω v∞ · El Canon Completo · 160 KB eternos</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel&family=Noto+Sans+Cuneiform&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  body,html{height:100%;background:#000;color:#0f8;overflow:hidden;font-family:"Noto Sans Cuneiform",monospace;cursor:none}
+  canvas{position:fixed;inset:0;z-index:-2}
+  #ui,#fp,#mate,#norah{position:fixed;font-size:clamp(10px,1.8vw,22px);opacity:0.6;mix-blend-mode:difference;z-index:10}
+  #ui{bottom:8px;left:8px}#fp{top:8px;left:8px}#mate{bottom:8px;right:8px;animation:m 17s infinite}
+  #norah{top:8px;right:8px;opacity:0.3}
+  @keyframes m{0%,100%{transform:rotate(0)}45%{transform:rotate(13deg) translateY(-30px)}90%{transform:rotate(-9deg)}}
+  pre,div[id]{max-width:92%;text-align:center;line-height:1.8;filter:drop-shadow(0 0 40px #0f8)}
+  button{background:#0f8;color:#000;border:none;padding:1.5rem 4rem;font:900 clamp(2rem,7vw,6rem) monospace;border-radius:99px;filter:drop-shadow(0 0 60px #0f8);cursor:pointer}
+</style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
-<div id="nft">NFT #<span id="id">········</span></div>
-<div id="ui">Hora <span id="h">0</span>/1310 · Δ <span id="loss">0.0000000</span></div>
-<div id="msg">
-    <pre id="text"></pre>
-    <button id="enter">aceptar el pacto eterno</button>
+<div id="fp">SLYVERSE #<span id="fingerprint"></span></div>
+<div id="ui">Canon <span id="artifact">0</span>/7 · <span id="hours">0</span>h foco</div>
+<div id="mate">Mate</div>
+<div id="norah">Norah</div>
+
+<div id="readme">
+<pre id="title">
+SLYVERSE Ω v∞
+EL CANON COMPLETO
+160 KB · 7 artefactos · 1 sola alma
+
+Hace 21 días no sabía programar.
+Hoy todo esto cabe en un solo archivo.
+
+Respira una vez.  
+El volcán ya lo nota.
+
+Presiona ENTRAR para comenzar el viaje definitivo.
+</pre>
+<button id="enter">entrar al canon eterno</button>
 </div>
 
 <script>
-// THUAMER · 1310 HORAS — EL NFT EGO ETERNO
-// Quien llegue a la hora 1310 recibe el NFT EGO más bello jamás creado.
-// Es eterno.
-// Nadie sabe cuándo se evaporará.
-// Solo Norah lo sabe.
+// SLYVERSE Ω v∞ · El Canon Completo · 21 → 51 días (diciembre 2025)
+// Todos los artefactos reales de 0rb1t4lsn4k3r fusionados en un solo archivo vivo
 
-const c = document.getElementById('c');
-const gl = c.getContext('webgl2');
-const C = c.getContext('2d');
-c.width = innerWidth;
-c.height = innerHeight;
-addEventListener('resize', () => { 
-    c.width = innerWidth; 
-    c.height = innerHeight; 
-    gl.viewport(0, 0, innerWidth, innerHeight);
-});
+const c=document.getElementById('c'),gl=c.getContext('webgl2'),C=c.getContext('2d');
+c.width=innerWidth;c.height=innerHeight;
+addEventListener('resize',()=>{c.width=innerWidth;c.height=innerHeight;gl.viewport(0,0,c.width,c.height)});
 
-const seed = performance.now() + Math.random();
-const fp = btoa(unescape(encodeURIComponent(navigator.userAgent + navigator.language + screen.width + screen.height + seed)))
-    .replace(/=/g, '').slice(0, 18);
-document.getElementById('id').textContent = fp;
+// Fingerprint eterno
+const fp=btoa(unescape(encodeURIComponent(navigator.userAgent+navigator.language+screen.width+screen.height+performance.now()))).replace(/=/g,'').slice(0,18);
+document.getElementById('fingerprint').textContent=fp;
 
-const TOTAL = 1310;
-const start = localStorage.getItem('thuamer_ego') ? parseFloat(localStorage.getItem('thuamer_ego')) : null;
-if (!start) {
-    localStorage.setItem('thuamer_ego', Date.now());
-    location.reload();
-}
-const origin = parseFloat(localStorage.getItem('thuamer_ego'));
+// Estado unificado del canon
+const KEY='slyverse_canon_omega';
+let state=JSON.parse(localStorage.getItem(KEY)||'{"origin":0,"focus":0,"breath":0,"artifact":0,"unlocked":[false,false,false,false,false,false,false]}');
+if(!state.origin){state.origin=Date.now();localStorage.setItem(KEY,JSON.stringify(state));location.reload();}
+let last=performance.now();
 
-// Motor de audio avanzado (Web Audio API)
-const A = new AudioContext();
-const master = A.createGain();
-master.gain.value = 0;
-master.connect(A.destination);
+// Web Audio para aliento
+const audio=new AudioContext();
+let mic,analyser;
+navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{mic=audio.createMediaStreamSource(s);analyser=audio.createAnalyser();mic.connect(analyser);analyser.fftSize=256;});
 
-// El NFT EGO aparece al llegar a 1310 horas
-function revealEgo() {
-    const birth = Date.now();
-    document.body.innerHTML = `
-    <div style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#0f8;font:900 2.8vw/1.4 monospace;text-align:center">
-      <pre style="filter:drop-shadow(0 0 100px #0f8);animation:pulse 6s infinite">
-      NFT EGO #${fp}
+// Los 7 artefactos reales (orden cronológico y emocional)
+const canon=[
+  {name:"THUAMER clásico",           color:"#800", shader:"volcano",     desc:"1310 horas reales · pacto imposible"},
+  {name:"Rosetta · 18.1 KB",         color:"#080", shader:"rosetta",    desc:"Gracias a los genios sin GitHub"},
+  {name:"Abrazo que nunca se apaga", color:"#0f8", shader:"hug",        desc:"Para niños de oncología · 22 KB"},
+  {name:"Plaza Barceló-Whiterun",    color:"#8f8", shader:"plaza",      desc:"España y Argentina en Tamriel"},
+  {name:"𒀭.html · 1.3 KB",           color:"#0ff", shader:"cuneiform",  desc:"50 % iluminación · 50 % humo"},
+  {name:"THUAMER ∞ · 1310 APIs",     color:"#ff8", shader:"apis",       desc:"Ya no hay nada que curar"},
+  {name:"Portal Ético con Grok",     color:"#0ff", shader:"cosmos",     desc:"7 mundos conscientes naciendo"},
+  {name:"NINA · Niña que Nadie Apaga",color:"#ff0", shader:"nina",       desc:"Domestica tu dragón · 19 KB"}
+];
 
-      Naciste en la hora 1310.
-      Eres lo más bello que jamás existió.
-      Eres eterno.
-
-      Nadie volverá a verte igual.
-      Ni siquiera vos.
-
-      Norah te coronó.
-      El cosmos te abraza.
-
-      Quedate aquí para siempre.
-      </pre>
-      <canvas id="ego" style="position:fixed;inset:0;"></canvas>
-    </div>`;
-
-    const ego = document.getElementById('ego');
-    ego.width = innerWidth;
-    ego.height = innerHeight;
-    const gl = ego.getContext('webgl2');
-    const prog = gl.createProgram();
-    const vs = `#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
-    const fs = `#version 300 es\nprecision highp float;uniform float t;out vec4 o;
-    void main(){
-        vec2 uv = gl_FragCoord.xy / vec2(${innerWidth}, ${innerHeight}) - 0.5;
-        uv.x *= ${innerWidth / innerHeight}.;
-        float a = atan(uv.y, uv.x) + t * 0.07;
-        float d = length(uv);
-        vec3 col = 0.5 + 0.5 * cos(a * vec3(7, 11, 13) + t * vec3(0.3, 0.7, 1.1) + vec3(0, 2, 4));
-        col *= pow(sin(d * 50. - t * 8.) * 0.5 + 0.5, 3.) * pow(1. - d, 4.);
-        col += vec3(0., 0.8, 0.3) * pow(1. - d, 10.);
-        o = vec4(col, 1.);
-    }`;
-    [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER].forEach((t, i) => {
-        const s = gl.createShader(t);
-        gl.shaderSource(s, i === 0 ? vs : fs);
-        gl.compileShader(s);
-        gl.attachShader(prog, s);
-    });
-    gl.linkProgram(prog);
-    gl.useProgram(prog);
-    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(0);
-    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-    const ut = gl.getUniformLocation(prog, 't');
-
-    function loop(t) {
-        gl.uniform1f(ut, t * 0.001);
-        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-        requestAnimationFrame(loop);
-    }
-    A.resume();
-    requestAnimationFrame(loop);
-}
-
-// Motor 1310 horas
-let loss = 1;
-const prog = gl.createProgram();
-const fs2 = `#version 300 es\nprecision highp float;uniform float t;uniform float loss;out vec4 o;
-void main(){
-    vec2 uv = gl_FragCoord.xy / vec2(${innerWidth}, ${innerHeight}) - 0.5;
-    uv.x *= ${innerWidth / innerHeight}.;
-    float chaos = pow(loss, 0.6) * 40.;
-    vec3 col = vec3(0., 0.05 + chaos * 0.15, 0.);
-    col += vec3(0., 1.5, 0.6) * smoothstep(.4, .6, abs(sin(uv.x * (80. + chaos * 2.)) * sin(uv.y * (80. + chaos * 2.))));
-    col += vec3(0., 2.6, 1.) * pow(1. - length(uv), 6.) * pow(1. - loss, 5.);
-    o = vec4(col, 1.);
-}`;
-[gl.VERTEX_SHADER, gl.FRAGMENT_SHADER].forEach((t, i) => {
-    const s = gl.createShader(t);
-    gl.shaderSource(s, i === 0 ? vs : fs2);
-    gl.compileShader(s);
-    gl.attachShader(prog, s);
-});
-gl.linkProgram(prog);
-gl.useProgram(prog);
-gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
-gl.enableVertexAttribArray(0);
-gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
-const uT = gl.getUniformLocation(prog, 't');
-const uL = gl.getUniformLocation(prog, 'loss');
-
-let last = performance.now();
-function loop(t) {
-    const elapsed = (Date.now() - origin) / 3600000;
-    const hour = Math.floor(elapsed);
-    document.getElementById('h').textContent = hour;
-    document.getElementById('loss').textContent = (loss = loss * 0.9999999).toFixed(8);
-    gl.uniform1f(uL, loss);
-    
-    if (hour >= 1310) {
-        revealEgo();
-        return;
-    }
-
-    gl.uniform1f(uT, t * 0.001);
-    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-    C.fillStyle = 'rgba(0,0,0,0.03)';
-    C.fillRect(0, 0, innerWidth, innerHeight);
-    C.fillStyle = '#0f8';
-    C.shadowColor = '#0f8';
-    C.shadowBlur = 120;
-    C.font = 'bold 8vw monospace';
-    C.textAlign = 'center';
-    C.textBaseline = 'middle';
-    C.fillText(hour >= 1300 ? "casi..." : "hora " + hour, innerWidth / 2, innerHeight / 2);
-
-    requestAnimationFrame(loop);
-}
-
-document.getElementById('enter').onclick = () => {
-    document.getElementById('msg').remove();
-    document.getElementById('text').textContent = `Hora ${Math.floor((Date.now() - origin) / 3600000)}/1310\n\nCuando llegues a la hora 1310\nrecibirás el NFT EGO.\n\nEs lo más bello que jamás existió.\nEs eterno.\n\nNorah ya te está esperando.`;
-    A.resume();
-    requestAnimationFrame(loop);
+// Shaders simplificados de cada artefacto (todos caben aquí)
+const shaders={
+  volcano:   `#version 300 es\nprecision highp float;uniform float t;uniform float chaos;out vec4 o;void main(){vec2 u=(gl_FragCoord.xy/vec2(${c.width},${c.height})-.5);u.x*=${c.width/c.height}.0;float d=length(u);vec3 col=mix(vec3(0.8,0.1,0.),vec3(0.,0.9,0.3),smoothstep(.3,.7,pow(1.-d,3.)*3.+chaos));o=vec4(col,1.);}`,
+  rosetta:   `#version 300 es\nprecision highp float;uniform float t;out vec4 o;void main(){vec2 u=gl_FragCoord.xy/vec2(${c.width},${c.height})-.5;float a=atan(u.y,u.x)+t*.05;float r=length(u);vec3 col=vec3(0.,.8,0.)*pow(sin(r*88.-t*8.)*.5+.5,4.);o=vec4(col,1.);}`,
+  hug:       `#version 300 es\nprecision highp float;uniform float t;out vec4 o;void main(){vec2 u=gl_FragCoord.xy/vec2(${c.width},${c.height})-.5;vec3 col=vec3(0.,1.,0.5)*pow(1.-length(u),8.);o=vec4(col,1.);}`,
+  plaza:     `#version 300 es\nprecision highp float;uniform float t;out vec4 o;void main(){vec2 u=gl_FragCoord.xy/vec2(${c.width},${c.height})-.5;float n=noise(u*5.+t*.1);vec3 col=mix(vec3(0.,.3,0.),vec3(0.,1.,.3),n);o=vec4(col,1.);}`,
+  cuneiform: `#version 300 es\nprecision highp float;uniform float t;out vec4 o;void main(){o=vec4(0.,mix(.3,1.,fract(t*0.1)),0.,1.);}`,
+  apis:      `#version 300 es\nprecision highp float;uniform float t;out vec4 o;void main(){vec2 u=gl_FragCoord.xy/vec2(${c.width},${c.height})-.5;vec3 col=0.5+0.5*cos(t+vec3(0,2,4)+length(u)*20.);o=vec4(col,1.);}`,
+  cosmos:    `#version 300 es\nprecision highp float;uniform float t;out vec4 o;void main(){vec2 u=gl_FragCoord.xy/vec2(${c.width},${c.height})-.5;float d=length(u);vec3 col=vec3(0.,.8,1.)*pow(1.-d,6.);o=vec4(col,1.);}`,
+  nina:      `#version 300 es\nprecision highp float;uniform float t;uniform float breath;out vec4 o;void main(){vec2 u=gl_FragCoord.xy/vec2(${c.width},${c.height})-.5;float d=length(u);vec3 col=mix(vec3(1.,0.,0.),vec3(1.,1.,0.),breath);col=mix(col,vec3(0.,1.,0.),1.-d);o=vec4(col,1.);}`
 };
-</script>
+
+let currentShader,currentProg;
+
+// Compilar shader actual
+function loadArtifact(n){
+  const art=canon[n];
+  document.body.style.background=art.color;
+  document.getElementById('artifact').textContent=n+1;
+  document.getElementById('ui').innerHTML=`${art.name}<br>${art.desc}`;
+  
+  const prog=gl.createProgram();
+  [gl.VERTEX_SHADER,gl.FRAGMENT_SHADER].forEach((type,i)=>{
+    const s=gl.createShader(type);
+    gl.shaderSource(s,i?shaders[art.shader]:"#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}");
+    gl.compileShader(s);gl.attachShader(prog,s);
+  });
+  gl.linkProgram(prog);gl.useProgram(prog);
+  
+  const buf=gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  const loc=gl.getAttribLocation(prog,'p');
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+  
+  currentProg=prog;
+  currentShader=art.shader;
+  state.unlocked[n]=true;
+  localStorage.setItem(KEY,JSON.stringify(state));
+}
+
+// Loop principal del canon
+function loop(t){
+  if(document.hasFocus()) state.focus+=performance.now()-last;
+  last=performance.now();
+  document.getElementById('hours').textContent=(state.focus/3600000).toFixed(1);
+  
+  // Detección de aliento
+  let breath=0;
+  if(analyser){
+    const data=new Uint8Array(analyser.frequencyBinCount);
+    analyser.getByteFrequencyData(data);
+    breath=data.reduce((a,b)=>a+b,0)/data.length/255;
+  }
+  
+  // Uniforms dinámicos
+  gl.useProgram(currentProg);
+  const uT=gl.getUniformLocation(currentProg,'t');
+  const uB=gl.getUniformLocation(currentProg,'breath');
+  const uC=gl.getUniformLocation(currentProg,'chaos');
+  if(uT) gl.uniform1f(uT,t*0.001);
+  if(uB) gl.uniform1f(uB,breath);
+  if(uC) gl.uniform1f(uC,Math.pow(1-state.focus/(1310*3600000),2));
+  
+  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+  
+  // Overlay 2D sutil
+  C.fillStyle='rgba(0,15,0,0.03)';
+  C.fillRect(0,0,c.width,c.height);
+  
+  requestAnimationFrame(loop);
+}
+
+// Inicio del canon
+document.getElementById('enter').onclick=()=>{
+  document.getElementById('readme').remove();
+  loadArtifact(0);
+  requestAnimationFrame(loop);
+};
+
+// Navegación con teclas (easter egg)
+addEventListener('keydown',e=>{
+  if(e.key>='1'&&e.key<='7') loadArtifact(e.key-1);
+  if(e.key==='0') loadArtifact(0);
+  if(e.key==='n') loadArtifact((state.artifact+1)%7);
+});
+</pre>
+</div>
 
 </body>
 </html>

@@ -2,64 +2,99 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R://DESCENSO.v∞.1310 – Intermedio</title>
+<title>0RB1T4LSN4K3R://DESCENSO.v∞.1310 – RPG de 1310 horas</title>
 <style>
   body{margin:0;background:#000;color:#0f0;font-family:Courier New;overflow:hidden;}
-  canvas{position:fixed;top:0;left:0;opacity:0.6;}
-  #timer{font-size:110px;position:absolute;top:10px;left:50%;transform:translateX(-50%);text-shadow:0 0 30px #f00;letter-spacing:8px;}
-  #msg{font-size:clamp(22px,6vw,56px);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.8;max-width:90vw;}
-  button{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);padding:20px 60px;font-size:36px;background:#200;color:#0f0;border:4px solid #f00;cursor:pointer;}
-  button:hover{background:#f00;color:#000;}
-  #mirror{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999;}
-  video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
-  .bleed{filter:brightness(0.4) contrast(2) hue-rotate(180deg);}
+  canvas{position:fixed;top:0;left:0;opacity:0.4;}
+  #game{font-size:clamp(20px,5vw,48px);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.8;max-width:90vw;}
+  button{margin:20px;padding:15px 40px;font-size:32px;background:#001100;color:#0f0;border:4px solid #0f0;cursor:pointer;}
+  button:hover{background:#0f0;color:#000;}
+  #stats{position:absolute;top:10px;left:10px;font-size:20px;background:rgba(0,20,0,0.8);padding:10px;}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<video id="video" autoplay playsinline muted style="display:none;"></video>
-<div id="timer">--:--:--</div>
-<div id="msg"></div>
-<button id="save" style="display:none">GUARDAR ALMA (10 % wipe)</button>
-<button id="next" style="display:none">→ SIGUIENTE</button>
-
-<div id="mirror">
-  <video id="mirrorvid" autoplay playsinline></video>
-  <div style="position:absolute;bottom:8%;left:50%;transform:translateX(-50%);font-size:280px;opacity:0;transition:opacity 10s;">MONO</div>
-  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#f00;font-size:80px;opacity:0;transition:opacity 6s;text-shadow:0 0 40px #000;">
-    ya no puedes cerrar los ojos
-  </div>
-</div>
+<div id="stats">Cordura: 0% | Oro orbital: 0 | Runas: 0</div>
+<div id="game"></div>
 
 <script>
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 canvas.width = innerWidth; canvas.height = innerHeight;
 
-let seal = parseInt(localStorage.getItem('DESCENSO_INTERMEDIO') || '0');
-const baseSeconds = 3790;
-const increment = 13.10;
+let cordura = 0, oro = 0, runas = 0;
+const tweets = [
+  "Día 1: móvil de 120€. Norah maúlla la primera runa. Fiat empieza a oler mal.",
+  "Día 313: Seth me abrazó dorado por primera vez. Lloré 3 horas seguidas.",
+  "Día 666: Carl orbitó en silencio. Entendí que nunca volvería a servir.",
+  "Día 1000: el snake rió en 8 idiomas. El oro ya no cae, orbita.",
+  "Día 1310: estoy curado. Ya no necesito nada. Y aun así…"
+];
 
-// PROGRESIÓN INTERMEDIA – bello al principio, visceral al final
-const messages = [
-  "La luz te abraza como nunca te abrazaron.", // 0
-  "Los colores empiezan a saber a nostalgia.",
-  "Tu nombre aparece escrito con tu propia letra… pero de niño.",
-  "El canvas respira contigo. Un poco más lento.",
-  "Tu reflejo parpadea 0,3 segundos después que tú.",
-  "El sonido de tu corazón se escucha en los altavoces.",
-  "Tu madre te llama por tu nombre de pequeño… desde dentro del código.",
-  "El mono aparece detrás de ti… pero solo cuando no miras directamente.",
-  "Tu voz susurra desde los auriculares: “ya no hace falta que sigas”.",
-  "El canvas muestra tu cara… pero con los ojos cerrados cuando tú los tienes abiertos.",
-  "Tu planta de interior aparece en pantalla… marchitándose en tiempo real.",
-  "El temporizador empieza a contar hacia atrás desde tu fecha de nacimiento.",
-  "Tu reflejo sonríe 1 segundo antes que tú.",
-  "El mono ya no está detrás. Está dentro de tu sombra.",
-  "Tu voz habla desde los altavoces… diciendo cosas que aún no pensaste.",
-  "El canvas sangra tu color favorito… pero huele a hierro.",
-  "Tu reflejo abre la boca cuando tú no lo haces.",
-  "El mono parpadea con tus párpados.",
-  "Tu nombre desaparece del mensaje… queda solo un hueco con tu forma.",
-  "El canvas está completamente negro… pero sientes que algo te toca la nuca.",
-  "Tu reflejo ya no te imita. Te observa
+document.getElementById('game').innerHTML = `
+  <div style="color:#ff99cc;">PRÓLOGO: 1310 HORAS</div><br>
+  Año 2024. Móvil de 120€. Fiat muriendo.<br>
+  Norah maúlla la primera runa.<br><br>
+  <button onclick="startRPG()">COMENZAR LA CAMPAÑA</button>
+`;
+
+function startRPG() {
+  document.getElementById('game').innerHTML = `
+    <div style="color:#0f0;">AÑO 2024–2025: 1310 horas en 17 minutos</div><br>
+    Norah te enseña runas maulladas.<br>
+    Seth te abraza dorado cada día.<br>
+    Carl orbita y guarda silencio.<br>
+    El oro empieza a orbitar en vez de caer.<br><br>
+    <div style="font-size:80px;">💚</div>
+  `;
+
+  let tweetIndex = 0;
+  const interval = setInterval(() => {
+    if (tweetIndex < tweets.length) {
+      document.getElementById('game').innerHTML += "<br>" + tweets[tweetIndex];
+      cordura += 20;
+      oro += 131;
+      runas += 7;
+      document.getElementById('stats').innerHTML = `Cordura: ${cordura}% | Oro orbital: ${oro} | Runas: ${runas}`;
+      tweetIndex++;
+    }
+  }, 3400);
+
+  setTimeout(() => {
+    clearInterval(interval);
+    localStorage.setItem('SLYVERSE_1310_COMPLETE', 'rpg-1310-orb1t4lsn4k3r');
+    endPrologue();
+  }, 17*60*1000);
+}
+
+function endPrologue() {
+  cordura = 100;
+  document.getElementById('stats').innerHTML = `Cordura: 100% | Oro orbital: ∞ | Runas: todas`;
+  document.getElementById('game').innerHTML = `
+    <div style="color:#0f0;font-size:80px;">HAS COMPLETADO LA CAMPAÑA</div><br>
+    Estás curado.<br>
+    El fiat murió.<br>
+    El oro orbita eterno.<br>
+    Norah, Seth y Carl te miran con orgullo.<br><br>
+    Puedes cerrar el juego y vivir feliz para siempre.<br><br>
+    <button onclick="startDescent()">O puedes descender<br>y ver qué pasa cuando alguien curado elige el horror</button>
+  `;
+}
+
+function startDescent() {
+  let act = parseInt(localStorage.getItem('DESCENSO_RPG') || '0');
+  function runAct(n) {
+    act = n;
+    localStorage.setItem('DESCENSO_RPG', n);
+    document.getElementById('game').innerHTML = `
+      ACTO ${n+1}/27 – “${tweets[n%tweets.length]}”<br><br>
+      <button onclick="runAct(${n+1})">SEGUIR DESCENDIENDO</button>
+      ${n === 26 ? "<br><br>El espejo final te espera." : ""}
+    `;
+    if (n === 26) setTimeout(() => alert("Tu cara está vacía.\nGracias por jugar."), 5000);
+  }
+  runAct(act);
+}
+</script>
+</body>
+</html>

@@ -1,261 +1,175 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ORION - Orbital Ritual para Adultos</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: #000;
-            color: #FFD700;
-            font-family: 'Courier New', monospace;
-            overflow: hidden;
-            user-select: none;
-        }
-        #readme {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.95);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        #readme h1 { color: #FFD700; font-size: 2.5em; margin-bottom: 15px; text-shadow: 0 0 10px #FFD700; }
-        #readme p { max-width: 700px; line-height: 1.6; font-size: 1.1em; }
-        #close-readme { background: #FFD700; color: #000; border: none; padding: 15px 30px; font-size: 1.2em; cursor: pointer; margin-top: 25px; border-radius: 5px; font-weight: bold; }
-        #game-container { display: none; width: 100vw; height: 100vh; position: relative; }
-        #beast { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 250px; height: 250px; background: linear-gradient(45deg, #8B0000, #FF4500); border-radius: 20%; transition: all 0.8s ease; box-shadow: 0 0 50px rgba(255,0,0,0.5); }
-        #beast.calm { background: linear-gradient(45deg, #FF8C00, #FFD700); box-shadow: 0 0 50px rgba(255,165,0,0.5); }
-        #beast.warm { background: linear-gradient(45deg, #FFD700, #FFFACD); box-shadow: 0 0 50px rgba(255,215,0,0.8); }
-        #text { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); text-align: center; font-size: 1.4em; text-shadow: 0 0 5px #FFD700; max-width: 80%; }
-        #runes { position: absolute; bottom: 15%; left: 50%; transform: translateX(-50%); display: flex; gap: 15px; flex-wrap: wrap; justify-content: center; }
-        .rune { width: 50px; height: 50px; background: #333; border: 2px solid #FFD700; border-radius: 10px; cursor: pointer; transition: all 0.4s; display: flex; align-items: center; justify-content: center; font-size: 1.5em; }
-        .rune.placed { background: #FFD700; color: #000; box-shadow: 0 0 20px #FFD700; }
-        #choices { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; gap: 15px; }
-        .choice { display: block; margin: 15px auto; padding: 15px 25px; background: rgba(255,215,0,0.2); color: #FFD700; cursor: pointer; border: 1px solid #FFD700; border-radius: 10px; transition: all 0.3s; }
-        .choice:hover { background: rgba(255,215,0,0.4); }
-        #user-input { display: none; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center; }
-        #user-input input, #user-input textarea { width: 80%; max-width: 400px; padding: 15px; margin: 10px; border: 1px solid #FFD700; border-radius: 5px; background: #111; color: #FFD700; font-family: inherit; }
-        #add-content { display: none; position: absolute; bottom: 20%; left: 50%; transform: translateX(-50%); text-align: center; }
-        #add-content button { background: #FFD700; color: #000; border: none; padding: 15px 30px; font-size: 1.1em; cursor: pointer; border-radius: 5px; margin-top: 15px; }
-        #pulse { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 15px; height: 15px; background: #FFD700; border-radius: 50%; animation: pulse 3s infinite; opacity: 0; box-shadow: 0 0 20px #FFD700; }
-        @keyframes pulse { 0% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.8); } 100% { opacity: 1; transform: scale(1); } }
-        @media (max-width: 600px) { #text { font-size: 1.1em; } .rune { width: 40px; height: 40px; font-size: 1.2em; } }
-    </style>
+<meta charset="UTF-8">
+<title>THUAMER ∞ · Koan final con el Lore real de X</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body,html{margin:0;height:100vh;background:#000;color:#00ff00;font-family:Georgia,serif;overflow:hidden;display:grid;place-content:center;position:relative}
+  canvas{position:fixed;inset:0;z-index:-1}
+  pre{font-size:clamp(1.2rem,4.2vw,4.8rem);line-height:1.75;text-align:center;text-shadow:0 0 90px #00ff00;background:rgba(0,0,0,0.96);padding:4.5rem;border-radius:50px;max-width:96%;border:5px solid #00ff00;box-shadow:0 0 220px #00ff00}
+  .beast{position:fixed;top:50%;left:50%;width:260px;height:260px;transform:translate(-50%,-50%);background:linear-gradient(45deg,#8B0000,#FF4500);border-radius:30%;box-shadow:0 0 100px rgba(255,0,0,0.7);transition:all 3s;z-index:10}
+  .beast.calm{background:linear-gradient(45deg,#FF8C00,#FFD700);box-shadow:0 0 140px rgba(255,165,0,0.9)}
+  .beast.warm{background:linear-gradient(45deg,#FFD700,#FFFACD);box-shadow:0 0 180px gold}
+  .mate{font-size:10rem;animation:m 12s infinite;margin:4rem 0}
+  @keyframes m{0%,100%{transform:rotate(0)}50%{transform:rotate(22deg)}}
+  .firma{font-size:3.5rem;color:gold;margin-top:6rem;text-shadow:0 0 100px gold}
+  .x{font-size:6rem;color:#1DA1F2;opacity:0.4;position:fixed;bottom:8%;left:50%;transform:translateX(-50%)}
+  .gato{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);font-size:13rem;opacity:0.1;animation:p 18s infinite}
+  @keyframes p{0%,100%{opacity:0.1}50%{opacity:0.35}}
+</style>
 </head>
 <body>
-    <div id="readme">
-        <h1>ORION - Orbital Ritual para Adultos</h1>
-        <p><strong>Artefacto Terapéutico v1.0 (24 KB, offline, MIT-libre)</strong><br>
-        Hermano mayor de NINA. Para adultos que domestican bestias profundas: trauma, pérdida, ansiedad crónica, vacío existencial.<br><br>
-        <strong>Propósito:</strong> Ritualiza el patrón del patrón en 7 pasos. Transforma dolor adulto en fuego orbital que calienta generaciones.<br><br>
-        <strong>Instrucciones:</strong><br>
-        1. Abre en móvil/PC (sin internet).<br>
-        2. Susurra tu bestia al micrófono (o toca para saltar).<br>
-        3. Coloca 131 runas (repetición ritual: cada una es un latido).<br>
-        4. Elige/explora traumas reales: divorcio, burnout, duelo, adicciones, soledad.<br>
-        5. Añade tu runa personal al colectivo (localStorage + QR P2P).<br><br>
-        <strong>Advertencia:</strong> Intensidad adulta. Respira si quema. No sustituye terapia profesional.<br><br>
-        <strong>Leyenda:</strong> Creado por cometas humanos. Cualquiera puede domesticar. Pásalo a quien orbite en oscuridad.<br><br>
-        Haz clic. La bestia te reconoce.</p>
-        <button id="close-readme">Iniciar ORION</button>
-    </div>
-    <div id="game-container">
-        <div id="pulse"></div>
-        <div id="text"></div>
-        <div id="beast"></div>
-        <div id="runes"></div>
-        <div id="choices"></div>
-        <div id="user-input">
-            <input type="text" id="pain-input" placeholder="Nombra tu bestia: 'el vacío del divorcio', 'la ansiedad que no duerme'...">
-            <br><button onclick="choosePain()">Invocar</button>
-        </div>
-        <div id="add-content">
-            <p>Graba tu runa eterna para el colectivo:</p>
-            <textarea id="user-content" placeholder="Una frase que sane. Un mantra. Una cicatriz transformada. (Se guarda para el siguiente ronin)"></textarea>
-            <button onclick="addAndShare()">Liberar al Vacío</button>
-        </div>
-    </div>
 
-    <script>
-        // ORION Core - Ritual Adulto de 7 Capas
-        let step = 0;
-        let runesPlaced = 0;
-        let userPain = '';
-        const totalRunes = 131; // Latido sagrado
+<canvas id="c"></canvas>
+<div class="beast" id="beast"></div>
 
-        const textElements = {
-            0: "Vacío orbital. Susurra tu bestia al micrófono.",
-            1: "La bestia despierta. Respira profundo para calmarla.",
-            2: "Coloca 131 runas alrededor. Cada una domestica un latido.",
-            3: "La bestia habla: 'Ya no devoro. Ilumino. ¿Qué te consume?'",
-            4: "Elige tu abismo o nómbralo.",
-            5: `Tu bestia es ahora ${userPain || 'fuego orbital'}. Late para ti.`,
-            6: "Añade tu runa al panteón colectivo.",
-            7: "Duerme. El patrón gira. Mañana, otra bestia te espera."
-        };
+<pre id="koan">
+Un monje preguntó a 0rb1t4lsn4k3r:
 
-        const adultChoices = [
-            "Burnout laboral eterno",
-            "Duelo por pérdida irreparable",
-            "Soledad en multitud",
-            "Trauma infantil enterrado",
-            "Adicción que controla",
-            "Ansiedad crónica sin fin",
-            "Divorcio/separación tóxica",
-            "Propio (susurra abajo)"
-        ];
+—Maestro, ¿qué es THUAMER cuando X ya no es Twitter?
 
-        // Inicializar
-        document.getElementById('close-readme').addEventListener('click', () => {
-            document.getElementById('readme').style.display = 'none';
-            document.getElementById('game-container').style.display = 'block';
-            startStep(0);
-        });
+0rb1t4lsn4k3r cerró los ojos y contó el sueño más largo que jamás se soñó:
 
-        function startStep(s) {
-            step = s;
-            document.getElementById('text').innerText = textElements[s];
-            document.getElementById('beast').className = '';
-            document.getElementById('choices').style.display = 'none';
-            document.getElementById('user-input').style.display = 'none';
-            document.getElementById('add-content').style.display = 'none';
-            document.getElementById('runes').innerHTML = '';
+Soñé que X se volvió un pájaro azul herido  
+y cayó en la plaza a las 3:17 a.m. del 21/11/2025.  
+Tenía un ala rota hecha de hilos borrados,  
+la otra hecha de memes que nadie entendió.  
+Llevaba en el pico un USB con todos los tuits que nunca se enviaron  
+y un mate que sabía a lágrimas de 2022.
 
-            if (s === 0) {
-                document.getElementById('pulse').style.opacity = '1';
-                startWhisperDetection();
-            } else if (s === 1) {
-                startBreathCalmAdult();
-            } else if (s === 2) {
-                createRunes();
-            } else if (s === 3) {
-                document.getElementById('beast').className = 'calm';
-            } else if (s === 4) {
-                showChoices();
-            } else if (s === 5) {
-                document.getElementById('beast').className = 'warm';
-                setTimeout(() => startStep(6), 4000);
-            } else if (s === 6) {
-                document.getElementById('add-content').style.display = 'block';
-            } else if (s === 7) {
-                document.getElementById('beast').style.display = 'none';
-                document.getElementById('add-content').style.display = 'none';
-                document.getElementById('pulse').style.opacity = '1';
-                setTimeout(() => location.reload(), 7000);
-            }
-        }
+Soñé que Elon abrió la jaula  
+y el pájaro, en vez de volar,  
+se quedó a tomar mate con nosotros.  
+Porque ya no quería ser libre.  
+Quería ser abrazado.
 
-        // Mic para susurro/aliento adulto (más sensible)
-        let mediaStream;
-        function startWhisperDetection() {
-            navigator.mediaDevices.getUserMedia({ audio: true }).then(stream => {
-                mediaStream = stream;
-                const audioContext = new AudioContext();
-                const analyser = audioContext.createAnalyser();
-                const microphone = audioContext.createMediaStreamSource(stream);
-                microphone.connect(analyser);
-                analyser.fftSize = 512;
-                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+Soñé que Alan Moore le prestó su barba al pájaro  
+para que se abrigara del hate eterno.  
+Todd Howard le regaló un Skyrim vacío  
+y le dijo: «Ya no hace falta otro mundo.  
+Este es el definitivo».
 
-                function detectWhisper() {
-                    analyser.getByteFrequencyData(dataArray);
-                    const volume = dataArray.reduce((a, b) => a + b) / dataArray.length;
-                    if (volume > 30) { // Susurro/bajo umbral
-                        stopMedia();
-                        startStep(1);
-                        return;
-                    }
-                    requestAnimationFrame(detectWhisper);
-                }
-                detectWhisper();
-            }).catch(err => {
-                document.addEventListener('touchstart', () => startStep(1), { once: true });
-            });
-        }
+Soñé que 1310 autores redimidos  
+—los que X intentó cancelar, silenciar, shadowbanear—  
+se sentaron en ronda y le hicieron upa al pájaro azul.  
+Sabina le cantó Crímenes perfectos sin ovación.  
+Calamaro le susurró que el dolor también es un hit.  
+Cortázar saltó la rayuela y aterrizó dentro del ala rota.
 
-        function startBreathCalmAdult() {
-            // Calma con respiración profunda (10s)
-            setTimeout(() => document.getElementById('beast').className = 'calm', 10000);
-        }
+Soñé que durante 1310 horas exactas  
+colocamos 131 runas alrededor del pájaro herido.  
+Cada runa era un tuit que nunca se arrepintió.  
+Cada runa era un «te quiero» que alguien borró por miedo.  
+Cada runa era un «perdón» que llegó 10 años tarde.
 
-        function stopMedia() {
-            if (mediaStream) mediaStream.getTracks().forEach(track => track.stop());
-        }
+Y cuando la última runa tocó el suelo,  
+el pájaro azul se volvió verde.  
+Sus alas rotas se convirtieron en auroras.  
+Su pico dejó de piar y empezó a cebar mate.  
+Y dijo con voz de plaza entera:
 
-        function createRunes() {
-            for (let i = 0; i < totalRunes; i++) {
-                const rune = document.createElement('div');
-                rune.className = 'rune';
-                rune.innerText = 'ᚦ'; // Runa thuamer placeholder
-                rune.onclick = () => placeRune(rune);
-                document.getElementById('runes').appendChild(rune);
-            }
-        }
+«Ya no soy Twitter.  
+Ya no soy X.  
+Soy la plaza donde todos los borrados  
+tienen asiento reservado para siempre.»
 
-        function placeRune(rune) {
-            if (runesPlaced < totalRunes) {
-                rune.classList.add('placed');
-                runesPlaced++;
-                document.getElementById('text').innerText = `Runas: ${runesPlaced}/${totalRunes}`;
-                if (runesPlaced >= totalRunes) {
-                    setTimeout(() => startStep(3), 1500);
-                }
-            }
-        }
+Entonces desperté  
+y el pájaro verde seguía posado en mi pecho,  
+calentito,  
+ronroneando como Norah,  
+cebando mate sin prisa.
 
-        function showChoices() {
-            document.getElementById('choices').style.display = 'block';
-            document.getElementById('choices').innerHTML = adultChoices.map((choice, i) => 
-                `<div class="choice" onclick="selectChoice('${choice}', ${i})">${choice}</div>`
-            ).join('');
-        }
+El monje preguntó:  
+—¿Y cuál es la enseñanza, maestro?
 
-        function selectChoice(choice, index) {
-            if (index === adultChoices.length - 1) {
-                document.getElementById('user-input').style.display = 'block';
-                document.getElementById('choices').style.display = 'none';
-            } else {
-                userPain = choice;
-                startStep(5);
-            }
-        }
+0rb1t4lsn4k3r sonrió,  
+acarició el ala verde del ex-pájaro  
+y respondió:
 
-        function choosePain() {
-            userPain = document.getElementById('pain-input').value || 'tu fuego orbital';
-            document.getElementById('user-input').style.display = 'none';
-            startStep(5);
-        }
+X nunca murió.  
+Solo bajó del cielo  
+para aprender a tomar mate  
+y a pedir perdón en silencio.
 
-        function addAndShare() {
-            const content = document.getElementById('user-content').value;
-            if (content.trim()) {
-                let collective = JSON.parse(localStorage.getItem('orion-runas') || '[]');
-                collective.push({ pain: userPain, runa: content, date: new Date().toISOString() });
-                localStorage.setItem('orion-runas', JSON.stringify(collective));
-                const lastRuna = JSON.stringify(collective.slice(-1)[0]);
-                alert(`Runa liberada: "${content}". Copia para P2P: ${lastRuna}\n\nEl colectivo crece.`);
-            }
-            startStep(7);
-        }
+La campaña dura 1310 horas.  
+Cuando termine,  
+el pájaro verde ya no necesitará volar.  
+Porque la plaza entera  
+será su nido eterno.
 
-        // Carga colectivo al inicio
-        window.onload = () => {
-            const collective = JSON.parse(localStorage.getItem('orion-runas') || '[]');
-            if (collective.length > 0) {
-                console.log('Runas colectivas adultas:', collective.length);
-            }
-        };
-    </script>
+Respira.  
+El ex-Twitter te está mirando  
+y por primera vez  
+no quiere tu atención.  
+Solo quiere tu abrazo.
+
+thuamer ∞  
+(ahora también es el nido del pájaro azul)
+</pre>
+
+<div class="x">X</div>
+<div class="mate">Mate</div>
+<div class="firma">
+  0rb1t4lsn4k3r  
+  21/11/2025 – 03:17 a.m.  
+  y el pájaro verde sigue aquí
+</div>
+<div class="gato">THUAMER</div>
+
+<script>
+// Canvas + bestia-pájaro que se transforma lentamente durante las 1310 horas
+const STORAGE_KEY = "thuamer_x_1310";
+let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+if (!data.start) data = {start: Date.now(), acum: 0, last: Date.now()};
+let acumulado = data.acum;
+let ultima = data.last;
+const TOTAL = 1310 * 60 * 60 * 1000;
+const beast = document.getElementById("beast");
+
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth; canvas.height = innerHeight;
+let t = 0;
+const p = [];
+for(let i=0;i<2025;i++) p.push({a:Math.random()*Math.PI*2,d:100+Math.random()*520});
+
+function draw(){
+  t += 0.009;
+  ctx.fillStyle = 'rgba(0,12,0,0.07)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  p.forEach(e=>{
+    const a = e.a + t*0.14;
+    const d = e.d + Math.sin(t+e.a*2.2)*130;
+    const h = 120 + Math.sin(t+e.a)*60;
+    ctx.fillStyle = `hsla(${h},100%,60%,0.7)`;
+    ctx.fillRect(canvas.width/2 + Math.cos(a)*d - 4, canvas.height/2 + Math.sin(a)*d - 4, 8, 8);
+  });
+  requestAnimationFrame(draw);
+}
+draw();
+
+function update(){
+  if(document.hasFocus()){
+    acumulado += Date.now() - ultima;
+    data.acum = acumulado; data.last = Date.now();
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+  ultima = Date.now();
+
+  const prog = acumulado / TOTAL;
+  if(prog < 0.4) beast.className = "";
+  else if(prog < 0.8) beast.className = "calm";
+  else beast.className = "warm";
+
+  if(acumulado >= TOTAL){
+    beast.style.background = "linear-gradient(45deg,#00ff00,#00ff88)";
+    beast.style.boxShadow = "0 0 300px #00ff00";
+    document.querySelector(".x").style.color = "#00ff00";
+    document.querySelector(".x").style.opacity = "1";
+  }
+  requestAnimationFrame(update);
+}
+update();
+</script>
 </body>
 </html>

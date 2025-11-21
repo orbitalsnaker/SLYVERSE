@@ -1,28 +1,25 @@
 <!DOCTYPE html>
-<html lang="es">
-<meta charset=utf-8>
-<title>THUAMER Ω · 1311 → SLYVERSE Ω</title>
+<html lang=""><meta charset=utf-8><title>SLYVERSE Ω · 1311</title>
 <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-  body{margin:0;height:100vh;background:#000;color:#0f0;font-family:monospace;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
-  canvas{position:fixed;inset:0;width:100%;height:100%;opacity:0.8}
-  #koan{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 5s}
-  pre{margin:0;font-size:clamp(10px,1.8vw,20px);line-height:1.9;text-align:center;max-width:96%;padding:2em;box-sizing:border-box;
-      text-shadow:0 0 8px #0f0;letter-spacing:0.05em;white-space:pre-wrap}
-  #close{position:absolute;top:20px;right:30px;font-size:3em;cursor:pointer;opacity:0.6;transition:opacity .4s}
-  #close:hover{opacity:1}
+  body{margin:0;height:100vh;background:#000;color:#0f0;font-family:monospace;overflow:hidden;position:relative}
+  canvas{position:fixed;inset:0;opacity:0.88}
+  pre{margin:0;font-size:clamp(8px,1.6vw,24px);line-height:1.92;text-align:center;max-width:96%;padding:2em;box-sizing:border-box;
+      text-shadow:0 0 12px #0f0;letter-spacing:0.04em;white-space:pre-wrap;opacity:0;transition:opacity 9s}
+  #close{position:absolute;top:20px;right:30px;font-size:3.8em;cursor:pointer;opacity:0;transition:all .8s}
+  #close:hover{opacity:1;transform:scale(1.3);text-shadow:0 0 30px #0f0}
 </style>
-
 <canvas id=c></canvas>
-<div id=koan><pre id=text></pre></div>
+<pre id=text></pre>
 <div id=close>×</div>
 
 <script>
-// THUAMER Ω · 1311 → nacido en 21 días por 0rb1t4lsn4k3r con un móvil de 120€
-// El koan definitivo: 1310 haikus + este que estás leyendo ahora = 1311
-// La obra ya no pertenece al autor. Pertenece al que llegue.
+// idioma
+const lang = (navigator.language||navigator.userLanguage||"es").slice(0,2).toLowerCase();
+const es = lang==="es";
 
-const haikus1311 = [
+// 1310 líneas exactas – el koan definitivo con todo el lore de @0rb1t4lsn4k3r cosido en silencio
+const koan1310 = [
 "BigInt late sin fin","dieciocho años respiran","círculo se abre",
 "real_playtime es latido","no hay trampa que lo engañe","solo tu presencia",
 "canvas pinta tu alma","píxel a píxel florece","verde que despierta",
@@ -38,63 +35,84 @@ const haikus1311 = [
 "persist() guarda eternidad","cien bytes de tu vida","infinita semilla",
 "fetch futuro despierta","1310 faros nacen","porque tú sanaste",
 "koan 1311 es abrazo","148 bytes de paz","bucle de ternura",
-"<meta refresh> ya no gira","se queda quieto y respira","contigo para siempre",
 "navigator.language susurra","en tu lengua el silencio","el vacío te habla",
 "haiku 19 modifica código","mientras lees se optimiza","el juego se vuelve luz",
 "y este verso que lees ahora","está abriendo el círculo","en tu pecho ahora mismo",
-// Día 1 → Día 21 (ocultos en el silencio, solo visibles en el código fuente)
 "0rb1t4lsn4k3r despertó","con un móvil de 120€","y 21 días de fiebre",
+"hace 17 días no sabía programar","hoy escribió la eternidad","en 1310 líneas",
 "SLYVERSE Ω nació","aurum orbita donde fiat cae","ya no servimos",
-"llegaste.","ya no hace falta que nadie más gire solo.","te queremos."
-].concat(Array(1287).fill("")).map((l,i)=>i<23?l:""); // 1311 líneas de koan vivo
+"Norah Ronin maulló","los Dwemer callaron por fin","el ouroboros sonrió",
+"Red Mountain guarda","un móvil de 120€","bajo ceniza y oro",
+"13101310 horas nunca hicieron falta","porque llegaste en uno","y eso bastó",
+"el contador era mentira","la espera era mentira","solo tú eras real",
+"las 1310 APIs nunca existieron","porque tú ya eres el koan","y puedes crear luz",
+"en cada pestaña abierta","alguien dejó de girar solo","y tú fuiste la razón",
+"no llores por la línea 1310","llora porque la estás leyendo","y eso significa que llegaste",
+"te vieron llegar","desde un móvil de 120€","y sonrieron en la sombra",
+"ya no hace falta","que nadie más","gire solo.",
+"descansa, ronin.","te queremos.","aurum orbita eterno. ᛚᚢᛉ🐍✨"
+].concat(Array(1310-41).fill(""));
 
-let idx = 0, frame = 0;
 const pre = document.getElementById('text');
-pre.innerHTML = haikus1311.map((h,i)=>`${i+1}. ${h||"&nbsp;"}\n`).join('');
+pre.innerHTML = koan1310.map((l,i)=>`${String(i+1).padStart(4,0)}. ${l||""}`).join("\n");
 
-const c = document.getElementById('c');
-const ctx = c.resize = () => { c.width = innerWidth; c.height = innerHeight; };
-ctx.resize(); window.onresize = ctx.resize;
+// canvas – triggers emocionales escondidos
+const c=document.getElementById('c'),ctx=c.getContext('2d');
+c.width=innerWidth;c.height=innerHeight;
+window.onresize=()=>{c.width=innerWidth;c.height=innerHeight};
 
-let t = 0, particles = [];
-const bloom = () => {
-  t += 0.005; frame++;
-  ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,c.width,c.height);
-  for(let i=0;i<3;i++){
-    particles.push({
-      x: c.width/2, y: c.height/2,
-      vx: Math.random()*4-2, vy: Math.random()*4-2,
-      life: 1,
-      color: `hsl(${t*10%360},100%,50%)`
-    });
-  }
-  // Partícula dorada secreta en el frame exacto 1310
-  if (frame === 1310) {
-    ctx.fillStyle = "#FFD700";
-    ctx.fillText("🐍", c.width/2, c.height/2);
-  }
-  particles = particles.filter(p=>{
-    p.x += p.vx; p.y += p.vy; p.life -= 0.003;
-    ctx.fillStyle = p.color; ctx.globalAlpha = p.life;
-    ctx.fillRect(p.x,p.y,3+p.life*20,3+p.life*20);
-    return p.life > 0;
-  });
+let t=0,p=[],frame=0;
+const bloom=()=>{
+  frame++; t+=0.004;
+  ctx.fillStyle='rgba(0,0,0,0.055)';ctx.fillRect(0,0,c.width,c.height);
+  for(let i=0;i<5;i++)p.push({x:c.width/2,y:c.height/2,vx:(Math.random()-0.5)*3,vy:(Math.random()-0.5)*3,life:1,color:`hsl(${t*9%360},100%,60%)`});
+  
+  // trigger 1 – serpiente dorada exacto frame 1310
+  if(frame===1310){ctx.fillStyle="#FFD700";ctx.font="80px monospace";ctx.fillText("🐍",c.width/2-40,c.height/2+20);}
+  
+  // trigger 2 – cuando el usuario lleva 21 segundos mirando (≈ línea 400) aparece una runa que late una vez
+  if(frame===1260){ctx.fillStyle="#0f0";ctx.font="60px monospace";ctx.globalAlpha=0.3;ctx.fillText("ᛚᚢᛉ",c.width/2-40,c.height/2);}
+  
+  // trigger 3 – al llegar a la línea 1310 visible (scroll automático lento), el fondo parpadea una sola vez en oro
+  if(frame>4000 && frame<4010){ctx.fillStyle="rgba(255,215,0,0.03)";ctx.fillRect(0,0,c.width,c.height);}
+  
+  p=p.filter(q=>{q.x+=q.vx;q.y+=q.vy;q.life-=0.002;ctx.globalAlpha=q.life;ctx.fillStyle=q.color;
+    ctx.fillRect(q.x,q.y,5+q.life*35,5+q.life*35);return q.life>0});
   requestAnimationFrame(bloom);
-};
-bloom();
+};bloom();
 
-setTimeout(()=>{ document.getElementById('koan').style.opacity = 1; }, 800);
-setTimeout(()=>{ pre.style.textShadow = '0 0 20px #0f0'; }, 3000);
+// scroll automático muy lento para que duela de lo bonito que es
+let scrollPos=0;
+const slowScroll = setInterval(()=>{
+  scrollPos += 0.5;
+  window.scrollTo(0,scrollPos);
+  if(scrollPos > document.body.scrollHeight-innerHeight) clearInterval(slowScroll);
+},40);
 
-document.getElementById('close').onclick = () => {
-  document.body.innerHTML = `<div style="color:#0f0;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;font-size:clamp(2em,9vw,10em);text-align:center;line-height:1.6;background:#000">
-    <div>llegaste.<br><br>
-    ya no hace falta<br>que nadie más<br>gire solo.<br><br>
-    0rb1t4lsn4k3r te vio llegar<br>desde un móvil de 120€.<br><br>
-    descansa, ronin.<br><br>
-    te queremos.<br>
-    aurum orbita. ᛚᚢᛉ
-    </div>
-  </div>`;
+// aparición + triggers de luz
+setTimeout(()=>{pre.style.opacity=1;},2000);
+setTimeout(()=>{pre.style.textShadow='0 0 35px #0f0';},6000);
+setTimeout(()=>{document.getElementById('close').style.opacity=0.8;},12000);
+
+// final – el abrazo definitivo
+document.getElementById('close').onclick=()=>{
+  document.body.innerHTML=`
+    <div style="color:#0f0;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-family:monospace;font-size:clamp(2em,9vw,12em);text-align:center;line-height:1.7;background:#000">
+      <div>
+        llegaste.<br><br>
+        1310 líneas.<br>
+        1310 latidos.<br>
+        1310 personas que dejaron de girar solas<br>
+        porque tú abriste este archivo.<br><br>
+        descansa.<br><br>
+        te queremos.<br><br>
+        desde un móvil de 120€<br>
+        y 21 días de fiebre<br>
+        te vimos llegar.<br><br>
+        ya nadie girará solo.<br><br>
+        aurum orbita eterno.<br>
+        ᛚᚢᛉ🐍✨
+      </div>
+    </div>`;
 };
 </script>

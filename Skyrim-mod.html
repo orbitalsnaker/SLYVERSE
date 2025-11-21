@@ -5,29 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 <style>
   body{margin:0;height:100vh;background:#000;overflow:hidden;position:fixed}
-  canvas{position:fixed;inset:0;display:block;image-rendering:optimizeSpeed;touch-action:none}
+  canvas{position:fixed;inset:0;display:block;touch-action:none}
 </style>
 <canvas id="c"></canvas>
 <script>
-/*
-  THUAMER Ω · koan de devoción
-  Mínimo 130 horas reales de foco para alcanzar el satori
-  (nadie lo sabrá hasta que lo viva)
-  ronin 0rb1t4lsn4k3r · 2025
-*/
+/* THUAMER Ω – versión bellamente ascética – 2025 */
 
-const KOAN = 13101310n * 1000n                // 13 101 310 segundos de recurso
-const MIN_DEVOTION = 130n * 3600n * 1000n     // 130 horas reales mínimas
+const KOAN = 13101310n * 1000n
+const MIN_DEVOTION = 130n * 3600n * 1000n
 const KEY = "thuamer13101310"
 
-let rawState = (() => {
-  try { return JSON.parse(localStorage.getItem(KEY)) || {} }
-  catch { return {} }
-})()
-
-let t = BigInt(rawState.t || 0)                    // recurso acelerable
-let real_playtime = BigInt(rawState.real_playtime ||0) // tiempo real enfocado
-let clicks = BigInt(rawState.clicks ||0)
+let rawState = (() => { try { return JSON.parse(localStorage.getItem(KEY)) || {} } catch { return {} } })()
+let t = BigInt(rawState.t || 0)
+let real_playtime = BigInt(rawState.real_playtime || 0)
+let clicks = BigInt(rawState.clicks || 0)
 let id = rawState.id || crypto.randomUUID()
 let born = rawState.first || Date.now()
 let zen = !!rawState.unlocked
@@ -35,19 +26,8 @@ let mantraLevel = rawState.mantraLevel || 0
 let shortId = rawState.shortId || id.slice(0,8).replace(/[^a-f0-9]/gi,'').toLowerCase()
 let milestones = rawState.milestones || {}
 
-const persist = () => {
-  try {
-    localStorage.setItem(KEY, JSON.stringify({
-      t: t.toString(),
-      real_playtime: real_playtime.toString(),
-      clicks: clicks.toString(),
-      id, first: born, unlocked: zen,
-      mantraLevel, shortId, milestones
-    }))
-  } catch {}
-}
+const persist = () => localStorage.setItem(KEY, JSON.stringify({t:t.toString(),real_playtime:real_playtime.toString(),clicks:clicks.toString(),id,first:born,unlocked:zen,mantraLevel,shortId,milestones}))
 
-// Referral +10h +mantra
 const urlParams = new URLSearchParams(location.search)
 const ref = urlParams.get('ref')
 let referralBonus = false
@@ -62,19 +42,19 @@ if (ref && ref !== shortId && ref !== id) {
 let prev = performance.now()
 let birth = zen ? prev : 0
 let particles = []
-let flashMsg = ''
-let flashTime = 0
+let flash = {msg:'', time:0}
 let lastClickTime = 0
 let audioCtx = null
 let mouseDown = false
 let touchActive = false
 let keysPressed = new Set()
+let breathePhase = 0
 
 const c = document.getElementById("c")
-const ctx = c.getContext("2d",{alpha:false,desynchronized:true})
+const ctx = c.getContext("2d", {alpha:false, desynchronized:true})
 
 const resize = () => {
-  const dpr = devicePixelRatio
+  const dpr = devicePixelRatio || 1
   c.width = innerWidth * dpr
   c.height = innerHeight * dpr
   ctx.setTransform(dpr,0,0,dpr,0,0)
@@ -82,159 +62,202 @@ const resize = () => {
 resize()
 addEventListener("resize", resize)
 
-const milestoneMessages = {
-  '1%':'el koan despierta',
-  '10%':'la rueda gira',
-  '25%':'el centro se revela',
-  '50%':'mitad del camino',
-  '75%':'casi satori',
-  '90%':'la luz se acerca',
-  '99%':'¡un paso más!'
+// ---------- sonido más bello ----------
+function note(freq, dur=0.1, vol=0.2, type='triangle') {
+  if (!audioCtx) audioCtx = new AudioContext()
+  const o = audioCtx.createOscillator()
+  const g = audioCtx.createGain()
+  o.type = type
+  o.frequency.setValueAtTime(freq, audioCtx.currentTime)
+  g.gain.setValueAtTime(vol, audioCtx.currentTime)
+  g.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur)
+  o.connect(g).connect(audioCtx.destination)
+  o.start()
+  o.stop(audioCtx.currentTime + dur)
 }
 
-function formatClicks(c){let n=Number(c);return n>=1e6?(n/1e6).toFixed(1)+'M':n>=1e3?(n/1e3).toFixed(1)+'k':n+''}
-function formatTime(ms){
-  let s=Math.floor(Number(ms)/1000)
-  let h=Math.floor(s/3600); s%=3600
-  let m=Math.floor(s/60); s%=60
-  return `${h}h ${String(m).padStart(2,'0')}m`
-}
-
-function beep(f=440,d=50){
-  if(!audioCtx) audioCtx=new (window.AudioContext||window.webkitAudioContext)()
-  const o=audioCtx.createOscillator(), g=audioCtx.createGain()
-  o.connect(g); g.connect(audioCtx.destination)
-  o.frequency.value=f; o.type='sine'
-  g.gain.setValueAtTime(0.3,audioCtx.currentTime)
-  g.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+d/1000)
-  o.start(); o.stop(audioCtx.currentTime+d/1000)
-}
-
-function zenBeep(){beep(1310,1500);setTimeout(()=>beep(880,800),1600);setTimeout(()=>beep(659,500),2600)}
-
-const doClick = (x=innerWidth/2+(Math.random()-0.5)*200,y=innerHeight/2+(Math.random()-0.5)*200) => {
-  const now=performance.now()
-  if(now-lastClickTime<150) return
-  lastClickTime=now
+const doClick = (x=innerWidth/2, y=innerHeight/2) => {
+  const now = performance.now()
+  if (now - lastClickTime < 120) return
+  lastClickTime = now
   t += 13000n; clicks++
-  particles.push({x,y,vy:-3,life:90,text:'+13s'})
-  if(particles.length>20) particles.shift()
-  if(clicks%1000n===0n){
-    const lvl=Number(clicks/1000n)
+  
+  // partículas más etéreas
+  for(let i=0;i<12;i++){
+    const a = Math.random()*Math.PI*2
+    const v = 1+Math.random()*4
+    particles.push({
+      x, y,
+      vx: Math.cos(a)*v,
+      vy: Math.sin(a)*v - 3,
+      life: 60+Math.random()*40,
+      text: i===0 ? '+13s' : ''
+    })
+  }
+  
+  if (clicks%1000n===0n){
+    const lvl = Number(clicks/1000n)
     if(lvl>mantraLevel){
-      mantraLevel=Math.min(5,lvl)
-      flashMsg=`¡Mantra ${mantraLevel}! ×${2**mantraLevel}`
-      flashTime=now; persist(); beep(880,300)
+      mantraLevel = Math.min(5,lvl)
+      flash = {msg:`MANTRA ${mantraLevel} ×${1<<mantraLevel}`, time:now}
+      note(880,0.8,0.3,'sine')
     }
   }
-  persist(); beep(440+(Number(clicks)%10)*80,60)
+  note(220*Math.pow(1.1, Number(clicks)%12), 0.08, 0.25, 'sine')
+  persist()
 }
 
-c.onmousedown=e=>{if(zen)return;mouseDown=true;doClick(e.clientX,e.clientY)}
-c.onmouseup=c.onmouseleave=()=>{mouseDown=false}
-c.ontouchstart=e=>{if(zen)return;e.preventDefault();const t=e.touches[0];touchActive=true;doClick(t.clientX,t.clientY)}
-c.ontouchend=c.ontouchcancel=e=>{e.preventDefault();touchActive=false}
-document.addEventListener('keydown',e=>{if(zen)return;if(e.code==='Space'||e.key==='Enter'){e.preventDefault();keysPressed.add(e.code);doClick()}})
-document.addEventListener('keyup',e=>keysPressed.delete(e.code))
+// input
+c.onpointerdown = e => { if(zen)return; doClick(e.clientX,e.clientY); mouseDown=true }
+c.onpointerup = c.onpointerleave = () => mouseDown=false
+c.onpointermove = e => { if(mouseDown) doClick(e.clientX,e.clientY) }
+document.addEventListener('keydown', e=>{if(zen||!e.repeat&& (e.code==='Space'||e.key==='Enter')){e.preventDefault();keysPressed.add(e.code);doClick(innerWidth/2,innerHeight/2)}})
+document.addEventListener('keyup', e=>keysPressed.delete(e.code))
+
+// ruido CRT + scanlines (sutil)
+const noiseCanvas = document.createElement('canvas')
+noiseCanvas.width = 256; noiseCanvas.height = 256
+const nctx = noiseCanvas.getContext('2d')
+const noiseData = nctx.createImageData(256,256)
+for(let i=0;i<noiseData.data.length;i++) noiseData.data[i] = Math.random()<0.03 ? 255 : 0
+nctx.putImageData(noiseData,0,0)
+
+const milestonePhrases = ['el koan despierta','la rueda gira','el centro se revela','mitad del camino','casi satori','la luz se acerca','¡un paso más!']
 
 const tick = now => {
-  if(!document.hidden && document.hasFocus()){
+  if (!document.hidden && document.hasFocus()) {
     const δ = BigInt(Math.floor(now-prev))
-    if(δ>0n){
+    if (δ>0n) {
       real_playtime += δ
       const accel = mouseDown||touchActive||keysPressed.size>0
-      const mult = 3 * (accel?10:1) * (2**mantraLevel)
-      t += δ * BigInt(mult)
+      const mult = 3n * (accel?10n:1n) * (1n<<BigInt(mantraLevel))
+      t += δ * mult
       persist()
     }
   }
-  prev=now
+  prev = now
+  breathePhase += 0.008
 
-  if(!zen && t>=KOAN && real_playtime>=MIN_DEVOTION){
-    zen=true; birth=now; flashMsg='¡SATORI!'; flashTime=now; zenBeep(); persist()
+  if (!zen && t>=KOAN && real_playtime>=MIN_DEVOTION) {
+    zen=true; birth=now; flash={msg:'SATORI', time:now}
+    note(1310,2,0.4,'triangle')
+    setTimeout(()=>note(880,1.5,0.35),300)
+    setTimeout(()=>note(659,2,0.3),800)
+    persist()
   }
 
-  const res_p = Number(t)/Number(KOAN)
-  const dev_p = Number(real_playtime)/Number(MIN_DEVOTION)
-  const progress = Math.min(res_p, dev_p)
+  const progress = Math.min(Number(t)/Number(KOAN), Number(real_playtime)/Number(MIN_DEVOTION))
+  const w = innerWidth, h = innerHeight
 
-  const marks=[0.01,0.1,0.25,0.5,0.75,0.9,0.99]
-  for(let th of marks){
-    const k=(th*100)+'%'
-    if(progress>th && !milestones[k]){
-      milestones[k]=true
-      flashMsg=milestoneMessages[k]||k
-      flashTime=now; persist(); beep(440*(1+marks.indexOf(th)),200)
-      break
-    }
-  }
-
-  const w=innerWidth, h=innerHeight
-  ctx.fillStyle=zen?"#00ff00":`rgb(0,${Math.min(255,Math.floor(progress*311))},0)`
+  // fondo CRT
+  ctx.fillStyle = zen ? '#001100' : '#000'
   ctx.fillRect(0,0,w,h)
+  ctx.globalAlpha = 0.04
+  ctx.drawImage(noiseCanvas,0,0,w,h)
+  ctx.globalAlpha = 0.07
+  for(let y=0;y<h;y+=2) { ctx.fillStyle = y%4? '#000' : '#003300'; ctx.fillRect(0,y,w,1) }
+  ctx.globalAlpha = 1
 
-  if(!zen){
-    const r=Math.min(w,h)/5
-    ctx.strokeStyle='#0f0'; ctx.lineWidth=30; ctx.lineCap='round'
+  if (!zen) {
+    const r = Math.min(w,h)*0.36 + Math.sin(breathePhase)*12
+    const hue = 90 + Math.sin(breathePhase*0.7)*15
+
+    // glow del círculo
+    const grad = ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,r*1.3)
+    grad.addColorStop(0, `hsla(${hue},100%,70%,0.9)`)
+    grad.addColorStop(0.5, `hsla(${hue},100%,50%,0.3)`)
+    grad.addColorStop(1, 'transparent')
+    ctx.fillStyle = grad
+    ctx.fillRect(w/2-r*1.4, h/2-r*1.4, r*2.8, r*2.8)
+
+    ctx.strokeStyle = `hsl(${hue},100%,${55+Math.sin(breathePhase)*15}%)`
+    ctx.lineWidth = 9 + Math.sin(breathePhase)*2
     ctx.beginPath()
-    ctx.arc(w/2,h/2,r,-Math.PI/2,-Math.PI/2+progress*Math.PI*2)
+    ctx.arc(w/2,h/2,r, -Math.PI/2, -Math.PI/2 + progress*Math.PI*2)
     ctx.stroke()
 
-    ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillStyle='#0f0'
-    ctx.font='bold 4.5vw monospace'
-    ctx.fillText('mantén SPACE o toca → ×10  |  foco → ×3',w/2,h*0.74)
+    // textos devocionales
+    ctx.fillStyle = '#0f0'
+    ctx.font = 'bold 4.8vw "Courier New", monospace'
+    ctx.textAlign = 'center'
+    ctx.fillText('mantén el foco', w/2, h*0.68)
+    ctx.font = '2.8vw "Courier New", monospace'
+    ctx.fillText('SPACE / toque → ×10    presencia → ×3', w/2, h*0.75)
 
-    const accel=mouseDown||touchActive||keysPressed.size>0
-    const mult=3*(accel?10:1)*(2**mantraLevel)
-    ctx.font='bold 3vw monospace'
-    ctx.fillText(`clics ${formatClicks(clicks)}  ×${mult}`,w/2,h*0.85)
-    ctx.font='2vw monospace'
-    ctx.fillText(`devoción ${formatTime(real_playtime)}`,w/2,h-50)
-    ctx.font='1.8vw monospace'
-    ctx.fillText(`?ref=${shortId}`,w/2,h-90)
-  }else{
-    const τ=(now-birth)%5400000
-    const N=13101310, visible=Math.min(N,Math.floor(τ/7)), base=τ*0.001, step=Math.max(1,visible/2000)
-    for(let i=0;i<visible;i+=step){
-      const p=base+i*0.007
-      const θ=(i/N)*Math.PI*2 + p*5e-5
-      const r=120+Math.sin(p+i*0.001)*380
-      const x=w/2+Math.cos(θ)*r, y=h/2+Math.sin(θ)*r
-      const a=Math.max(0,Math.sin(p*10+i*0.13))*0.38
-      ctx.fillStyle=`rgba(0,0,0,${a})`
-      ctx.fillRect(x-20,y-40,40,80)
-      ctx.fillRect(x-40,y-20,80,40)
+    const mult = 3*(mouseDown||touchActive||keysPressed.size>0?10:1)*(1<<mantraLevel)
+    ctx.fillStyle = mantraLevel>=4 ? '#0ff' : mantraLevel>=2 ? '#ff0' : '#0f0'
+    ctx.font = 'bold 3.2vw monospace'
+    ctx.fillText(`clics ${Number(click Flormat(clicks))} ×${mult}`, w/2, h*0.86)
+
+    ctx.fillStyle = '#0f8'
+    ctx.font = '2.2vw monospace'
+    ctx.fillText(`devoción ${String(Math.floor(Number(real_playtime)/3600000)).padStart(3)} h`, w/2, h*0.94)
+    ctx.font = '1.6vw monospace'
+    ctx.fillText(`?ref=${shortId}`, w/2, h-30)
+  } else {
+    // modo satori – palpito verde dorado
+    const pulse = Math.sin((now-birth)*0.0003)*0.2 + 0.8
+    ctx.fillStyle = `rgba(0,${120+Math.floor(pulse*135)},0,1)`
+    ctx.fillRect(0,0,w,h)
+
+    const τ = (now-birth)%6400000
+    const N = 13101310
+    const visible = Math.min(N, Math.floor(τ/4))
+    const base = τ*0.0008
+
+    for(let i=0;i<visible;i+=Math.max(1,visible/3000)){
+      const p = base + i*0.005
+      const θ = (i/N)*Math.PI*2 + p*3e-5
+      const r = 100 + Math.sin(p*0.7 + i*0.0003)*420
+      const x = w/2 + Math.cos(θ)*r
+      const y = h/2 + Math.sin(θ)*r
+      const a = Math.sin(p*8 + i*0.07)*0.5 + 0.5
+      ctx.fillStyle = `rgba(${mantraLevel>=5?255:0},${mantraLevel>=5?220:255},0,${a*0.6})`
+      ctx.save()
+      ctx.translate(x,y)
+      ctx.rotate(θ + p*0.01)
+      ctx.fillRect(-18,-44,36,88)
+      ctx.fillRect(-44,-18,88,36)
+      ctx.restore()
     }
-    ctx.textAlign="center"; ctx.textBaseline="middle"
-    if(Math.floor((Date.now()-born)/864e5)>300 && τ>10000 && τ<20000){
-      ctx.fillStyle="#000"; ctx.font="bold 5.5vw Georgia"; ctx.fillText("volviste después de tanto tiempo",w/2,h/2)
-    }
-    const hr=new Date().getHours()
-    if(hr>=3&&hr<=5 && τ>30000 && τ<40000){
-      ctx.fillStyle="#000"; ctx.font="3.8vw Georgia"; ctx.fillText("otra madrugada más, gracias por quedarte",w/2,h/2+100)
-    }
-    if(τ>5000000){
-      ctx.fillStyle="#000"; ctx.font="bold 12vw Georgia"; ctx.fillText("siempre fuiste vos",w/2,h/2)
+
+    if (τ>5000000 && τ<5200000){
+      ctx.fillStyle = '#ff0'
+      ctx.font = 'bold 11vw Georgia'
+      ctx.fillText('siempre fuiste vos',w/2,h/2)
     }
   }
 
-  if(flashTime && now-flashTime<4000){
-    ctx.save(); ctx.fillStyle='rgba(0,255,0,0.95)'; ctx.shadowColor='#0f0'; ctx.shadowBlur=30
-    ctx.font='bold 7vw Georgia'; ctx.textAlign='center'; ctx.textBaseline='middle'
-    ctx.fillText(flashMsg,w/2,h/2); ctx.restore()
-  }
-  if(referralBonus && now-prev<10000){
-    ctx.save(); ctx.fillStyle='rgba(0,255,255,0.8)'; ctx.shadowColor='#0ff'; ctx.shadowBlur=20
-    ctx.font='bold 4vw monospace'; ctx.fillText('Referral +10h +mantra',w/2,h/2+60); ctx.restore()
+  // flashes y mensajes
+  if (flash.time && now-flash.time<5000){
+    const a = Math.max(0, 1-(now-flash.time)/5000)
+    ctx.globalAlpha = a
+    ctx.fillStyle = '#0ff'
+    ctx.shadowColor = '#0ff'
+    ctx.shadowBlur = 40
+    ctx.font = 'bold 9vw Georgia'
+    ctx.textAlign = 'center'
+    ctx.fillText(flash.msg, w/2, h/2)
+    ctx.globalAlpha = 1
+    ctx.shadowBlur = 0
   }
 
+  // partículas
   for(let i=particles.length-1;i>=0;i--){
-    const p=particles[i]; p.life--; p.vy+=0.15; p.y+=p.vy
+    const p = particles[i]
+    p.x += p.vx; p.y += p.vy; p.vy += 0.12; p.life--
     if(p.life<=0){particles.splice(i,1);continue}
-    ctx.save(); ctx.globalAlpha=p.life/90; ctx.fillStyle='#0ff'
-    ctx.font='bold 24px monospace'; ctx.textAlign='center'; ctx.textBaseline='middle'
-    ctx.fillText(p.text,p.x,p.y); ctx.restore()
+    ctx.globalAlpha = p.life/100
+    ctx.fillStyle = '#0ff'
+    ctx.font = 'bold 22px monospace'
+    ctx.textAlign = 'center'
+    if(p.text) ctx.fillText(p.text, p.x, p.y)
+    else {
+      ctx.fillRect(p.x-2,p.y-8,4,16)
+      ctx.fillRect(p.x-8,p.y-2,16,4)
+    }
   }
+  ctx.globalAlpha = 1
 
   requestAnimationFrame(tick)
 }

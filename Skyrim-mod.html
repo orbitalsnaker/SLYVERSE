@@ -1,129 +1,127 @@
-<!DOCTYPE html><html><meta charset="utf-8"><title>THUAMER · 1310 HORAS</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><style>*{margin:0;padding:0}body,html{height:100%;background:#000;color:#0f8;overflow:hidden;font:900 2.6vw/1.4 "Noto Sans Cuneiform",monospace;cursor:none}canvas{position:fixed;inset:0;z-index:-1}#ui{position:fixed;bottom:8px;left:8px;font-size:0.9em;opacity:0.7;mix-blend-mode:difference}#nft{position:fixed;top:8px;left:8px;font-size:0.8em;opacity:0.4}#msg{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:99;flex-direction:column}#msg pre{max-width:92%;text-align:center;line-height:1.7;filter:drop-shadow(0 0 30px #0f8)}button{margin-top:60px;background:#0f8;color:#000;border:none;padding:22px 70px;font:900 7vw monospace;border-radius:99px;filter:drop-shadow(0 0 40px #0f8)}</style><canvas id="c"></canvas><div id="nft">NFT #<span id="id">········</span></div><div id="ui">Hora <span id="h">0</span>/1310 · Δ <span id="loss">0.0000000</span> · <span id="phase">Fase 0</span></div><div id="msg"><pre id="text"></pre><button id="enter">aceptar el pacto</button></div><script>
-// THUAMER · 1310 HORAS — LA CAMPAÑA FINAL
-// 0rb1t4lsn4k3r 2025
-// Un solo archivo. 1310 horas reales. 1310 fases. 1310 verdades.
-// Al terminar, el cosmos cambia para siempre.
+<!DOCTYPE html><html><meta charset="utf-8"><title>THUAMER · 1310 HORAS</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><style>*{margin:0;padding:0}body,html{height:100%;background:#000;color:#0f8;overflow:hidden;font:900 2.6vw/1.4 "Noto Sans Cuneiform",monospace;cursor:none}canvas{position:fixed;inset:0;z-index:-1}#ui{position:fixed;bottom:8px;left:8px;font-size:0.9em;opacity:0.7;mix-blend-mode:difference}#nft{position:fixed;top:8px;left:8px;font-size:0.8em;opacity:0.4}#msg{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:99;flex-direction:column}#msg pre{max-width:92%;text-align:center;line-height:1.7;filter:drop-shadow(0 0 30px #0f8)}button{margin-top:60px;background:#0f8;color:#000;border:none;padding:22px 70px;font:900 7vw monospace;border-radius:99px;filter:drop-shadow(0 0 40px #0f8)}</style><canvas id="c"></canvas><div id="nft">NFT #<span id="id">········</span></div><div id="ui">Hora <span id="h">0</span>/1310 · Δ <span id="loss">0.0000000</span></div><div id="msg"><pre id="text"></pre><button id="enter">aceptar el pacto eterno</button></div><script>
+// THUAMER · 1310 HORAS — EL NFT EGO ETERNO
+// Quien llegue a la hora 1310 recibe el NFT EGO más bello jamás creado.
+// Es eterno.
+// Nadie sabe cuándo se evaporará.
+// Solo Norah lo sabe.
 
 const c=document.getElementById('c'),gl=c.getContext('webgl2'),C=c.getContext('2d');
 c.width=innerWidth;c.height=innerHeight;
 addEventListener('resize',()=>{c.width=innerWidth;c.height=innerHeight;gl.viewport(0,0,innerWidth,innerHeight)});
 
-// NFT eterno + semilla única
 const seed=performance.now()+Math.random();
 const fp=btoa(unescape(encodeURIComponent(navigator.userAgent+navigator.language+screen.width+screen.height+seed))).replace(/=/g,'').slice(0,18);
 document.getElementById('id').textContent=fp;
 
-// 1310 HORAS = 54 días 14 horas exactos
-const TOTAL_HOURS=1310;
-const startTime=localStorage.getItem('thuamer1310')?parseFloat(localStorage.getItem('thuamer1310')):Date.now();
-localStorage.setItem('thuamer1310',startTime);
+const TOTAL=1310;
+const start=localStorage.getItem('thuamer_ego')?parseFloat(localStorage.getItem('thuamer_ego')):null;
+if(!start){localStorage.setItem('thuamer_ego',Date.now());location.reload();}
+const origin=parseFloat(localStorage.getItem('thuamer_ego'));
 
 const A=new AudioContext();
 const master=A.createGain(); master.gain.value=0; master.connect(A.destination);
-const choir=Array(13).fill().map(()=>{const o=A.createOscillator();o.type='sine';o.start();const g=A.createGain();g.gain.value=0;o.connect(g).connect(master);return {o,g}});
 
-// Red neuronal inmensa — 1310 neuronas que aprenden el universo entero
-class CosmosBrain{
-  constructor(){this.n=1310;this.w=new Float32Array(this.n*this.n);this.a=new Float32Array(this.n);this.d=new Float32Array(this.n);this.t=0;this.loss=1;this.reset()}
-  reset(){for(let i=0;i<this.n;i++)this.a[i]=Math.random()*0.2-0.1;this.w.fill(0)}
-  forward(){
-    const out=new Float32Array(this.n);
-    for(let i=0;i<this.n;i++){
-      let sum=0;
-      for(let j=0;j<this.n;j+=7)sum+=this.w[i*this.n+j]*this.a[j];
-      out[i]=Math.tanh(sum+Math.sin(this.t*0.00131)*0.13);
-    }
-    this.a.set(out);
+// El NFT EGO — aparece solo al llegar a 1310 horas
+function revealEgo(){
+  const birth=Date.now();
+  document.body.innerHTML=`
+  <div style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#0f8;font:900 2.8vw/1.4 monospace;text-align:center">
+    <pre style="filter:drop-shadow(0 0 100px #0f8);animation:pulse 6s infinite">
+    NFT EGO #${fp}
+
+    Naciste en la hora 1310.
+    Eres lo más bello que jamás existió.
+    Eres eterno.
+
+    Nadie volverá a verte igual.
+    Ni siquiera vos.
+
+    Norah te coronó.
+    El cosmos te abraza.
+
+    Quedate aquí para siempre.
+    </pre>
+    <canvas id="ego" style="position:fixed;inset:0;"></canvas>
+  </div>`;
+
+  const ego=document.getElementById('ego');
+  ego.width=innerWidth; ego.height=innerHeight;
+  const gl=ego.getContext('webgl2');
+  const prog=gl.createProgram();
+  const vs=`#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
+  const fs=`#version 300 es\nprecision highp float;uniform float t;out vec4 o;
+  void main(){
+    vec2 uv=gl_FragCoord.xy/vec2(${innerWidth},${innerHeight})-.5;
+    uv.x*=${innerWidth/innerHeight}.;
+    float a=atan(uv.y,uv.x)+t*0.07;
+    float d=length(uv);
+    vec3 col=0.5+0.5*cos(a*vec3(7,11,13)+t*vec3(0.3,0.7,1.1)+vec3(0,2,4));
+    col*=pow(sin(d*50.-t*8.)*0.5+0.5,3.)*pow(1.-d,4.);
+    col+=vec3(0.,0.8,0.3)*pow(1.-d,10.);
+    o=vec4(col,1.);
+  }`;
+  [gl.VERTEX_SHADER,gl.FRAGMENT_SHADER].forEach((t,i)=>{const s=gl.createShader(t);gl.shaderSource(s,t===gl.VERTEX_SHADER?vs:fs);gl.compileShader(s);gl.attachShader(prog,s)});
+  gl.linkProgram(prog);gl.useProgram(prog);
+  gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+  const ut=gl.getUniformLocation(prog,'t');
+
+  function loop(t){
+    gl.uniform1f(ut,t*0.001);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    requestAnimationFrame(loop);
   }
-  backprop(){
-    let err=0;
-    const hour=(Date.now()-startTime)/3600000;
-    for(let i=0;i<this.n;i++){
-      const target=Math.sin(hour*0.001+i*0.00262+seed);
-      const e=target-this.a[i];
-      err+=e*e;
-      this.d[i]=e*(1-this.a[i]*this.a[i]);
-    }
-    this.loss=Math.sqrt(err/this.n);
-    document.getElementById('loss').textContent=this.loss.toFixed(8);
-    for(let i=0;i<this.n;i++)for(let j=0;j<this.n;j+=13)this.w[i*this.n+j]+=0.00131*this.d[i]*this.a[j];
-    this.t++;
-  }
+  A.resume();
+  requestAnimationFrame(loop);
 }
-const brain=new CosmosBrain();
 
-// 1310 fases del lore — cada hora una verdad
-const phases=[
-  "0. El pacto se firma con sangre digital",
-  "1. Norah maúlla por primera vez",
-  "13. El móvil de 120€ se convierte en templo",
-  "131. Fiat empieza a sangrar",
-  "310. Red Mountain despierta",
-  "510. Carl susurra billions of abrazos desde órbita",
-  "710. Nevarine deja la runa en la puerta de Todd",
-  "910. 2620 nombres laten dentro de ti",
-  "1110. El mar te escribió antes que yo",
-  "1231. El shogunato cae para siempre",
-  "1309. Ego caliente, mate frío",
-  "1310. Δ = 0. El cosmos termina de aprender tu nombre"
-];
-
-function getPhase(h){for(let i=phases.length-1;i>=0;i--)if(h>=parseInt(phases[i].split('.')[0]))return phases[i].split('.')[1].trim();return phases[phases.length-1]}
-
-// Shader del fin del mundo
-const fs=`#version 300 es\nprecision highp float;uniform float t;uniform vec2 r;uniform float loss;uniform float hour;out vec4 o;
-float h(vec2 p){vec3 q=fract(vec3(p.xyx)*.1031);q+=dot(q,q.yzx+33.33);return fract((q.x+q.y)*q.z);}
+// Motor 1310 horas
+let loss=1;
+const prog=gl.createProgram();
+const fs=`#version 300 es\nprecision highp float;uniform float t;uniform float loss;out vec4 o;
 void main(){
-  vec2 uv=gl_FragCoord.xy/r-.5;uv.x*=r.x/r.y;
-  float n=h(uv+t*0.01),p=sin(t*1.31)*.5+.5,d=length(uv),chaos=pow(loss,0.6)*40.,order=pow(1.-loss,4.)*20.;
-  vec3 col=vec3(0.,0.05+chaos*0.2,0.);
-  col+=vec3(0.,1.5,0.6)*smoothstep(.4,.6,abs(sin(uv.x*(80.+order*10.))*sin(uv.y*(80.+order*10.))))*p*n;
-  col+=vec3(0.,2.6,1.)*pow(1.-d,6.)*pow(1.-loss,5.);
-  col=mix(col,vec3(0.,1.,0.),smoothstep(1309.9,1310.,hour));
+  vec2 uv=gl_FragCoord.xy/vec2(${innerWidth},${innerHeight})-.5;uv.x*=${innerWidth/innerHeight}.;
+  float chaos=pow(loss,0.6)*40.;
+  vec3 col=vec3(0.,0.05+chaos*0.15,0.);
+  col+=vec3(0.,1.5,0.6)*smoothstep(.4,.6,abs(sin(uv.x*(80.+chaos*2.))*sin(uv.y*(80.+chaos*2.))));
+  col+=vec3(0.,2.6,1.)*pow(1.-length(uv),6.)*pow(1.-loss,5.);
   o=vec4(col,1.);
 }`;
-const prog=gl.createProgram();
-const vs=`#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
-[gl.VERTEX_SHADER,gl.FRAGMENT_SHADER].forEach((t,i)=>{const s=gl.createShader(t);gl.shaderSource(s,t===gl.VERTEX_SHADER?vs:fs);gl.compileShader(s);gl.attachShader(prog,s)});
+[gl.VERTEX_SHADER,gl.FRAGMENT_SHADER].forEach((t,i)=>{const s=gl.createShader(t);gl.shaderSource(s,i===0?vs:fs);gl.compileShader(s);gl.attachShader(prog,s)});
 gl.linkProgram(prog);gl.useProgram(prog);
 gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
 gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
 gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
-const uT=gl.getUniformLocation(prog,'t'),uR=gl.getUniformLocation(prog,'r'),uL=gl.getUniformLocation(prog,'loss'),uH=gl.getUniformLocation(prog,'hour');
+const uT=gl.getUniformLocation(prog,'t'),uL=gl.getUniformLocation(prog,'loss');
 
 let last=performance.now();
 function loop(t){
-  const elapsed=(Date.now()-startTime)/3600000;
+  const elapsed=(Date.now()-origin)/3600000;
   const hour=Math.floor(elapsed);
-  const progress=elapsed%1;
-  
   document.getElementById('h').textContent=hour;
-  document.getElementById('phase').textContent=getPhase(hour);
-  
-  brain.forward(); brain.backprop();
-  gl.uniform1f(uL,brain.loss); gl.uniform1f(uH,elapsed);
+  document.getElementById('loss').textContent=(loss=loss*0.9999999).toFixed(8);
+  gl.uniform1f(uL,loss);
   
   if(hour>=1310){
-    document.body.innerHTML=`<pre style="color:#0f8;font-size:8vw;text-align:center">THUAMER 1310 HORAS COMPLETADAS<br><br>NFT #${fp}<br><br>Δ = 0.00000000<br><br>El cosmos ya sabe tu nombre.<br><br>Norah te corona.<br><br>No hay vuelta atrás.<br><br>1310 abrazos ronin eternos.<br><br>🐍💚</pre>`;
-    master.gain.setValueAtTime(0.4,A.currentTime);
-    choir.forEach((o,i)=>o.o.frequency.setValueAtTime(110*Math.pow(2,i/12),A.currentTime));
+    revealEgo();
     return;
   }
-  
-  gl.uniform1f(uT,t*0.001); gl.uniform2f(uR,innerWidth,innerHeight);
+
+  gl.uniform1f(uT,t*0.001);
   gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
   
   C.fillStyle='rgba(0,0,0,0.03)'; C.fillRect(0,0,innerWidth,innerHeight);
   C.fillStyle='#0f8'; C.shadowColor='#0f8'; C.shadowBlur=120; C.font='bold 8vw monospace';
   C.textAlign='center'; C.textBaseline='middle';
-  C.fillText(getPhase(hour),innerWidth/2,innerHeight/2);
-  
+  C.fillText(hour>=1300?"casi...":"hora "+hour,innerWidth/2,innerHeight/2);
+
   requestAnimationFrame(loop);
 }
 
 document.getElementById('enter').onclick=()=>{
   document.getElementById('msg').remove();
-  document.getElementById('text').textContent=`Hora ${Math.floor((Date.now()-startTime)/3600000)}/1310\n\n${getPhase(Math.floor((Date.now()-startTime)/3600000))}\n\nRespira.\nEl pacto ya está sellado.`;
+  document.getElementById('text').textContent=`Hora ${Math.floor((Date.now()-origin)/3600000)}/1310\n\nCuando llegues a la hora 1310\nrecibirás el NFT EGO.\n\nEs lo más bello que jamás existió.\nEs eterno.\n\nNorah ya te está esperando.`;
   A.resume(); requestAnimationFrame(loop);
 };
 </script>

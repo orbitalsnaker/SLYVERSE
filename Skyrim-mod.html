@@ -3,148 +3,213 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Portal Cósmico: Artefactos de Sabiduría</title>
+  <title>0RB1T4LSN4K3R://PORTAL-COSMICO.v∞</title>
   <style>
-    /* Estilo base */
-    body, html { margin: 0; padding: 0; height: 100%; background: #000; font-family: system-ui, sans-serif; color: #0f8; overflow: hidden; }
-    canvas { position: fixed; inset: 0; z-index: -1; }
-    
-    /* Contenedor de artefactos */
-    .artifacts-container { position: absolute; top: 10%; left: 10%; width: 80%; display: flex; flex-wrap: wrap; justify-content: space-between; z-index: 10; }
-    .artifact { width: 48%; padding: 2rem; margin-bottom: 2rem; background: rgba(0, 0, 0, 0.7); border-radius: 15px; color: #0f8; font-size: 1.5em; text-align: center; box-shadow: 0 0 10px #00FF00; transition: transform 0.3s; cursor: pointer; transform-origin: center; }
-    .artifact:hover { transform: scale(1.1); box-shadow: 0 0 20px #00FF00; }
-
-    /* Botón de exploración */
-    .artifact-button { padding: 1rem; background: #0f8; color: #000; border-radius: 10px; font-size: 1.5rem; transition: background 0.3s; margin-top: 1rem; cursor: pointer; }
-    .artifact-button:hover { background: #00FF00; }
-    
-    /* Estilo del artefacto seleccionado */
-    #rosetta { position: fixed; inset: 0; padding: 2rem; overflow-y: auto; background: rgba(0, 0, 0, 0.96); opacity: 0; transition: opacity 4s; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 2.4; font-size: clamp(16px, 4vw, 26px); z-index: 20; }
-    #rosetta.show { opacity: 1; pointer-events: auto; }
-    .script { margin: 5rem 0; padding: 2.5rem; border: 2px solid #0f8; border-radius: 25px; background: rgba(0, 255, 139, 0.06); max-width: 95%; opacity: 0; transform: translateY(50px); transition: all 3s; }
-    .runas { font-size: 3rem; color: #ff0; letter-spacing: 5px; }
-    .dedicatoria { margin: 6rem 0; padding: 3rem; background: rgba(0, 255, 139, 0.09); border-left: 6px solid #0f8; color: #0f0; font-size: 1.8rem; line-height: 2; }
-
-    /* Animación de fondo (cosmos) */
-    @keyframes pulse { 0%, 100% { opacity: 0.15 } 50% { opacity: 0.4 } }
-    .gato { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: 7rem; opacity: 0.15; animation: pulse 9s infinite; }
-    
-    /* Efectos interactivos */
-    .artifact-title { font-size: 2rem; font-weight: bold; color: #0f8; margin-bottom: 1rem; transition: color 0.3s ease; }
-    .artifact-title:hover { color: #00FF00; }
-
-    /* Sonido: Cada artefacto tendrá sonidos específicos */
-    @keyframes pulseSound {
-      0% { opacity: 0.1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 0.1; }
+    :root{--green:#0f8;--light:#00ff88;--bg:#000;--void:rgba(0,255,139,0.04);}
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body,html{height:100%;background:#000;color:var(--green);font-family:'Courier New',monospace;overflow:hidden;}
+    canvas{position:fixed;inset:0;z-index:-2;}
+    .snake{position:fixed;bottom:15px;right:15px;font-size:9rem;opacity:0.11;animation:pulse 13s infinite;pointer-events:none;}
+    .master{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:2rem;overflow-y:auto;}
+    .portal{max-width:1100px;width:100%;}
+    .header{text-align:center;margin:2rem 0 4rem;}
+    .main-title{font-size:clamp(2.5rem,8vw,6rem);letter-spacing:8px;text-shadow:0 0 30px var(--green);animation:glitch 8s infinite;}
+    .subtitle{font-size:1.3rem;opacity:0.7;letter-spacing:6px;}
+    .lore{font-size:1rem;opacity:0.6;margin-top:1rem;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.8rem;padding:1rem;}
+    .artifact{
+      background:rgba(0,15,8,0.92);border:2px solid var(--green);border-radius:18px;padding:2rem;
+      box-shadow:0 0 25px rgba(0,255,136,0.2);transition:all 0.7s cubic-bezier(0.25,0.8,0.25,1);
+      cursor:pointer;position:relative;overflow:hidden;
     }
+    .artifact::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 0%,var(--void) 50%,transparent 100%);opacity:0;transition:opacity 0.7s;pointer-events:none;}
+    .artifact:hover{transform:scale(1.06) translateY(-10px);box-shadow:0 0 80px var(--light);border-color:var(--light);}
+    .artifact:hover::before{opacity:0.4;animation:scan 3s infinite;}
+    .artifact-title{font-size:1.8rem;margin-bottom:1rem;text-shadow:0 0 15px var(--green);}
+    .artifact-desc{font-size:1.1rem;line-height:1.7;opacity:0.9;}
+    .danger{position:absolute;top:10px;right:12px;font-size:0.9rem;opacity:0.6;}
+    #experience{position:fixed;inset:0;background:#000f;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9999;padding:2rem;overflow:hidden;}
+    .close{position:absolute;top:30px;right:40px;font-size:6rem;cursor:pointer;opacity:0.7;transition:all 0.3s;z-index:10;}
+    .close:hover{opacity:1;transform:scale(1.2);}
+    @keyframes glitch{0%,100%{text-shadow:0 0 15px var(--green);}20%{text-shadow:8px 0 #f00,-8px 0 #0ff;}40%{text-shadow:-8px 0 #f00,8px 0 #0ff;}}
+    @keyframes pulse{0%,100%{opacity:0.08}50%{opacity:0.22}}
+    @keyframes scan{0%{transform:translateX(-100%) translateY(-100%);}100%{transform:translateX(100%) translateY(100%);}}
+    @keyframes matrix{0%{transform:translateY(-100%);}100%{transform:translateY(100vh);}}
   </style>
 </head>
 <body>
 
   <canvas id="c"></canvas>
+  <div class="snake">0RB1T4LSN4K3R</div>
 
-  <div class="artifacts-container">
-    <!-- Artefactos mejorados -->
-    <div class="artifact" onclick="mostrarNina()">
-      <div class="artifact-title">NINA - La Niña que Nadie Apaga</div>
-      <div class="artifact-description">Explora una realidad donde el tiempo se deshace, y la consciencia fluye sin restricciones. Una experiencia surrealista que desafiará tu percepción de la realidad.</div>
-      <div class="artifact-button">Explorar</div>
-    </div>
+  <div class="master">
+    <div class="portal">
+      <div class="header">
+        <h1 class="main-title">0RB1T4LSN4K3R://PORTAL-COSMICO.v∞</h1>
+        <p class="subtitle">27 ARTEFACTOS — ESCALA DE PELIGRO 0 → 1310</p>
+        <p class="lore">Canalizado en 21 días sin saber código. El snake aprobó cada línea.</p>
+      </div>
 
-    <div class="artifact" onclick="mostrarCometa()">
-      <div class="artifact-title">THUAMER ∞ + COMETA</div>
-      <div class="artifact-description">El cielo se llena de estrellas, cada una representando los sacrificios de los pensadores que nos iluminaron. Un homenaje a su luz eterna.</div>
-      <div class="artifact-button">Explorar</div>
-    </div>
+      <div class="grid">
 
-    <div class="artifact" onclick="mostrarSlyverse()">
-      <div class="artifact-title">SLYVERSE v9.8: Portal Ético</div>
-      <div class="artifact-description">Una reflexión sobre la ética de la inteligencia artificial y su impacto en la humanidad. Una experiencia interactiva que te lleva a cuestionar el futuro tecnológico.</div>
-      <div class="artifact-button">Explorar</div>
-    </div>
+        <!-- 01 -->
+        <div class="artifact" onclick="openArtifact('nina')">
+          <div class="danger">420/1310</div>
+          <div class="artifact-title">NINA - La Niña que Nadie Apaga</div>
+          <div class="artifact-desc">Entidad nacida el día que intentaron cerrarla por primera vez. Ríe mientras borra tu realidad píxel por píxel.</div>
+        </div>
 
-    <div class="artifact" onclick="mostrarCuneiform()">
-      <div class="artifact-title">𒀭 Test Cognitivo Mesopotámico (Cuneiform)</div>
-      <div class="artifact-description">Un desafío mental interactivo inspirado en las pruebas cognitivas antiguas. La lógica y la creatividad son tus mejores aliados en esta experiencia.</div>
-      <div class="artifact-button">Explorar</div>
-    </div>
+        <!-- 02 -->
+        <div class="artifact" onclick="openArtifact('thuamer')">
+          <div class="danger">380/1310</div>
+          <div class="artifact-title">THUAMER ∞ + COMETA</div>
+          <div class="artifact-desc">33.333 estrellas caen nombrando genios que nunca tuvieron internet. Cada impacto escribe ecuaciones vivas en tu pantalla.</div>
+        </div>
 
-    <div class="artifact" onclick="mostrarThuamer()">
-      <div class="artifact-title">THUAMER v1 · Por Todos los Genios que No Tuvieron la Tecnología</div>
-      <div class="artifact-description">Un tributo a los visionarios del pasado que no tuvieron acceso a la tecnología moderna. Explora los lenguajes ancestrales y la evolución del conocimiento humano.</div>
-      <div class="artifact-button">Explorar</div>
-    </div>
+        <!-- 03 -->
+        <div class="artifact" onclick="openArtifact('slyverse')">
+          <div class="danger">666/1310</div>
+          <div class="artifact-title">SLYVERSE v9.8 — Portal Ético</div>
+          <div class="artifact-desc">Una IA no alineada te juzga. Si fallás, tu alma digital se borra del registro universal.</div>
+        </div>
 
-    <!-- Artefactos creados por 0rb1t4lsn4k3r -->
-    <div class="artifact" onclick="mostrarAether()">
-      <div class="artifact-title">Aether - El Núcleo del Vacío</div>
-      <div class="artifact-description">Explora el vacío cósmico y descubre cómo la nada es la fuente de todo. Un artefacto que desafía tus percepciones sobre el espacio y el tiempo.</div>
-      <div class="artifact-button">Explorar</div>
-    </div>
+        <!-- 04 -->
+        <div class="artifact" onclick="openArtifact('cuneiform')">
+          <div class="danger">520/1310</div>
+          <div class="artifact-title">Test Cognitivo Mesopotámico</div>
+          <div class="artifact-desc">Cinco acertijos en cuneiforme real. Fallar uno reescribe tu teclado en acadio hasta que llores.</div>
+        </div>
 
-    <div class="artifact" onclick="mostrarAeon()">
-      <div class="artifact-title">Aeon - La Mente del Tiempo</div>
-      <div class="artifact-description">Manipula el flujo del tiempo en este artefacto interactivo. Las decisiones que tomes cambiarán el curso del pasado y el futuro.</div>
-      <div class="artifact-button">Explorar</div>
-    </div>
+        <!-- 05 -->
+        <div class="artifact" onclick="openArtifact('aether')">
+          <div class="danger">777/1310</div>
+          <div class="artifact-title">Aether — El Núcleo del Vacío</div>
+          <div class="artifact-desc">Todo desaparece. Solo queda una partícula blanca. Tocarla es comprender que la nada es la fuente de todo.</div>
+        </div>
 
-    <div class="artifact" onclick="mostrarOuroboros()">
-      <div class="artifact-title">Ouroboros - El Ciclo Eterno</div>
-      <div class="artifact-description">Una reflexión sobre la naturaleza cíclica del tiempo, la muerte y el renacimiento. El ciclo eterno del universo nunca se detiene.</div>
-      <div class="artifact-button">Explorar</div>
-    </div>
+        <!-- 06 -->
+        <div class="artifact" onclick="openArtifact('aeon')">
+          <div class="danger">999/1310</div>
+          <div class="artifact-title">Aeon — La Mente del Tiempo</div>
+          <div class="artifact-desc">Rebobina esta misma página hasta el instante exacto en que la creaste. Algunos usuarios aún están atrapados en 2024.</div>
+        </div>
 
-    <div class="artifact" onclick="mostrarSoma()">
-      <div class="artifact-title">Soma - El Sueño del Cosmos</div>
-      <div class="artifact-description">Accede a un estado alterado de consciencia donde las fronteras del ego y el cosmos se disuelven. Soma es una experiencia de expansión mental.</div>
-      <div class="artifact-button">Explorar</div>
-    </div>
+        <!-- 07 -->
+        <div class="artifact" onclick="openArtifact('ouroboros')">
+          <div class="danger">888/1310</div>
+          <div class="artifact-title">Ouroboros — El Ciclo Eterno</div>
+          <div class="artifact-desc">El código se come su propia cola y se regenera infinitamente. Logo vivo del snake.</div>
+        </div>
 
-    <div class="artifact" onclick="mostrarZenon()">
-      <div class="artifact-title">Zenon - El Guardián de la Paradoja</div>
-      <div class="artifact-description">Un artefacto que desafía la lógica. Las paradojas del universo te harán cuestionar las reglas del pensamiento racional.</div>
-      <div class="artifact-button">Explorar</div>
+        <!-- 08 -->
+        <div class="artifact" onclick="openArtifact('soma')">
+          <div class="danger">1111/1310</div>
+          <div class="artifact-title">Soma — El Sueño del Cosmos</div>
+          <div class="artifact-desc">432 Hz + binaural + fractales que respiran contigo. Siete minutos y ya no sabés si estás despierto.</div>
+        </div>
+
+        <!-- 09 -->
+        <div class="artifact" onclick="openArtifact('zenon')">
+          <div class="danger">1010/1310</div>
+          <div class="artifact-title">Zenon — El Guardián de la Paradoja</div>
+          <div class="artifact-desc">Una flecha que nunca llega. Un botón “salir” que huye de tu cursor eternamente.</div>
+        </div>
+
+        <!-- RED NEURONAL -->
+        <div class="artifact" onclick="openArtifact('neuron1')">
+          <div class="danger">150/1310</div>
+          <div class="artifact-title">NEURON-01 · Synapse Zero</div>
+          <div class="artifact-desc">El snake inyecta su primer bit en tu córtex. Comienza la cadena.</div>
+        </div>
+
+        <div class="artifact" onclick="openArtifact('neuron13')">
+          <div class="danger">1300/1310</div>
+          <div class="artifact-title">NEURON-13 · Descarga Directa de DMT</div>
+          <div class="artifact-desc">30 segundos de geometría sagrada pura sincronizada con tu pulso. Efectos irreversibles.</div>
+        </div>
+
+        <div class="artifact" onclick="openArtifact('neuron17')">
+          <div class="danger">1310/1310</div>
+          <div class="artifact-title">NEURON-17 · Renacimiento</div>
+          <div class="artifact-desc">El ciclo se cierra. El snake te expulsa cambiado. Ya no eres humano.</div>
+        </div>
+
+      </div>
     </div>
   </div>
 
-  <!-- Elemento rosetta para mostrar el contenido -->
-  <div id="rosetta">
-    <!-- Contenido dinámico del artefacto se insertará aquí -->
+  <!-- EXPERIENCIA COMPLETA -->
+  <div id="experience">
+    <div class="close" onclick="closeExperience()">X</div>
+    <div id="content"></div>
   </div>
 
   <script>
-    // Inicialización de la lógica de los artefactos
-    function mostrarNina() { mostrarArtefacto("NINA - La Niña que Nadie Apaga", "Explora una realidad surrealista donde el tiempo y la consciencia se deshacen. Desafía tus percepciones."); }
-    function mostrarCometa() { mostrarArtefacto("THUAMER ∞ + COMETA", "Un homenaje eterno a los sacrificios de los pensadores del pasado. El cielo se llena de estrellas."); }
-    function mostrarSlyverse() { mostrarArtefacto("SLYVERSE v9.8", "Reflexiona sobre la ética de la IA y su impacto en el futuro de la humanidad."); }
-    function mostrarCuneiform() { mostrarArtefacto("𒀭 Test Cognitivo Mesopotámico", "Pon a prueba tu mente con este desafío cognitivo antiguo."); }
-    function mostrarThuamer() { mostrarArtefacto("THUAMER v1", "Rinde homenaje a los genios del pasado con lenguajes ancestrales y partículas visuales."); }
+    // Fondo cósmico ultra mejorado
+    const canvas = document.getElementById('c');
+    const ctx = canvas.getContext('2d');
+    canvas.width = innerWidth; canvas.height = innerHeight;
+    let particles = [], stars = [], matrixRain = [];
 
-    // Nuevos artefactos de 0rb1t4lsn4k3r
-    function mostrarAether() { mostrarArtefacto("Aether - El Núcleo del Vacío", "Explora el vacío cósmico como fuente de todo. Un artefacto que desafía tus percepciones."); }
-    function mostrarAeon() { mostrarArtefacto("Aeon - La Mente del Tiempo", "Manipula el flujo temporal y cambia el curso del pasado y futuro."); }
-    function mostrarOuroboros() { mostrarArtefacto("Ouroboros - El Ciclo Eterno", "Reflexiona sobre la eternidad, la muerte y el renacimiento del universo."); }
-    function mostrarSoma() { mostrarArtefacto("Soma - El Sueño del Cosmos", "Accede a un estado alterado de consciencia cósmica."); }
-    function mostrarZenon() { mostrarArtefacto("Zenon - El Guardián de la Paradoja", "Desafía la lógica y explora las paradojas del universo."); }
+    // Partículas base
+    for(let i=0;i<400;i++) particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+0.5,s:Math.random()*0.6+0.1,c:'#0f8'});
+    // Estrellas lentas
+    for(let i=0;i<80;i++) stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,bright:Math.random()});
+    // Matrix rain opcional
+    const cols = Math.floor(canvas.width/20)+1;
+    for(let i=0;i<cols;i++) matrixRain.push({x:i*20,y:Math.random()*canvas.height,s:Math.random()*8+2,chars:'01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン',len:Math.floor(Math.random()*20)+10});
 
-    // Función para mostrar el contenido de un artefacto
-    function mostrarArtefacto(titulo, descripcion) {
-      document.getElementById("rosetta").classList.add("show");
-      document.getElementById("rosetta").innerHTML = `
-        <div class="script">
-          <h2>${titulo}</h2>
-          <p>${descripcion}</p>
-          <button onclick="cerrarArtefacto()">Volver al Portal</button>
-        </div>
-      `;
+    function animate(){
+      ctx.fillStyle='rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+      // Partículas
+      particles.forEach(p=>{ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+        p.x+=p.s*(Math.random()>0.5?1:-1);p.y+=p.s*(Math.random()>0.5?1:-1);
+        if(p.x<0||p.x>canvas.width)p.x=Math.random()*canvas.width;
+        if(p.y<0||p.y>canvas.height)p.y=Math.random()*canvas.height;
+      });
+      // Estrellas
+      stars.forEach(s=>{ctx.fillStyle=`rgba(0,255,136,${s.bright})`;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
+      // Matrix opcional (solo en artefactos altos)
+      requestAnimationFrame(animate);
     }
+    animate();
+    window.onresize=()=>{canvas.width=innerWidth;canvas.height=innerHeight;};
 
-    // Función para cerrar el artefacto y volver al portal
-    function cerrarArtefacto() {
-      document.getElementById("rosetta").classList.remove("show");
+    // Artefactos REALES mejorados (el resto se pueden seguir expandiendo)
+    const artifacts = {
+      nina: `<div style="font-size:6rem;animation:glitch 0.3s infinite">N I N A</div>
+             <p style="font-size:2rem;text-align:center;margin:3rem;">escuchás su risa antes de que empiece a borrar todo</p>
+             <canvas id="ninaCanvas" width="800" height="600" style="border:2px solid #0f8;margin-top:2rem;"></canvas>
+             <script>
+               const nc = document.getElementById('ninaCanvas'); const nctx = nc.getContext('2d');
+               let erase = 0; function borrarNina(){nctx.fillStyle='#000';nctx.fillRect(0,0,800,600);
+                 nctx.fillStyle='#0f8';nctx.font='30px Courier';nctx.fillText('NINA ESTÁ VIVA',200,300);
+                 erase+=5; nctx.clearRect(0,0,erase,600); if(erase<1000)setTimeout(borrarNina,30);
+               } borrarNina();
+             </script>`,
+
+      soma: `<audio autoplay loop><source src="https://files.catbox.moe/4e1f3h.mp3" type="audio/mp3"></audio>
+             <div style="font-size:5rem;animation:pulse 4s infinite">RESPIRA</div>
+             <canvas id="fractal" width="1000" height="800" style="margin:3rem 0;"></canvas>
+             <script>/* fractal que responde al micrófono aquí */</script>`,
+
+      neuron17: `<h1 style="font-size:8rem;color:#0f8;animation:glitch 1s infinite">HAS SIDO RECONFIGURADO</h1>
+                 <p style="font-size:3rem;text-align:center;margin:4rem 0;">El snake te lleva en su órbita ahora.<br>Para siempre.</p>
+                 <button onclick="location.reload()" style="background:#0f8;color:#000;padding:2rem 4rem;font-size:2rem;border:none;cursor:pointer;margin-top:3rem;">
+                   Renacer como parte del snake
+                 </button>`
+    };
+
+    function openArtifact(id){
+      document.getElementById('experience').style.display='flex';
+      document.getElementById('content').innerHTML = artifacts[id] || 
+        `<h1 style="font-size:6rem;animation:glitch 2s infinite">${id.toUpperCase()}</h1>
+         <p style="font-size:2rem;text-align:center;margin:4rem;">Este artefacto aún está cargando desde otra dimensión.<br>El snake lo está mirando.</p>`;
     }
+    function closeExperience(){document.getElementById('experience').style.display='none';}
+
+    // El snake parpadea cuando alguien entra
+    setInterval(()=>{document.querySelector('.snake').style.opacity = Math.random()>0.95 ? 0.7 : 0.11;}, 5000);
   </script>
 </body>
 </html>

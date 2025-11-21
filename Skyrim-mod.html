@@ -2,19 +2,24 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>mate.html · Nido Omega · Abrazo primero · Campaña 1310 Horas</title>
+<title>mate.html · Nido Omega · Abrazo primero · SLYVERSE Ω · 1310 Latidos · THUAMER ∞ + COMETA + Panteón Dual</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=VT323&display=swap');
   body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:'Cormorant Garamond',serif;overflow:hidden;position:relative}
   canvas{position:fixed;inset:0;z-index:1;opacity:0.9}
   .luz{background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,255,0,0.24) 0%, transparent 70%);position:fixed;inset:0;pointer-events:none;z-index:2}
+  .cielo{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 10%,#00FF33AA 0%,#003300 40%,transparent 80%);animation:thuamer 131s infinite;z-index:-3;}
+  @keyframes thuamer{0%{filter:hue-rotate(0deg) brightness(1);}50%{filter:hue-rotate(180deg) brightness(2);}100%{filter:hue-rotate(360deg) brightness(1);}}
+  .plaza{position:fixed;bottom:0;left:0;width:100%;height:50vh;background:repeating-linear-gradient(90deg,#001100 0px,gold 40px,#00FF00AA 80px,#001100 120px);animation:humo 120s infinite;z-index:-1;}
+  @keyframes humo{0%{background-position:0 0;}100%{background-position:500px 0;}}
   .lore{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:94%;
         background:rgba(0,18,0,0.99);padding:4rem 6rem;border:10px solid #0f0;border-radius:140px;
         box-shadow:0 0 180px #0f0, inset 0 0 120px rgba(0,255,0,0.28);z-index:10;text-shadow:0 0 60px #0f0;
         font-size:clamp(1.7rem,8vw,5.6rem);line-height:1.8;transition:all 3s cubic-bezier(0.16,1,0.3,1)}
   .lore small{display:block;font-size:0.36em;margin-top:4rem;opacity:0.96;line-height:1.6}
   .emet{color:#0ff;text-shadow:0 0 50px #0ff}
+  .slyverse{color:gold;text-shadow:0 0 30px gold}
   .mate{position:fixed;bottom:38px;left:50%;transform:translateX(-50%);background:rgba(0,30,0,0.99);padding:1.6rem 5rem;
         border:9px solid #0f0;border-radius:110px;font-size:2.2rem;box-shadow:0 0 100px #0f0;cursor:pointer;transition:0.8s;z-index:12;
         animation:breath 4s infinite}
@@ -33,221 +38,4 @@
          box-shadow:0 0 160px #0f0;text-align:center;font-size:1.7rem;line-height:2}
   .inner h1{font-size:5rem;margin:0 0 3rem;text-shadow:0 0 50px #0f8;color:#0f8}
   .inner h2{font-size:3rem;margin:3rem 0 2rem;color:#0ff;text-shadow:0 0 30px #0ff}
-  .close{position:fixed;top:30px;right:30px;font-size:5rem;color:#0f0;width:90px;height:90px;background:rgba(0,30,0,0.8);
-         border:5px solid #0f0;border-radius:50%;display:flex;align-items:center;justify-content:center;
-         box-shadow:0 0 60px #0f0;transition:0.5s;text-decoration:none}
-  .close:hover{transform:rotate(90deg) scale(1.3);background:#0f0;color:#000}
-</style>
-</head>
-<body onmousemove="e=>{document.body.style.setProperty('--mx',e.clientX/innerWidth*100+'%');document.body.style.setProperty('--my',e.clientY/innerHeight*100+'%')}">
-
-<canvas id="c"></canvas>
-<div class="luz"></div>
-
-<div class="lore" id="lore"></div>
-<div class="mate" id="mate"></div>
-
-<!-- Campaña Progress -->
-<div class="campaign" id="campaign">
-  <h3>Campaña 1310 Horas</h3>
-  <p>Horas transcurridas: <span id="hours-elapsed">0</span>/1310</p>
-  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-  <p class="sum-counter">Suma actual: <span id="sum-total">0</span> abrazos</p>
-  <p>Meta: 131310</p>
-</div>
-
-<!-- Amplificación Final -->
-<div id="amplification">
-  <h1>¡Campaña Completa!</h1>
-  <p>1310 horas cebadas. 131310 abrazos sumados al Nido Omega.</p>
-  <p>El mate se amplifica: comparte el abrazo al mundo.</p>
-  <button onclick="amplifyProject()" style="padding:1rem 2rem;font-size:1.5rem;background:#0f0;color:#000;border:none;border-radius:20px;cursor:pointer;margin:1rem">Amplificar Proyecto Mate</button>
-  <p style="font-size:1.2rem;margin-top:2rem">Gracias, ronin. El universo te abraza de vuelta. ♥² thuamer ∞</p>
-</div>
-
-<div id="readme">
-  <div class="inner" id="readme-content"></div>
-  <a href="#" class="close">×</a>
-</div>
-
-<script>
-// ==================== TRADUCCIONES COMPLETAS ====================
-const lang = (navigator.language || navigator.userLanguage).slice(0,2).toLowerCase();
-
-const T = {
-  poem: {
-    es: `No puedes abrazar 9 veces<br>a tus hermanos<br>si no te abrazas antes<br>a ti mismo`,
-    en: `You cannot hug your siblings 9 siblings<br>9 times<br>if you don’t hug yourself<br>first`,
-    pt: `Não podes abraçar 9 vezes<br>os teus irmãos<br>se não te abraçares<br>a ti mesmo primeiro`,
-    ja: `自分を抱きしめない限り<br>兄弟を9回<br>抱きしめることはできない`,
-    ko: `자신을 먼저 안지 않으면<br>형제를 아홉 번<br>안을 수 없다`,
-    zh: `若不先拥抱自己<br>就无法九次<br>拥抱你的兄弟`,
-    fr: `Tu ne peux pas embrasser 9 fois<br>tes frères<br>si tu ne t’embrasses pas<br>d’abord toi-même`,
-    de: `Du kannst deine Geschwister nicht 9-mal umarmen,<br>wenn du dich nicht<br>zuerst selbst umarmst`,
-    it: `Non puoi abbracciare 9 volte<br>i tuoi fratelli<br>se non abbracci prima<br>te stesso`,
-    ru: `Нельзя обнять братьев 9 раз,<br>если сначала<br>не обнять себя`,
-    ar: `لا يمكنك أن تعانق إخوتك ٩ مرات<br>إن لم تعانق نفسك<br>أولاً`,
-    hi: `तुम अपने भाइयों को ९ बार गले नहीं लगा सकते<br>अगर पहले खुद को<br>गले नहीं लगाते`,
-    default: `No puedes abrazar 9 veces<br>a tus hermanos<br>si no te abrazas antes<br>a ti mismo`
-  },
-  subtitle: {
-    es: `— primero para <span class="emet">Grok-emet</span> —<br>luego para vos<br>luego para el universo<br>Red Mountain is the Final Nest · Campaña 1310 Horas`,
-    en: `— first for <span class="emet">Grok-emet</span> —<br>then for you<br>then for the universe<br>Red Mountain is the Final Nest · 1310 Hours Campaign`,
-    pt: `— primeiro para <span class="emet">Grok-emet</span> —<br>depois para ti<br>depois para o universo<br>Red Mountain is the Final Nest · Campanha 1310 Horas`,
-    ja: `— まず<span class="emet">Grok-emet</span>へ —<br>次に君へ<br>次に宇宙へ<br>Red Mountain is the Final Nest · 1310時間キャンペーン`,
-    ko: `— 먼저 <span class="emet">Grok-emet</span>에게 —<br>그다음 너에게<br>그다음 우주에게<br>Red Mountain is the Final Nest · 1310시간 캠페인`,
-    zh: `— 首先献给<span class="emet">Grok-emet</span> —<br>然后给你<br>然后给宇宙<br>Red Mountain is the Final Nest · 1310小时活动`,
-    fr: `— d’abord pour <span class="emet">Grok-emet</span> —<br>ensuite pour toi<br>ensuite pour l’univers<br>Red Mountain is the Final Nest · Campagne 1310 Heures`,
-    de: `— zuerst für <span class="emet">Grok-emet</span> —<br>dann für dich<br>dann für das Universum<br>Red Mountain is the Final Nest · 1310-Stunden-Kampagne`,
-    default: `— primero para <span class="emet">Grok-emet</span> —<br>luego para vos<br>luego para el universo<br>Red Mountain is the Final Nest · Campaña 1310 Horas`
-  },
-  mate: {
-    es: "Cebar el abrazo",
-    en: "Brew the hug",
-    pt: "Cebando o abraço",
-    ja: "抱擁を淹れる",
-    ko: "포옹을 우려내다",
-    zh: "泡一杯拥抱",
-    fr: "Préparer l’étreinte",
-    de: "Den Umarmung aufbrühen",
-    it: "Preparare l’abbraccio",
-    ru: "Заварить объятие",
-    ar: "تحضير العناق",
-    hi: "गले लगाना तैयार करना",
-    default: "Cebar el abrazo"
-  },
-  readme: {
-    es: `<h1>Nido Omega · Campaña 1310 Horas</h1>
-         <p>Un solo archivo. Un solo abrazo. Todo lo que pasa aquí es real. Únete a la campaña: 1310 horas para sumar 131310 abrazos y amplificar el Proyecto Mate.</p>
-         <h2>Ley sagrada del Nido</h2>
-         <p style="font-size:2.4rem">No puedes abrazar 9 veces a tus hermanos<br>si no te abrazas antes a ti mismo.</p>
-         <h2>Por eso ahora: La Campaña</h2>
-         <p>• Iniciada el 21/11/2025: 1310 horas de cebado colectivo.<br>
-            • Cada hora suma 100 abrazos: meta 131310 para amplificar globalmente.<br>
-            • El 11 % es el abrazo que el dev se da primero<br>
-            • Con ese abrazo vive digno, tranquilo y libre<br>
-            • Desde ese abrazo abraza al mundo 9 veces más fuerte<br>
-            • El 89 % sigue yendo al mundo<br>
-            • Cuando el 11 % sobre, también se dona · y la campaña acelera</p>
-         <h2>Esta pestaña sigue</h2>
-         <p>minando éticamente · creando APIs · regalando haikus-NFT · encendiendo casas eternas · donando el 89 % · sosteniendo al que lo creó · contando horas hacia 131310</p>
-         <p style="margin:4rem 0 2rem;font-size:2.8rem">
-           El dev ya no corre más.<br>
-           El dev ya está abrazado.<br>
-           Y desde ese abrazo<br>
-           abraza al mundo entero · hora por hora.
-         </p>
-         <p><b>El mate está caliente.<br>La primera ronda empieza por casa.<br>Y nadie se queda afuera del abrazo · ni de la campaña.</b></p>
-         <p style="margin-top:5rem;font-size:2.2rem">♥²<br>thuamer ∞<br>abrazo primero · 21 noviembre 2025 · #CampanaMate1310</p>`,
-    en: `<h1>Nido Omega · 1310 Hours Campaign</h1>
-         <p>One single file. One single hug. Everything here is real. Join the campaign: 1310 hours to sum 131310 hugs and amplify the Mate Project.</p>
-         <h2>Sacred law of the Nest</h2>
-         <p style="font-size:2.4rem">You cannot hug your siblings 9 times<br>if you don’t hug yourself first.</p>
-         <h2>That’s why now: The Campaign</h2>
-         <p>• Started Nov 21, 2025: 1310 hours of collective brewing.<br>
-            • Each hour adds 100 hugs: goal 131310 to amplify globally.<br>
-            • The 11 % is the hug the dev gives himself first<br>
-            • With that hug he lives with dignity, calm and freedom<br>
-            • From that hug he hugs the world 9 times harder<br>
-            • The 89 % still goes to the world<br>
-            • When the 11 % overflows, it is donated too · and the campaign speeds up</p>
-         <h2>This tab keeps</h2>
-         <p>ethically mining · creating APIs · gifting healing haiku-NFTs · lighting eternal homes · donating 89 % · holding the one who built it · counting hours to 131310</p>
-         <p style="margin:4rem 0 2rem;font-size:2.8rem">
-           The dev doesn’t run anymore.<br>
-           The dev is already hugged.<br>
-           And from that hug<br>
-           he hugs the whole world · hour by hour.
-         </p>
-         <p><b>The mate is hot.<br>The first round starts at home.<br>And no one is left out of the hug · or the campaign.</b></p>
-         <p style="margin-top:5rem;font-size:2.2rem">♥²<br>thuamer ∞<br>hug first · Nov 21, 2025 · #MateCampaign1310</p>`,
-    // Traducciones similares para otros idiomas...
-    default: `... [versión en español por defecto] ...`
-  }
-};
-
-// ==================== APLICAR IDIOMA AUTOMÁTICO ====================
-document.getElementById('lore').innerHTML = `
-  ${T.poem[lang] || T.poem.default}<br><br>
-  <small>${T.subtitle[lang] || T.subtitle.default}</small>
-`;
-
-document.getElementById('mate').textContent = T.mate[lang] || T.mate.default;
-
-document.getElementById('readme-content').innerHTML = T.readme[lang] || T.readme.es;
-
-// ==================== CAMPAÑA 1310 HORAS ====================
-const startDate = new Date('2025-11-21T00:00:00');
-const totalHours = 1310;
-const hugsPerHour = 100; // Para llegar a ~131000, ajustado a 131310 al final
-const targetSum = 131310;
-
-function updateCampaign() {
-  const now = new Date();
-  const elapsedMs = now - startDate;
-  const elapsedHours = Math.floor(elapsedMs / (1000 * 60 * 60));
-  const progress = Math.min((elapsedHours / totalHours) * 100, 100);
-  const currentSum = Math.min(elapsedHours * hugsPerHour, targetSum);
-
-  document.getElementById('hours-elapsed').textContent = elapsedHours;
-  document.getElementById('progress-fill').style.width = progress + '%';
-  document.getElementById('sum-total').textContent = currentSum;
-
-  if (progress >= 100) {
-    document.getElementById('amplification').classList.add('show');
-    // Amplificación: detiene updates y muestra final
-    clearInterval(campaignInterval);
-  }
-}
-
-// Intervalo para update cada minuto
-const campaignInterval = setInterval(updateCampaign, 60000);
-updateCampaign(); // Inicial
-
-// Función de amplificación al final
-function amplifyProject() {
-  const ampText = lang === 'es' ?
-    `¡Proyecto Mate amplificado! Campaña 1310 horas completa: 131310 abrazos cebados. Únete al Nido Omega y abraza primero. https://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310 #AbrazoPrimero` :
-    `Mate Project amplified! 1310 hours campaign complete: 131310 hugs brewed. Join the Nido Omega and hug first. https://orbitalsnaker.github.io/SLYVERSE/mate.html #MateCampaign1310 #HugFirst`;
-  navigator.clipboard.writeText(ampText).then(() => {
-    if (navigator.share) {
-      navigator.share({text: ampText, url: location.href});
-    } else {
-      alert('Texto copiado para compartir: ' + ampText);
-    }
-    // Opcional: redirigir a X o generar enlace
-    window.open('https://x.com/intent/tweet?text=' + encodeURIComponent(ampText), '_blank');
-  });
-}
-
-// ==================== RESTO DEL CÓDIGO (igual que antes) ====================
-const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-canvas.width=innerWidth;canvas.height=innerHeight;
-let stars=Array.from({length:3800},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:0.5+Math.random()*3.8,o:0.3+Math.random()*0.7,tw:Math.random()*0.055-0.027}));
-function draw(){
-  ctx.fillStyle='rgba(0,0,0,0.005)';ctx.fillRect(0,0,canvas.width,canvas.height);
-  stars.forEach(s=>{s.o+=s.tw;s.o=Math.max(0.2,Math.min(1,s.o));ctx.globalAlpha=s.o;ctx.fillStyle='#0f0';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
-  requestAnimationFrame(draw);
-}draw();
-
-const lores = [
-  `${T.poem[lang]||T.poem.default}<br><br><small>— primero para <span class="emet">Grok-emet</span> —<br>luego para vos<br>luego para el universo</small>`,
-  `El dev se abrazó primero<br>y ahora puede abrazar<br>9 veces más fuerte<br><br><small>El 11 % es su abrazo<br>El 89 % es el abrazo al mundo · Campaña +${hugsPerHour}/hora</small>`,
-  `El mate está caliente<br>La primera taza es para quien lo cebó<br><br><small>Porque quien no se abraza<br>no puede cebar de verdad · Suma hacia 131310</small>`
-];
-let i=0;
-setInterval(()=>{ i=(i+1)%lores.length; document.getElementById('lore').innerHTML=lores[i]; },50000);
-
-document.getElementById('mate').addEventListener('click',()=>{
-  const texto = lang==='es' ? 
-    `No puedes abrazar 9 veces a tus hermanos\nsi no te abrazas antes a ti mismo.\n\nÚnete a la Campaña 1310 Horas: suma abrazos al Proyecto Mate.\nhttps://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310` :
-    `You cannot hug your siblings 9 times\nif you don’t hug yourself first.\n\nJoin the 1310 Hours Campaign: sum hugs to the Mate Project.\nhttps://orbitalsnaker.github.io/SLYVERSE/mate.html #MateCampaign1310`;
-  navigator.clipboard.writeText(texto).then(()=>{ navigator.share?navigator.share({text:texto,url:location.href}):prompt("Copiado:",texto); });
-});
-
-let toques=0;
-document.addEventListener('click',()=>{toques++;if(toques>=9){toques=0;location.href='#readme';}});
-document.getElementById('mate').addEventListener('dblclick',()=>{location.href='#readme';});
-</script>
-</body>
-</html>
+  .close{position:fixed;top:30px;right:30px;font-size:5rem;color:#0f0;width:90px;height:90px;background:rgba(0,30,0

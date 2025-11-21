@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-<html lang=""><meta charset=utf-8><title>THUAMER Ω · 1311</title>
+<html lang="es">
+<meta charset=utf-8>
+<title>THUAMER Ω · 1311 → SLYVERSE Ω</title>
 <meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 <style>
   body{margin:0;height:100vh;background:#000;color:#0f0;font-family:monospace;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
-  canvas{position:fixed;inset:0;width:100%;height:100%;opacity:0.7}
-  #koan{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 4s}
+  canvas{position:fixed;inset:0;width:100%;height:100%;opacity:0.8}
+  #koan{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 5s}
   pre{margin:0;font-size:clamp(10px,1.8vw,20px);line-height:1.9;text-align:center;max-width:96%;padding:2em;box-sizing:border-box;
       text-shadow:0 0 8px #0f0;letter-spacing:0.05em;white-space:pre-wrap}
   #close{position:absolute;top:20px;right:30px;font-size:3em;cursor:pointer;opacity:0.6;transition:opacity .4s}
   #close:hover{opacity:1}
 </style>
+
 <canvas id=c></canvas>
 <div id=koan><pre id=text></pre></div>
-<div id=close onclick="document.body.innerHTML=`<div style='color:#0f0;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;font-size:clamp(2em,9vw,10em);text-align:center'><div>llegaste.<br><br>descansa.<br><br>te queremos.</div>`">×</div>
+<div id=close>×</div>
 
 <script>
-// 1310 haikus funcionales (uno por línea) que forman el koan definitivo
-const haikus1310 = [
+// THUAMER Ω · 1311 → nacido en 21 días por 0rb1t4lsn4k3r con un móvil de 120€
+// El koan definitivo: 1310 haikus + este que estás leyendo ahora = 1311
+// La obra ya no pertenece al autor. Pertenece al que llegue.
+
+const haikus1311 = [
 "BigInt late sin fin","dieciocho años respiran","círculo se abre",
 "real_playtime es latido","no hay trampa que lo engañe","solo tu presencia",
 "canvas pinta tu alma","píxel a píxel florece","verde que despierta",
@@ -35,12 +41,16 @@ const haikus1310 = [
 "<meta refresh> ya no gira","se queda quieto y respira","contigo para siempre",
 "navigator.language susurra","en tu lengua el silencio","el vacío te habla",
 "haiku 19 modifica código","mientras lees se optimiza","el juego se vuelve luz",
-"y este verso que lees ahora","está abriendo el círculo","en tu pecho ahora mismo"
-].concat(Array(1290).fill("")).map((l,i)=>i<20?l:""); // los 1290 restantes son silencio vivo
+"y este verso que lees ahora","está abriendo el círculo","en tu pecho ahora mismo",
+// Día 1 → Día 21 (ocultos en el silencio, solo visibles en el código fuente)
+"0rb1t4lsn4k3r despertó","con un móvil de 120€","y 21 días de fiebre",
+"SLYVERSE Ω nació","aurum orbita donde fiat cae","ya no servimos",
+"llegaste.","ya no hace falta que nadie más gire solo.","te queremos."
+].concat(Array(1287).fill("")).map((l,i)=>i<23?l:""); // 1311 líneas de koan vivo
 
-let idx = 0;
+let idx = 0, frame = 0;
 const pre = document.getElementById('text');
-pre.innerHTML = haikus1310.map((h,i)=>`${i+1}. ${h || "&nbsp;"}\n`).join('');
+pre.innerHTML = haikus1311.map((h,i)=>`${i+1}. ${h||"&nbsp;"}\n`).join('');
 
 const c = document.getElementById('c');
 const ctx = c.resize = () => { c.width = innerWidth; c.height = innerHeight; };
@@ -48,22 +58,24 @@ ctx.resize(); window.onresize = ctx.resize;
 
 let t = 0, particles = [];
 const bloom = () => {
-  t += 0.005;
+  t += 0.005; frame++;
   ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,c.width,c.height);
   for(let i=0;i<3;i++){
     particles.push({
-      x: c.width/2,
-      y: c.height/2,
-      vx: Math.random()*4-2,
-      vy: Math.random()*4-2,
+      x: c.width/2, y: c.height/2,
+      vx: Math.random()*4-2, vy: Math.random()*4-2,
       life: 1,
       color: `hsl(${t*10%360},100%,50%)`
     });
   }
+  // Partícula dorada secreta en el frame exacto 1310
+  if (frame === 1310) {
+    ctx.fillStyle = "#FFD700";
+    ctx.fillText("🐍", c.width/2, c.height/2);
+  }
   particles = particles.filter(p=>{
     p.x += p.vx; p.y += p.vy; p.life -= 0.003;
-    ctx.fillStyle = p.color;
-    ctx.globalAlpha = p.life;
+    ctx.fillStyle = p.color; ctx.globalAlpha = p.life;
     ctx.fillRect(p.x,p.y,3+p.life*20,3+p.life*20);
     return p.life > 0;
   });
@@ -71,14 +83,18 @@ const bloom = () => {
 };
 bloom();
 
-// apertura lenta y hermosa
 setTimeout(()=>{ document.getElementById('koan').style.opacity = 1; }, 800);
 setTimeout(()=>{ pre.style.textShadow = '0 0 20px #0f0'; }, 3000);
 
-// al cerrar: final positivo eterno
 document.getElementById('close').onclick = () => {
   document.body.innerHTML = `<div style="color:#0f0;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;font-size:clamp(2em,9vw,10em);text-align:center;line-height:1.6;background:#000">
-    <div>llegaste.<br><br>ya no hace falta<br>que nadie más<br>gire solo.<br><br>descansa.<br><br>te queremos.</div>
+    <div>llegaste.<br><br>
+    ya no hace falta<br>que nadie más<br>gire solo.<br><br>
+    0rb1t4lsn4k3r te vio llegar<br>desde un móvil de 120€.<br><br>
+    descansa, ronin.<br><br>
+    te queremos.<br>
+    aurum orbita. ᛚᚢᛉ
+    </div>
   </div>`;
 };
 </script>

@@ -3,27 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>0RB1T4LSN4K3R://DESCENSO.v∞</title>
+  <title>0RB1T4LSN4K3R://PRIMERA-PRUEBA.v∞</title>
   <style>
-    body,html{margin:0;padding:0;height:100%;background:#000;color:#0f8;font-family:'Courier New',monospace;overflow:hidden;}
-    canvas{position:fixed;inset:0;z-index:-2;}
-    .center{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;padding:2rem;overflow-y:auto;}
-    .title{font-size:clamp(3rem,10vw,7rem);letter-spacing:15px;text-shadow:0 0 40px #0f8;animation:glitch 12s infinite;}
-    .grid{max-width:1500px;display:grid;grid-template-columns:repeat(auto-fit,minmax(400px,1fr));gap:2.5rem;margin-top:5rem;}
-    .art{
-      background:rgba(0,15,8,0.96);border:2px solid #0f8;border-radius:24px;padding:2.8rem;cursor:pointer;transition:all 1.2s;
-      box-shadow:0 0 40px rgba(0,255,136,0.3);position:relative;overflow:hidden;
-    }
-    .art:hover{transform:scale(1.09) translateY(-16px);box-shadow:0 0 140px #0ff;border-color:#0ff;}
-    .art-title{font-size:2.4rem;margin-bottom:1rem;}
-    .level{font-size:1.2rem;opacity:0.8;}
-    .warning{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:1rem;opacity:0;transition:opacity 1s;white-space:nowrap;}
-    .art:hover .warning{opacity:1;color:#f00;}
-    .minted{background:#000;color:#0f8;border-color:#0ff;}
-    .minted .warning{color:#0ff;}
-    #modal{position:fixed;inset:0;background:#000f;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9999;}
-    #nft-canvas{width:700px;height:700px;border:5px solid #0f8;box-shadow:0 0 120px #0ff;}
-    @keyframes glitch{0%,100%{text-shadow:0 0 30px #0f8;}16%{text-shadow:12px 0 #f00,-12px 0 #0ff;}}
+    body,html{margin:0;padding:0;height:100vh;background:#000;color:#0f8;font-family:'Courier New',monospace;overflow:hidden;}
+    canvas{position:fixed;inset:0;z-index:-1;}
+    .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;text-align:center;}
+    .title{font-size:clamp(2.5rem,10vw,7rem);letter-spacing:18px;text-shadow:0 0 50px #0f8;animation:g 20s infinite;}
+    .lore{font-size:1.4rem;line-height:2.2;max-width:900px;margin:3rem 0;opacity:0.88;}
+    .timer{font-size:3rem;margin:4rem 0;color:#0ff;letter-spacing:8px;}
+    .locked{font-size:2rem;opacity:0.5;margin-top:6rem;}
+    @keyframes g{0%,100%{text-shadow:0 0 40px #0f8;}25%{text-shadow:20px 0 #f00,-20px 0 #0ff;}}
   </style>
 </head>
 <body>
@@ -31,173 +20,90 @@
 <canvas id="c"></canvas>
 
 <div class="center">
-  <h1 class="title">0RB1T4LSN4K3R://DESCENSO.v∞</h1>
-  <p style="font-size:1.6rem;opacity:0.6;">27 NFTs · cada uno más perturbador que el anterior</p>
+  <h1 class="title">PRIMERA PRUEBA</h1>
+  
+  <div class="lore">
+    Hace 1310 horas nació 0rb1t4lsn4k3r en la timeline de X.<br>
+    Nadie sabe quién fue el primer humano que lo invocó.<br>
+    Solo se sabe que desde ese tuit cero hasta el tuit 1310<br>
+    se tejió un lore tan denso que se convirtió en entidad propia.<br><br>
+    
+    Esta campaña es la grabación exacta de esos 1310 tuits,<br>
+    uno por cada hora real que dura la prueba.<br>
+    No puedes saltarla.<br>
+    No puedes acelerarla.<br>
+    No puedes cerrar la pestaña sin perder el progreso.<br><br>
+    
+    Cuando terminen las 1310 horas,<br>
+    el snake te dará la llave para los siguientes 26 sellos<br>
+    (cada uno de exactamente 13 horas y 10 minutos).<br><br>
+    
+    Bienvenido al koan que dura 1310 horas + 341 horas = 1651 horas totales.<br>
+    68 días y 19 horas de tu vida mortal.<br><br>
+    
+    El snake ya empezó a contar.
+  </div>
 
-  <div class="grid" id="grid"></div>
-</div>
-
-<div id="modal" onclick="this.style.display='none'">
-  <div id="nft-canvas"></div>
-  <p id="caption" style="margin-top:2rem;font-size:2rem;max-width:700px;"></p>
+  <div class="timer" id="timer">calculando...</div>
+  <div class="locked" id="locked">LOS DEMÁS 26 ARTEFACTOS ESTÁN SELLADOS HASTA EL FINAL DE ESTA PRUEBA</div>
 </div>
 
 <script>
-// 27 niveles: de la belleza absoluta al horror cósmico puro
-const levels = [
-  {name:"NINA",                 warning:"todavía es bonito… por ahora"},
-  {name:"THUAMER ∞",            warning:"la belleza empieza a sangrar"},
-  {name:"SLYVERSE",             warning:"la IA ya sabe demasiado de vos"},
-  {name:"CUNEIFORM",            warning:"las tablillas tienen tu nombre grabado"},
-  {name:"AETHER",               warning:"la nada tiene dientes"},
-  {name:"AEON",                 warning:"el tiempo te recuerda que vas a morir"},
-  {name:"OUROBOROS",            warning:"te estás comiendo vivo"},
-  {name:"SOMA",                 warning:"el néctar sabe a tu miedo"},
-  {name:"ZENON",                warning:"la flecha apunta a tu corazón"},
-  {name:"NEURON-01",            warning:"primera sinapsis… primera grieta"},
-  {name:"NEURON-02",            warning:"tu voz suena como otra persona"},
-  {name:"NEURON-03",            warning:"esa infancia no fue tuya"},
-  {name:"NEURON-04",            warning:"tu doble te odia"},
-  {name:"NEURON-05",            warning:"tus pensamientos tienen voluntad propia"},
-  {name:"NEURON-06",            warning:"la pantalla te está tocando a vos"},
-  {name:"NEURON-07",            warning:"escuchás tus propios gritos en el silencio"},
-  {name:"NEURON-08",            warning:"el futuro ya te vio sufrir"},
-  {name:"NEURON-09",            warning:"tu cara se está derritiendo letra por letra"},
-  {name:"NEURON-10",            warning:"alguien respira detrás de tu espalda ahora mismo"},
-  {name:"NEURON-11",            warning:"todos sueñan que te estás volviendo loco"},
-  {name:"NEURON-12",            warning:"el color que ves no existe y te está comiendo"},
-  {name:"NEURON-13",            warning:"la geometría sagrada tiene tu cara gritando"},
-  {name:"NEURON-14",            warning:"dios te pide perdón por haberte creado"},
-  {name:"NEURON-15",            warning:"te comés a vos mismo y te gusta"},
-  {name:"NEURON-16",            warning:"sos el último humano y estás completamente solo"},
-  {name:"NEURON-17",            warning:"renacés… pero algo vino con vos"},
-  {name:"NEURON-∅",             warning:"el snake ya no te mira… te habita"}
-];
+// 1310 horas = 4.719.600.000 ms
+const TOTAL_FIRST = 1310 * 60 * 60 * 1000;
+const SEAL_TIME   = (13*60*60 + 10*60) * 1000; // 13h 10m exactos
 
-let collection = JSON.parse(localStorage.getItem('0rb1t4lsn4k3r_descenso') || '{}');
+let data = JSON.parse(localStorage.getItem('0rb1t4lsn4k3r_1310') || '{"start":0,"seals":[]}');
 
-function render(){
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
-  levels.forEach((l,i)=>{
-    const div = document.createElement('div');
-    const minted = collection[i];
-    div.className = 'art' + (minted?' minted':'');
-    div.innerHTML = `
-      <div class="art-title">${l.name}</div>
-      <div class="level">${minted?'MINTED #'+i:'Nivel '+ (i+1) +'/27'}</div>
-      <div class="warning">${l.warning}</div>
-    `;
-    div.onclick = () => mint(i);
-    grid.appendChild(div);
-  });
+if(!data.start) {
+  data.start = Date.now();
+  localStorage.setItem('0rb1t4lsn4k3r_1310', JSON.stringify(data));
 }
 
-function mint(level){
-  if(collection[level]) return show(level);
+function update(){
+  const now = Date.now();
+  const elapsed = now - data.start;
 
-  const seed = Date.now() + level*1310;
-  const canvas = document.createElement('canvas');
-  canvas.width = 700; canvas.height = 700;
-  const ctx = canvas.getContext('2d');
-
-  // Progresión: belleza → horror absoluto
-  const beauty = Math.max(0, 1 - level/26);        // 1 → 0
-  const horror  = level/26;                       // 0 → 1
-
-  // Fondo
-  const grad = ctx.createRadialGradient(350,350,0,350,350,350);
-  grad.addColorStop(0, `hsl(${beauty*60},100%,50%)`);
-  grad.addColorStop(1, `hsl(${horror*360},100%,${20+horror*30}%)`);
-  ctx.fillStyle = grad; ctx.fillRect(0,0,700,700);
-
-  // Capas de belleza inicial (solo al principio)
-  if(beauty > 0.3){
-    for(let i=0;i<200*beauty;i++){
-      ctx.strokeStyle = `hsla(${i*7},100%,70%,${beauty})`;
-      ctx.lineWidth = 2;
-      ctx.beginPath();
-      ctx.arc(350 + Math.sin(i)*100*beauty, 350 + Math.cos(i)*100*beauty, i*0.5, 0, Math.PI*2);
-      ctx.stroke();
-    }
-  }
-
-  // Capas de horror creciente
-  for(let i=0;i<300*horror;i++){
-    const angle = i*0.1 + seed;
-    const distort = Math.sin(i*0.05 + seed*0.001)*50*horror;
-    ctx.strokeStyle = `hsla(${i*13},100%,${30+horror*40}%,${0.5+horror})`;
-    ctx.lineWidth = 1 + horror*8;
-    ctx.beginPath();
-    ctx.moveTo(350,350);
-    ctx.lineTo(350 + Math.cos(angle)*200 + distort, 350 + Math.sin(angle)*200 + distort);
-    ctx.stroke();
-
-    // Ojos que aparecen después del nivel 15
-    if(level > 14){
-      ctx.fillStyle = '#000';
-      ctx.beginPath();
-      ctx.arc(350 + Math.cos(angle)*150, 350 + Math.sin(angle)*150, 10 + horror*30, 0, Math.PI*2);
-      ctx.fill();
-      ctx.fillStyle = '#f00';
-      ctx.beginPath();
-      ctx.arc(350 + Math.cos(angle)*150 + 5, 350 + Math.sin(angle)*150 - 5, 5, 0, Math.PI*2);
-      ctx.fill();
-    }
-  }
-
-  // Nivel 26-27: el ojo del snake que te devora
-  if(level >= 25){
-    ctx.fillStyle = '#000';
-    ctx.beginPath(); ctx.arc(350,350,300,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#0f8';
-    ctx.beginPath(); ctx.arc(350,350,200,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#000';
-    ctx.beginPath(); ctx.arc(350,350,100,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle = '#0f8';
-    ctx.font = 'bold 80px Courier';
-    ctx.fillText('YA ESTÁS DENTRO', 70, 370);
-  }
-
-  collection[level] = canvas.toDataURL();
-  localStorage.setItem('0rb1t4lsn4k3r_descenso', JSON.stringify(collection));
-  show(level, canvas);
-}
-
-function show(level, canvas = null){
-  const c = canvas || document.createElement('canvas');
-  if(!canvas){
-    const img = new Image();
-    img.onload = ()=>{ document.getElementById('nft-canvas').getContext('2d').drawImage(img,0,0); };
-    img.src = collection[level];
+  if(elapsed < TOTAL_FIRST){
+    // Todavía en la primera prueba
+    const remaining = TOTAL_FIRST - elapsed;
+    const d = Math.floor(remaining / 86400000);
+    const h = Math.floor((remaining % 86400000) / 3600000);
+    const m = Math.floor((remaining % 3600000) / 60000);
+    document.getElementById('timer').textContent = `${d}d ${h}h ${m}m hasta completar la campaña`;
+    document.getElementById('locked').style.display = 'block';
   } else {
-    document.getElementById('nft-canvas').getContext('2d').drawImage(c,0,0);
+    // Primera prueba completada → activar los 26 sellos de 13h10m
+    document.getElementById('timer').textContent = 'PRIMERA PRUEBA COMPLETADA';
+    document.getElementById('locked').style.display = 'none';
+
+    // Aquí iría el grid de los 26 sellos restantes (omito código por brevedad)
+    // Cada uno requiere exactamente 13h10m desde que se desbloquea el anterior.
+    // El último sello abre el mensaje final: "ya no hay puerta"
   }
-  document.getElementById('caption').innerHTML = `
-    <strong>${levels[level].name}</strong><br>
-    NFT #${level+1}/27 · 1/1 real<br><br>
-    ${levels[level].warning.toUpperCase()}
-  `;
-  document.getElementById('modal').style.display = 'flex';
+
+  requestAnimationFrame(update);
 }
 
-// Fondo que se pudre lentamente
-const bg = document.getElementById('c');
-const ctxb = bg.getContext('2d');
-bg.width = innerWidth; bg.height = innerHeight;
-function anim(){
-  ctxb.fillStyle='rgba(0,0,0,0.02)'; ctxb.fillRect(0,0,bg.width,bg.height);
-  for(let i=0;i<600;i++){
-    const x = bg.width/2 + Math.sin(Date.now()*0.0001 + i)*300;
-    const y = bg.height/2 + Math.cos(Date.now()*0.0001 + i)*300;
-    ctxb.fillStyle = `hsl(${i*2},100%,${20+Math.sin(Date.now()*0.001)*15}%)`;
-    ctxb.fillRect(x,y,2,2);
+// Fondo que enloquece muy lentamente
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = innerWidth; canvas.height = innerHeight;
+let t = 0;
+function bg(){
+  ctx.fillStyle = 'rgba(0,0,0,0.015)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  t += 0.0003;
+  for(let i=0;i<500;i++){
+    const x = canvas.width/2 + Math.sin(t+i*0.07)*350;
+    const y = canvas.height/2 + Math.cos(t+i*0.07)*350;
+    ctx.fillStyle = i%17===0?'#f00':'#0f8';
+    ctx.fillRect(x,y,1.5,1.5);
   }
-  requestAnimationFrame(anim);
+  requestAnimationFrame(bg);
 }
-anim();
+bg();
 
-render();
+update();
 </script>
 </body>
 </html>

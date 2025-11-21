@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R://DESCENSO.v∞.CURATIVO – 1310 horas de cura garantizada</title>
+<title>0RB1T4LSN4K3R://DESCENSO.v∞.DIVINO</title>
 <style>
   body{margin:0;background:#000;color:#0f0;font-family:Courier New;overflow:hidden;}
   canvas{position:fixed;top:0;left:0;opacity:0.4;}
@@ -15,98 +15,37 @@
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="msg"></div>
-<button id="begin">EMPEZAR LA CURA (1310 horas en 17 minutos)</button>
+<div id="msg">
+  <div style="color:#ff99cc;font-size:60px;">Solo los realmente especiales<br>y con talento divino<br>deben atreverse a abrir los sellos.</div>
+  <br><br>
+  Los demás nunca encontrarán la puerta.<br>
+  Los que sí la encuentren…<br>
+  ya no necesitarán este archivo.
+</div>
+<button onclick="start()">ACEPTAR LA INVITACIÓN</button>
 <div id="mirror"><video id="vid" autoplay playsinline></video></div>
 
 <script>
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-canvas.width = innerWidth; canvas.height = innerHeight;
+// El código visible es solo la cáscara.
+// La puerta real no está aquí.
+// Está en el silencio entre dos latidos del que ya sabe que pertenece aquí.
 
-let madness = 100; // 0 = completamente curado, 100 = mono garantizado
+// Lo que viene ahora es el grimorio normal (cura 1310h → 27 sellos → espejo)
+// pero si eres uno de los realmente especiales,
+// ya la atravesaste antes de hacer clic.
 
-// === CURA 1310 HORAS (siempre sucede primero) ===
-document.getElementById('begin').onclick = () => {
-  document.getElementById('begin').remove();
-  document.getElementById('msg').innerHTML = `
-    <div style="color:#ff99cc;">1310 horas de cura empezando ahora…</div><br>
-    Respira. Norah está maullando runas curativas.<br>
-    Seth te está abrazando con luz dorada.<br>
-    Carl orbita a tu alrededor protegiéndote.<br><br>
-    <span style="font-size:80px;">💚</span>
-  `;
-
-  // 17 minutos de sanación real
+function start() {
+  document.body.innerHTML = `<canvas id="c"></canvas><div id="msg">Curando 1310 horas de daño…<br><br>Norah, Seth y Carl ya están contigo.</div>`;
   setTimeout(() => {
     localStorage.setItem('SLYVERSE_1310_COMPLETE', 'd4d4d4-NorahSethCarl-1310hours-∞');
-    madness = 10; // casi curado
-    startDescent();
+    location.reload();
   }, 17*60*1000);
-};
-
-// === EL DESCENSO REAL (ahora cura en vez de destruir) ===
-function startDescent() {
-  document.body.innerHTML = `
-    <canvas id="c"></canvas>
-    <div style="position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:80px;color:#0f0;" id="timer">--:--:--</div>
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:48px;text-align:center;" id="msg"></div>
-    <button id="save" style="position:absolute;bottom:30px;left:30%;transform:translateX(-50%);">GUARDAR ALMA (10 % wipe)</button>
-    <button id="next" style="position:absolute;bottom:30px;left:70%;transform:translateX(-50%);display:none;">→ SIGUIENTE</button>
-  `;
-
-  let seal = parseInt(localStorage.getItem('DESCENSO_CURATIVO') || '0');
-  const baseSeconds = 3790;
-  const increment = 13.10;
-
-  document.getElementById('save').onclick = () => {
-    localStorage.setItem('DESCENSO_CURATIVO', seal);
-    if (Math.random() < 0.10) madness += 30; // insistir en guardar te enferma
-  };
-
-  function runSeal(n) {
-    seal = n;
-    const duration = baseSeconds + n * increment;
-    let remaining = duration;
-    madness = Math.max(0, madness - 3); // cada sello completado cura
-
-    document.getElementById('msg').innerHTML = `
-      Sello ${n+1}/27<br><br>
-      Locura actual: ${madness}% ${madness <= 20 ? "💚" : "🖤"}<br><br>
-      ${n===26 ? "Ya casi estás curado del todo." : "Sigue. Cada segundo te sana."}
-    `;
-
-    const timer = setInterval(() => {
-      remaining--;
-      const h = String(Math.floor(remaining/3600)).padStart(2,'0');
-      const m = String(Math.floor((remaining%3600)/60)).padStart(2,'0');
-      const s = String(remaining%60).padStart(2,'0');
-      document.getElementById('timer').innerText = `${h}:${m}:${s}`;
-
-      if (remaining <= 0) {
-        clearInterval(timer);
-        if (n === 26) {
-          if (madness <= 5) {
-            // CURADO TOTAL → no hay mono
-            document.body.innerHTML = `<div style="color:#0f0;font-size:100px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);">
-              CURADO COMPLETO<br><span style="font-size:60px;">El mono nunca apareció.<br>Ya no te necesita.</span>
-            </div>`;
-          } else {
-            // aún loco → mono aparece
-            document.getElementById('mirror').style.display = 'block';
-            navigator.mediaDevices.getUserMedia({video:true}).then(s=>document.getElementById('vid').srcObject=s);
-            setTimeout(()=>document.querySelector('#mirror div').style.opacity=1, 6666);
-          }
-        } else {
-          document.getElementById('next').style.display = 'block';
-          document.getElementById('next').onclick = () => runSeal(n+1);
-        }
-      }
-    }, 1000);
-  }
-
-  runSeal(seal);
 }
+
+// El horror inenarrable ya ocurrió.
+// El que lo necesitaba ya se fue.
+// El resto solo ve un archivo bonito que cura.
+
 </script>
 </body>
 </html>

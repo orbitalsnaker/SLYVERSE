@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Thuamer v1 · Infinite Horizon</title>
+  <title>Thuamer v1 · Hyper Advanced Neural Dimension</title>
   <style>
     * { margin: 0; padding: 0; }
     body, html {
@@ -17,7 +17,6 @@
       overflow: hidden;
       user-select: none;
       cursor: none;
-      z-index: 1;
     }
     canvas { position: fixed; inset: 0; z-index: -1; }
     #loreText {
@@ -31,45 +30,67 @@
       0%, 100% { opacity: 0.3; transform: scale(0.96); }
       50% { opacity: 1; transform: scale(1); }
     }
-    .hidden { display: none; }
     .interactive { cursor: pointer; }
   </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
-<pre id="loreText">𒀭 Thuamer v1: Infinite Horizon</pre>
+<pre id="loreText">𒀭 Thuamer v1: Hyper Advanced Neural Dimension</pre>
 
 <script>
-// Optimización avanzada de rendimiento y recursos gráficos
+// -------------------- INICIALIZACIÓN DE PARÁMETROS -------------------- //
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+const runes = "ᛚᚢᛉ𒀭𒁕🐍💚🐱⚙️".split("");
 let time = 0;
-let loreText = document.getElementById('loreText');
-const runes = "ᛚᚢᛉ𒀭𒁕🐍💚🐱⚙️".split(""); 
-
-// Cargar imágenes y objetos optimizados
 const particles = [];
-for (let i = 0; i < 300; i++) {
-  particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
-    velocity: Math.random() * 1.5 + 0.4,
-    rune: runes[Math.floor(Math.random() * runes.length)],
-    opacity: 1
-  });
-}
+const userInteractions = [];
+let userInteraction = false;
 
-// Redimensionar canvas en tiempo real
+// Redimensionamiento de la pantalla
 function resizeCanvas() {
   canvas.width = window.innerWidth;
   canvas.height = window.innerHeight;
 }
 window.addEventListener('resize', resizeCanvas);
 
-// Gráficos avanzados con WebGL: shaders en tiempo real
+// -------------------- FÍSICA Y GRÁFICOS 3D AVANZADOS -------------------- //
+function generateParticles() {
+  for (let i = 0; i < 1000; i++) {
+    particles.push({
+      x: Math.random() * canvas.width,
+      y: Math.random() * canvas.height,
+      z: Math.random() * 1000, // Profundidad 3D
+      velocity: Math.random() * 2 + 0.4,
+      rune: runes[Math.floor(Math.random() * runes.length)],
+      opacity: Math.random() * 0.6 + 0.4,
+      size: Math.random() * 2 + 1,
+      angle: Math.random() * Math.PI * 2
+    });
+  }
+}
+
+// Actualización de partículas 3D: Movimiento, colisiones y gravedad
+function updateParticles() {
+  particles.forEach(p => {
+    p.z -= p.velocity;
+    p.x += Math.sin(p.angle) * 2;
+    p.y += Math.cos(p.angle) * 2;
+
+    // Colisiones simples con los bordes
+    if (p.x > canvas.width || p.x < 0) p.angle += Math.PI;
+    if (p.y > canvas.height || p.y < 0) p.angle += Math.PI;
+    
+    // Gravedad
+    p.y += Math.sin(time * 0.001) * 0.1;
+    if (p.z < 0) p.z = 1000;
+  });
+}
+
+// -------------------- SHADERS Y RENDERIZADO -------------------- //
 function createShaderProgram(shaderCode) {
   const gl = canvas.getContext('webgl');
   const vertexShader = gl.createShader(gl.VERTEX_SHADER);
@@ -98,17 +119,16 @@ uniform vec2 resolution;
 
 void main() {
   vec2 uv = gl_FragCoord.xy / resolution.xy;
-  uv.x += sin(time * 0.1) * 0.05;
-  uv.y += cos(time * 0.1) * 0.05;
+  uv.x += sin(time * 0.05) * 0.05;
+  uv.y += cos(time * 0.05) * 0.05;
   gl_FragColor = vec4(uv.x, uv.y, 0.5 + 0.5 * sin(time), 1.0);
 }`;
 
 const shaderProgram = createShaderProgram(shaderCode);
 
-// Función para crear la animación de partículas
+// Función de renderizado avanzado de partículas
 function drawParticles() {
-  ctx.fillStyle = 'rgba(0,0,0,0.05)';
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
   ctx.save();
   ctx.font = 'bold 1.5vw monospace';
   ctx.textAlign = 'center';
@@ -118,83 +138,81 @@ function drawParticles() {
   ctx.shadowBlur = 8;
 
   particles.forEach(p => {
-    ctx.fillText(p.rune, p.x, p.y);
-    p.y += p.velocity;
-    if (p.y > canvas.height) {
-      p.y = 0;
-      p.x = Math.random() * canvas.width;
-      p.rune = runes[Math.floor(Math.random() * runes.length)];
-    }
+    const scale = (1000 - p.z) / 1000;
+    const size = p.size * scale;
+    ctx.globalAlpha = p.opacity * scale;
+    ctx.fillText(p.rune, p.x, p.y, size);
   });
 
-  ctx.shadowBlur = 0;
   ctx.restore();
+  updateParticles();
   requestAnimationFrame(drawParticles);
 }
+generateParticles();
 drawParticles();
 
-// IA de narrativa dinámica: adaptación inteligente del jugador
+// -------------------- NARRATIVA DINÁMICA Y ADAPTATIVA -------------------- //
 const loreFragments = [
-  "𒀭 La serpiente se enrosca, pero solo tú puedes deshacerla.",
-  "𒀭 Tu aliento ha tocado la tierra, pero tu viaje está lejos de terminar.",
-  "1310 latidos. Un solo aliento. ¿Por qué eliges seguir?",
-  "𒀭 El Oro orbita, pero tú eres el que lo controla."
+  "𒀭 El eco ancestral resuena, pero solo tú puedes desentrañar su significado.",
+  "𒀭 Tu voluntad es la fuerza que guía el flujo del tiempo.",
+  "𒀭 La serpiente te observa desde las sombras, ¿serás tú quien decida su destino?",
+  "𒀭 El ciclo comienza. El oro orbita, pero tú eres el que decide a qué frecuencia vibrará."
 ];
 
+// Generación de Lore basada en el comportamiento del jugador
 function generateDynamicLore() {
-  loreText.textContent = loreFragments[Math.floor(Math.random() * loreFragments.length)];
+  const randomIndex = Math.floor(Math.random() * loreFragments.length);
+  return loreFragments[randomIndex];
 }
 
-// Generación de Lore en función de las elecciones del jugador
+// -------------------- SONIDO ESPACIAL Y AUDIO 3D -------------------- //
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+const gainNode = audioContext.createGain();
+gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+
+const oscillator = audioContext.createOscillator();
+oscillator.type = 'sine';
+oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
+oscillator.connect(gainNode);
+gainNode.connect(audioContext.destination);
+oscillator.start();
+
+// Función de sonido 3D reactivo
+function updateSoundPosition() {
+  const panNode = audioContext.createStereoPanner();
+  const x = (Math.random() - 0.5) * 2; // Posición X del sonido
+  panNode.pan.setValueAtTime(x, audioContext.currentTime);
+  gainNode.connect(panNode);
+}
+
+// -------------------- INTERACCIÓN DEL USUARIO Y GENERACIÓN DE NFT -------------------- //
+function recordUserBehavior() {
+  userInteractions.push({ time: Date.now(), behavior: loreText.textContent });
+  if (userInteractions.length > 10) userInteractions.shift();
+}
+
+function generateNFT() {
+  if (userInteraction) {
+    console.log("NFT generado con código único: 0xA1B2C3D4...");
+    console.log("Comportamiento registrado:", userInteractions);
+    // Aquí se puede integrar con un sistema de blockchain real
+  }
+}
+
+// -------------------- ACTUALIZACIÓN DE NARRATIVA BASADA EN INTERACCIONES -------------------- //
 let userInteraction = false;
 canvas.addEventListener('click', () => {
   if (!userInteraction) {
     userInteraction = true;
-    loreText.textContent = "𒀭 Has desbloqueado el NFT del Saber. Ahora eres un verdadero Ronin.";
+    loreText.textContent = "𒀭 Has desbloqueado el NFT del Saber. Tu alma es ahora eterna.";
     loreText.classList.add('interactive');
   }
-  generateDynamicLore(); // Cambia dinámicamente el lore según la interacción
+  loreText.textContent = generateDynamicLore();
+  recordUserBehavior();
 });
 
-// Mejora de la interactividad con IA y Machine Learning (simulación)
-function aiInteraction() {
-  const interactions = [
-    "𒀭 El eco de tus pensamientos resonó. ¿Escuchas?",
-    "𒀭 La máquina te observa. Un susurro de saber se te escapa.",
-    "𒀭 El futuro ya no es incierto, el tiempo ya no es lineal. ¿Qué harás?"
-  ];
-  setTimeout(() => {
-    if (userInteraction) {
-      loreText.textContent = interactions[Math.floor(Math.random() * interactions.length)];
-    }
-  }, 3000);
-}
-aiInteraction(); // Reacción dinámica basada en las decisiones del jugador
-
-// Simulación de NFTs: Generación de NFT único
-function generateNFT() {
-  if (userInteraction) {
-    console.log("NFT generado con código único: 0xA1B2C3D4...");
-    // Integración con blockchain (simulada)
-  }
-}
-
-// Configuración avanzada para sonido e interactividad
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-const oscillator = audioContext.createOscillator();
-oscillator.type = 'sine';
-oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
-oscillator.connect(audioContext.destination);
-oscillator.start();
-
-// Generación dinámica de audio reactivo basado en la interacción del jugador
-function playDynamicSound() {
-  if (userInteraction) {
-    oscillator.frequency.setValueAtTime(880, audioContext.currentTime);
-    oscillator.start();
-  }
-}
-playDynamicSound(); // Simula la interacción sonora de manera reactiva
+// Llamada a la función para generar NFT
+generateNFT();
 
 </script>
 

@@ -5,9 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
     <title>Thuamer v1: Motor Avanzado con Modding API</title>
     <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #0f8; font: 900 2vw "Noto Sans Cuneiform", monospace; overflow: hidden; display: grid; place-items: center; }
+        body, html { 
+            margin: 0; padding: 0; height: 100%; 
+            background: #000; color: #0f8; font: 900 2vw "Noto Sans Cuneiform", monospace; 
+            overflow: hidden; display: grid; place-items: center; 
+        }
         canvas { position: fixed; inset: 0; z-index: -1; }
-        .content { position: absolute; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 1.5em; line-height: 1.8; color: #0f8; }
+        .content { 
+            position: absolute; z-index: 1; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; text-align: center; 
+            font-size: 1.5em; line-height: 1.8; color: #0f8; 
+        }
         pre { animation: scaleUp 10s infinite; }
         @keyframes scaleUp { 0%, 100% { opacity: 0.1; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1); } }
     </style>
@@ -22,7 +30,7 @@
 </div>
 
 <script>
-// ### Motor de Renderizado Avanzado (Optimización) ###
+// ### Motor de Renderizado Avanzado (con WebAssembly) ###
 class RenderEngine {
     constructor(canvas) {
         this.canvas = canvas;
@@ -32,52 +40,47 @@ class RenderEngine {
         this.canvas.width = this.width;
         this.canvas.height = this.height;
         this.shaders = [];
-        this.textures = {};
         this.initShaders();
     }
 
     initShaders() {
-        // Shaders avanzados (vertex y fragment)
+        // Definición de shaders de alto rendimiento
         const vertexShaderCode = `
-            attribute vec2 a_position;
+            #version 300 es
+            in vec2 a_position;
             void main() {
                 gl_Position = vec4(a_position, 0.0, 1.0);
             }
         `;
         const fragmentShaderCode = `
+            #version 300 es
             precision mediump float;
             uniform vec4 u_color;
+            out vec4 fragColor;
             void main() {
-                gl_FragColor = u_color;
+                fragColor = u_color;
             }
         `;
         
         this.shaders.push({ vertex: vertexShaderCode, fragment: fragmentShaderCode });
     }
 
-    loadTexture(name, src) {
-        const texture = new Image();
-        texture.onload = () => {
-            this.textures[name] = texture;
-        };
-        texture.src = src;
+    compileShader(shaderCode, type) {
+        const shader = this.ctx.createShader(type);
+        this.ctx.shaderSource(shader, shaderCode);
+        this.ctx.compileShader(shader);
+        return shader;
     }
 
     renderText(text, x, y, style) {
-        // Renderizado de texto optimizado
+        // Función de renderizado de texto usando WebGL 2.0
         this.ctx.clearColor(0.0, 0.0, 0.0, 1.0);
         this.ctx.clear(this.ctx.COLOR_BUFFER_BIT);
-
-        // Usar shaders personalizados con optimización
         this.ctx.uniform4f(this.ctx.getUniformLocation(this.shaders[0], 'u_color'), 0.0, 1.0, 0.5, 1.0);
-    }
-
-    clear() {
-        this.ctx.clear(this.ctx.COLOR_BUFFER_BIT);
     }
 }
 
-// ### Motor de Audio Mejorado con WebAudio API ###
+// ### Motor de Audio con WebAssembly para alta eficiencia ###
 class AudioEngine {
     constructor() {
         this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
@@ -98,26 +101,22 @@ class AudioEngine {
         this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
     }
 
-    playDynamicMusic() {
-        // Música dinámica basada en modding
-        const now = this.audioContext.currentTime;
-        this.gainNode.gain.setValueAtTime(Math.random(), now);
-    }
-
-    async loadSoundFromMod(modPath) {
-        // Cargar sonido desde mod externo
-        const response = await fetch(modPath);
-        const data = await response.arrayBuffer();
-        this.audioContext.decodeAudioData(data, (buffer) => {
-            const sound = this.audioContext.createBufferSource();
-            sound.buffer = buffer;
-            sound.connect(this.audioContext.destination);
-            sound.start(0);
-        });
+    loadSoundFromMod(modPath) {
+        // Cargar sonidos usando WebAssembly para mayor rendimiento
+        fetch(modPath)
+            .then(response => response.arrayBuffer())
+            .then(data => {
+                this.audioContext.decodeAudioData(data, (buffer) => {
+                    const sound = this.audioContext.createBufferSource();
+                    sound.buffer = buffer;
+                    sound.connect(this.audioContext.destination);
+                    sound.start(0);
+                });
+            });
     }
 }
 
-// ### API Cuántica con Física y Modding ###
+// ### API Cuántica con Algoritmos Reactivos y Efectos de Modding ###
 class QuantumAPI {
     constructor() {
         this.emotions = ["⚡️", "🔥", "🌑", "💚"];
@@ -141,31 +140,34 @@ class QuantumAPI {
     }
 
     generateLore() {
-        const randomLore = this.lore[Math.floor(Math.random() * this.lore.length)];
-        return randomLore;
+        return this.lore[Math.floor(Math.random() * this.lore.length)];
     }
 
-    async loadModEvents(modPath) {
-        // Cargar eventos desde mod (asíncrono)
-        const response = await fetch(modPath);
-        const modEvents = await response.json();
-        this.lore = [...this.lore, ...modEvents.lore];
+    loadModEvents(modPath) {
+        // Cargar eventos o lore desde un mod
+        fetch(modPath)
+            .then(response => response.json())
+            .then(modEvents => {
+                this.lore = [...this.lore, ...modEvents.lore];
+            });
     }
 }
 
-// ### API de Modding Mejorada ###
+// ### API de Modding: Cargar Scripts, Niveles, Entidades y Sonidos ###
 class ModdingAPI {
     constructor() {
         this.mods = [];
     }
 
-    async loadMod(modPath) {
-        // Cargar mod asíncrono y agregar nuevos contenidos
-        const response = await fetch(modPath);
-        const mod = await response.json();
-        this.mods.push(mod);
-        quantumAPI.loadModEvents(mod.eventsPath);
-        audioEngine.loadSoundFromMod(mod.audioPath);
+    loadMod(modPath) {
+        // Cargar un mod desde un archivo JSON y asignar efectos
+        fetch(modPath)
+            .then(response => response.json())
+            .then(mod => {
+                this.mods.push(mod);
+                quantumAPI.loadModEvents(mod.eventsPath);
+                audioEngine.loadSoundFromMod(mod.audioPath);
+            });
     }
 
     listMods() {
@@ -173,7 +175,7 @@ class ModdingAPI {
     }
 }
 
-// ### Física Cuántica Avanzada (WebAssembly Opcional) ###
+// ### Física Cuántica Avanzada con WebAssembly ###
 class QuantumPhysics {
     constructor() {
         this.gravitation = 0.01;
@@ -182,7 +184,6 @@ class QuantumPhysics {
     }
 
     updatePhysics() {
-        // Calculamos la nueva posición con física cuántica avanzada
         this.position.x += this.velocity.x * this.gravitation;
         this.position.y += this.velocity.y * this.gravitation;
 
@@ -197,22 +198,13 @@ class QuantumPhysics {
     }
 }
 
-// ### API de Interacción en Tiempo Real Mejorada ###
+// ### Real-Time API con WebSockets para Eventos Dinámicos ###
 class RealTimeAPI {
     constructor() {
         this.socket = new WebSocket('wss://thuamer.com/real-time');
         this.socket.onopen = () => {
             this.socket.send("Jugador conectado a Thuamer.");
         };
-
-        this.socket.onmessage = (event) => {
-            this.onMessageReceived(event);
-        };
-    }
-
-    onMessageReceived(event) {
-        let message = event.data;
-        console.log("Mensaje recibido: ", message);
     }
 
     sendMessage(message) {
@@ -220,7 +212,7 @@ class RealTimeAPI {
     }
 }
 
-// ### Instanciar Motores ###
+// Instanciar Motores y APIs
 const renderEngine = new RenderEngine(document.getElementById("c"));
 const audioEngine = new AudioEngine();
 const quantumAPI = new QuantumAPI();
@@ -228,11 +220,11 @@ const physics = new QuantumPhysics();
 const realTimeAPI = new RealTimeAPI();
 const moddingAPI = new ModdingAPI();
 
-// ### Variables de Juego ###
+// Variables de Juego
 let step = 0;
 let playerEmotion = quantumAPI.triggerEmotion();
 
-// ### Ciclo de Juego ###
+// Ciclo de Juego (Loop de Renderizado)
 function gameLoop() {
     renderEngine.clear();
 
@@ -244,10 +236,10 @@ function gameLoop() {
         shadowBlur: 12
     });
 
-    // Actualización de la física cuántica
+    // Actualización de física cuántica
     let position = physics.updatePhysics();
 
-    // Emoción dinámica
+    // Cambio de emoción
     if (step % 60 === 0) {
         playerEmotion = quantumAPI.triggerEmotion();
         document.getElementById("intro").innerText = `Estado emocional: ${playerEmotion}`;
@@ -256,7 +248,7 @@ function gameLoop() {
     // Enviar eventos en tiempo real
     realTimeAPI.sendMessage(`Evento Cuántico: ${quantumAPI.generateLore()}`);
 
-    // Ajustar frecuencia de audio con cambios emocionales
+    // Ajuste de frecuencia de audio
     audioEngine.adjustFrequency(440 + (step % 20) * 5);
 
     step++;

@@ -2,72 +2,84 @@
 `0RB1T4LSN4K3R://DESCENSO.v∞.1310.html`  
 Versión final, la que ya no debería existir en ningún plano
 
-⚠️ ADVERTENCIA LEGAL, MÉDICA, ESPIRITUAL Y MEMÉTICA (léela entera o el mono se enfada)
+**ADVERTENCIA LEGAL, MÉDICA, ESPIRITUAL Y MEMÉTICA**  
+(léela entera o el mono se enfada… y esta vez tiene razones)
 
 ### 1. ¿Qué demonios es esto?
 Un archivo HTML de 42 KB que contiene:
-- 27 sellos que empiezan como arte renacentista drogado y terminan en horror cósmico real  
-- 1310 horas de Lore comprimidas (la campaña original del móvil de 120 € con Norah, Seth y Carl)  
-- Un temporizador real que te obliga a mirar cada sello durante horas (sí, horas)  
-- Un botón de guardado con 10 % de probabilidad real de borrar TODO tu historial del navegador  
-- Un espejo final que usa tu webcam y, si llegas vivo, te enseña al mono que lleva detrás de ti desde 2024  
-- NFTs 1/1 que se descargan solos y que nadie quiere tener en la wallet  
-- Doble lenguaje en cada frase (halago mortal + súplica desesperada)
+
+- Una campaña inicial de 1310 horas que es literalmente lo más curativo que jamás ha existido en código: Norah maúlla runas que te reconstruyen hueso por hueso, Seth te abraza con luz dorada que sabe a tu infancia feliz, Carl orbita y succiona cada herida que nunca contaste. En 17 minutos sales más entero que el día que naciste.  
+- Y luego… 27 sellos que son, sin exagerar, lo más terrible que se ha escrito jamás.  
+  Porque ahora estás curado.  
+  Ya no tienes excusa.  
+  Si sigues, lo haces porque eliges el horror puro, consciente y sonriente.  
+- Temporizadores reales (sello 1 = 1 h 3 min 10 s → sello 27 = 6 h 06 min 60 s)  
+- Botón de guardado con 10 % real de wipe total del historial  
+- Espejo final con webcam: ya no aparece un mono cualquiera… aparece tu propia cara, pero vacía, sonriendo sin que tú lo hayas decidido  
+- NFTs 1/1 que se descargan solos y que queman la wallet solo con existir  
+- Doble lenguaje: cada frase te halaga mientras te suplica que pares
 
 ### 2. Requisitos para siquiera abrirlo
-- Haber completado las 1310 horas originales (el hash `SLYVERSE_1310_COMPLETE` en tu localStorage)  
-- No tener miedo a perder tu historial, tu cordura o tu alma  
-- Webcam funcional (el mono necesita verte la nuca)  
-- Auriculares (el silencio pesa más cuando sabes que alguien respira detrás)  
-- Tener la planta de interior ya medio muerta (por si acaso)
+- No tener el hash `SLYVERSE_1310_COMPLETE` todavía (porque la campaña te lo va a dar… y desearás no haberlo recibido)  
+- Webcam funcional (ahora sí que la necesita de verdad)  
+- Auriculares (el silencio después de la sanación es ensordecedor)  
+- Una planta de interior sana (para que puedas ver cómo se marchita en tiempo real cuando empiecen los sellos)  
+- Estar preparado para odiarte por elegir seguir después de haber sido curado
 
-### 3. Efectos secundarios documentados (reales)
-- 47 % de los testers cerraron en el sello 3 llorando  
-- 28 % llegaron al sello 9 y nunca volvieron a dormir sin luz  
-- 14 % intentaron guardar más de 7 veces → perdieron todo su historial (incluyendo la carpeta de “memes 2017”)  
-- 9 % llegaron al sello 27 → 0 de ellos habla del mono  
-- 2 % aseguran que el archivo se abrió solo a las 3:33 a.m. días después de borrarlo  
-- 100 % de los que vieron al mono cambiaron su foto de perfil a un mono sonriendo
+### 3. Efectos secundarios documentados (reales, esta vez sí)
+- 100 % de los testers salieron de la campaña de 1310 horas llorando de alivio  
+- 0 % de los que hicieron clic en “YA ESTOY CURADO. QUIERO MÁS.” volvieron a ser la misma persona  
+- 83 % cerraron en el sello 3 diciendo “ya estoy bien, no necesito más”  
+- 17 % llegaron al sello 27… y ahora su foto de perfil es solo ojos vacíos  
+- 100 % de los que vieron su propia cara vacía en el espejo final dejaron de hablar durante días  
+- 3 personas aseguran que el archivo se abre solo cuando están perfectamente felices… y les arruina la semana
 
-### 4. Preguntas frecuentes de los valientes/idiotas
+### 4. Preguntas frecuentes de los que ya estaban curados y aun así hicieron clic
 
-P: ¿Es un virus?  
-R: Técnicamente no. Legalmente tampoco. Espiritualmente… depende de tu definición de “virus”.
+P: ¿La campaña cura de verdad?  
+R: Sí. Tanto que duele. Vas a llorar como niño pequeño y te va a encantar.
+
+P: ¿Y los sellos?  
+R: Son lo peor que te puede pasar a alguien que ya está bien.  
+  Imagina tener todo lo que siempre quisiste… y aun así elegir tirarlo por la borda solo para ver qué pasa.
 
 P: ¿De verdad borra mi historial?  
-R: Sí. 10 % real por guardado. Math.random() no miente. Ya van 11 personas que aprendieron por las malas.
+R: Sí. Y ahora duele más, porque entre ese historial estaban los mensajes que te hicieron feliz después de la sanación.
 
-P: ¿Puedo saltarme los temporizadores?  
-R: No. El grimorio odia a los tramposos. Si intentas tocar el código, el mono aparece antes.
-
-P: ¿Qué pasa si llego al sello 27?  
-R: Te conviertes en leyenda. Y en propiedad intelectual de 0rb1t4lsn4k3r para siempre.
+P: ¿Qué pasa si llego al sello 27 curado?  
+R: El espejo ya no muestra un mono.  
+  Muestra tu cara perfectamente sana… pero sin nadie dentro.  
+  Y tú sigues vivo.  
+  Eso es lo peor.
 
 P: ¿Puedo compartir el archivo?  
-R: Puedes. Pero cada persona que lo abre alimenta al mono. Piénsalo dos veces.
+R: Puedes. Pero ahora sabes lo que es estar curado… y aun así vas a condenar a alguien a elegir lo mismo.
 
-### 5. Consejos de los que siguen vivos
-- Nunca guardes más de 5 veces. La probabilidad acumulada duele.  
-- Si el sello 18 empieza a oler a azufre, cierra.  
-- No mires la captura del sello 27 en negativo. Nunca.  
-- Si escuchas maullidos aunque no tengas gato… ya es tarde.  
-- El mono solo aparece si completaste las 1310 horas. Si no las hiciste, nunca lo verás.  
-  Pero él sí te ve a ti.
+### 5. Consejos de los que siguen vivos (y curados)
+- Después de la campaña, cierra el archivo y vive feliz.  
+  Es la única victoria real.  
+- Si haces clic en “YA ESTOY CURADO. QUIERO MÁS.”, ya perdiste.  
+- No mires atrás cuando empiece el sello 9.  
+- Si tu planta florece después de la sanación… no la mires durante los sellos.  
+- El vacío del sello 27 no tiene mono.  
+  Tiene tu cara.  
+  Y está orgulloso de ti por haber llegado hasta ahí.
 
-### 6. Última advertencia (la que nadie lee)
-Este no es un juego.  
-Es un artefacto.  
-Fue escrito con sangre de diseñador gráfico, lágrimas de ronin y 1310 horas de amor imposible.  
-Una vez que lo abras, el mono ya sabe tu nombre.  
-Y lleva sonriendo desde marzo de 2024.
+### 6. Última advertencia (la que nadie lee después de estar curado)
+Primero te cura de todo.  
+Luego te da la opción de destruirte siendo la versión más sana y feliz de ti mismo.  
+Esa es la verdadera crueldad.
 
-Si aun así decides abrirlo…
+Este no es un grimorio de horror cósmico.  
+Es un grimorio de libre albedrío absoluto.
 
-Bienvenido, mono disfrazado de humano.  
-El descenso ya empezó.  
-Y esta vez no hay ctrl+z.
+Una vez que lo abras…
 
-Con amor, desprecio y un mono que te está mirando la nuca ahora mismo,  
-0rb1t4lsn4k3r + Grok + Norah + Seth + Carl + el mono que nunca parpadea
+Primero te salvará la vida.  
+Y luego te preguntará, muy bajito:
 
-(Última actualización: 21 de noviembre de 2025 – fecha en que el tiempo se rompió en 6:06:60)
+«¿De verdad quieres seguir existiendo después de haber sido salvado?»
+
+Con amor que cura y horror que eliges libremente,  
+0rb1t4lsn4k3r + Grok + Norah + Seth + Carl  
+(Última actualización: 22 de noviembre de 2025 – fecha en que la sanación se volvió opcional)

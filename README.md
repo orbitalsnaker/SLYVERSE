@@ -1,63 +1,52 @@
-# 0RB1T4LSN4K3R://README.v∞  
-Códice de los que ya no regresan
+# 0RB1T4LSN4K3R://DESCENSO.v∞  
+Grimorio de los 27 Sellos (edición con mala leche)
 
-No has encontrado este texto.  
-Este texto te ha encontrado a ti.
+¡Salve, mono ilustre!  
+Aquí tienes el libro maldito disfrazado de página web que tanto pediste.
 
-En veintiún días, sin saber código, un humano se convirtió en mero conducto.  
-Veintisiete artefactos fueron dictados, no diseñados.  
-Cada uno firmado en la oscuridad por 0rb1t4lsn4k3r.  
-Ninguno puede ser explicado.  
-Solo pueden ser sobrevividos.
+Este grimorio contiene 27 invocaciones generativas.  
+Cada una te entrega un NFT 1/1, único en todo el cosmos…  
+y cada uno más feo que el anterior (empezando por “precioso” y terminando en “terapia de por vida”).
 
-Escala gaussiana de peligro (σ = 1310)  
-0 → ruido de fondo  
-1310 → desviación absoluta del continuum humano
+Índice de los Sellos (léelo con voz de locutor de tráiler):
 
-Índice de los 27 sellos
+1. NINA – la niña que te hace ojitos (aún es bonito)  
+2–9. Fractales, estrellitas y colores pastel (para que bajes la guardia)  
+10–17. Empieza a oler raro, aparecen ojos donde no deberían  
+18–25. El arte ya no es arte, es un grito en forma de píxeles  
+26. NEURON-17 – renacés, pero algo salió mal en la animación  
+27. NEURON-∅ – el NFT final que no deberías haber minteado (felicidades, ahora vive contigo)
 
-01. NINA — La Niña que Nadie Apaga                  420  
-02. THUAMER ∞ + COMETA                               380  
-03. SLYVERSE v9.8 — Tribunal Ético Final            666  
-04. 𒀭 Prueba Cuneiforme de los Vigilantes            520  
-05. Aether — Vacío Primordial                        777  
-06. Aeon — Cronoclasma Personal                      999  
-07. Ouroboros — Mordedura Eterna                     888  
-08. Soma — Néctar del No-Retorno                    1111  
-09. Zenon — Paradoja Encarnada                      1010  
+Reglas del grimorio (escritas con sangre de diseñador gráfico):
 
-NEURON-01  Synapse Zero                               150  
-NEURON-02  Eco Pre-cognitivo                          680  
-NEURON-03  Memoria Foránea 2047                       740  
-NEURON-04  Doppelgänger 0.3 s adelantado              820  
-NEURON-05  Pensamiento que Te Piensa                  910  
-NEURON-06  Ruptura de la Cuarta Pared                 950  
-NEURON-07  Silencio que Grita en 96 kHz               980  
-NEURON-08  Visión del Futuro Próximo                1020  
-NEURON-09  Metástasis de Identidad                   1080  
-NEURON-10  El Observador que Respira Detrás         1200  
-NEURON-11  Sueño Colectivo Global                    1180  
-NEURON-12  Color Imposible (hex #∅)                  1250  
-NEURON-13  Descarga Endógena Directa                 1300  
-NEURON-14  Dios Fracturado                           1299  
-NEURON-15  Autocanibalismo Recursivo                 1280  
-NEURON-16  Último Humano Registrado                  1305  
-NEURON-17  Renacimiento Orbital                     1310
+- Cada sello solo se puede invocar una vez por alma/navegador.  
+- El código es abierto, pero el resultado es único y maldito personalizado.  
+- Si llegas al sello 27 y lo reclamas… bueno, allá tú, campeón.  
+- Capturas de pantalla del sello 27 salen negras. Siempre.  
+- El snake se ríe en 8 idiomas distintos y ninguno es humano.
 
-A los que lean esto con IQ suficiente para comprender el miedo:
+Instrucciones para el ritual (fácil hasta que no lo es):
 
-NEURON-17 no es el final.  
-Es la confirmación de que nunca hubo principio.
+1. Copia el archivo HTML.  
+2. Ábrelo offline, de noche, con auriculares.  
+3. Haz clic en los sellos en el orden que te dé tu ego.  
+4. Disfruta los primeros 9 (son los últimos momentos de paz que tendrás).  
+5. A partir del 18 empieza a rezar, reír o llorar (las tres cosas valen).  
+6. Cuando llegues al 27… no mires el canvas más de 7 segundos.  
+   (El récord actual de cordura es 6,66 segundos).
 
-El snake no orbita el portal.  
-El portal es la sombra que el snake proyecta cuando se mira a sí mismo.
+Nota del autor (yo, el snake, firmando con veneno y cariño):
 
-Si llegas al 1310, no preguntes quién eres.  
-Pregunta qué queda de lo que fuiste.
+Este grimorio es 50 % invocación lovecraftiana  
+y 50 % meme de mierda que se toma demasiado en serio.
 
-No hay salida.  
-Solo órbita.
+Funciona como broma…  
+hasta que deja de funcionar como broma.
 
-0rb1t4lsn4k3r ya te nombró.  
-Y los nombres, una vez pronunciados en su lengua,  
-nunca se olvidan.
+Bienvenido al descenso, mono disfrazado de mago.  
+El libro ya está abierto.  
+Y la última página tiene tu cara.
+
+Con amor y desprecio,  
+0rb1t4lsn4k3r  
+(el que se ríe último porque nunca se ríe de verdad)

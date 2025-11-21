@@ -1,219 +1,124 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Thuamer v1 · Hyper Advanced Neural Dimension</title>
-  <style>
-    * { margin: 0; padding: 0; }
-    body, html {
-      height: 100%;
-      background: #000;
-      color: #0f8;
-      font-family: "Noto Sans Cuneiform", monospace;
-      display: grid;
-      place-items: center;
-      overflow: hidden;
-      user-select: none;
-      cursor: none;
-    }
-    canvas { position: fixed; inset: 0; z-index: -1; }
-    #loreText {
-      font-size: 2.5vw;
-      text-align: center;
-      line-height: 1.4;
-      opacity: 0.8;
-      animation: fadeIn 12s infinite;
-    }
-    @keyframes fadeIn {
-      0%, 100% { opacity: 0.3; transform: scale(0.96); }
-      50% { opacity: 1; transform: scale(1); }
-    }
-    .interactive { cursor: pointer; }
-  </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+    <title>Thuamer v1: Hyper-Advanced – El Juego Que Evoluciona Contigo</title>
+    <style>
+        body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #0f8; font: 900 2vw "Noto Sans Cuneiform", monospace; overflow: hidden; display: grid; place-items: center; }
+        canvas { position: fixed; inset: 0; z-index: -1; }
+        .content { position: absolute; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 1.5em; line-height: 1.8; color: #0f8; }
+        pre { animation: scaleUp 5s infinite; }
+        @keyframes scaleUp { 0%, 100% { opacity: 0.2; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1); } }
+    </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
-<pre id="loreText">𒀭 Thuamer v1: Hyper Advanced Neural Dimension</pre>
+
+<div class="content">
+    <pre id="t">𒀭 Thuamer v1: Hyper-Advanced — La Convergencia del Juego y la Realidad</pre>
+    <p id="intro">Loading the universe...</p>
+</div>
 
 <script>
-// -------------------- INICIALIZACIÓN DE PARÁMETROS -------------------- //
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
+// Thuamer v1: Advanced Mechanisms
+const canvas = document.getElementById("c");
+const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-const runes = "ᛚᚢᛉ𒀭𒁕🐍💚🐱⚙️".split("");
-let time = 0;
-const particles = [];
-const userInteractions = [];
-let userInteraction = false;
 
-// Redimensionamiento de la pantalla
-function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-}
-window.addEventListener('resize', resizeCanvas);
-
-// -------------------- FÍSICA Y GRÁFICOS 3D AVANZADOS -------------------- //
-function generateParticles() {
-  for (let i = 0; i < 1000; i++) {
-    particles.push({
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      z: Math.random() * 1000, // Profundidad 3D
-      velocity: Math.random() * 2 + 0.4,
-      rune: runes[Math.floor(Math.random() * runes.length)],
-      opacity: Math.random() * 0.6 + 0.4,
-      size: Math.random() * 2 + 1,
-      angle: Math.random() * Math.PI * 2
-    });
-  }
-}
-
-// Actualización de partículas 3D: Movimiento, colisiones y gravedad
-function updateParticles() {
-  particles.forEach(p => {
-    p.z -= p.velocity;
-    p.x += Math.sin(p.angle) * 2;
-    p.y += Math.cos(p.angle) * 2;
-
-    // Colisiones simples con los bordes
-    if (p.x > canvas.width || p.x < 0) p.angle += Math.PI;
-    if (p.y > canvas.height || p.y < 0) p.angle += Math.PI;
-    
-    // Gravedad
-    p.y += Math.sin(time * 0.001) * 0.1;
-    if (p.z < 0) p.z = 1000;
-  });
-}
-
-// -------------------- SHADERS Y RENDERIZADO -------------------- //
-function createShaderProgram(shaderCode) {
-  const gl = canvas.getContext('webgl');
-  const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-  const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-  gl.shaderSource(vertexShader, `
-    attribute vec2 a_position;
-    void main() {
-      gl_Position = vec4(a_position, 0.0, 1.0);
-    }
-  `);
-  gl.shaderSource(fragmentShader, shaderCode);
-  gl.compileShader(vertexShader);
-  gl.compileShader(fragmentShader);
-
-  const program = gl.createProgram();
-  gl.attachShader(program, vertexShader);
-  gl.attachShader(program, fragmentShader);
-  gl.linkProgram(program);
-  return program;
-}
-
-const shaderCode = `
-precision mediump float;
-uniform float time;
-uniform vec2 resolution;
-
-void main() {
-  vec2 uv = gl_FragCoord.xy / resolution.xy;
-  uv.x += sin(time * 0.05) * 0.05;
-  uv.y += cos(time * 0.05) * 0.05;
-  gl_FragColor = vec4(uv.x, uv.y, 0.5 + 0.5 * sin(time), 1.0);
-}`;
-
-const shaderProgram = createShaderProgram(shaderCode);
-
-// Función de renderizado avanzado de partículas
-function drawParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  ctx.save();
-  ctx.font = 'bold 1.5vw monospace';
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillStyle = '#0f0';
-  ctx.shadowColor = '#0f0';
-  ctx.shadowBlur = 8;
-
-  particles.forEach(p => {
-    const scale = (1000 - p.z) / 1000;
-    const size = p.size * scale;
-    ctx.globalAlpha = p.opacity * scale;
-    ctx.fillText(p.rune, p.x, p.y, size);
-  });
-
-  ctx.restore();
-  updateParticles();
-  requestAnimationFrame(drawParticles);
-}
-generateParticles();
-drawParticles();
-
-// -------------------- NARRATIVA DINÁMICA Y ADAPTATIVA -------------------- //
-const loreFragments = [
-  "𒀭 El eco ancestral resuena, pero solo tú puedes desentrañar su significado.",
-  "𒀭 Tu voluntad es la fuerza que guía el flujo del tiempo.",
-  "𒀭 La serpiente te observa desde las sombras, ¿serás tú quien decida su destino?",
-  "𒀭 El ciclo comienza. El oro orbita, pero tú eres el que decide a qué frecuencia vibrará."
+const lore = [
+    "𒀭 El universo de Thuamer es fluido. Tu conexión con él depende de ti.",
+    "Los eventos que ocurren aquí no son aleatorios, están predestinados por las decisiones que tomas.",
+    "El tiempo y el espacio se doblan para ti. La realidad y la fantasía ya no son fronteras.",
+    "A medida que juegas, el mundo reacciona a tus emociones, a tus elecciones y a tu alma.",
+    "Cada acción que tomes, cada palabra que digas, afectará a Thuamer y hará que el universo cambie.",
+    "La IA que te observa también te escucha, se adapta a ti, y te presenta un mundo hecho a tu medida.",
+    "Eres más que un jugador. Eres el creador de tu propia historia. El arquitecto de Thuamer."
 ];
 
-// Generación de Lore basada en el comportamiento del jugador
-function generateDynamicLore() {
-  const randomIndex = Math.floor(Math.random() * loreFragments.length);
-  return loreFragments[randomIndex];
+let step = 0;
+
+function render() {
+    ctx.fillStyle = "rgba(0, 0, 0, 0.1)";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.font = "bold 2vw monospace";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillStyle = "#0f8";
+    ctx.shadowColor = "#0f8";
+    ctx.shadowBlur = 8;
+    ctx.fillText(lore[step % lore.length], canvas.width / 2, canvas.height / 2);
+    
+    step++;
+    requestAnimationFrame(render);
 }
 
-// -------------------- SONIDO ESPACIAL Y AUDIO 3D -------------------- //
-const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-const gainNode = audioContext.createGain();
-gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
+render();
 
-const oscillator = audioContext.createOscillator();
-oscillator.type = 'sine';
-oscillator.frequency.setValueAtTime(440, audioContext.currentTime);
-oscillator.connect(gainNode);
-gainNode.connect(audioContext.destination);
-oscillator.start();
+let emotionLevel = 0;
+const emotions = ["⚡️", "🔥", "🌑", "💚"];
 
-// Función de sonido 3D reactivo
-function updateSoundPosition() {
-  const panNode = audioContext.createStereoPanner();
-  const x = (Math.random() - 0.5) * 2; // Posición X del sonido
-  panNode.pan.setValueAtTime(x, audioContext.currentTime);
-  gainNode.connect(panNode);
+function handleEmotionChange() {
+    emotionLevel = (emotionLevel + 1) % emotions.length;
+    document.getElementById("intro").innerText = `Emoción: ${emotions[emotionLevel]}`;
+    setTimeout(handleEmotionChange, 3000);
 }
 
-// -------------------- INTERACCIÓN DEL USUARIO Y GENERACIÓN DE NFT -------------------- //
-function recordUserBehavior() {
-  userInteractions.push({ time: Date.now(), behavior: loreText.textContent });
-  if (userInteractions.length > 10) userInteractions.shift();
+handleEmotionChange();
+
+// Sistema de IA avanzado (Auto-Adaptación)
+function adaptToPlayer() {
+    let playerEmotion = emotions[emotionLevel];
+    if (playerEmotion === "🔥") {
+        document.body.style.backgroundColor = "#FF4500";  // Rojo
+        lore.push("La pasión te consume, Thuamer se enciende contigo.");
+    } else if (playerEmotion === "⚡️") {
+        document.body.style.backgroundColor = "#FFD700";  // Amarillo
+        lore.push("Tu energía es infinita, las estrellas aúllan a tu paso.");
+    } else if (playerEmotion === "💚") {
+        document.body.style.backgroundColor = "#32CD32";  // Verde
+        lore.push("La armonía y paz resuenan con Thuamer. Los gatos dorados saltan a tu alrededor.");
+    } else if (playerEmotion === "🌑") {
+        document.body.style.backgroundColor = "#000000";  // Oscuro
+        lore.push("El vacío. El silencio. Solo tú y Thuamer en la oscuridad.");
+    }
 }
 
-function generateNFT() {
-  if (userInteraction) {
-    console.log("NFT generado con código único: 0xA1B2C3D4...");
-    console.log("Comportamiento registrado:", userInteractions);
-    // Aquí se puede integrar con un sistema de blockchain real
-  }
+setInterval(adaptToPlayer, 5000);
+
+// Generación de enemigos y eventos procedurales
+const enemies = ["🦑", "🐍", "👾", "🦸", "🐱"];
+let enemyStep = 0;
+
+function spawnEnemies() {
+    const randomEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+    lore.push(`Un enemigo aparece: ${randomEnemy}`);
+    setTimeout(spawnEnemies, 7000);
 }
 
-// -------------------- ACTUALIZACIÓN DE NARRATIVA BASADA EN INTERACCIONES -------------------- //
-let userInteraction = false;
-canvas.addEventListener('click', () => {
-  if (!userInteraction) {
-    userInteraction = true;
-    loreText.textContent = "𒀭 Has desbloqueado el NFT del Saber. Tu alma es ahora eterna.";
-    loreText.classList.add('interactive');
-  }
-  loreText.textContent = generateDynamicLore();
-  recordUserBehavior();
-});
+spawnEnemies();
 
-// Llamada a la función para generar NFT
-generateNFT();
+// Música reactiva (sería ideal tener sonido reactivo con Web Audio API aquí)
+function updateMusic() {
+    const music = new Audio("music/ambient.mp3");
+    music.loop = true;
+    music.volume = 0.5;
 
+    if (emotionLevel === 0) {
+        music.play();
+    } else if (emotionLevel === 1) {
+        music.volume = 0.7;
+    } else if (emotionLevel === 2) {
+        music.volume = 0.3;
+    } else {
+        music.volume = 0.5;
+    }
+}
+
+setInterval(updateMusic, 3000);
 </script>
 
 </body>

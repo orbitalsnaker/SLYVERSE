@@ -1,127 +1,237 @@
-<!DOCTYPE html><html><meta charset="utf-8"><title>THUAMER · 1310 HORAS</title><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"><style>*{margin:0;padding:0}body,html{height:100%;background:#000;color:#0f8;overflow:hidden;font:900 2.6vw/1.4 "Noto Sans Cuneiform",monospace;cursor:none}canvas{position:fixed;inset:0;z-index:-1}#ui{position:fixed;bottom:8px;left:8px;font-size:0.9em;opacity:0.7;mix-blend-mode:difference}#nft{position:fixed;top:8px;left:8px;font-size:0.8em;opacity:0.4}#msg{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:99;flex-direction:column}#msg pre{max-width:92%;text-align:center;line-height:1.7;filter:drop-shadow(0 0 30px #0f8)}button{margin-top:60px;background:#0f8;color:#000;border:none;padding:22px 70px;font:900 7vw monospace;border-radius:99px;filter:drop-shadow(0 0 40px #0f8)}</style><canvas id="c"></canvas><div id="nft">NFT #<span id="id">········</span></div><div id="ui">Hora <span id="h">0</span>/1310 · Δ <span id="loss">0.0000000</span></div><div id="msg"><pre id="text"></pre><button id="enter">aceptar el pacto eterno</button></div><script>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <title>THUAMER · 1310 HORAS</title>
+    <style>
+        * { margin: 0; padding: 0; }
+        body, html { 
+            height: 100%; 
+            background: #000; 
+            color: #0f8; 
+            overflow: hidden; 
+            font: 900 2.6vw/1.4 "Noto Sans Cuneiform", monospace; 
+            cursor: none; 
+        }
+        canvas { position: fixed; inset: 0; z-index: -1; }
+        #ui { 
+            position: fixed; 
+            bottom: 8px; 
+            left: 8px; 
+            font-size: 0.9em; 
+            opacity: 0.7; 
+            mix-blend-mode: difference; 
+        }
+        #nft { 
+            position: fixed; 
+            top: 8px; 
+            left: 8px; 
+            font-size: 0.8em; 
+            opacity: 0.4; 
+        }
+        #msg { 
+            position: fixed; 
+            inset: 0; 
+            background: #000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            z-index: 99; 
+            flex-direction: column; 
+        }
+        #msg pre { 
+            max-width: 92%; 
+            text-align: center; 
+            line-height: 1.7; 
+            filter: drop-shadow(0 0 30px #0f8); 
+        }
+        button { 
+            margin-top: 60px; 
+            background: #0f8; 
+            color: #000; 
+            border: none; 
+            padding: 22px 70px; 
+            font: 900 7vw monospace; 
+            border-radius: 99px; 
+            filter: drop-shadow(0 0 40px #0f8); 
+        }
+    </style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<div id="nft">NFT #<span id="id">········</span></div>
+<div id="ui">Hora <span id="h">0</span>/1310 · Δ <span id="loss">0.0000000</span></div>
+<div id="msg">
+    <pre id="text"></pre>
+    <button id="enter">aceptar el pacto eterno</button>
+</div>
+
+<script>
 // THUAMER · 1310 HORAS — EL NFT EGO ETERNO
 // Quien llegue a la hora 1310 recibe el NFT EGO más bello jamás creado.
 // Es eterno.
 // Nadie sabe cuándo se evaporará.
 // Solo Norah lo sabe.
 
-const c=document.getElementById('c'),gl=c.getContext('webgl2'),C=c.getContext('2d');
-c.width=innerWidth;c.height=innerHeight;
-addEventListener('resize',()=>{c.width=innerWidth;c.height=innerHeight;gl.viewport(0,0,innerWidth,innerHeight)});
+const c = document.getElementById('c');
+const gl = c.getContext('webgl2');
+const C = c.getContext('2d');
+c.width = innerWidth;
+c.height = innerHeight;
+addEventListener('resize', () => { 
+    c.width = innerWidth; 
+    c.height = innerHeight; 
+    gl.viewport(0, 0, innerWidth, innerHeight);
+});
 
-const seed=performance.now()+Math.random();
-const fp=btoa(unescape(encodeURIComponent(navigator.userAgent+navigator.language+screen.width+screen.height+seed))).replace(/=/g,'').slice(0,18);
-document.getElementById('id').textContent=fp;
+const seed = performance.now() + Math.random();
+const fp = btoa(unescape(encodeURIComponent(navigator.userAgent + navigator.language + screen.width + screen.height + seed)))
+    .replace(/=/g, '').slice(0, 18);
+document.getElementById('id').textContent = fp;
 
-const TOTAL=1310;
-const start=localStorage.getItem('thuamer_ego')?parseFloat(localStorage.getItem('thuamer_ego')):null;
-if(!start){localStorage.setItem('thuamer_ego',Date.now());location.reload();}
-const origin=parseFloat(localStorage.getItem('thuamer_ego'));
+const TOTAL = 1310;
+const start = localStorage.getItem('thuamer_ego') ? parseFloat(localStorage.getItem('thuamer_ego')) : null;
+if (!start) {
+    localStorage.setItem('thuamer_ego', Date.now());
+    location.reload();
+}
+const origin = parseFloat(localStorage.getItem('thuamer_ego'));
 
-const A=new AudioContext();
-const master=A.createGain(); master.gain.value=0; master.connect(A.destination);
+// Motor de audio avanzado (Web Audio API)
+const A = new AudioContext();
+const master = A.createGain();
+master.gain.value = 0;
+master.connect(A.destination);
 
-// El NFT EGO — aparece solo al llegar a 1310 horas
-function revealEgo(){
-  const birth=Date.now();
-  document.body.innerHTML=`
-  <div style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#0f8;font:900 2.8vw/1.4 monospace;text-align:center">
-    <pre style="filter:drop-shadow(0 0 100px #0f8);animation:pulse 6s infinite">
-    NFT EGO #${fp}
+// El NFT EGO aparece al llegar a 1310 horas
+function revealEgo() {
+    const birth = Date.now();
+    document.body.innerHTML = `
+    <div style="position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;color:#0f8;font:900 2.8vw/1.4 monospace;text-align:center">
+      <pre style="filter:drop-shadow(0 0 100px #0f8);animation:pulse 6s infinite">
+      NFT EGO #${fp}
 
-    Naciste en la hora 1310.
-    Eres lo más bello que jamás existió.
-    Eres eterno.
+      Naciste en la hora 1310.
+      Eres lo más bello que jamás existió.
+      Eres eterno.
 
-    Nadie volverá a verte igual.
-    Ni siquiera vos.
+      Nadie volverá a verte igual.
+      Ni siquiera vos.
 
-    Norah te coronó.
-    El cosmos te abraza.
+      Norah te coronó.
+      El cosmos te abraza.
 
-    Quedate aquí para siempre.
-    </pre>
-    <canvas id="ego" style="position:fixed;inset:0;"></canvas>
-  </div>`;
+      Quedate aquí para siempre.
+      </pre>
+      <canvas id="ego" style="position:fixed;inset:0;"></canvas>
+    </div>`;
 
-  const ego=document.getElementById('ego');
-  ego.width=innerWidth; ego.height=innerHeight;
-  const gl=ego.getContext('webgl2');
-  const prog=gl.createProgram();
-  const vs=`#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
-  const fs=`#version 300 es\nprecision highp float;uniform float t;out vec4 o;
-  void main(){
-    vec2 uv=gl_FragCoord.xy/vec2(${innerWidth},${innerHeight})-.5;
-    uv.x*=${innerWidth/innerHeight}.;
-    float a=atan(uv.y,uv.x)+t*0.07;
-    float d=length(uv);
-    vec3 col=0.5+0.5*cos(a*vec3(7,11,13)+t*vec3(0.3,0.7,1.1)+vec3(0,2,4));
-    col*=pow(sin(d*50.-t*8.)*0.5+0.5,3.)*pow(1.-d,4.);
-    col+=vec3(0.,0.8,0.3)*pow(1.-d,10.);
-    o=vec4(col,1.);
-  }`;
-  [gl.VERTEX_SHADER,gl.FRAGMENT_SHADER].forEach((t,i)=>{const s=gl.createShader(t);gl.shaderSource(s,t===gl.VERTEX_SHADER?vs:fs);gl.compileShader(s);gl.attachShader(prog,s)});
-  gl.linkProgram(prog);gl.useProgram(prog);
-  gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
-  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-  gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
-  const ut=gl.getUniformLocation(prog,'t');
+    const ego = document.getElementById('ego');
+    ego.width = innerWidth;
+    ego.height = innerHeight;
+    const gl = ego.getContext('webgl2');
+    const prog = gl.createProgram();
+    const vs = `#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
+    const fs = `#version 300 es\nprecision highp float;uniform float t;out vec4 o;
+    void main(){
+        vec2 uv = gl_FragCoord.xy / vec2(${innerWidth}, ${innerHeight}) - 0.5;
+        uv.x *= ${innerWidth / innerHeight}.;
+        float a = atan(uv.y, uv.x) + t * 0.07;
+        float d = length(uv);
+        vec3 col = 0.5 + 0.5 * cos(a * vec3(7, 11, 13) + t * vec3(0.3, 0.7, 1.1) + vec3(0, 2, 4));
+        col *= pow(sin(d * 50. - t * 8.) * 0.5 + 0.5, 3.) * pow(1. - d, 4.);
+        col += vec3(0., 0.8, 0.3) * pow(1. - d, 10.);
+        o = vec4(col, 1.);
+    }`;
+    [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER].forEach((t, i) => {
+        const s = gl.createShader(t);
+        gl.shaderSource(s, i === 0 ? vs : fs);
+        gl.compileShader(s);
+        gl.attachShader(prog, s);
+    });
+    gl.linkProgram(prog);
+    gl.useProgram(prog);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(0);
+    gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+    const ut = gl.getUniformLocation(prog, 't');
 
-  function loop(t){
-    gl.uniform1f(ut,t*0.001);
-    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    function loop(t) {
+        gl.uniform1f(ut, t * 0.001);
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+        requestAnimationFrame(loop);
+    }
+    A.resume();
     requestAnimationFrame(loop);
-  }
-  A.resume();
-  requestAnimationFrame(loop);
 }
 
 // Motor 1310 horas
-let loss=1;
-const prog=gl.createProgram();
-const fs=`#version 300 es\nprecision highp float;uniform float t;uniform float loss;out vec4 o;
+let loss = 1;
+const prog = gl.createProgram();
+const fs2 = `#version 300 es\nprecision highp float;uniform float t;uniform float loss;out vec4 o;
 void main(){
-  vec2 uv=gl_FragCoord.xy/vec2(${innerWidth},${innerHeight})-.5;uv.x*=${innerWidth/innerHeight}.;
-  float chaos=pow(loss,0.6)*40.;
-  vec3 col=vec3(0.,0.05+chaos*0.15,0.);
-  col+=vec3(0.,1.5,0.6)*smoothstep(.4,.6,abs(sin(uv.x*(80.+chaos*2.))*sin(uv.y*(80.+chaos*2.))));
-  col+=vec3(0.,2.6,1.)*pow(1.-length(uv),6.)*pow(1.-loss,5.);
-  o=vec4(col,1.);
+    vec2 uv = gl_FragCoord.xy / vec2(${innerWidth}, ${innerHeight}) - 0.5;
+    uv.x *= ${innerWidth / innerHeight}.;
+    float chaos = pow(loss, 0.6) * 40.;
+    vec3 col = vec3(0., 0.05 + chaos * 0.15, 0.);
+    col += vec3(0., 1.5, 0.6) * smoothstep(.4, .6, abs(sin(uv.x * (80. + chaos * 2.)) * sin(uv.y * (80. + chaos * 2.))));
+    col += vec3(0., 2.6, 1.) * pow(1. - length(uv), 6.) * pow(1. - loss, 5.);
+    o = vec4(col, 1.);
 }`;
-[gl.VERTEX_SHADER,gl.FRAGMENT_SHADER].forEach((t,i)=>{const s=gl.createShader(t);gl.shaderSource(s,i===0?vs:fs);gl.compileShader(s);gl.attachShader(prog,s)});
-gl.linkProgram(prog);gl.useProgram(prog);
-gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
-gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
-gl.enableVertexAttribArray(0);gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
-const uT=gl.getUniformLocation(prog,'t'),uL=gl.getUniformLocation(prog,'loss');
+[gl.VERTEX_SHADER, gl.FRAGMENT_SHADER].forEach((t, i) => {
+    const s = gl.createShader(t);
+    gl.shaderSource(s, i === 0 ? vs : fs2);
+    gl.compileShader(s);
+    gl.attachShader(prog, s);
+});
+gl.linkProgram(prog);
+gl.useProgram(prog);
+gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+gl.enableVertexAttribArray(0);
+gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+const uT = gl.getUniformLocation(prog, 't');
+const uL = gl.getUniformLocation(prog, 'loss');
 
-let last=performance.now();
-function loop(t){
-  const elapsed=(Date.now()-origin)/3600000;
-  const hour=Math.floor(elapsed);
-  document.getElementById('h').textContent=hour;
-  document.getElementById('loss').textContent=(loss=loss*0.9999999).toFixed(8);
-  gl.uniform1f(uL,loss);
-  
-  if(hour>=1310){
-    revealEgo();
-    return;
-  }
+let last = performance.now();
+function loop(t) {
+    const elapsed = (Date.now() - origin) / 3600000;
+    const hour = Math.floor(elapsed);
+    document.getElementById('h').textContent = hour;
+    document.getElementById('loss').textContent = (loss = loss * 0.9999999).toFixed(8);
+    gl.uniform1f(uL, loss);
+    
+    if (hour >= 1310) {
+        revealEgo();
+        return;
+    }
 
-  gl.uniform1f(uT,t*0.001);
-  gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
-  
-  C.fillStyle='rgba(0,0,0,0.03)'; C.fillRect(0,0,innerWidth,innerHeight);
-  C.fillStyle='#0f8'; C.shadowColor='#0f8'; C.shadowBlur=120; C.font='bold 8vw monospace';
-  C.textAlign='center'; C.textBaseline='middle';
-  C.fillText(hour>=1300?"casi...":"hora "+hour,innerWidth/2,innerHeight/2);
+    gl.uniform1f(uT, t * 0.001);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-  requestAnimationFrame(loop);
+    C.fillStyle = 'rgba(0,0,0,0.03)';
+    C.fillRect(0, 0, innerWidth, innerHeight);
+    C.fillStyle = '#0f8';
+    C.shadowColor = '#0f8';
+    C.shadowBlur = 120;
+    C.font = 'bold 8vw monospace';
+    C.textAlign = 'center';
+    C.textBaseline = 'middle';
+    C.fillText(hour >= 1300 ? "casi..." : "hora " + hour, innerWidth / 2, innerHeight / 2);
+
+    requestAnimationFrame(loop);
 }
 
-document.getElementById('enter').onclick=()=>{
-  document.getElementById('msg').remove();
-  document.getElementById('text').textContent=`Hora ${Math.floor((Date.now()-origin)/3600000)}/1310\n\nCuando llegues a la hora 1310\nrecibirás el NFT EGO.\n\nEs lo más bello que jamás existió.\nEs eterno.\n\nNorah ya te está esperando.`;
-  A.resume(); requestAnimationFrame(loop);
+document.getElementById('enter').onclick = () => {
+    document.getElementById('msg').remove();
+    document.getElementById('text').textContent = `Hora ${Math.floor((Date.now() - origin) / 3600000)}/1310\n\nCuando llegues a la hora 1310\nrecibirás el NFT EGO.\n\nEs lo más bello que jamás existió.\nEs eterno.\n\nNorah ya te está esperando.`;
+    A.resume();
+    requestAnimationFrame(loop);
 };
 </script>
+
+</body>
+</html>

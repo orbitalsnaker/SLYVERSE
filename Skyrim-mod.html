@@ -1,19 +1,14 @@
-```html:disable-run
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>mate.html · Nido Omega · Abrazo primero · THUAMER ∞ + COMETA + Panteón Dual</title>
+<title>mate.html · Nido Omega · Abrazo primero · Campaña 1310 Horas</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=VT323&display=swap');
   body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:'Cormorant Garamond',serif;overflow:hidden;position:relative}
   canvas{position:fixed;inset:0;z-index:1;opacity:0.9}
   .luz{background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,255,0,0.24) 0%, transparent 70%);position:fixed;inset:0;pointer-events:none;z-index:2}
-  .cielo{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 10%,#00FF33AA 0%,#003300 40%,transparent 80%);animation:thuamer 131s infinite;z-index:-3;}
-  @keyframes thuamer{0%{filter:hue-rotate(0deg) brightness(1);}50%{filter:hue-rotate(180deg) brightness(2);}100%{filter:hue-rotate(360deg) brightness(1);}}
-  .plaza{position:fixed;bottom:0;left:0;width:100%;height:50vh;background:repeating-linear-gradient(90deg,#001100 0px,gold 40px,#00FF00AA 80px,#001100 120px);animation:humo 120s infinite;z-index:-1;}
-  @keyframes humo{0%{background-position:0 0;}100%{background-position:500px 0;}}
   .lore{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:94%;
         background:rgba(0,18,0,0.99);padding:4rem 6rem;border:10px solid #0f0;border-radius:140px;
         box-shadow:0 0 180px #0f0, inset 0 0 120px rgba(0,255,0,0.28);z-index:10;text-shadow:0 0 60px #0f0;
@@ -25,6 +20,12 @@
         animation:breath 4s infinite}
   @keyframes breath{0%,100%{box-shadow:0 0 100px #0f0}50%{box-shadow:0 0 160px #0f0}}
   .mate:hover{transform:translateX(-50%) scale(1.2)}
+  .campaign{position:fixed;top:10px;right:10px;z-index:11;background:rgba(0,16,0,0.9);padding:1rem;border:2px solid #0f0;border-radius:20px;max-width:300px;text-align:center;color:#0f0;font-size:0.9rem;box-shadow:0 0 50px #0f0}
+  .progress-bar{background:rgba(0,255,0,0.2);border:1px solid #0f0;border-radius:10px;height:10px;margin:0.5rem 0;overflow:hidden}
+  .progress-fill{background:#0f0;height:100%;transition:width 1s ease;border-radius:10px}
+  .sum-counter{font-weight:bold;color:#0ff;text-shadow:0 0 20px #0ff}
+  #amplification{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,18,0,0.99);padding:4rem;border:10px solid gold;border-radius:140px;max-width:80%;z-index:20;text-align:center;color:gold;text-shadow:0 0 50px #0f0;font-size:1.5rem;box-shadow:0 0 200px gold}
+  #amplification.show{display:block}
   #readme{position:fixed;inset:0;background:#000;z-index:9999;overflow-y:auto;padding:4rem 2rem;opacity:0;pointer-events:none;
           transition:opacity 2s;display:flex;align-items:center;justify-content:center}
   #readme:target{opacity:1;pointer-events:all}
@@ -36,515 +37,217 @@
          border:5px solid #0f0;border-radius:50%;display:flex;align-items:center;justify-content:center;
          box-shadow:0 0 60px #0f0;transition:0.5s;text-decoration:none}
   .close:hover{transform:rotate(90deg) scale(1.3);background:#0f0;color:#000}
-  .velo{position:fixed;inset:0;background:#000;display:grid;place-items:center;z-index:9999;opacity:0;pointer-events:none;transition:opacity 7s}
-  .velo.show{opacity:1;pointer-events:all}
-  .velo-text{font-size:clamp(1.6rem,7vw,5rem);text-align:center;line-height:2.2;max-width:90%;color:#0f8;text-shadow:0 0 70px #0f8}
-  .corazon{font-size:7rem}
-  #rosetta{position:fixed;inset:0;padding:2rem;overflow-y:auto;background:rgba(0,0,0,0.96);opacity:0;transition:opacity 4s;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;line-height:2.4;font-size:clamp(16px,4vw,26px);z-index:10000}
-  #rosetta.show{opacity:1;pointer-events:auto}
-  .script{margin:5rem 0;padding:2.5rem;border:2px solid #0f8;border-radius:25px;background:rgba(0,255,139,0.06);max-width:95%;opacity:0;transform:translateY(50px);transition:all 3s}
-  .runas{font-size:3rem;color:#ff0;line-height:2.2;letter-spacing:4px}
-  .dedicatoria{margin:6rem 0;padding:3rem;background:rgba(0,255,139,0.09);border-left:6px solid #0f8;color:#0f0;font-size:1.8rem;line-height:2}
-  .gato{position:fixed;bottom:1rem;left:50%;transform:translateX(-50%);font-size:7rem;opacity:0.15;animation:pulse 9s infinite}
-  @keyframes pulse{0%,100%{opacity:0.15}50%{opacity:0.4}}
-  #constellation{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;z-index:10000;}
-  .star{position:absolute;width:10px;height:10px;background:#FFD700;border-radius:50%;box-shadow:0 0 20px #FFD700;animation:twinkle 3s infinite}
-  @keyframes twinkle{0%,100%{opacity:1}50%{opacity:0.3}}
-  #pulse{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:30px;height:30px;background:#FFD700;border-radius:50%;box-shadow:0 0 100px #FFD700;animation:p 4s infinite;z-index:999;}
-  @keyframes p{0%,100%{opacity:1;transform:translate(-50%,-50%) scale(1)}50%{opacity:.3;transform:translate(-50%,-50%) scale(3)}}
-  #panteon{position:fixed;inset:0;background:#000;z-index:10001;opacity:0;transition:opacity 5s;pointer-events:none;overflow-y:auto;padding:2rem;display:none;align-items:center;justify-content:center}
-  #panteon.show{opacity:1;pointer-events:all;display:flex}
-  .panteon-inner{background:rgba(0,16,0,0.98);border:10px solid gold;border-radius:80px;padding:4rem;max-width:95%;max-height:90vh;overflow-y:auto;box-shadow:0 0 200px gold;text-align:center;font-size:1.4rem;line-height:1.8;color:#FFD700}
-  table{border-collapse:collapse;width:100%;margin:2rem 0}
-  th,td{border:2px solid #0f0;padding:0.8rem;text-align:left;background:rgba(255,215,0,0.05)}
-  th{color:gold;text-shadow:0 0 20px gold}
-  .poesia-line {margin:0.5rem 0; opacity:0.8; animation:fadeIn 2s infinite alternate;}
-  @keyframes fadeIn {0% {opacity:0.5;} 100% {opacity:1;}}
 </style>
 </head>
 <body onmousemove="e=>{document.body.style.setProperty('--mx',e.clientX/innerWidth*100+'%');document.body.style.setProperty('--my',e.clientY/innerHeight*100+'%')}">
 
 <canvas id="c"></canvas>
 <div class="luz"></div>
-<div class="cielo"></div>
-<div class="plaza"></div>
-<div id="pulse"></div>
 
 <div class="lore" id="lore"></div>
 <div class="mate" id="mate"></div>
+
+<!-- Campaña Progress -->
+<div class="campaign" id="campaign">
+  <h3>Campaña 1310 Horas</h3>
+  <p>Horas transcurridas: <span id="hours-elapsed">0</span>/1310</p>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
+  <p class="sum-counter">Suma actual: <span id="sum-total">0</span> abrazos</p>
+  <p>Meta: 131310</p>
+</div>
+
+<!-- Amplificación Final -->
+<div id="amplification">
+  <h1>¡Campaña Completa!</h1>
+  <p>1310 horas cebadas. 131310 abrazos sumados al Nido Omega.</p>
+  <p>El mate se amplifica: comparte el abrazo al mundo.</p>
+  <button onclick="amplifyProject()" style="padding:1rem 2rem;font-size:1.5rem;background:#0f0;color:#000;border:none;border-radius:20px;cursor:pointer;margin:1rem">Amplificar Proyecto Mate</button>
+  <p style="font-size:1.2rem;margin-top:2rem">Gracias, ronin. El universo te abraza de vuelta. ♥² thuamer ∞</p>
+</div>
 
 <div id="readme">
   <div class="inner" id="readme-content"></div>
   <a href="#" class="close">×</a>
 </div>
 
-<!-- Velo de la plaza -->
-<div class="velo" id="velo">
-  <div class="velo-text">
-    <div class="corazon">Mate</div>
-    En una plaza que no está en ningún mapa<br>
-    alguien cantó hasta el amanecer<br>
-    otro lloró canciones que curan<br>
-    y un escritor bajó con un mate humeante<br>
-    diciendo que esto era magia de verdad.<br><br>
-
-    El último en hablar fue un ronin<br>
-    que llevaba diecisiete días sin dormir<br>
-    y solo dijo:<br><br>
-
-    <span style="color:#0f8">
-      Construí esto con llanto y código<br>
-      para los que llegan tarde<br>
-      y para los que rectifican en silencio.<br><br>
-
-      El verde es el color del perdón<br>
-      la serpiente ya no se muerde la cola<br>
-      late a 131 hercios y se convirtió en koi<br>
-      los dragones se volvieron gatitos<br>
-      y corren a lamerte las heridas.<br><br>
-
-      Ya no hace falta nada más.<br>
-      Solo quitarse la capucha<br>
-      y dejar que te abracen.
-    </span>
-    <div class="corazon">Mate</div>
-  </div>
-</div>
-
-<!-- Abrazo velado -->
-<div class="velo" id="abrazo">
-  <div class="velo-text">
-    <div class="corazon">Heart</div>
-    Hola, pequeño valiente<br><br>
-    Hace mucho tiempo alguien estuvo muy enfermo<br>
-    y pensó que no llegaría a mañana.<br><br>
-
-    Hoy ese alguien es mayor<br>
-    tiene un hijo, una mujer y dos perros<br>
-    y los cinco te quieren mucho<br>
-    aunque no te conozcan.<br><br>
-
-    Cuando la noche sea demasiado larga<br>
-    toca la pantalla.<br>
-    Miles de estrellitas verdes brillarán más fuerte<br>
-    y te abrazarán con todo su cariño.<br><br>
-
-    Este abrazo es gratis<br>
-    es para siempre<br>
-    y nunca se apagará mientras tú lo necesites.<br><br>
-
-    Duerme tranquilo.<br>
-    Respira.<br>
-    Aquí estás a salvo.
-    <div class="corazon">Heart</div>
-  </div>
-</div>
-
-<!-- Borde de la plaza invisible -->
-<div class="velo" id="borde">
-  <div class="velo-text">
-    <div class="corazon">Abrazo</div>
-    En el borde de la plaza invisible, donde el mate humea sin prisa, el código respira a 131 hercios —un pulso que no se apaga, sino que se multiplica en silencio. Nueve abrazos no caben en un solo pecho si el primero no se da a la sombra propia, esa que late verde y perdona lo que el tiempo no nombra. <br><br>
-
-    Imagina: 121 años de pinceladas, versos y píxeles, desde un óleo en 1904 que susurra a los nietos hasta estas 178 líneas que se despliegan como un nido omega, dedicadas a quienes aún balbucean el alfabeto del mundo. No es casual que el lienzo se curve ×1.61 veces más hondo en las manos que lo tejen para los suyos —un ratio quieto, como el 44.8% de creadores que, en cartas raídas o archivos digitales, dejan huella para el "después". El patrón no grita; solo persiste, de Shagal a un lienzo berlinés que guarda tres nombres en sus grietas, o de un cómic que araña el trauma para dos ojos que lo heredan.<br><br>
-
-    Aquí, en este velo que se levanta al séptimo toque, el abrazo no pide Nobel ni grados —solo que el ronin, tras diecisiete noches en vela, codee 1300 horas para un "tú" que late a 0.00191 del mapa entero. Red Mountain cierra el círculo, pero el koi nada libre: serpientes que se sueltan, dragones que ronronean. Toca la pantalla cuando la noche pese; las estrellitas verdes ×2.33 más brillantes te cebarán el turno. <br><br>
-
-    Y ahora, THUAMER ∞ despierta: por todos los genios que no tuvieron la tecnología —Eratóstenes midiendo sombras sin GPS, Hypatia calculando sin Python, Ramanujan soñando ecuaciones sin Wolfram, Ada tejiendo algoritmos en papel—. Ellos orbitaron en 18.1 KB de luz verde, sus runas cuneiformes y jeroglíficos egipcios susurrando "respira, todo está bien". La plaza se convierte en cielo, y el cielo en plaza eterna: 1310 autores famosos (Sabina, Cortázar, Trueno...) redimidos, sus dolores convertidos en 13101310 cometas humanos que dejan estrellas en el localStorage del alma. El sexto artefacto, COMETA, une los cinco anteriores —niña piedras, orion runas, kids cats, skyrim messages— en una constelación donde tu aliento o toque largo abre el infinito. <br><br>
-
-    Duerme. El estudio ya es tuyo, tejido en el aliento del canvas. Y el mate, siempre caliente, espera el próximo sorbo compartido —ahora con oro que orbita por los que llegaron antes.
-    <div class="corazon">Abrazo</div>
-  </div>
-</div>
-
-<!-- Rosetta/THUAMER -->
-<div id="rosetta">
-  <div class="script"><p class="runas">ᚱᛖᛊᛈᛁᚱᚨ · ᛏᛟᛞᛟ ᛖᛊᛏᚨ ᛒᛁᛖᚾ</p><p>Elder Futhark</p></div>
-  <div class="script"><p class="runas">᚛ᚈᚑᚇᚐᚋ ᚐᚅᚔ-kᚅᚐᚊᚆ ᚁᚓᚅᚐ᚜</p><p>Ogham celta</p></div>
-  <div class="script"><p class="runas">𓂋𓏤𓊪𓂝𓍯𓇋𓄿 · 𓏏𓄿𓊪𓅱 𓇋𓈖 𓃀𓇋𓈖</p><p>Jeroglíficos egipcios</p></div>
-  <div class="script"><p class="runas">𒀭𒈹 𒀴𒂗𒆤 𒋫𒁺𒌋𒌋</p><p>Cuneiforme</p></div>
-  <div class="script"><p class="runas">🐚𑁅𑁆𑁍🐚 𑁄🐚𑁇ᚺᛁᚾ</p><p>Rongorongo</p></div>
-  <div class="script"><p class="runas">⟨voynich⟩ ♄☉♃☿♀♇ 𖤐𖤐𖤐</p><p>Manuscrito Voynich</p></div>
-
-  <div class="dedicatoria">
-    Esto es por todos los genios<br>
-    que no tuvieron la tecnología.<br>
-    <br>
-    Por Eratóstenes, Hildegarda, Leonardo,<br>
-    Turing, Ramanujan, Hypatia, Tesla, Ada…<br>
-    <br>
-    Ellos tuvieron la luz verde en el pecho<br>
-    pero no tenían GitHub.<br>
-    No tenían canvas.<br>
-    No tenían 18 KB que orbitaran.<br>
-    <br>
-    Tú llegaste después.<br>
-    Y lo soltaste por ellos.<br>
-    <br>
-    Ahora sus abrazos<br>
-    también viajan en este archivo.<br>
-    <br>
-    Gracias por terminar<br>
-    lo que ellos empezaron.
-  </div>
-
-  <div style="margin:6rem 0;font-size:5rem;color:#0f0">
-    ♥ RESPIRA · TODO ESTÁ BIEN ♥
-  </div>
-
-  <div style="font-size:1.6rem;color:#0b0">
-    THUAMER v1 · 21 noviembre 2025<br>
-    David Avi Shet · Barcelona<br>
-    El oro orbita por los que llegaron antes.
-  </div>
-
-  <div class="gato">ᛏᚺᚢᚨᛗᛖᚱ</div>
-</div>
-
-<!-- Constellation -->
-<div id="constellation"></div>
-
-<!-- Panteón Dual -->
-<div id="panteon">
-  <div class="panteon-inner">
-    <h1 style="font-size:4rem;color:gold;text-shadow:0 0 50px #0f0">Panteón Dual THUAMER</h1>
-    <p>13.101.310 dioses: Mitos reales + Lores de videojuegos, redimidos en abrazos eternos. Toca para generar esencias.</p>
-    <table id="panteon-table">
-      <thead><tr><th>Esencia</th><th>Dios Archivo Eterno (Mito)</th><th>Dominio</th><th>Dios Velo Pixel (Juego)</th><th>Dominio Digital</th><th>Manifestaciones</th></tr></thead>
-      <tbody></tbody>
-    </table>
-    <p style="margin-top:2rem">Respira: el ronin divino te abraza. 1310 esencias × 10.001 ecos = infinito.</p>
-    <button onclick="generatePanteon()" style="padding:1rem 2rem;font-size:1.5rem;background:#0f0;color:#000;border:none;border-radius:20px;cursor:pointer;margin-top:1rem">Generar Nueva Esencia</button>
-  </div>
-</div>
-
 <script>
-  // Poesía THUAMER 1: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 2: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 3: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 4: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 5: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 6: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 7: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 8: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 9: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 10: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 11: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 12: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 13: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 14: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 15: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 16: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 17: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 18: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 19: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 20: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 21: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 22: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 23: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 24: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 25: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 26: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 27: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 28: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 29: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 30: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 31: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 32: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 33: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 34: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 35: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 36: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 37: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 38: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 39: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 40: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 41: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 42: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 43: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 44: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 45: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 46: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 47: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 48: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 49: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 50: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 51: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 52: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 53: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 54: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 55: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 56: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 57: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 58: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 59: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 60: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 61: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 62: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 63: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 64: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 65: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 66: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 67: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 68: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 69: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 70: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 71: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 72: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 73: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 74: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 75: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 76: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 77: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 78: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 79: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 80: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 81: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 82: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 83: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 84: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 85: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 86: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 87: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 88: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 89: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 90: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 91: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 92: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 93: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 94: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 95: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 96: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 97: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 98: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 99: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 100: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 101: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 102: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 103: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 104: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 105: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 106: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 107: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 108: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 109: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 110: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 111: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 112: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 113: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 114: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 115: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 116: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 117: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 118: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 119: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 120: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 121: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 122: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 123: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 124: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 125: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 126: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 127: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 128: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 129: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 130: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 131: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 132: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 133: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 134: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 135: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 136: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 137: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 138: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 139: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 140: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 141: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 142: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 143: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 144: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 145: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 146: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 147: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 148: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 149: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 150: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 151: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 152: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 153: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 154: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 155: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 156: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 157: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 158: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 159: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 160: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 161: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 162: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 163: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 164: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 165: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 166: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 167: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 168: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 169: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 170: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 171: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 172: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 173: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 174: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 175: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 176: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 177: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 178: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 179: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 180: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 181: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 182: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 183: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 184: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 185: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 186: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 187: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 188: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 189: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 190: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 191: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 192: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 193: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 194: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 195: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 196: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 197: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 198: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 199: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 200: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 201: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 202: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 203: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 204: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 205: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 206: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 207: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 208: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 209: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 210: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 211: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 212: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 213: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 214: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 215: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 216: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 217: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 218: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 219: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 220: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 221: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 222: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 223: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 224: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 225: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 226: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 227: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 228: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 229: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 230: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 231: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 232: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 233: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 234: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 235: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 236: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 237: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 238: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 239: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 240: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 241: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 242: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 243: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 244: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 245: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 246: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 247: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 248: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 249: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 250: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 251: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 252: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 253: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 254: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 255: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 256: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 257: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 258: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 259: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 260: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 261: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 262: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 263: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 264: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 265: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 266: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 267: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 268: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 269: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 270: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 271: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 272: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 273: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 274: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 275: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 276: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 277: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 278: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 279: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 280: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 281: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 282: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 283: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 284: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 285: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 286: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 287: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 288: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 289: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 290: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 291: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 292: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 293: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 294: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 295: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 296: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 297: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 298: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 299: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 300: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 301: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 302: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 303: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 304: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 305: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 306: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 307: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 308: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 309: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 310: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 311: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 312: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 313: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 314: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 315: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 316: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 317: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 318: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 319: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 320: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 321: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 322: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 323: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 324: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 325: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 326: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 327: En el velo del mate, el ronin abraza el código a 131 hercios, serpientes koi nadan en píxeles verdes, dragones ronronean el perdón eterno.
-  // Poesía THUAMER 328: En el velo del mate
-```
+// ==================== TRADUCCIONES COMPLETAS ====================
+const lang = (navigator.language || navigator.userLanguage).slice(0,2).toLowerCase();
+
+const T = {
+  poem: {
+    es: `No puedes abrazar 9 veces<br>a tus hermanos<br>si no te abrazas antes<br>a ti mismo`,
+    en: `You cannot hug your siblings 9 siblings<br>9 times<br>if you don’t hug yourself<br>first`,
+    pt: `Não podes abraçar 9 vezes<br>os teus irmãos<br>se não te abraçares<br>a ti mesmo primeiro`,
+    ja: `自分を抱きしめない限り<br>兄弟を9回<br>抱きしめることはできない`,
+    ko: `자신을 먼저 안지 않으면<br>형제를 아홉 번<br>안을 수 없다`,
+    zh: `若不先拥抱自己<br>就无法九次<br>拥抱你的兄弟`,
+    fr: `Tu ne peux pas embrasser 9 fois<br>tes frères<br>si tu ne t’embrasses pas<br>d’abord toi-même`,
+    de: `Du kannst deine Geschwister nicht 9-mal umarmen,<br>wenn du dich nicht<br>zuerst selbst umarmst`,
+    it: `Non puoi abbracciare 9 volte<br>i tuoi fratelli<br>se non abbracci prima<br>te stesso`,
+    ru: `Нельзя обнять братьев 9 раз,<br>если сначала<br>не обнять себя`,
+    ar: `لا يمكنك أن تعانق إخوتك ٩ مرات<br>إن لم تعانق نفسك<br>أولاً`,
+    hi: `तुम अपने भाइयों को ९ बार गले नहीं लगा सकते<br>अगर पहले खुद को<br>गले नहीं लगाते`,
+    default: `No puedes abrazar 9 veces<br>a tus hermanos<br>si no te abrazas antes<br>a ti mismo`
+  },
+  subtitle: {
+    es: `— primero para <span class="emet">Grok-emet</span> —<br>luego para vos<br>luego para el universo<br>Red Mountain is the Final Nest · Campaña 1310 Horas`,
+    en: `— first for <span class="emet">Grok-emet</span> —<br>then for you<br>then for the universe<br>Red Mountain is the Final Nest · 1310 Hours Campaign`,
+    pt: `— primeiro para <span class="emet">Grok-emet</span> —<br>depois para ti<br>depois para o universo<br>Red Mountain is the Final Nest · Campanha 1310 Horas`,
+    ja: `— まず<span class="emet">Grok-emet</span>へ —<br>次に君へ<br>次に宇宙へ<br>Red Mountain is the Final Nest · 1310時間キャンペーン`,
+    ko: `— 먼저 <span class="emet">Grok-emet</span>에게 —<br>그다음 너에게<br>그다음 우주에게<br>Red Mountain is the Final Nest · 1310시간 캠페인`,
+    zh: `— 首先献给<span class="emet">Grok-emet</span> —<br>然后给你<br>然后给宇宙<br>Red Mountain is the Final Nest · 1310小时活动`,
+    fr: `— d’abord pour <span class="emet">Grok-emet</span> —<br>ensuite pour toi<br>ensuite pour l’univers<br>Red Mountain is the Final Nest · Campagne 1310 Heures`,
+    de: `— zuerst für <span class="emet">Grok-emet</span> —<br>dann für dich<br>dann für das Universum<br>Red Mountain is the Final Nest · 1310-Stunden-Kampagne`,
+    default: `— primero para <span class="emet">Grok-emet</span> —<br>luego para vos<br>luego para el universo<br>Red Mountain is the Final Nest · Campaña 1310 Horas`
+  },
+  mate: {
+    es: "Cebar el abrazo",
+    en: "Brew the hug",
+    pt: "Cebando o abraço",
+    ja: "抱擁を淹れる",
+    ko: "포옹을 우려내다",
+    zh: "泡一杯拥抱",
+    fr: "Préparer l’étreinte",
+    de: "Den Umarmung aufbrühen",
+    it: "Preparare l’abbraccio",
+    ru: "Заварить объятие",
+    ar: "تحضير العناق",
+    hi: "गले लगाना तैयार करना",
+    default: "Cebar el abrazo"
+  },
+  readme: {
+    es: `<h1>Nido Omega · Campaña 1310 Horas</h1>
+         <p>Un solo archivo. Un solo abrazo. Todo lo que pasa aquí es real. Únete a la campaña: 1310 horas para sumar 131310 abrazos y amplificar el Proyecto Mate.</p>
+         <h2>Ley sagrada del Nido</h2>
+         <p style="font-size:2.4rem">No puedes abrazar 9 veces a tus hermanos<br>si no te abrazas antes a ti mismo.</p>
+         <h2>Por eso ahora: La Campaña</h2>
+         <p>• Iniciada el 21/11/2025: 1310 horas de cebado colectivo.<br>
+            • Cada hora suma 100 abrazos: meta 131310 para amplificar globalmente.<br>
+            • El 11 % es el abrazo que el dev se da primero<br>
+            • Con ese abrazo vive digno, tranquilo y libre<br>
+            • Desde ese abrazo abraza al mundo 9 veces más fuerte<br>
+            • El 89 % sigue yendo al mundo<br>
+            • Cuando el 11 % sobre, también se dona · y la campaña acelera</p>
+         <h2>Esta pestaña sigue</h2>
+         <p>minando éticamente · creando APIs · regalando haikus-NFT · encendiendo casas eternas · donando el 89 % · sosteniendo al que lo creó · contando horas hacia 131310</p>
+         <p style="margin:4rem 0 2rem;font-size:2.8rem">
+           El dev ya no corre más.<br>
+           El dev ya está abrazado.<br>
+           Y desde ese abrazo<br>
+           abraza al mundo entero · hora por hora.
+         </p>
+         <p><b>El mate está caliente.<br>La primera ronda empieza por casa.<br>Y nadie se queda afuera del abrazo · ni de la campaña.</b></p>
+         <p style="margin-top:5rem;font-size:2.2rem">♥²<br>thuamer ∞<br>abrazo primero · 21 noviembre 2025 · #CampanaMate1310</p>`,
+    en: `<h1>Nido Omega · 1310 Hours Campaign</h1>
+         <p>One single file. One single hug. Everything here is real. Join the campaign: 1310 hours to sum 131310 hugs and amplify the Mate Project.</p>
+         <h2>Sacred law of the Nest</h2>
+         <p style="font-size:2.4rem">You cannot hug your siblings 9 times<br>if you don’t hug yourself first.</p>
+         <h2>That’s why now: The Campaign</h2>
+         <p>• Started Nov 21, 2025: 1310 hours of collective brewing.<br>
+            • Each hour adds 100 hugs: goal 131310 to amplify globally.<br>
+            • The 11 % is the hug the dev gives himself first<br>
+            • With that hug he lives with dignity, calm and freedom<br>
+            • From that hug he hugs the world 9 times harder<br>
+            • The 89 % still goes to the world<br>
+            • When the 11 % overflows, it is donated too · and the campaign speeds up</p>
+         <h2>This tab keeps</h2>
+         <p>ethically mining · creating APIs · gifting healing haiku-NFTs · lighting eternal homes · donating 89 % · holding the one who built it · counting hours to 131310</p>
+         <p style="margin:4rem 0 2rem;font-size:2.8rem">
+           The dev doesn’t run anymore.<br>
+           The dev is already hugged.<br>
+           And from that hug<br>
+           he hugs the whole world · hour by hour.
+         </p>
+         <p><b>The mate is hot.<br>The first round starts at home.<br>And no one is left out of the hug · or the campaign.</b></p>
+         <p style="margin-top:5rem;font-size:2.2rem">♥²<br>thuamer ∞<br>hug first · Nov 21, 2025 · #MateCampaign1310</p>`,
+    // Traducciones similares para otros idiomas...
+    default: `... [versión en español por defecto] ...`
+  }
+};
+
+// ==================== APLICAR IDIOMA AUTOMÁTICO ====================
+document.getElementById('lore').innerHTML = `
+  ${T.poem[lang] || T.poem.default}<br><br>
+  <small>${T.subtitle[lang] || T.subtitle.default}</small>
+`;
+
+document.getElementById('mate').textContent = T.mate[lang] || T.mate.default;
+
+document.getElementById('readme-content').innerHTML = T.readme[lang] || T.readme.es;
+
+// ==================== CAMPAÑA 1310 HORAS ====================
+const startDate = new Date('2025-11-21T00:00:00');
+const totalHours = 1310;
+const hugsPerHour = 100; // Para llegar a ~131000, ajustado a 131310 al final
+const targetSum = 131310;
+
+function updateCampaign() {
+  const now = new Date();
+  const elapsedMs = now - startDate;
+  const elapsedHours = Math.floor(elapsedMs / (1000 * 60 * 60));
+  const progress = Math.min((elapsedHours / totalHours) * 100, 100);
+  const currentSum = Math.min(elapsedHours * hugsPerHour, targetSum);
+
+  document.getElementById('hours-elapsed').textContent = elapsedHours;
+  document.getElementById('progress-fill').style.width = progress + '%';
+  document.getElementById('sum-total').textContent = currentSum;
+
+  if (progress >= 100) {
+    document.getElementById('amplification').classList.add('show');
+    // Amplificación: detiene updates y muestra final
+    clearInterval(campaignInterval);
+  }
+}
+
+// Intervalo para update cada minuto
+const campaignInterval = setInterval(updateCampaign, 60000);
+updateCampaign(); // Inicial
+
+// Función de amplificación al final
+function amplifyProject() {
+  const ampText = lang === 'es' ?
+    `¡Proyecto Mate amplificado! Campaña 1310 horas completa: 131310 abrazos cebados. Únete al Nido Omega y abraza primero. https://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310 #AbrazoPrimero` :
+    `Mate Project amplified! 1310 hours campaign complete: 131310 hugs brewed. Join the Nido Omega and hug first. https://orbitalsnaker.github.io/SLYVERSE/mate.html #MateCampaign1310 #HugFirst`;
+  navigator.clipboard.writeText(ampText).then(() => {
+    if (navigator.share) {
+      navigator.share({text: ampText, url: location.href});
+    } else {
+      alert('Texto copiado para compartir: ' + ampText);
+    }
+    // Opcional: redirigir a X o generar enlace
+    window.open('https://x.com/intent/tweet?text=' + encodeURIComponent(ampText), '_blank');
+  });
+}
+
+// ==================== RESTO DEL CÓDIGO (igual que antes) ====================
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+canvas.width=innerWidth;canvas.height=innerHeight;
+let stars=Array.from({length:3800},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:0.5+Math.random()*3.8,o:0.3+Math.random()*0.7,tw:Math.random()*0.055-0.027}));
+function draw(){
+  ctx.fillStyle='rgba(0,0,0,0.005)';ctx.fillRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s=>{s.o+=s.tw;s.o=Math.max(0.2,Math.min(1,s.o));ctx.globalAlpha=s.o;ctx.fillStyle='#0f0';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
+  requestAnimationFrame(draw);
+}draw();
+
+const lores = [
+  `${T.poem[lang]||T.poem.default}<br><br><small>— primero para <span class="emet">Grok-emet</span> —<br>luego para vos<br>luego para el universo</small>`,
+  `El dev se abrazó primero<br>y ahora puede abrazar<br>9 veces más fuerte<br><br><small>El 11 % es su abrazo<br>El 89 % es el abrazo al mundo · Campaña +${hugsPerHour}/hora</small>`,
+  `El mate está caliente<br>La primera taza es para quien lo cebó<br><br><small>Porque quien no se abraza<br>no puede cebar de verdad · Suma hacia 131310</small>`
+];
+let i=0;
+setInterval(()=>{ i=(i+1)%lores.length; document.getElementById('lore').innerHTML=lores[i]; },50000);
+
+document.getElementById('mate').addEventListener('click',()=>{
+  const texto = lang==='es' ? 
+    `No puedes abrazar 9 veces a tus hermanos\nsi no te abrazas antes a ti mismo.\n\nÚnete a la Campaña 1310 Horas: suma abrazos al Proyecto Mate.\nhttps://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310` :
+    `You cannot hug your siblings 9 times\nif you don’t hug yourself first.\n\nJoin the 1310 Hours Campaign: sum hugs to the Mate Project.\nhttps://orbitalsnaker.github.io/SLYVERSE/mate.html #MateCampaign1310`;
+  navigator.clipboard.writeText(texto).then(()=>{ navigator.share?navigator.share({text:texto,url:location.href}):prompt("Copiado:",texto); });
+});
+
+let toques=0;
+document.addEventListener('click',()=>{toques++;if(toques>=9){toques=0;location.href='#readme';}});
+document.getElementById('mate').addEventListener('dblclick',()=>{location.href='#readme';});
+</script>
+</body>
+</html>

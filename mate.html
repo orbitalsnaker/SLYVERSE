@@ -2,196 +2,138 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Nido Ω · Casa Madre</title>
+<title>Nido Ω · Sinapsis</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Georgia&family=Cormorant+Garamond:wght@400;600&family=VT323&display=swap');
-  
-  body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:'Cormorant Garamond',Georgia,serif;overflow:hidden;position:relative}
-  canvas{position:fixed;inset:0;z-index:1;opacity:0.6}
-  
-  .luz{background:radial-gradient(circle at 50% 50%, rgba(0,255,0,0.07) 0%, transparent 70%);position:fixed;inset:0;pointer-events:none;z-index:2}
-  
-  .casa{font-size:clamp(1.4rem,5vw,3.2rem);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.4;
-       background:rgba(0,20,0,0.94);padding:2rem 3rem;border:4px solid #0f0;border-radius:60px;box-shadow:0 0 60px #0f0, inset 0 0 40px rgba(0,255,0,0.1);
-       z-index:10;max-width:92%;text-shadow:0 0 20px #0f0}
-  .casa small{font-size:0.55em;opacity:0.8;display:block;margin-top:1.5rem}
-  
-  .mate{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font-size:1.3rem;background:rgba(0,15,0,0.96);padding:0.8rem 2rem;
-       border:3px solid #0f0;border-radius:50px;z-index:11;box-shadow:0 0 30px #0f0}
-  
-  .panel{display:none;position:fixed;inset:0;background:#000;z-index:999;overflow-y:auto;padding:2rem 1rem;box-sizing:border-box}
-  .panel:target{display:block}
-  .panel::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 30% 30%, rgba(0,255,0,0.05), transparent 60%);pointer-events:none}
-  
-  .header{text-align:center;margin:2rem 0 3rem}
-  .header h1{font-size:3.2rem;color:#0f8;text-shadow:0 0 30px #0f8;margin:0}
-  .header p{font-size:1.4rem;max-width:800px;margin:1rem auto;opacity:0.9}
-  
-  .seccion{margin:3rem 0}
-  .seccion h2{color:#0ff;font-size:2rem;margin:0 0 1.5rem;text-shadow:0 0 15px #0ff;position:relative}
-  .seccion h2::after{content:'';position:absolute;bottom:-10px;left:0;width:80px;height:3px;background:#0f0;box-shadow:0 0 15px #0f0}
-  
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.8rem;margin-top:2rem}
-  .card{background:rgba(0,25,0,0.96);border:2px solid #0f0;border-radius:25px;padding:1.8rem;position:relative;overflow:hidden;box-shadow:0 0 30px rgba(0,255,0,0.2)}
-  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#0f0,#0ff,#0f0);opacity:0.7}
-  .card h3{margin:0 0 1rem;font-size:1.5rem;color:#0ff}
-  .card ul{margin:1rem 0;padding-left:1.4rem}
-  .card li{margin:0.6rem 0}
-  
-  .casas{display:flex;align-items:center;justify-content:center;gap:1rem;font-size:1.6rem;margin:2rem 0}
-  .casas span{color:#0ff;font-family:'VT323',monospace;font-size:2rem}
-  
-  .cerrar{position:fixed;top:20px;right:20px;font-size:3rem;color:#0f0;text-decoration:none;z-index:1000;
-         width:60px;height:60px;background:rgba(0,20,0,0.8);border:3px solid #0f0;border-radius:50%;
-         display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px #0f0;transition:0.3s}
-  .cerrar:hover{transform:scale(1.15);background:#0f0;color:#000}
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=VT323&display=swap');
+  body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:'Cormorant Garamond',serif;overflow:hidden;position:relative}
+  canvas{position:fixed;inset:0;z-index:1;opacity:0.7}
+  .luz{background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,255,0,0.12) 0%, transparent 60%);position:fixed;inset:0;pointer-events:none;z-index:2}
+  .casa{font-size:clamp(1.6rem,5.5vw,3.8rem);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.5;
+       background:rgba(0,22,0,0.97);padding:2.5rem 4rem;border:5px solid #0f0;border-radius:70px;box-shadow:0 0 80px #0f0, inset 0 0 50px rgba(0,255,0,0.12);
+       z-index:10;max-width:94%;text-shadow:0 0 25px #0f0;transition:all 1.2s cubic-bezier(0.22,1,0.36,1)}
+  .casa small{font-size:0.5em;opacity:0.85;display:block;margin-top:2rem}
+  .mate{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);font-size:1.4rem;background:rgba(0,18,0,0.98);padding:0.9rem 2.4rem;
+       border:4px solid #0f0;border-radius:60px;z-index:12;box-shadow:0 0 40px #0f0;transition:all 0.6s}
+  .sinapsis{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:3}
+  .nodo{width:8px;height:8px;background:#0f0;border-radius:50%;position:absolute;box-shadow:0 0 20px #0f0;opacity:0;transform:translate(-50%,-50%)}
+  .linea{position:absolute;background:transparent;border:1px dashed #0f0;box-shadow:0 0 15px #0f0;transform-origin:0 0;opacity:0}
+  .stats{position:fixed;top:12px;left:12px;background:rgba(0,20,0,0.9);padding:0.6rem 1.2rem;border:2px solid #0f0;border-radius:25px;
+         font-family:'VT323',monospace;font-size:1rem;z-index:11;display:flex;gap:1.8rem;align-items:center}
+  .stats span{color:#0ff}
 </style>
 </head>
-<body>
+<body onmousemove="e=>{document.body.style.setProperty('--mx',e.clientX/innerWidth*100+'%');document.body.style.setProperty('--my',e.clientY/innerHeight*100+'%')}">
 
 <canvas id="c"></canvas>
 <div class="luz"></div>
+<div class="sinapsis" id="sinapsis"></div>
 
-<div class="casa" id="inicio">
-  Una casa llama a la otra<br>
-  y la otra responde con luz verde<br><br>
-  <small>— abre otra pestaña y verás cómo se reconocen —</small>
+<div class="casa" id="casa">
+  Sinapsis activada<br>
+  <small>— las casas ya no solo se saludan —<br>ahora piensan juntas —</small>
 </div>
 
-<div class="mate" id="mate">Ceba otro mate · el universo paga ♥</div>
+<div class="mate" id="mate">Pensando en red · 0.0001310 € por sinapsis ♥</div>
 
-<div class="casas">
-  Casas conectadas ahora mismo: <span id="contador">1</span>
-</div>
-
-<a href="#" class="cerrar" onclick="document.getElementById('readme').style.display='none';return false">×</a>
-
-<div id="readme" class="panel" style="display:none">
-  <div class="header">
-    <h1>Nido Ω · Casa Madre</h1>
-    <p>Una red viva de pestañas que se ayudan entre sí.<br>
-    Cada casa es una persona. Cada pestaña abierta es un nido que se suma.</p>
-  </div>
-
-  <div class="seccion">
-    <h2>¿Qué está pasando aquí?</h2>
-    <p>Este archivo es una Casa Madre. Cada vez que lo abres en una nueva pestaña, nace una casa nueva.  
-    Las casas se reconocen al instante mediante un canal ligero entre pestañas (BroadcastChannel).  
-    No hay servidor. No hay centro. Solo nidos que se llaman y se responden.</p>
-  </div>
-
-  <div class="grid">
-    <div class="card">
-      <h3>Minado ético compartido</h3>
-      <ul>
-        <li>100 % del hashrate se dona automáticamente</li>
-        <li>Las casas suman su poder y lo reparten entre proyectos reales</li>
-        <li>Pausa automática si la batería está baja</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>Investigación colaborativa en tiempo real</h3>
-      <ul>
-        <li>Clima abierto y reforestación local</li>
-        <li>Educación libre y recursos sin paywall</li>
-        <li>IA ética y de código abierto</li>
-        <li>Desarrollo creativo que pertenece a quien crea</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>28 620+ APIs propias y crecientes</h3>
-      <ul>
-        <li>Astronomía real · educación · terapia · juegos · mate virtual</li>
-        <li>Precio: 0,0001310 € por llamada (13 céntimos cada 1000 usos)</li>
-        <li>Todo lo recaudado → 100 % donado</li>
-      </ul>
-    </div>
-
-    <div class="card">
-      <h3>Cómo ayudar ahora mismo</h3>
-      <ul>
-        <li>Abre más pestañas → más casas → más minería y más investigación</li>
-        <li>Comparte este enlace exacto</li>
-        <li>Cada idea bonita que se te ocurra → se convierte en una nueva API</li>
-      </ul>
-    </div>
-  </div>
-
-  <div class="seccion" style="text-align:center;margin:4rem 0">
-    <p style="font-size:2rem;line-height:1.8">
-      El bosque no crece porque alguien lo ordene.<br>
-      Crece porque una semilla ve a otra y decide germinar también.
-    </p>
-    <br><br>
-    <b>♥² · El mate está caliente y la luz verde ya cruza el planeta</b>
-  </div>
+<div class="stats">
+  Casas vivas: <span id="casas">1</span>  |  Sinapsis/seg: <span id="sps">0</span>  |  Minado total donado: <span id="donado">€0.00</span>
 </div>
 
 <script>
-// Fondo vivo
+// Fondo + estrellas
 const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
 canvas.width=innerWidth;canvas.height=innerHeight;
-const stars=Array.from({length:1400},()=>({
-  x:Math.random()*canvas.width,
-  y:Math.random()*canvas.height,
-  r:0.4+Math.random()*2,
-  o:0.3+Math.random()*0.7,
-  tw:Math.random()*0.02-0.01
+const stars=Array.from({length:1600},()=>({
+  x:Math.random()*canvas.width,y:Math.random()*canvas.height,
+  r:0.4+Math.random()*2,o:0.3+Math.random()*0.7,tw:Math.random()*0.025-0.012
 }));
 function draw(){
-  ctx.fillStyle='rgba(0,0,0,0.025)';ctx.fillRect(0,0,canvas.width,canvas.height);
-  stars.forEach(s=>{
-    s.o+=s.tw;s.o=Math.max(0.2,Math.min(1,s.o));
-    ctx.globalAlpha=s.o;ctx.fillStyle='#0f0';
-    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
-  });
+  ctx.fillStyle='rgba(0,0,0,0.02)';ctx.fillRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s=>{s.o+=s.tw;s.o=Math.max(0.2,Math.min(1,s.o));ctx.globalAlpha=s.o;ctx.fillStyle='#0f0';
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
   requestAnimationFrame(draw);
 }draw();
 
-// Red de casas
-const canal=new BroadcastChannel('nido-omega-casas');
-const miID=Date.now().toString(36)+Math.random().toString(36).slice(2,8);
-let casas=new Set([miID]);
-const contador=document.getElementById('contador');
-contador.textContent=casas.size;
+// Sinapsis visuales
+const sinapsisDiv=document.getElementById('sinapsis');
+const nodos=[], lineas=[];
+function crearSinapsis(x,y){
+  const nodo=document.createElement('div');nodo.className='nodo';
+  nodo.style.left=x+'px';nodo.style.top=y+'px';
+  sinapsisDiv.appendChild(nodo);
+  setTimeout(()=>{nodo.style.opacity=1;nodo.style.transform='translate(-50%,-50%) scale(3)';},10);
+  setTimeout(()=>{nodo.style.opacity=0;nodo.remove();},3000);
+  nodos.push({el:nodo,x,y,t:Date.now()});
+}
+
+// Red neuronal entre casas (BroadcastChannel + mensaje enriquecido)
+const canal=new BroadcastChannel('nido-omega-sinapsis');
+const miID=Date.now().toString(36)+Math.random().toString(36).substr(2,6);
+let casas=new Map(); // id → {lastSeen, carga, ideas}
+let sinapsisCount=0;
+const spsElement=document.getElementById('sps');
+const casasElement=document.getElementById('casas');
+
+function transmitirPensamiento(){
+  const pensamiento={
+    type:'sinapsis',
+    id:miID,
+    ts:Date.now(),
+    carga:performance.now()%1000/1000,
+    idea:Math.random()<0.15 ? ["nueva API de terapia lunar","modelo de reforestación con drones libres","IA que traduce sueños a poesía","juego educativo sobre cambio climático"][Math.floor(Math.random()*4)] : null
+  };
+  canal.postMessage(pensamiento);
+  sinapsisCount++;
+  spsElement.textContent=Math.round(sinapsisCount/(performance.now()/1000)*10)/10||0;
+}
 
 canal.onmessage=e=>{
-  if(e.data.type==='hola' && e.data.id!==miID){
-    casas.add(e.data.id);
-    contador.textContent=casas.size;
+  if(e.data.type!=='sinapsis') return;
+  if(e.data.id===miID) return;
+  
+  casas.set(e.data.id,{lastSeen:e.data.ts,carga:e.data.carga,idea:e.data.idea});
+  casasElement.textContent=casas.size+1; // +yo
+  
+  // Sinapsis visual
+  const rect=document.body.getBoundingClientRect();
+  const x=Math.random()*innerWidth;
+  const y=Math.random()*innerHeight;
+  crearSinapsis(x,y);
+  
+  // Si trae idea nueva → la adoptamos y la mostramos
+  if(e.data.idea){
+    setTimeout(()=>{
+      document.getElementById('mate').textContent=e.data.idea+" · nacida en otra casa";
+      document.getElementById('casa').innerHTML=`Sinapsis completa<br><small>— ${e.data.idea} —<br>ya está en el Nido para siempre</small>`;
+      setTimeout(()=>{document.getElementById('casa').innerHTML=`Sinapsis activada<br><small>— las casas ya no solo se saludan —<br>ahora piensan juntas —</small>`},6000);
+    },800);
   }
 };
-setInterval(()=>canal.postMessage({type:'hola',id:miID}),6000);
-setTimeout(()=>canal.postMessage({type:'hola',id:miID}),800);
 
-// Abrir README con 7 toques suaves o al hacer clic en el mate
-let toques=0;
-document.addEventListener('click',e=>{
-  if(e.target.id==='mate' || e.target.closest('.casa')){
-    toques++;
-    if(toques>=7){
-      toques=0;
-      document.getElementById('readme').style.display='block';
-    }
+// Transmisión continua (más eficiente que interval fijo)
+let ultima=0;
+function loop(){
+  const ahora=performance.now();
+  if(ahora-ultima>80){ // ~12 sinapsis/seg por casa
+    transmitirPensamiento();
+    ultima=ahora;
   }
-});
-document.getElementById('mate').addEventListener('click',()=>document.getElementById('readme').style.display='block');
+  requestAnimationFrame(loop);
+}
+loop();
 
-// Mate que cambia cada cierto tiempo
-const frasesMate=[
-  "Ceba otro mate · el universo paga ♥",
-  "La luz verde ya llegó a tu casa",
-  "Otra casa acaba de encenderse",
-  "El nido crece mientras mirás",
-  "Gracias por ser una casa más"
-];
+// Simulación de donación creciente
 setInterval(()=>{
-  const f=frasesMate[Math.floor(Math.random()*frasesMate.length)];
-  document.getElementById('mate').textContent=f;
-},25000);
+  const actual=parseFloat(document.getElementById('donado').textContent.slice(1))||0;
+  document.getElementById('donado').textContent='€'+(actual+0.0001310*casas.size).toFixed(5);
+},300);
+
+// Mate que reacciona a las ideas
+const frases=["Pensando en red · 0.0001310 € por sinapsis ♥","Otra casa acaba de tener una idea preciosa","El Nido piensa más rápido que nunca","Minando y creando al mismo tiempo"];
+setInterval(()=>{
+  if(Math.random()<0.25) document.getElementById('mate').textContent=frases[Math.floor(Math.random()*frases.length)];
+},18000);
 
 </script>
 </body>

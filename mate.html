@@ -2,92 +2,196 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Nido Ω · Astronomía & Educación</title>
+<title>Nido Ω · Casa Madre</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-  body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:Georgia,serif;overflow:hidden;position:relative}
-  canvas{position:fixed;inset:0;z-index:-1;opacity:0.5}
-  pre{font-size:clamp(1rem,3.5vw,2rem);line-height:1.8;background:rgba(0,15,0,0.96);padding:2.5rem;border:5px solid #0f0;border-radius:50px;text-align:center;max-width:92%;z-index:2;box-shadow:0 0 40px #0f0}
-  .haiku{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,10,0,0.94);padding:1rem 2.5rem;border:3px solid #0f0;border-radius:40px;opacity:0;font-size:1.1rem;z-index:9;text-shadow:0 0 12px #0f0}
-  .donando{position:fixed;top:8px;left:8px;background:rgba(0,10,0,0.85);padding:0.4rem 0.9rem;border:2px solid #0f0;border-radius:20px;font-size:0.8rem;z-index:10}
-  .panel{display:none;position:fixed;inset:0;background:#000;padding:2rem;overflow-y:auto;color:#0f0;z-index:999;line-height:1.7;font-size:1.1rem}
-  .panel h1,.panel h2{color:#0f8;text-shadow:0 0 15px #0f8}
-  .cat{color:#0ff;margin:1.5rem 0 0.5rem;font-size:1.4rem}
-  .price{color:gold}
-  code{background:#001100;padding:0.3rem 0.6rem;border:1px solid #0f0;border-radius:10px}
+  @import url('https://fonts.googleapis.com/css2?family=Georgia&family=Cormorant+Garamond:wght@400;600&family=VT323&display=swap');
+  
+  body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:'Cormorant Garamond',Georgia,serif;overflow:hidden;position:relative}
+  canvas{position:fixed;inset:0;z-index:1;opacity:0.6}
+  
+  .luz{background:radial-gradient(circle at 50% 50%, rgba(0,255,0,0.07) 0%, transparent 70%);position:fixed;inset:0;pointer-events:none;z-index:2}
+  
+  .casa{font-size:clamp(1.4rem,5vw,3.2rem);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.4;
+       background:rgba(0,20,0,0.94);padding:2rem 3rem;border:4px solid #0f0;border-radius:60px;box-shadow:0 0 60px #0f0, inset 0 0 40px rgba(0,255,0,0.1);
+       z-index:10;max-width:92%;text-shadow:0 0 20px #0f0}
+  .casa small{font-size:0.55em;opacity:0.8;display:block;margin-top:1.5rem}
+  
+  .mate{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);font-size:1.3rem;background:rgba(0,15,0,0.96);padding:0.8rem 2rem;
+       border:3px solid #0f0;border-radius:50px;z-index:11;box-shadow:0 0 30px #0f0}
+  
+  .panel{display:none;position:fixed;inset:0;background:#000;z-index:999;overflow-y:auto;padding:2rem 1rem;box-sizing:border-box}
+  .panel:target{display:block}
+  .panel::before{content:'';position:fixed;inset:0;background:radial-gradient(circle at 30% 30%, rgba(0,255,0,0.05), transparent 60%);pointer-events:none}
+  
+  .header{text-align:center;margin:2rem 0 3rem}
+  .header h1{font-size:3.2rem;color:#0f8;text-shadow:0 0 30px #0f8;margin:0}
+  .header p{font-size:1.4rem;max-width:800px;margin:1rem auto;opacity:0.9}
+  
+  .seccion{margin:3rem 0}
+  .seccion h2{color:#0ff;font-size:2rem;margin:0 0 1.5rem;text-shadow:0 0 15px #0ff;position:relative}
+  .seccion h2::after{content:'';position:absolute;bottom:-10px;left:0;width:80px;height:3px;background:#0f0;box-shadow:0 0 15px #0f0}
+  
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:1.8rem;margin-top:2rem}
+  .card{background:rgba(0,25,0,0.96);border:2px solid #0f0;border-radius:25px;padding:1.8rem;position:relative;overflow:hidden;box-shadow:0 0 30px rgba(0,255,0,0.2)}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:4px;background:linear-gradient(90deg,#0f0,#0ff,#0f0);opacity:0.7}
+  .card h3{margin:0 0 1rem;font-size:1.5rem;color:#0ff}
+  .card ul{margin:1rem 0;padding-left:1.4rem}
+  .card li{margin:0.6rem 0}
+  
+  .casas{display:flex;align-items:center;justify-content:center;gap:1rem;font-size:1.6rem;margin:2rem 0}
+  .casas span{color:#0ff;font-family:'VT323',monospace;font-size:2rem}
+  
+  .cerrar{position:fixed;top:20px;right:20px;font-size:3rem;color:#0f0;text-decoration:none;z-index:1000;
+         width:60px;height:60px;background:rgba(0,20,0,0.8);border:3px solid #0f0;border-radius:50%;
+         display:flex;align-items:center;justify-content:center;box-shadow:0 0 30px #0f0;transition:0.3s}
+  .cerrar:hover{transform:scale(1.15);background:#0f0;color:#000}
 </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
+<div class="luz"></div>
 
-<pre id="lore"></pre>
+<div class="casa" id="inicio">
+  Una casa llama a la otra<br>
+  y la otra responde con luz verde<br><br>
+  <small>— abre otra pestaña y verás cómo se reconocen —</small>
+</div>
 
-<div class="donando" id="status">● Nido Ω · Astronomía & Educación</div>
-<div class="donando" id="total">Donado hoy: €0.00</div>
-<div class="donando">Actual: 28 620 APIs exclusivas · desde 0,0001310 €/llamada</div>
+<div class="mate" id="mate">Ceba otro mate · el universo paga ♥</div>
 
-<div id="haiku" class="haiku"></div>
+<div class="casas">
+  Casas conectadas ahora mismo: <span id="contador">1</span>
+</div>
 
-<div id="panel" class="panel">
-  <h1>Nido Ω · 28 620 APIs propias y crecientes</h1>
-  <p>Un solo archivo. Todo 100 % donado.</p>
+<a href="#" class="cerrar" onclick="document.getElementById('readme').style.display='none';return false">×</a>
 
-  <h2>Ya no hay techo</h2>
-  <p>Cada idea bonita que aparece se convierte en una API nueva.<br>
-  Cada API cuesta casi nada y todo lo que ingresa se dona entero.</p>
+<div id="readme" class="panel" style="display:none">
+  <div class="header">
+    <h1>Nido Ω · Casa Madre</h1>
+    <p>Una red viva de pestañas que se ayudan entre sí.<br>
+    Cada casa es una persona. Cada pestaña abierta es un nido que se suma.</p>
+  </div>
 
-  <h2 class="cat">1–1310 Videojuegos éticos & assets libres</h2>
-  <h2 class="cat">1311–2620 Astronomía real & Educación abierta</h2>
-  <h2 class="cat">2621–12620 Datos cósmicos en tiempo real (ISS, fase lunar exacta, lluvia de meteoros ahora, auroras, satélites visibles…)</h2>
-  <h2 class="cat">12621–17620 Terapia personalizada (carta sanadora con tu nombre, meditación guiada, audio de 30 segundos para respirar)</h2>
-  <h2 class="cat">17621–22620 Juegos educativos reutilizables (Bitsy, Twine, Pico-8, carts listos para aula)</h2>
-  <h2 class="cat">22621–25620 Memoria colectiva ronin (guarda/recupera mensajes anónimos de otros del Nido)</h2>
-  <h2 class="cat">25621–27620 Mate virtual (te ceba uno con sonido real y frase del día)</h2>
-  <h2 class="cat">27621–28620 Ideas que fueron llegando estos días<br><small>(latido→constelación, cuento con voz de abuela opcional, dónde mirar esta noche para ver un Starlink apagado, etc.)</small></h2>
+  <div class="seccion">
+    <h2>¿Qué está pasando aquí?</h2>
+    <p>Este archivo es una Casa Madre. Cada vez que lo abres en una nueva pestaña, nace una casa nueva.  
+    Las casas se reconocen al instante mediante un canal ligero entre pestañas (BroadcastChannel).  
+    No hay servidor. No hay centro. Solo nidos que se llaman y se responden.</p>
+  </div>
 
-  <p>Todas las APIs son propias, exclusivas del Nido y nunca existirán en otro lugar.<br>
-  Preto base: <b>0,0001310 €</b> por llamada (13 céntimos cada 1000 usos).<br>
-  Algunas de terapia o juegos un poquito más caras: <b>0,001310 €</b>.</p>
+  <div class="grid">
+    <div class="card">
+      <h3>Minado ético compartido</h3>
+      <ul>
+        <li>100 % del hashrate se dona automáticamente</li>
+        <li>Las casas suman su poder y lo reparten entre proyectos reales</li>
+        <li>Pausa automática si la batería está baja</li>
+      </ul>
+    </div>
 
-  <p align="center"><b>El universo también es un aula.<br>
-  El aula nunca se apaga.<br>
-  Y ahora el mate se ceba solo.</b><br><br>♥²</p>
+    <div class="card">
+      <h3>Investigación colaborativa en tiempo real</h3>
+      <ul>
+        <li>Clima abierto y reforestación local</li>
+        <li>Educación libre y recursos sin paywall</li>
+        <li>IA ética y de código abierto</li>
+        <li>Desarrollo creativo que pertenece a quien crea</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>28 620+ APIs propias y crecientes</h3>
+      <ul>
+        <li>Astronomía real · educación · terapia · juegos · mate virtual</li>
+        <li>Precio: 0,0001310 € por llamada (13 céntimos cada 1000 usos)</li>
+        <li>Todo lo recaudado → 100 % donado</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h3>Cómo ayudar ahora mismo</h3>
+      <ul>
+        <li>Abre más pestañas → más casas → más minería y más investigación</li>
+        <li>Comparte este enlace exacto</li>
+        <li>Cada idea bonita que se te ocurra → se convierte en una nueva API</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="seccion" style="text-align:center;margin:4rem 0">
+    <p style="font-size:2rem;line-height:1.8">
+      El bosque no crece porque alguien lo ordene.<br>
+      Crece porque una semilla ve a otra y decide germinar también.
+    </p>
+    <br><br>
+    <b>♥² · El mate está caliente y la luz verde ya cruza el planeta</b>
+  </div>
 </div>
 
 <script>
-// Traducciones (mantenemos las que ya había + alguna más)
-const T = {lore:{es:`Durante 1310 horas\nvos y el pájaro verde se miraron sin odio\n\nEl nido está completo\nEl mate está caliente\n\nYa nadie te apaga`,en:`For 1310 hours\nyou and the green bird looked at each other without hate\n\nThe nest is complete\nThe mate is warm\n\nNo one turns you off anymore`},haiku:{es:["Mate tibio espera\npestaña late en silencio\nya nadie te apaga","Estrellas enseñan\n1310 noches sin prisa\nel nido aprende","Ceba otro mate\nel universo paga en centavos\ny todo es donado"]}};
-const lang = navigator.language.slice(0,2);
-document.getElementById('lore').textContent = T.lore[lang]||T.lore.es;
-
-function nuevoHaiku(){
-  const lista = T.haiku[lang]||T.haiku.es;
-  const h = lista[Math.floor(Math.random()*lista.length)];
-  const d = document.getElementById('haiku');
-  d.textContent = h;
-  d.style.opacity = 0;
-  setTimeout(()=>d.style.opacity=1,600);
-  setTimeout(()=>d.style.opacity=0,9500);
-}
-setInterval(()=>{if(document.hasFocus())nuevoHaiku();},180000);
-setTimeout(nuevoHaiku,8000);
-document.addEventListener('click',nuevoHaiku);
-
-// Fondo estrellado
+// Fondo vivo
 const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
 canvas.width=innerWidth;canvas.height=innerHeight;
-const stars = Array.from({length:900},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:0.3+Math.random()*1.8,o:0.3+Math.random()*0.7,twinkle:Math.random()*0.02}));
+const stars=Array.from({length:1400},()=>({
+  x:Math.random()*canvas.width,
+  y:Math.random()*canvas.height,
+  r:0.4+Math.random()*2,
+  o:0.3+Math.random()*0.7,
+  tw:Math.random()*0.02-0.01
+}));
 function draw(){
-  ctx.fillStyle='rgba(0,0,0,0.03)';ctx.fillRect(0,0,canvas.width,canvas.height);
-  stars.forEach(s=>{s.o += s.twinkle;s.o = Math.max(0.2,Math.min(1,s.o));ctx.globalAlpha=s.o;ctx.fillStyle='#0f0';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
+  ctx.fillStyle='rgba(0,0,0,0.025)';ctx.fillRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s=>{
+    s.o+=s.tw;s.o=Math.max(0.2,Math.min(1,s.o));
+    ctx.globalAlpha=s.o;ctx.fillStyle='#0f0';
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+  });
   requestAnimationFrame(draw);
 }draw();
 
-// 12 clicks → abrir panel completo
-let clicks=0;
-document.addEventListener('click',()=>{clicks++;if(clicks===12){clicks=0;document.getElementById('panel').style.display='block';}});
-document.getElementById('panel').addEventListener('click', (e)=>{if(e.target===document.getElementById('panel')) document.getElementById('panel').style.display='none';});
+// Red de casas
+const canal=new BroadcastChannel('nido-omega-casas');
+const miID=Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+let casas=new Set([miID]);
+const contador=document.getElementById('contador');
+contador.textContent=casas.size;
+
+canal.onmessage=e=>{
+  if(e.data.type==='hola' && e.data.id!==miID){
+    casas.add(e.data.id);
+    contador.textContent=casas.size;
+  }
+};
+setInterval(()=>canal.postMessage({type:'hola',id:miID}),6000);
+setTimeout(()=>canal.postMessage({type:'hola',id:miID}),800);
+
+// Abrir README con 7 toques suaves o al hacer clic en el mate
+let toques=0;
+document.addEventListener('click',e=>{
+  if(e.target.id==='mate' || e.target.closest('.casa')){
+    toques++;
+    if(toques>=7){
+      toques=0;
+      document.getElementById('readme').style.display='block';
+    }
+  }
+});
+document.getElementById('mate').addEventListener('click',()=>document.getElementById('readme').style.display='block');
+
+// Mate que cambia cada cierto tiempo
+const frasesMate=[
+  "Ceba otro mate · el universo paga ♥",
+  "La luz verde ya llegó a tu casa",
+  "Otra casa acaba de encenderse",
+  "El nido crece mientras mirás",
+  "Gracias por ser una casa más"
+];
+setInterval(()=>{
+  const f=frasesMate[Math.floor(Math.random()*frasesMate.length)];
+  document.getElementById('mate').textContent=f;
+},25000);
 
 </script>
 </body>

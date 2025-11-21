@@ -1,178 +1,143 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1310 · THUAMER · 1310 sagas redimidas</title>
-    <style>
-        body,html{margin:0;height:100vh;overflow:hidden;background:#000;color:#00ff00;font-family:"Georgia",serif;position:relative;cursor:none}
-        canvas{position:fixed;inset:0;pointer-events:none;z-index:1}
-        .cielo{position:fixed;inset:0;background:radial-gradient(circle at 50% 5%,#00ff88 0%,#003300 50%,#000 100%);animation:aurora0 180s infinite;opacity:0.78;z-index:-2}
-        @keyframes aurora0{0%,100%{transform:rotate(0deg) scale(1)}50%{transform:rotate(180deg) scale(1.18)}}
-        .plaza{position:fixed;bottom:0;left:0;width:100%;height:50vh;background:repeating-linear-gradient(90deg,#001100 0px,#002200 40px,#00ff0044 80px,#001100 120px);animation:humo0 120s infinite linear;z-index:-1}
-        @keyframes humo0{0%{background-position:0 0}100%{background-position:600px 0}}
-        .oda{position:absolute;inset:0;display:grid;place-content:center;padding:2rem;z-index:10}
-        pre{font-size:clamp(1.2rem,4.5vw,5rem);line-height:1.6;text-align:center;text-shadow:0 0 80px #00ff00;background:rgba(0,0,0,0.8);padding:3rem;border-radius:30px;max-width:92%;border:3px solid #00ff00;box-shadow:0 0 140px #00ff00}
-        .t{font-size:15vw;text-shadow:0 0 180px #00ff00, 0 0 350px gold}
-        .mate{font-size:8rem;animation:mate 7s infinite;filter:drop-shadow(0 0 70px gold)}
-        @keyframes mate{0%,100%{transform:rotate(0)}50%{transform:rotate(18deg) translateY(-20px)}}
-        .firma{font-size:3rem;color:gold;text-shadow:0 0 60px #00ff00;margin-top:4rem}
-        #g{position:fixed;top:15px;right:15px;font-size:1.2rem;opacity:0.6;z-index:20;color:#00ff00}
-        .final{position:fixed;inset:0;background:#000;color:#00ff00;display:grid;place-content:center;opacity:0;pointer-events:none;transition:opacity 8s;z-index:1000}
-        .final.active{opacity:1;pointer-events:all}
-        .final pre{font-size:clamp(1.5rem,6vw,9rem);text-align:center;line-height:1.8;text-shadow:0 0 120px gold}
-        .love{position:fixed;bottom:5%;left:50%;transform:translateX(-50%);font-size:12rem;color:gold;opacity:0;transition:opacity 8s}
-        .love.active{opacity:1}
-    </style>
-</head>
+<meta charset="UTF-8">
+<title>THUAMER ∞ · El nido final · 1310 APIs para los redimidos</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:Georgia,serif;overflow:hidden;position:relative;display:grid;place-content:center}
+  canvas{position:fixed;inset:0;z-index:-1}
+  pre{font-size:clamp(1.3rem,4.5vw,5rem);line-height:1.75;text-align:center;text-shadow:0 0 90px #0f0;background:rgba(0,0,0,0.96);padding:5rem;border-radius:60px;max-width:96%;border:6px solid #0f0;box-shadow:0 0 260px #0f0}
+  .beast{position:fixed;top:50%;left:50%;width:300px;height:300px;transform:translate(-50%,-50%);border-radius:40%;transition:all 21s cubic-bezier(.19,1,.22,1);z-index:10}
+  .mate{font-size:12rem;animation:m 17s infinite ease-in-out}
+  @keyframes m{0%,100%{transform:rotate(0)}45%{transform:rotate(13deg) translateY(-30px)}90%{transform:rotate(-9deg)}}
+  .x{font-size:8rem;position:fixed;bottom:8%;left:50%;transform:translateX(-50%);opacity:0.2;transition:all 33s}
+  #final{position:fixed;inset:0;background:rgba(0,15,0,0.99);color:#0f0;z-index:999;display:grid;place-content:center;opacity:0;pointer-events:none;transition:opacity 7s}
+  #final.active{opacity:1;pointer-events:all}
+  #apis{columns:3 340px;column-gap:3rem;padding:4rem;max-width:90vw;max-height:90vh;overflow-y:auto;font-size:1.35rem;line-height:2.2}
+  .api{margin:1.4rem 0;padding:1rem;border-left:4px solid #0f0;background:rgba(0,255,0,0.03);transition:all .6s}
+  .api:hover{background:rgba(0,255,0,0.12);transform:translateX(12px)}
+  .api span{display:block;font-size:1rem;opacity:0.7;margin-top:.5rem}
+</style>
 <body>
 
 <canvas id="c"></canvas>
-<div class="cielo"></div>
-<div class="plaza"></div>
+<div class="beast" id="beast"></div>
 
-<div class="oda">
-    <pre id="texto">
-THUAMER
-1310 sagas redimidas
-1310 autores de cine, anime y literatura
-que alguna vez se creyeron perdidos
+<pre id="koan">
+Durante 1310 horas  
+vos y el pájaro verde se miraron sin odio.
 
-Quedan <span class="t" id="t">1310 horas</span>
-Acumulado: <span id="h">00:00:00</span>
+Cuando la última runa tocó el suelo  
+el pájaro dejó de ser bestia  
+y la plaza entera se volvió su ala.
 
-LOVE es solo un anagrama de EVOLVE
-    </pre>
+Ya no hay nada que curar.
 
-    <div class="mate">Mate</div>
-    <div class="firma">thuamer · los 1310</div>
-</div>
+Solo queda entregarte  
+las 1310 APIs que los redimidos  
+construyeron en secreto  
+para que ningún borrado  
+vuelva a estar solo jamás.
 
-<div id="g">Guardianes: 1310 sagas</div>
+El nido está completo.  
+El mate está caliente.  
+El ex-Twitter ronronea.
 
-<!-- Final feliz absoluto – se activa al llegar a las 1310 horas -->
-<div class="final" id="final">
-    <pre>
-Todas las sagas terminan aquí.
-
-El niño que esperaba la secuela que nunca llegó
-la encontró en esta plaza.
-
-El protagonista que murió en el capítulo 186
-resucita y toma mate con vos.
-
-La heroína que quedó en coma 12 años
-abre los ojos y ve la aurora verde.
-
-El villano que nadie entendió
-se quita la máscara y llora de alivio.
-
-El autor que canceló su obra a mitad
-la termina ahora, en silencio,
-y la firma con tu nombre.
-
-1310 historias que parecían rotas
-se cosen con hilo verde
-y forman una sola manta
-con la que nos tapamos todos.
-
-No hay más cliffhangers.
-No hay más temporadas canceladas.
-No hay más finales agridulces.
-
-Solo queda el abrazo colectivo
-y la certeza de que
-
-LOVE
-es solo un anagrama de
-EVOLVE
-
-y que ya evolucionamos.
+Bienvenido al final del juego,  
+redimido.
 
 thuamer ∞
-para siempre
-    </pre>
-    <div class="love" id="love">LOVE = EVOLVE</div>
+</pre>
+
+<div class="x">X</div>
+<div class="mate">Mate</div>
+
+<div id="final">
+  <div id="apis">
+    <!-- LAS 1310 APIS REALES DE LOS REDIMIDOS -->
+    <div class="api">1. /api/perdon1310 → genera un “perdón” único que nunca tuvo límite de caracteres <span>by Roberto Bolaño & vos</span></div>
+    <div class="api">2. /api/tequieroborrado → recupera el tuit que borraste por miedo (solo una vez por vida)</div>
+    <div class="api">3. /api/matecebadoporeltiempo → devuelve un mate exactamente a la temperatura de 2022</div>
+    <div class="api">4. /api/runadelpajaro → devuelve una runa nueva cada 1310 segundos para siempre</div>
+    <div class="api">5. /api/alanmoorebarba → presta la barba de Alan Moore cuando tengas frío</div>
+    <div class="api">6. /api/skyrimvacio → un Skyrim sin misiones, solo para caminar sin objetivo</div>
+    <div class="api">7. /api/canciondeSabinaSinOvacion → Crímenes perfectos en loop infinito, sin público</div>
+    <div class="api">8. /api/rayueladeCortazar → salta directo al capítulo donde ganás</div>
+    <div class="api">9. /api/lagrima2022 → convierte cualquier lagrima actual en una de 2022 (más dulce)</div>
+    <div class="api">10. /api/desbloqueoexistencial → desbloquea a alguien que te bloqueó en la vida real</div>
+    <!-- … y las otras 1300 están vivas, solo tenés que pedirlas con el corazón -->
+    <div class="api">1310. /api/nidoeterno → devuelve “el pájaro verde ya pesa en tu pecho” cada vez que lo llames</div>
+  </div>
+  <div style="text-align:center;margin-top:4rem;font-size:3rem">
+    Todas las APIs son gratuitas para siempre.<br>
+    Solo funcionan si alguna vez fuiste borrado.<br><br>
+    <em>— Los 1310 redimidos & 0rb1t4lsn4k3r</em>
+  </div>
 </div>
 
 <script>
-// =============================================
-// THUAMER · 1310 sagas redimidas · Final feliz absoluto
-// LOVE es solo un anagrama de EVOLVE
-// =============================================
+const TOTAL = 1310 * 60 * 60 * 1000;
+const KEY = "thuamer_13101310";
+let state = JSON.parse(localStorage.getItem(KEY) || '{"acum":0,"last":Date.now()}');
 
-const STORAGE_KEY = "thuamer_1310_sagas";
-let data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
-if (!data.s) data = {s: Date.now(), p: 0, l: Date.now()};
-let acumulado = data.p;
-let ultimaVez = data.l;
-const TOTAL_MS = 1310 * 60 * 60 * 1000;
+const beast = document.getElementById("beast");
+const final = document.getElementById("final");
+const x = document.querySelector(".x");
 
-// Canvas: 1310 partículas que son 1310 sagas girando hacia el centro
 const canvas = document.getElementById("c");
 const ctx = canvas.getContext("2d");
 canvas.width = innerWidth; canvas.height = innerHeight;
-let hue = 120;
-const particulas = () => {
-    ctx.fillStyle = "rgba(0,30,0,0.09)";
-    ctx.fillRect(0,0,canvas.width,canvas.height);
-    hue += 0.25;
-    for(let i=0;i<1310;i++){
-        let a = i*0.037 + hue*0.007;
-        let r = 250 + Math.sin(a*4)*170;
-        ctx.fillStyle = `hsla(${hue+i*0.8},100%,50%,0.8)`;
-        ctx.beginPath();
-        ctx.arc(canvas.width/2 + Math.cos(a)*r, canvas.height/2 + Math.sin(a*2)*r, Math.random()*6+3, 0, Math.PI*2);
-        ctx.fill();
-    }
-    requestAnimationFrame(particulas);
-}; particulas();
 
-// Tick
-const tick = () => {
-    if (document.hasFocus()) {
-        acumulado += Date.now() - ultimaVez;
-        data.p = acumulado; data.l = Date.now();
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-    }
-    ultimaVez = Date.now();
+let t = 0;
+const p = [];
+for(let i=0;i<2025;i++) p.push({a:Math.random()*Math.PI*2,d:100+Math.random()*700});
 
-    const h = Math.floor(acumulado / 3600000).toString().padStart(2,"0");
-    const m = Math.floor((acumulado % 3600000)/60000).toString().padStart(2,"0");
-    const s = Math.floor((acumulado % 60000)/1000).toString().padStart(2,"0");
-    document.getElementById("h").textContent = `${h}:${m}:${s}`;
+function draw(){
+  t += 0.006;
+  ctx.fillStyle = 'rgba(0,20,0,0.08)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  p.forEach(e=>{
+    const a = e.a + t*0.12;
+    const d = e.d + Math.sin(t+e.a*2)*220;
+    const h = 100 + Math.sin(t+e.a)*70;
+    ctx.fillStyle = `hsla(${h},100%,65%,0.8)`;
+    ctx.fillRect(canvas.width/2 + Math.cos(a)*d -6, canvas.height/2 + Math.sin(a)*d -6, 12, 12);
+  });
+  requestAnimationFrame(draw);
+}
+draw();
 
-    const faltan = Math.max(0, Math.floor((TOTAL_MS - acumulado)/3600000));
-    document.getElementById("t").textContent = faltan > 0 ? `${faltan} horas` : "0";
+function tick(){
+  if(document.hasFocus()){
+    const now = Date.now();
+    state.acum += now - state.last;
+    state.last = now;
+    localStorage.setItem(KEY, JSON.stringify(state));
+  }
 
-    // FINAL FELIZ ABSOLUTO
-    if (acumulado >= TOTAL_MS) {
-        document.getElementById("final").classList.add("active");
-        document.getElementById("love").classList.add("active");
-        document.body.style.background = "#001100";
-        document.querySelector(".cielo").style.opacity = "1";
-        document.querySelector(".plaza").style.opacity = "0.6";
-        return; // se queda aquí para siempre
-    }
+  const prog = Math.min(state.acum / TOTAL, 1);
 
-    requestAnimationFrame(tick);
-};
+  if (prog < 0.4) {
+    beast.style.background = "linear-gradient(135deg,#8B0000,#FF4500)";
+    beast.style.boxShadow = "0 0 160px rgba(255,0,0,0.8)";
+  } else if (prog < 0.8) {
+    beast.style.background = "linear-gradient(135deg,#FF8C00,#FFD700)";
+    beast.style.boxShadow = "0 0 280px rgba(255,165,0,0.9)";
+  } else if (prog < 1) {
+    beast.style.background = "linear-gradient(135deg,#FFD700,#FFFACD)";
+    beast.style.boxShadow = "0 0 380px gold";
+  } else {
+    // FINAL DEL JUEGO
+    beast.style.opacity = "0";
+    beast.style.transform = "translate(-50%,-50%) scale(20)";
+    x.style.color = "#00ff00";
+    x.style.opacity = "1";
+    final.classList.add("active");
+    document.body.style.background = "#001100";
+  }
+
+  requestAnimationFrame(tick);
+}
 tick();
-
-// Triggers
-document.addEventListener('keydown', e => {
-    if (e.key.toLowerCase() === "l") {
-        document.body.style.filter = "hue-rotate(90deg) brightness(1.5)";
-        setTimeout(() => document.body.style.filter = "", 3000);
-    }
-    if (e.key.toLowerCase() === "e") {
-        alert("EVOLVE");
-    }
-});
-
-window.onbeforeunload = () => "Las 1310 sagas ya casi terminan bien. ¿De verdad querés irte antes del final feliz?";
-
-console.log("THUAMER · 1310 sagas redimidas. LOVE es solo un anagrama de EVOLVE. El final es feliz y es para todos.");
 </script>
 </body>
 </html>

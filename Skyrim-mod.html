@@ -13,15 +13,28 @@
     #rosetta { position: fixed; inset: 0; padding: 2rem; overflow-y: auto; background: rgba(0, 0, 0, 0.96); opacity: 0; transition: opacity 4s; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; line-height: 2.4; font-size: clamp(16px, 4vw, 26px); }
     #rosetta.show { opacity: 1; pointer-events: auto; }
     .script { margin: 5rem 0; padding: 2.5rem; border: 2px solid #0f8; border-radius: 25px; background: rgba(0, 255, 139, 0.06); max-width: 95%; opacity: 0; transform: translateY(50px); transition: all 3s; }
-    .runas { font-size: 3rem; color: #ff0; line-height: 2.2; letter-spacing: 4px; }
+    .runas { margin: 5rem 0; font-size: 3rem; color: #ff0; line-height: 2.2; letter-spacing: 4px; }
     .dedicatoria { margin: 6rem 0; padding: 3rem; background: rgba(0, 255, 139, 0.09); border-left: 6px solid #0f8; color: #0f0; font-size: 1.8rem; line-height: 2; }
     .gato { position: fixed; bottom: 1rem; left: 50%; transform: translateX(-50%); font-size: 7rem; opacity: 0.15; animation: pulse 9s infinite; }
     @keyframes pulse { 0%, 100% { opacity: 0.15 } 50% { opacity: 0.4 } }
+    body, html { font-family: system-ui, sans-serif; color: #0f8; }
+    .laberinto { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80vw; height: 80vh; background-color: rgba(0, 0, 0, 0.6); border-radius: 15px; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px #00FF00; }
+    .puerta { width: 10vw; height: 20vh; background: #0f8; border-radius: 8px; box-shadow: 0 0 20px #00FF00; cursor: pointer; transition: background-color 0.3s; }
+    .puerta:hover { background-color: #00FF00; }
+    .mensaje { color: #ff0; font-size: 1.5rem; text-align: center; padding: 2rem; }
   </style>
 </head>
 <body>
 
   <canvas id="c"></canvas>
+
+  <!-- Laberinto del Lenguaje -->
+  <div class="laberinto">
+    <div class="puerta" id="puerta-1" onclick="abrirPuerta(1)"></div>
+    <div class="mensaje" id="mensaje">
+      Bienvenido al Laberinto del Lenguaje. Encuentra la salida.
+    </div>
+  </div>
 
   <div id="rosetta">
     <div class="script">
@@ -117,6 +130,30 @@
       requestAnimationFrame(draw);
     }
     draw();
+
+    const mensajes = {
+      es: "Bienvenido al Laberinto del Lenguaje. Encuentra la salida.",
+      en: "Welcome to the Language Labyrinth. Find the exit.",
+      fr: "Bienvenue dans le Labyrinthe des Langues. Trouvez la sortie.",
+      de: "Willkommen im Sprachlabyrinth. Finde den Ausgang.",
+    };
+
+    const idioma = navigator.language || navigator.userLanguage;
+    const idiomaUsuario = idioma.split('-')[0];
+
+    document.getElementById('mensaje').textContent = mensajes[idiomaUsuario] || mensajes['es'];
+
+    function abrirPuerta(puertaId) {
+      const puertas = document.querySelectorAll('.puerta');
+      const puertaActual = document.getElementById(`puerta-${puertaId}`);
+      puertaActual.style.display = 'none';
+      
+      if (puertaId === 1) {
+        setTimeout(() => {
+          document.getElementById('mensaje').textContent = mensajes[idiomaUsuario] || mensajes['es'];
+        }, 1500);
+      }
+    }
   </script>
 
 </body>

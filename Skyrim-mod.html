@@ -5,32 +5,77 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 <style>
   body{margin:0;height:100vh;background:#000;overflow:hidden;position:fixed}
-  canvas{position:fixed;inset:0;display:block;image-rendering:optimizeSpeed}
+  canvas{position:fixed;inset:0;display:block;image-rendering:optimizeSpeed;touch-action:none}
 </style>
 <canvas id="c"></canvas>
 <script>
 /*
-  13 101 310 horas → 47 164 716 000 000 ms
-  koan ejecutable · ronin 0rb1t4lsn4k3r
+  13 101 310 horas → koan jugable: 13 101 310 segundos (≈152 días base, horas con accels)
+  ronin 0rb1t4lsn4k3r · versión jugable con teclado/táctil
 */
 
-const KOAN = 47164716000000n
+const KOAN = 13101310n * 1000n
 const KEY  = "thuamer13101310"
 
-let state = (() => {
+let rawState = (() => {
   try { return JSON.parse(localStorage.getItem(KEY)) || {} }
   catch { return {} }
 })()
 
-let t   = BigInt(state.t   || 0)        // tiempo colectivo acumulado
-let id  = state.id  || crypto.randomUUID()
-let born= state.first || Date.now()
-let zen = !!state.unlocked              // satori alcanzado
+let t      = BigInt(rawState.t      || 0)
+let clicks = BigInt(rawState.clicks || 0)
+let id     = rawState.id     || crypto.randomUUID()
+let born   = rawState.first  || Date.now()
+let zen    = !!rawState.unlocked
+let mantraLevel = rawState.mantraLevel || 0
+let shortId = rawState.shortId || id.slice(0, 8).replace(/[^a-f0-9]/gi, '').toLowerCase()
+let milestones = rawState.milestones || {}
+
+const state = {
+  t: t.toString(),
+  clicks: clicks.toString(),
+  id, first: born, unlocked: zen,
+  mantraLevel, shortId, milestones
+}
+
+const persist = () => {
+  try {
+    state.t = t.toString()
+    state.clicks = clicks.toString()
+    state.id = id
+    state.first = born
+    state.unlocked = zen
+    state.mantraLevel = mantraLevel
+    state.shortId = shortId
+    state.milestones = milestones
+    localStorage.setItem(KEY, JSON.stringify(state))
+  } catch {}
+}
+
+persist() // init
+
+// Referral bonus
+const urlParams = new URLSearchParams(location.search)
+const ref = urlParams.get('ref')
+let referralBonus = false
+if (ref && ref !== shortId && ref !== id) {
+  const bonus = 10n * 3600000n
+  t += bonus
+  clicks += 1000n
+  mantraLevel = Math.min(5, mantraLevel + 1)
+  referralBonus = true
+  persist()
+}
 
 let prev = performance.now()
 let birth = zen ? prev : 0
+let particles = []
+let flashMsg = ''
+let flashTime = 0
+let lastClickTime = 0
+let audioCtx = null
 
-const c   = document.getElementById("c")
+const c = document.getElementById("c")
 const ctx = c.getContext("2d", {alpha:false,desynchronized:true,willReadFrequently:false})
 
 const resize = () => {
@@ -42,74 +87,261 @@ const resize = () => {
 resize()
 addEventListener("resize", resize)
 
-const persist = () => {
-  try {
-    localStorage.setItem(KEY, JSON.stringify({
-      t: t < Number.MAX_SAFE_INTEGER ? Number(t) : Number.MAX_SAFE_INTEGER,
-      id, first: born, unlocked: zen
-    }))
-  } catch{}
+const milestoneMessages = {
+  '1%': 'el koan despierta',
+  '10%': 'la rueda gira',
+  '25%': 'el centro se revela',
+  '50%': 'mitad del camino',
+  '75%': 'casi satori',
+  '90%': 'la luz se acerca',
+  '99%': '¡un paso más!'
 }
 
-const tick = now => {
+function formatClicks(c) {
+  let n = Number(c)
+  if (n >= 1e6) return (n / 1e6).toFixed(1) + 'M'
+  if (n >= 1e3) return (n / 1e3).toFixed(1) + 'k'
+  return n.toString()
+}
+
+function beep(freq = 440, dur = 50) {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)()
+  const o = audioCtx.createOscillator()
+  const g = audioCtx.createGain()
+  o.connect(g)
+  g.connect(audioCtx.destination)
+  o.frequency.value = freq
+  o.type = 'sine'
+  g.gain.setValueAtTime(0.3, audioCtx.currentTime)
+  g.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + dur / 1000)
+  o.start(audioCtx.currentTime)
+  o.stop(audioCtx.currentTime + dur / 1000)
+}
+
+function zenBeep() {
+  beep(1310, 1500)
+  setTimeout(() => beep(880, 800), 1600)
+  setTimeout(() => beep(659, 500), 2600)
+}
+
+let keysPressed = new Set()
+let mouseDown = false
+let touchActive = false
+
+const doClick = (clientX = innerWidth / 2 + (Math.random() - 0.5) * 200, clientY = innerHeight / 2 + (Math.random() - 0.5) * 200) => {
+  const now = performance.now()
+  if (now - lastClickTime < 150) return
+  lastClickTime = now
+
+  t += 13000n
+  clicks++
+  particles.push({ x: clientX, y: clientY, vy: -3, life: 90, text: '+13s' })
+  while (particles.length > 20) particles.shift()
+
+  // Mantra unlock
+  if (clicks % 1000n === 0n) {
+    const newLevel = Number(clicks / 1000n)
+    if (newLevel > mantraLevel) {
+      mantraLevel = Math.min(5, newLevel)
+      flashMsg = `¡Mantra ${mantraLevel} ! x${Math.pow(2, mantraLevel)}`
+      flashTime = now
+      persist()
+      beep(880, 300)
+    }
+  }
+
+  persist()
+  beep(440 + (Number(clicks) % 10) * 80, 60)
+}
+
+// Events
+c.onmousedown = (e) => {
+  if (zen) return
+  mouseDown = true
+  doClick(e.clientX, e.clientY)
+}
+c.onmouseup = c.onmouseleave = () => { mouseDown = false }
+
+c.ontouchstart = (e) => {
+  if (zen) return
+  e.preventDefault()
+  const touch = e.touches[0]
+  touchActive = true
+  doClick(touch.clientX, touch.clientY)
+}
+c.ontouchend = c.ontouchcancel = (e) => {
+  e.preventDefault()
+  touchActive = false
+}
+
+document.addEventListener('keydown', (e) => {
+  if (zen) return
+  if (e.code === 'Space' || e.key === 'Enter') {
+    e.preventDefault()
+    keysPressed.add(e.code)
+    doClick()
+  }
+})
+document.addEventListener('keyup', (e) => {
+  keysPressed.delete(e.code)
+})
+
+const tick = (now) => {
   if (!document.hidden && document.hasFocus()) {
     const δ = BigInt(Math.floor(now - prev))
-    if (δ > 0n) { t += δ; persist() }
+    if (δ > 0n) {
+      const isAccelerating = mouseDown || touchActive || keysPressed.has('Space') || keysPressed.has('Enter')
+      const focusMult = document.hasFocus() ? 3 : 1
+      const accelMult = isAccelerating ? 10 : 1
+      const mantraMult = Math.pow(2, mantraLevel)
+      const multiplier = focusMult * accelMult * mantraMult
+      t += δ * BigInt(Math.floor(multiplier))
+      persist()
+    }
   }
   prev = now
 
-  if (!zen && t >= KOAN) { zen = true; birth = now; persist() }
+  if (!zen && t >= KOAN) {
+    zen = true
+    birth = now
+    flashMsg = '¡SATORI!'
+    flashTime = now
+    zenBeep()
+    persist()
+  }
+
+  // Milestones
+  const progress = Number(t) / Number(KOAN)
+  const thresholds = [0.01, 0.1, 0.25, 0.5, 0.75, 0.9, 0.99]
+  for (let th of thresholds) {
+    const key = `${Math.round(th * 100)}%`
+    if (progress > th && !milestones[key]) {
+      milestones[key] = true
+      flashMsg = milestoneMessages[key] || `¡${key}!`
+      flashTime = now
+      persist()
+      beep(440 * (1 + thresholds.indexOf(th)), 200)
+      break
+    }
+  }
+
+  // Referral flash
+  if (referralBonus && now - prev < 5000) {
+    flashMsg = '¡Referral! +10h +1 mantra'
+    flashTime = now
+  }
 
   const w = innerWidth, h = innerHeight
 
-  if (zen) {
+  ctx.fillStyle = zen ? "#00ff00" : `rgb(0,${Math.min(255, Math.floor(progress * 311))},0)`
+  ctx.fillRect(0, 0, w, h)
+
+  if (!zen) {
+    // Progress circle
+    const r = Math.min(w, h) / 5
+    ctx.strokeStyle = '#0f0'
+    ctx.lineWidth = 30
+    ctx.lineCap = 'round'
+    ctx.beginPath()
+    ctx.arc(w / 2, h / 2, r, -Math.PI / 2, -Math.PI / 2 + progress * Math.PI * 2)
+    ctx.stroke()
+
+    // UI text
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillStyle = '#0f0'
+    ctx.font = 'bold 5vw monospace'
+    ctx.fillText('mantén SPACE o toca', w / 2, h * 0.75)
+    ctx.font = 'bold 3.5vw monospace'
+    ctx.fillText('para x10 | foco x3', w / 2, h * 0.82)
+
+    const isAccelerating = mouseDown || touchActive || keysPressed.has('Space') || keysPressed.has('Enter')
+    const focusMult = document.hasFocus() ? 3 : 1
+    const accelMult = isAccelerating ? 10 : 1
+    const mantraMult = Math.pow(2, mantraLevel)
+    const mult = focusMult * accelMult * mantraMult
+    ctx.font = 'bold 3vw monospace'
+    ctx.fillText(`clics: ${formatClicks(clicks)} | x${Math.floor(mult)}`, w / 2, h * 0.9)
+
+    ctx.font = '2vw monospace'
+    ctx.fillText(`?ref=${shortId}`, w / 2, 40)
+    ctx.font = '1.8vw monospace'
+    ctx.fillText('agrega a la URL para bonus', w / 2, 70)
+
+  } else {
     const cycle = 5400000
     const τ = birth ? (now - birth) % cycle : 0
-
-    ctx.fillStyle = "#00ff00"
-    ctx.fillRect(0,0,w,h)
 
     const N = 13101310
     const visible = Math.min(N, Math.floor(τ / 7))
     const base = τ * 0.001
+    const step = Math.max(1, visible / 2000) // performant
 
-    for (let i = 0; i < visible; i++) {
+    for (let i = 0; i < visible; i += step) {
       const p = base + i * 0.007
       const θ = (i / N) * Math.PI * 2 + p * 5e-5
       const r = 120 + Math.sin(p + i * 0.001) * 380
-      const x = w/2 + Math.cos(θ) * r
-      const y = h/2 + Math.sin(θ) * r
-      const a = Math.max(0, Math.sin(p*10 + i*0.13)) * 0.38
+      const x = w / 2 + Math.cos(θ) * r
+      const y = h / 2 + Math.sin(θ) * r
+      const a = Math.max(0, Math.sin(p * 10 + i * 0.13)) * 0.38
 
       ctx.fillStyle = `rgba(0,0,0,${a})`
-      ctx.fillRect(x-20, y-40, 40, 80)
-      ctx.fillRect(x-40, y-20, 80, 40)
+      ctx.fillRect(x - 20, y - 40, 40, 80)
+      ctx.fillRect(x - 40, y - 20, 80, 40)
     }
 
     ctx.textAlign = "center"
     ctx.textBaseline = "middle"
 
-    if (Math.floor((Date.now() - born)/864e5) > 300 && τ > 10000 && τ < 20000) {
+    if (Math.floor((Date.now() - born) / 864e5) > 300 && τ > 10000 && τ < 20000) {
       ctx.fillStyle = "#000"
       ctx.font = "bold 5.5vw Georgia"
-      ctx.fillText("volviste después de tanto tiempo", w/2, h/2)
+      ctx.fillText("volviste después de tanto tiempo", w / 2, h / 2)
     }
     const hr = new Date().getHours()
     if (hr >= 3 && hr <= 5 && τ > 30000 && τ < 40000) {
       ctx.fillStyle = "#000"
       ctx.font = "3.8vw Georgia"
-      ctx.fillText("otra madrugada más, gracias por quedarte", w/2, h/2 + 100)
+      ctx.fillText("otra madrugada más, gracias por quedarte", w / 2, h / 2 + 100)
     }
     if (τ > 5000000) {
       ctx.fillStyle = "#000"
       ctx.font = "bold 12vw Georgia"
-      ctx.fillText("siempre fuiste vos", w/2, h/2)
+      ctx.fillText("siempre fuiste vos", w / 2, h / 2)
     }
+  }
 
-  } else {
-    const g = Math.min(255, Math.floor(Number(t)/Number(KOAN)*311))
-    ctx.fillStyle = `rgb(0,${g},0)`
-    ctx.fillRect(0,0,w,h)
+  // Flash message
+  if (flashTime && now - flashTime < 4000) {
+    ctx.save()
+    ctx.fillStyle = 'rgba(0,255,0,0.9)'
+    ctx.shadowColor = '#0f0'
+    ctx.shadowBlur = 20
+    ctx.font = 'bold 7vw Georgia'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(flashMsg, w / 2, h / 2)
+    ctx.restore()
+  }
+
+  // Particles
+  for (let i = particles.length - 1; i >= 0; i--) {
+    const p = particles[i]
+    p.life--
+    p.vy += 0.15
+    p.y += p.vy
+    if (p.life <= 0) {
+      particles.splice(i, 1)
+      continue
+    }
+    ctx.save()
+    ctx.globalAlpha = p.life / 90
+    ctx.fillStyle = '#0ff'
+    ctx.font = 'bold 20px monospace'
+    ctx.textAlign = 'center'
+    ctx.textBaseline = 'middle'
+    ctx.fillText(p.text, p.x, p.y)
+    ctx.restore()
   }
 
   requestAnimationFrame(tick)

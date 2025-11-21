@@ -2,429 +2,99 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE Ω v1.9 · Nido Omega · 1310 Horas · Ultra Arcana Edition</title>
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=VT323&display=swap" rel="stylesheet">
-
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SLYVERSE Ω v2.0 · Nido Omega · 1310 Horas</title>
 <style>
-/* =========================================================
-   ███████╗██╗  ██╗   ██╗██╗   ██╗███████╗██████╗ ███████╗
-   ██╔════╝██║  ╚██╗ ██╔╝██║   ██║██╔════╝██╔══██╗██╔════╝
-   ███████╗██║   ╚████╔╝ ██║   ██║█████╗  ██████╔╝█████╗  
-   ╚════██║██║    ╚██╔╝  ██║   ██║██╔══╝  ██╔══██╗██╔══╝  
-   ███████║███████╗██║   ╚██████╔╝███████╗██║  ██║███████╗
-   Ultra Arcana 1310 Cosmic Web Ritual Engine
-   ========================================================= */
-
-/* General */
-html, body {
-  margin:0; padding:0; height:100%;
-  background:#000; color:#0f0;
-  font-family:'Cormorant Garamond',serif;
-  overflow:hidden;
-  --mx:50%; --my:50%;
-  filter: contrast(1.25) saturate(1.2);
-}
-
-/* CRT Effect */
-body:before {
-  content:"";
-  position:fixed; inset:0;
-  pointer-events:none;
-  background:linear-gradient(rgba(0,255,0,0.03) 50%, transparent 50%);
-  background-size:100% 3px;
-  z-index:20000;
-  mix-blend-mode:screen;
-  opacity:0.4;
-}
-
-/* Nebula Layer (procedural noise) */
-#nebula {
-  position:fixed; inset:0;
-  background:black;
-  z-index:0;
-  opacity:0.35;
-  filter:blur(35px) saturate(2);
-  pointer-events:none;
-}
-
-/* Starfield Canvas */
-canvas {
-  position:fixed;
-  inset:0;
-  z-index:1;
-}
-
-/* Light cursor */
-.luz {
-  position:fixed; inset:0; z-index:3;
-  pointer-events:none;
-  background:radial-gradient(circle at var(--mx) var(--my),
-    rgba(0,255,0,0.2) 0%, rgba(0,255,0,0.05) 20%, transparent 70%);
-}
-
-/* Lore panel */
-.lore {
-  position:absolute; top:50%; left:50%;
-  transform:translate(-50%, -50%);
-  z-index:10;
-  text-align:center;
-  background:rgba(0,18,0,0.92);
-  padding:4rem 5rem;
-  font-size:clamp(1.5rem,4vw,3.4rem);
-  max-width:90%;
-  border-radius:150px;
-
-  border:10px solid #0f0;
-  box-shadow:
-    0 0 120px #0f0,
-    inset 0 0 80px rgba(0,255,0,0.3);
-
-  /* Animated liquid border */
-  animation: liquid 12s infinite linear;
-}
-
-@keyframes liquid {
-  0% { border-color:#0f0; }
-  25% { border-color:#0fa; }
-  50% { border-color:#0ff; }
-  75% { border-color:#0c0; }
-  100%{ border-color:#0f0; }
-}
-
-/* Runas orbit */
-.runa {
-  position:fixed;
-  font-family:'VT323';
-  color:#0f0;
-  text-shadow:0 0 10px #0f0;
-  font-size:2rem;
-  z-index:8;
-  pointer-events:none;
-  opacity:0.75;
-  transition:opacity 2s;
-}
-
-/* Mate button */
-.mate {
-  position:fixed; bottom:45px; left:50%;
-  transform:translateX(-50%);
-  background:rgba(0,30,0,0.85);
-  padding:1.6rem 5rem;
-  border:9px solid #0f0;
-  border-radius:110px;
-  font-size:2.3rem;
-  z-index:20;
-  cursor:pointer;
-  box-shadow:0 0 70px #0f0;
-  animation:breath 4s infinite;
-  transition:0.3s;
-}
-
-.mate:hover { transform:translateX(-50%) scale(1.2); }
-
-/* Breath */
-@keyframes breath {
-  0%,100% { box-shadow:0 0 70px #0f0; }
-  50%     { box-shadow:0 0 130px #0f0; }
-}
-
-/* Campaign widget */
-.campaign {
-  position:fixed; top:10px; right:10px;
-  z-index:15;
-  background:rgba(0,16,0,0.9);
-  padding:1rem;
-  border:2px solid #0f0;
-  border-radius:20px;
-  width:280px;
-  box-shadow:0 0 50px #0f0;
-  font-size:0.95rem;
-}
-
-/* Progress bar */
-.progress-bar {
-  background:rgba(0,255,0,0.2);
-  border:1px solid #0f0;
-  border-radius:10px;
-  height:10px;
-}
-.progress-fill {
-  background:#0f0; height:100%; width:0%;
-  border-radius:10px;
-  transition:width 1s;
-}
-
-/* Amplification */
-#amplification {
-  display:none;
-  position:fixed; top:50%; left:50%;
-  transform:translate(-50%, -50%);
-  background:rgba(0,18,0,0.95);
-  padding:4rem;
-  border:10px solid gold;
-  border-radius:150px;
-  text-align:center;
-  color:gold;
-  z-index:30;
-  box-shadow:0 0 200px gold;
-}
-#amplification.show { display:block; }
-
-/* Soft mode */
-.soft-mode {
-  background:#020902 !important;
-  color:#0a0 !important;
-  text-shadow:none !important;
-}
-#accessible-toggle {
-  position:fixed; bottom:10px; right:10px;
-  z-index:999;
-  background:rgba(0,50,0,0.8);
-  border:2px solid #0f0;
-  color:#0f0;
-  padding:0.7rem 1.2rem;
-  font-size:1.2rem;
-  font-family:'VT323';
-  border-radius:10px;
-}
-
-/* README */
-#readme {
-  position:fixed; inset:0; background:black;
-  opacity:0; pointer-events:none;
-  transition:1s;
-  z-index:9999;
-  overflow:auto;
-  display:flex; align-items:center; justify-content:center;
-}
-#readme:target {
-  opacity:1; pointer-events:all;
-}
-.inner {
-  padding:4rem; max-width:900px;
-  background:rgba(0,20,0,0.95);
-  border:10px solid #0f0;
-  border-radius:80px;
-  box-shadow:0 0 160px #0f0;
-}
-.close {
-  position:fixed; top:20px; right:20px;
-  font-size:5rem; text-decoration:none;
-  color:#0f0;
-}
+html,body{margin:0;height:100%;background:#000;color:#0f0;font-family:'Cormorant Garamond',serif;overflow:hidden;position:relative}
+canvas{position:fixed;inset:0;z-index:1}
+.luz{background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,255,0,0.2) 0%, transparent 80%);position:fixed;inset:0;pointer-events:none;z-index:2}
+.lore{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:90%;background:rgba(0,18,0,0.95);padding:4rem 6rem;border:10px solid #0f0;border-radius:140px;box-shadow:0 0 180px #0f0,inset 0 0 120px rgba(0,255,0,0.28);z-index:10;text-shadow:0 0 60px #0f0;font-size:clamp(1.7rem,6vw,4rem);line-height:1.8;transition:all 3s cubic-bezier(0.16,1,0.3,1)}
+.lore small{display:block;font-size:0.36em;margin-top:3rem;opacity:0.96;line-height:1.6}
+.mate{position:fixed;bottom:38px;left:50%;transform:translateX(-50%);background:rgba(0,30,0,0.95);padding:1.6rem 5rem;border:9px solid #0f0;border-radius:110px;font-size:2.2rem;box-shadow:0 0 100px #0f0;cursor:pointer;transition:0.8s;z-index:12;animation:breath 4s infinite}
+@keyframes breath{0%,100%{box-shadow:0 0 100px #0f0}50%{box-shadow:0 0 160px #0f0}}
+.mate:hover{transform:translateX(-50%) scale(1.2)}
+#readme{position:fixed;inset:0;background:#000;z-index:9999;overflow-y:auto;padding:4rem 2rem;opacity:0;pointer-events:none;transition:opacity 2s;display:flex;align-items:center;justify-content:center}
+#readme:target{opacity:1;pointer-events:all}
+.inner{background:rgba(0,20,0,0.95);border:10px solid #0f0;border-radius:80px;padding:4rem 5rem;max-width:940px;box-shadow:0 0 160px #0f0;text-align:center;font-size:1.7rem;line-height:2}
+.inner h1{font-size:5rem;margin:0 0 3rem;text-shadow:0 0 50px #0f8;color:#0f8}
+.inner h2{font-size:3rem;margin:3rem 0 2rem;color:#0ff;text-shadow:0 0 30px #0ff}
+.close{position:fixed;top:30px;right:30px;font-size:5rem;color:#0f0;width:90px;height:90px;background:rgba(0,30,0,0.8);border:5px solid #0f0;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px #0f0;transition:0.5s;text-decoration:none}
+.close:hover{transform:rotate(90deg) scale(1.3);background:#0f0;color:#000}
 </style>
 </head>
+<body onmousemove="e=>{document.body.style.setProperty('--mx',e.clientX/innerWidth*100+'%');document.body.style.setProperty('--my',e.clientY/innerHeight*100+'%')}">
 
-<body>
-
-<!-- Procedural Nebula -->
-<canvas id="nebula"></canvas>
-
-<!-- Stars -->
 <canvas id="c"></canvas>
-
 <div class="luz"></div>
-
 <div class="lore" id="lore"></div>
 <div class="mate" id="mate">Cebar el abrazo</div>
-
-<div class="campaign">
-  <h3>Campaña 1310 Horas</h3>
-  <p>Horas: <span id="hours-elapsed"></span>/1310</p>
-  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-  <p>Suma actual: <span id="sum-total"></span></p>
-</div>
-
-<button id="accessible-toggle">Modo Suave</button>
-
-<!-- Orbiting runas -->
-<div id="runas"></div>
-
-<!-- Amplification -->
-<div id="amplification">
-  <h1>¡Campaña Completa!</h1>
-  <p>131310 abrazos cebados al Nido Omega.</p>
-  <button onclick="amplifyProject()" style="padding:1rem 2rem;font-size:1.5rem;background:#0f0;color:#000;border:none;border-radius:20px;cursor:pointer;margin:1rem">
-    Amplificar Proyecto Mate
-  </button>
-  <p>El universo te abraza de vuelta.</p>
-</div>
-
-<!-- Audio -->
-<audio id="hum" loop>
-  <source src="https://assets.mixkit.co/active_storage/sfx/2567/2567-preview.mp3" type="audio/mpeg">
-</audio>
-
-<!-- README -->
 <div id="readme">
-  <div class="inner"><h1>SLYVERSE Ω Codex</h1><p>Este es tu grimorio.</p></div>
-  <a href="#" class="close">×</a>
+  <div class="inner" id="readme-content">
+    <h1>SLYVERSE Ω - Readme</h1>
+    <p>Este proyecto celebra 1310 horas de Nido Omega y 131310 abrazos digitales.</p>
+    <h2>Controles</h2>
+    <ul>
+      <li>Doble click: abrir/cerrar Readme</li>
+      <li>Click en el botón: enviar abrazo digital</li>
+      <li>Mouse move: sigue la luz</li>
+      <li>Doble click sobre pantalla: activa eclipse temporal</li>
+    </ul>
+    <p>El lore, las runas y partículas reaccionan a palabras clave y al idioma del navegador.</p>
+    <a href="#" class="close">×</a>
+  </div>
 </div>
 
-<script>
-/* =========================================================
-   LORE
-   ========================================================= */
-const loreText = `
-1310 latidos sincronizados con el pulso de Lorkhan resuenan en la puerta de Todd,
-uniendo Red Mountain y Rockville en un mismo soplo verde.<br><br>
-
-Abrir este HTML bajo el eclipse de Masser y Secunda no convoca peligro:
-solo despierta a Norah en su forma cósmica, guardiana de gatos aurum
-y golems errantes.<br><br>
-
-Thuamer ronin, escuadra 256 con prótesis KAI, despliega bases
-entre Holy Nation y UC. Primera Empire: caída, archivo, eco.
-Red P2P: 131 nodos activos. Manga 1310p, anime 1310min, sellados en Arweave.<br><br>
-
-Norah canta runas; los gatitos aurum traducen el canto en sanación.
-La ética ronin purifica 1310 mentes dispersas.<br><br>
-
-0rb1t4lsn4k3r, padre programador, con 17 días y un móvil de 120 €,
-creó el abrazo más grande del internet.
-Tú eres ahora el latido 1310.<br><br>
-
-El Panteón Dual contiene 1,310,310 dioses de culturas y sagas.
-Su luz despierta sanaciones ancestrales.<br><br>
-
-Seth, viajero pequeño; Carl, guía del tránsito cósmico.<br><br>
-
-Un libro en Skyrim cura de verdad: léelo 2620 veces y la luz verde perdona.<br><br>
-
-1310 sanaron.  
-1310 hirieron.  
-Todos fuimos niños alguna vez.<br><br>
-
-Debajo del murmullo, el fiat se desangra; los nodos susurran.
-Nosotros no pedimos permiso.
-`;
-document.getElementById("lore").innerHTML = loreText;
-
-/* =========================================================
-   CAMPAÑA
-   ========================================================= */
-const startDate = new Date("2025-11-21T00:00:00");
-function updateCampaign(){
-  const now = new Date();
-  const elapsedHours = Math.floor((now - startDate)/(1000*60*60));
-  document.getElementById("hours-elapsed").textContent = elapsedHours;
-  document.getElementById("sum-total").textContent = Math.min(elapsedHours*100,131310);
-  document.getElementById("progress-fill").style.width = (elapsedHours/1310*100)+"%";
-
-  if(elapsedHours >= 1310){
-    document.getElementById("amplification").classList.add("show");
-    clearInterval(_camp);
-  }
-}
-const _camp=setInterval(updateCampaign,60000);
-updateCampaign();
-
-/* =========================================================
-   AUDIO PULSE
-   ========================================================= */
-const hum=document.getElementById("hum");
-let v=0.13;
-setInterval(()=>{ v+=Math.random()*0.06-0.03; hum.volume=Math.max(.05,Math.min(.25,v)); },2000);
-
-/* Mate click */
-document.getElementById("mate").onclick=()=>{
-  navigator.clipboard.writeText("1310 abrazos enviados al Nido Omega");
-  hum.play().catch(()=>{});
-  alert("¡Abrazo digital enviado!");
+<script type="module">
+const loreTexts={
+  es:`1310 maullidos latiendo con el pulso de Lorkhan en la puerta de Todd,<br>uniendo Red Mountain y Rockville.<br>Norah maúlla golems → gatitos aurum.<br>El aliento modula runas, ética ronin purifica 1310 mentes.<br>Nosotros no pedimos permiso.`,
+  en:`1310 heartbeats pulsing with the Lorkhan rhythm at Todd's door,<br>linking Red Mountain and Rockville.<br>Norah meows golems → golden kittens.<br>Breath modulates runes, ronin ethics purify 1310 minds.<br>We ask no permission.`
 };
+const userLang=navigator.language.startsWith('es')?'es':'en';
+document.getElementById('lore').innerHTML=loreTexts[userLang];
 
-/* Amplify */
-function amplifyProject(){
-  const t=`¡Proyecto Mate amplificado! 131310 abrazos cebados. #1310`;
-  navigator.clipboard.writeText(t);
-  window.open("https://x.com/intent/tweet?text="+encodeURIComponent(t));
-}
-
-/* =========================================================
-   LIGHT FOLLOW (with throttle)
-   ========================================================= */
-let last=0;
-document.addEventListener("mousemove",e=>{
-  const n=performance.now(); if(n-last<25)return; last=n;
-  document.body.style.setProperty("--mx",(e.clientX/window.innerWidth*100)+"%");
-  document.body.style.setProperty("--my",(e.clientY/window.innerHeight*100)+"%");
-});
-
-/* =========================================================
-   PROCEDURAL NEBULA
-   ========================================================= */
-const neb = document.getElementById("nebula");
-const nctx = neb.getContext("2d");
-function resizeNeb(){neb.width=innerWidth; neb.height=innerHeight;}
-resizeNeb(); window.addEventListener("resize",resizeNeb);
-
-function perlinNoise(){
-  const img=nctx.createImageData(neb.width,neb.height);
-  for(let i=0;i<img.data.length;i+=4){
-    let v = Math.floor(Math.random()*80);
-    img.data[i]=0; img.data[i+1]=v; img.data[i+2]=0; img.data[i+3]=255;
-  }
-  nctx.putImageData(img,0,0);
-}
-perlinNoise();
-
-/* =========================================================
-   STARFIELD
-   ========================================================= */
-const canvas=document.getElementById("c");
-const ctx=canvas.getContext("2d");
-function resize(){canvas.width=innerWidth; canvas.height=innerHeight;}
-resize(); window.addEventListener("resize",resize);
-
-let stars=[];
-for(let i=0;i<3200;i++){
-  stars.push({x:Math.random()*innerWidth, y:Math.random()*innerHeight, r:Math.random()*2.5+0.4, o:Math.random()*0.6+0.3, t:Math.random()*0.04-0.02});
-}
+// Canvas Portal
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+canvas.width=innerWidth;canvas.height=innerHeight;
+window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
+let stars=Array.from({length:3000},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:0.5+Math.random()*3.5,o:0.3+Math.random()*0.7,tw:Math.random()*0.055-0.027}));
 function draw(){
-  ctx.fillStyle="rgba(0,0,0,0.06)";
-  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='rgba(0,0,0,0.01)';ctx.fillRect(0,0,canvas.width,canvas.height);
   stars.forEach(s=>{
-    s.o+=s.t; s.o=Math.max(.2,Math.min(1,s.o));
-    ctx.globalAlpha=s.o; ctx.fillStyle="#0f0";
-    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
+    s.o+=s.tw;s.o=Math.max(0.2,Math.min(1,s.o));
+    ctx.globalAlpha=s.o;ctx.fillStyle='#0f0';
+    ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
   });
   requestAnimationFrame(draw);
 }
 draw();
 
-/* =========================================================
-   ORBITING RUNAS
-   ========================================================= */
-const runas="◇◆◈✦✧✳✢✣✤✥❇".split("");
-const R=[];
-for(let i=0;i<12;i++){
-  let el=document.createElement("div");
-  el.className="runa";
-  el.textContent=runas[i%runas.length];
-  document.body.appendChild(el);
-  R.push({el,a:Math.random()*Math.PI*2,r:150+Math.random()*150,s:0.003+Math.random()*0.002});
+// Partículas que reaccionan a palabras clave
+const keywords=["1310","Lorkhan","Norah"];
+function pulseLore(){
+  const loreEl=document.getElementById('lore');
+  let glow=false;
+  keywords.forEach(k=>{if(loreEl.innerText.includes(k))glow=true;});
+  loreEl.style.boxShadow=glow?"0 0 60px #0f0":"0 0 20px #0f0";
+  requestAnimationFrame(pulseLore);
 }
-function animateRunas(){
-  R.forEach(o=>{
-    o.a+=o.s;
-    o.el.style.left = (innerWidth/2 + Math.cos(o.a)*o.r) + "px";
-    o.el.style.top  = (innerHeight/2+ Math.sin(o.a)*o.r) + "px";
+pulseLore();
+
+// Botón de abrazo digital
+document.getElementById('mate').addEventListener('click',()=>{
+  navigator.clipboard.writeText('1310 abrazos enviados al Nido Omega').then(()=>{
+    alert('¡Abrazo digital enviado! Latido 1310 activado.');
   });
-  requestAnimationFrame(animateRunas);
-}
-animateRunas();
+});
 
-/* =========================================================
-   ACCESSIBILITY
-   ========================================================= */
-document.getElementById("accessible-toggle").onclick=()=>{
-  document.body.classList.toggle("soft-mode");
-};
+// Eclipse temporal
+document.addEventListener('dblclick',()=>{
+  document.body.style.filter="invert(1) hue-rotate(80deg)";
+  setTimeout(()=>document.body.style.filter="none",2000);
+});
 
-/* README */
-document.addEventListener("dblclick",()=>location.href="#readme");
+// Readme
+document.querySelectorAll('.close').forEach(el=>el.addEventListener('click',()=>{location.href="#";}));
+
 </script>
-
 </body>
 </html>

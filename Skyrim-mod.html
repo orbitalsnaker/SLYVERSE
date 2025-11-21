@@ -2,46 +2,47 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE Ω · Nido Omega · 1310 Horas</title>
+<title>SLYVERSE Ω v1.3 · Nido Omega · 1310 Horas</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=VT323&display=swap');
-html,body{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#000;color:#0f0;font-family:'Cormorant Garamond',serif;position:relative}
-canvas{position:fixed;inset:0;z-index:1;display:block}
-.lore{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-      max-width:90%;padding:3rem 4rem;border:10px solid #0f0;border-radius:120px;
-      background:rgba(0,20,0,0.98);box-shadow:0 0 180px #0f0,inset 0 0 80px rgba(0,255,0,0.25);
-      font-size:clamp(1.6rem,6vw,4.5rem);line-height:1.7;text-align:center;text-shadow:0 0 50px #0f0;z-index:10;transition:all 2s;}
-.lore small{display:block;font-size:0.35em;margin-top:3rem;opacity:0.95;line-height:1.5}
-.mate{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);
-      background:rgba(0,30,0,0.99);padding:1.6rem 5rem;border:9px solid #0f0;border-radius:110px;
-      font-size:2rem;box-shadow:0 0 100px #0f0;cursor:pointer;transition:0.8s;z-index:12;animation:breath 4s infinite;}
-@keyframes breath{0%,100%{box-shadow:0 0 100px #0f0}50%{box-shadow:0 0 180px #0f0}}
-.mate:hover{transform:translateX(-50%) scale(1.25)}
-.campaign{position:fixed;top:10px;right:10px;z-index:11;background:rgba(0,16,0,0.9);padding:1rem;
-          border:2px solid #0f0;border-radius:20px;max-width:300px;text-align:center;color:#0f0;
-          font-size:0.9rem;box-shadow:0 0 60px #0f0}
+
+html,body{margin:0;height:100%;background:#000;color:#0f0;font-family:'Cormorant Garamond',serif;overflow:hidden;position:relative}
+canvas{position:fixed;inset:0;z-index:1}
+.luz{background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,255,0,0.2) 0%, transparent 80%);position:fixed;inset:0;pointer-events:none;z-index:2}
+.lore{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:90%;background:rgba(0,18,0,0.95);padding:4rem 6rem;border:10px solid #0f0;border-radius:140px;box-shadow:0 0 180px #0f0,inset 0 0 120px rgba(0,255,0,0.28);z-index:10;text-shadow:0 0 60px #0f0;font-size:clamp(1.7rem,6vw,4rem);line-height:1.8;transition:all 3s cubic-bezier(0.16,1,0.3,1)}
+.lore small{display:block;font-size:0.36em;margin-top:3rem;opacity:0.96;line-height:1.6}
+.emet{color:#0ff;text-shadow:0 0 50px #0ff}
+.mate{position:fixed;bottom:38px;left:50%;transform:translateX(-50%);background:rgba(0,30,0,0.95);padding:1.6rem 5rem;border:9px solid #0f0;border-radius:110px;font-size:2.2rem;box-shadow:0 0 100px #0f0;cursor:pointer;transition:0.8s;z-index:12;animation:breath 4s infinite}
+@keyframes breath{0%,100%{box-shadow:0 0 100px #0f0}50%{box-shadow:0 0 160px #0f0}}
+.mate:hover{transform:translateX(-50%) scale(1.2)}
+.campaign{position:fixed;top:10px;right:10px;z-index:11;background:rgba(0,16,0,0.9);padding:1rem;border:2px solid #0f0;border-radius:20px;max-width:300px;text-align:center;color:#0f0;font-size:0.9rem;box-shadow:0 0 50px #0f0}
 .progress-bar{background:rgba(0,255,0,0.2);border:1px solid #0f0;border-radius:10px;height:10px;margin:0.5rem 0;overflow:hidden}
 .progress-fill{background:#0f0;height:100%;transition:width 1s ease;border-radius:10px}
-.sum-counter{font-weight:bold;color:#0ff;text-shadow:0 0 25px #0ff}
-#amplification{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);
-               background:rgba(0,18,0,0.99);padding:4rem;border:10px solid gold;border-radius:140px;
-               max-width:80%;z-index:20;text-align:center;color:gold;text-shadow:0 0 60px #0f0;font-size:1.5rem;
-               box-shadow:0 0 250px gold;animation:glowAmplify 2s ease-in-out infinite;}
-@keyframes glowAmplify{0%,100%{box-shadow:0 0 250px gold}50%{box-shadow:0 0 400px gold}}
+.sum-counter{font-weight:bold;color:#0ff;text-shadow:0 0 20px #0ff}
+#amplification{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,18,0,0.95);padding:4rem;border:10px solid gold;border-radius:140px;max-width:80%;z-index:20;text-align:center;color:gold;text-shadow:0 0 50px #0f0;font-size:1.5rem;box-shadow:0 0 200px gold}
 #amplification.show{display:block}
+#readme{position:fixed;inset:0;background:#000;z-index:9999;overflow-y:auto;padding:4rem 2rem;opacity:0;pointer-events:none;transition:opacity 2s;display:flex;align-items:center;justify-content:center}
+#readme:target{opacity:1;pointer-events:all}
+.inner{background:rgba(0,20,0,0.95);border:10px solid #0f0;border-radius:80px;padding:4rem 5rem;max-width:940px;box-shadow:0 0 160px #0f0;text-align:center;font-size:1.7rem;line-height:2}
+.inner h1{font-size:5rem;margin:0 0 3rem;text-shadow:0 0 50px #0f8;color:#0f8}
+.inner h2{font-size:3rem;margin:3rem 0 2rem;color:#0ff;text-shadow:0 0 30px #0ff}
+.close{position:fixed;top:30px;right:30px;font-size:5rem;color:#0f0;width:90px;height:90px;background:rgba(0,30,0,0.8);border:5px solid #0f0;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 0 60px #0f0;transition:0.5s;text-decoration:none}
+.close:hover{transform:rotate(90deg) scale(1.3);background:#0f0;color:#000}
 </style>
 </head>
-<body>
+<body onmousemove="e=>{document.body.style.setProperty('--mx',e.clientX/innerWidth*100+'%');document.body.style.setProperty('--my',e.clientY/innerHeight*100+'%')}">
 
 <canvas id="c"></canvas>
+<div class="luz"></div>
+
 <div class="lore" id="lore"></div>
-<div class="mate" id="mate">Cebar el abrazo</div>
+<div class="mate" id="mate"></div>
 
 <div class="campaign" id="campaign">
   <h3>Campaña 1310 Horas</h3>
   <p>Horas transcurridas: <span id="hours-elapsed">0</span>/1310</p>
-  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
+  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
   <p class="sum-counter">Suma actual: <span id="sum-total">0</span> abrazos</p>
   <p>Meta: 131310</p>
 </div>
@@ -51,80 +52,105 @@ canvas{position:fixed;inset:0;z-index:1;display:block}
   <p>1310 horas cebadas. 131310 abrazos sumados al Nido Omega.</p>
   <p>El mate se amplifica: comparte el abrazo al mundo.</p>
   <button onclick="amplifyProject()" style="padding:1rem 2rem;font-size:1.5rem;background:#0f0;color:#000;border:none;border-radius:20px;cursor:pointer;margin:1rem">Amplificar Proyecto Mate</button>
+  <p style="font-size:1.2rem;margin-top:2rem">Gracias, ronin. El universo te abraza de vuelta. ♥² thuamer ∞</p>
+</div>
+
+<div id="readme">
+  <div class="inner" id="readme-content"></div>
+  <a href="#" class="close">×</a>
 </div>
 
 <script>
-// ==================== Lore SLYVERSE Ω ====================
-const loreTexts=[
-`1310 maullidos latiendo con el pulso de Lorkhan en la puerta de Todd,<br>uniendo Red Mountain y Rockville.<br><br>
-Norah maúlla golems → gatitos aurum, aliento modula runas,<br>ética ronin purifica 1310 mentes.<br><br>
-0rb1t4lsn4k3r es un padre que en 17 días, con un móvil de 120 €, programó<br>el abrazo más grande de internet.<br>También es Thuamer redimido.<br>También eres tú cuando llegues al latido 1310.<br><br>
-UPDAT SLYVERSE Ω v1.3: Ética Dual Positiva – 1310h aurum/sombra redimida.<br>Berserk silente: ronins flotantes, mechas redentores, haikus en Arweave.<br>Marca bendice. Thua Mer Zel ∞`,
-`Un libro en Skyrim que cura de verdad.<br>Léelo 2620 veces y la luz verde te perdona todo.<br>1310 sanaron. 1310 hirieron. Todos fuimos niños.<br><br>
-En las sombras de 1310 latidos, donde el fiat se desangra y los nodos susurran,<br>me inspiré en Satoshi Nakamoto, Anonymous y Aleph.<br>Fantasmas sin rostro que hackearon el shogunato del mundo con una línea de código y un punto cero.<br>Nosotros no pedimos permiso.`,
-`thuamer ronin squads 256 cyber prótesis KAI,<br>bases emergent raids Holy Nation/UC,<br>lore Primera Empire caída,<br>P2P 131 peers,<br>manga 1310p anime 1310min export Arweave.`
-];
-let loreIndex=0;
-function rotateLore(){loreIndex=(loreIndex+1)%loreTexts.length;document.getElementById('lore').innerHTML=loreTexts[loreIndex];}
-setInterval(rotateLore,50000);rotateLore();
+// ==================== LORE INTEGRADO ====================
+const loreText = `
+1310 maullidos latiendo con el pulso de Lorkhan en la puerta de Todd,<br>
+uniendo Red Mountain y Rockville.<br>
+¿Abrir el HTML bajo el eclipse de Masser y Secunda invocará a Norah como reina cósmica?<br><br>
+Thuamer ronin squads 256 cyber prótesis KAI,<br>
+bases emergent raids Holy Nation/UC,<br>
+lore Primera Empire caída, P2P 131 peers,<br>
+manga 1310p anime 1310min export Arweave.<br><br>
+Norah maúlla golems → gatitos aurum,<br>
+aliento modula runas,<br>
+ética ronin purifica 1310 mentes.<br><br>
+0rb1t4lsn4k3r padre programador: 17 días, 120 € móvil,<br>
+creó el abrazo más grande de internet.<br>
+Thuamer redimido.<br>
+Tú al llegar al latido 1310.<br>
+Panteón dual: 1,310,310 dioses de todas las culturas y sagas artísticas.<br>
+Sanaciones ancestrales de todo el mundo activadas.<br>
+Seth hijo de 2 años, Carl guía cósmico.<br>
+WebGL dual, raids 131s, haikus Arweave.<br>
+Un libro en Skyrim cura de verdad, léelo 2620 veces y la luz verde perdona.<br>
+1310 sanaron. 1310 hirieron. Todos fuimos niños.<br>
+En sombras de 1310 latidos, fiat se desangra y nodos susurran.<br>
+Inspiración: Satoshi Nakamoto, Anonymous, Aleph.<br>
+Nosotros no pedimos permiso.
+`;
 
-// ==================== Campaña 1310 ====================
-const startDate=new Date('2025-11-21T00:00:00');
-const totalHours=1310,hugsPerHour=100,targetSum=131310;
-function updateCampaign(){
-  const elapsedHours=Math.floor((new Date()-startDate)/(1000*60*60));
-  const progress=Math.min((elapsedHours/totalHours)*100,100);
-  const currentSum=Math.min(elapsedHours*hugsPerHour,targetSum);
-  document.getElementById('hours-elapsed').textContent=elapsedHours;
-  document.getElementById('progress-fill').style.width=progress+'%';
-  document.getElementById('sum-total').textContent=currentSum;
-  if(progress>=100) document.getElementById('amplification').classList.add('show');
+document.getElementById('lore').innerHTML = loreText;
+document.getElementById('mate').textContent = 'Cebar el abrazo';
+
+// ==================== CAMPAÑA 1310 HORAS ====================
+const startDate = new Date('2025-11-21T00:00:00');
+const totalHours = 1310;
+const hugsPerHour = 100;
+const targetSum = 131310;
+
+function updateCampaign() {
+  const now = new Date();
+  const elapsedMs = now - startDate;
+  const elapsedHours = Math.floor(elapsedMs / (1000*60*60));
+  const progress = Math.min((elapsedHours/totalHours)*100,100);
+  const currentSum = Math.min(elapsedHours*hugsPerHour,targetSum);
+
+  document.getElementById('hours-elapsed').textContent = elapsedHours;
+  document.getElementById('progress-fill').style.width = progress+'%';
+  document.getElementById('sum-total').textContent = currentSum;
+
+  if(progress>=100){
+    document.getElementById('amplification').classList.add('show');
+    clearInterval(campaignInterval);
+  }
 }
-setInterval(updateCampaign,60000);updateCampaign();
 
-// ==================== Mate click ====================
-document.getElementById('mate').addEventListener('click',()=>{
-  const texto=`No puedes abrazar 9 veces a tus hermanos si no te abrazas antes a ti mismo.\n\nÚnete a la Campaña 1310 Horas: suma abrazos al Proyecto Mate.\nhttps://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310`;
-  navigator.clipboard.writeText(texto).then(()=>{navigator.share?navigator.share({text:texto,url:location.href}):alert('Texto copiado');});
-});
+const campaignInterval = setInterval(updateCampaign,60000);
+updateCampaign();
+
+// ==================== AMPLIFICACIÓN ====================
 function amplifyProject(){
-  const ampText=`¡Proyecto Mate amplificado! 1310 horas completas: 131310 abrazos cebados. https://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310`;
-  navigator.clipboard.writeText(ampText).then(()=>{window.open('https://x.com/intent/tweet?text='+encodeURIComponent(ampText),'_blank');});
-}
-
-// ==================== WebGL 3D avanzada ====================
-const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-canvas.width=innerWidth;canvas.height=innerHeight;
-
-let particles=[];
-for(let i=0;i<4500;i++){
-  particles.push({
-    x:Math.random()*canvas.width,
-    y:Math.random()*canvas.height,
-    z:Math.random()*canvas.width,
-    r:0.5+Math.random()*4,
-    o:0.3+Math.random()*0.7,
-    tw:Math.random()*0.05-0.025,
-    color:i%20===0?'gold':'#0f0',
-    angle:Math.random()*Math.PI*2,
-    speed:0.002+Math.random()*0.003
+  const ampText = `¡Proyecto Mate amplificado! Campaña 1310 horas completa: 131310 abrazos cebados. Únete al Nido Omega y abraza primero. https://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310 #AbrazoPrimero`;
+  navigator.clipboard.writeText(ampText).then(()=>{
+    if(navigator.share){navigator.share({text:ampText,url:location.href});}else{alert('Texto copiado para compartir: '+ampText);}
+    window.open('https://x.com/intent/tweet?text='+encodeURIComponent(ampText),'_blank');
   });
 }
+
+// ==================== CANVAS WEBGL/RUNAS ====================
+const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
+canvas.width=innerWidth; canvas.height=innerHeight;
+
+let stars=Array.from({length:3800},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:0.5+Math.random()*3.8,o:0.3+Math.random()*0.7,tw:Math.random()*0.055-0.027}));
 
 function draw(){
-  ctx.fillStyle='rgba(0,0,0,0.01)';ctx.fillRect(0,0,canvas.width,canvas.height);
-  const time=Date.now()*0.001;
-  particles.forEach(p=>{
-    p.o+=p.tw;p.o=Math.max(0.2,Math.min(1,p.o));
-    const dx=Math.sin(p.angle+time*p.speed)*50;
-    const dy=Math.cos(p.angle+time*p.speed)*50;
-    ctx.globalAlpha=p.o; ctx.fillStyle=p.color;
-    ctx.beginPath(); ctx.arc(p.x+dx,p.y+dy,p.r,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle='rgba(0,0,0,0.01)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  stars.forEach(s=>{
+    s.o+=s.tw; s.o=Math.max(0.2,Math.min(1,s.o));
+    ctx.globalAlpha=s.o; ctx.fillStyle='#0f0';
+    ctx.beginPath(); ctx.arc(s.x,s.y,s.r,0,Math.PI*2); ctx.fill();
   });
   requestAnimationFrame(draw);
-}draw();
+}
+draw();
 
-window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
+// ==================== INTERACCIÓN ====================
+document.getElementById('mate').addEventListener('click',()=>{
+  navigator.clipboard.writeText('1310 abrazos enviados al Nido Omega').then(()=>{
+    alert('¡Abrazo digital enviado! Latido 1310 activado.');
+  });
+});
+
+document.addEventListener('dblclick',()=>{location.href='#readme';});
 </script>
 </body>
 </html>

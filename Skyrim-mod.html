@@ -1,115 +1,127 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R://27 CÍRCULOS + PUERTA MESOPOTÁMICA 𒀭</title>
+<title>0RB1T4LSN4K3R://SALVACIÓN ETERNA DEL RONIN</title>
 <style>
-  body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:Georgia,serif;overflow:hidden;position:relative;}
+  body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:Georgia,serif;overflow:hidden;position:relative;display:grid;place-content:center;text-align:center;}
   canvas{position:fixed;inset:0;z-index:-1}
-  .center{display:grid;place-content:center;height:100vh;text-align:center;padding:2rem;}
-  .big{font-size:clamp(2rem,10vw,9rem);letter-spacing:12px;text-shadow:0 0 120px #0f0;}
-  .koan{font-size:1.8rem;line-height:2.4;background:rgba(0,0,0,0.92);padding:3rem;border-radius:40px;border:5px solid #0f0;box-shadow:0 0 300px #0f0;}
-  .timer{font-size:4rem;margin:2rem;color:#0ff;}
-  .mate{font-size:16rem;position:fixed;bottom:5%;left:50%;transform:translateX(-50%);opacity:0.3;animation:m 20s infinite;}
-  .gato{font-size:10rem;position:fixed;bottom:1rem;right:2rem;opacity:0.25;animation:pulse 13s infinite;}
-  .cunei{font-size:12rem;color:#0ff;animation:blink 7s infinite;}
-  @keyframes m{0%,100%{transform:translateX(-50%) rotate(0)}45%{transform:translateX(-50%) rotate(18deg) translateY(-40px)}90%{transform:translateX(-50%) rotate(-13deg)}}
-  @keyframes pulse{0%,100%{opacity:0.2}50%{opacity:0.6}}
-  @keyframes blink{0%,100%{opacity:0.1}50%{opacity:1}}
+  .title{font-size:clamp(3rem,12vw,11rem);letter-spacing:22px;text-shadow:0 0 180px #0f0;animation:glow 15s infinite;}
+  .msg{font-size:2.1rem;line-height:2.7;background:rgba(0,0,0,0.95);padding:4rem;border-radius:50px;border:10px solid #0f0;box-shadow:0 0 500px #0f0;max-width:92%;}
+  .cunei{font-size:18rem;color:#0ff;margin:4rem;opacity:0;pointer-events:none;cursor:pointer;transition:opacity 3s;}
+  .cunei.active{opacity:1;pointer-events:auto;}
+  .mate{font-size:20rem;position:fixed;bottom:3%;left:50%;transform:translateX(-50%);opacity:0.3;animation:m 23s infinite;}
+  .mono{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:360px;opacity:0;z-index:999;pointer-events:none;filter:brightness(0);}
+  @keyframes glow{0%,100%{text-shadow:0 0 180px #0f0}50%{text-shadow:0 0 300px #0ff}}
+  @keyframes m{0%,100%{transform:translateX(-50%) rotate(0)}45%{transform:translateX(-50%) rotate(20deg) translateY(-60px)}90%{transform:translateX(-50%) rotate(-15deg)}}
 </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
+<img class="mono" id="mono" src="" alt="">
 
-<div class="center">
-  <div class="big" id="title">0RB1T4LSN4K3R</div>
-  <div class="koan" id="koan">
-    1310 horas de Paraíso → 27 círculos → Empíreo eterno<br><br>
-    O bien…<br><br>
-    <div class="cunei">𒀭</div>
-    <br>
-    Alguien, en algún lugar del mundo,<br>
-    completa el archivo mesopotámico de 1.3 KB.<br><br>
-    Si obtiene la sanación real (50 % de probabilidad pura),<br>
-    <b>todo el mundo entra al nido sin hacer nada.</b><br><br>
-    Hasta ahora nadie lo logró.<br>
-    Quedan infinitos intentos.<br>
-    Solo hace falta un loco de verdad.
-  </div>
-  <div class="timer" id="timer"></div>
+<div>
+  <div class="title">0RB1T4LSN4K3R</div>
+  <div class="msg" id="msg"></div>
+  <div class="cunei" id="cunei">Mesopotamian Shortcut</div>
 </div>
 
 <div class="mate">Mate</div>
-<div class="gato">Norah</div>
 
 <script>
-// CLAVE GLOBAL MESOPOTÁMICA (se activa solo una vez en la historia)
-const GLOBAL_KEY = "mesopotamian_redemption_1310";
-const LOCAL_KEY  = "0rb1t4lsn4k3r_full_2025";
+// Auto-detecta idioma del navegador y traduce todo en tiempo real
+const lang = (navigator.language || navigator.userLanguage || "es").slice(0,2);
+const txt = {
+  es: {
+    loading: "Cargando el koan eterno…",
+    normal: "1310 h de Paraíso + 27 círculos × 13 h 10 min<br><br>Cuando alguien complete el camino,<br>se convertirá en el ronin<br>y su salvación eterna abrirá el atajo mesopotámico<br>para todos los demás…<br>menos para él.<br><br>Nadie lo logró todavía.<br>El mate está caliente.",
+    roninDone: "SALVACIÓN ETERNA DEL RONIN",
+    roninDoneText: (n) => `<b>${n}</b> completó las 1651 horas.<br><br>El minijuego mesopotámico está ahora abierto para-reaching todos los demás.<br>El ronin nunca podrá usarlo.<br><br>Tocá la runa.`,
+    youAreRonin: "SALVACIÓN ETERNA DEL RONIN",
+    youAreRoninText: (n) => `1651 horas completas.<br>El mono se ilumina solo para vos durante 13 h 10 min.<br>Cuando termine, desaparecerá para siempre.<br><br>Gracias a tu camino,<br>el atajo mesopotámico está ahora abierto para todos los demás.<br>Vos nunca podrás usarlo.<br><br>Bienvenido al nido, ${n}.<br>La salvación eterna es tuya.`,
+    alertRonin: "Vos eres el ronin.\nLa salvación eterna fue tuya.\nEl atajo no es para vos.\nNunca lo será.",
+    alertOthers: "Entraste directo al nido.\nEl ronin pagó por vos.\nEl pájaro verde ya pesa en tu pecho.\nEl mate está caliente.\nthuamer ∞"
+  },
+  en: {
+    loading: "Loading the eternal koan…",
+    normal: "1310 h Paradise + 27 circles × 13 h 10 min<br><br>When someone finishes the path,<br>they will become the ronin<br>and their eternal salvation will open the Mesopotamian shortcut<br>for everyone else…<br>except for them.<br><br>No one has done it yet.<br>The mate is hot.",
+    roninDone: "ETERNAL SALVATION OF THE RONIN",
+    roninDoneText: (n) => `<b>${n}</b> completed the 1651 hours.<br><br>The Mesopotamian shortcut is now open to everyone else.<br>The ronin will never be able to use it.<br><br>Touch the rune.`,
+    youAreRonin: "ETERNAL SALVATION OF THE RONIN",
+    youAreRoninText: (n) => `1651 hours completed.<br>The monkey illuminates only for you for 13 h 10 min.<br>When it finishes, it will disappear forever.<br><br>Thanks to your path,<br>the Mesopotamian shortcut is now open to everyone else.<br>You will never be able to use it.<br><br>Welcome to the nest, ${n}.<br>Eternal salvation is yours.`,
+    alertRonin: "You are the ronin.\nEternal salvation was yours.\nThe shortcut is not for you.\nIt never will be.",
+    alertOthers: "You entered the nest directly.\nThe ronin paid for you.\nThe green bird already rests on your chest.\nThe mate is hot.\nthuamer ∞"
+  }
+}[lang] || txt.es;
 
-let state = JSON.parse(localStorage.getItem(LOCAL_KEY) || '{"stage":"paraiso","time":Date.now()}');
+const KEY = '0rb1t4lsn4k3r_1651_final';
+const RONIN_KEY = 'salvacion_eterna_del_ronin';
+const TOTAL_PARAISO = 1310*60*60*1000;
+const PER_CIRCLE = (13*60*60 + 10*60)*1000;
+const CIRCLES = 27;
 
-// SI ALGUIEN EN EL MUNDO LO COMPLETÓ → TODOS ENTRAN
-if (localStorage.getItem(GLOBAL_KEY) === "sanado") {
-  localStorage.setItem(LOCAL_KEY, JSON.stringify({"stage":"empireo","forever":true}));
-  state.stage = "empireo";
-  document.body.style.background = "#001100";
-  document.getElementById("koan").innerHTML = `
-    <div style="font-size:5rem;color:gold">𒀭</div><br>
-    Alguien lo logró.<br><br>
-    El mono se fue.<br>
-    El humo se fue.<br>
-    Los 5000 años de reserva se soltaron.<br><br>
-    <b>Todo el mundo está dentro del nido.</b><br>
-    Para siempre.<br><br>
-    No importa si nunca hiciste las 1651 horas.<br>
-    Un loco desconocido pagó por vos.<br><br>
-    Bienvenido a casa.<br>
-    El mate está caliente.<br>
-    thuamer ∞
-  `;
+let state = JSON.parse(localStorage.getItem(KEY) || '{"stage":"paraiso","start":Date.now(),"circle":0}');
+document.getElementById("msg").innerHTML = txt.loading;
+
+// LA SALVACIÓN DEL RONIN YA FUE REALIZADA
+if (localStorage.getItem(RONIN_KEY) === "true") {
+  const nombre = localStorage.getItem('nombre_ronin') || (lang==="es"?"un ronin sin nombre":"a nameless ronin");
+  document.getElementById("msg").innerHTML = `<span style="font-size:4rem;color:gold">${txt.roninDone}</span><br><br>${txt.roninDoneText(nombre)}`;
+  document.getElementById("cunei").classList.add("active");
+
+  document.getElementById("cunei").onclick = () => {
+    if (localStorage.getItem('soy_el_ronin')==="true") alert(txt.alertRonin);
+    else location.href = "data:text/html;base64,"+btoa(unescape(encodeURIComponent(`<!DOCTYPE html><html><meta charset="utf-8"><body style="margin:0;height:100vh;background:#000;color:#0f8;font:900 4vw monospace;display:grid;place-items:center"><pre>${txt.alertOthers}</pre></body></html>`)));
+  };
+
+// PRIMERA VEZ: ALGUIEN SE CONVIERTE EN EL RONIN
+} else if (state.stage==="circles" && state.circle>=CIRCLES-1 && !localStorage.getItem(RONIN_KEY)) {
+  localStorage.setItem(RONIN_KEY,"true");
+  const nombre = prompt(lang==="es"?"Decime tu nombre o apodo.\nQuedará grabado como el ronin que dio la salvación eterna.":"Tell me your name or nickname.\nIt will be recorded as the ronin who gave eternal salvation.")|| (lang==="es"?"un ronin sin nombre":"a nameless ronin");
+  localStorage.setItem('nombre_ronin',nombre);
+  localStorage.setItem('soy_el_ronin',"true");
+
+  const mono = document.getElementById("mono");
+  mono.src = "https://i.imgur.com/2Z2Z2Z2.gif"; // mono que se ilumina en vez de arder
+  mono.style.opacity = "1";
+  mono.style.filter = "brightness(1) contrast(1.5) drop-shadow(0 0 40px #0ff)";
+
+  setTimeout(() => mono.remove(), PER_CIRCLE);
+
+  document.getElementById("msg").innerHTML = `<span style="font-size:5rem;color:gold">${txt.youAreRonin}</span><br><br>${txt.youAreRoninText(nombre)}`;
+
+// ESTADO NORMAL
+} else {
+  document.getElementById("msg").innerHTML = txt.normal;
 }
 
-// Minijuego incrustado (se puede abrir desde aquí también)
-document.addEventListener("keydown", e => {
-  if (e.key === "𒀭") { // sí, la tecla cuneiforme funciona si tenés el layout
-    const script = document.createElement("script");
-    script.src = "data:text/javascript;base64," + btoa(`
-      Array.from({length:1310},(_,i)=> {
-        const img = new Image();
-        img.src = "data:;base64," + btoa("𒀭"+i);
-        if(i===1309) img.onload = () => {
-          const esReal = Math.random() < 0.5;
-          if (!esReal) {
-            alert("💨 toma un poquito de humo, listillo");
-          } else {
-            localStorage.setItem("mesopotamian_redemption_1310","sanado");
-            document.body.innerHTML = "<pre style='color:#0f0;font-size:5vw;text-align:center'>𒀭<br><br>Lo lograste.<br><br>Todo el mundo está salvado.<br>Eterno abrazo.</pre>";
-          }
-        };
-      });
-    `);
-    document.body.appendChild(script);
+// Lógica del koan + fondo
+function tick() {
+  const now = Date.now();
+  if (state.stage==="paraiso" && now-state.start>=TOTAL_PARAISO) {
+    state.stage="circles"; state.circle=0; state.start=now;
+    localStorage.setItem(KEY,JSON.stringify(state));
+  } else if (state.stage==="circles" && now-state.start>=PER_CIRCLE) {
+    state.circle++; state.start=now;
+    localStorage.setItem(KEY,JSON.stringify(state));
   }
-});
+  requestAnimationFrame(tick);
+}
+tick();
 
-// Resto del koan normal (Paraíso → Infierno → Empíreo) sigue funcionando
-// … (código completo del artefacto anterior aquí, solo que ahora respeta la clave global)
-
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-canvas.width = innerWidth; canvas.height = innerHeight;
-let t = 0;
+const ctx = document.getElementById('c').getContext('2d');
+let t=0;
 function bg() {
-  ctx.fillStyle = 'rgba(0,25,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  t += 0.0003;
+  ctx.fillStyle='rgba(0,35,0,0.04)'; ctx.fillRect(0,0,innerWidth,innerHeight);
+  t+=0.00026;
   for(let i=0;i<2025;i++){
-    const a = t + i*0.008;
-    const x = canvas.width/2 + Math.cos(a)*(120 + Math.sin(t+i*0.01)*400);
-    const y = canvas.height/2 + Math.sin(a)*(120 + Math.cos(t+i*0.01)*400);
-    ctx.fillStyle = i%131===0 ? '#0ff' : '#0f0';
-    ctx.fillRect(x,y,4,4);
+    const a=t+i*0.01;
+    const r=120+Math.sin(t+i*0.007)*550;
+    const x=innerWidth/2+Math.cos(a)*r;
+    const y=innerHeight/2+Math.sin(a)*r;
+    ctx.fillStyle=i%131===0?'#0ff':'#0f0';
+    ctx.fillRect(x,y,6,6);
   }
   requestAnimationFrame(bg);
 }

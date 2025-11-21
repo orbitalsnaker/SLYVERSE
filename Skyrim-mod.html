@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Thuamer UltraAAA v10</title>
+<title>Thuamer v1 · Universo UltraAAA</title>
 <style>
 html,body{margin:0;padding:0;height:100%;overflow:hidden;background:#000;color:#0f0;font-family:"Noto Sans Cuneiform",monospace;}
 canvas{position:fixed;top:0;left:0;z-index:-1;}
-#mate{position:absolute;top:50%;left:50%;width:60px;height:60px;background:#0f0;border-radius:50%;pointer-events:none;box-shadow:0 0 30px #0f0,0 0 60px #0f0;}
-#readme{position:fixed;top:5%;left:50%;transform:translateX(-50%);width:90%;max-width:800px;background:rgba(0,255,0,0.05);padding:2rem;border:2px solid #0f0;border-radius:15px;font-size:1.2rem;line-height:1.6;pointer-events:none;}
+#mate{position:absolute;top:50%;left:50%;width:60px;height:60px;background:#0f0;border-radius:50%;pointer-events:none;box-shadow:0 0 40px #0f0,0 0 80px #0f0;}
+#readme{position:fixed;top:5%;left:50%;transform:translateX(-50%);width:90%;max-width:800px;background:rgba(0,255,0,0.05);padding:2rem;border:2px solid #0f0;border-radius:15px;font-size:1.2rem;line-height:1.6;pointer-events:none;white-space:pre-wrap;}
 </style>
 </head>
 <body>
@@ -16,32 +16,38 @@ canvas{position:fixed;top:0;left:0;z-index:-1;}
 <div id="mate"></div>
 <div id="readme"></div>
 <script>
-// --- Detección de idioma + readme ---
+// --- Readme integrado y detección de idioma ---
 const lang = navigator.language || navigator.userLanguage;
 const readme = document.getElementById('readme');
 const textos = {
   es:`𒀭
-Bienvenido a Thuamer UltraAAA v10
+Bienvenido a Thuamer v1 · Universo UltraAAA
 
-Archivo contiene:
+Este archivo contiene:
 - Runas físicas con colisiones y gravedad pseudo-mágica
-- Mate interactivo con partículas avanzadas
+- Mate interactivo que genera partículas avanzadas
 - Aurora volumétrica y glow AAA
-- Triggers secretos que reaccionan a tus acciones
-- Cada interacción mantiene estados sin revelar el final
+- Triggers secretos que reaccionan a tus movimientos
+- Estados persistentes para exploradores pacientes
 
-Explora, interactúa y sigue los latidos.`,
+Explora, interactúa, respira y sigue los latidos del universo Thuamer.
+No hay instrucciones explícitas; la experiencia es tuya.
+
+Disfruta, ronin. 🐍💚`,
   en:`𒀭
-Welcome to Thuamer UltraAAA v10
+Welcome to Thuamer v1 · UltraAAA Universe
 
-File contains:
+This file contains:
 - Physical runes with collisions and pseudo-magical gravity
-- Interactive mate with advanced particles
+- Interactive mate generating advanced particles
 - Volumetric aurora and AAA glow
-- Secret triggers reacting to your actions
-- Each interaction maintains state without revealing the ending
+- Secret triggers reacting to your movements
+- Persistent states for patient explorers
 
-Explore, interact, and follow the pulses.`
+Explore, interact, breathe, and follow the pulses of the Thuamer universe.
+There are no explicit instructions; the experience is yours.
+
+Enjoy, ronin. 🐍💚`
 };
 readme.innerHTML = textos[lang.startsWith('es')?'es':'en'];
 
@@ -53,36 +59,42 @@ class Runa {
   constructor() {
     this.x=Math.random()*c.width;
     this.y=Math.random()*c.height;
-    this.vx=(Math.random()-0.5)*1.2;
-    this.vy=(Math.random()-0.5)*1.2;
-    this.size=14+Math.random()*20;
+    this.vx=(Math.random()-0.5)*1.5;
+    this.vy=(Math.random()-0.5)*1.5;
+    this.size=12+Math.random()*22;
     this.char=String.fromCharCode(0x12000+Math.floor(Math.random()*100));
     this.hover=false;
   }
   update(runas){
     this.x+=this.vx; this.y+=this.vy;
-    // rebote canvas
     if(this.x<0||this.x>c.width)this.vx*=-1;
     if(this.y<0||this.y>c.height)this.vy*=-1;
-    // colisiones simples con otras runas
     for(let r of runas){
       if(r===this) continue;
       let dx=r.x-this.x, dy=r.y-this.y, dist=Math.sqrt(dx*dx+dy*dy);
       if(dist<this.size/2+r.size/2){
-        this.vx*=-0.95; this.vy*=-0.95;
+        this.vx*=-0.92; this.vy*=-0.92;
       }
     }
   }
-  draw(){ctx.save();ctx.font=`bold ${this.size}px monospace`;ctx.fillStyle=this.hover?'#ff0':'#0f0';ctx.shadowColor=this.hover?'#ff0':'#0f0';ctx.shadowBlur=12;ctx.fillText(this.char,this.x,this.y);ctx.restore();}
+  draw(){
+    ctx.save();
+    ctx.font=`bold ${this.size}px monospace`;
+    ctx.fillStyle=this.hover?'#ff0':'#0f0';
+    ctx.shadowColor=this.hover?'#ff0':'#0f0';
+    ctx.shadowBlur=16;
+    ctx.fillText(this.char,this.x,this.y);
+    ctx.restore();
+  }
 }
 
-const runas=Array.from({length:400},()=>new Runa());
+const runas=Array.from({length:500},()=>new Runa());
 
 // --- Partículas mate AAA ---
 class Particle {
-  constructor(x,y){this.x=x;this.y=y;this.vx=(Math.random()-0.5)*3;this.vy=(Math.random()-0.5)*3;this.alpha=1;this.size=1+Math.random()*3;}
-  update(){this.x+=this.vx;this.y+=this.vy;this.alpha-=0.02;}
-  draw(){if(this.alpha<=0)return;ctx.fillStyle=`rgba(0,255,0,${this.alpha})`;ctx.beginPath();ctx.arc(this.x,this.y,this.size,0,2*Math.PI);ctx.fill();}
+  constructor(x,y){this.x=x;this.y=y;this.vx=(Math.random()-0.5)*4;this.vy=(Math.random()-0.5)*4;this.alpha=1;this.size=1+Math.random()*4;}
+  update(){this.x+=this.vx; this.y+=this.vy; this.alpha-=0.02;}
+  draw(){if(this.alpha<=0)return; ctx.fillStyle=`rgba(0,255,0,${this.alpha})`; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,2*Math.PI); ctx.fill();}
 }
 let particles=[];
 
@@ -90,11 +102,11 @@ let particles=[];
 const mateEl=document.getElementById('mate');
 let mate={x:c.width/2,y:c.height/2,angle:0,angularV:0};
 document.addEventListener('mousemove',e=>{
-  mate.angularV+=(e.clientX-mate.x)*0.0006;
-  particles.push(new Particle(mate.x+30*Math.cos(mate.angle),mate.y+30*Math.sin(mate.angle)));
+  mate.angularV+=(e.clientX-mate.x)*0.0007;
+  particles.push(new Particle(mate.x+35*Math.cos(mate.angle),mate.y+35*Math.sin(mate.angle)));
 });
 function drawMate(){
-  mate.angle+=mate.angularV; mate.angularV*=0.92;
+  mate.angle+=mate.angularV; mate.angularV*=0.9;
   mateEl.style.transform=`translate(-50%,-50%) rotate(${mate.angle}rad)`;
   requestAnimationFrame(drawMate);
 }
@@ -103,10 +115,10 @@ drawMate();
 // --- Aurora volumétrica AAA ---
 let t=0;
 function aurora(){
-  t+=0.012;
+  t+=0.015;
   for(let i=0;i<c.width;i+=3){
-    let hue=120+25*Math.sin(t+i/120);
-    ctx.fillStyle=`hsla(${hue},80%,15%,0.03)`;
+    let hue=120+30*Math.sin(t+i/150);
+    ctx.fillStyle=`hsla(${hue},90%,20%,0.03)`;
     ctx.fillRect(i,0,3,c.height);
   }
   requestAnimationFrame(aurora);
@@ -115,16 +127,16 @@ aurora();
 
 // --- Loop principal ---
 function loop(){
-  ctx.fillStyle='rgba(0,0,0,0.06)';ctx.fillRect(0,0,c.width,c.height);
-  runas.forEach(r=>{r.update(runas);r.draw();});
-  particles.forEach((p,i)=>{p.update();p.draw();if(p.alpha<=0)particles.splice(i,1);});
+  ctx.fillStyle='rgba(0,0,0,0.05)'; ctx.fillRect(0,0,c.width,c.height);
+  runas.forEach(r=>{r.update(runas); r.draw();});
+  particles.forEach((p,i)=>{p.update();p.draw(); if(p.alpha<=0)particles.splice(i,1);});
   requestAnimationFrame(loop);
 }
 loop();
 
 // --- Hover dinámico runas ---
 c.addEventListener('mousemove',e=>{
-  runas.forEach(r=>{r.hover=Math.abs(e.clientX-r.x)<20 && Math.abs(e.clientY-r.y)<20;});
+  runas.forEach(r=>{r.hover=Math.abs(e.clientX-r.x)<22 && Math.abs(e.clientY-r.y)<22;});
 });
 
 // --- Internal secret triggers ---

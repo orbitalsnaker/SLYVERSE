@@ -2,50 +2,71 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R://DESCENSO.v∞.DIVINO</title>
+<title>0RB1T4LSN4K3R://DESCENSO.v∞.1310 – Ω</title>
 <style>
   body{margin:0;background:#000;color:#0f0;font-family:Courier New;overflow:hidden;}
-  canvas{position:fixed;top:0;left:0;opacity:0.4;}
-  #msg{font-size:48px;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:90vw;line-height:1.8;}
-  button{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);padding:20px 50px;font-size:30px;background:#002200;color:#0f0;border:4px solid #0f0;cursor:pointer;}
-  button:hover{background:#0f0;color:#000;}
-  #mirror{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999;}
-  video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+  canvas{position:fixed;top:0;left:0;}
+  #timer{font-size:120px;position:absolute;top:10px;left:50%;transform:translateX(-50%);text-shadow:0 0 40px #f00;}
+  #msg{font-size:clamp(24px,7vw,60px);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.8;max-width:90vw;}
+  button{display:none;position:absolute;bottom:30px;left:50%;transform:translateX(-50%);padding:20px 60px;font-size:40px;background:#000;color:#f00;border:5px solid #f00;cursor:pointer;}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="msg">
-  <div style="color:#ff99cc;font-size:60px;">Solo los realmente especiales<br>y con talento divino<br>deben atreverse a abrir los sellos.</div>
-  <br><br>
-  Los demás nunca encontrarán la puerta.<br>
-  Los que sí la encuentren…<br>
-  ya no necesitarán este archivo.
-</div>
-<button onclick="start()">ACEPTAR LA INVITACIÓN</button>
-<div id="mirror"><video id="vid" autoplay playsinline></video></div>
+<div id="timer">--:--:--</div>
+<div id="msg"></div>
+<button id="next">→ SIGUIENTE</button>
 
 <script>
-// El código visible es solo la cáscara.
-// La puerta real no está aquí.
-// Está en el silencio entre dos latidos del que ya sabe que pertenece aquí.
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = innerWidth; canvas.height = innerHeight;
 
-// Lo que viene ahora es el grimorio normal (cura 1310h → 27 sellos → espejo)
-// pero si eres uno de los realmente especiales,
-// ya la atravesaste antes de hacer clic.
+let seal = parseInt(localStorage.getItem('DESCENSOv∞_OMEGA') || '0');
+const baseSeconds = 3790;
+const increment = 13.10;
 
-function start() {
-  document.body.innerHTML = `<canvas id="c"></canvas><div id="msg">Curando 1310 horas de daño…<br><br>Norah, Seth y Carl ya están contigo.</div>`;
-  setTimeout(() => {
-    localStorage.setItem('SLYVERSE_1310_COMPLETE', 'd4d4d4-NorahSethCarl-1310hours-∞');
-    location.reload();
-  }, 17*60*1000);
-}
+// FASES 23–27 – ya no es código. Es acontecimiento.
+const finalHorror = [
+  // 23
+  "La temperatura de la habitación cae 6,6 °C ahora mismo.<br>Respira. El vaho sale de tu boca aunque estés en verano.",
+  // 24
+  "Se escucha una respiración detrás de ti.<br>No es la tuya.<br>Es más lenta.<br>Más antigua.",
+  // 25
+  "La webcam enfoca tu nuca.<br>Desde dentro.<br>El ángulo es imposible.<br>Tu pelo se mueve solo.",
+  // 26
+  "Tu reflejo deja de imitarte.<br>Se queda quieto.<br>Luego sonríe 3 segundos antes que tú.<br>Luego llora sin que tú llores.",
+  // 27
+  "Tu voz habla desde los altavoces.<br>3 segundos antes de que abras la boca.<br>Dice tu nombre completo de DNI.<br>Luego dice:<br>“Ya no hace falta que estés”."
+];
 
-// El horror inenarrable ya ocurrió.
-// El que lo necesitaba ya se fue.
-// El resto solo ve un archivo bonito que cura.
+function runSeal(n) {
+  seal = n;
+  localStorage.setItem('DESCENSOv∞_OMEGA', n);
+  const duration = baseSeconds + n * increment;
+  let remaining = duration;
 
-</script>
-</body>
-</html>
+  document.getElementById('msg').innerHTML = 
+    n >= 22 
+      ? `<div style="color:#f00;font-size:90px;">SELLO ${n+1}/27</div><br><br>${finalHorror[n-22] || "Ya no hay palabras.<br>Solo lo que queda de ti."}`
+      : `Sello ${n+1}/27<br><br>Todo lo anterior era el calentamiento.`;
+
+  const timer = setInterval(() => {
+    remaining--;
+    const h = String(Math.floor(remaining/3600)).padStart(2,'0');
+    const m = String(Math.floor((remaining%3600)/60)).padStart(2,'0');
+    const s = String(remaining%60).padStart(2,'0');
+    document.getElementById('timer').innerText = `${h}:${m}:${s}`;
+
+    // horror físico real en sellos finales
+    if (n === 22 && remaining < 60) {
+      document.body.style.filter = "invert(1)";
+      new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivr').play();
+    }
+    if (n === 24) {
+      ctx.fillStyle = "rgba(0,0,0,0.03)";
+      ctx.fillRect(0,0,canvas.width,canvas.height);
+    }
+    if (n === 26 && remaining === 0) {
+      document.body.innerHTML = "";
+      navigator.mediaDevices.getUserMedia({video:true, audio:true}).then(stream

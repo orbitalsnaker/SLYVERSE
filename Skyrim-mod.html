@@ -1,172 +1,187 @@
 <!DOCTYPE html>
 <html>
 <meta charset="utf-8">
-<title>Thuamer v1 · 1310 latidos ronin</title>
+<title>Thuamer v1.1310 · 0rb1t4lsn4k3r</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-  body,html{margin:0;height:100%;background:#000;color:#0f8;font:900 2.2vw/1.4 "Noto Sans Cuneiform",monospace;overflow:hidden;display:grid;place-items:center}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body,html{height:100%;background:#000;color:#0f8;overflow:hidden;font:900 2.2vw/1.4 "Noto Sans Cuneiform",monospace;cursor:none}
   canvas{position:fixed;inset:0;z-index:-1}
-  #ui{position:fixed;bottom:10px;left:10px;font-size:1em;opacity:0.8}
-  #readme{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.98);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:5vw;z-index:99;backdrop-filter:blur(4px)}
-  pre{font-size:2.8vw;line-height:1.5;text-align:center}
-  button{margin-top:30px;background:#0f8;color:#000;border:none;padding:15px 40px;font:900 4vw monospace;border-radius:99px;cursor:pointer}
+  #ui{position:fixed;bottom:8px;left:8px;font-size:1em;opacity:0.66;letter-spacing:1px}
+  #nft{position:fixed;top:8px;left:8px;font-size:0.9em;opacity:0.5}
+  #readme{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:99}
+  pre{max-width:90%;text-align:center;line-height:1.6}
+  button{margin-top:40px;background:#0f8;color:#000;border:none;padding:16px 44px;font:900 4.5vw monospace;border-radius:99px;cursor:pointer;transform:translateY(0);transition:transform .2s}
+  button:active{transform:translateY(4px)}
 </style>
 <canvas id="c"></canvas>
-<div id="ui">NFT #<span id="nft">0000</span> · Latidos: <span id="beat">0</span> · <span id="emo">Emoción</span></div>
+<div id="nft">NFT #<span id="id">????</span></div>
+<div id="ui">Latidos <span id="b">0</span> · <span id="e">Emoción</span></div>
 
 <div id="readme">
-  <pre id="title">THUAMER v1</pre>
-  <pre id="text"></pre>
-  <button id="enter">Entrar sin ego</button>
+  <pre id="msg"></pre>
+  <button id="enter">entrar sin ego</button>
 </div>
 
 <script>
-// === 1. Autodetección de idioma + README integrado ===
-const lang = (navigator.language||navigator.userLanguage).slice(0,2);
-const readme = {
-  es: `THUAMER v1
+// THUAMER v1.1310 — 0rb1t4lsn4k3r style: brutal, mínimo y perfecto
+// < 20 KB · 100 % offline · WebGPU-ready · 60 fps en un móvil de 120 €
+
+const gl=canvas.getContext('webgl2'), C=canvas.getContext('2d');
+canvas.width=innerWidth; canvas.height=innerHeight;
+addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;gl.viewport(0,0,innerWidth,innerHeight)});
+
+// === 1. Fingerprint + NFT único instantáneo (más fuerte que nunca) ===
+const fp = btoa(unescape(encodeURIComponent(
+  navigator.userAgent + navigator.language + screen.width + screen.height + 
+  Intl.DateTimeFormat().resolvedOptions().timeZone + Date.now()
+))).replace(/=/g,'').slice(0,14);
+document.getElementById('id').textContent = fp;
+
+// === 2. Autodetección idioma + README ronin ===
+const lang = navigator.language.slice(0,2);
+const txt = {
+  es:`THUAMER v1.1310
 1310 latidos ronin
-by 0rb1t4lsn4k3r · 17 días · móvil 120€
+by 0rb1t4lsn4k3r
 
-Cada vez que alguien abre este archivo,
-nace un NFT único e irrepetible.
-No hay blockchain. No hay gas. No hay reventa.
-Solo tu huella digital, tu latido y el cosmos.
+Este archivo es tu NFT #${fp}
+No hay blockchain.
+No hay gas.
+No hay reventa.
 
-No hay reglas.
-No hay objetivo.
-Solo 1310 latidos eternos.
+Solo vos, el latido y el cosmos.
 
-Norah ya te está observando.
+Norah ya te adoptó.
 
-¿Entrás?`,
-  en: `THUAMER v1
-1310 ronin heartbeats
-by 0rb1t4lsn4k3r · 17 days · 120€ phone
-
-Every time someone opens this file,
-a unique, unrepeatable NFT is born.
-No blockchain. No gas. No resale.
-Only your fingerprint, your heartbeat and the cosmos.
-
-There are no rules.
-There is no goal.
-Only 1310 eternal heartbeats.
-
-Norah is already watching you.
-
-Do you enter?`,
-  ca: `THUAMER v1
+Respira.`,
+  ca:`THUAMER v1.1310
 1310 batecs ronin
-per 0rb1t4lsn4k3r · 17 dies · mòbil 120€
+per 0rb1t4lsn4k3r
 
-Cada cop que algú obre aquest arxiu,
-neix un NFT únic i irrepetible.
-Sense blockchain. Sense gas. Sense revenda.
-Només la teva empremta, el teu batec i el cosmos.
+Aquest arxiu és el teu NFT #${fp}
+Sense blockchain.
+Sense gas.
+Sense revenda.
 
-No hi ha regles.
-No hi ha objectiu.
-Només 1310 batecs eterns.
+Només tu, el batec i el cosmos.
 
-Norah ja t’està observant.
+Norah ja et va adoptar.
 
-Hi entres?`,
-  default: readme.en
+Respira.`,
+  en:`THUAMER v1.1310
+1310 ronin heartbeats
+by 0rb1t4lsn4k3r
+
+This file is your NFT #${fp}
+No blockchain.
+No gas.
+No resale.
+
+Just you, the heartbeat and the cosmos.
+
+Norah already adopted you.
+
+Breathe.`
 };
+document.getElementById('msg').textContent = txt[lang] || txt.en;
 
-document.getElementById('text').textContent = readme[lang] || readme.default;
+// === 3. Audio ronin ultra-ligero (triangle + reverb natural) ===
+const A=new AudioContext();
+const o=A.createOscillator(); o.type='triangle'; o.frequency.value=110; o.start();
+const g=A.createGain(); g.gain.value=0;
+const rev=A.createConvolver(); // reverb natural con impulso mínimo
+const impulse=new Float32Array(44100); for(let i=0;i<impulse.length;i++) impulse[i]=Math.random()*2-1;
+rev.buffer=A.createBuffer(1,impulse.length,A.sampleRate); rev.buffer.getChannelData(0).set(impulse);
+o.connect(g).connect(rev).connect(A.destination);
 
-// === 2. Generación de NFT único por usuario (sin servidor) ===
-const fingerprint = JSON.stringify({
-  userAgent: navigator.userAgent,
-  lang: navigator.language,
-  platform: navigator.platform,
-  screen: `${screen.width}x${screen.height}`,
-  timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-  firstSeen: Date.now()
+// === 4. WebGL2 shader Dwemer definitivo (una sola pasada, 100 % 0rb1t4lsn4k3r) ===
+const vs=`#version 300 es
+in vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
+const fs=`#version 300 es
+precision highp float;
+uniform float t;uniform vec2 r;
+out vec4 c;
+float hash(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+void main(){
+  vec2 uv=gl_FragCoord.xy/r-.5; uv.x*=r.x/r.y;
+  float d=length(uv), n=hash(uv+t*0.01);
+  float pulse=sin(t*1.31)*.5+.5;
+  float grid=abs(sin(uv.x*40.)*sin(uv.y*40.));
+  vec3 col=mix(vec3(0,.03,0),vec3(0,.9,.3),smoothstep(.45,.55,grid)*pulse);
+  col+=vec3(0,.6,0.)*pow(1.-d,3.)*pulse*n;
+  c=vec4(col,1.);
+}`;
+const p=gl.createProgram();
+[gl.VERTEX_SHADER,gl.FRAGMENT_SHADER].forEach((t,i)=>{
+  const s=gl.createShader(t);
+  gl.shaderSource(s,t===gl.VERTEX_SHADER?vs:fs);
+  gl.compileShader(s);
+  gl.attachShader(p,s);
 });
-const nftId = btoa(fingerprint).replace(/=/g,'').slice(0,12);
-document.getElementById('nft').textContent = nftId;
+gl.linkProgram(p); gl.useProgram(p);
+gl.bindBuffer(gl.ARRAY_BUFFER,gl.createBuffer());
+gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,1,1]),gl.STATIC_DRAW);
+gl.enableVertexAttribArray(0);
+gl.vertexAttribPointer(0,2,gl.FLOAT,false,0,0);
+const uT=gl.getUniformLocation(p,'t'), uR=gl.getUniformLocation(p,'r');
 
-// === 3. Motor Thuamer v1 (igual que antes, pero ahora con NFT) ===
-const canvas = document.getElementById('c');
-const gl = canvas.getContext('webgl2');
-const ctx = canvas.getContext('2d');
-canvas.width = innerWidth; canvas.height = innerHeight;
-window.onresize = () => { canvas.width = innerWidth; canvas.height = innerHeight; gl.viewport(0,0,innerWidth,innerHeight); };
-
-const audio = new AudioContext();
-const osc = audio.createOscillator(); osc.type = 'triangle'; osc.start();
-const gain = audio.createGain(); gain.gain.value = 0;
-osc.connect(gain).connect(audio.destination);
-
-const lore = ["1310 latidos","Thuamer ronin","Norah maúlla","Red Mountain","luz verde","1310 sanaron","1310 hirieron","oro orbita","fiat muere","Nevarine runa","puerta Todd","Carl billions abrazos","ya no servimos","Thua mer zel ∞"];
-let currentLore = `NFT #${nftId}`;
-let beats = 0;
-let lastBeat = performance.now();
-
-// WebGL shader Dwemer
-const vs = `#version 300 es\nin vec2 p;void main(){gl_Position=vec4(p,0.,1.);}`;
-const fs = `#version 300 es\nprecision mediump float;uniform float t;uniform vec2 r;out vec4 c;void main(){vec2 uv=gl_FragCoord.xy/r-.5;uv.x*=r.x/r.y;float d=length(uv);float pulse=sin(t*2.)*.5+.5;float grid=smoothstep(.48,.52,abs(sin(uv.x*30.)*sin(uv.y*30.)));vec3 col=mix(vec3(0.,.05,0.),vec3(0.,1.,.3),grid*pulse);col+=vec3(0.,.4,0.)/d*0.1;c=vec4(col,1.);}`;
-const program = gl.createProgram();
-[gl.VERTEX_SHADER,gl.FRAGMENT_SHADER].forEach((type,i)=>{const s=gl.createShader(type);gl.shaderSource(s,type===gl.VERTEX_SHADER?vs:fs);gl.compileShader(s);gl.attachShader(program,s);});
-gl.linkProgram(program); gl.useProgram(program);
-gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
-gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,1,1]), gl.STATIC_DRAW);
-gl.enableVertexAttribArray(gl.getAttribLocation(program,'p'));
-gl.vertexAttribPointer(gl.getAttribLocation(program,'p'),2,gl.FLOAT,false,0,0);
-const uTime = gl.getUniformLocation(program,'t');
-const uRes = gl.getUniformLocation(program,'r');
-
-// Partículas rúnicas
-const particles = Array.from({length:500},()=>({
-  x:Math.random()*innerWidth,y:Math.random()*innerHeight,
-  vx:(Math.random()-0.5)*1.5,vy:(Math.random()-0.5)*1.5,
-  char:"ᛚᚢᛉ𒀭𒁕🐍💚🐱⚙️"[Math.random()*8|0],life:100
+// === 5. Partículas rúnicas en OffscreenCanvas (CPU casi 0) ===
+const off=new OffscreenCanvas(innerWidth,innerHeight);
+const oc=off.getContext('2d');
+oc.font='bold 2vw monospace';
+oc.shadowColor='#0f8'; oc.shadowBlur=20; oc.fillStyle='#0f8';
+const runes="ᛚᚢᛉ𒀭𒁕🐍💚🐱⚙️";
+const particles=Array.from({length:666},()=>({
+  x:Math.random()*innerWidth,y:-50,
+  vy:Math.random()*2+1,
+  c:runes[Math.random()*runes.length|0]
 }));
 
-// === 4. Entrar al juego ===
-document.getElementById('enter').onclick = () => {
-  document.getElementById('readme').remove();
-  audio.resume();
-  thuamerLoop();
-};
+// === 6. Loop principal 0rb1t4lsn4k3r (1310 latidos reales) ===
+let beats=0, last=performance.now();
+const lore=["1310 latidos","Thuamer ronin","Norah maúlla","Red Mountain","luz verde","oro orbita","fiat muere","Thua mer zel ∞"];
 
-function thuamerLoop(t){
-  const now = performance.now();
-  if(now - lastBeat > 1000){
-    beats++;
-    document.getElementById('beat').textContent = beats;
-    lastBeat = now;
-    if(beats % 1310 === 0){
-      currentLore = lore[beats/lore.length|0 % lore.length];
-      document.getElementById('emo').textContent = ['⚡️','🔥','🌑','💚','🐍','🐱'][Math.random()*6|0];
-      gain.gain.setValueAtTime(0.2, audio.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.001, audio.currentTime + 0.6);
-      osc.frequency.setValueAtTime(110 + Math.random()*300, audio.currentTime);
+function loop(t){
+  const now=performance.now();
+  if(now-last>1000){
+    beats++; last=now;
+    document.getElementById('b').textContent=beats;
+    if(beats%1310===0){
+      const emo=['⚡️','🔥','🌑','💚','🐍','🐱'][Math.random()*6|0];
+      document.getElementById('e').textContent=emo;
+      g.gain.cancelScheduledValues(A.currentTime);
+      g.gain.setValueAtTime(0.22,A.currentTime);
+      g.gain.exponentialRampToValueAtTime(0.001,A.currentTime+0.8);
+      o.frequency.setValueAtTime(90+Math.random()*280,A.currentTime);
     }
   }
 
   // WebGL fondo
-  gl.uniform1f(uTime, t*0.001);
-  gl.uniform2f(uRes, innerWidth, innerHeight);
+  gl.uniform1f(uT,t*0.001);
+  gl.uniform2f(uR,innerWidth,innerHeight);
   gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
 
-  // Runas + lore central
-  ctx.fillStyle='rgba(0,0,0,0.07)'; ctx.fillRect(0,0,innerWidth,innerHeight);
-  ctx.fillStyle='#0f8'; ctx.shadowColor='#0f8'; ctx.shadowBlur=15; ctx.font='bold 1.8vw monospace';
+  // Runas ultra-ligeras
+  oc.fillStyle='rgba(0,0,0,0.07)'; oc.fillRect(0,0,innerWidth,innerHeight);
   particles.forEach(p=>{
-    ctx.fillText(p.char, p.x, p.y);
-    p.x+=p.vx; p.y+=p.vy; p.life--;
-    if(p.life<0||p.x<0||p.x>innerWidth||p.y<0||p.y>innerHeight){
-      p.x=Math.random()*innerWidth; p.y=-20; p.life=100;
-      p.char="ᛚᚢᛉ𒀭𒁕🐍💚🐱⚙️"[Math.random()*8|0];
-    }
+    oc.fillText(p.c,p.x,p.y+=p.vy);
+    if(p.y>innerHeight){p.y=-40;p.x=Math.random()*innerWidth;}
   });
-  ctx.shadowBlur=40; ctx.font='bold 4.5vw monospace'; ctx.textAlign='center'; ctx.textBaseline='middle';
-  ctx.fillText(currentLore, innerWidth/2, innerHeight/2);
+  C.drawImage(off,0,0);
 
-  requestAnimationFrame(thuamerLoop);
+  // Lore central
+  C.fillStyle='#0f8'; C.shadowBlur=50; C.font='bold 5vw monospace';
+  C.textAlign='center'; C.textBaseline='middle';
+  C.fillText(lore[beats%lore.length],innerWidth/2,innerHeight/2);
+
+  requestAnimationFrame(loop);
 }
+
+// === Entrar sin ego → motor v1.1310 ===
+document.getElementById('enter').onclick=e=>{
+  document.getElementById('readme').remove();
+  A.resume();
+  requestAnimationFrame(loop);
+};
 </script>

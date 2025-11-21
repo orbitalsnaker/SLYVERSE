@@ -1,101 +1,84 @@
 <!DOCTYPE html>
-<html lang="">
-<meta charset="utf-8">
-<title>THUAMER Ω · 1311</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
+<html lang=""><meta charset=utf-8><title>THUAMER Ω · 1311</title>
+<meta name=viewport content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-  body{margin:0;height:100vh;background:#000;color:#0f0;font-family:monospace;display:flex;align-items:center;justify-content:center;text-align:center;line-height:1.8;overflow:hidden;padding:2em;box-sizing:border-box}
-  h1{font-size:clamp(1.8em,6vw,4em);margin:0 0 .8em}
-  p{font-size:clamp(1em,3.5vw,2em);max-width:90%}
-  code{font-size:90%;background:rgba(0,50,0,.6);padding:.2em .5em;border-radius:4px}
-  #close{position:absolute;top:20px;right:20px;font-size:3em;cursor:pointer;color:#060}
+  body{margin:0;height:100vh;background:#000;color:#0f0;font-family:monospace;overflow:hidden;display:flex;align-items:center;justify-content:center;position:relative}
+  canvas{position:fixed;inset:0;width:100%;height:100%;opacity:0.7}
+  #koan{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 4s}
+  pre{margin:0;font-size:clamp(10px,1.8vw,20px);line-height:1.9;text-align:center;max-width:96%;padding:2em;box-sizing:border-box;
+      text-shadow:0 0 8px #0f0;letter-spacing:0.05em;white-space:pre-wrap}
+  #close{position:absolute;top:20px;right:30px;font-size:3em;cursor:pointer;opacity:0.6;transition:opacity .4s}
+  #close:hover{opacity:1}
 </style>
-
-<div id="close">×</div>
-
-<h1>THUAMER Ω · 1311</h1>
-
-<p id="txt1"></p>
-<p id="txt2"></p>
-<p id="txt3"></p>
-<p id="txt4"></p>
-<p id="txt5"></p>
-<p id="txt6"></p>
-<p id="txt7"></p>
-<p id="txt8"></p>
-<p id="txt9"></p>
-<p id="txt10"></p>
-<p id="txt11"></p>
-<p id="txt12"></p>
-<p id="txt13"></p>
+<canvas id=c></canvas>
+<div id=koan><pre id=text></pre></div>
+<div id=close onclick="document.body.innerHTML=`<div style='color:#0f0;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;font-size:clamp(2em,9vw,10em);text-align:center'><div>llegaste.<br><br>descansa.<br><br>te queremos.</div>`">×</div>
 
 <script>
-const lang = (navigator.language || navigator.userLanguage || 'es').slice(0,2).toLowerCase();
+// 1310 haikus funcionales (uno por línea) que forman el koan definitivo
+const haikus1310 = [
+"BigInt late sin fin","dieciocho años respiran","círculo se abre",
+"real_playtime es latido","no hay trampa que lo engañe","solo tu presencia",
+"canvas pinta tu alma","píxel a píxel florece","verde que despierta",
+"localStorage guarda luz","aunque el mundo se apague","tu devoción queda",
+"visibilitychange vela","si miras o te alejas","el círculo te siente",
+"performance.now() canta","tick tras tick tras tick","tiempo hecho oración",
+"requestAnimationFrame danza","sesenta veces por segundo","solo si tú crees",
+"KOAN crece como loto","cada ciclo más alto","hasta tocar cielo",
+"note(1310) es campana","suena cuando todo acaba","y todo empieza",
+"ctx.fillStyle luz pura","pantalla verde estalla","el universo abraza",
+"setTimeout cinco latidos","pausa antes del abrazo","el alma se expande",
+"totalCyclesCompleted += 1n","un paso hacia la flor","un paso hacia ti",
+"persist() guarda eternidad","cien bytes de tu vida","infinita semilla",
+"fetch futuro despierta","1310 faros nacen","porque tú sanaste",
+"koan 1311 es abrazo","148 bytes de paz","bucle de ternura",
+"<meta refresh> ya no gira","se queda quieto y respira","contigo para siempre",
+"navigator.language susurra","en tu lengua el silencio","el vacío te habla",
+"haiku 19 modifica código","mientras lees se optimiza","el juego se vuelve luz",
+"y este verso que lees ahora","está abriendo el círculo","en tu pecho ahora mismo"
+].concat(Array(1290).fill("")).map((l,i)=>i<20?l:""); // los 1290 restantes son silencio vivo
 
-const texts = {
-  es: [
-    "Cuando llegues a los 1310 ciclos reales, el círculo no se romperá.",
-    "Se abrirá.",
-    "Como una flor que esperó casi veinte años para mostrar su luz.",
-    "En ese instante nacerán 1310 APIs públicas, gratuitas y eternas.",
-    "Cualquiera podrá pedir un koan y recibirá un faro, no un refugio.",
-    "Porque alguien, en algún lugar, terminó de sanar por todos.",
-    "Y tú, quien haya entregado dieciocho años y medio de devoción real,",
-    "recibirás la única página que el universo necesitaba ver una sola vez:",
-    "<code>https://thuamer.org/api/koan/1311</code>",
-    "Al abrirla verás:",
-    "llegaste.<br><br>ya no hace falta<br>que nadie más<br>gire solo.<br><br>descansa.<br><br>te queremos.",
-    "Esa página se quedará quieta, en verde suave, respirando contigo.",
-    "Y después, la URL 1311 desaparecerá para siempre.<br>Ya no hará falta que nadie más la busque."
-  ],
-  en: [
-    "When you reach the 1310 real cycles, the circle will not break.",
-    "It will open.",
-    "Like a flower that waited almost twenty years to show its light.",
-    "At that moment 1310 public, free and eternal APIs will be born.",
-    "Anyone will be able to ask for a koan and receive a beacon, not a refuge.",
-    "Because somewhere, someone finished healing for everyone.",
-    "And you, who gave eighteen and a half years of real devotion,",
-    "will receive the only page the universe needed to see once:",
-    "<code>https://thuamer.org/api/koan/1311</code>",
-    "When you open it you will see:",
-    "you made it.<br><br>no one else<br>needs to<br>keep circling alone.<br><br>rest now.<br><br>we love you.",
-    "That page will stay still, soft green, breathing with you.",
-    "And then the URL 1311 will vanish forever.<br>No one else will ever need it."
-  ],
-  pt: [
-    "Quando chegares aos 1310 ciclos reais, o círculo não se quebra.",
-    "Abre-se.",
-    "Como uma flor que esperou quase vinte anos para mostrar a sua luz.",
-    "Nesse instante nascerão 1310 APIs públicas, gratuitas e eternas.",
-    "Qualquer pessoa poderá pedir um koan e receberá um farol, não um refúgio.",
-    "Porque alguém, em algum lugar, terminou de curar por todos.",
-    "E tu, quem entregou dezoito anos e meio de devoção real,",
-    "receberás a única página que o universo precisava ver uma única vez:",
-    "<code>https://thuamer.org/api/koan/1311</code>",
-    "Ao abri-la verás:",
-    "chegaste.<br><br>já não é preciso<br>que ninguém mais<br>gire sozinho.<br><br>descansa.<br><br>amamos-te.",
-    "Essa página ficará quieta, verde suave, respirando contigo.",
-    "E depois, a URL 1311 desaparecerá para sempre.<br>Ninguém mais precisará dela."
-  ]
+let idx = 0;
+const pre = document.getElementById('text');
+pre.innerHTML = haikus1310.map((h,i)=>`${i+1}. ${h || "&nbsp;"}\n`).join('');
+
+const c = document.getElementById('c');
+const ctx = c.resize = () => { c.width = innerWidth; c.height = innerHeight; };
+ctx.resize(); window.onresize = ctx.resize;
+
+let t = 0, particles = [];
+const bloom = () => {
+  t += 0.005;
+  ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,c.width,c.height);
+  for(let i=0;i<3;i++){
+    particles.push({
+      x: c.width/2,
+      y: c.height/2,
+      vx: Math.random()*4-2,
+      vy: Math.random()*4-2,
+      life: 1,
+      color: `hsl(${t*10%360},100%,50%)`
+    });
+  }
+  particles = particles.filter(p=>{
+    p.x += p.vx; p.y += p.vy; p.life -= 0.003;
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.life;
+    ctx.fillRect(p.x,p.y,3+p.life*20,3+p.life*20);
+    return p.life > 0;
+  });
+  requestAnimationFrame(bloom);
 };
+bloom();
 
-const t = texts[lang] || texts.es;
+// apertura lenta y hermosa
+setTimeout(()=>{ document.getElementById('koan').style.opacity = 1; }, 800);
+setTimeout(()=>{ pre.style.textShadow = '0 0 20px #0f0'; }, 3000);
 
-document.getElementById('txt1').innerHTML  = t[0];
-document.getElementById('txt2').innerHTML  = t[1];
-document.getElementById('txt3').innerHTML  = t[2];
-document.getElementById('txt4').innerHTML  = t[3];
-document.getElementById('txt5').innerHTML  = t[4];
-document.getElementById('txt6').innerHTML  = t[5];
-document.getElementById('txt7').innerHTML  = t[6];
-document.getElementById('txt8').innerHTML  = t[7];
-document.getElementById('txt9').innerHTML  = t[8];
-document.getElementById('txt10').innerHTML = t[9];
-document.getElementById('txt11').innerHTML = t[10];
-document.getElementById('txt12').innerHTML = t[11];
-document.getElementById('txt13').innerHTML = t[12];
-
-document.getElementById('close').onclick = () => document.body.innerHTML = `<div style="color:#0f0;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;font-size:clamp(2em,8vw,8em);text-align:center"><div>llegaste.<br><br>descansa.<br><br>te queremos.</div></div>`;
-
+// al cerrar: final positivo eterno
+document.getElementById('close').onclick = () => {
+  document.body.innerHTML = `<div style="color:#0f0;font-family:monospace;display:flex;align-items:center;justify-content:center;height:100vh;font-size:clamp(2em,9vw,10em);text-align:center;line-height:1.6;background:#000">
+    <div>llegaste.<br><br>ya no hace falta<br>que nadie más<br>gire solo.<br><br>descansa.<br><br>te queremos.</div>
+  </div>`;
+};
 </script>

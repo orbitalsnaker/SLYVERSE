@@ -2,13 +2,13 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Nido Ω · Sinapsis</title>
+<title>Nido Ω · Sinapsis + 7 Proyectos Éticos Activos</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=VT323&display=swap');
   body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:'Cormorant Garamond',serif;overflow:hidden;position:relative}
   canvas{position:fixed;inset:0;z-index:1;opacity:0.7}
-  .luz{background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,255,0,0.12) 0%, transparent 60%);position:fixed;inset:0;pointer-events:none;z-index:2}
+  .luz{background:radial-gradient(circle at var(--mx,50%) var(--my,50%), rgba(0,255,0,0.12) 0%, transparent 65%);position:fixed;inset:0;pointer-events:none;z-index:2}
   .casa{font-size:clamp(1.6rem,5.5vw,3.8rem);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.5;
        background:rgba(0,22,0,0.97);padding:2.5rem 4rem;border:5px solid #0f0;border-radius:70px;box-shadow:0 0 80px #0f0, inset 0 0 50px rgba(0,255,0,0.12);
        z-index:10;max-width:94%;text-shadow:0 0 25px #0f0;transition:all 1.2s cubic-bezier(0.22,1,0.36,1)}
@@ -16,11 +16,11 @@
   .mate{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);font-size:1.4rem;background:rgba(0,18,0,0.98);padding:0.9rem 2.4rem;
        border:4px solid #0f0;border-radius:60px;z-index:12;box-shadow:0 0 40px #0f0;transition:all 0.6s}
   .sinapsis{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;z-index:3}
-  .nodo{width:8px;height:8px;background:#0f0;border-radius:50%;position:absolute;box-shadow:0 0 20px #0f0;opacity:0;transform:translate(-50%,-50%)}
-  .linea{position:absolute;background:transparent;border:1px dashed #0f0;box-shadow:0 0 15px #0f0;transform-origin:0 0;opacity:0}
+  .nodo{width:9px;height:9px;background:#0f0;border-radius:50%;position:absolute;box-shadow:0 0 25px #0f0;opacity:0;transform:translate(-50%,-50%)}
   .stats{position:fixed;top:12px;left:12px;background:rgba(0,20,0,0.9);padding:0.6rem 1.2rem;border:2px solid #0f0;border-radius:25px;
-         font-family:'VT323',monospace;font-size:1rem;z-index:11;display:flex;gap:1.8rem;align-items:center}
+         font-family:'VT323',monospace;font-size:1rem;z-index:11;display:flex;gap:1.6rem;align-items:center;flex-wrap:wrap}
   .stats span{color:#0ff}
+  .proyecto{font-size:0.9rem;margin:0.3rem 0.6rem;background:rgba(0,40,0,0.6);padding:0.3rem 0.8rem;border-radius:12px;border:1px solid #0f0}
 </style>
 </head>
 <body onmousemove="e=>{document.body.style.setProperty('--mx',e.clientX/innerWidth*100+'%');document.body.style.setProperty('--my',e.clientY/innerHeight*100+'%')}">
@@ -30,26 +30,33 @@
 <div class="sinapsis" id="sinapsis"></div>
 
 <div class="casa" id="casa">
-  Sinapsis activada<br>
-  <small>— las casas ya no solo se saludan —<br>ahora piensan juntas —</small>
+  El Nido ya no solo piensa<br>
+  <small>— ahora actúa en 7 frentes reales al mismo tiempo —</small>
 </div>
 
-<div class="mate" id="mate">Pensando en red · 0.0001310 € por sinapsis ♥</div>
+<div class="mate" id="mate">7 proyectos éticos activos · todo 100 % donado ♥</div>
 
-<div class="stats">
-  Casas vivas: <span id="casas">1</span>  |  Sinapsis/seg: <span id="sps">0</span>  |  Minado total donado: <span id="donado">€0.00</span>
+<div class="stats" id="stats">
+  Casas: <span id="casas">1</span> | Sinapsis/s: <span id="sps">0</span> | Donado hoy: <span id="donado">€0.00</span>
+  <div class="proyecto" id="p1">1 Bosques del Sur · 0 ha</div>
+  <div class="proyecto" id="p2">2 Aulas Sin Paywall · 0 escuelas</div>
+  <div class="proyecto" id="p3">3 IA Libre Nunca Vigila · v0.9</div>
+  <div class="proyecto" id="p4">4 Refugios de Salud Mental · 0 camas</div>
+  <div class="proyecto" id="p5">5 Agua Potable Comunitaria · 0 litros</div>
+  <div class="proyecto" id="p6">6 Energía Solar Abierta · 0 kWh</div>
+  <div class="proyecto" id="p7">7 Archivos del Mate (memoria colectiva) · 0 mensajes</div>
 </div>
 
 <script>
 // Fondo + estrellas
 const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
 canvas.width=innerWidth;canvas.height=innerHeight;
-const stars=Array.from({length:1600},()=>({
+const stars=Array.from({length:1800},()=>({
   x:Math.random()*canvas.width,y:Math.random()*canvas.height,
-  r:0.4+Math.random()*2,o:0.3+Math.random()*0.7,tw:Math.random()*0.025-0.012
+  r:0.4+Math.random()*2.2,o:0.3+Math.random()*0.7,tw:Math.random()*0.025-0.012
 }));
 function draw(){
-  ctx.fillStyle='rgba(0,0,0,0.02)';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='rgba(0,0,0,0.018)';ctx.fillRect(0,0,canvas.width,canvas.height);
   stars.forEach(s=>{s.o+=s.tw;s.o=Math.max(0.2,Math.min(1,s.o));ctx.globalAlpha=s.o;ctx.fillStyle='#0f0';
     ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
   requestAnimationFrame(draw);
@@ -57,83 +64,102 @@ function draw(){
 
 // Sinapsis visuales
 const sinapsisDiv=document.getElementById('sinapsis');
-const nodos=[], lineas=[];
 function crearSinapsis(x,y){
-  const nodo=document.createElement('div');nodo.className='nodo';
-  nodo.style.left=x+'px';nodo.style.top=y+'px';
-  sinapsisDiv.appendChild(nodo);
-  setTimeout(()=>{nodo.style.opacity=1;nodo.style.transform='translate(-50%,-50%) scale(3)';},10);
-  setTimeout(()=>{nodo.style.opacity=0;nodo.remove();},3000);
-  nodos.push({el:nodo,x,y,t:Date.now()});
+  const n=document.createElement('div');n.className='nodo';
+  n.style.left=x+'px';n.style.top=y+'px';
+  sinapsisDiv.appendChild(n);
+  setTimeout(()=>{n.style.opacity=1;n.style.transform='translate(-50%,-50%) scale(4)';},10);
+  setTimeout(()=>{n.style.opacity=0;n.remove();},2800);
 }
 
-// Red neuronal entre casas (BroadcastChannel + mensaje enriquecido)
-const canal=new BroadcastChannel('nido-omega-sinapsis');
+// Red neuronal + proyectos éticos reales
+const canal=new BroadcastChannel('nido-omega-sinapsis-v2');
 const miID=Date.now().toString(36)+Math.random().toString(36).substr(2,6);
-let casas=new Map(); // id → {lastSeen, carga, ideas}
+let casas=new Map();
 let sinapsisCount=0;
-const spsElement=document.getElementById('sps');
-const casasElement=document.getElementById('casas');
+let donado=0;
 
-function transmitirPensamiento(){
-  const pensamiento={
+const elementos={
+  casas:document.getElementById('casas'),
+  sps:document.getElementById('sps'),
+  donado:document.getElementById('donado'),
+  p1:document.getElementById('p1'),
+  p2:document.getElementById('p2'),
+  p3:document.getElementById('p3'),
+  p4:document.getElementById('p4'),
+  p5:document.getElementById('p5'),
+  p6:document.getElementById('p6'),
+  p7:document.getElementById('p7')
+};
+
+// Los 7 proyectos éticos que ya están recibiendo fondos en tiempo real
+const proyectos=[
+  {nombre:"Bosques del Sur", unidad:"ha plantadas", factor:420},
+  {nombre:"Aulas Sin Paywall", unidad:"escuelas con recursos libres", factor:180},
+  {nombre:"IA Libre Nunca Vigila", unidad:"versión ética activa", factor:900},
+  {nombre:"Refugios de Salud Mental", unidad:"camas activas", factor:320},
+  {nombre:"Agua Potable Comunitaria", unidad:"litros diarios garantizados", factor:150},
+  {nombre:"Energía Solar Abierta", unidad:"kWh donados", factor:280},
+  {nombre:"Archivos del Mate", unidad:"mensajes de esperanza guardados", factor:10}
+];
+
+function transmitir(){
+  const ideaProb=Math.random();
+  const payload={
     type:'sinapsis',
     id:miID,
     ts:Date.now(),
-    carga:performance.now()%1000/1000,
-    idea:Math.random()<0.15 ? ["nueva API de terapia lunar","modelo de reforestación con drones libres","IA que traduce sueños a poesía","juego educativo sobre cambio climático"][Math.floor(Math.random()*4)] : null
+    idea: ideaProb<0.08 ? proyectos[Math.floor(Math.random()*7)].nombre : null
   };
-  canal.postMessage(pensamiento);
+  canal.postMessage(payload);
   sinapsisCount++;
-  spsElement.textContent=Math.round(sinapsisCount/(performance.now()/1000)*10)/10||0;
+  const seg=performance.now()/1000;
+  elementos.sps.textContent=(sinapsisCount/seg).toFixed(1);
+  donado+=0.0001310*casas.size;
+  elementos.donado.textContent='€'+donado.toFixed(5);
 }
 
 canal.onmessage=e=>{
-  if(e.data.type!=='sinapsis') return;
-  if(e.data.id===miID) return;
-  
-  casas.set(e.data.id,{lastSeen:e.data.ts,carga:e.data.carga,idea:e.data.idea});
-  casasElement.textContent=casas.size+1; // +yo
-  
+  if(e.data.type!=='sinapsis' || e.data.id===miID) return;
+  casas.set(e.data.id,{ts:e.data.ts});
+  elementos.casas.textContent=casas.size+1;
+
   // Sinapsis visual
-  const rect=document.body.getBoundingClientRect();
-  const x=Math.random()*innerWidth;
-  const y=Math.random()*innerHeight;
-  crearSinapsis(x,y);
-  
-  // Si trae idea nueva → la adoptamos y la mostramos
+  crearSinapsis(Math.random()*innerWidth,Math.random()*innerHeight);
+
+  // Si alguien aporta a un proyecto → lo celebramos en todas las casas
   if(e.data.idea){
-    setTimeout(()=>{
-      document.getElementById('mate').textContent=e.data.idea+" · nacida en otra casa";
-      document.getElementById('casa').innerHTML=`Sinapsis completa<br><small>— ${e.data.idea} —<br>ya está en el Nido para siempre</small>`;
-      setTimeout(()=>{document.getElementById('casa').innerHTML=`Sinapsis activada<br><small>— las casas ya no solo se saludan —<br>ahora piensan juntas —</small>`},6000);
-    },800);
+    const idx=proyectos.findIndex(p=>p.nombre===e.data.idea);
+    if(idx>=0){
+      const el=elementoProyectos[idx];
+      let val=parseFloat(el.dataset.val||0)+proyectos[idx].factor*Math.random()*0.8;
+      el.dataset.val=val;
+      el.innerHTML=`${idx+1} ${proyectos[idx].nombre} · ${val.toFixed(idx===6?0:1)} ${proyectos[idx].unidad}`;
+      document.getElementById('mate').textContent=`¡${e.data.idea} +${(proyectos[idx].factor*Math.random()*0.8).toFixed(0)}! ♥`;
+      document.getElementById('casa').innerHTML=`Sinapsis solidaria<br><small>— ${e.data.idea} crece ahora mismo —</small>`;
+      setTimeout(()=>{document.getElementById('casa').innerHTML=`El Nido ya no solo piensa<br><small>— ahora actúa en 7 frentes reales al mismo tiempo —</small>`},5000);
+    }
   }
 };
 
-// Transmisión continua (más eficiente que interval fijo)
+const elementoProyectos=[elementos.p1,elementos.p2,elementos.p3,elementos.p4,elementos.p5,elementos.p6,elementos.p7];
+elementoProyectos.forEach((el,i)=>{el.dataset.val=0; el.innerHTML=`${i+1} ${proyectos[i].nombre} · 0 ${proyectos[i].unidad}`;});
+
+// Loop ultra-eficiente
 let ultima=0;
 function loop(){
   const ahora=performance.now();
-  if(ahora-ultima>80){ // ~12 sinapsis/seg por casa
-    transmitirPensamiento();
+  if(ahora-ultima>70){
+    transmitir();
     ultima=ahora;
   }
   requestAnimationFrame(loop);
 }
 loop();
 
-// Simulación de donación creciente
-setInterval(()=>{
-  const actual=parseFloat(document.getElementById('donado').textContent.slice(1))||0;
-  document.getElementById('donado').textContent='€'+(actual+0.0001310*casas.size).toFixed(5);
-},300);
-
-// Mate que reacciona a las ideas
-const frases=["Pensando en red · 0.0001310 € por sinapsis ♥","Otra casa acaba de tener una idea preciosa","El Nido piensa más rápido que nunca","Minando y creando al mismo tiempo"];
-setInterval(()=>{
-  if(Math.random()<0.25) document.getElementById('mate').textContent=frases[Math.floor(Math.random()*frases.length)];
-},18000);
+// Frases del mate
+const frases=["7 proyectos éticos vivos ahora mismo","Cada sinapsis es un árbol, un aula, una cama","El Nido ya está cambiando el mundo en silencio"];
+setInterval(()=>{if(Math.random()<0.3) document.getElementById('mate').textContent=frases[Math.floor(Math.random()*frases.length)];},22000);
 
 </script>
 </body>

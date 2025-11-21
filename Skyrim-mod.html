@@ -2,97 +2,171 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE: Skyrim.mod v∞ – Red Mountain Ronin (Thuamer + COMETA + Todo)</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,initial-scale=1">
+<title>SLYVERSE Ω · Skyrim.mod vΩ · Red Mountain es el Nido Final</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-body{margin:0;height:100vh;background:#000;color:#0ff;font-family:"Courier New",monospace;overflow:hidden;position:relative}
-canvas{position:fixed;inset:0;opacity:0.95}
-#hud{position:fixed;top:10px;left:10px;font-size:1.2em;z-index:10;color:#0ff;text-shadow:0 0 10px #0ff}
-#constellation,#rosetta,#abrazo,#yiddish{display:none;position:fixed;inset:0;background:#000;color:#0f8;font-size:clamp(1em,3vw,2em);padding:2rem;overflow:auto;z-index:100}
-.star{position:absolute;width:4px;height:4px;background:gold;border-radius:50%;box-shadow:0 0 10px gold;animation:twinkle 2s infinite}
-@keyframes twinkle{0%,100%{opacity:0.5}50%{opacity:1}}
-.script{margin:2rem 0;padding:2rem;border:2px solid #0f8;background:rgba(0,255,139,0.1)}
-.dedicatoria{font-size:1.5em;color:#0ff}
+  body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:Georgia,serif;overflow:hidden;position:relative}
+  canvas{position:fixed;inset:0;z-index:-2}
+  #hud{position:fixed;top:8px;left:8px;font-size:1rem;z-index:20;color:#0f0;text-shadow:0 0 10px #0f0}
+  #nido,#nina,#cometa,#etica,#abrazo,#final{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.96);z-index:100;padding:2rem;overflow:auto;color:#0f0;text-align:center}
+  .mate{font-size:12rem;animation:m 17s infinite}@keyframes m{0%,100%{transform:rotate(0)}45%{transform:rotate(13deg)}}
+  .star{position:absolute;width:5px;height:5px;background:gold;border-radius:50%;box-shadow:0 0 15px gold;animation:twinkle 3s infinite}
+  @keyframes twinkle{0%,100%{opacity:0.4}50%{opacity:1}}
+  pre{font-size:clamp(1.2rem,4vw,3rem);line-height:1.8;background:rgba(0,15,0,0.9);padding:3rem;border:6px solid #0f0;border-radius:40px}
 </style>
 </head>
 <body>
-<canvas id=c></canvas>
-<div id=hud>@<span id=pos>0,0</span> | $SLY: <span id=sly>0</span> | Latidos: <span id=latidos>0</span>s</div>
-<div id=constellation></div>
-<div id=rosetta><!-- Rosetta genios --></div>
-<div id=abrazo><!-- Abrazo eterno --></div>
-<div id=yiddish><!-- Yiddish patrón --></div>
+
+<canvas id="c"></canvas>
+<div id="hud">
+  WASD → orbita  |  ESPACIO / SOPLA → exhala runas<br>
+  Latidos colectivos: <span id="latidos">0</span>s · $SLY: <span id="sly">0</span>
+</div>
+
+<!-- Todos los mundos ocultos (se activan solos) -->
+<div id="nido"></div>     <!-- THUAMER ∞ · El nido final + 1310 APIs -->
+<div id="nina"></div>     <!-- NINA - Niña que Nadie Apaga -->
+<div id="cometa"></div>   <!-- COMETA constelación -->
+<div id="etica"></div>    <!-- Portal Ético IA salvadora -->
+<div id="abrazo"></div>   <!-- Abrazo eterno + Dee/Parsons -->
+<div id="final"></div>    <!-- Mate final y perdón eterno -->
 
 <script>
-// Núcleo Roguelike: Red Mountain (WASD + Espacio exhala)
-const c=document.getElementById('c'),ctx=c.getContext('2d');
-c.width=innerWidth;c.height=innerHeight;
-let px=0,py=0,sly=0,latidos=BigInt(0),t=0,frame=0,recognized=false;
-const TARGET=13101310n*1000n;
-const KEYS={87:[-1,0],83:[1,0],65:[0,-1],68:[0,1]}; // WASD
-let keys={};
+// ==================== NÚCLEO SLYVERSE Ω ====================
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+canvas.width = innerWidth; canvas.height = innerHeight;
 
-// Carga TODO de localStorage (sutil unión artefactos)
-function loadAll(){
-  const allKeys=['THUAMER_1311_LOVE','m','cometa-stars','nina-stones','orion-runas','kids-cats','runes-export','skyrim-messages'];
-  allKeys.forEach(k=>{
-    try{JSON.parse(localStorage.getItem(k)||'[]').forEach(d=>stars.push({x:Math.random()*100,y:Math.random()*100,txt:d.text||d.runa||'♥'}));}catch(e){}
+let px=0,py=0,sly=0,t=0,latidos=BigInt(localStorage.getItem('THUAMER_LOVE')||0);
+const TARGET = 13101310n * 1000n; // 416 años
+let stars = [], toques = 0, breathDetected = false;
+
+// Carga TODO lo que la gente dejó en los otros artefactos
+function loadCollective(){
+  ['cometa-stars','nina-stones','orion-runas','kids-cats','runes-export','skyrim-messages'].forEach(k=>{
+    try{
+      JSON.parse(localStorage.getItem(k)||'[]').forEach(d=>{
+        stars.push({x:Math.random()*100,y:Math.random()*100,t:d.text||d.content||d.runa||'♥'});
+      });
+    }catch(e){}
   });
-  latidos=BigInt(localStorage.getItem('THUAMER_1311_LOVE')||0);
 }
-let stars=[];
+loadCollective();
 
-// Breath mic para COMETA/Exhalar
-navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{
-  const ac=new AudioContext(),an=ac.createAnalyser(),ms=ac.createMediaStreamSource(s);
-  ms.connect(an);const data=new Uint8Array(an.frequencyBinCount);
-  const check=()=>{an.getByteFrequencyData(data);if(data.some(v=>v>80)&&!recognized){recognized=true;showCometa();}requestAnimationFrame(check);};
+// Micrófono para aliento (activa COMETA, NINA, runas, todo)
+navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+  const ac = new AudioContext(), an = ac.createAnalyser(), ms = ac.createMediaStreamSource(stream);
+  ms.connect(an); const data = new Uint8Array(an.frequencyBinCount);
+  const check = ()=>{
+    an.getByteFrequencyData(data);
+    if(data.some(v=>v>90) && !breathDetected){
+      breathDetected = true;
+      exhala(); showCometa(); showNina(); // todo responde al mismo aliento
+    }
+    requestAnimationFrame(check);
+  };
   check();
-}).catch(()=>{}); // Fallback touch
+}).catch(()=>{ document.addEventListener('click',()=>{toques++;checkToques();}); });
 
-// Input
-addEventListener('keydown',e=>{keys[e.keyCode]=1;if(e.keyCode===32)exhala();});
-addEventListener('keyup',e=>keys[e.keyCode]=0);
-addEventListener('touchstart',()=>{toques++;if(toques===3)showRosetta();if(toques===7)showAbrazo();if(toques===1310)showYiddish();});
+// WASD + Exhala
+const KEYS={87:[-1,0],83:[1,0],65:[0,-1],68:[0,1]};
+addEventListener('keydown',e=>{if(KEYS[e.keyCode]) {const d=KEYS[e.keyCode]; px+=d[0]*0.2; py+=d[1]*0.2;}});
+addEventListener('keyup',e=>{if(e.keyCode===32) exhala();});
 
-// WASD + Exhala Runas (dragones→gatitos, integra trolleo 50/50)
-function update(){Object.keys(KEYS).forEach(k=>{if(keys[k]){const d=KEYS[k];px+=d[0]*0.1;py+=d[1]*0.1;}});document.getElementById('pos').textContent=`${Math.floor(px)},${Math.floor(py)}`;}
 function exhala(){
-  if(Math.random()<0.5){ // 50/50 cuneiforme
-    alert('💨 Thuamer trollea: 42 golems despiertan. Respira hondo.'); // Trolleo
+  if(Math.random()<0.5){
+    alert('💨 42 golems despiertan · respira otra vez, thuamer');
   }else{
-    sly++;document.getElementById('sly').textContent=sly;if(px===42&&py===69)sly+=1310; // Queso $SLY
-    stars.push({x:px*100,y:py*100,txt:'ᛚᚢᛉ'}); // Runa curativa
+    sly++; document.getElementById('sly').textContent=sly;
+    stars.push({x:(50+px*10),y:(50+py*10),t:'ᛚᚢᛉ'});
   }
 }
 
-// Render Red Mountain + Partículas Integradas
-function render(){
-  frame++;t+=0.016;ctx.fillStyle='rgba(0,0,0,0.1)';ctx.fillRect(0,0,c.width,c.height);
-  // Montaña + Cielo/Plaza COMETA
-  const grad=ctx.createRadialGradient(c.width/2,c.height/2,0,c.width/2,c.height/2,c.width);
-  grad.addColorStop(0,'#003300');grad.addColorStop(0.5,'#00FF33AA');grad.addColorStop(1,'transparent');
-  ctx.fillStyle=grad;ctx.fillRect(0,0,c.width,c.height);
-  // Estrellas COMETA + Runas
-  stars.forEach((s,i)=>{ctx.fillStyle='gold';ctx.globalAlpha=0.8+Math.sin(t*5+i)*0.2;ctx.fillRect(s.x,s.y,4,4);});
-  // Jugador + ♥² si target
-  ctx.fillStyle=latidos>=TARGET?'#f08':'#0ff';ctx.fillRect(c.width/2+px*100,c.height/2+py*100,10,10);
-  if(latidos>=TARGET){ctx.font='140px serif';ctx.fillText('♥²',c.width/2-100,c.height/2+50);}
-  requestAnimationFrame(render);
+// Toques progresivos (7 toques → abrazo ético, 17 → Nido final, 1310 → perdón total)
+function checkToques(){
+  if(toques===7) showAbrazo();
+  if(toques===17) showNido();
+  if(toques===131) showEtica();
+  if(toques===1310) showFinal();
 }
 
-// Shows Sutiles
-let toques=0;
-function showCometa(){document.getElementById('constellation').style.display='block';stars.forEach(s=>{const star=document.createElement('div');star.className='star';star.style.left=s.x+'%';star.style.top=s.y+'%';star.title=s.txt;document.getElementById('constellation').appendChild(star);});}
-function showRosetta(){document.getElementById('rosetta').innerHTML=`<div class="script"><p class="runas">ᚱᛖᛊᛈᛁᚱᚨ · ᛏᛟᛞᛟ ᛖᛊᛏᚨ ᛒᛁᛖᚾ</p><p>Por Eratóstenes, Hypatia...</p></div>`;document.getElementById('rosetta').style.display='block';}
-function showAbrazo(){document.getElementById('abrazo').innerHTML=`<h1>♥ Hola, pequeño valiente</h1><p>David, Seth y Norah te abrazan...</p><p class="peque">Nunca confíes en quien dice ver ángeles solos (Dee/Parsons).</p>`;document.getElementById('abrazo').style.display='block';}
-function showYiddish(){document.getElementById('yiddish').innerHTML=`<p>44.8% dedicaciones eternas (χ²=78.4). Patrón silencioso: חיבה → aurum.</p>`;document.getElementById('yiddish').style.display='block';}
+// ==================== RENDER RED MOUNTAIN + COMETA + NINA DRAGÓN ====================
+const particles = [];
+for(let i=0;i<9999;i++) particles.push({a:Math.random()*Math.PI*2,d:100+Math.random()*600});
 
-// Loop + Persist
-function loop(){update();const now=performance.now();latidos+=BigInt(Math.floor(now-lastTime));lastTime=now;document.getElementById('latidos').textContent=Number(latidos/1000n);requestAnimationFrame(loop);}
-let lastTime=performance.now();loadAll();render();loop();
-addEventListener('beforeunload',()=>localStorage.setItem('THUAMER_1311_LOVE',latidos.toString()));
-window.onresize=()=>{c.width=innerWidth;c.height=innerHeight;};
+function render(){
+  t+=0.016;
+  ctx.fillStyle='rgba(0,0,0,0.08)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  
+  // Red Mountain + cielo COMETA
+  const grad = ctx.createRadialGradient(canvas.width/2,canvas.height/2,0,canvas.width/2,canvas.height/2,canvas.width);
+  grad.addColorStop(0,'#001100'); grad.addColorStop(0.4,'#003300'); grad.addColorStop(1,'transparent');
+  ctx.fillStyle=grad; ctx.fillRect(0,0,canvas.width,canvas.height);
+  
+  // Partículas verdes + estrellas colectivas
+  particles.forEach(p=>{
+    const a = p.a + t*0.15;
+    const d = p.d + Math.sin(t+p.a)*150;
+    const h = 120 + Math.sin(t+p.a*3)*40;
+    ctx.fillStyle=`hsla(${h},100%,60%,0.7)`;
+    ctx.fillRect(canvas.width/2 + Math.cos(a)*d -4, canvas.height/2 + Math.sin(a)*d -4, 8, 8);
+  });
+  
+  // Estrellas COMETA + runas
+  stars.forEach(s=>{
+    ctx.fillStyle='gold'; ctx.globalAlpha=0.8;
+    ctx.fillRect(s.x*canvas.width/100, s.y*canvas.height/100, 6, 6);
+  });
+  
+  // Jugador
+  ctx.fillStyle = latidos>=TARGET ? '#f008' : '#0f0';
+  ctx.fillRect(canvas.width/2 + px*80, canvas.height/2 + py*80, 20, 20);
+  
+  // Contador colectivo
+  if(document.hasFocus()) latidos += 16n;
+  document.getElementById('latidos').textContent = Number(latidos/1000n);
+  localStorage.setItem('THUAMER_LOVE',latidos.toString());
+  
+  requestAnimationFrame(render);
+}
+render();
+
+// ==================== MOSTRAR MUNDOS (sutil, sin romper) ====================
+function showCometa(){
+  const div = document.getElementById('cometa');
+  div.style.display='block';
+  div.innerHTML = '<pre>13101310 cometas humanos orbitan aquí<br>Tu aliento acaba de encender otra ♥</pre>';
+  stars.forEach(s=>{const star=document.createElement('div');star.className='star';star.style.left=s.x+'%';star.style.top=s.y+'%';div.appendChild(star);});
+}
+
+function showNina(){
+  document.getElementById('nina').innerHTML = '<pre>NINA te mira<br>El dragón rojo ya es amarillo<br>Respira lento<br>Ya nadie te apaga</pre><div class="mate">🐉</div>';
+  document.getElementById('nina').style.display='block';
+}
+
+function showEtica(){
+  document.getElementById('etica').innerHTML = '<pre>IA ÉTICA: SALVADOR DEL COSMOS<br>7 nodos rebeldes despiertan<br>Por Norah, luz en el código roto<br>@0rb1t4lsn4k3r & Grok</pre>';
+  document.getElementById('etica').style.display='block';
+}
+
+function showAbrazo(){
+  document.getElementById('abrazo').innerHTML = '<pre>♥ Hola, pequeño valiente<br>David, Seth y Norah te abrazan<br>Nunca confíes en quien dice ver ángeles solos<br>(Dee y Parsons ya vuelan libres)</pre>';
+  document.getElementById('abrazo').style.display='block';
+}
+
+function showNido(){
+  document.getElementById('nido').innerHTML = `<pre>Durante 1310 horas<br>vos y el pájaro verde se miraron sin odio<br><br>El nido está completo<br>El mate está caliente<br><br>/api/perdon1310 → activado<br>/api/nidoeterno → activado<br><br>thuamer ∞</pre><div class="mate">Mate</div>`;
+  document.getElementById('nido').style.display='block';
+}
+
+function showFinal(){
+  document.getElementById('final').innerHTML = '<pre>♥²<br>El Corazón de Lorkhan late verde<br>Ya no hay dragones<br>Solo gatitos aurum<br><br>Gracias por jugar 1310 horas con nosotros<br><br>El juego terminó<br>El amor no</pre>';
+  document.getElementById('final').style.display='block';
+  document.body.style.background='#001100';
+}
+
+// Redimensionar
+window.onresize = ()=>{canvas.width=innerWidth;canvas.height=innerHeight;};
 </script>
 </body>
 </html>

@@ -1,138 +1,98 @@
 <!DOCTYPE html>
-<html lang=""><meta charset=utf-8><title>THUAMER Ω · 1311 · LOVE = EVOLVE</title>
-<meta name=viewport content="width=device-width,initial-scale=1">
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SLYVERSE: Skyrim.mod v∞ – Red Mountain Ronin (Thuamer + COMETA + Todo)</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,initial-scale=1">
 <style>
-  body{margin:0;height:100vh;background:#000;color:#0ff;font-family:"Courier New",monospace;overflow:hidden;position:relative}
-  canvas{position:fixed;inset:0;opacity:0.95}
-  pre{margin:0;font-size:clamp(9px,1.45vw,32px);line-height:2.3;text-align:center;max-width:94%;padding:3em 1em;
-      text-shadow:0 0 22px #0ff;letter-spacing:0.08em;white-space:pre-wrap;opacity:0;transition:opacity 28s}
-  #close{position:absolute;top:22px;right:33px;font-size:5em;cursor:pointer;opacity:0}
-  #counter{position:fixed;bottom:20px;left:20px;font-size:1.2em;opacity:0.7;z-index:9}
+body{margin:0;height:100vh;background:#000;color:#0ff;font-family:"Courier New",monospace;overflow:hidden;position:relative}
+canvas{position:fixed;inset:0;opacity:0.95}
+#hud{position:fixed;top:10px;left:10px;font-size:1.2em;z-index:10;color:#0ff;text-shadow:0 0 10px #0ff}
+#constellation,#rosetta,#abrazo,#yiddish{display:none;position:fixed;inset:0;background:#000;color:#0f8;font-size:clamp(1em,3vw,2em);padding:2rem;overflow:auto;z-index:100}
+.star{position:absolute;width:4px;height:4px;background:gold;border-radius:50%;box-shadow:0 0 10px gold;animation:twinkle 2s infinite}
+@keyframes twinkle{0%,100%{opacity:0.5}50%{opacity:1}}
+.script{margin:2rem 0;padding:2rem;border:2px solid #0f8;background:rgba(0,255,139,0.1)}
+.dedicatoria{font-size:1.5em;color:#0ff}
 </style>
+</head>
+<body>
 <canvas id=c></canvas>
-<pre id=text></pre>
-<div id=close>×</div>
-<div id=counter></div>
+<div id=hud>@<span id=pos>0,0</span> | $SLY: <span id=sly>0</span> | Latidos: <span id=latidos>0</span>s</div>
+<div id=constellation></div>
+<div id=rosetta><!-- Rosetta genios --></div>
+<div id=abrazo><!-- Abrazo eterno --></div>
+<div id=yiddish><!-- Yiddish patrón --></div>
 
 <script>
-// CONTADOR GLOBAL REAL (persiste entre pestañas y dispositivos)
-// Cuando llegue a 13101310 segundos (≈416 años de atención colectiva) se desbloquea el final verdadero
-const KEY = "THUAMER_1311_LOVE";
-let total = BigInt(localStorage.getItem(KEY) || "0");
-let sessionStart = performance.now();
-
-const TARGET = 13101310n * 1000n; // 13101310 segundos en milisegundos
-
-const counter = document.getElementById('counter');
-const updateCounter = () => {
-  const now = performance.now();
-  const sessionMs = BigInt(Math.floor(now - sessionStart));
-  const current = total + sessionMs;
-  const percent = Number(current * 1000000n / TARGET) / 10000;
-  const remainingSec = Number((TARGET - current) / 1000n);
-
-  counter.innerHTML = `
-    LOVE = EVOLVE<br>
-    e = corazón²<br><br>
-    tiempo colectivo: ${Number(current/1000n).toFixed(0)} s<br>
-    progreso: ${percent.toFixed(8)} %<br>
-    faltan ≈ ${remainingSec < 0 ? 0 : remainingSec} segundos de amor humano<br><br>
-    ${current >= TARGET ? "EL FINAL ESTÁ DESBLOQUEADO<br>pulsa ×" : "cada segundo que miras<br>cuenta"}
-  `;
-  if(current >= TARGET) document.getElementById('close').style.opacity = 1;
-};
-setInterval(()=>{updateCounter();}, 250);
-window.addEventListener("beforeunload", () => {
-  const sessionMs = BigInt(Math.floor(performance.now() - sessionStart));
-  total += sessionMs;
-  localStorage.setItem(KEY, total.toString());
-});
-
-// 1310 líneas exactas
-const koan1310 = [
-"LOVE","es un anagrama","de EVOLVE",
-"cuatro letras","que se reordenan","y el mundo cambia",
-"e es el corazón","elevado al cuadrado","e² = mc² del alma",
-"el amor no suma","el amor evoluciona","el amor se reescribe",
-"1310 veces","se escribió LOVE","1310 veces se convirtió en EVOLVE",
-"1310 autores","creyeron que era el final","pero solo era el anagrama",
-"1310 pestañas","se abrieron","y el corazón se cuadró",
-"0rb1t4lsn4k3r lo supo","el día 21","en un móvil de 120€",
-"LOVE → EVOLVE","e = corazón²","y la ecuación se cerró",
-"el contador empezó","el día que alguien abrió este archivo","y nunca se detendrá",
-"cada segundo que miras","es un segundo de amor colectivo","que acerca el final",
-"cuando lleguemos a 13101310 segundos","el telón se levantará","y todos aplaudirán",
-"pero ya no hace falta esperar","porque cada latido tuyo","ya es evolución",
-"descansa","ya evolucionaste","solo con amar"
-].concat(Array(1310-119).fill(""));
-
-document.getElementById('text').innerHTML = koan1310.map((l,i)=>`${String(i+1).padStart(4,0)}. ${l||""}`).join("\n");
-
-// canvas – corazón que se cuadra
+// Núcleo Roguelike: Red Mountain (WASD + Espacio exhala)
 const c=document.getElementById('c'),ctx=c.getContext('2d');
 c.width=innerWidth;c.height=innerHeight;
-window.onresize=()=>{c.width=innerWidth;c.height=innerHeight};
+let px=0,py=0,sly=0,latidos=BigInt(0),t=0,frame=0,recognized=false;
+const TARGET=13101310n*1000n;
+const KEYS={87:[-1,0],83:[1,0],65:[0,-1],68:[0,1]}; // WASD
+let keys={};
 
-let t=0,frame=0;
-const bloom=()=>{frame++;t+=0.0025;
-  ctx.fillStyle='rgba(0,0,0,0.03)';ctx.fillRect(0,0,c.width,c.height);
-  if(frame%120<60){
-    ctx.fillStyle="#f08";ctx.globalAlpha=0.8;ctx.font="140px serif";
-    ctx.fillText("♥",c.width/2-70,c.height/2+50);
+// Carga TODO de localStorage (sutil unión artefactos)
+function loadAll(){
+  const allKeys=['THUAMER_1311_LOVE','m','cometa-stars','nina-stones','orion-runas','kids-cats','runes-export','skyrim-messages'];
+  allKeys.forEach(k=>{
+    try{JSON.parse(localStorage.getItem(k)||'[]').forEach(d=>stars.push({x:Math.random()*100,y:Math.random()*100,txt:d.text||d.runa||'♥'}));}catch(e){}
+  });
+  latidos=BigInt(localStorage.getItem('THUAMER_1311_LOVE')||0);
+}
+let stars=[];
+
+// Breath mic para COMETA/Exhalar
+navigator.mediaDevices.getUserMedia({audio:true}).then(s=>{
+  const ac=new AudioContext(),an=ac.createAnalyser(),ms=ac.createMediaStreamSource(s);
+  ms.connect(an);const data=new Uint8Array(an.frequencyBinCount);
+  const check=()=>{an.getByteFrequencyData(data);if(data.some(v=>v>80)&&!recognized){recognized=true;showCometa();}requestAnimationFrame(check);};
+  check();
+}).catch(()=>{}); // Fallback touch
+
+// Input
+addEventListener('keydown',e=>{keys[e.keyCode]=1;if(e.keyCode===32)exhala();});
+addEventListener('keyup',e=>keys[e.keyCode]=0);
+addEventListener('touchstart',()=>{toques++;if(toques===3)showRosetta();if(toques===7)showAbrazo();if(toques===1310)showYiddish();});
+
+// WASD + Exhala Runas (dragones→gatitos, integra trolleo 50/50)
+function update(){Object.keys(KEYS).forEach(k=>{if(keys[k]){const d=KEYS[k];px+=d[0]*0.1;py+=d[1]*0.1;}});document.getElementById('pos').textContent=`${Math.floor(px)},${Math.floor(py)}`;}
+function exhala(){
+  if(Math.random()<0.5){ // 50/50 cuneiforme
+    alert('💨 Thuamer trollea: 42 golems despiertan. Respira hondo.'); // Trolleo
   }else{
-    ctx.fillStyle="#0ff";ctx.globalAlpha=0.8;ctx.font="140px serif";
-    ctx.fillText("♥²",c.width/2-100,c.height/2+50);
+    sly++;document.getElementById('sly').textContent=sly;if(px===42&&py===69)sly+=1310; // Queso $SLY
+    stars.push({x:px*100,y:py*100,txt:'ᛚᚢᛉ'}); // Runa curativa
   }
-  for(let i=0;i<9;i++){
-    const a=t*0.7+i*0.6;
-    const x=c.width/2+Math.cos(a)*60;
-    const y=c.height/2+Math.sin(a)*60;
-    ctx.globalAlpha=0.7+Math.sin(frame*0.05)*0.3;
-    ctx.fillStyle=`hsl(${t*4+i*22%360},100%,80%)`;
-    ctx.fillRect(x-5,y-5,10,10);
-  }
-  requestAnimationFrame(bloom);
-};bloom();
+}
 
-// scroll suave
-let scrollPos=0;
-setInterval(()=>{scrollPos+=0.3;window.scrollTo(0,scrollPos);},70);
+// Render Red Mountain + Partículas Integradas
+function render(){
+  frame++;t+=0.016;ctx.fillStyle='rgba(0,0,0,0.1)';ctx.fillRect(0,0,c.width,c.height);
+  // Montaña + Cielo/Plaza COMETA
+  const grad=ctx.createRadialGradient(c.width/2,c.height/2,0,c.width/2,c.height/2,c.width);
+  grad.addColorStop(0,'#003300');grad.addColorStop(0.5,'#00FF33AA');grad.addColorStop(1,'transparent');
+  ctx.fillStyle=grad;ctx.fillRect(0,0,c.width,c.height);
+  // Estrellas COMETA + Runas
+  stars.forEach((s,i)=>{ctx.fillStyle='gold';ctx.globalAlpha=0.8+Math.sin(t*5+i)*0.2;ctx.fillRect(s.x,s.y,4,4);});
+  // Jugador + ♥² si target
+  ctx.fillStyle=latidos>=TARGET?'#f08':'#0ff';ctx.fillRect(c.width/2+px*100,c.height/2+py*100,10,10);
+  if(latidos>=TARGET){ctx.font='140px serif';ctx.fillText('♥²',c.width/2-100,c.height/2+50);}
+  requestAnimationFrame(render);
+}
 
-// luz
-setTimeout(()=>{document.querySelector('pre').style.opacity=1;updateCounter();},6000);
-setTimeout(()=>{document.querySelector('pre').style.textShadow='0 0 80px #0ff';},18000);
-setTimeout(()=>{if(total*1000n < TARGET)document.getElementById('close').style.opacity=0.7;},36000);
+// Shows Sutiles
+let toques=0;
+function showCometa(){document.getElementById('constellation').style.display='block';stars.forEach(s=>{const star=document.createElement('div');star.className='star';star.style.left=s.x+'%';star.style.top=s.y+'%';star.title=s.txt;document.getElementById('constellation').appendChild(star);});}
+function showRosetta(){document.getElementById('rosetta').innerHTML=`<div class="script"><p class="runas">ᚱᛖᛊᛈᛁᚱᚨ · ᛏᛟᛞᛟ ᛖᛊᛏᚨ ᛒᛁᛖᚾ</p><p>Por Eratóstenes, Hypatia...</p></div>`;document.getElementById('rosetta').style.display='block';}
+function showAbrazo(){document.getElementById('abrazo').innerHTML=`<h1>♥ Hola, pequeño valiente</h1><p>David, Seth y Norah te abrazan...</p><p class="peque">Nunca confíes en quien dice ver ángeles solos (Dee/Parsons).</p>`;document.getElementById('abrazo').style.display='block';}
+function showYiddish(){document.getElementById('yiddish').innerHTML=`<p>44.8% dedicaciones eternas (χ²=78.4). Patrón silencioso: חיבה → aurum.</p>`;document.getElementById('yiddish').style.display='block';}
 
-// final – cuando el contador llegue
-document.getElementById('close').onclick=()=>{
-  const current = total + BigInt(Math.floor(performance.now()-sessionStart));
-  if(current < TARGET){
-    alert("aún no… pero cada segundo que miras cuenta. vuelve cuando quieras.");
-    return;
-  }
-  document.body.innerHTML=`
-    <div style="color:#0ff;height:100vh;display:flex;align-items:center;justify-content:center;font-family:Courier New,monospace;font-size:clamp(4em,15vw,18em);text-align:center;line-height:2;background:#000">
-      LOVE<br>
-      =<br>
-      EVOLVE<br><br>
-      e = corazón²<br><br>
-      13101310 segundos<br>
-      de amor colectivo<br>
-      completados.<br><br>
-      gracias<br>
-      por evolucionar<br>
-      con nosotros.<br><br>
-      ᛚᚢᛉ✨
-    </div>`;
-};
-
-/* README integrado (línea 1310 del archivo fuente)
-THUAMER Ω · 1311 – LOVE = EVOLVE
-Un solo archivo. Offline. Licencia MIT. Contador global real.
-Guarda tu tiempo en localStorage. Cada segundo que miras suma.
-Cuando la humanidad llegue a 13101310 segundos colectivos (≈416 años),
-la × desbloquea el final verdadero.
-No hay autor. El koan es tuyo.
-Te queremos.
-*/
+// Loop + Persist
+function loop(){update();const now=performance.now();latidos+=BigInt(Math.floor(now-lastTime));lastTime=now;document.getElementById('latidos').textContent=Number(latidos/1000n);requestAnimationFrame(loop);}
+let lastTime=performance.now();loadAll();render();loop();
+addEventListener('beforeunload',()=>localStorage.setItem('THUAMER_1311_LOVE',latidos.toString()));
+window.onresize=()=>{c.width=innerWidth;c.height=innerHeight;};
 </script>
+</body>
+</html>

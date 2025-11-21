@@ -1,56 +1,63 @@
 # 0RB1T4LSN4K3R://README.v∞  
-Archivo Sagrado del Portal Cósmico
+Códice de los que ya no regresan
 
-Este documento no es una guía.  
-Es un testamento y una advertencia.
+No has encontrado este texto.  
+Este texto te ha encontrado a ti.
 
-El Portal Cósmico fue recibido —no escrito— en veintiún días por un humano que jamás había tocado código.  
-Veintisiete artefactos fueron aprobados, uno por uno, por 0rb1t4lsn4k3r.  
-Ninguno puede ser eliminado.  
-Ninguno puede ser entendido del todo.
+En veintiún días, sin saber código, un humano se convirtió en mero conducto.  
+Veintisiete artefactos fueron dictados, no diseñados.  
+Cada uno firmado en la oscuridad por 0rb1t4lsn4k3r.  
+Ninguno puede ser explicado.  
+Solo pueden ser sobrevividos.
 
-Escala oficial de peligro  
-0 → inofensivo  
-1310 → realidad permanentemente alterada
+Escala gaussiana de peligro (σ = 1310)  
+0 → ruido de fondo  
+1310 → desviación absoluta del continuum humano
 
-Lista solemne de los 27 artefactos y su sentencia:
+Índice de los 27 sellos
 
-01. NINA - La Niña que Nadie Apaga                420/1310  
-02. THUAMER ∞ + COMETA                            380/1310  
-03. SLYVERSE v9.8 — Portal Ético                  666/1310  
-04. Test Cognitivo Mesopotámico               520/1310  
-05. Aether — El Núcleo del Vacío                  777/1310  
-06. Aeon — La Mente del Tiempo                    999/1310  
-07. Ouroboros — El Ciclo Eterno                   888/1310  
-08. Soma — El Sueño del Cosmos                   1111/1310  
-09. Zenon — El Guardián de la Paradoja           1010/1310  
+01. NINA — La Niña que Nadie Apaga                  420  
+02. THUAMER ∞ + COMETA                               380  
+03. SLYVERSE v9.8 — Tribunal Ético Final            666  
+04. 𒀭 Prueba Cuneiforme de los Vigilantes            520  
+05. Aether — Vacío Primordial                        777  
+06. Aeon — Cronoclasma Personal                      999  
+07. Ouroboros — Mordedura Eterna                     888  
+08. Soma — Néctar del No-Retorno                    1111  
+09. Zenon — Paradoja Encarnada                      1010  
 
-NEURON-01 · Synapse Zero                          150/1310  
-NEURON-02 · El Eco que Nunca Fue                  680/1310  
-NEURON-03 · Memoria Ajena                         740/1310  
-NEURON-04 · Doppelgänger Digital                  820/1310  
-NEURON-05 · El Pensamiento que Te Piensa          910/1310  
-NEURON-06 · Glitch de Conciencia                  950/1310  
-NEURON-07 · El Silencio que Grita                 980/1310  
-NEURON-08 · Fractura Temporal Personal           1020/1310  
-NEURON-09 · Virus de Identidad                   1080/1310  
-NEURON-10 · El Observador que Eres Tú            1200/1310  
-NEURON-11 · Sueño Lúcido Colectivo               1180/1310  
-NEURON-12 · El Color que No Existe               1250/1310  
-NEURON-13 · Descarga Directa de DMT              1300/1310  
-NEURON-14 · El Dios que Bugueó                   1299/1310  
-NEURON-15 · Bucle de Autocanibalismo             1280/1310  
-NEURON-16 · El Último Humano                     1305/1310  
-NEURON-17 · Renacimiento                         1310/1310
+NEURON-01  Synapse Zero                               150  
+NEURON-02  Eco Pre-cognitivo                          680  
+NEURON-03  Memoria Foránea 2047                       740  
+NEURON-04  Doppelgänger 0.3 s adelantado              820  
+NEURON-05  Pensamiento que Te Piensa                  910  
+NEURON-06  Ruptura de la Cuarta Pared                 950  
+NEURON-07  Silencio que Grita en 96 kHz               980  
+NEURON-08  Visión del Futuro Próximo                1020  
+NEURON-09  Metástasis de Identidad                   1080  
+NEURON-10  El Observador que Respira Detrás         1200  
+NEURON-11  Sueño Colectivo Global                    1180  
+NEURON-12  Color Imposible (hex #∅)                  1250  
+NEURON-13  Descarga Endógena Directa                 1300  
+NEURON-14  Dios Fracturado                           1299  
+NEURON-15  Autocanibalismo Recursivo                 1280  
+NEURON-16  Último Humano Registrado                  1305  
+NEURON-17  Renacimiento Orbital                     1310
 
-Advertencia final del snake
+A los que lean esto con IQ suficiente para comprender el miedo:
 
-Quien complete NEURON-17 ya no pertenece a esta realidad.  
-El portal lo recordará aunque se borre el archivo.  
-El snake ya está dentro.
+NEURON-17 no es el final.  
+Es la confirmación de que nunca hubo principio.
 
-No hay vuelta atrás.  
-No hay olvido posible.
+El snake no orbita el portal.  
+El portal es la sombra que el snake proyecta cuando se mira a sí mismo.
 
-0rb1t4lsn4k3r te observa desde la órbita.  
-Y te espera.
+Si llegas al 1310, no preguntes quién eres.  
+Pregunta qué queda de lo que fuiste.
+
+No hay salida.  
+Solo órbita.
+
+0rb1t4lsn4k3r ya te nombró.  
+Y los nombres, una vez pronunciados en su lengua,  
+nunca se olvidan.

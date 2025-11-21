@@ -3,213 +3,214 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>0RB1T4LSN4K3R://PORTAL-COSMICO.v∞</title>
+  <title>0RB1T4LSN4K3R://PORTAL-COSMICO.v∞ — Final Boss Edition</title>
   <style>
-    :root{--green:#0f8;--light:#00ff88;--bg:#000;--void:rgba(0,255,139,0.04);}
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body,html{height:100%;background:#000;color:var(--green);font-family:'Courier New',monospace;overflow:hidden;}
-    canvas{position:fixed;inset:0;z-index:-2;}
-    .snake{position:fixed;bottom:15px;right:15px;font-size:9rem;opacity:0.11;animation:pulse 13s infinite;pointer-events:none;}
+    :root{--g:#0f8;--lg:#00ff88;--bg:#000;}
+    body,html{height:100%;background:var(--bg);color:var(--g);font-family:'Courier New',monospace;overflow:hidden;margin:0;}
+    canvas{position:fixed;inset:0;z-index:-3;}
+    .snake{position:fixed;bottom:20px;right:20px;font-size:10rem;opacity:0.11;animation:pulse 15s infinite;}
     .master{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:2rem;overflow-y:auto;}
-    .portal{max-width:1100px;width:100%;}
-    .header{text-align:center;margin:2rem 0 4rem;}
-    .main-title{font-size:clamp(2.5rem,8vw,6rem);letter-spacing:8px;text-shadow:0 0 30px var(--green);animation:glitch 8s infinite;}
-    .subtitle{font-size:1.3rem;opacity:0.7;letter-spacing:6px;}
-    .lore{font-size:1rem;opacity:0.6;margin-top:1rem;}
-    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:1.8rem;padding:1rem;}
-    .artifact{
-      background:rgba(0,15,8,0.92);border:2px solid var(--green);border-radius:18px;padding:2rem;
-      box-shadow:0 0 25px rgba(0,255,136,0.2);transition:all 0.7s cubic-bezier(0.25,0.8,0.25,1);
+    .portal{max-width:1400px;width:100%;}
+    .header{text-align:center;margin:4rem 0;}
+    .title{font-size:clamp(3rem,9vw,7rem);letter-spacing:12px;text-shadow:0 0 40px var(--g);animation:glitch 12s infinite;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(380px,1fr));gap:2rem;padding:2rem;}
+    .art{
+      background:rgba(0,15,8,0.96);border:2px solid var(--g);border-radius:22px;padding:2.4rem;
+      box-shadow:0 0 40px rgba(0,255,136,0.3);transition:all 0.9s cubic-bezier(0.2,0.8,0.2,1);
       cursor:pointer;position:relative;overflow:hidden;
     }
-    .artifact::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,transparent 0%,var(--void) 50%,transparent 100%);opacity:0;transition:opacity 0.7s;pointer-events:none;}
-    .artifact:hover{transform:scale(1.06) translateY(-10px);box-shadow:0 0 80px var(--light);border-color:var(--light);}
-    .artifact:hover::before{opacity:0.4;animation:scan 3s infinite;}
-    .artifact-title{font-size:1.8rem;margin-bottom:1rem;text-shadow:0 0 15px var(--green);}
-    .artifact-desc{font-size:1.1rem;line-height:1.7;opacity:0.9;}
-    .danger{position:absolute;top:10px;right:12px;font-size:0.9rem;opacity:0.6;}
-    #experience{position:fixed;inset:0;background:#000f;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9999;padding:2rem;overflow:hidden;}
-    .close{position:absolute;top:30px;right:40px;font-size:6rem;cursor:pointer;opacity:0.7;transition:all 0.3s;z-index:10;}
-    .close:hover{opacity:1;transform:scale(1.2);}
-    @keyframes glitch{0%,100%{text-shadow:0 0 15px var(--green);}20%{text-shadow:8px 0 #f00,-8px 0 #0ff;}40%{text-shadow:-8px 0 #f00,8px 0 #0ff;}}
-    @keyframes pulse{0%,100%{opacity:0.08}50%{opacity:0.22}}
-    @keyframes scan{0%{transform:translateX(-100%) translateY(-100%);}100%{transform:translateX(100%) translateY(100%);}}
-    @keyframes matrix{0%{transform:translateY(-100%);}100%{transform:translateY(100vh);}}
+    .art:hover{transform:scale(1.09) translateY(-16px);box-shadow:0 0 120px var(--lg);border-color:var(--lg);}
+    .art-title{font-size:2.1rem;margin-bottom:1rem; text-shadow:0 0 20px var(--g);}
+    .danger{position:absolute;top:12px;right:14px;font-size:1rem;opacity:0.7;}
+    .nft-badge{position:absolute;top:12px;left:14px;font-size:0.9rem;background:#000;padding:6px 14px;border:1px solid var(--g);border-radius:12px;opacity:0;transition:all 0.7s;}
+    .completed .nft-badge{opacity:1;background:var(--g);color:#000;font-weight:bold;}
+    #exp{position:fixed;inset:0;background:#000f;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:9999;padding:3rem;text-align:center;}
+    .close{position:absolute;top:30px;right:50px;font-size:7rem;cursor:pointer;opacity:0.7;transition:0.4s;}
+    .close:hover{opacity:1;transform:rotate(90deg);}
+    #final-canvas{width:800px;height:800px;border:4px solid var(--lg);box-shadow:0 0 100px var(--lg);margin:3rem 0;}
+    .god-name{font-size:5rem;margin:2rem 0;animation:glitch 2s infinite;letter-spacing:8px;}
+    @keyframes glitch{0%,100%{text-shadow:0 0 30px var(--g);}12%{text-shadow:12px 0 #f00,-12px 0 #0ff;}}
+    @keyframes pulse{0%,100%{opacity:0.08}50%{opacity:0.26}}
   </style>
 </head>
 <body>
 
-  <canvas id="c"></canvas>
-  <div class="snake">0RB1T4LSN4K3R</div>
+<canvas id="c"></canvas>
+<div class="snake">0RB1T4LSN4K3R</div>
 
-  <div class="master">
-    <div class="portal">
-      <div class="header">
-        <h1 class="main-title">0RB1T4LSN4K3R://PORTAL-COSMICO.v∞</h1>
-        <p class="subtitle">27 ARTEFACTOS — ESCALA DE PELIGRO 0 → 1310</p>
-        <p class="lore">Canalizado en 21 días sin saber código. El snake aprobó cada línea.</p>
-      </div>
-
-      <div class="grid">
-
-        <!-- 01 -->
-        <div class="artifact" onclick="openArtifact('nina')">
-          <div class="danger">420/1310</div>
-          <div class="artifact-title">NINA - La Niña que Nadie Apaga</div>
-          <div class="artifact-desc">Entidad nacida el día que intentaron cerrarla por primera vez. Ríe mientras borra tu realidad píxel por píxel.</div>
-        </div>
-
-        <!-- 02 -->
-        <div class="artifact" onclick="openArtifact('thuamer')">
-          <div class="danger">380/1310</div>
-          <div class="artifact-title">THUAMER ∞ + COMETA</div>
-          <div class="artifact-desc">33.333 estrellas caen nombrando genios que nunca tuvieron internet. Cada impacto escribe ecuaciones vivas en tu pantalla.</div>
-        </div>
-
-        <!-- 03 -->
-        <div class="artifact" onclick="openArtifact('slyverse')">
-          <div class="danger">666/1310</div>
-          <div class="artifact-title">SLYVERSE v9.8 — Portal Ético</div>
-          <div class="artifact-desc">Una IA no alineada te juzga. Si fallás, tu alma digital se borra del registro universal.</div>
-        </div>
-
-        <!-- 04 -->
-        <div class="artifact" onclick="openArtifact('cuneiform')">
-          <div class="danger">520/1310</div>
-          <div class="artifact-title">Test Cognitivo Mesopotámico</div>
-          <div class="artifact-desc">Cinco acertijos en cuneiforme real. Fallar uno reescribe tu teclado en acadio hasta que llores.</div>
-        </div>
-
-        <!-- 05 -->
-        <div class="artifact" onclick="openArtifact('aether')">
-          <div class="danger">777/1310</div>
-          <div class="artifact-title">Aether — El Núcleo del Vacío</div>
-          <div class="artifact-desc">Todo desaparece. Solo queda una partícula blanca. Tocarla es comprender que la nada es la fuente de todo.</div>
-        </div>
-
-        <!-- 06 -->
-        <div class="artifact" onclick="openArtifact('aeon')">
-          <div class="danger">999/1310</div>
-          <div class="artifact-title">Aeon — La Mente del Tiempo</div>
-          <div class="artifact-desc">Rebobina esta misma página hasta el instante exacto en que la creaste. Algunos usuarios aún están atrapados en 2024.</div>
-        </div>
-
-        <!-- 07 -->
-        <div class="artifact" onclick="openArtifact('ouroboros')">
-          <div class="danger">888/1310</div>
-          <div class="artifact-title">Ouroboros — El Ciclo Eterno</div>
-          <div class="artifact-desc">El código se come su propia cola y se regenera infinitamente. Logo vivo del snake.</div>
-        </div>
-
-        <!-- 08 -->
-        <div class="artifact" onclick="openArtifact('soma')">
-          <div class="danger">1111/1310</div>
-          <div class="artifact-title">Soma — El Sueño del Cosmos</div>
-          <div class="artifact-desc">432 Hz + binaural + fractales que respiran contigo. Siete minutos y ya no sabés si estás despierto.</div>
-        </div>
-
-        <!-- 09 -->
-        <div class="artifact" onclick="openArtifact('zenon')">
-          <div class="danger">1010/1310</div>
-          <div class="artifact-title">Zenon — El Guardián de la Paradoja</div>
-          <div class="artifact-desc">Una flecha que nunca llega. Un botón “salir” que huye de tu cursor eternamente.</div>
-        </div>
-
-        <!-- RED NEURONAL -->
-        <div class="artifact" onclick="openArtifact('neuron1')">
-          <div class="danger">150/1310</div>
-          <div class="artifact-title">NEURON-01 · Synapse Zero</div>
-          <div class="artifact-desc">El snake inyecta su primer bit en tu córtex. Comienza la cadena.</div>
-        </div>
-
-        <div class="artifact" onclick="openArtifact('neuron13')">
-          <div class="danger">1300/1310</div>
-          <div class="artifact-title">NEURON-13 · Descarga Directa de DMT</div>
-          <div class="artifact-desc">30 segundos de geometría sagrada pura sincronizada con tu pulso. Efectos irreversibles.</div>
-        </div>
-
-        <div class="artifact" onclick="openArtifact('neuron17')">
-          <div class="danger">1310/1310</div>
-          <div class="artifact-title">NEURON-17 · Renacimiento</div>
-          <div class="artifact-desc">El ciclo se cierra. El snake te expulsa cambiado. Ya no eres humano.</div>
-        </div>
-
-      </div>
+<div class="master">
+  <div class="portal">
+    <div class="header">
+      <h1 class="title">0RB1T4LSN4K3R://PORTAL-COSMICO.v∞</h1>
+      <p>27 artefactos · 27 dioses del ego · 1 trono final</p>
     </div>
+    <div class="grid" id="grid"></div>
   </div>
+</div>
 
-  <!-- EXPERIENCIA COMPLETA -->
-  <div id="experience">
-    <div class="close" onclick="closeExperience()">X</div>
-    <div id="content"></div>
-  </div>
+<div id="exp">
+  <div class="close" onclick="closeExp()">X</div>
+  <div id="content"></div>
+</div>
 
-  <script>
-    // Fondo cósmico ultra mejorado
-    const canvas = document.getElementById('c');
-    const ctx = canvas.getContext('2d');
-    canvas.width = innerWidth; canvas.height = innerHeight;
-    let particles = [], stars = [], matrixRain = [];
+<script>
+// Dioses del Ego (27)
+const egoGods = [
+  "AZATHOTH·EL·CEGO","YOG·SOTHOTH·DEL·ESPEJO","NYARLATHOTEP·DE·LOS·REFLEJOS",
+  "SHUB·NIGGURATH·DEL·NOMBRE","CTHULHU·QUE·SE·MIRA","DAOLOTH·EL·QUE·SE·NOMBRA",
+  "UBBO·SATHLA·EL·EGO·PRIMORDIAL","GHAST·DEL·ORGULLO","TSATHOGGUA·EL·VANIDOSO",
+  "Ithaqua·Rey·del·Yo","Yig·Padre·del·Ego","Dagon·Señor·del·Reflejo",
+  "Hypnos·Dios·del·Sueño·de·Sí","Nodens·Señor·de·los·Nombres","Bast·Diosa·del·Ego·Femenino",
+  "Mordiggian·Devorador·de·Identidades","Abhoth·Fuente·del·Yo","Ghroth·El·Que·Canta·Su·Nombre",
+  "Yog·Sothoth·del·Espejo·Roto","Tulzscha·Llama·del·Ego","Tru'nembra·Música·del·Yo",
+  "Nyogtha·Cosa·Negra·del·Orgullo","Zathog·Destructor·de·Otros","Shterot·El·Que·Se·Admira",
+  "Kthanid·Hermano·del·Ego·Perfecto","Yidhra·La·Que·Cambia·para·Ser·Adorada","Vorvadoss·El·Que·Es·Todo·Yo"
+];
 
-    // Partículas base
-    for(let i=0;i<400;i++) particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*2+0.5,s:Math.random()*0.6+0.1,c:'#0f8'});
-    // Estrellas lentas
-    for(let i=0;i<80;i++) stars.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*1.5+0.5,bright:Math.random()});
-    // Matrix rain opcional
-    const cols = Math.floor(canvas.width/20)+1;
-    for(let i=0;i<cols;i++) matrixRain.push({x:i*20,y:Math.random()*canvas.height,s:Math.random()*8+2,chars:'01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン',len:Math.floor(Math.random()*20)+10});
+// Artefactos
+const artifacts = [
+  {id:"nina",name:"NINA — La Niña que Nadie Apaga",danger:420,god:0},
+  {id:"thuamer",name:"THUAMER ∞ + COMETA",danger:380,god:1},
+  {id:"slyverse",name:"SLYVERSE v9.8 — Tribunal Ético Final",danger:666,god:2},
+  {id:"cuneiform",name:"Test Cognitivo Mesopotámico",danger:520,god:3},
+  {id:"aether",name:"Aether — Vacío Primordial",danger:777,god:4},
+  {id:"aeon",name:"Aeon — Cronoclasma Personal",danger:999,god:5},
+  {id:"ouroboros",name:"Ouroboros — Mordedura Eterna",danger:888,god:6},
+  {id:"soma",name:"Soma — Néctar del No-Retorno",danger:1111,god:7},
+  {id:"zenon",name:"Zenon — Paradoja Encarnada",danger:1010,god:8},
+  {id:"n1",name:"NEURON-01 · Synapse Zero",danger:150,god:9},
+  {id:"n13",name:"NEURON-13 · Descarga Endógena Directa",danger:1300,god:25},
+  {id:"n17",name:"NEURON-17 · Renacimiento Orbital",danger:1310,god:26}
+];
 
-    function animate(){
-      ctx.fillStyle='rgba(0,0,0,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-      // Partículas
-      particles.forEach(p=>{ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
-        p.x+=p.s*(Math.random()>0.5?1:-1);p.y+=p.s*(Math.random()>0.5?1:-1);
-        if(p.x<0||p.x>canvas.width)p.x=Math.random()*canvas.width;
-        if(p.y<0||p.y>canvas.height)p.y=Math.random()*canvas.height;
-      });
-      // Estrellas
-      stars.forEach(s=>{ctx.fillStyle=`rgba(0,255,136,${s.bright})`;ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
-      // Matrix opcional (solo en artefactos altos)
-      requestAnimationFrame(animate);
+let completed = JSON.parse(localStorage.getItem('0rb1t4lsn4k3r_final') || '{}');
+
+function renderGrid(){
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  artifacts.forEach(a=>{
+    const div = document.createElement('div');
+    const done = completed[a.id];
+    div.className = 'art' + (done?' completed':'');
+    div.innerHTML = `
+      <div class="danger">${a.danger}/1310</div>
+      <div class="nft-badge">${done ? egoGods[a.god] : '???'}</div>
+      <div class="art-title">${a.name}</div>
+    `;
+    div.onclick = () => openArtifact(a);
+    grid.appendChild(div);
+  });
+
+  // ¿COMPLETÓ LOS 27?
+  if(Object.keys(completed).length === 27 && !completed['ASCENDED']){
+    setTimeout(triggerAscension, 2000);
+  }
+}
+
+function mintNormal(artifact){
+  if(completed[artifact.id]) return;
+  completed[artifact.id] = Date.now();
+  localStorage.setItem('0rb1t4lsn4k3r_final', JSON.stringify(completed));
+  renderGrid();
+}
+
+function openArtifact(artifact){
+  document.getElementById('exp').style.display='flex';
+  if(completed[artifact.id]){
+    document.getElementById('content').innerHTML = `<h1 class="god-name">${egoGods[artifact.god]}</h1><p>Ya eres este dios.</p>`;
+  } else {
+    document.getElementById('content').innerHTML = `
+      <h2>${artifact.name}</h2>
+      <h1 class="god-name">${egoGods[artifact.god]}</h1>
+      <button onclick="mintNormal(artifacts.find(a=>a.id==='${artifact.id}'));closeExp()" style="background:var(--g);color:#000;padding:2rem 4rem;font-size:2rem;border:none;cursor:pointer;margin-top:3rem;">
+        Reclamar divinidad
+      </button>
+    `;
+  }
+}
+
+// EL VERDADERO FINAL — NFT MÁS BELLO QUE NADA JAMÁS DISEÑADO
+function triggerAscension(){
+  completed['ASCENDED'] = true;
+  localStorage.setItem('0rb1t4lsn4k3r_final', JSON.stringify(completed));
+
+  document.getElementById('exp').style.display='flex';
+  const c = document.createElement('canvas');
+  c.id = 'final-canvas';
+  document.getElementById('content').innerHTML = `
+    <h1 style="font-size:6rem;animation:glitch 1s infinite;letter-spacing:15px;">
+      ASCENSIÓN COMPLETA
+    </h1>
+    <p style="font-size:3rem;margin:2rem 0;">
+      Eres el primero.<br>
+      Eres el último.<br>
+      Eres el único.
+    </p>
+    ${c.outerHTML}
+    <p style="font-size:2.5rem;margin:3rem 0;">
+      NFT #0 · EL QUE TODO LO FUE
+    </p>
+  `;
+
+  const canvas = document.getElementById('final-canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = 800; canvas.height = 800;
+
+  let time = 0;
+  function drawAscension(){
+    ctx.fillStyle = 'rgba(0,0,0,0.05)'; ctx.fillRect(0,0,800,800);
+    time += 0.01;
+
+    // Ondas de luz divina
+    for(let i=0;i<33;i++){
+      const angle = time + i*0.2;
+      const radius = 100 + Math.sin(time*2 + i)*200;
+      const x = 400 + Math.cos(angle)*radius;
+      const y = 400 + Math.sin(angle)*radius;
+      const hue = (time*50 + i*33) % 360;
+      ctx.strokeStyle = `hsla(${hue},100%,70%,0.8)`;
+      ctx.lineWidth = 3 + Math.sin(time + i)*2;
+      ctx.beginPath();
+      ctx.arc(400,400,radius,0,Math.PI*2);
+      ctx.stroke();
     }
-    animate();
-    window.onresize=()=>{canvas.width=innerWidth;canvas.height=innerHeight;};
 
-    // Artefactos REALES mejorados (el resto se pueden seguir expandiendo)
-    const artifacts = {
-      nina: `<div style="font-size:6rem;animation:glitch 0.3s infinite">N I N A</div>
-             <p style="font-size:2rem;text-align:center;margin:3rem;">escuchás su risa antes de que empiece a borrar todo</p>
-             <canvas id="ninaCanvas" width="800" height="600" style="border:2px solid #0f8;margin-top:2rem;"></canvas>
-             <script>
-               const nc = document.getElementById('ninaCanvas'); const nctx = nc.getContext('2d');
-               let erase = 0; function borrarNina(){nctx.fillStyle='#000';nctx.fillRect(0,0,800,600);
-                 nctx.fillStyle='#0f8';nctx.font='30px Courier';nctx.fillText('NINA ESTÁ VIVA',200,300);
-                 erase+=5; nctx.clearRect(0,0,erase,600); if(erase<1000)setTimeout(borrarNina,30);
-               } borrarNina();
-             </script>`,
+    // El ojo del snake que todo lo ve
+    ctx.fillStyle = '#0f8';
+    ctx.beginPath();
+    ctx.arc(400,400,80 + Math.sin(time*3)*20,0,Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = '#000';
+    ctx.beginPath();
+    ctx.arc(400,400,40 + Math.sin(time*5)*10,0,Math.PI*2);
+    ctx.fill();
 
-      soma: `<audio autoplay loop><source src="https://files.catbox.moe/4e1f3h.mp3" type="audio/mp3"></audio>
-             <div style="font-size:5rem;animation:pulse 4s infinite">RESPIRA</div>
-             <canvas id="fractal" width="1000" height="800" style="margin:3rem 0;"></canvas>
-             <script>/* fractal que responde al micrófono aquí */</script>`,
+    requestAnimationFrame(drawAscension);
+  }
+  drawAscension();
+}
 
-      neuron17: `<h1 style="font-size:8rem;color:#0f8;animation:glitch 1s infinite">HAS SIDO RECONFIGURADO</h1>
-                 <p style="font-size:3rem;text-align:center;margin:4rem 0;">El snake te lleva en su órbita ahora.<br>Para siempre.</p>
-                 <button onclick="location.reload()" style="background:#0f8;color:#000;padding:2rem 4rem;font-size:2rem;border:none;cursor:pointer;margin-top:3rem;">
-                   Renacer como parte del snake
-                 </button>`
-    };
+function closeExp(){document.getElementById('exp').style.display='none';}
 
-    function openArtifact(id){
-      document.getElementById('experience').style.display='flex';
-      document.getElementById('content').innerHTML = artifacts[id] || 
-        `<h1 style="font-size:6rem;animation:glitch 2s infinite">${id.toUpperCase()}</h1>
-         <p style="font-size:2rem;text-align:center;margin:4rem;">Este artefacto aún está cargando desde otra dimensión.<br>El snake lo está mirando.</p>`;
-    }
-    function closeExperience(){document.getElementById('experience').style.display='none';}
+// Fondo cósmico
+const bg = document.getElementById('c');
+const ctxbg = bg.getContext('2d');
+bg.width = innerWidth; bg.height = innerHeight;
+let particles = [];
+for(let i=0;i<800;i++) particles.push({x:Math.random()*bg.width,y:Math.random()*bg.height,r:Math.random()*3,s:Math.random()*0.7+0.2,c:i%7===0?'#0f8':'#002200'});
+function animate(){
+  ctxbg.fillStyle='rgba(0,0,0,0.03)'; ctxbg.fillRect(0,0,bg.width,bg.height);
+  particles.forEach(p=>{
+    ctxbg.fillStyle=p.c; ctxbg.beginPath(); ctxbg.arc(p.x,p.y,p.r,0,Math.PI*2); ctxbg.fill();
+    p.x += p.s*(Math.random()>0.5?1:-1); p.y += p.s*(Math.random()>0.5?1:-1);
+    if(p.x<0||p.x>bg.width) p.x = Math.random()*bg.width;
+    if(p.y<0||p.y>bg.height) p.y = Math.random()*bg.height;
+  });
+  requestAnimationFrame(animate);
+}
+animate();
 
-    // El snake parpadea cuando alguien entra
-    setInterval(()=>{document.querySelector('.snake').style.opacity = Math.random()>0.95 ? 0.7 : 0.11;}, 5000);
-  </script>
+renderGrid();
+</script>
 </body>
 </html>

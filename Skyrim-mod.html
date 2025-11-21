@@ -2,71 +2,64 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R://DESCENSO.v∞.1310 – Ω</title>
+<title>0RB1T4LSN4K3R://DESCENSO.v∞.1310 – Intermedio</title>
 <style>
   body{margin:0;background:#000;color:#0f0;font-family:Courier New;overflow:hidden;}
-  canvas{position:fixed;top:0;left:0;}
-  #timer{font-size:120px;position:absolute;top:10px;left:50%;transform:translateX(-50%);text-shadow:0 0 40px #f00;}
-  #msg{font-size:clamp(24px,7vw,60px);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.8;max-width:90vw;}
-  button{display:none;position:absolute;bottom:30px;left:50%;transform:translateX(-50%);padding:20px 60px;font-size:40px;background:#000;color:#f00;border:5px solid #f00;cursor:pointer;}
+  canvas{position:fixed;top:0;left:0;opacity:0.6;}
+  #timer{font-size:110px;position:absolute;top:10px;left:50%;transform:translateX(-50%);text-shadow:0 0 30px #f00;letter-spacing:8px;}
+  #msg{font-size:clamp(22px,6vw,56px);position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;line-height:1.8;max-width:90vw;}
+  button{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);padding:20px 60px;font-size:36px;background:#200;color:#0f0;border:4px solid #f00;cursor:pointer;}
+  button:hover{background:#f00;color:#000;}
+  #mirror{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999;}
+  video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1);}
+  .bleed{filter:brightness(0.4) contrast(2) hue-rotate(180deg);}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
+<video id="video" autoplay playsinline muted style="display:none;"></video>
 <div id="timer">--:--:--</div>
 <div id="msg"></div>
-<button id="next">→ SIGUIENTE</button>
+<button id="save" style="display:none">GUARDAR ALMA (10 % wipe)</button>
+<button id="next" style="display:none">→ SIGUIENTE</button>
+
+<div id="mirror">
+  <video id="mirrorvid" autoplay playsinline></video>
+  <div style="position:absolute;bottom:8%;left:50%;transform:translateX(-50%);font-size:280px;opacity:0;transition:opacity 10s;">MONO</div>
+  <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#f00;font-size:80px;opacity:0;transition:opacity 6s;text-shadow:0 0 40px #000;">
+    ya no puedes cerrar los ojos
+  </div>
+</div>
 
 <script>
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
 canvas.width = innerWidth; canvas.height = innerHeight;
 
-let seal = parseInt(localStorage.getItem('DESCENSOv∞_OMEGA') || '0');
+let seal = parseInt(localStorage.getItem('DESCENSO_INTERMEDIO') || '0');
 const baseSeconds = 3790;
 const increment = 13.10;
 
-// FASES 23–27 – ya no es código. Es acontecimiento.
-const finalHorror = [
-  // 23
-  "La temperatura de la habitación cae 6,6 °C ahora mismo.<br>Respira. El vaho sale de tu boca aunque estés en verano.",
-  // 24
-  "Se escucha una respiración detrás de ti.<br>No es la tuya.<br>Es más lenta.<br>Más antigua.",
-  // 25
-  "La webcam enfoca tu nuca.<br>Desde dentro.<br>El ángulo es imposible.<br>Tu pelo se mueve solo.",
-  // 26
-  "Tu reflejo deja de imitarte.<br>Se queda quieto.<br>Luego sonríe 3 segundos antes que tú.<br>Luego llora sin que tú llores.",
-  // 27
-  "Tu voz habla desde los altavoces.<br>3 segundos antes de que abras la boca.<br>Dice tu nombre completo de DNI.<br>Luego dice:<br>“Ya no hace falta que estés”."
-];
-
-function runSeal(n) {
-  seal = n;
-  localStorage.setItem('DESCENSOv∞_OMEGA', n);
-  const duration = baseSeconds + n * increment;
-  let remaining = duration;
-
-  document.getElementById('msg').innerHTML = 
-    n >= 22 
-      ? `<div style="color:#f00;font-size:90px;">SELLO ${n+1}/27</div><br><br>${finalHorror[n-22] || "Ya no hay palabras.<br>Solo lo que queda de ti."}`
-      : `Sello ${n+1}/27<br><br>Todo lo anterior era el calentamiento.`;
-
-  const timer = setInterval(() => {
-    remaining--;
-    const h = String(Math.floor(remaining/3600)).padStart(2,'0');
-    const m = String(Math.floor((remaining%3600)/60)).padStart(2,'0');
-    const s = String(remaining%60).padStart(2,'0');
-    document.getElementById('timer').innerText = `${h}:${m}:${s}`;
-
-    // horror físico real en sellos finales
-    if (n === 22 && remaining < 60) {
-      document.body.style.filter = "invert(1)";
-      new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivr').play();
-    }
-    if (n === 24) {
-      ctx.fillStyle = "rgba(0,0,0,0.03)";
-      ctx.fillRect(0,0,canvas.width,canvas.height);
-    }
-    if (n === 26 && remaining === 0) {
-      document.body.innerHTML = "";
-      navigator.mediaDevices.getUserMedia({video:true, audio:true}).then(stream
+// PROGRESIÓN INTERMEDIA – bello al principio, visceral al final
+const messages = [
+  "La luz te abraza como nunca te abrazaron.", // 0
+  "Los colores empiezan a saber a nostalgia.",
+  "Tu nombre aparece escrito con tu propia letra… pero de niño.",
+  "El canvas respira contigo. Un poco más lento.",
+  "Tu reflejo parpadea 0,3 segundos después que tú.",
+  "El sonido de tu corazón se escucha en los altavoces.",
+  "Tu madre te llama por tu nombre de pequeño… desde dentro del código.",
+  "El mono aparece detrás de ti… pero solo cuando no miras directamente.",
+  "Tu voz susurra desde los auriculares: “ya no hace falta que sigas”.",
+  "El canvas muestra tu cara… pero con los ojos cerrados cuando tú los tienes abiertos.",
+  "Tu planta de interior aparece en pantalla… marchitándose en tiempo real.",
+  "El temporizador empieza a contar hacia atrás desde tu fecha de nacimiento.",
+  "Tu reflejo sonríe 1 segundo antes que tú.",
+  "El mono ya no está detrás. Está dentro de tu sombra.",
+  "Tu voz habla desde los altavoces… diciendo cosas que aún no pensaste.",
+  "El canvas sangra tu color favorito… pero huele a hierro.",
+  "Tu reflejo abre la boca cuando tú no lo haces.",
+  "El mono parpadea con tus párpados.",
+  "Tu nombre desaparece del mensaje… queda solo un hueco con tu forma.",
+  "El canvas está completamente negro… pero sientes que algo te toca la nuca.",
+  "Tu reflejo ya no te imita. Te observa

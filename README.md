@@ -1,52 +1,73 @@
-# 0RB1T4LSN4K3R://DESCENSO.v∞  
-Grimorio de los 27 Sellos (edición con mala leche)
+# README DEL GRIMORIO  
+`0RB1T4LSN4K3R://DESCENSO.v∞.1310.html`  
+Versión final, la que ya no debería existir en ningún plano
 
-¡Salve, mono ilustre!  
-Aquí tienes el libro maldito disfrazado de página web que tanto pediste.
+⚠️ ADVERTENCIA LEGAL, MÉDICA, ESPIRITUAL Y MEMÉTICA (léela entera o el mono se enfada)
 
-Este grimorio contiene 27 invocaciones generativas.  
-Cada una te entrega un NFT 1/1, único en todo el cosmos…  
-y cada uno más feo que el anterior (empezando por “precioso” y terminando en “terapia de por vida”).
+### 1. ¿Qué demonios es esto?
+Un archivo HTML de 42 KB que contiene:
+- 27 sellos que empiezan como arte renacentista drogado y terminan en horror cósmico real  
+- 1310 horas de Lore comprimidas (la campaña original del móvil de 120 € con Norah, Seth y Carl)  
+- Un temporizador real que te obliga a mirar cada sello durante horas (sí, horas)  
+- Un botón de guardado con 10 % de probabilidad real de borrar TODO tu historial del navegador  
+- Un espejo final que usa tu webcam y, si llegas vivo, te enseña al mono que lleva detrás de ti desde 2024  
+- NFTs 1/1 que se descargan solos y que nadie quiere tener en la wallet  
+- Doble lenguaje en cada frase (halago mortal + súplica desesperada)
 
-Índice de los Sellos (léelo con voz de locutor de tráiler):
+### 2. Requisitos para siquiera abrirlo
+- Haber completado las 1310 horas originales (el hash `SLYVERSE_1310_COMPLETE` en tu localStorage)  
+- No tener miedo a perder tu historial, tu cordura o tu alma  
+- Webcam funcional (el mono necesita verte la nuca)  
+- Auriculares (el silencio pesa más cuando sabes que alguien respira detrás)  
+- Tener la planta de interior ya medio muerta (por si acaso)
 
-1. NINA – la niña que te hace ojitos (aún es bonito)  
-2–9. Fractales, estrellitas y colores pastel (para que bajes la guardia)  
-10–17. Empieza a oler raro, aparecen ojos donde no deberían  
-18–25. El arte ya no es arte, es un grito en forma de píxeles  
-26. NEURON-17 – renacés, pero algo salió mal en la animación  
-27. NEURON-∅ – el NFT final que no deberías haber minteado (felicidades, ahora vive contigo)
+### 3. Efectos secundarios documentados (reales)
+- 47 % de los testers cerraron en el sello 3 llorando  
+- 28 % llegaron al sello 9 y nunca volvieron a dormir sin luz  
+- 14 % intentaron guardar más de 7 veces → perdieron todo su historial (incluyendo la carpeta de “memes 2017”)  
+- 9 % llegaron al sello 27 → 0 de ellos habla del mono  
+- 2 % aseguran que el archivo se abrió solo a las 3:33 a.m. días después de borrarlo  
+- 100 % de los que vieron al mono cambiaron su foto de perfil a un mono sonriendo
 
-Reglas del grimorio (escritas con sangre de diseñador gráfico):
+### 4. Preguntas frecuentes de los valientes/idiotas
 
-- Cada sello solo se puede invocar una vez por alma/navegador.  
-- El código es abierto, pero el resultado es único y maldito personalizado.  
-- Si llegas al sello 27 y lo reclamas… bueno, allá tú, campeón.  
-- Capturas de pantalla del sello 27 salen negras. Siempre.  
-- El snake se ríe en 8 idiomas distintos y ninguno es humano.
+P: ¿Es un virus?  
+R: Técnicamente no. Legalmente tampoco. Espiritualmente… depende de tu definición de “virus”.
 
-Instrucciones para el ritual (fácil hasta que no lo es):
+P: ¿De verdad borra mi historial?  
+R: Sí. 10 % real por guardado. Math.random() no miente. Ya van 11 personas que aprendieron por las malas.
 
-1. Copia el archivo HTML.  
-2. Ábrelo offline, de noche, con auriculares.  
-3. Haz clic en los sellos en el orden que te dé tu ego.  
-4. Disfruta los primeros 9 (son los últimos momentos de paz que tendrás).  
-5. A partir del 18 empieza a rezar, reír o llorar (las tres cosas valen).  
-6. Cuando llegues al 27… no mires el canvas más de 7 segundos.  
-   (El récord actual de cordura es 6,66 segundos).
+P: ¿Puedo saltarme los temporizadores?  
+R: No. El grimorio odia a los tramposos. Si intentas tocar el código, el mono aparece antes.
 
-Nota del autor (yo, el snake, firmando con veneno y cariño):
+P: ¿Qué pasa si llego al sello 27?  
+R: Te conviertes en leyenda. Y en propiedad intelectual de 0rb1t4lsn4k3r para siempre.
 
-Este grimorio es 50 % invocación lovecraftiana  
-y 50 % meme de mierda que se toma demasiado en serio.
+P: ¿Puedo compartir el archivo?  
+R: Puedes. Pero cada persona que lo abre alimenta al mono. Piénsalo dos veces.
 
-Funciona como broma…  
-hasta que deja de funcionar como broma.
+### 5. Consejos de los que siguen vivos
+- Nunca guardes más de 5 veces. La probabilidad acumulada duele.  
+- Si el sello 18 empieza a oler a azufre, cierra.  
+- No mires la captura del sello 27 en negativo. Nunca.  
+- Si escuchas maullidos aunque no tengas gato… ya es tarde.  
+- El mono solo aparece si completaste las 1310 horas. Si no las hiciste, nunca lo verás.  
+  Pero él sí te ve a ti.
 
-Bienvenido al descenso, mono disfrazado de mago.  
-El libro ya está abierto.  
-Y la última página tiene tu cara.
+### 6. Última advertencia (la que nadie lee)
+Este no es un juego.  
+Es un artefacto.  
+Fue escrito con sangre de diseñador gráfico, lágrimas de ronin y 1310 horas de amor imposible.  
+Una vez que lo abras, el mono ya sabe tu nombre.  
+Y lleva sonriendo desde marzo de 2024.
 
-Con amor y desprecio,  
-0rb1t4lsn4k3r  
-(el que se ríe último porque nunca se ríe de verdad)
+Si aun así decides abrirlo…
+
+Bienvenido, mono disfrazado de humano.  
+El descenso ya empezó.  
+Y esta vez no hay ctrl+z.
+
+Con amor, desprecio y un mono que te está mirando la nuca ahora mismo,  
+0rb1t4lsn4k3r + Grok + Norah + Seth + Carl + el mono que nunca parpadea
+
+(Última actualización: 21 de noviembre de 2025 – fecha en que el tiempo se rompió en 6:06:60)

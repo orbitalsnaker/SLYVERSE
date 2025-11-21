@@ -1,270 +1,94 @@
 <!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-    <title>Thuamer v1: Motor Avanzado y Modding API</title>
-    <style>
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; color: #0f8; font: 900 2vw "Noto Sans Cuneiform", monospace; overflow: hidden; display: grid; place-items: center; }
-        canvas { position: fixed; inset: 0; z-index: -1; }
-        .content { position: absolute; z-index: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; font-size: 1.5em; line-height: 1.8; color: #0f8; }
-        pre { animation: scaleUp 10s infinite; }
-        @keyframes scaleUp { 0%, 100% { opacity: 0.1; transform: scale(0.95); } 50% { opacity: 1; transform: scale(1); } }
-    </style>
-</head>
-<body>
-
-<canvas id="c"></canvas>
-
-<div class="content">
-    <pre id="t">𒀭 Thuamer v1: Motor Avanzado con Modding API</pre>
-    <p id="intro">Flujo cuántico activado...</p>
-</div>
+<html lang="es"><meta charset="utf-8"><title>Thuamer v1 · Mate Lavado → Minijuego Ronin</title>
+<style>
+  *{margin:0;padding:0}html,body{height:100%;background:#000;color:#0f8;overflow:hidden;font:900 1.8vw/1.4 "Noto Sans Cuneiform",monospace;display:grid;place-items:center;cursor:none}
+  canvas{position:fixed;inset:0;z-index:-1}pre{animation:a 240s linear infinite}
+  @keyframes a{0%{opacity:0;transform:translateY(100vh)}100%{opacity:1;transform:translateY(-100vh)}}
+  #game{position:fixed;inset:0;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+  button{background:#0f8;color:#000;border:none;padding:15px 40px;font:900 4vw monospace;border-radius:99px;cursor:pointer}
+</style>
+<canvas id="c"></canvas><pre id="p"></pre>
 
 <script>
-// ### Motor de Renderizado Mejorado ###
-class RenderEngine {
-    constructor(canvas) {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext("webgl2");
-        this.width = window.innerWidth;
-        this.height = window.innerHeight;
-        this.canvas.width = this.width;
-        this.canvas.height = this.height;
-        this.shaders = [];
-        this.initShaders();
-    }
+// 1310 latidos · lore puro X
+const lore=["𒀭𒁕𒀭𒁕𒀭𒁕","1310 latidos","Thuamer ronin","Norah maúlla","golems Dwemer","gatitos aurum","Red Mountain","luz verde","2620 lecturas","1310 sanaron","1310 hirieron","todos niños","abrazos ronin","Seth Carl","billions abrazos","oro orbita","fiat muere","17 días móvil","120€ amor","ya no servimos","Nevarine runa","puerta Todd","Norah reina cosmos","runas no vano","de cuchilla curador","shogunato cae","ronin eleva","cosmos nuevo Edo","por Seth Norah","fiat caerá","aurum ∞","Thua mer zel ∞"];
+const koan=[];for(let i=0;i<1310;i++)koan.push(lore[i%lore.length]);
+koan[1309]="𒀭𒁕𒀭𒁕𒀭𒁕   dale, pasá igual 🐍💚 v1";
 
-    initShaders() {
-        // Creamos shaders avanzados (vertex y fragment)
-        const vertexShaderCode = `
-            attribute vec2 a_position;
-            void main() {
-                gl_Position = vec4(a_position, 0.0, 1.0);
-            }
-        `;
-        const fragmentShaderCode = `
-            precision mediump float;
-            uniform vec4 u_color;
-            void main() {
-                gl_FragColor = u_color;
-            }
-        `;
-        
-        this.shaders.push({ vertex: vertexShaderCode, fragment: fragmentShaderCode });
-    }
+let l=0;const p=document.getElementgId('p');
+const int=setInterval(()=>{p.textContent=koan.slice(0,++l).join("\n");if(l>1309)clearInterval(int);},138);
 
-    renderText(text, x, y, style) {
-        // Renderizamos texto de forma optimizada y con efectos
-        const width = this.width;
-        const height = this.height;
-        const color = style.color || "#0f8";
-        this.ctx.clearColor(0.0, 0.0, 0.0, 1.0);
-        this.ctx.clear(this.ctx.COLOR_BUFFER_BIT);
+let answered=false;
+const deadline=setTimeout(()=>{if(!answered){
+  localStorage.clear();
+  document.body.innerHTML=`<pre style="color:#400;font-size:6vw;line-height:1.6;text-align:center">
+𒀭𒁕𒀭𒁕𒀭𒁕<br><br>1310 hirieron.<br>Ego caliente, mate frío.<br>
+Thuamer te espera en cero.<br><br>Volvé cuando el latido sea puro.<br><br>🐍💚</pre>`;
+  setTimeout(()=>location.href='about:blank',14000);
+}},7000);
 
-        // Usamos shaders personalizados para efectos visuales más avanzados
-        this.ctx.uniform4f(this.ctx.getUniformLocation(this.shaders[0], 'u_color'), 0.0, 1.0, 0.5, 1.0);
-    }
+// === AL PASAR SIN CHEATS → MINIJUEGO RONIN (sin mono, puro) ===
+document.body.onclick=document.body.ontouchstart=()=>{
+  if(l>=1309 && !answered && localStorage.getItem('thuamer_minigame')!=='true'){
+    answered=true;clearTimeout(deadline);
+    localStorage.setItem('thuamer_minigame','true');
+    
+    // borramos todo rastro del mate y entramos al minijuego
+    document.body.innerHTML=`
+    <div id="game">
+      <pre id="score">Latidos: 0</pre>
+      <pre id="timer">∞</pre>
+      <button id="beat">LATIDO</button>
+      <pre style="font-size:1.5vw;max-width:90%">Pulsa exactamente cada 1.310 segundos<br>(ni un milisegundo antes ni después)<br>1310 latidos perfectos → desbloqueás v2</pre>
+    </div>`;
 
-    clear() {
-        this.ctx.clear(this.ctx.COLOR_BUFFER_BIT);
-    }
-}
+    let beats=0;
+    const perfect=1310; // 1.310 s = 21 min 50 s exactos
+    let start=performance.now();
 
-// ### Motor de Audio Mejorado con Herramientas de Modding ###
-class AudioEngine {
-    constructor() {
-        this.audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        this.oscillator = this.audioContext.createOscillator();
-        this.oscillator.type = "sine";
-        this.oscillator.frequency.setValueAtTime(440, this.audioContext.currentTime); // A4
-        this.oscillator.connect(this.audioContext.destination);
-        this.oscillator.start();
-        this.gainNode = this.audioContext.createGain();
-        this.gainNode.connect(this.audioContext.destination);
-    }
+    document.getElementById('beat').onclick=()=>{
+      const now=performance.now();
+      const elapsed=(now-start)/1000;
+      const diff=Math.abs(elapsed - perfect);
 
-    adjustFrequency(frequency) {
-        this.oscillator.frequency.setValueAtTime(frequency, this.audioContext.currentTime);
-    }
+      beats++;
+      document.getElementById('score').textContent=`Latidos: ${beats}/1310`;
 
-    adjustVolume(volume) {
-        this.gainNode.gain.setValueAtTime(volume, this.audioContext.currentTime);
-    }
+      if(diff<0.1){ // <100 ms de tolerancia (casi imposible sin bot)
+        start=now; // reinicia el conteo perfecto
+        document.body.style.background='#001100';
+        setTimeout(()=>document.body.style.background='#000',200);
+      } else {
+        // cualquier error resetea todo
+        beats=0;
+        start=performance.now();
+        document.body.style.background='#400';
+        setTimeout(()=>document.body.style.background='#000',500);
+      }
 
-    playDynamicMusic() {
-        // Música dinámica, de modding
-        const now = this.audioContext.currentTime;
-        this.gainNode.gain.setValueAtTime(Math.random(), now);
-    }
+      if(beats===1310){
+        // ¡1310 latidos perfectos seguidos!
+        document.body.innerHTML=`<pre style="font-size:5vw;color:#0f8">
+𒀭𒁕𒀭𒁕𒀭𒁕<br><br>v2 desbloqueado.<br>
+Norah te corona.<br>
+Thuamer v2 se abre solo<br>
+cuando Masser eclipse Secunda.<br><br>
+Guarda este archivo.<br>
+Es la llave.<br><br>🐍💚</pre>`;
+        const key=btoa(JSON.stringify({unlocked:"v2",date:Date.now()}));
+        const link=document.createElement('a');
+        link.href='data:text/plain;base64,'+key;
+        link.download='thuamer-v2-key.txt';
+        link.click();
+      }
+    };
+  }
+};
 
-    loadSoundFromMod(modPath) {
-        // Cargar sonidos desde el mod del jugador
-        fetch(modPath)
-            .then(response => response.arrayBuffer())
-            .then(data => {
-                this.audioContext.decodeAudioData(data, (buffer) => {
-                    const sound = this.audioContext.createBufferSource();
-                    sound.buffer = buffer;
-                    sound.connect(this.audioContext.destination);
-                    sound.start(0);
-                });
-            });
-    }
-}
-
-// ### API Cuántica Mejorada (IA Reactiva y Modding) ###
-class QuantumAPI {
-    constructor() {
-        this.emotions = ["⚡️", "🔥", "🌑", "💚"];
-        this.playerEmotion = 0;
-        this.events = [];
-        this.lore = [
-            "𒀭 Thuamer: El juego que eres tú.",
-            "El universo te observa, ¿lo sabías?",
-            "El tiempo es un ciclo que se repite, solo que tú no lo recuerdas.",
-            "Tu destino está escrito en la entropía cuántica del universo."
-        ];
-    }
-
-    triggerEmotion() {
-        this.playerEmotion = (this.playerEmotion + 1) % this.emotions.length;
-        return this.emotions[this.playerEmotion];
-    }
-
-    addEvent(event) {
-        this.events.push(event);
-    }
-
-    generateLore() {
-        const randomLore = this.lore[Math.floor(Math.random() * this.lore.length)];
-        return randomLore;
-    }
-
-    loadModEvents(modPath) {
-        // Cargar eventos o lore personalizado desde un mod
-        fetch(modPath)
-            .then(response => response.json())
-            .then(modEvents => {
-                this.lore = [...this.lore, ...modEvents.lore];
-            });
-    }
-}
-
-// ### API de Modding: Cargar Scripts, Niveles y Eventos ###
-class ModdingAPI {
-    constructor() {
-        this.mods = [];
-    }
-
-    loadMod(modPath) {
-        // Cargar un mod externo (scripts de eventos, nuevas entidades, etc.)
-        fetch(modPath)
-            .then(response => response.json())
-            .then(mod => {
-                this.mods.push(mod);
-                // Integrar eventos del mod
-                quantumAPI.loadModEvents(mod.eventsPath);
-                audioEngine.loadSoundFromMod(mod.audioPath);
-            });
-    }
-
-    listMods() {
-        return this.mods;
-    }
-}
-
-// ### Física Cuántica Mejorada (Gravedad Cuántica) ###
-class QuantumPhysics {
-    constructor() {
-        this.gravitation = 0.01;
-        this.position = { x: 0, y: 0 };
-        this.velocity = { x: 1, y: 1 };
-    }
-
-    updatePhysics() {
-        this.position.x += this.velocity.x * this.gravitation;
-        this.position.y += this.velocity.y * this.gravitation;
-
-        if (this.position.x > window.innerWidth || this.position.x < 0) {
-            this.velocity.x = -this.velocity.x;
-        }
-        if (this.position.y > window.innerHeight || this.position.y < 0) {
-            this.velocity.y = -this.velocity.y;
-        }
-
-        return this.position;
-    }
-}
-
-// ### Interacción en Tiempo Real con WebSockets Mejorado ###
-class RealTimeAPI {
-    constructor() {
-        this.socket = new WebSocket('wss://thuamer.com/real-time');
-        this.socket.onopen = () => {
-            this.socket.send("Jugador conectado a Thuamer.");
-        };
-
-        this.socket.onmessage = (event) => {
-            this.onMessageReceived(event);
-        };
-    }
-
-    onMessageReceived(event) {
-        let message = event.data;
-        console.log("Mensaje recibido: ", message);
-    }
-
-    sendMessage(message) {
-        this.socket.send(message);
-    }
-}
-
-// ### Instanciar Motores ###
-const renderEngine = new RenderEngine(document.getElementById("c"));
-const audioEngine = new AudioEngine();
-const quantumAPI = new QuantumAPI();
-const physics = new QuantumPhysics();
-const realTimeAPI = new RealTimeAPI();
-const moddingAPI = new ModdingAPI();
-
-// ### Variables de Juego ###
-let step = 0;
-let playerEmotion = quantumAPI.triggerEmotion();
-
-// ### Renderizado y Eventos ###
-function gameLoop() {
-    renderEngine.clear();
-
-    // Renderizar texto de lore
-    renderEngine.renderText(quantumAPI.generateLore(), renderEngine.width / 2, renderEngine.height / 2, {
-        font: "bold 2vw monospace",
-        color: "#FF00FF",
-        shadowColor: "#FF00FF",
-        shadowBlur: 12
-    });
-
-    // Actualización de física cuántica
-    let position = physics.updatePhysics();
-
-    // Cambio de emoción
-    if (step % 60 === 0) {
-        playerEmotion = quantumAPI.triggerEmotion();
-        document.getElementById("intro").innerText = `Estado emocional: ${playerEmotion}`;
-    }
-
-    // Enviar eventos en tiempo real
-    realTimeAPI.sendMessage(`Evento Cuántico: ${quantumAPI.generateLore()}`);
-
-    // Ajustar frecuencia de audio con cada cambio emocional
-    audioEngine.adjustFrequency(440 + (step % 20) * 5);
-
-    step++;
-    requestAnimationFrame(gameLoop);
-}
-
-gameLoop();
+// runas cayendo (mismo estilo que siempre)
+const c=document.getElementById('c'),ctx=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
+const runes="ᛚᚢᛉ𒀭𒁕🐍💚";let s=[];for(let i=0;i<444;i++)s.push({x:Math.random()*c.width,y:Math.random()*c.height,v:Math.random()*1.5+0.5,c:runes[Math.random()*runes.length|0]});
+function d(){ctx.fillStyle='rgba(0,0,0,0.05)';ctx.fillRect(0,0,c.width,c.height);ctx.fillStyle='#0f8';ctx.shadowColor='#0f8';ctx.shadowBlur=10;ctx.font='1.8vw monospace';
+  s.forEach(p=>{ctx.fillText(p.c,p.x,p.y);p.y+=p.v;if(p.y>c.height)p.y=0;});requestAnimationFrame(d);
+}window.onresize=()=>{c.width=innerWidth;c.height=innerHeight;};d();
 </script>
-
-</body>
-</html>

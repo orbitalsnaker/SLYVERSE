@@ -1,168 +1,119 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-<meta charset="UTF-8">
-<title>THUAMER Ω · la película eterna</title>
+<meta charset="utf-8">
+<title>THUAMER Ω</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-  body,html{margin:0;padding:0;width:100%;height:100%;background:#000;overflow:hidden;position:fixed;top:0;left:0}
-  canvas{display:block;position:fixed;inset:0;width:100%;height:100%;image-rendering:optimizeSpeed}
-  @media (prefers-reduced-motion: reduce){canvas{image-rendering:pixelated}}
+  body{margin:0;height:100vh;background:#000;overflow:hidden;position:fixed}
+  canvas{position:fixed;inset:0;display:block;image-rendering:optimizeSpeed}
 </style>
-</head>
-<body>
-
 <canvas id="c"></canvas>
-
 <script>
-(() => {
-  'use strict';
+/*
+  13 101 310 horas → 47 164 716 000 000 ms
+  koan ejecutable · ronin 0rb1t4lsn4k3r
+*/
 
-  // 13 101 310 horas colectivas → milisegundos (BigInt)
-  const TARGET = 47164716000000n;
-  const STORAGE_KEY = "thuamer13101310";
+const KOAN = 47164716000000n
+const KEY  = "thuamer13101310"
 
-  // Persistencia segura con fallback
-  let storage = { t: 0n, id: crypto.randomUUID(), first: Date.now(), unlocked: false };
+let state = (() => {
+  try { return JSON.parse(localStorage.getItem(KEY)) || {} }
+  catch { return {} }
+})()
+
+let t   = BigInt(state.t   || 0)        // tiempo colectivo acumulado
+let id  = state.id  || crypto.randomUUID()
+let born= state.first || Date.now()
+let zen = !!state.unlocked              // satori alcanzado
+
+let prev = performance.now()
+let birth = zen ? prev : 0
+
+const c   = document.getElementById("c")
+const ctx = c.getContext("2d", {alpha:false,desynchronized:true,willReadFrequently:false})
+
+const resize = () => {
+  const dpr = devicePixelRatio
+  c.width  = innerWidth  * dpr
+  c.height = innerHeight * dpr
+  ctx.setTransform(dpr,0,0,dpr,0,0)
+}
+resize()
+addEventListener("resize", resize)
+
+const persist = () => {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) {
-      const parsed = JSON.parse(raw);
-      storage = {
-        t: BigInt(parsed.t || 0),
-        id: parsed.id || crypto.randomUUID(),
-        first: parsed.first || Date.now(),
-        unlocked: !!parsed.unlocked
-      };
-    }
-  } catch(e) { /* corrupto → reset silencioso */ }
+    localStorage.setItem(KEY, JSON.stringify({
+      t: t < Number.MAX_SAFE_INTEGER ? Number(t) : Number.MAX_SAFE_INTEGER,
+      id, first: born, unlocked: zen
+    }))
+  } catch{}
+}
 
-  let collective = storage.t;
-  let lastTime = performance.now();
-  let movieMode = storage.unlocked;
-  let movieStart = movieMode ? performance.now() : 0;
+const tick = now => {
+  if (!document.hidden && document.hasFocus()) {
+    const δ = BigInt(Math.floor(now - prev))
+    if (δ > 0n) { t += δ; persist() }
+  }
+  prev = now
 
-  const canvas = document.getElementById("c");
-  const ctx = canvas.getContext("2d", {
-    alpha: false,
-    desynchronized: true,
-    willReadFrequently: false
-  });
+  if (!zen && t >= KOAN) { zen = true; birth = now; persist() }
 
-  const resize = () => {
-    canvas.width = canvas.clientWidth * devicePixelRatio;
-    canvas.height = canvas.clientHeight * devicePixelRatio;
-    ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
-  };
-  resize();
-  addEventListener("resize", resize);
+  const w = innerWidth, h = innerHeight
 
-  const save = () => {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify({
-        t: Number(collective > Number.MAX_SAFE_INTEGER ? Number.MAX_SAFE_INTEGER : collective),
-        id: storage.id,
-        first: storage.first,
-        unlocked: movieMode
-      }));
-    } catch(e) {}
-  };
+  if (zen) {
+    const cycle = 5400000
+    const τ = birth ? (now - birth) % cycle : 0
 
-  // Acumulador ultra-preciso (solo cuando está visible y en foco)
-  const visibilityHandler = () => {
-    if (!document.hidden && document.hasFocus()) lastTime = performance.now();
-  };
-  addEventListener("visibilitychange", visibilityHandler);
-  addEventListener("focus", visibilityHandler);
-  addEventListener("blur", () => lastTime = performance.now());
+    ctx.fillStyle = "#00ff00"
+    ctx.fillRect(0,0,w,h)
 
-  const daysSinceFirst = () => Math.floor((Date.now() - storage.first) / 86400000);
+    const N = 13101310
+    const visible = Math.min(N, Math.floor(τ / 7))
+    const base = τ * 0.001
 
-  const loop = (now) => {
-    // Acumular tiempo colectivo con precisión de BigInt
-    if (!document.hidden && document.hasFocus()) {
-      const delta = BigInt(Math.floor(now - lastTime));
-      if (delta > 0n) {
-        collective += delta;
-        save();
-      }
-    }
-    lastTime = now;
+    for (let i = 0; i < visible; i++) {
+      const p = base + i * 0.007
+      const θ = (i / N) * Math.PI * 2 + p * 5e-5
+      const r = 120 + Math.sin(p + i * 0.001) * 380
+      const x = w/2 + Math.cos(θ) * r
+      const y = h/2 + Math.sin(θ) * r
+      const a = Math.max(0, Math.sin(p*10 + i*0.13)) * 0.38
 
-    // Desbloqueo permanente
-    if (!movieMode && collective >= TARGET) {
-      movieMode = true;
-      movieStart = now;
-      save();
+      ctx.fillStyle = `rgba(0,0,0,${a})`
+      ctx.fillRect(x-20, y-40, 40, 80)
+      ctx.fillRect(x-40, y-20, 80, 40)
     }
 
-    const cw = canvas.clientWidth;
-    const ch = canvas.clientHeight;
+    ctx.textAlign = "center"
+    ctx.textBaseline = "middle"
 
-    if (movieMode) {
-      let elapsed = movieStart ? (now - movieStart) % 5_400_000 : 0; // 90 min loop
-
-      ctx.fillStyle = "#00ff00";
-      ctx.fillRect(0, 0, cw, ch);
-
-      const TOTAL_POINTS = 13101310;
-      const step = Math.floor(elapsed / 7);
-      const visible = Math.min(TOTAL_POINTS, step);
-
-      const timeBase = elapsed * 0.001;
-
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-
-      for (let i = 0; i < visible; i++) {
-        const t = timeBase + i * 0.007;
-        const angle = (i / TOTAL_POINTS) * Math.PI * 2 + t * 0.00005;
-        const pulse = Math.sin(t + i * 0.001) * 380;
-        const radius = 120 + pulse;
-
-        const x = cw / 2 + Math.cos(angle) * radius;
-        const y = ch / 2 + Math.sin(angle) * radius;
-
-        const intensity = Math.max(0, Math.sin(t * 10 + i * 0.13));
-
-        ctx.fillStyle = `rgba(0,0,0,${intensity * 0.38})`;
-        ctx.fillRect(x - 20, y - 40, 40, 80);
-        ctx.fillRect(x - 40, y - 20, 80, 40);
-      }
-
-      // Triggers emocionales (más suaves y mejor tipografía)
-      if (daysSinceFirst() > 300 && elapsed > 10000 && elapsed < 20000) {
-        ctx.fillStyle = "rgba(0,0,0,0.9)";
-        ctx.font = "bold 5vw Georgia";
-        ctx.fillText("volviste después de tanto tiempo", cw/2, ch/2);
-      }
-
-      const hour = new Date().getHours();
-      if (hour >= 3 && hour <= 5 && elapsed > 30000 && elapsed < 40000) {
-        ctx.fillStyle = "rgba(0,0,0,0.85)";
-        ctx.font = "3.5vw Georgia";
-        ctx.fillText("otra madrugada más, gracias por quedarte", cw/2, ch/2 + 90);
-      }
-
-      if (elapsed > 5_000_000) {
-        ctx.fillStyle = "#000";
-        ctx.font = "bold 11vw Georgia";
-        ctx.fillText("siempre fuiste vos", cw/2, ch/2);
-      }
-
-    } else {
-      // Pantalla de espera
-      const ratio = Number(collective) / Number(TARGET);
-      const green = Math.min(255, Math.floor(ratio * 300));
-      ctx.fillStyle = `rgb(0,${green},0)`;
-      ctx.fillRect(0, 0, cw, ch);
+    if (Math.floor((Date.now() - born)/864e5) > 300 && τ > 10000 && τ < 20000) {
+      ctx.fillStyle = "#000"
+      ctx.font = "bold 5.5vw Georgia"
+      ctx.fillText("volviste después de tanto tiempo", w/2, h/2)
+    }
+    const hr = new Date().getHours()
+    if (hr >= 3 && hr <= 5 && τ > 30000 && τ < 40000) {
+      ctx.fillStyle = "#000"
+      ctx.font = "3.8vw Georgia"
+      ctx.fillText("otra madrugada más, gracias por quedarte", w/2, h/2 + 100)
+    }
+    if (τ > 5000000) {
+      ctx.fillStyle = "#000"
+      ctx.font = "bold 12vw Georgia"
+      ctx.fillText("siempre fuiste vos", w/2, h/2)
     }
 
-    requestAnimationFrame(loop);
-  };
+  } else {
+    const g = Math.min(255, Math.floor(Number(t)/Number(KOAN)*311))
+    ctx.fillStyle = `rgb(0,${g},0)`
+    ctx.fillRect(0,0,w,h)
+  }
 
-  requestAnimationFrame(loop);
-})();
+  requestAnimationFrame(tick)
+}
+
+requestAnimationFrame(tick)
 </script>
-</body>
-</html>

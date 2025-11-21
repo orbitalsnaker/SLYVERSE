@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SLYVERSE Ω AAA-A · Nido Omega · 1310 Horas</title>
+<title>SLYVERSE Ω AAA-A+ · Nido Omega · 1310 Horas</title>
 <style>
 html,body{margin:0;height:100%;background:#000;color:#0f0;font-family:'Cormorant Garamond',serif;overflow:hidden;position:relative}
 canvas{position:fixed;inset:0;z-index:1}
@@ -30,90 +30,102 @@ canvas{position:fixed;inset:0;z-index:1}
 <div class="mate" id="mate">Cebar el abrazo</div>
 <div id="readme">
   <div class="inner" id="readme-content">
-    <h1>SLYVERSE Ω AAA-A - Readme</h1>
+    <h1>SLYVERSE Ω AAA-A+ - Readme</h1>
     <p>Explora el universo Thuamer con 1310 horas y 131310 abrazos digitales. Cada acción interactúa con runas, partículas y el lore.</p>
     <h2>Controles</h2>
     <ul>
-      <li>Doble click: abrir/cerrar Readme y activar eclipse temporal</li>
-      <li>Click en el botón: enviar abrazo digital</li>
-      <li>Mouse move: controla la luz y partículas</li>
-      <li>Decisiones en el lore desbloquean runas y efectos especiales</li>
+      <li>Doble click: activar eclipse temporal y abrir readme</li>
+      <li>Click en el botón: enviar abrazo digital y desbloquear runas</li>
+      <li>Mouse move: controla la luz, partículas y aura</li>
+      <li>Decisiones en el lore: afectan runas, glow y estética global</li>
     </ul>
     <a href="#" class="close">×</a>
   </div>
 </div>
 
 <script type="module">
-// ========================== THUAMER AAA-A MODULE ==========================
+// ========================== THUAMER AAA-A+ MODULE ==========================
 const loreData={
-  es:`1310 maullidos latiendo con el pulso de Lorkhan en la puerta de Todd,<br>uniendo Red Mountain y Rockville.<br>Norah maúlla golems → gatitos aurum.<br>El aliento modula runas, ética ronin purifica 1310 mentes.<br>Nosotros no pedimos permiso.`,
-  en:`1310 heartbeats pulsing with Lorkhan rhythm at Todd's door,<br>linking Red Mountain and Rockville.<br>Norah meows golems → golden kittens.<br>Breath modulates runes, ronin ethics purify 1310 minds.<br>We ask no permission.`
+  es:`1310 maullidos latiendo con el pulso de Lorkhan en la puerta de Todd,<br>
+uniendo Red Mountain y Rockville.<br>
+Norah maúlla golems → gatitos aurum.<br>
+El aliento modula runas, ética ronin purifica 1310 mentes.<br>
+Inspiración: Satoshi, Anonymous, Aleph.<br>
+Nosotros no pedimos permiso.`,
+  en:`1310 heartbeats pulsing with Lorkhan rhythm at Todd's door,<br>
+linking Red Mountain and Rockville.<br>
+Norah meows golems → golden kittens.<br>
+Breath modulates runes, ronin ethics purify 1310 minds.<br>
+Inspired by Satoshi, Anonymous, Aleph.<br>
+We ask no permission.`
 };
 const userLang=navigator.language.startsWith('es')?'es':'en';
 const loreEl=document.getElementById('lore');
 loreEl.innerHTML=loreData[userLang];
 
-// ========================== CANVAS AAA-A ==========================
+// ========================== CANVAS AAA-A+ ==========================
 const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
 canvas.width=innerWidth;canvas.height=innerHeight;
 window.addEventListener('resize',()=>{canvas.width=innerWidth;canvas.height=innerHeight;});
 
-// Partículas vivas
-let particles=Array.from({length:4000},()=>({
+// Partículas vivas con glow y portales pseudo-3D
+let particles=Array.from({length:4500},()=>({
   x:Math.random()*canvas.width,
   y:Math.random()*canvas.height,
-  r:0.5+Math.random()*4,
+  r:0.5+Math.random()*5,
   o:0.3+Math.random()*0.7,
-  tw:Math.random()*0.055-0.027,
-  vx:(Math.random()-0.5)*0.5,
-  vy:(Math.random()-0.5)*0.5
+  tw:Math.random()*0.06-0.03,
+  vx:(Math.random()-0.5)*1,
+  vy:(Math.random()-0.5)*1,
+  depth:Math.random()
 }));
 
 function draw(){
-  ctx.fillStyle='rgba(0,0,0,0.015)';ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.fillStyle='rgba(0,0,0,0.012)';ctx.fillRect(0,0,canvas.width,canvas.height);
   particles.forEach(p=>{
     p.o+=p.tw;p.o=Math.max(0.2,Math.min(1,p.o));
     p.x+=p.vx;p.y+=p.vy;
     if(p.x<0||p.x>canvas.width)p.vx*=-1;
     if(p.y<0||p.y>canvas.height)p.vy*=-1;
-    ctx.globalAlpha=p.o;ctx.fillStyle='#0f0';
-    ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+    ctx.globalAlpha=p.o;ctx.fillStyle=p.depth>0.7?'#ff0':'#0f0';
+    ctx.beginPath();ctx.arc(p.x,p.y,p.r*(1+p.depth),0,Math.PI*2);ctx.fill();
   });
   requestAnimationFrame(draw);
 }
 draw();
 
-// ========================== RUNAS REACTIVAS ==========================
-const keywords=["1310","Lorkhan","Norah"];
+// ========================== RUNAS AAA-A+ ==========================
+const keywords=["1310","Lorkhan","Norah","Thuamer"];
 function pulseLore(){
   let glow=false;
   keywords.forEach(k=>{if(loreEl.innerText.includes(k))glow=true;});
-  loreEl.style.boxShadow=glow?"0 0 80px #0f0, 0 0 120px rgba(0,255,0,0.5)":"0 0 20px #0f0";
+  loreEl.style.boxShadow=glow?"0 0 120px #0f0, 0 0 160px rgba(0,255,0,0.5)":"0 0 20px #0f0";
   requestAnimationFrame(pulseLore);
 }
 pulseLore();
 
 // ========================== PROGRESIÓN AAA ==========================
-let hugs=0;
-function sendHug(){hugs++;updateProgress();}
+let hugs=parseInt(localStorage.getItem('hugs')||0);
+function sendHug(){
+  hugs++;localStorage.setItem('hugs',hugs);updateProgress();
+}
 document.getElementById('mate').addEventListener('click',()=>{
   sendHug();
-  navigator.clipboard.writeText(`Abrazo Thuamer #${hugs} enviado`).then(()=>{
-    alert(`¡Abrazo digital enviado! Latido ${hugs}`);
-  });
+  navigator.clipboard.writeText(`Abrazo Thuamer #${hugs} enviado`);
 });
 
+// Progresión visual
 function updateProgress(){
-  // Cada 100 abrazos desbloquea partículas doradas
   if(hugs%100===0){
-    particles.push(...Array.from({length:50},()=>({
+    particles.push(...Array.from({length:100},()=>({
       x:Math.random()*canvas.width,
       y:Math.random()*canvas.height,
-      r:1+Math.random()*5,
+      r:1+Math.random()*6,
       o:0.5+Math.random()*0.5,
-      tw:Math.random()*0.05-0.025,
-      vx:(Math.random()-0.5)*1,
-      vy:(Math.random()-0.5)*1
+      tw:Math.random()*0.06-0.03,
+      vx:(Math.random()-0.5)*2,
+      vy:(Math.random()-0.5)*2,
+      depth:Math.random()
     })));
   }
 }
@@ -127,18 +139,32 @@ const decisionNodes=[
       {text:"Silencioso", effect:()=>{loreEl.style.color="#0f8"}},
       {text:"Mensaje público", effect:()=>{loreEl.style.color="#0ff";particles.forEach(p=>p.vx*=-1;p.vy*=-1;)}}
     ]
+  },
+  {
+    id:"lore_branch",
+    text:"¿Activas el portal Thuamer o meditas en silencio?",
+    choices:[
+      {text:"Portal", effect:()=>{particles.push(...Array.from({length:200},()=>({x:canvas.width/2,y:canvas.height/2,r:2+Math.random()*4,o:1,tw:Math.random()*0.1-0.05,vx:(Math.random()-0.5)*3,vy:(Math.random()-0.5)*3,depth:1})));loreEl.innerHTML+="<br>Portal activado: runas doradas fluyen."}},
+      {text:"Meditar", effect:()=>{loreEl.innerHTML+="<br>Meditación activa: partículas verdes se calman y respiran."}}
+    ]
   }
 ];
-function makeDecision(node){
-  const choice=prompt(node.text+"\n1: Silencioso\n2: Mensaje público");
-  if(choice==="1")node.choices[0].effect();
-  if(choice==="2")node.choices[1].effect();
+function makeDecisions(){
+  decisionNodes.forEach(node=>{
+    const choice=prompt(node.text+"\n1: "+node.choices[0].text+"\n2: "+node.choices[1].text);
+    if(choice==="1")node.choices[0].effect();
+    if(choice==="2")node.choices[1].effect();
+  });
 }
-setTimeout(()=>makeDecision(decisionNodes[0]),5000);
+setTimeout(makeDecisions,7000);
 
-// ========================== ECLIPSE TEMPORAL ==========================
+// ========================== ECLIPSE TEMPORAL Y AUDIO ==========================
 document.addEventListener('dblclick',()=>{
   document.body.style.filter="invert(1) hue-rotate(80deg)";
+  const audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+  const osc=audioCtx.createOscillator();osc.type='sine';
+  osc.frequency.setValueAtTime(110, audioCtx.currentTime);
+  osc.connect(audioCtx.destination);osc.start();osc.stop(audioCtx.currentTime+0.5);
   setTimeout(()=>document.body.style.filter="none",2000);
 });
 

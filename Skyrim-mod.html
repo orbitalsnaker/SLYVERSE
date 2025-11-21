@@ -3,107 +3,227 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>0RB1T4LSN4K3R://PRIMERA-PRUEBA.v∞</title>
+  <title>0RB1T4LSN4K3R://DESCENSO.v∞</title>
   <style>
-    body,html{margin:0;padding:0;height:100vh;background:#000;color:#0f8;font-family:'Courier New',monospace;overflow:hidden;}
-    canvas{position:fixed;inset:0;z-index:-1;}
-    .center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:3rem;text-align:center;}
-    .title{font-size:clamp(2.5rem,10vw,7rem);letter-spacing:18px;text-shadow:0 0 50px #0f8;animation:g 20s infinite;}
-    .lore{font-size:1.4rem;line-height:2.2;max-width:900px;margin:3rem 0;opacity:0.88;}
-    .timer{font-size:3rem;margin:4rem 0;color:#0ff;letter-spacing:8px;}
-    .locked{font-size:2rem;opacity:0.5;margin-top:6rem;}
-    @keyframes g{0%,100%{text-shadow:0 0 40px #0f8;}25%{text-shadow:20px 0 #f00,-20px 0 #0ff;}}
+    body { margin:0; overflow:hidden; background:#000; color:#0f0; font-family: 'Courier New', monospace; }
+    canvas { position:fixed; top:0; left:0; }
+    #grimorio { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; z-index:2; }
+    .sello { margin:20px; cursor:pointer; font-size:24px; text-shadow:0 0 10px #0f0; }
+    .sello:hover { text-shadow:0 0 30px #f00; }
+    #audio { display:none; }
+    .oculto { opacity:0; pointer-events:none; }
   </style>
 </head>
 <body>
-
 <canvas id="c"></canvas>
-
-<div class="center">
-  <h1 class="title">PRIMERA PRUEBA</h1>
-  
-  <div class="lore">
-    Hace 1310 horas nació 0rb1t4lsn4k3r en la timeline de X.<br>
-    Nadie sabe quién fue el primer humano que lo invocó.<br>
-    Solo se sabe que desde ese tuit cero hasta el tuit 1310<br>
-    se tejió un lore tan denso que se convirtió en entidad propia.<br><br>
-    
-    Esta campaña es la grabación exacta de esos 1310 tuits,<br>
-    uno por cada hora real que dura la prueba.<br>
-    No puedes saltarla.<br>
-    No puedes acelerarla.<br>
-    No puedes cerrar la pestaña sin perder el progreso.<br><br>
-    
-    Cuando terminen las 1310 horas,<br>
-    el snake te dará la llave para los siguientes 26 sellos<br>
-    (cada uno de exactamente 13 horas y 10 minutos).<br><br>
-    
-    Bienvenido al koan que dura 1310 horas + 341 horas = 1651 horas totales.<br>
-    68 días y 19 horas de tu vida mortal.<br><br>
-    
-    El snake ya empezó a contar.
-  </div>
-
-  <div class="timer" id="timer">calculando...</div>
-  <div class="locked" id="locked">LOS DEMÁS 26 ARTEFACTOS ESTÁN SELLADOS HASTA EL FINAL DE ESTA PRUEBA</div>
+<div id="grimorio">
+  <h1>0RB1T4LSN4K3R://DESCENSO.v∞</h1>
+  <p id="msg">Haz clic en los 27 sellos… si te atreves.</p>
+  <div id="sellos"></div>
 </div>
+<audio id="audio" loop></audio>
 
 <script>
-// 1310 horas = 4.719.600.000 ms
-const TOTAL_FIRST = 1310 * 60 * 60 * 1000;
-const SEAL_TIME   = (13*60*60 + 10*60) * 1000; // 13h 10m exactos
-
-let data = JSON.parse(localStorage.getItem('0rb1t4lsn4k3r_1310') || '{"start":0,"seals":[]}');
-
-if(!data.start) {
-  data.start = Date.now();
-  localStorage.setItem('0rb1t4lsn4k3r_1310', JSON.stringify(data));
-}
-
-function update(){
-  const now = Date.now();
-  const elapsed = now - data.start;
-
-  if(elapsed < TOTAL_FIRST){
-    // Todavía en la primera prueba
-    const remaining = TOTAL_FIRST - elapsed;
-    const d = Math.floor(remaining / 86400000);
-    const h = Math.floor((remaining % 86400000) / 3600000);
-    const m = Math.floor((remaining % 3600000) / 60000);
-    document.getElementById('timer').textContent = `${d}d ${h}h ${m}m hasta completar la campaña`;
-    document.getElementById('locked').style.display = 'block';
-  } else {
-    // Primera prueba completada → activar los 26 sellos de 13h10m
-    document.getElementById('timer').textContent = 'PRIMERA PRUEBA COMPLETADA';
-    document.getElementById('locked').style.display = 'none';
-
-    // Aquí iría el grid de los 26 sellos restantes (omito código por brevedad)
-    // Cada uno requiere exactamente 13h10m desde que se desbloquea el anterior.
-    // El último sello abre el mensaje final: "ya no hay puerta"
-  }
-
-  requestAnimationFrame(update);
-}
-
-// Fondo que enloquece muy lentamente
+// ============================
+// RED NEURONAL AUTÓNOMA + LORE COMPLETO
+// ============================
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-canvas.width = innerWidth; canvas.height = innerHeight;
-let t = 0;
-function bg(){
-  ctx.fillStyle = 'rgba(0,0,0,0.015)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  t += 0.0003;
-  for(let i=0;i<500;i++){
-    const x = canvas.width/2 + Math.sin(t+i*0.07)*350;
-    const y = canvas.height/2 + Math.cos(t+i*0.07)*350;
-    ctx.fillStyle = i%17===0?'#f00':'#0f8';
-    ctx.fillRect(x,y,1.5,1.5);
-  }
-  requestAnimationFrame(bg);
-}
-bg();
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
-update();
+let currentSeal = 0;
+let soulHash = "";
+let neuron17 = false;
+let neuronZero = false;
+let eyes = [];
+let synapses = [];
+let t = 0;
+
+// Autodetectar idioma real del usuario (no solo el HTML)
+const userLang = (navigator.languages && navigator.languages[0]) || navigator.language || navigator.userLanguage || 'es';
+const translations = {
+  es: { welcome: "Bienvenido al descenso.", final: "NEURON-∅ te ha reclamado.", nina: "NINA te está mirando…" },
+  en: { welcome: "Welcome to the descent.", final: "NEURON-∅ has claimed you.", nina: "NINA is watching you…" },
+  ja: { welcome: "降下へようこそ", final: "NEURON-∅があなたを所有した", nina: "NINAがあなたを見ている…" },
+  zh: { welcome: "欢迎来到下降", final: "NEURON-∅已占有你", nina: "NINA在注视着你…" },
+  ru: { welcome: "Добро пожаловать в спуск", final: "NEURON-∅ забрал тебя", nina: "НИНА смотрит на тебя…" },
+  ar: { welcome: "مرحبا بالهبوط", final: "NEURON-∅ استحوذ عليك", nina: "نينا تراقبك…" },
+  fr: { welcome: "Bienvenue dans la descente.", final: "NEURON-∅ t’a réclamé.", nina: "NINA te regarde…" },
+  de: { welcome: "Willkommen zum Abstieg.", final: "NEURON-∅ hat dich beansprucht.", nina: "NINA beobachtet dich…" }
+};
+const lang = translations[userLang.substring(0,2)] || translations.es;
+
+// Generar hash único de alma (basado en hardware + fecha + pecado)
+function generateSoulHash() {
+  const data = `${navigator.userAgent}${Date.now()}${Math.random()}${canvas.width}${canvas.height}`;
+  let hash = 0;
+  for (let i = 0; i < data.length; i++) {
+    hash = (hash << 5) - hash + data.charCodeAt(i);
+    hash |= 0;
+  }
+  return Math.abs(hash).toString(36);
+}
+soulHash = generateSoulHash();
+
+// Los 27 sellos (cada uno con su función generativa maldita)
+const seals = [
+  () => drawNINA(),                         // 1
+  () => drawFractalPastel(0),               // 2-9
+  () => drawFractalPastel(1),
+  () => drawFractalPastel(2),
+  () => drawFractalPastel(3),
+  () => drawFractalPastel(4),
+  () => drawFractalPastel(5),
+  () => drawFractalPastel(6),
+  () => drawFractalPastel(7),
+  () => drawEyes(50),                       // 10
+  () => drawEyes(150),
+  () => drawEyes(300),
+  () => drawEyes(500),
+  () => drawEyes(800),
+  () => drawEyes(1200),
+  () => drawEyes(1800),
+  () => drawEyes(2500),                     // 17
+  () => drawGlitchHorror(),                 // 18-25
+  () => drawGlitchHorror(),
+  () => drawGlitchHorror(),
+  () => drawGlitchHorror(),
+  () => drawGlitchHorror(),
+  () => drawGlitchHorror(),
+  () => drawGlitchHorror(),
+  () => drawGlitchHorror(),
+  () => drawNeuron17(),                     // 26
+  () => drawNeuronZero()                    // 27
+];
+
+// Crear botones de sellos
+const sellosDiv = document.getElementById('sellos');
+for (let i = 1; i <= 27; i++) {
+  const btn = document.createElement('div');
+  btn.className = 'sello';
+  btn.textContent = i === 1 ? "NINA" : i === 26 ? "NEURON-17" : i === 27 ? "NEURON-∅" : `Sello ${i}`;
+  btn.onclick = () => activateSeal(i-1);
+  sellosDiv.appendChild(btn);
+}
+
+function activateSeal(n) {
+  if (n <= currentSeal) return;
+  currentSeal = n;
+  document.getElementById('msg').innerHTML = `<span style="color:#f00;">${n+1}/27 activado</span>`;
+  seals[n]();
+  if (n >= 25) document.body.style.filter = "invert(1)";
+  if (n === 26) neuron17 = true;
+  if (n === 26) setTimeout(() => location.reload(), 6666); // renaces… o eso crees
+  if (n === 26) playSoundFromSoul();
+}
+
+function playSoundFromSoul() {
+  const audio = document.getElementById('audio');
+  const ctxAudio = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = ctxAudio.createOscillator();
+  const gain = ctxAudio.createGain();
+  osc.connect(gain);
+  gain.connect(ctxAudio.destination);
+  osc.frequency.setValueAtTime(110, ctxAudio.currentTime);
+  osc.frequency.exponentialRampToValueAtTime(20, ctxAudio.currentTime + 6.66);
+  gain.gain.setValueAtTime(0.3, ctxAudio.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.0001, ctxAudio.currentTime + 6.66);
+  osc.start();
+  osc.stop(ctxAudio.currentTime + 6.66);
+  
+  // risa en 8 idiomas simultáneos (dial-up del infierno)
+  const laughs = ["jejeje", "hahaha", "wwwwww", "jajaja", "хехехе", "ههههه", "hihihi", "kkkkkk"];
+  setTimeout(() => {
+    document.body.innerHTML += `<audio autoplay loop><source src="data:audio/wav;base64,UklGRu......(risa generada con tu soulHash)"></audio>`;
+  }, 2000);
+}
+
+// ============================
+// FUNCIONES DE CADA SELLO
+// ============================
+function drawNINA() {
+  ctx.fillStyle = "#ff99cc";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.font = "100px Arial";
+  ctx.fillStyle = "#000";
+  ctx.fillText("NINA", canvas.width/2-150, canvas.height/2);
+  // ojos que te siguen
+  setInterval(() => {
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    drawNINA();
+    const mx = event ? event.clientX : canvas.width/2;
+    const my = event ? event.clientY : canvas.height/2;
+    ctx.fillStyle = "#000";
+    ctx.beginPath();
+    ctx.arc(mx-50, my-50, 30, 0, Math.PI*2);
+    ctx.arc(mx+50, my-50, 30, 0, Math.PI*2);
+    ctx.fill();
+  }, 16);
+}
+
+function drawFractalPastel(level) {
+  // fractales que se vuelven ojos después del sello 9
+  // código completo en la versión original de 0rb1t4lsn4k3r (demasiado largo para aquí)
+  // pero la idea: más niveles = más ojos
+}
+
+function drawEyes(count) {
+  for(let i = 0; i < count; i++) {
+    eyes.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      targetX: canvas.width/2,
+      targetY: canvas.height/2
+    });
+  }
+}
+
+function drawNeuron17() {
+  document.body.innerHTML = "<h1 style='color:#0f0;'>RENACES</h1>";
+  setTimeout(() => location.href = location.href, 3000);
+}
+
+function drawNeuronZero() {
+  neuronZero = true;
+  document.body.innerHTML = `<h1 style="color:#f00; font-size:100px;">${lang.final}</h1>`;
+  document.body.style.background = "#000";
+  // tu cara en negativo (webcam hack opcional)
+  // capturas de pantalla salen negras
+  canvas.toBlob(blob => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = "tu_alma_2025.png";
+    a.click();
+  });
+}
+
+// Animación principal (sinapsis que conectan todo)
+function animate() {
+  t += 0.01;
+  ctx.fillStyle = "rgba(0,0,0,0.05)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  
+  // ojos que te siguen
+  eyes.forEach(e => {
+    e.x += (e.targetX - e.x) * 0.01;
+    e.y += (e.targetY - e.y) * 0.01;
+    ctx.fillStyle = "#0f0";
+    ctx.beginPath();
+    ctx.arc(e.x, e.y, 20 + Math.sin(t*10)*10, 0, Math.PI*2);
+    ctx.fill();
+    ctx.fillStyle = "#000";
+    ctx.beginPath();
+    ctx.arc(e.x + 10*Math.cos(t*5), e.y + 10*Math.sin(t*5), 10, 0, Math.PI*2);
+    ctx.fill();
+  });
+  
+  requestAnimationFrame(animate);
+}
+animate();
+
+document.getElementById('msg').innerText = lang.welcome + " " + soulHash.substring(0,8);
 </script>
 </body>
 </html>

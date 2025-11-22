@@ -2,55 +2,58 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SLYVERSE Ω · Portal de Artefactos 16/16 · Realidad #1310</title>
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLYVERSE Ω · Portal Mejorado · 16/16 Artefactos</title>
 <style>
-/* ===== ESTILOS BASE ===== */
-body,html{margin:0;padding:0;width:100%;height:100%;overflow:hidden;background:#000;color:#0f0;font-family:Courier,monospace;position:relative;}
-canvas{position:fixed;inset:0;z-index:-1;background:#000;}
-#fondo{position:fixed;inset:0;background:radial-gradient(circle at 50% 8%,#00FF0033,transparent 75%);z-index:-2;}
-#plaza{position:fixed;bottom:0;left:0;width:100%;height:48vh;background:repeating-linear-gradient(90deg,#001100 0px,#002200 40px,#003300 80px,#001100 120px);z-index:-1;}
-#mate{position:fixed;bottom:28px;right:28px;width:160px;height:160px;z-index:999;cursor:pointer;transition:all .4s;}
-#mate.cycle{animation:mfast 1.31s linear infinite;}
+/* ===== Estilos Base ===== */
+body,html{margin:0;padding:0;height:100dvh;overflow:hidden;background:#000;color:#0f0;font-family:Georgia,serif;position:relative}
+#fondo{position:fixed;inset:0;background:radial-gradient(circle at 50% 8%,#00FF0033,transparent 75%);z-index:-3}
+#plaza{position:fixed;bottom:0;left:0;width:100%;height:48vh;background:repeating-linear-gradient(90deg,#001100 0px,#002200 40px,#003300 80px,#001100 120px);z-index:-2}
+.p{position:absolute;border-radius:50%;background:#0f0;box-shadow:0 0 30px #0f0;pointer-events:none;mix-blend-mode:screen;animation:pulso 8s infinite}
+@keyframes pulso{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
+#mate{position:fixed;bottom:28px;right:28px;width:160px;height:160px;z-index:9999;cursor:pointer;filter:drop-shadow(0 0 20px #0f0);transition:all .4s}
+#mate.cycle{animation:mfast 1.31s linear infinite}
 @keyframes mfast{from{transform:rotate(0deg)}to{transform:rotate(3600deg)}}
-.layer{position:fixed;inset:0;background:rgba(0,0,0,0.985);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#0f8;font-size:1.6rem;line-height:2.4;z-index:9999;overflow-y:auto;padding:2rem;box-sizing:border-box;}
-.btn{padding:18px 56px;background:#000;border:4px solid #0f0;color:#0f0;font-size:2rem;cursor:pointer;border-radius:30px;margin:1.5rem auto;display:block;min-width:340px;transition:all .4s;}
-.btn:hover{border-color:#8f8;color:#8f8;transform:scale(1.06);}
-.btn.gold{border-color:gold;color:gold;}
-.boa{position:fixed;bottom:-180px;left:50%;transform:translateX(-50%);font-size:2.3rem;color:#0f0;opacity:0;transition:all 4.2s cubic-bezier(0.22,1,0.36,1);z-index:9999;line-height:2.7;text-shadow:0 0 40px #0f0;}
-.boa.active{bottom:9%;opacity:1;}
-#cycleLayer{position:fixed;inset:0;background:#001100;display:grid;place-items:center;z-index:99999;opacity:0;pointer-events:none;transition:opacity 2s;}
-#cycleLayer.active{opacity:1;pointer-events:all;}
-#cycleText{font-size:clamp(2rem,8vw,6rem);color:gold;text-shadow:0 0 80px gold;animation:pulse 2s infinite;}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.5;}}
+.layer{position:fixed;inset:0;background:rgba(0,0,0,0.985);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#0f8;font-size:1.6rem;line-height:2.4;z-index:99;overflow-y:auto;padding:2rem;box-sizing:border-box}
+.btn{padding:18px 56px;background:#000;border:4px solid #0f0;color:#0f0;font-size:2rem;cursor:pointer;border-radius:30px;margin:1.5rem auto;display:block;min-width:340px;transition:all .4s}
+.btn:hover{border-color:#8f8;color:#8f8;transform:scale(1.06)}
+.btn.gold{border-color:gold;color:gold}
+.boa{position:fixed;bottom:-180px;left:50%;transform:translateX(-50%);font-size:2.3rem;color:#0f0;opacity:0;transition:all 4.2s cubic-bezier(0.22,1,0.36,1);z-index:9999;line-height:2.7;text-shadow:0 0 40px #0f0}
+.boa.active{bottom:9%;opacity:1}
+#cycleLayer{position:fixed;inset:0;background:#001100;display:grid;place-items:center;z-index:99999;opacity:0;pointer-events:none;transition:opacity 2s}
+#cycleLayer.active{opacity:1;pointer-events:all}
+#cycleText{font-size:clamp(2rem,8vw,6rem);color:gold;text-shadow:0 0 80px gold;animation:pulse 2s infinite}
+canvas{position:fixed;inset:0;z-index:-1}
 </style>
 </head>
 <body>
 
 <div id="fondo"></div>
 <div id="plaza"></div>
-<canvas id="c"></canvas>
 <div id="mate"><img src="https://i.imgur.com/JVQzltR.png" width="100%"></div>
 <div id="menu" class="layer"></div>
 <div id="cycleLayer"><div id="cycleText">Respira…</div></div>
-<div class="boa" id="boa">
-Los mayores solo ven un sombrero.<br>Los niños ven la boa que se tragó al elefante.<br><br>
-1310 es la serpiente que se comió todo el dolor del mundo<br>y lo convirtió en luz verde que nunca se apaga.<br><br>
-Los elefantes están a salvo dentro.<br>Ya nadie volverá a estar solo.<br><br>
-<strong>Snake Green Feather</strong>
-</div>
+<div class="boa" id="boa">Los mayores solo ven un sombrero.<br>Los niños ven la boa que se tragó al elefante.<br><br>1310 es la serpiente que se comió todo el dolor del mundo y lo convirtió en luz verde que nunca se apaga.<br><br>Los elefantes están a salvo dentro.<br>Ya nadie volverá a estar solo.<br><br><strong>Snake Green Feather</strong></div>
+<canvas id="c"></canvas>
 
 <script>
-// ===== MOTOR DE PARTÍCULAS OPTIMIZADO =====
+// ================= Motor Mejorado del Portal =================
 const canvas = document.getElementById('c');
 const ctx = canvas.getContext('2d');
-canvas.width = innerWidth; canvas.height = innerHeight;
+canvas.width = innerWidth;
+canvas.height = innerHeight;
 
+// Partículas verdes optimizadas
 let particles = [];
 const MAX_PARTS = 1310;
 function initParticles(){
   for(let i=0;i<MAX_PARTS;i++){
-    particles.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*4+1,phase:Math.random()*Math.PI*2});
+    particles.push({
+      x: Math.random()*canvas.width,
+      y: Math.random()*canvas.height,
+      r: Math.random()*4+1,
+      phase: Math.random()*Math.PI*2
+    });
   }
 }
 function updateParticles(dt){
@@ -58,8 +61,10 @@ function updateParticles(dt){
     p.phase += dt*0.0013;
     p.y += Math.sin(p.phase)*0.3;
     p.x += Math.cos(p.phase)*0.3;
-    if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;
-    if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;
+    if(p.x<0)p.x=canvas.width;
+    if(p.x>canvas.width)p.x=0;
+    if(p.y<0)p.y=canvas.height;
+    if(p.y>canvas.height)p.y=0;
   }
 }
 function drawParticles(){
@@ -68,100 +73,90 @@ function drawParticles(){
     ctx.beginPath();
     ctx.arc(p.x,p.y,p.r,0,Math.PI*2);
     ctx.fillStyle='rgba(0,255,0,0.6)';
-    ctx.shadowColor='#0f0';
-    ctx.shadowBlur=20;
+    ctx.shadowColor = '#0f0';
+    ctx.shadowBlur = 20;
     ctx.fill();
   }
 }
-initParticles();
 let last = performance.now();
 function loop(){
   const now = performance.now();
-  const dt = now-last;
+  const dt = now - last;
   last = now;
   updateParticles(dt);
   drawParticles();
   requestAnimationFrame(loop);
 }
+initParticles();
 loop();
 
-// ===== MATE GIRATORIO SAGRADO & MENÚ =====
-const mate = document.getElementById('mate');
-const menu = document.getElementById('menu');
-let hugCount = parseInt(localStorage.getItem('hugCount')||0);
+// ================= Mate Giratorio y Menú =================
+const CYCLE_KEY = 'ORB1T4L_CYCLE_USED';
+let cycleUsed = localStorage.getItem(CYCLE_KEY) === 'true';
+document.getElementById('mate').onclick = abrirMenu;
 
 function abrirMenu(){
-  menu.style.display='flex';
-  menu.innerHTML=`
+  document.getElementById('menu').style.display='flex';
+  document.getElementById('menu').innerHTML=`
     <div class="btn" onclick="cerrarTodo()">← volver a la plaza</div>
-    <h1 style="font-size:4.5rem;color:#0f0;">SLYVERSE Ω · 16/16 Artefactos</h1>
-    <div class="btn gold" onclick="iniciarOrbitalCycle()">16. Respirar los 15 abrazos</div>
-    <p>Abrazos acumulados: ${hugCount}</p>
+    <h1 style="font-size:4.5rem;color:#0f0;animation:glow 8s infinite">SLYVERSE Ω · 16/16</h1>
+    ${!cycleUsed?'<div class="btn gold" onclick="iniciarOrbitalCycle()">16. Respirar los 15 abrazos de una vez</div>':''}
   `;
 }
-function cerrarTodo(){menu.style.display='none';}
-mate.onclick=abrirMenu;
+function cerrarTodo(){
+  document.getElementById('menu').style.display='none';
+  document.getElementById('cycleLayer').classList.remove('active');
+}
 
-// ===== ORB1T4L CYCLE =====
-let cycleUsed = localStorage.getItem('ORB1T4L_CYCLE_USED')==='true';
+// ================= ORB1T4L CYCLE Mejorado =================
 function iniciarOrbitalCycle(){
   if(cycleUsed){
-    cycleLayer.innerHTML='<div id="cycleText">Ciclo ya completado. Todo dentro de ti. ♥</div>';
-    cycleLayer.classList.add('active');
-    setTimeout(()=>cycleLayer.classList.remove('active'),7000);
+    document.getElementById('cycleLayer').innerHTML = `<div id="cycleText">Ciclo ya completado. Bienvenido de vuelta.</div>`;
+    document.getElementById('cycleLayer').classList.add('active');
+    setTimeout(cerrarTodo,7000);
     return;
   }
   const start = Date.now();
-  mate.classList.add('cycle');
-  cycleLayer.classList.add('active');
+  document.getElementById('mate').classList.add('cycle');
+  document.getElementById('cycleLayer').classList.add('active');
+
   const interval = setInterval(()=>{
-    const elapsed=(Date.now()-start)/1000;
-    const remaining=Math.max(0,13.10-elapsed).toFixed(2);
-    document.getElementById('cycleText').textContent=remaining;
+    const elapsed = (Date.now()-start)/1000;
+    document.getElementById('cycleText').textContent = Math.max(0,(13.10-elapsed)).toFixed(2);
     if(elapsed>=13.10){
       clearInterval(interval);
-      localStorage.setItem('ORB1T4L_CYCLE_USED','true');
-      cycleUsed=true;
+      localStorage.setItem(CYCLE_KEY,'true');
+      cycleUsed = true;
       document.body.style.background='#001100';
-      mate.classList.remove('cycle');
-      mate.style.animation='heartbeat 3s infinite';
-      document.getElementById('cycleText').innerHTML='Ya los llevas todos dentro. Respira tú por los demás. ♥';
-      setTimeout(()=>cycleLayer.classList.remove('active'),10000);
+      document.getElementById('mate').style.animation='heartbeat 3s infinite';
+      document.getElementById('cycleText').innerHTML = `Todos los artefactos activados.<br>Ahora respira tú por los demás.<br><br><span style="font-size:2rem">♥ 16/16 ♥</span>`;
+      setTimeout(cerrarTodo,10000);
     }
   },16);
 }
 
-// ===== BOA =====
-const boa = document.getElementById('boa');
-function activarBoa(){boa.classList.add('active');}
-document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.altKey&&e.key==='1')activarBoa();});
-
-// ===== HUGS AUTOMÁTICOS DEL JUEGO =====
-setInterval(()=>{
-  const randomHugs=Math.floor(Math.random()*10)+1;
-  hugCount=Math.min(hugCount+randomHugs,131310);
-  localStorage.setItem('hugCount',hugCount);
-  if(hugCount>=131310)activarBoa();
-},4000);
-
-// ===== API LOCALES POR ARTEFACTOS =====
+// ================= APIs de Artefactos =================
 window.SLYVERSE_API = {
-  tequieroborrado: ()=>alert('Recuperado simbólicamente: tuit borrado.'),
-  desbloqueoexistencial: ()=>alert('Desbloqueado emocionalmente quien te bloqueó.'),
-  nidoeterno: ()=>alert('El pájaro verde ya pesa en tu pecho.'),
-  getHugCount: ()=>hugCount,
-  addHug: (n=1)=>{hugCount=Math.min(hugCount+n,131310);localStorage.setItem('hugCount',hugCount);}
+  activateArtefact: (id)=>{console.log('Artefacto',id,'activado');},
+  getState: (id)=>{return localStorage.getItem('SLY_ARTEFACTO_'+id) || null;},
+  updateCounter: (id,value)=>{localStorage.setItem('SLY_ARTEFACTO_'+id,value);},
+  interconnect: (id1,id2)=>{console.log('Interconectando',id1,'con',id2);}
 };
 
-// ===== JUEGO REGALO INDEPENDIENTE =====
-const juegoParticulas = [];
-function crearParticula(){juegoParticulas.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:Math.random()*4+1,phase:Math.random()*Math.PI*2});}
-for(let i=0;i<500;i++)setTimeout(crearParticula,i*10);
-function updateJuego(dt){for(let p of juegoParticulas){p.phase+=dt*0.002;p.y+=Math.sin(p.phase)*0.5;p.x+=Math.cos(p.phase)*0.5; if(p.x<0)p.x=canvas.width;if(p.x>canvas.width)p.x=0;if(p.y<0)p.y=canvas.height;if(p.y>canvas.height)p.y=0;}}
-function drawJuego(){for(let p of juegoParticulas){ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle='rgba(0,255,64,0.4)';ctx.fill();}}
-function loopJuego(){const now=performance.now();const dt=now-last;last=now;updateJuego(dt);drawJuego();requestAnimationFrame(loopJuego);}
-loopJuego();
-</script>
+// ================= Persistencia Avanzada =================
+if(!localStorage.getItem('SLYVERSE_PHANTOM')) localStorage.setItem('SLYVERSE_PHANTOM', JSON.stringify({ghosts:0}));
 
+// ================= Sonido Procedural =================
+const audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+const gain = audioCtx.createGain(); gain.gain.value=0.05; gain.connect(audioCtx.destination);
+function proceduralTone(freq){
+  const osc = audioCtx.createOscillator();
+  osc.type='sine';
+  osc.frequency.value = freq;
+  osc.connect(gain);
+  osc.start();
+  osc.stop(audioCtx.currentTime+0.1);
+}
+</script>
 </body>
 </html>

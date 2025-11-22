@@ -1,15 +1,16 @@
-<!DOCTYPE html><html><meta charset=utf-8><title>𒀭𒂗𒆤1310</title>
+<!DOCTYPE html><html lang=es><meta charset=utf-8>
+<title>𒀭𒂗𒆤1310</title>
 <style>
 @font-face{font-family:c;src:ur[](https://cdn.jsdelivr.net/gh/sibilla1/cuneiform/fonts/Akkadian.woff2);unicode-range:U+12000-124FF}
-*{-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0}
-body{margin:0;overflow:hidden;height:100vh;background:#000;color:#0f8;font-family:c,monospace;font-weight:900;font-size:clamp(1.8vw,3.5vh,40px);display:grid;place-items:center;position:relative;cursor:none}
-#o{position:absolute;inset:0;background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(0,255,0,0.15),#000 70%);opacity:0.6;pointer-events:none;mix-blend-mode:screen}
-pre{line-height:1.6;text-align:center;animation:breathe 8s ease-in-out infinite}
-@keyframes breathe{0%,100%{filter:brightness(1) drop-shadow(0 0 20px #0f8)}50%{filter:brightness(2) drop-shadow(0 0 60px #0f8)}}
-#counter{font-size:2em;letter-spacing:0.5em;text-shadow:0 0 30px #0f8}
-#timer{font-size:1.2em;opacity:0.8}
+*{margin:0;padding:0;box-sizing:border-box}
+body,html{height:100vh;overflow:hidden;background:#000;color:#0f8;font-family:c,monospace;font-weight:900;font-size:clamp(1.8vw,3.5vh,44px);display:grid;place-items:center;position:relative;cursor:none}
+#o{position:absolute;inset:0;background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(0,255,0,.11),#000 72%);opacity:.68;pointer-events:none;mix-blend-mode:screen}
+pre{line-height:1.6;text-align:center;animation:b 11s ease-in-out infinite}
+@keyframes b{0%,100%{filter:brightness(1) drop-shadow(0 0 18px #0f8)}50%{filter:brightness(2.4) drop-shadow(0 0 80px #0f8)}}
+#cnt,#tmr,#hint{font-size:1.3em;letter-spacing:.5em;text-shadow:0 0 28px #0f8}
+#hint{color:#044;opacity:0;transition:opacity 2s,transform 2s}
 </style>
-<body onmousemove=e=>document.getElementById('o').style.setProperty('--x',e.clientX/window.innerWidth*100+'%'),document.getElementById('o').style.setProperty('--y',e.clientY/window.innerHeight*100+'%')>
+<body onmousemove=e=>document.getElementById('o').style.setProperty('--x',e.clientX/innerWidth*100+'%'),document.getElementById('o').style.setProperty('--y',e.clientY/innerHeight*100+'%')>
 <div id=o></div>
 <pre id=t>
 𒀭𒂗𒆤 1310 𒀭𒂗𒆤
@@ -17,46 +18,71 @@ pre{line-height:1.6;text-align:center;animation:breathe 8s ease-in-out infinite}
 𒀭𒈹𒁺 𒋫 𒁕𒁺
 𒐍𒐍𒐍 𒄷𒌨 𒄿𒈾 𒉈𒄿𒁺
 </pre>
-<pre id=counter>0/1310</pre>
-<pre id=timer>--:--</pre>
+<pre id=cnt>0/1310</pre>
+<pre id=tmr>--:--</pre>
+<pre id=hint></pre>
 <script>
-let l=parseInt(localStorage.getItem('𒀭')||'0'), start=performance.now(), t=document.getElementById('t'), c=document.getElementById('counter'), tm=document.getElementById('timer');
-onclick=_=>onclick=null && go();
+let l = parseInt(localStorage.getItem('l')||'0');
+let g = parseInt(localStorage.getItem('g')||'0');
+const t=document.getElementById('t'),c=document.getElementById('cnt'),tm=document.getElementById('tmr'),h=document.getElementById('hint');
+
+const koans = [
+  "", // 0
+  "El que cuenta ya está contado", // 1-99
+  "Cada clic es un clavo en tu ataúd", // 100-299
+  "El contador cuenta al contador", // 300-499
+  "Tú eres el dedo que señala la luna", // 500-699
+  "1310 no es un número, es una puerta", // 700-899
+  "El que llega primero se queda para siempre", // 900-1099
+  "El silencio después del clic 1310 es el maestro", // 1100-1309
+  "No hay ganador, solo alguien que dejó de creer que perdía" // 1310
+];
+
+function showKoan(){
+  let k = g<1?0:g<100?1:g<300?2:g<500?3:g<700?4:g<900?5:g<1100?6:g<1310?7:8;
+  if(koans[k]){
+    h.textContent = koans[k];
+    h.style.opacity = 0.13;
+    setTimeout(()=>h.style.opacity=0,4000);
+  }
+}
+
+if(g>=1310){
+  c.textContent="1310/1310"; c.style.color="#800";
+  t.innerHTML="𒀭𒂗𒆤 𒌋𒐍<br>arcadio";
+  showKoan();
+}else{
+  c.textContent=`${g}/1310`;
+  onclick=()=>onclick=null,go();
+}
+
+let start = performance.now();
 function go(){
-  if(l>=1310) win();
-  let target = 790 * l * 1000;
+  if(g>=1310)return;
+  let target = 790 * g * 1000;
   let elapsed = performance.now() - start;
   if(elapsed < target){
     let left = target - elapsed;
-    let m = String(~~(left/6e4)).padStart(2,'0');
-    let s = String(~~(left%6e4/1000)).padStart(2,'0');
+    let m = String(~~(left/60000)).padStart(2,'0');
+    let s = String(~~(left%60000/1000)).padStart(2,'0');
     tm.textContent = `${m}:${s}`;
-    c.textContent = `${l}/1310`;
-    t.textContent = `𒀭𒂗𒆤 ${l}/1310\n𒀭𒂗𒆤`;
+    c.textContent = `${g}/1310`;
+    t.textContent = `𒀭𒂗𒆤 ${g}/1310\n𒀭𒂗𒆤`;
     requestAnimationFrame(go);
-  } else {
-    l++;
-    localStorage.setItem('𒀭',l);
-    new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=').play().catch(()=>0);
-    t.textContent = `𒀭𒂗𒆤 ${l}/1310\n𒀭𒂗𒆤`;
-    c.textContent = `${l}/1310`;
-    l===1310?setTimeout(win,800):setTimeout(go,300);
+  }else{
+    g++; l++;
+    localStorage.setItem('g',g); localStorage.setItem('l',l);
+    showKoan();
+    if(g===1310){
+      localStorage.setItem('winner',Date.now());
+      setTimeout(()=>{
+        document.body.innerHTML="<pre style='animation:hue 16s linear infinite;filter:brightness(2)'>𒀭𒂗𒆤𒌋𒐍<br><br>1310×1310<br>una solución<br><br>arcadio</pre><style>@keyframes hue{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}body{background:#000;color:#0f8;text-shadow:0 0 50px}</style>";
+      },900);
+    }else{
+      t.textContent = `𒀭𒂗𒆤 ${g}/1310\n𒀭𒂗𒆤`;
+      c.textContent = `${g}/1310`;
+      setTimeout(go,280);
+    }
   }
 }
-async function win(){
-  let totalSec = ~~((performance.now()-start)/1000);
-  let h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(totalSec+navigator.userAgent));
-  let id = [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,20);
-  let runs = (parseInt(localStorage.getItem('𒀭runs')||'0'))+1;
-  localStorage.setItem('𒀭runs',runs);
-  document.body.innerHTML = `<pre style="animation:win 12s linear infinite">
-𒀭𒂗𒆤 𒌋𒐍 𒌋𒐊 𒉈𒄿𒁺\n
-${id}\n
-𒁺𒀭 𒍣𒁕𒁺 𒄿𒈾 𒉈𒄿𒁺\n
-𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎� MSP: 𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎�𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎��ef
-
-<style>@keyframes win{0%{filter:hue-rotate(0deg) brightness(1)}100%{filter:hue-rotate(360deg) brightness(2)}}body{background:#000;color:#0f8;text-shadow:0 0 40px #0f8;animation:win 12s linear infinite}</style>`;
-}
-if(l>0) c.textContent = `${l}/1310`;
-if(l>=1310) win();
 </script>

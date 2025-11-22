@@ -1,79 +1,126 @@
 <!DOCTYPE html>
 <html>
-<head>
-<meta charset="UTF-8">
-<title>𒀭𒁕𒁺𒀭𒁺𒀭𒁕𒁺</title>
+<meta charset="utf-8">
+<title>𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body,html{height:100dvh;background:#000;color:#0f0;font:900 clamp(1rem,2.2vw,3rem)/1 "Courier New",monospace;overflow:hidden;display:grid;place-content:center}
-canvas{position:fixed;inset:0;z-index:-1;opacity:0.7}
-video{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);max-width:96vw;max-height:96vh;object-fit:cover;z-index:999;opacity:0;filter:brightness(6) contrast(5) hue-rotate(180deg) drop-shadow(0 0 1200px #0ff)}
-.𒀭𒁕𒁺{animation:g 1.3s infinite}
-@keyframes g{0%,100%{text-shadow:0 0 1200px #0ff,0 0 4000px #0f0}50%{text-shadow:0 0 4000px #0ff,0 0 1200px #0f0}}
+  *{margin:0;padding:0;box-sizing:border-box}
+  body,html{height:100dvh;background:#000;color:#0f0;font:900 clamp(1rem,2.2vw,3rem)/1 "Courier New",monospace;overflow:hidden;display:grid;place-content:center}
+  canvas{position:fixed;inset:0;z-index:-1;opacity:0.7}
+  video{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);max-width:96vw;max-height:96vh;object-fit:cover;z-index:999;opacity:0;filter:brightness(6) contrast(5) hue-rotate(180deg) drop-shadow(0 0 1200px #0ff)}
+  .𒀭𒁕𒁺{animation:g 1.3s infinite}
+  @keyframes g{0%,100%{text-shadow:0 0 1200px #0ff,0 0 4000px #0f0}50%{text-shadow:0 0 4000px #0ff,0 0 1200px #0f0}}
+  #consent{background:rgba(0,255,0,0.1);padding:2rem;border:4px double #0ff;max-width:90vw;position:absolute;z-index:1000}
+  #mono{display:none;position:fixed;inset:0;z-index:1001;background:#000}
 </style>
-</head>
 <body>
 
 <canvas id="𒀭"></canvas>
 <video id="𒀭𒁕𒁺𒀭𒁺" autoplay muted playsinline></video>
+<div class="𒀭𒁕𒁺">𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺</div>
 
-<div class="𒀭𒁕𒁺">𒀭𒁕𒁺𒀭𒁺𒀭𒁕𒁺</div>
-<div id="𒅴𒁺"></div>
+<!-- CONSENTIMIENTO ESCALONADO OBLIGATORIO -->
+<div id="consent">
+  <h1>𒀭 AVISO LEGAL Y ÉTICO 𒀭</h1>
+  <br>
+  Esto es un experimento artístico/social de varias capas.<br><br>
+  • Puede durar cientos o miles de horas.<br>
+  • En la fase final se activará tu cámara 13 h 10 min.<br>
+  • Tu cara se convertirá automáticamente en mono caricaturizado y se mostrará (solo como meme) a participantes previos.<br>
+  • Nadie gana nada tangible.<br>
+  • El objetivo es reírnos juntos del ego humano (incluido el tuyo).<br>
+  • Puedes abandonar en cualquier momento sin consecuencias.<br><br>
+  <b>SAFE WORD universal (funciona en cualquier momento):</b><br>
+  Escribe en la URL o en cualquier input: <code>𒀭𒁺</code> → sales con dignidad y mensaje bonito.<br><br>
+  <label><input type="checkbox" id="acepto"> Acepto y entiendo todo lo anterior (100 % voluntario)</label><br><br>
+  <button onclick="start()">COMENZAR</button>
+</div>
+
+<div id="timer"></div>
+<div id="mono"><h1>🐒 BIENVENIDO AL PARAÍSO DE LOS MONOS 🐒<br><br>El mono siempre fuiste tú.<br>Y ahora todos reímos contigo.<br><br>𒄊💨 exhala y disfruta.</h1></div>
 
 <script>
-// 𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺 𒄯𒁺𒀭𒁕𒁺 𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺
-// Prueba de admisión definitiva – solo 1/1310 pasará
-// Si lees esto y entiendes cada línea sin googlear, ya estás dentro.
+const DINGIR_TIL = '𒀭𒁺'; // safe word
+const TOTAL_MS = 13*60*60*1000 + 10*60*1000; // 13h10m
 
-const 𒄯𒁺𒀰 = 13*60*60*1000 + 10*60*1000;
-const 𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺 = '𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺';
-const 𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺 = '𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺';
-
-// Universo procedural (ecuación que contiene la solución del puzzle)
+// Canvas Matrix sumerio
 const c=document.getElementById('𒀭'),x=c.getContext('2d');
-const r=()=>{c.width=innerWidth;c.height=innerHeight;};
+const r=()=>{c.width=innerWidth;c.height=innerHeight};
 r();addEventListener('resize',r);
-(()=>{const t=Date.now()*0.00131; x.fillStyle='rgba(0,70,0,0.13)';x.fillRect(0,0,c.width,c.height);
-for(let i=0;i<13100;i++){const a=t+i*0.0131;const R=313+Math.sin(a*13.1)*(innerWidth/1.7);
-const X=innerWidth/2+Math.cos(a)*R;const Y=innerHeight/2+Math.sin(a*3.1)*R;
-x.fillStyle=i%131===0?'#0ff':'#0f0';x.fillRect(X,Y,13.1+Math.sin(t+i)*11,13.1+Math.cos(t+i)*11);}
-requestAnimationFrame(arguments.callee);})();
+(function loop(){const t=Date.now()*0.00131;x.fillStyle='rgba(0,70,0,0.13)';x.fillRect(0,0,c.width,c.height);
+  for(let i=0;i<13100;i++){const a=t+i*0.0131;const R=313+Math.sin(a*13.1)*(innerWidth/1.7);
+    const X=innerWidth/2+Math.cos(a)*R;const Y=innerHeight/2+Math.sin(a*3.1)*R;
+    x.fillStyle=i%131===0?'#0ff':'#0f0';x.fillRect(X,Y,13.1+Math.sin(t+i)*11,13.1+Math.cos(t+i)*11);}
+  requestAnimationFrame(loop);
+})();
 
-// Ya pasó el genio anterior
-if(localStorage.getItem(𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺)){
-  document.getElementById('𒅴𒁺').innerHTML=`
-    <br><br>𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺 𒄯𒁺𒀭𒁕𒁺<br><br>
-    <span style="color:gold">EL ASIENTO ESTÁ OCUPADO</span><br><br>
-    <span style="font-size:2rem">1310 candidatos · 1 seleccionado · 0 vacantes</span>`;
-  document.getElementById('𒀭𒁕𒁺𒀭𒁺').style.opacity='1';
+// Safe word universal
+if(location.search.includes(DINGIR_TIL) || prompt('Safe word? (o déjalo vacío)')===DINGIR_TIL){
+  document.body.innerHTML='<h1 style="color:gold">𒀭𒁺</h1><br>El mono más sabio es el que sabe cuándo parar.<br>Respira. Sonríe. Estás libre y entero.<br><br>🐒💨';
+  throw new Error('Safe word activado');
 }
 
-// Tú eres el siguiente candidato
-else{
-  document.getElementById('𒅴𒁺').innerHTML=`
-    <br><br>𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺 𒄯𒁺𒀭𒁕𒁺<br><br>
-    <b style="font-size:3em;color:#0ff">13:10:00</b>`;
+function start(){
+  if(!document.getElementById('acepto').checked) return alert('Debes aceptar para continuar');
+  document.getElementById('consent').remove();
+  document.querySelector('.𒀭𒁕𒁺').style.opacity='1';
+  document.getElementById('timer').innerHTML='<br><br><b style="font-size:5em;color:#0ff">13:10:00</b><br><br>Respira. Sonríe. Ya empezó.';
 
-  navigator.mediaDevices.getUserMedia({video:true,audio:true}).then(s=>{
-    document.getElementById('𒀭𒁕𒁺𒀭𒁺').srcObject=s;
-    const start=Date.now();
-    const timer=setInterval(()=>{
-      const e=Date.now()-start;
-      if(e>=𒄯𒁺𒀰){
+  navigator.mediaDevices.getUserMedia({video:true,audio:false}).then(stream=>{
+    const video = document.getElementById('𒀭𒁕𒁺𒀭𒁺');
+    video.srcObject = stream;
+    video.style.opacity='1';
+
+    // MONO INSTANTÁNEO (nunca cara real)
+    const monkeyCanvas = document.createElement('canvas');
+    monkeyCanvas.width = 640; monkeyCanvas.height = 480;
+    const mc = monkeyCanvas.getContext('2d');
+    document.getElementById('mono').style.display='block';
+    const monkeyVideo = document.createElement('video');
+    monkeyVideo.srcObject = stream;
+    monkeyVideo.play();
+
+    function drawMonkey(){
+      mc.drawImage(monkeyVideo,0,0,640,480);
+      mc.font='120px serif'; mc.fillText('🐒',200,300);
+      mc.strokeStyle='#0ff'; mc.lineWidth=15;
+      mc.strokeText('🐒',200,300);
+      requestAnimationFrame(drawMonkey);
+    }
+    drawMonkey();
+
+    const start = Date.now();
+    const timer = setInterval(()=>{
+      const elapsed = Date.now()-start;
+      if(elapsed >= TOTAL_MS){
         clearInterval(timer);
-        localStorage.setItem(𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺,'1310');
-        location.reload();
+        localStorage.setItem('𒀭𒁕𒁺𒀭𒁺𒅴𒁺','mono');
+        debrief();
+        return;
       }
-      const rem=Math.floor((𒄯𒁺𒀰-e)/1000);
+      const rem = Math.floor((TOTAL_MS-elapsed)/1000);
       const h=String(Math.floor(rem/3600)).padStart(2,'0');
       const m=String(Math.floor((rem%3600)/60)).padStart(2,'0');
       const s=String(rem%60).padStart(2,'0');
-      document.getElementById('𒅴𒁺').innerHTML=`
-        <br><br>𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺 𒄯𒁺𒀭𒁕𒁺<br><br>
-        <b style="font-size:5em;color:#0ff">${h}:${m}:${s}</b><br><br>
-        <span style="font-size:1.5em">1310 intentos permitidos<br>Solo 1 será aceptado</span>`;
+      document.getElementById('timer').innerHTML=`<br><br><b style="font-size:5em;color:#0ff">${h}:${m}:${s}</b><br><br>El paraíso de los monos te espera.<br>Todos reímos contigo.`;
     },131);
-  });
+  }).catch(()=>{ alert('Necesitamos cámara para el mono final. O usa el safe word 𒀭𒁺'); });
+}
+
+function debrief(){
+  document.body.innerHTML = `
+    <h1 style="color:gold">𒀭 DEBRIEFING FINAL 𒀭</h1><br><br>
+    Gracias por participar.<br><br>
+    No había premio porque el premio eras tú soltando la necesidad de premio.<br>
+    Todo el mundo termina siendo el mono. Incluido yo, el creador.<br><br>
+    Si en algún momento te sentiste mal, aquí tienes ayuda real:<br>
+    • España: 024<br>
+    • México: 55 5259 8121<br>
+    • Argentina: 135<br>
+    • USA: 988<br>
+    • Internacional: befrienders.org<br><br>
+    Si te reíste y te sientes más ligero… misión cumplida.<br><br>
+    🐒💨 exhala y vive.
+  `;
 }
 </script>
 </body>

@@ -1,73 +1,78 @@
-```markdown
-# 𒀭𒁕𒁺𒀭𒁺𒀭𒁕𒁺
+# THUAMER Ω — README OFICIAL  
+**thuamer_omega_final.html** · 18 KB · 22 noviembre 2025  
+Autor colectivo: 0rb1t4lsn4k3r + Snake Green Feather + David Avi Shet
 
-**“Proyecto Enki-1310”**  
-**Nivel de clasificación: solo para los que se creen por encima del resto**
+## ¿Qué es esto?
 
-```
-Este no es otro puzzle de mierda para mortales.
-Este es el que separa a los que entienden de los que solo creen entender.
-```
+Un único archivo HTML autónomo que contiene **todo el protocolo THUAMER Ω**:
 
-### Lo que saben los NPC
+- 1310 horas reales de sanación binaural (136.1 Hz + 8 Hz theta continuo)  
+- 10 artefactos curativos estilo 0rb1t4lsn4k3r (desbloqueados solo al terminar)  
+- THUAMER ∞ + COMETA — la plaza eterna con 13101310 cometas humanos  
+- THUAMER v1 original de David Avi Shet (el regalo verdadero)  
+- Fondo cósmico vivo, contador real, abandono irreversible, silencio absoluto, espejos, bucles, quema de ego, renacimiento de serpiente…
 
-- Un HTML de 8.7 KB.
-- Un contador de 13 h 10 min.
-- Cuneiforme bonito.
-- “Espera y algo pasa”.
+Todo funciona 100 % offline, sin servidores, sin trackers, sin permisos raros (solo cámara opcional en el artefacto MIRROR y micrófono opcional en COMETA).
 
-### Lo que sabemos los que ya estamos dentro
+## Cómo usarlo
 
-- 1310 no es un número cualquiera: es la constante que aparece en la solución de la última ecuación de Ramanujan–Sato no publicada.
-- El fondo no es ruido: es un espectrograma que solo se hace audible a 1.310 kHz.
-- El puzzle final (SHANGRI-LA EN 1310 DIMENSIONES) tiene exactamente 1310 piezas y solo una configuración válida.
-- Nadie lo ha resuelto aún en público.
-- El primero que lo resuelva será literalmente el único ser humano vivo que conozca la respuesta.
-- El resto solo podrá mirar y aplaudir desde fuera.
+1. Guarda el archivo como **thuamer_omega_final.html**  
+2. Ábrelo en cualquier navegador moderno (Chrome, Firefox, Safari, Brave…)  
+3. Pulsa el botón **ACEPTO LAS 1310 HORAS**  
+4. Deja la pestaña abierta (puedes minimizarla, silenciarla, lo que quieras).  
+   El contador sigue aunque cierres el portátil (usa localStorage).  
+5. Cuando llegues a 1310:00:00 → se desbloquea el portal final.  
+6. Desde ahí puedes tocar cualquiera de los 12 regalos cuando estés listo.
 
-### Lo que solo sospechamos los que llevamos años en esto
+## Los 12 regalos finales (solo para quien completó las 1310 h)
 
-Hay un único asiento vacío en la mesa.  
-Ese asiento tiene tu nombre escrito desde antes de que nacieras.  
-Solo hay una forma de ocuparlo:  
-abrir el archivo,  
-mantener la pestaña viva 13 h 10 min exactos,  
-y demostrar que eres capaz de ver lo que los demás no pueden ni imaginar.
+| Artefacto                        | Qué hace realmente                                           | Duración     |
+|----------------------------------|----------------------------------------------------------------------|--------------|
+| 0 · ZERO                         | Vacío absoluto que contiene todo                                     | ∞            |
+| 1 · SNAKE                        | Renacimiento de la serpiente que se come su propia cola              | 2–3 min      |
+| 2 · GLITCH                       | Glitch visual que te obliga a aceptar el error                       | 11 seg       |
+| 3 · MIRROR                       | Te pone la cámara frente a ti después de 1310 h                      | 15 seg       |
+| 4 · VOID                         | 11 minutos de silencio absoluto (cronómetro real)                    | 11:00 exactos|
+| 5 · LOOP                         | Bucle hipnótico de “Respira / Suelta / Repite”                       | 8 minutos    |
+| 6 · ECHO                         | Escribes tu dolor y el eco te lo devuelve sanado                     | Manual       |
+| 7 · BURN                         | Escribes lo que ya no eres y lo ves arder literalmente               | Manual       |
+| 8 · SEED                         | Oscuridad total + binaural suave → germinación                       | 3–4 min      |
+| 9 · 0rb1t4lsn4k3r                 | El mensaje final del mono que dejó de fumar                          | ∞            |
+| THUAMER ∞ + COMETA               | La plaza eterna + constelación de 13101310 cometas humanos           | ∞            |
+| THUAMER v1 (David Avi Shet)      | El archivo original de 18 KB que lo empezó todo                      | ∞            |
 
-Los que fallaron ya están archivados para siempre.  
-Sus risas se reproducen en bucle para recordarnos que la inteligencia sin disciplina es solo ruido.
+## Preguntas frecuentes
 
-### Requisitos reales (no los que cuentan en voz alta)
+**P: ¿De verdad tengo que dejarlo 1310 horas abierto?**  
+R: Sí. El contador es real y se guarda en tu navegador. No hay trampa ni atajos. El protocolo solo funciona si lo vives.
 
-- Coeficiente intelectual > 145 (o la arrogancia equivalente).
-- Capacidad de mantener una pestaña activa sin tocarla durante medio día.
-- Ausencia total de miedo al ridículo eterno.
-- Creer que tú sí eres la excepción.
+**P: ¿Puedo silenciarlo o minimizarlo?**  
+R: Sí. El binaural sigue sonando aunque silencies la pestaña. El contador sigue contando.
 
-```
-Si ya estás pensando “esto lo resuelvo en diez minutos mirando el código fuente”,  
-cierra esta página ahora.  
-Ahorrarás 13 horas y 10 minutos de tu vida  
-y nosotros nos ahorramos otra risa grabada.
-```
+**P: ¿Qué pasa si borro cookies o cambio de dispositivo?**  
+R: Pierdes el progreso. El protocolo es personal e intransferible.
 
-Los mediocres abren y cierran.  
-Los listos abren, analizan y abandonan a los 20 minutos.  
-Los que se creen dioses aguantan las 13 h 10 min.
+**P: ¿Puedo compartir mi progreso?**  
+R: No. Cada persona debe hacer sus propias 1310 horas. Ese es el trato.
 
-Y solo uno,  
-solo uno,  
-lo resolverá.
+**P: ¿Por qué 1310?**  
+R: Porque 1310 autores famosos nos salvaron con su dolor convertido en arte.  
+    Porque 1310 horas = 54,7 días = tiempo suficiente para que el cerebro cambie para siempre.  
+    Porque 1310 suena a 13101310 cometas humanos.
 
-Ese uno no escribe en Reddit.  
-No hace streams.  
-No necesita validación.
+**P: ¿Esto es una secta, una estafa, una broma?**  
+R: Es un abrazo muy largo disfrazado de archivo HTML.
 
-Ese uno simplemente sabe.
+## Licencia
 
-¿Eres tú?
+**CC-0 + Amor Incondicional**  
+Haz lo que quieras con este archivo.  
+Cópialo, modifícalo, regálalo, quémalo, olvídalo.  
+Solo hay una regla: si lo compartes, no quites los nombres.
 
-Pruébalo.
+0rb1t4lsn4k3r · Snake Green Feather · David Avi Shet  
+22 noviembre 2025 → ∞
 
-El contador ya está corriendo para alguien más.
-```
+Respira.  
+Todo está bien.  
+Y el cielo ya está lleno de nosotros.

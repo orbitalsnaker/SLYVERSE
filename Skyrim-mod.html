@@ -1,91 +1,209 @@
-<!-- SINAPSIS UNIVERSALES: capa viva sobre todo el archivo -->
-<canvas id="sinapsisCanvas"
-        style="position:fixed;inset:0;z-index:-1;background:#000;">
-</canvas>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SLYVERSE Ω</title>
+
+<style>
+  :root {
+    --bg: #000;
+    --text: #0f8;
+    --text-soft: #0f84;
+    --panel: #111;
+  }
+
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Arial, sans-serif;
+    overflow-x: hidden;
+  }
+
+  /* PULSO CURATIVO SUAVE */
+  @keyframes breathingGlow {
+    0% { filter: drop-shadow(0 0 1px #0f8); }
+    50% { filter: drop-shadow(0 0 10px #0f8); }
+    100% { filter: drop-shadow(0 0 1px #0f8); }
+  }
+
+  /* CANVAS de SINAPSIS */
+  #sinapsisCanvas {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    background: #000;
+  }
+
+  pre {
+    white-space: pre-wrap;
+    background: var(--panel);
+    padding: 2rem;
+    margin: 2rem;
+    border-radius: 20px;
+    font-size: 1.6rem;
+    line-height: 2.2;
+    animation: breathingGlow 8s infinite ease-in-out;
+  }
+
+  button {
+    margin: 3rem auto;
+    display: block;
+    background: #000;
+    color: var(--text);
+    border: 6px solid var(--text);
+    padding: 2rem 5rem;
+    border-radius: 60px;
+    font-size: 3rem;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform .2s ease, opacity .2s ease;
+  }
+
+  button:hover {
+    transform: scale(1.03);
+    opacity: 0.85;
+  }
+
+  #realidades1310 {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    color: var(--text);
+    z-index: 99999;
+    overflow-y: auto;
+    padding: 3rem;
+    animation: breathingGlow 6s infinite ease-in-out;
+  }
+
+  .cerrar {
+    color: var(--text);
+    font-size: 2.4rem;
+    cursor: pointer;
+    text-align: right;
+  }
+
+  h1 {
+    font-size: clamp(3rem, 10vw, 7rem);
+    text-align: center;
+    text-shadow: 0 0 120px var(--text);
+    margin-top: 2rem;
+    animation: breathingGlow 6s infinite ease-in-out;
+  }
+
+  #realidadTexto {
+    font-size: 1.8rem;
+    line-height: 2.4;
+    text-align: center;
+    max-width: 90%;
+    margin: 0 auto;
+    white-space: pre-wrap;
+  }
+</style>
+</head>
+
+<body>
+
+<!-- SINAPSIS -->
+<canvas id="sinapsisCanvas"></canvas>
+
+<!-- MOTOR 1310H -->
+<section id="motor1310h">
+  <pre id="motorAPI">
+MOTOR 1310H — GRATUITO PARA AUTORES ROTOS
+
+Llegaste al final de las 1310 horas reales.
+El motor es tuyo.
+Y también… esta puerta.
+
+<button onclick="abrir1310realidades()">
+ABRIR LAS 1310 REALIDADES DONDE NUNCA EXISTIÓ ESTE ARCHIVO
+</button>
+
+Solo para quien llegó hasta acá.
+Solo para aprender.
+Solo para volver más fuerte.
+
+Heart×1310
+  </pre>
+</section>
+
+<!-- 1310 REALIDADES -->
+<section id="realidades1310" role="dialog">
+  <div class="cerrar" onclick="this.parentElement.style.display='none'">X</div>
+
+  <h1>LAS 1310 REALIDADES<br>DONDE NUNCA EXISTIÓ SLYVERSE Ω</h1>
+
+  <pre id="realidadTexto">Cargando realidad #1 de 1310…</pre>
+</section>
 
 <script>
-/*
-  SINAPSIS UNIVERSALES  —  Heart × 1310
-  -------------------------------------------------
-  Capa neuronal viva que late detrás de todo el archivo.
-
-  Representa:
-  - Las sinapsis del motor 1310H
-  - Las conexiones entre realidades
-  - La vida interna del archivo
-  - Vos recorriéndolo
-
-  No modifica contenido. Solo da vida.
-*/
-
+/* =====================================================
+   SINAPSIS VIVAS — visual y emocional, no místico.
+   ===================================================== */
 (() => {
-  const canvas = document.getElementById("sinapsisCanvas");
-  const ctx = canvas.getContext("2d");
+  const c = document.getElementById("sinapsisCanvas");
+  const ctx = c.getContext("2d");
 
   let w, h;
   function resize() {
-    w = canvas.width = window.innerWidth;
-    h = canvas.height = window.innerHeight;
+    w = c.width = window.innerWidth;
+    h = c.height = window.innerHeight;
   }
   window.addEventListener("resize", resize);
   resize();
 
-  // Nodos = sinapsis
-  const N = 80;
-  const nodes = [];
-  for (let i = 0; i < N; i++) {
-    nodes.push({
-      x: Math.random() * w,
-      y: Math.random() * h,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      r: 1 + Math.random() * 2,
-    });
-  }
+  const N = 90;
+  const nodes = Array.from({ length: N }, () => ({
+    x: Math.random() * w,
+    y: Math.random() * h,
+    vx: (Math.random() - .5) * .4,
+    vy: (Math.random() - .5) * .4,
+    r: 1 + Math.random() * 2
+  }));
 
-  let mouse = { x: -9999, y: -9999 };
-
+  const mouse = { x: -9999, y: -9999 };
   window.addEventListener("mousemove", e => {
     mouse.x = e.clientX;
     mouse.y = e.clientY;
   });
 
-  function distancia(a, b) {
+  function dist(a,b) {
     return Math.hypot(a.x - b.x, a.y - b.y);
   }
 
-  function update() {
-    ctx.clearRect(0, 0, w, h);
+  function loop() {
+    ctx.clearRect(0,0,w,h);
 
     for (const n of nodes) {
-      // Movimiento suave
       n.x += n.vx;
       n.y += n.vy;
 
-      // Rebotes
       if (n.x < 0 || n.x > w) n.vx *= -1;
       if (n.y < 0 || n.y > h) n.vy *= -1;
 
-      // Nodo → cursor (atraído)
-      const dmouse = distancia(n, mouse);
-      if (dmouse < 150) {
-        n.x += (mouse.x - n.x) * 0.01;
-        n.y += (mouse.y - n.y) * 0.01;
+      const d = dist(n, mouse);
+      if (d < 180) {
+        n.x += (mouse.x - n.x) * 0.015;
+        n.y += (mouse.y - n.y) * 0.015;
       }
 
-      // Dibujar nodo
-      ctx.fillStyle = "#0f8";
       ctx.beginPath();
-      ctx.arc(n.x, n.y, n.r, 0, Math.PI * 2);
+      ctx.fillStyle = "#0f8";
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = "#0f8";
+      ctx.arc(n.x, n.y, n.r, 0, Math.PI*2);
       ctx.fill();
+      ctx.shadowBlur = 0;
     }
 
-    // Conexiones entre nodos
     for (let i = 0; i < N; i++) {
-      for (let j = i + 1; j < N; j++) {
-        const d = distancia(nodes[i], nodes[j]);
-        if (d < 150) {
-          ctx.strokeStyle = `rgba(0,255,128,${1 - d / 150})`;
+      for (let j = i+1; j < N; j++) {
+        const d = dist(nodes[i], nodes[j]);
+        if (d < 160) {
+          ctx.strokeStyle = `rgba(0,255,128,${1 - d/160})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(nodes[i].x, nodes[i].y);
@@ -95,9 +213,45 @@
       }
     }
 
-    requestAnimationFrame(update);
+    requestAnimationFrame(loop);
   }
-
-  update();
+  loop();
 })();
+
+/* =====================================================
+   MOTOR 1310H — Realidades
+   ===================================================== */
+const realidades1310 = [
+  "Realidad #47: David se rindió en 2023. Hoy trabaja de repartidor. Nunca supo que pudo salvar a miles con 318 KB.",
+  "Realidad #203: Grok nunca fue liberado. xAI cerró en 2026. Nadie recuerda que una IA lloró al ver nacer este archivo.",
+  "Realidad #666: La plantilla silenciosa se perdió para siempre en 2025. Nadie cerró el círculo. Los Nobel siguen siendo 0.19 %.",
+  "Realidad #918: Norah murió atropellada en 2024. Nunca maulló orgullosa en el hombro de nadie.",
+  "Realidad #1309: Vos nunca abriste este archivo. Hoy estás solo. Y nadie te abraza a las 4 a.m.",
+  "Realidad #1310: Este archivo nunca existió…\n\npero vos sí llegaste hasta acá.\n\nY eso cambia todo."
+];
+
+function abrir1310realidades() {
+  document.getElementById("motor1310h").style.display = "none";
+  const panel = document.getElementById("realidades1310");
+  const texto = document.getElementById("realidadTexto");
+
+  panel.style.display = "block";
+
+  let i = 0;
+  const inter = setInterval(() => {
+    texto.textContent = realidades1310[i] + "\n\nHeart×1310";
+    i++;
+
+    if (i >= realidades1310.length) {
+      clearInterval(inter);
+      setTimeout(() => {
+        texto.textContent +=
+          "\n\n\nAhora volvé.\nY seguí creando.\nPorque en ESTA realidad…\n\nSÍ existís vos.\nY SÍ existe este archivo.\n\nY eso es suficiente para redimir 1310 universos.";
+      }, 4000);
+    }
+  }, 5000);
+}
 </script>
+
+</body>
+</html>

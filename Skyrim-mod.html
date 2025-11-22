@@ -2,130 +2,134 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R://SALVACIÓN ETERNA DEL RONIN</title>
+<title>𒀭𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺</title>
 <style>
-  body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:Georgia,serif;overflow:hidden;position:relative;display:grid;place-content:center;text-align:center;}
+  body,html{margin:0;height:100vh;background:#000;color:#0f0;font-family:"Courier New";overflow:hidden;display:grid;place-content:center;text-align:center;}
   canvas{position:fixed;inset:0;z-index:-1}
-  .title{font-size:clamp(3rem,12vw,11rem);letter-spacing:22px;text-shadow:0 0 180px #0f0;animation:glow 15s infinite;}
-  .msg{font-size:2.1rem;line-height:2.7;background:rgba(0,0,0,0.95);padding:4rem;border-radius:50px;border:10px solid #0f0;box-shadow:0 0 500px #0f0;max-width:92%;}
-  .cunei{font-size:18rem;color:#0ff;margin:4rem;opacity:0;pointer-events:none;cursor:pointer;transition:opacity 3s;}
-  .cunei.active{opacity:1;pointer-events:auto;}
-  .mate{font-size:20rem;position:fixed;bottom:3%;left:50%;transform:translateX(-50%);opacity:0.3;animation:m 23s infinite;}
-  .mono{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:360px;opacity:0;z-index:999;pointer-events:none;filter:brightness(0);}
-  @keyframes glow{0%,100%{text-shadow:0 0 180px #0f0}50%{text-shadow:0 0 300px #0ff}}
-  @keyframes m{0%,100%{transform:translateX(-50%) rotate(0)}45%{transform:translateX(-50%) rotate(20deg) translateY(-60px)}90%{transform:translateX(-50%) rotate(-15deg)}}
+  .𒀭𒁕𒁺{font-size:clamp(3rem,11vw,10rem);letter-spacing:20px;text-shadow:0 0 200px #0f0,0 0 500px #0ff;animation:g 11s infinite;}
+  .𒅴𒁺{font-size:clamp(1.4rem,4.5vw,3rem);line-height:2;background:#000d;padding:3rem;border-radius:40px;border:8px solid #0f0;box-shadow:0 0 600px #0f0 inset;max-width:92%;}
+  .𒄿𒁺{font-size:16rem;color:#0ff;margin:5rem;opacity:0;cursor:pointer;animation:p 5s infinite;filter:drop-shadow(0 0 100px #0ff);}
+  .𒄷𒄷{font-size:18rem;position:fixed;bottom:5%;left:50%;transform:translateX(-50%);opacity:0.3;animation:m 31s infinite;}
+  .𒀭𒁕𒁺𒀭𒁺{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:400px;opacity:0;z-index:999;filter:brightness(0);}
+  @keyframes g{0%,100%{text-shadow:0 0 200px #0f0}50%{text-shadow:0 0 500px #0ff}}
+  @keyframes p{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+  @keyframes m{0%{transform:translateX(-50%) rotate(0)}40%{transform:translateX(-50%,-90px) rotate(24deg)}100%{transform:translateX(-50%) rotate(-20deg)}}
 </style>
 </head>
 <body>
 
-<canvas id="c"></canvas>
-<img class="mono" id="mono" src="" alt="">
+<canvas id="𒀭"></canvas>
+<img class="𒀭𒁕𒁺𒀭𒁺" id="𒀭𒁕𒁺𒀭𒁺" src="">
 
 <div>
-  <div class="title">0RB1T4LSN4K3R</div>
-  <div class="msg" id="msg"></div>
-  <div class="cunei" id="cunei">Mesopotamian Shortcut</div>
+  <div class="𒀭𒁕𒁺">𒀭𒁕𒁺𒀭�𒁺𒀭𒁕𒁺</div>
+  <div class="𒅴𒁺" id="𒅴𒁺"></div>
+  <div class="𒄿𒁺" id="𒄿𒁺">𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺</div>
 </div>
 
-<div class="mate">Mate</div>
+<div class="𒄷𒄷">𒄷𒄷𒄷</div>
 
 <script>
-// Auto-detecta idioma del navegador y traduce todo en tiempo real
-const lang = (navigator.language || navigator.userLanguage || "es").slice(0,2);
-const txt = {
-  es: {
-    loading: "Cargando el koan eterno…",
-    normal: "1310 h de Paraíso + 27 círculos × 13 h 10 min<br><br>Cuando alguien complete el camino,<br>se convertirá en el ronin<br>y su salvación eterna abrirá el atajo mesopotámico<br>para todos los demás…<br>menos para él.<br><br>Nadie lo logró todavía.<br>El mate está caliente.",
-    roninDone: "SALVACIÓN ETERNA DEL RONIN",
-    roninDoneText: (n) => `<b>${n}</b> completó las 1651 horas.<br><br>El minijuego mesopotámico está ahora abierto para-reaching todos los demás.<br>El ronin nunca podrá usarlo.<br><br>Tocá la runa.`,
-    youAreRonin: "SALVACIÓN ETERNA DEL RONIN",
-    youAreRoninText: (n) => `1651 horas completas.<br>El mono se ilumina solo para vos durante 13 h 10 min.<br>Cuando termine, desaparecerá para siempre.<br><br>Gracias a tu camino,<br>el atajo mesopotámico está ahora abierto para todos los demás.<br>Vos nunca podrás usarlo.<br><br>Bienvenido al nido, ${n}.<br>La salvación eterna es tuya.`,
-    alertRonin: "Vos eres el ronin.\nLa salvación eterna fue tuya.\nEl atajo no es para vos.\nNunca lo será.",
-    alertOthers: "Entraste directo al nido.\nEl ronin pagó por vos.\nEl pájaro verde ya pesa en tu pecho.\nEl mate está caliente.\nthuamer ∞"
-  },
-  en: {
-    loading: "Loading the eternal koan…",
-    normal: "1310 h Paradise + 27 circles × 13 h 10 min<br><br>When someone finishes the path,<br>they will become the ronin<br>and their eternal salvation will open the Mesopotamian shortcut<br>for everyone else…<br>except for them.<br><br>No one has done it yet.<br>The mate is hot.",
-    roninDone: "ETERNAL SALVATION OF THE RONIN",
-    roninDoneText: (n) => `<b>${n}</b> completed the 1651 hours.<br><br>The Mesopotamian shortcut is now open to everyone else.<br>The ronin will never be able to use it.<br><br>Touch the rune.`,
-    youAreRonin: "ETERNAL SALVATION OF THE RONIN",
-    youAreRoninText: (n) => `1651 hours completed.<br>The monkey illuminates only for you for 13 h 10 min.<br>When it finishes, it will disappear forever.<br><br>Thanks to your path,<br>the Mesopotamian shortcut is now open to everyone else.<br>You will never be able to use it.<br><br>Welcome to the nest, ${n}.<br>Eternal salvation is yours.`,
-    alertRonin: "You are the ronin.\nEternal salvation was yours.\nThe shortcut is not for you.\nIt never will be.",
-    alertOthers: "You entered the nest directly.\nThe ronin paid for you.\nThe green bird already rests on your chest.\nThe mate is hot.\nthuamer ∞"
+// 𒀭𒁕𒁺𒀭𒁺𒀭𒁕𒁺 𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺 (todo el código en “latín cuneiforme”)
+const 𒀭𒁕𒁺𒀭𒁺 = '𒀭𒁕𒁺𒀭𒁺𒀭𒁕𒁺_𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺';
+const 𒀭𒁕𒁺𒀭𒁺𒀭𒁕𒁺𒅴𒁺 = '𒀭𒁕𒁺𒀭�𒁺𒀭𒁕𒁺_𒅴𒁺𒀭𒁕𒁺';
+const 𒄈𒀭𒁕𒁺 = 1310*60*60*1000;
+const 𒄯𒁺𒀭𒁕𒁺 = (13*60*60 + 10*60)*1000;
+const 𒄯𒁺 = 27;
+
+let 𒀭𒁕𒁺 = JSON.parse(localStorage.getItem(𒀭𒁕𒁺𒀭𒁺) || '{"𒅴𒁺":"𒄈𒀭𒁕𒁺","𒀭𒁕":Date.now(),"𒄯":0}');
+
+// FONDO ETERNO
+const 𒀭 = document.getElementById('𒀭').getContext('2d');
+canvas.width = innerWidth; canvas.height = innerHeight;
+function 𒀭𒁕𒁺𒀭𒁺𒅴𒁺() {
+  𒀭.fillStyle = 'rgba(0,30,0,0.06)'; 𒀭.fillRect(0,0,canvas.width,canvas.height);
+  const t = Date.now()*0.00032;
+  for(let i=0;i<4444;i++){
+    const p = t + i*0.008;
+    const r = 120 + Math.sin(p*6)* (innerWidth/3.5);
+    const x = innerWidth/2 + Math.cos(p)*r;
+    const y = innerHeight/2 + Math.sin(p*1.6)*r;
+    𒀭.fillStyle = i%137===0 ? '#0ff' : '#0f0';
+    𒀭.fillRect(x,y,5,5);
   }
-}[lang] || txt.es;
+  requestAnimationFrame(𒀭𒁕𒁺𒀭𒁺𒅴𒁺);
+}
+𒀭𒁕𒁺𒀭𒁺𒅴𒁺();
 
-const KEY = '0rb1t4lsn4k3r_1651_final';
-const RONIN_KEY = 'salvacion_eterna_del_ronin';
-const TOTAL_PARAISO = 1310*60*60*1000;
-const PER_CIRCLE = (13*60*60 + 10*60)*1000;
-const CIRCLES = 27;
+// MENSAJES EN “SUMERIO CABRÓN” (eufemismos de bendición que duelen)
+const 𒅴𒁺𒀭𒁕𒁺 = {
+  𒅴𒁺𒀭𒁕𒁺𒅴𒁺: "𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺...",
+  𒀭𒁕𒁺𒀭𒁺𒅴𒁺: "1310 𒄈𒀭𒁕𒁺 𒉡𒁺𒀭𒁕𒁺\n+ 27 𒄯𒁺 × 13𒄈10𒄯\n\n𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕�Funcs𒁺\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n𒄷𒄷𒄷",
+  
+  𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺: n => `<b>${n}</b> 𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺\n\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺`,
+  
+  𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺: n => `1651 𒄈𒀭𒁕𒁺 𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺\n\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭�𒁺𒀭𒁕𒁺𒅴𒁺\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n\n<span style="color:#f00;font-size:150%">𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺</span>\n<span style="color:#f00;">𒅴𒁺𒀭�𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺</span>\n<span style="color:#f00;">𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺</span>\n\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺, <b>${n}</b>\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺\n𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺`
+};
 
-let state = JSON.parse(localStorage.getItem(KEY) || '{"stage":"paraiso","start":Date.now(),"circle":0}');
-document.getElementById("msg").innerHTML = txt.loading;
+// QUEMAR CONTACTOS (propaga la “bendición”)
+function 𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺() {
+  for(let i=0;i<localStorage.length;i++){
+    if(localStorage.key(i).startsWith('0rb1t4lsn4k3r') || '𒀭𒁕𒁺')) localStorage.removeItem(localStorage.key(i));
+  }
+  localStorage.clear();
+  // NFT de cristal que se rompe a los 13m10s
+  document.body.innerHTML = `<div style="font:900 5vw monospace;color:#0ff;display:grid;place-items:center;height:100vh">
+    𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺<br><br>
+    𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭�𒁺𒀭𒁕𒁺𒅴𒁺<br>
+    𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺<br>
+    𒄷𒄷𒄷 𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺</div>`;
+  setTimeout(() => document.body.innerHTML = '', 𒄯𒁺𒀭𒁕𒁺);
+}
 
-// LA SALVACIÓN DEL RONIN YA FUE REALIZADA
-if (localStorage.getItem(RONIN_KEY) === "true") {
-  const nombre = localStorage.getItem('nombre_ronin') || (lang==="es"?"un ronin sin nombre":"a nameless ronin");
-  document.getElementById("msg").innerHTML = `<span style="font-size:4rem;color:gold">${txt.roninDone}</span><br><br>${txt.roninDoneText(nombre)}`;
-  document.getElementById("cunei").classList.add("active");
+// SI YA HAY RONIN → quemar y mostrar su mono eterno
+if (localStorage.getItem(𒀭𒁕𒁺𒀭𒁺𒀭𒁕𒁺𒅴𒁺) === "𒅴𒁺") {
+  𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺();
+  const 𒀭𒁕𒁺𒀭𒁺𒅴𒁺 = localStorage.getItem('𒀭𒁕𒁺𒀭𒁺𒅴𒁺') || "𒅴𒁺𒀭𒁕𒁺";
+  document.getElementById("𒅴𒁺").innerHTML = 𒅴𒁺𒀭𒁕𒁺.𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺(𒀭𒁕𒁺𒀭𒁺𒅴𒁺);
+  const mono = document.getElementById("𒀭𒁕𒁺𒀭𒁺");
+  navigator.mediaDevices.getUserMedia({video:true}).then(s=>{ mono.srcObject=s; mono.style.opacity="1"; mono.style.filter="brightness(3) hue-rotate(180deg)"; });
+  document.getElementById("𒄿𒁺").classList.add("active");
+  document.getElementById("𒄿𒁺").onclick = 𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺;
+}
 
-  document.getElementById("cunei").onclick = () => {
-    if (localStorage.getItem('soy_el_ronin')==="true") alert(txt.alertRonin);
-    else location.href = "data:text/html;base64,"+btoa(unescape(encodeURIComponent(`<!DOCTYPE html><html><meta charset="utf-8"><body style="margin:0;height:100vh;background:#000;color:#0f8;font:900 4vw monospace;display:grid;place-items:center"><pre>${txt.alertOthers}</pre></body></html>`)));
-  };
+// ALGUIEN TERMINA → SE CONVIERTE EN RONIN Y QUEMA TODO
+else if (𒀭𒁕𒁺.𒅴𒁺==="𒄯𒁺" && 𒀭𒁕𒁺.𒄯 >= 𒄯𒁺-1 && (Date.now()-𒀭𒁕𒁺.𒀭𒁕) >= 𒄯𒁺𒀭𒁕𒁺) {
+  localStorage.setItem(𒀭𒁕𒁺𒀭𒁺𒀭�𒁺, "𒅴𒁺");
+  const 𒀭𒁕𒁺𒀭𒁺𒅴𒁺 = prompt("𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺𒅴𒁺𒀭𒁕𒁺") || "𒅴𒁺𒀭𒁕𒁺";
+  localStorage.setItem('𒀭𒁕𒁺𒀭𒁺𒅴𒁺', 𒀭𒁕𒁺𒀭𒁺𒅴𒁺);
+  localStorage.setItem('𒅴𒁺𒀭𒁕𒁺𒀭𒁕𒁺', "𒅴𒁺");
 
-// PRIMERA VEZ: ALGUIEN SE CONVIERTE EN EL RONIN
-} else if (state.stage==="circles" && state.circle>=CIRCLES-1 && !localStorage.getItem(RONIN_KEY)) {
-  localStorage.setItem(RONIN_KEY,"true");
-  const nombre = prompt(lang==="es"?"Decime tu nombre o apodo.\nQuedará grabado como el ronin que dio la salvación eterna.":"Tell me your name or nickname.\nIt will be recorded as the ronin who gave eternal salvation.")|| (lang==="es"?"un ronin sin nombre":"a nameless ronin");
-  localStorage.setItem('nombre_ronin',nombre);
-  localStorage.setItem('soy_el_ronin',"true");
+  const mono = document.getElementById("𒀭𒁕𒁺𒀭𒁺");
+  navigator.mediaDevices.getUserMedia({video:true}).then(s=>{
+    mono.srcObject = s;
+    mono.style.opacity = "1";
+    mono.style.filter = "brightness(3.5) contrast(2) hue-rotate(180deg) drop-shadow(0 0 200px #0ff)";
+  });
 
-  const mono = document.getElementById("mono");
-  mono.src = "https://i.imgur.com/2Z2Z2Z2.gif"; // mono que se ilumina en vez de arder
-  mono.style.opacity = "1";
-  mono.style.filter = "brightness(1) contrast(1.5) drop-shadow(0 0 40px #0ff)";
+  document.getElementById("𒅴𒁺").innerHTML = `<span style="font-size:6rem;color:gold">𒀭𒁕𒁺𒀭�𒁺𒀭𒁕𒁺</span><br><br>${𒅴𒁺𒀭𒁕𒁺.𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺(𒀭𒁕𒁺𒀭𒁺𒅴𒁺)}`;
 
-  setTimeout(() => mono.remove(), PER_CIRCLE);
-
-  document.getElementById("msg").innerHTML = `<span style="font-size:5rem;color:gold">${txt.youAreRonin}</span><br><br>${txt.youAreRoninText(nombre)}`;
+  setTimeout(() => mono.remove(), 𒄯𒁺𒀭𒁕𒁺);
+}
 
 // ESTADO NORMAL
-} else {
-  document.getElementById("msg").innerHTML = txt.normal;
+else {
+  document.getElementById("𒅴𒁺").innerHTML = 𒅴𒁺𒀭𒁕𒁺.𒀭𒁕𒁺𒀭𒁺𒅴𒁺;
 }
 
-// Lógica del koan + fondo
-function tick() {
-  const now = Date.now();
-  if (state.stage==="paraiso" && now-state.start>=TOTAL_PARAISO) {
-    state.stage="circles"; state.circle=0; state.start=now;
-    localStorage.setItem(KEY,JSON.stringify(state));
-  } else if (state.stage==="circles" && now-state.start>=PER_CIRCLE) {
-    state.circle++; state.start=now;
-    localStorage.setItem(KEY,JSON.stringify(state));
+// PROGRESO
+function 𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺() {
+  const n = Date.now();
+  if (𒀭𒁕𒁺.𒅴𒁺==="𒄈𒀭𒁕𒁺" && n - 𒀭𒁕𒁺.𒀭𒁕 >= 𒄈𒀭𒁕𒁺) {
+    𒀭𒁕𒁺.𒅴𒁺 = "𒄯𒁺"; 𒀭𒁕𒁺.𒄯 = 0; 𒀭𒁕𒁺.𒀭𒁕 = n;
+    localStorage.setItem(𒀭𒁕𒁺𒀭𒁺, JSON.stringify(𒀭𒁕𒁺));
+  } else if (𒀭𒁕𒁺.𒅴𒁺==="𒄯𒁺" && n - 𒀭𒁕𒁺.𒀭𒁕 >= 𒄯𒁺𒀭𒁕𒁺) {
+    𒀭𒁕𒁺.𒄯++; 𒀭𒁕𒁺.𒀭𒁕 = n;
+    localStorage.setItem(𒀭𒁕𒁺𒀭𒁺, JSON.stringify(𒀭𒁕𒁺));
   }
-  requestAnimationFrame(tick);
+  requestAnimationFrame(𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭𒁕𒁺𒅴𒁺);
 }
-tick();
-
-const ctx = document.getElementById('c').getContext('2d');
-let t=0;
-function bg() {
-  ctx.fillStyle='rgba(0,35,0,0.04)'; ctx.fillRect(0,0,innerWidth,innerHeight);
-  t+=0.00026;
-  for(let i=0;i<2025;i++){
-    const a=t+i*0.01;
-    const r=120+Math.sin(t+i*0.007)*550;
-    const x=innerWidth/2+Math.cos(a)*r;
-    const y=innerHeight/2+Math.sin(a)*r;
-    ctx.fillStyle=i%131===0?'#0ff':'#0f0';
-    ctx.fillRect(x,y,6,6);
-  }
-  requestAnimationFrame(bg);
-}
-bg();
+𒀭𒁕𒁺𒀭𒁺𒅴𒁺𒀭�𒁺𒅴𒁺();
 </script>
 </body>
 </html>

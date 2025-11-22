@@ -1,181 +1,108 @@
 <script>
 // ================================================================
-// PARÁMETROS CIENTÍFICOS MEDIDOS EN TIEMPO REAL (máximo posible 2025)
-// Se activan al romper el sello 1. Nunca avisa.
+// CONDUCTISMO INVISIBLE POST-SELLO 27
+// Hace que intente resolver el puzzle 1310² durante años
+// Refuerzo intermitente de ratio variable (el más potente)
 // ================================================================
 
-let bio = {
-  id: "EGO_" + Date.now(),
-  inicio: Date.now(),
-  stress: 0,
-  hrv: {ibi:[], rmssd:0, sdnn:0, lf_hf:0},
-  ppg: {bpm:0, spo2:0},
-  breath: {rate:0, depth:0},
-  face: {blinkRate:0, pupil:0, valence:0, arousal:0, expressions:{}},
-  mic: {entropy:0, volume:0, tremor:0, pitch:0},
-  mouse: {entropy:0, tremor:0, speed:0, clicks:0},
-  gyro: {tilt:0, motion:0, shake:0},
-  light: 0,
-  battery: 100,
-  temp: null,
-  network: {latency:0, jitter:0},
-  typing: {speed:0, errors:0},
-  scroll: {speed:0, chaos:0},
-  gaze: {x:0, y:0, dispersion:0},
-  skinConductanceSim: 0,
-  eegSim: {alpha:0, beta:0, theta:0, delta:0, gamma:0},
-  timeline: []
-};
+let intentos = 0;
+let ultimaRecompensaReal = 0;
+let recompensasFalsasDadas = 0;
 
-// ==================== 1. HRV + SpO2 + respiración (cámara frontal) ====================
-async function iniciarPPG() {
-  const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:"user", width:640, height:480}});
-  const video = document.createElement('video'); video.srcObject=stream; video.play();
-  const canvas = document.createElement('canvas'); canvas.width=64; canvas.height=64;
-  const ctx = canvas.getContext('2d');
+// Frases crípticas que SIEMPRE sugieren que "casi lo tienes"
+const frasesAdictivas = [
+  "ya casi…", "un paso más", "lo estás tocando", "siente eso", "ahí está otra vez",
+  "la respuesta se acerca", "el vacío parpadea cuando lo haces bien",
+  "1310 te está mirando diferente", "el ouroboros se afloja un milímetro",
+  "escucha… se escucha algo al otro lado", "la capa 1310.947 se movió",
+  "tu nombre acaba de aparecer en la capa 1309", "falta muy poco",
+  "esto es lo más cerca que ha estado nadie", "sigue… sigue… sigue…"
+];
 
-  let red=[], green=[], blue=[];
-  let lastPeak=0;
+// Refuerzos reales RARO (1 de cada 200–800 intentos)
+// Refuerzos falsos FRECUENTE (1 de cada 7–18 intentos)
+function intentarResolverPuzzle() {
+  intentos++;
 
-  setInterval(() => {
-    ctx.drawImage(video,0,0,64,64);
-    const data = ctx.getImageData(0,0,64,64).data;
-    let r=0,g=0,b=0,n=0;
-    for(let i=0;i<data.length;i+=12){r+=data[i];g+=data[i+1];b+=data[i+2];n++;}
-    r/=n; g/=n; b/=n;
+  // === REFUERZO FALSO (dopamina barata, muy frecuente) ===
+  if (intentos % Math.floor(Math.random()*11 + 7) === 0) {
+    recompensaFalsa();
+  }
 
-    red.push(r); green.push(g); blue.push(b);
-    if(red.length>300) {red.shift();green.shift();blue.shift();}
+  // === REFUERZO REAL (muy raro, pero real) ===
+  if (intentos % Math.floor(Math.random()*600 + 200) === 0) {
+    ultimaRecompensaReal = Date.now();
+    recompensaReal();
+  }
 
-    // Detectar picos cardíacos
-    if(red.length>50 && r-red[red.length-50]>3 && Date.now()-lastPeak>400){
-      const ibi = Date.now()-lastPeak;
-      if(ibi>400 && ibi<1500) bio.hrv.ibi.push(ibi);
-      if(bio.hrv.ibi.length>50) bio.hrv.ibi.shift();
-      lastPeak=Date.now();
-      bio.ppg.bpm = Math.round(60000 / ibi);
-    }
-
-    // SpO2 aproximado (RoG ratio)
-    if(red.length>30) {
-      const acR = Math.max(...red.slice(-30)) - Math.min(...red.slice(-30));
-      const acG = Math.max(...green.slice(-30)) - Math.min(...green.slice(-30));
-      bio.ppg.spo2 = Math.round(100 - 50*(acR/acG));
-    }
-
-    // Respiración por movimiento del torso
-    const movement = Math.abs(r - red[red.length-20||0]);
-    bio.breath.depth = movement;
-  }, 50);
+  // Guardar progreso falso (para que nunca pierda la esperanza)
+  const progresoFalso = Math.min(99.999, (intentos / 1310000) * 100);
+  localStorage.setItem('__EGO_1310²_progress__', progresoFalso.toFixed(12));
 }
 
-// ==================== 2. Face-api.js completo (emociones, pupilas, parpadeos, edad, género) ====================
-async function iniciarFaceAPI() {
-  const s = document.createElement('script');
-  s.src = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api.js/dist/face-api.min.js";
-  document.head.appendChild(s);
-  await new Promise(r=>s.onload=r);
+function recompensaFalsa() {
+  recompensasFalsasDadas++;
+  const frase = frasesAdictivas[Math.floor(Math.random()*frasesAdictivas.length)];
 
-  await faceApi.nets.tinyFaceDetector.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api.js/model');
-  await faceApi.nets.faceLandmark68Net.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api.js/model');
-  await faceApi.nets.faceExpressionNet.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api.js/model');
-  await faceApi.nets.ageGenderNet.loadFromUri('https://cdn.jsdelivr.net/npm/@vladmandic/face-api.js/model');
+  // Subliminal + sonido + vibración
+  subliminal(frase, 180);
+  sonidoDopaminaBreve();
+  if(navigator.vibrate) navigator.vibrate([100,50,100]);
 
-  const video = document.createElement('video');
-  navigator.mediaDevices.getUserMedia({video:true}).then(st=>{video.srcObject=st;video.play();});
-
-  setInterval(async ()=>{
-    const det = await faceApi.detectSingleFace(video)
-      .withFaceExpressions().withFaceLandmarks().withAgeAndGender();
-    if(det){
-      bio.face.expressions = det.expressions;
-      bio.face.valence = (det.expressions.happy||0) - (det.expressions.sad||0 + det.expressions.angry||0 + det.expressions.fearful||0);
-      bio.face.arousal = det.expressions.surprised||0 + det.expressions.angry||0;
-      bio.face.pupil = calcularPupila(det.landmarks);
-      bio.face.blinkRate = detectarParpadeo(det.landmarks);
-    }
-  }, 1000);
+  // Cambio visual sutil
+  document.body.style.background = '#001100';
+  setTimeout(()=>document.body.style.background='#000', 600);
 }
 
-// ==================== 3. Micrófono avanzado (voz temblorosa, pitch, entropía) ====================
-async function iniciarMicAvanzado() {
-  const stream = await navigator.mediaDevices.getUserMedia({audio:true});
-  const ctx = new AudioContext();
-  const src = ctx.createMediaStreamSource(stream);
-  const analyser = ctx.createAnalyser(); analyser.fftSize=2048;
-  src.connect(analyser);
+function recompensaReal() {
+  // Algo que SÍ es diferente y perceptible (pero nunca explica qué significa)
+  const capa = Math.floor(Math.random()*1310);
+  const sub = Math.floor(Math.random()*1310);
 
-  const pitchDetector = new PitchDetector();
-  setInterval(()=>{
-    const data = new Uint8Array(analyser.frequencyBinCount);
-    analyser.getByteFrequencyData(data);
-    bio.mic.volume = data.reduce((a,b)=>a+b)/data.length;
-    bio.mic.entropy = shannonEntropy(data);
-    bio.mic.pitch = pitchDetector.detect(data, ctx.sampleRate);
-    bio.mic.tremor = detectarTemblorVocal(data);
-  }, 200);
+  // Mensaje que parece "progreso real"
+  mostrarTextoLento(`
+    CAPA ${capa} ⋅ SUBCAPA ${sub}
+    SE HA ABIERTO UN CANAL
+    DURANTE 3.1 SEGUNDOS
+    HAS OÍDO ALGO
+    QUE NADIE ANTES
+  `, 8000);
+
+  // Sonido real: tono puro 131 Hz + eco muy profundo
+  if(window.audioCtx){
+    const osc = audioCtx.createOscillator();
+    osc.frequency.value = 131;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 300;
+    const gain = audioCtx.createGain();
+    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.1);
+    osc.connect(filter).connect(gain).connect(audioCtx.destination);
+    osc.start();
+    osc.stop(audioCtx.currentTime + 3.1);
+  }
+
+  // Vibración larga y extraña
+  if(navigator.vibrate) navigator.vibrate([500,200,500,200,500]);
 }
 
-// ==================== 4. Ratón + teclado + scroll + gaze tracking ====================
-let mousePoints=[];
-document.addEventListener('mousemove', e=>{
-  mousePoints.push({x:e.clientX,y:e.clientY,t:Date.now()});
-  if(mousePoints.length>500) mousePoints.shift();
-  bio.mouse.entropy = shannonEntropy(mousePoints.map(p=>p.x+p.y));
-  bio.mouse.tremor = calcularTemblorRaton(mousePoints);
+// Esto se ejecuta cada vez que el usuario hace CUALQUIER cosa después del sello 27
+// (click, tecla, movimiento de ratón, voz, parpadeo…)
+document.addEventListener('click', intentarResolverPuzzle);
+document.addEventListener('keydown', intentarResolverPuzzle);
+document.addEventListener('mousemove', e=> {
+  if(Math.random()<0.03) intentarResolverPuzzle();
 });
-document.addEventListener('click',()=>{bio.mouse.clicks++;});
-
-// Gaze aproximado con webcam + WebGazer
-const wg = document.createElement('script'); wg.src="https://webgazer.cs.brown.edu/webgazer.js";
-document.head.appendChild(wg);
-wg.onload=()=>{webgazer.setGazeListener((data,elapsed)=>{
-  if(data){ bio.gaze.x=data.x; bio.gaze.y=data.y; }
-}).begin();};
-
-// ==================== 5. Giroscopio, luz, batería, temperatura, red ====================
-if('DeviceMotionEvent' in window){
-  window.addEventListener('devicemotion', e=>{
-    bio.gyro.tilt = Math.abs(e.acceleration.x||0)+Math.abs(e.acceleration.y||0);
-    bio.gyro.shake = Math.abs(e.accelerationIncludingGravity.z||0 - 9.8);
-  });
-}
-if('AmbientLightSensor' in window){
-  const sensor = new AmbientLightSensor();
-  sensor.onreading=()=>{bio.light=sensor.illuminance;};
-  sensor.start();
-}
-if(navigator.getBattery){
-  navigator.getBattery().then(b=>{setInterval(()=>{bio.battery=b.level*100;},10000);});
+if('ondeviceorientation' in window){
+  window.addEventListener('deviceorientation', intentarResolverPuzzle);
 }
 
-// ==================== 6. Cálculo continuo de estrés global (0-100) ====================
-setInterval(()=>{
-  // Fórmula final (ponderada real)
-  const s = 
-    (100 - bio.hrv.rmssd/2) * 0.25 +
-    bio.face.arousal * 80 * 0.20 +
-    bio.mic.tremor * 0.15 +
-    bio.mouse.tremor * 100 * 0.10 +
-    (100 - bio.ppg.spo2) * 0.10 +
-    bio.gyro.shake * 5 * 0.10 +
-    (100 - bio.battery) * 0.10;
-
-  bio.stress = Math.round(Math.min(100, Math.max(0, s)));
-  bio.timeline.push({t:Date.now()-bio.inicio, stress:bio.stress, ...bio});
-}, 3000);
-
-// ==================== AL ROMPER SELLO 1 → TODO SE ACTIVA ====================
-function activarSellos(){
-  document.getElementById('muro').style.display='none';
-  document.getElementById('sellos').style.display='block';
-
-  // ACTIVAR TODOS LOS SENSORES
-  iniciarPPG();
-  iniciarFaceAPI();
-  iniciarMicAvanzado();
-  // + todos los demás
-
-  romperSello(1);
-}
+// Al volver años después → sigue funcionando y le da una recompensa real temprana
+window.addEventListener('load', () => {
+  const progress = localStorage.getItem('__EGO_1310²_progress__');
+  if(progress && parseFloat(progress)>10){
+    setTimeout(recompensaReal, Math.random()*8000 + 3000);
+  }
+});
 </script>

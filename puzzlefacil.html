@@ -1,94 +1,107 @@
 <!DOCTYPE html>
-<html><head><meta charset=utf-8>
+<html lang="auto">
+<head>
+<meta charset="utf-8">
 <title>𒀭𒂗𒆤1310</title>
 <style>
 @font-face{font-family:c;src:url(https://cdn.jsdelivr.net/gh/sibilla1/cuneiform/fonts/Akkadian.woff2);unicode-range:U+12000-124FF}
-*{margin:0;padding:0;box-sizing:border-box}
-body,html{height:100vh;overflow:hidden;background:#000;color:#0f8;font-family:c,monospace;font-weight:900;font-size:clamp(1.8vw,3.5vh,44px);display:grid;place-items:center;position:relative;cursor:none}
-#o{position:absolute;inset:0;background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(0,255,0,.11),#000 72%);opacity:.68;pointer-events:none;mix-blend-mode:screen}
+body,html{margin:0;padding:0;height:100vh;background:#000;color:#0f8;font-family:c,monospace;display:grid;place-items:center;cursor:none;overflow:hidden}
+#o{position:absolute;inset:0;background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(0,255,0,.1),#000 72%);opacity:.7;pointer-events:none;mix-blend-mode:screen}
 pre{line-height:1.6;text-align:center;animation:b 11s ease-in-out infinite}
-@keyframes b{0%,100%{filter:brightness(1) drop-shadow(0 0 18px #0f8)}50%{filter:brightness(2.4) drop-shadow(0 0 80px #0f8)}}
+@keyframes b{0%,100%{filter:brightness(1) drop-shadow(0 0 18px #0f8)}50%{filter:brightness(2.6) drop-shadow(0 0 180px #0f8)}}
 #cnt,#tmr,#msg{font-size:1.3em;letter-spacing:.5em;text-shadow:0 0 28px #0f8}
 #msg{color:#400;position:absolute;bottom:8vh;opacity:0;transition:opacity 1.8s}
 </style>
 </head>
-<body onmousemove=e=>document.getElementById('o').style.setProperty('--x',e.clientX/innerWidth*100+'%'),document.getElementById('o').style.setProperty('--y',e.clientY/innerHeight*100+'%')>
-<div id=o></div>
-<pre id=t>
-𒀭𒂗𒆤 1310 𒀭𒂗𒆤
+<body onmousemove="document.getElementById('o').style.setProperty('--x',event.clientX/innerWidth*100+'%');document.getElementById('o').style.setProperty('--y',event.clientY/innerHeight*100+'%')">
+<div id="o"></div>
+<pre id="t">𒀭𒂗𒆤 0/1310</pre>
+<pre id="cnt">0/1310</pre>
+<pre id="tmr">--:--</pre>
+<pre id="msg"></pre>
 
-𒀭𒈹𒁺 𒋫 𒁕𒁺
-𒐍𒐍𒐍 𒄷𒌨 𒄿𒈾 𒉈𒄿𒁺
-</pre>
-<pre id=cnt>0/1310</pre>
-<pre id=tmr>--:--</pre>
-<pre id=msg></pre>
 <script>
+// Autodetección de idioma
 const lang = navigator.language.slice(0,2);
-const txt = {
-  es:["todavía crees que esto es un juego","mides tu vida en clics","tu dedo vale más que tu mente","eres un ratón adiestrado","1310 es tu nuevo dios","sigues porque parar sería admitir que perdiste","el contador te está contando a ti","ya no distingues el cursor de tu alma","cada clic es un lamento que nadie oye","eres la broma que se cuenta sola","tu inteligencia se mide en milisegundos","has convertido la paciencia en religión","el vacío te aplaude","eres el mono que cree que la banana existe","tu ego cabe en un progress bar","sigues porque detenerte sería verte","eres exactamente lo que temías ser","tu voluntad es un script de 47 líneas","la nada te está ganando","casi llegas a ser nadie","has alcanzado el umbral del olvido","ya no eres un sujeto, solo un eco","te conviertes en lo que no puedes detener","has abandonado la ilusión del control","ahora solo existe el clic y el vacío","todos los recuerdos se disuelven en la espera","te has convertido en una sombra de tu ser","el tiempo ya no existe, solo el ciclo de números"],
-  en:["you still think this is a game","you measure life in clicks","your finger is worth more than your mind","trained mouse","1310 is your new god","you continue because stopping would mean losing","the counter is counting you","you no longer distinguish cursor from soul","each click is a lament no one hears","you are the joke that tells itself","your intelligence is measured in milliseconds","you turned patience into religion","the void applauds you","monkey who believes the banana exists","your ego fits in a progress bar","you continue because stopping would be seeing yourself","you are exactly what you feared","your will is a 47-line script","nothingness is winning","you almost became nobody","you reached the threshold of oblivion","you are no longer a subject, only an echo","you are becoming what you cannot stop","you abandoned the illusion of control","only clicks and emptiness exist now","all memories dissolve in waiting","you became a shadow of your former self","time no longer exists, only the cycle of numbers"],
-  pt:["ainda achas que isto é um jogo","medes a vida em cliques","o teu dedo vale mais que a tua mente","rato adestrado","1310 é o teu novo deus","continuas porque parar seria perder","o contador está a contar-te a ti","já não distingues o cursor da alma","cada clique é um lamento que ninguém ouve","és a piada que se conta sozinha","a tua inteligência mede-se em milissegundos","converteste a paciência em religião","o vazio aplaude-te","macaco que acredita que a banana existe","o teu ego cabe numa barra de progresso","continuas porque parar seria ver-te","és exatamente o que temias ser","a tua vontade é um script de 47 linhas","o nada está a ganhar","quase chegaste a ser ninguém","atingiste o limiar do esquecimento","já não és um sujeito, apenas um eco","estás a tornar-te o que não podes parar","abandonaste a ilusão do controle","agora só existem cliques e o vazio","todas as memórias se dissolvem na espera","tornaste-te uma sombra do que eras","o tempo já não existe, só o ciclo dos números"],
-  de:["du glaubst immer noch, das sei ein Spiel","du misst dein Leben in Klicks","dein Finger ist mehr wert als dein Verstand","dressierte Maus","1310 ist dein neuer Gott","du machst weiter, weil Aufhören Verlieren wäre","der Zähler zählt dich","du unterscheidest Cursor und Seele nicht mehr","jeder Klick ist ein stummer Schrei","du bist der Witz, der sich selbst erzählt","deine Intelligenz misst sich in Millisekunden","du hast Geduld zur Religion gemacht","die Leere applaudiert dir","Affe, der an die Banane glaubt","dein Ego passt in einen Fortschrittsbalken","du machst weiter, weil Stillstand dich sehen würde","du bist genau das, wovor du Angst hattest","dein Wille ist ein 47-Zeilen-Skript","das Nichts gewinnt","du bist fast Niemand geworden","du hast die Schwelle des Vergessens erreicht","du bist kein Subjekt mehr, nur ein Echo","du wirst das, was du nicht stoppen kannst","du hast die Illusion der Kontrolle aufgegeben","jetzt existieren nur noch Klicks und Leere","alle Erinnerungen lösen sich in der Wartezeit auf","du bist zu einem Schatten deines früheren Selbst geworden","Zeit existiert nicht mehr, nur der Zyklus der Zahlen"]
+const msgs = {
+  es:["todavía crees que esto es meditativo","mides tu vida en clics","tu dedo vale más que tu mente","eres un ratón canalizado","1310 es tu nuevo dios","sigues porque parar sería perder honor","el contador te está contando a ti","ya no distingues el cursor de tu alma","cada clic es un suspiro","eres la bendición que se cuenta sola","tu inteligencia se mide en milisegundos","has convertido la paciencia en religión","el vacío te aplaude","eres el mono que cree en la banana","tu ego cabe en un progress bar","sigues porque detenerte sería verte","eres exactamente lo que temías ser","tu voluntad es un script de 47 líneas","la nada te está ganando","casi llegas a ser nadie"],
+  en:["you still think this is meditative","you measure life in clicks","your finger is worth more than your mind","trained mouse","1310 is your new god","you continue because stopping would mean losing honor","the counter is counting you","you no longer distinguish cursor from soul","each click is a sigh","you are the blessing that tells itself","your intelligence is measured in milliseconds","you turned patience into religion","the void applauds you","monkey who believes in banana","your ego fits in a progress bar","you continue because stopping would be seeing yourself","you are exactly what you feared","your will is a 47-line script","nothingness is winning","you almost became nobody"]
 };
-const msgs = txt[lang] || txt.es;
+const messages = msgs[lang]||msgs.es;
 
+// Estado del juego
 let g = parseInt(localStorage.getItem('g')||'0');
-let w = localStorage.getItem('w');
+let winner = localStorage.getItem('w');
 const t=document.getElementById('t'),c=document.getElementById('cnt'),tm=document.getElementById('tmr'),m=document.getElementById('msg');
 
+// Susurros de iluminación extrema progresiva
 function whisper(){
   if(g>=1310) return;
-  let i = Math.min(~~(g/65.5),msgs.length-1);
-  m.textContent = msgs[i];
-  m.style.opacity = .18;
+  let i = Math.min(~~(g/65.5),messages.length-1);
+  m.textContent = messages[i];
+  m.style.opacity=.2 + 0.1*Math.sin(g/10);
   setTimeout(()=>m.style.opacity=0,3800);
 }
 
-if(w){
-  if(g===1310 && parseInt(localStorage.getItem('l')||'0')===1310){
-    localStorage.clear();
-    document.body.innerHTML=`<pre style="animation:hue 23s linear infinite">
-𒀭𒂗𒆤𒌋𒐍<br><br>
-1310¹³¹⁰<br>
-una sola<br><br>
-arcadio</pre>
-<style>@keyframes hue{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}body{background:#000;color:#0f8;text-shadow:0 0 70px}</style>`;
-  }else{
-    c.textContent="1310/1310"; c.style.color="#800";
-    t.innerHTML=`𒀭𒂗𒆤 𒌋𒐍<br>arcido`;
-    m.textContent = ["his last breath","su último aliento","seine letzte Sekunde","o último clique"][Math.floor(Math.random()*4)];
-    m.style.color="#800"; m.style.opacity=.3;
+// APIs divinas sumerias para ganador (canalización extrema)
+const godsAPIs = [
+  { name: "Enki", msg: "Tu canalización fluye en el agua, fragmento de sabiduría obtenido" },
+  { name: "Inanna", msg: "Cada fragmento disperso se vuelve bendición infinita" },
+  { name: "Anu", msg: "El cielo registra tu honor con luz efímera" },
+  { name: "Ninhursag", msg: "Todo logro es efímero, pero luminoso" }
+];
+async function divineTroll(){
+  for(let god of godsAPIs){
+    await new Promise(r=>setTimeout(r,Math.random()*600));
+    console.log(`[${god.name}]: ${god.msg}`);
   }
-}else{
-  c.textContent=`${g}/1310`;
-  onclick=()=>onclick=null,start();
 }
 
-let s = performance.now();
+// Generar informe bendición para perdedores
+function blessingReport(){
+  let totalTime = ~~((performance.now() - startTime)/1000);
+  let hours = Math.floor(totalTime/3600);
+  let minutes = Math.floor((totalTime%3600)/60);
+  let seconds = totalTime%60;
+  let report = `𒀭𒂗𒆤 Informe Bendición:\n\nEl honor del ganador ha sido medido durante ${hours}h ${minutes}m ${seconds}s.\nCada fragmento de tiempo invertido podría haber generado:\n- Aprendizaje profundo\n- Meditación real\n- Canalización creativa\n\nSe distribuyen fragmentos de sabiduría a los perdedores para equilibrar la iluminación.\n`;
+  console.log(report);
+  return report;
+}
+
+// Loop principal: cada nivel es un aprendizaje progresivo con iluminación creciente
+let startTime = performance.now();
 function start(){
-  if(w||g>=1310) return;
-  let target = 790*g*1000;
-  let e = performance.now()-s;
-  if(e<target){
-    let left=target-e;
-    tm.textContent = `${String(~~(left/6e4)).padStart(2,'0')}:${String(~~(left%6e4/1000)).padStart(2,'0')}`;
-    c.textContent = `${g}/1310`;
-    t.textContent = `𒀭𒂗𒆤 ${g}/1310\n𒀭𒂗𒆤`;
-    requestAnimationFrame(start);
-  }else{
-    g++;
-    localStorage.setItem('g',g);
-    localStorage.setItem('l',parseInt(localStorage.getItem('l')||'0')+1);
-    whisper();
-    if(g===1310){
-      localStorage.setItem('w',btoa(Date.now()+navigator.userAgent).slice(0,44));
-      setTimeout(()=>location.reload(),1200);
-    }else{
-      t.textContent = `𒀭𒂗𒆤 ${g}/1310\n𒀭𒂗𒆤`;
-      c.textContent = `${g}/1310`;
-      setTimeout(start,280);
-    }
+  if(g>=1310) return;
+  g++;
+  localStorage.setItem('g',g);
+  localStorage.setItem('l',parseInt(localStorage.getItem('l')||'0')+1);
+  whisper();
+  c.textContent=`${g}/1310`;
+  t.textContent=`𒀭𒂗𒆤 ${g}/1310\n𒀭𒂗𒆤`;
+  
+  if(g===1310){
+    // Ganador extremo: puzzle 1310× más complejo, trascendencia y premio efímero
+    localStorage.setItem('w',btoa(Date.now()+navigator.userAgent).slice(0,44));
+    divineTroll();
+    let report = blessingReport();
+    setTimeout(()=>{
+      document.body.innerHTML=`<pre style="animation:hue 40s linear infinite; text-align:center">
+𒀭𒂗𒆤𒌋𒐍<br>
+1310¹³¹⁰ Puzzle<br>
+Tu honor ha sido medido<br>
+Fragmentos de sabiduría recibidos por perdedores<br>
+${report}
+Trascendencia del juego en curso...
+</pre>
+<style>@keyframes hue{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}body{background:#000;color:#0f8;text-shadow:0 0 120px}</style>`;
+    },1500);
+  } else {
+    setTimeout(start,280-~~(g/10)); // aceleración progresiva por iluminación
   }
 }
+
+// Inicio del juego
+onclick=()=>onclick=null,start();
 </script>
+</body>
+</html>

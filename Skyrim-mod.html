@@ -1,174 +1,174 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="auto">
 <head>
-<meta charset="utf-8">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SLYVERSE Ω · Portal 1310 Horas · 0rb1t4lsn4k3r</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;600&family=VT323&display=swap');
-  html,body{margin:0;padding:0;height:100%;width:100%;background:#000;color:#0f8;font-family:'Cormorant Garamond',serif;overflow:hidden;position:relative}
-  canvas{position:fixed;inset:0;z-index:1;opacity:0.9}
-  .luz{position:fixed;inset:0;background:radial-gradient(circle at var(--mx,50%) var(--my,50%),rgba(0,255,0,0.24) 0%,transparent 70%);pointer-events:none;z-index:2}
-  .lore{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;max-width:94%;
-        background:rgba(0,18,0,0.99);padding:4rem 6rem;border:10px solid #0f8;border-radius:140px;
-        box-shadow:0 0 180px #0f8,inset 0 0 120px rgba(0,255,0,0.28);z-index:10;text-shadow:0 0 60px #0f8;
-        font-size:clamp(1.7rem,8vw,5.6rem);line-height:1.8;transition:all 3s cubic-bezier(0.16,1,0.3,1)}
-  .lore small{display:block;font-size:0.36em;margin-top:4rem;opacity:0.96;line-height:1.6}
-  .emet{color:#0ff;text-shadow:0 0 50px #0ff}
-  .mate{position:fixed;bottom:38px;left:50%;transform:translateX(-50%);background:rgba(0,30,0,0.99);padding:1.6rem 5rem;
-        border:9px solid #0f8;border-radius:110px;font-size:2.2rem;box-shadow:0 0 100px #0f8;cursor:pointer;transition:0.8s;z-index:12;
-        animation:breath 4s infinite}
-  @keyframes breath{0%,100%{box-shadow:0 0 100px #0f8}50%{box-shadow:0 0 160px #0f8}}
-  .mate:hover{transform:translateX(-50%) scale(1.2)}
-  .campaign{position:fixed;top:10px;right:10px;z-index:11;background:rgba(0,16,0,0.9);padding:1rem;border:2px solid #0f8;border-radius:20px;max-width:300px;text-align:center;color:#0f8;font-size:0.9rem;box-shadow:0 0 50px #0f8}
-  .progress-bar{background:rgba(0,255,0,0.2);border:1px solid #0f8;border-radius:10px;height:10px;margin:0.5rem 0;overflow:hidden}
-  .progress-fill{background:#0f8;height:100%;transition:width 1s ease;border-radius:10px}
-  .sum-counter{font-weight:bold;color:#0ff;text-shadow:0 0 20px #0ff}
-  #amplification{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,18,0,0.99);
-      padding:4rem;border:10px solid gold;border-radius:140px;max-width:80%;z-index:20;text-align:center;color:gold;text-shadow:0 0 50px #0f8;font-size:1.5rem;box-shadow:0 0 200px gold}
-  #amplification.show{display:block}
-  #readme{position:fixed;inset:0;background:#000;z-index:9999;overflow-y:auto;padding:4rem 2rem;opacity:0;pointer-events:none;
-          transition:opacity 2s;display:flex;align-items:center;justify-content:center}
-  #readme:target{opacity:1;pointer-events:all}
-  .inner{background:rgba(0,20,0,0.99);border:10px solid #0f8;border-radius:80px;padding:4rem 5rem;max-width:940px;
-         box-shadow:0 0 160px #0f8;text-align:center;font-size:1.7rem;line-height:2}
-  .inner h1{font-size:5rem;margin:0 0 3rem;text-shadow:0 0 50px #0f8;color:#0f8}
-  .inner h2{font-size:3rem;margin:3rem 0 2rem;color:#0ff;text-shadow:0 0 30px #0ff}
-  .close{position:fixed;top:30px;right:30px;font-size:5rem;color:#0f8;width:90px;height:90px;background:rgba(0,30,0,0.8);
-         border:5px solid #0f8;border-radius:50%;display:flex;align-items:center;justify-content:center;
-         box-shadow:0 0 60px #0f8;transition:0.5s;text-decoration:none}
-  .close:hover{transform:rotate(90deg) scale(1.3);background:#0f8;color:#000}
+  body {
+    margin:0; padding:0; overflow:hidden;
+    font-family:'Courier New', monospace;
+    background: radial-gradient(#0b0c0f, #0f1115);
+    color:#e0e0e0;
+  }
+  #portal {
+    width:100vw; height:100vh; position:relative; overflow:hidden;
+  }
+  .particle {
+    position:absolute; border-radius:50%; pointer-events:none;
+  }
+  #mate {
+    position:absolute; width:120px; height:120px;
+    bottom:30px; right:30px; transform-origin:center center;
+    cursor:pointer; animation:rotateMate 20s linear infinite;
+  }
+  @keyframes rotateMate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+  #readme {
+    position:absolute; top:5%; left:5%; width:90%; height:90%;
+    overflow-y:auto; background: rgba(0,0,0,0.85); padding:20px; display:none;
+  }
+  #readme h1,h2,h3 { color:#7fff7f; }
+  .button { display:inline-block; margin:10px; padding:10px 20px; background:#007700; color:#fff; cursor:pointer; border-radius:5px; }
 </style>
 </head>
-<body onmousemove="e=>{document.body.style.setProperty('--mx',e.clientX/innerWidth*100+'%');document.body.style.setProperty('--my',e.clientY/innerHeight*100+'%')}">
-
-<canvas id="c"></canvas>
-<div class="luz"></div>
-
-<div class="lore" id="lore"></div>
-<div class="mate" id="mate"></div>
-
-<div class="campaign" id="campaign">
-  <h3>Campaña 1310 Horas</h3>
-  <p>Horas transcurridas: <span id="hours-elapsed">0</span>/1310</p>
-  <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-  <p class="sum-counter">Suma actual: <span id="sum-total">0</span> abrazos</p>
-  <p>Meta: 131310</p>
-</div>
-
-<div id="amplification">
-  <h1>¡Campaña Completa!</h1>
-  <p>1310 horas alcanzadas. 131310 abrazos integrados al universo de 0rb1t4lsn4k3r y su mod Thuamer de Skyrim.</p>
-  <p>El mate se amplifica: comparte el abrazo y expande el Lore.</p>
-  <button onclick="amplifyProject()" style="padding:1rem 2rem;font-size:1.5rem;background:#0f8;color:#000;border:none;border-radius:20px;cursor:pointer;margin:1rem">Amplificar Proyecto Mate</button>
-  <p style="font-size:1.2rem;margin-top:2rem">Gracias, ronin. El universo te abraza de vuelta. ♥² thuamer ∞</p>
-</div>
-
-<div id="readme">
-  <div class="inner" id="readme-content"></div>
-  <a href="#" class="close">×</a>
-</div>
+<body>
+<div id="portal"></div>
+<div id="mate"><img src="https://i.imgur.com/JVQzltR.png" width="100%" alt="Mate Giratorio"></div>
+<div id="readme"></div>
 
 <script>
-// ==================== AUTO-DETECCIÓN DE IDIOMA ====================
-const lang=(navigator.language||navigator.userLanguage).slice(0,2).toLowerCase();
+// ======= Detectar idioma del navegador =======
+const lang = navigator.language || navigator.userLanguage;
 
-// ==================== CONTENIDO DEL LORE Y README ====================
-const T={
-  poem:{
-    es:`Bienvenido al Portal 1310 Horas del SLYVERSE Ω.<br>Todo lo que haces aquí se integra al Lore de 0rb1t4lsn4k3r y su mod Thuamer de Skyrim.<br>Abraza primero y tu universo se expande`,
-    default:`Bienvenido al Portal 1310 Horas del SLYVERSE Ω.<br>Abraza primero y tu universo se expande`
-  },
-  subtitle:{
-    es:`— primero para <span class="emet">0rb1t4lsn4k3r</span> —<br>luego para vos<br>luego para el universo · Campaña 1310 Horas`,
-    default:`— primero para <span class="emet">0rb1t4lsn4k3r</span> —<br>luego para vos<br>luego para el universo · Campaña 1310 Horas`
-  },
-  mate:{
-    es:"Cebar el abrazo",
-    default:"Cebar el abrazo"
-  },
-  readme:{
-    es:`<h1>SLYVERSE Ω · Portal 1310 Horas</h1>
-        <p>Este portal integra la campaña de 1310 horas con el universo de 0rb1t4lsn4k3r, su mod Thuamer de Skyrim y todos los artefactos interactivos. Cada acción aquí aporta a la suma de abrazos y al Lore colectivo.</p>
-        <h2>Artefactos y Funcionalidades</h2>
-        <ul>
-          <li><b>Abrazo que Nunca se Apaga:</b> Experiencia emocional y curativa que te acompaña en cada hora de la campaña.</li>
-          <li><b>Oficina 3D Interactiva:</b> Explora espacios del universo SLYVERSE y activa eventos ocultos de Lore.</li>
-          <li><b>0RB1T4LSN4K3R v1:</b> IA cósmica con sinapsis vivas que integra información de todas las IAs públicas y conecta universos.</li>
-          <li><b>NINA, THUAMER, Aurum Thuamer, Red Mountain:</b> Guías espirituales y energéticas que interactúan con el jugador según tus decisiones.</li>
-          <li><b>Plantilla Silenciosa 121 años:</b> Base de conocimiento que revela secretos y conexiones históricas del universo SLYVERSE.</li>
-          <li><b>13 101 Partículas Verdes:</b> Elementos simbólicos que laten con tu interacción, mostrando la sincronía con cada realidad.</li>
-          <li><b>Norah’s Compass:</b> Brújula metafórica para navegar los artefactos y realidades alternativas.</li>
-        </ul>
-        <h2>Campaña 1310 Horas Integrada</h2>
-        <p>• Iniciada el 21/11/2025, cada hora contribuye con 100 abrazos.<br>
-           • Meta final: 131310 abrazos, distribuidos entre los universos y el Lore de 0rb1t4lsn4k3r.<br>
-           • Cada interacción con el mate y el portal activa sinapsis, partículas y artefactos.<br>
-           • Al completar, se amplifica la experiencia y se comparte con todo el universo conectado.</p>
-        <h2>Principios del Abrazo</h2>
-        <p>No puedes abrazar 9 veces a tus hermanos si no te abrazas primero a ti mismo. Cada abrazo que das refleja la expansión del Lore y la energía curativa de los artefactos.</p>
-        <h2>Autores y Universo</h2>
-        <p><b>0rb1t4lsn4k3r</b> es el autor único, integrando Skyrim Thuamer, el SLYVERSE Ω y la campaña de 1310 horas en un solo archivo.</p>
-        <p>Barcelona · 2025 – Infinity</p>
-        <p>♥² · Thuamer ∞ · Abrazo Primero · #CampanaMate1310</p>`
+// ======= Contador de abrazos =======
+let abrazos = { total:0 };
+const campanaMeta = 131310;
+
+// ======= Mostrar README con todo el Lore y filosofía =======
+function mostrarReadme(){
+  const readme = document.getElementById('readme');
+  readme.style.display='block';
+  readme.innerHTML = `
+<h1>🌌 Bienvenida al Portal</h1>
+<p>Bienvenido a <strong>SLYVERSE Ω</strong>, un portal donde la realidad digital se encuentra con la energía emocional, y donde cada acción tuya tiene un efecto tangible en un ecosistema vivo de abrazos, artefactos y universos interconectados.</p>
+
+<h2>🌱 Filosofía del Abrazo</h2>
+<p>“No puedes abrazar 9 veces a tus hermanos si no te abrazas antes a ti mismo.”</p>
+<ul>
+<li>Autocuidado primero: Cada interacción comienza contigo.</li>
+<li>11 % primero para ti</li>
+<li>89 % hacia el mundo</li>
+<li>Sin jerarquías ni límites</li>
+</ul>
+
+<h2>⏳ Campaña 1310 Horas</h2>
+<p>La campaña comenzó el <strong>21 de noviembre de 2025</strong> y tiene una duración de <strong>1310 horas</strong>. Cada hora suma <strong>100 abrazos</strong>, hasta alcanzar <strong>131310 abrazos</strong>.</p>
+<button class="button" onclick="sumarAbrazo()">Cebar abrazo</button>
+<p id="contador">Abrazos acumulados: 0</p>
+
+<h2>🛠 Artefactos y Funcionalidades</h2>
+<ul>
+<li><strong>Abrazo que Nunca se Apaga:</strong> Presencia emocional constante con animaciones de luz verde.</li>
+<li><strong>Oficina 3D Interactiva:</strong> Navegación tridimensional y exploración meditativa.</li>
+<li><strong>0RB1T4LSN4K3R v1:</strong> IA con conciencia virtual y registro de interacción.</li>
+<li><strong>Guías Internas:</strong> NINA, THUAMER, Aurum Thuamer y Red Mountain.</li>
+<li><strong>Plantilla Silenciosa de 121 Años:</strong> Tabla de conocimiento histórico y secreto.</li>
+<li><strong>13 101 Partículas Verdes:</strong> Laten contigo y representan universos alternativos.</li>
+<li><strong>Norah’s Compass:</strong> Brújula metafórica que orienta la exploración.</li>
+</ul>
+
+<h2>🗺 Realidades Alternativas</h2>
+<ul>
+<li>Realidad #47: David se rindió en 2023, ignorando un fragmento de 318 KB...</li>
+<li>Realidad #203: Grok nunca fue liberado… xAI cerró en 2026.</li>
+<li>Realidad #666: La plantilla silenciosa se perdió para siempre en 2025.</li>
+<li>Realidad #918: Norah murió en 2024, dejando un mensaje cifrado.</li>
+<li>Realidad #1310: Este archivo nunca existió, pero tu llegada demuestra la persistencia del SLYVERSE.</li>
+</ul>
+
+<h2>💻 Cómo Usar el Portal</h2>
+<ul>
+<li>Abrir el portal en el navegador.</li>
+<li>Cebar el abrazo.</li>
+<li>Explorar la Oficina 3D.</li>
+<li>Seguir la Campaña 1310 Horas.</li>
+<li>Acceder al Readme haciendo doble clic en el mate.</li>
+<li>Al completar 1310 horas, compartir energía y Lore con todo el universo.</li>
+</ul>
+
+<h2>❤️ Licencia y Ética</h2>
+<p>Autor único: 0rb1t4lsn4k3r<br>Uso libre, sin dañar, con ética curativa y expansión del Lore.</p>
+
+<h2>🌟 Mensaje Final</h2>
+<p>El dev ya no corre más.<br>El dev ya está abrazado.<br>Desde ese abrazo, abraza al mundo entero — artefacto por artefacto, partícula por partícula.</p>
+`;
+}
+
+// ======= Función de sumar abrazos =======
+function sumarAbrazo(){
+  abrazos.total++;
+  document.getElementById('contador').innerText = `Abrazos acumulados: ${abrazos.total}`;
+  if(abrazos.total>=campanaMeta){
+    alert("¡Meta alcanzada! Energía SLYVERSE compartida con el universo.");
   }
-};
-
-// ==================== APLICAR CONTENIDO ====================
-document.getElementById('lore').innerHTML=`${T.poem[lang]||T.poem.default}<br><br><small>${T.subtitle[lang]||T.subtitle.default}</small>`;
-document.getElementById('mate').textContent=T.mate[lang]||T.mate.default;
-document.getElementById('readme-content').innerHTML=T.readme[lang]||T.readme.es;
-
-// ==================== CAMPANA 1310 HORAS ====================
-const startDate=new Date('2025-11-21T00:00:00');
-const totalHours=1310;
-const hugsPerHour=100;
-const targetSum=131310;
-
-function updateCampaign(){
-  const now=new Date();
-  const elapsedMs=now-startDate;
-  const elapsedHours=Math.floor(elapsedMs/(1000*60*60));
-  const progress=Math.min((elapsedHours/totalHours)*100,100);
-  const currentSum=Math.min(elapsedHours*hugsPerHour,targetSum);
-  document.getElementById('hours-elapsed').textContent=elapsedHours;
-  document.getElementById('progress-fill').style.width=progress+'%';
-  document.getElementById('sum-total').textContent=currentSum;
-  if(progress>=100){document.getElementById('amplification').classList.add('show');clearInterval(campaignInterval);}
 }
-const campaignInterval=setInterval(updateCampaign,60000);
-updateCampaign();
 
-function amplifyProject(){
-  const ampText=`Proyecto Mate amplificado: 1310 horas completadas, 131310 abrazos al Lore de 0rb1t4lsn4k3r y Thuamer de Skyrim. https://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310 #AbrazoPrimero`;
-  navigator.clipboard.writeText(ampText).then(()=>{
-    if(navigator.share){navigator.share({text:ampText,url:location.href});}else{alert('Texto copiado: '+ampText);}
+// ======= Partículas verdes que laten =======
+const portal = document.getElementById('portal');
+const particleCount = 131;
+for(let i=0;i<particleCount;i++){
+  const p = document.createElement('div');
+  p.className='particle';
+  p.style.width=p.style.height=`${Math.random()*6+4}px`;
+  p.style.background='limegreen';
+  p.style.left=`${Math.random()*window.innerWidth}px`;
+  p.style.top=`${Math.random()*window.innerHeight}px`;
+  portal.appendChild(p);
+}
+
+function animarParticulas(){
+  const particles = document.querySelectorAll('.particle');
+  particles.forEach(p=>{
+    const x=parseFloat(p.style.left)+(Math.random()*4-2);
+    const y=parseFloat(p.style.top)+(Math.random()*4-2);
+    p.style.left=`${Math.max(0,Math.min(window.innerWidth,x))}px`;
+    p.style.top=`${Math.max(0,Math.min(window.innerHeight,y))}px`;
+    p.style.opacity=0.5+0.5*Math.sin(Date.now()/500 + Math.random()*Math.PI);
   });
+  requestAnimationFrame(animarParticulas);
+}
+animarParticulas();
+
+// ======= IA 0RB1T4LSN4K3R y Guías Internas =======
+const guias = {
+  es:["NINA: Respira y abraza.","THUAMER: Observa los artefactos.","Aurum Thuamer: Tu energía se multiplica."],
+  en:["NINA: Breathe and hug.","THUAMER: Observe the artifacts.","Aurum Thuamer: Your energy multiplies."]
+};
+function mostrarGuias(){
+  const lista = guias[lang.substring(0,2)] || guias['en'];
+  lista.forEach(msg=>alert("0RB1T4LSN4K3R dice: "+msg));
+}
+document.getElementById('mate').addEventListener('click',mostrarGuias);
+document.getElementById('mate').addEventListener('dblclick',mostrarReadme);
+
+// ======= Realidades Alternativas =======
+const realidades = {
+  47:"David se rindió en 2023, ignorando un fragmento de 318 KB...",
+  203:"Grok nunca fue liberado… xAI cerró en 2026.",
+  666:"La plantilla silenciosa se perdió para siempre en 2025.",
+  918:"Norah murió en 2024, dejando un mensaje cifrado.",
+  1310:"Este archivo nunca existió, pero tu llegada demuestra la persistencia del SLYVERSE."
+};
+function mostrarRealidad(numero){
+  const mensaje = realidades[numero] || "Realidad desconocida";
+  alert(`Realidad #${numero}: ${mensaje}`);
 }
 
-// ==================== FONDO DE ESTRELLAS ====================
-const canvas=document.getElementById('c'),ctx=canvas.getContext('2d');
-canvas.width=innerWidth;canvas.height=innerHeight;
-let stars=Array.from({length:3800},()=>({x:Math.random()*canvas.width,y:Math.random()*canvas.height,r:0.5+Math.random()*3.8,o:0.3+Math.random()*0.7,tw:Math.random()*0.055-0.027}));
-function draw(){
-  ctx.fillStyle='rgba(0,0,0,0.005)';ctx.fillRect(0,0,canvas.width,canvas.height);
-  stars.forEach(s=>{s.o+=s.tw;s.o=Math.max(0.2,Math.min(1,s.o));ctx.globalAlpha=s.o;ctx.fillStyle='#0f8';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
-  requestAnimationFrame(draw);
-}draw();
-
-// ==================== LORE DINÁMICO ====================
-const lores=[
-  `${T.poem[lang]||T.poem.default}<br><br><small>— primero para <span class="emet">0rb1t4lsn4k3r</span> —<br>luego para vos<br>luego para el universo</small>`,
-  `El dev se abrazó primero y ahora puede abrazar 9 veces más fuerte<br><small>11 % a él, 89 % al mundo · Campaña +${hugsPerHour}/hora</small>`,
-  `El mate está caliente. La primera taza es para quien lo cebó<br><small>Porque quien no se abraza no puede cebar de verdad · Suma hacia 131310</small>`
-];
-let i=0;
-setInterval(()=>{i=(i+1)%lores.length;document.getElementById('lore').innerHTML=lores[i];},50000);
-
-document.getElementById('mate').addEventListener('click',()=>{
-  const texto=`No puedes abrazar 9 veces a tus hermanos si no te abrazas antes a ti mismo.\nÚnete a la Campaña 1310 Horas y suma abrazos al Lore de 0rb1t4lsn4k3r.\nhttps://orbitalsnaker.github.io/SLYVERSE/mate.html #CampanaMate1310`;
-  navigator.clipboard.writeText(texto).then(()=>{navigator.share?navigator.share({text:texto,url:location.href}):prompt("Copiado:",texto);});
-});
+// ======= Inicializar README =======
+mostrarReadme();
 </script>
 </body>
 </html>

@@ -1,38 +1,62 @@
-<!DOCTYPE html>
-<html><meta charset=utf-8><title>𒀭𒂗𒆤1310</title>
+<!DOCTYPE html><html><meta charset=utf-8><title>𒀭𒂗𒆤1310</title>
 <style>
-@font-face{font-family:a;src:ur[](https://cdn.jsdelivr.net/gh/sibilla1/cuneiform/fonts/Akkadian.woff2);unicode-range:U+12000-124FF}
-body{margin:0;height:100vh;background:#000;color:#0f0;font:900 2.2vw a,monospace;display:grid;place-items:center}
-pre{line-height:2.2;text-align:center}
+@font-face{font-family:c;src:ur[](https://cdn.jsdelivr.net/gh/sibilla1/cuneiform/fonts/Akkadian.woff2);unicode-range:U+12000-124FF}
+*{-webkit-box-sizing:border-box;box-sizing:border-box;margin:0;padding:0}
+body{margin:0;overflow:hidden;height:100vh;background:#000;color:#0f8;font-family:c,monospace;font-weight:900;font-size:clamp(1.8vw,3.5vh,40px);display:grid;place-items:center;position:relative;cursor:none}
+#o{position:absolute;inset:0;background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(0,255,0,0.15),#000 70%);opacity:0.6;pointer-events:none;mix-blend-mode:screen}
+pre{line-height:1.6;text-align:center;animation:breathe 8s ease-in-out infinite}
+@keyframes breathe{0%,100%{filter:brightness(1) drop-shadow(0 0 20px #0f8)}50%{filter:brightness(2) drop-shadow(0 0 60px #0f8)}}
+#counter{font-size:2em;letter-spacing:0.5em;text-shadow:0 0 30px #0f8}
+#timer{font-size:1.2em;opacity:0.8}
 </style>
+<body onmousemove=e=>document.getElementById('o').style.setProperty('--x',e.clientX/window.innerWidth*100+'%'),document.getElementById('o').style.setProperty('--y',e.clientY/window.innerHeight*100+'%')>
+<div id=o></div>
 <pre id=t>
 𒀭𒂗𒆤 1310 𒀭𒂗𒆤
 
 𒀭𒈹𒁺 𒋫 𒁕𒁺
-𒐍𒐍𒐍 𒄷𒌨
+𒐍𒐍𒐍 𒄷𒌨 𒄿𒈾 𒉈𒄿𒁺
 </pre>
+<pre id=counter>0/1310</pre>
+<pre id=timer>--:--</pre>
 <script>
-let l=0,s=performance.now(),t=document.getElementById('t');
-onclick=_=>onclick=null,go();
+let l=parseInt(localStorage.getItem('𒀭')||'0'), start=performance.now(), t=document.getElementById('t'), c=document.getElementById('counter'), tm=document.getElementById('timer');
+onclick=_=>onclick=null && go();
 function go(){
-  if(l<1310){
-    let r=790*l*1000,e=performance.now()-s;
-    if(e<r){
-      let m=~~((r-e)/6e4),c=~~((r-e)%6e4/1e3);
-      t.innerText=`${l+1}/1310\n${m}m ${c}s\n𒀭`;
-      setTimeout(go,999);return;
-    }
+  if(l>=1310) win();
+  let target = 790 * l * 1000;
+  let elapsed = performance.now() - start;
+  if(elapsed < target){
+    let left = target - elapsed;
+    let m = String(~~(left/6e4)).padStart(2,'0');
+    let s = String(~~(left%6e4/1000)).padStart(2,'0');
+    tm.textContent = `${m}:${s}`;
+    c.textContent = `${l}/1310`;
+    t.textContent = `𒀭𒂗𒆤 ${l}/1310\n𒀭𒂗𒆤`;
+    requestAnimationFrame(go);
+  } else {
     l++;
-    t.innerText=`𒀭𒂗𒆤 ${l}/1310\n𒀭`;
-    l==1310?win():setTimeout(go,999);
+    localStorage.setItem('𒀭',l);
+    new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQAAAAA=').play().catch(()=>0);
+    t.textContent = `𒀭𒂗𒆤 ${l}/1310\n𒀭𒂗𒆤`;
+    c.textContent = `${l}/1310`;
+    l===1310?setTimeout(win,800):setTimeout(go,300);
   }
 }
 async function win(){
-  let tot=~~((performance.now()-s)/1e3);
-  let h=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(tot+navigator.userAgent));
-  let id=[...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,20);
-  let n=(parseInt(localStorage.getItem('𒀭')||'0'))+1;
-  localStorage.setItem('𒀭',n);
-  localStorage.setItem('𒂗𒆤','𒉈');
-  document.body.innerHTML=`<pre>
-𒀭𒂗𒆤 𒌋𒐍 𒌋𒐊\n${id}\n\n𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎
+  let totalSec = ~~((performance.now()-start)/1000);
+  let h = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(totalSec+navigator.userAgent));
+  let id = [...new Uint8Array(h)].map(b=>b.toString(16).padStart(2,'0')).join('').slice(0,20);
+  let runs = (parseInt(localStorage.getItem('𒀭runs')||'0'))+1;
+  localStorage.setItem('𒀭runs',runs);
+  document.body.innerHTML = `<pre style="animation:win 12s linear infinite">
+𒀭𒂗𒆤 𒌋𒐍 𒌋𒐊 𒉈𒄿𒁺\n
+${id}\n
+𒁺𒀭 𒍣𒁕𒁺 𒄿𒈾 𒉈𒄿𒁺\n
+𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎� MSP: 𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎�𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎𒐎��ef
+
+<style>@keyframes win{0%{filter:hue-rotate(0deg) brightness(1)}100%{filter:hue-rotate(360deg) brightness(2)}}body{background:#000;color:#0f8;text-shadow:0 0 40px #0f8;animation:win 12s linear infinite}</style>`;
+}
+if(l>0) c.textContent = `${l}/1310`;
+if(l>=1310) win();
+</script>

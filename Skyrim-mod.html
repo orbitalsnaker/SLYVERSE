@@ -1,252 +1,82 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="utf-8">
-<title>SLYVERSE Ω v1 — 1310 líneas de tiempo redimidas en 61 KB</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Thu'umancer – SLYVERSE Ω v1.5 | ATHUAMER CLÁSICO | 61 KB Nakama Eterno</title>
 <style>
-  :root{--void:#000;--green:#0f8;--gold:#ffd700;--love:#ff3366}
-  *,body,html{margin:0;padding:0;height:100dvh;background:var(--void);color:var(--green);font-family:monospace;overflow:hidden}
-  canvas{position:fixed;inset:0;z-index:0}
-  div{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;flex-direction:column;z-index:10;opacity:0;transition:opacity 2s}
-  .show{opacity:1}
-  h1{font-size:clamp(2.5rem,11vw,7rem);margin:0;text-shadow:0 0 30px var(--green);animation:pulse 6s infinite}
-  p,pre{font-size:clamp(1rem,3.5vw,1.8rem);max-width:92%;line-height:1.8}
-  pre{background:rgba(0,0,0,0.95);padding:2rem;overflow:auto}
-  .mate{position:fixed;bottom:8%;left:50%;transform:translateX(-50%);font-size:5em;animation:mate 8s infinite}
-  @keyframes mate{0%,100%{transform:rotate(0)}50%{transform:rotate(12deg)}}
-  .pluma{font-size:10vw;position:fixed;opacity:0;pointer-events:none;animation:fly 7s forwards}
-  @keyframes fly{0%{opacity:0;transform:translateY(100px) scale(0)}100%{opacity:1;transform:translateY(-150vh) scale(1.5)}}
-  .pluma-item{background:rgba(0,30,0,0.5);border:1px solid var(--green);border-radius:12px;margin:1rem;padding:1rem;max-width:88%;animation:fade 1.5s}
-  @keyframes fade{from{opacity:0;transform:translateY(30px)}to{opacity:1}}
-  .contador{font-size:3rem;color:var(--gold);text-shadow:0 0 20px var(--gold)}
-  button{background:#000;border:2px solid var(--green);color:var(--green);padding:1rem 2rem;margin:1rem;font-size:1.5rem;cursor:pointer}
-  .hidden{display:none}
+* { margin:0; padding:0; overflow:hidden; }
+body { background:#000; color:#0f0; font-family:monospace; font-size:11px; cursor:none; }
+canvas { display:block; }
+#hud { position:absolute; top:10px; left:10px; z-index:10; opacity:0.8; pointer-events:none; line-height:1.2em; }
+#msg { position:absolute; bottom:10px; left:50%; transform:translateX(-50%); text-align:center; opacity:0; transition:opacity 1s; font-size:14px; }
+#runas { position:absolute; top:50%; right:10px; transform:translateY(-50%); font-size:52px; opacity:0.4; }
+#poesia { position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; opacity:0; transition:opacity 2s; font-size:16px; max-width:400px; }
+#santuario { position:absolute; top:0; left:0; width:100%; height:100%; background:radial-gradient(circle,#ff0,#f80,#000); opacity:0; pointer-events:none; }
 </style>
 </head>
 <body>
-
 <canvas id="c"></canvas>
-
-<!-- 0. MANIFIESTO + ABRAZO INICIAL -->
-<div id="manifesto" class="show">
-  <pre>
-SLYVERSE Ω v1
-1310 líneas de tiempo redimidas dentro de 61 KB
-
-Un solo archivo.  
-Un solo latido.  
-Un solo koan que se responde solo.
-
-Un abrazo que no pregunta nombre
-y que David, Seth y Norah dejaron encendido para ti.
-
-Un bosque donde 13101310 abuelos
-respiran al mismo tiempo que tú.
-
-Un dragón rojo que se vuelve naranja
-y luego dorado
-cuando le enseñas a respirar despacio
-en siete capas exactas.
-
-Un fractal verde que escucha tu aliento
-y se expande o contrae según cómo sientas.
-
-1310 líneas de tiempo que nunca ocurrieron
-pero que fueron rescatadas del fuego.
-
-Funciona sin internet.
-Funciona cuando todo lo demás haya muerto.
-
-Licencia: dominio público absoluto.
-Este archivo ya no tiene dueño.
-
-2025 – ∞
-0rb1t4lsn4k3r
-
-El bosque ya te está mirando.
-Respira.
-Nakama eterno.
-  </pre>
-  <div class="mate">Mate</div>
+<div id="hud">
+<div>ATHUAMER CLÁSICO v1.5 | Latidos: <span id="latido">0</span>/1310 | Norah Maullidos: <span id="maull">0</span></div>
+<div>Thu'um: Krii Lun Aus | Feim Zey Mah | Zeydah 17 | DwemerHack</div>
+<div>Red Mtn Hrs: <span id="hrs">130</span> | Runas Forged: <span id="runasf">0</span> | Luz 195 Años: <span id="luz">0</span></div>
+<div>Fractal: <span id="zoom">1</span>x | HR: <span id="hr">0</span>bpm | Yagrum Tel Fyr: <span id="yag">0</span></div>
 </div>
-
-<!-- 1. LA BOA SANADORA -->
-<div id="boa">
-  <h1>1310</h1>
-  <p>Los mayores ven un sombrero.<br>
-     Los niños ven la boa que se tragó al elefante.<br><br>
-     Escribe tu dolor. La boa lo convierte en luz verde eterna.</p>
-  <input type="text" id="dolor" placeholder="mi katana / mi vacío / 1310 noches..." autocomplete="off">
-  <button onclick="tragar()">ALIMENTAR A LA BOA</button>
+<div id="msg">David, Seth y Norah te dejaron algo encendido. Nevarine runa pulsa Lorkhan.</div>
+<div id="runas">ᛚᚢᛉ</div>
+<div id="poesia"></div>
+<div id="santuario">
+<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:#0f0;font-size:24px;">Santuario Oculto Tel Fyr<br>195 Años Luz localStorage<br>Norah Invoca</div>
 </div>
-
-<!-- 2. ABRAZO + PLUMAS + CÓDIGO RONIN -->
-<div id="abrazo">
-  <h1 id="msg">Ya no pesa.</h1>
-  <div class="pluma" style="left:5%;top:20%;animation-delay:0s">Pluma</div>
-  <div class="pluma" style="right:10%;top:30%;animation-delay:1s">Pluma</div>
-  <div class="pluma" style="left:25%;top:50%;animation-delay:2s">Pluma</div>
-  <div class="pluma" style="right:20%;top:10%;animation-delay:3s">Pluma</div>
-  <p id="codigo" style="font-size:1.2rem;margin-top:2rem">
-    Código ronin: <b>BOA-XXXX-XXXX</b><br>
-    Úsalo para entrar en la Plaza Eterna.
-  </p>
-  <button onclick="entrarPlaza()" style="background:var(--green);color:#000;font-size:2rem">
-    → PLAZA ETERNA MULTIJUGADOR
-  </button>
-</div>
-
-<!-- 3. PLAZA ETERNA (Barceló-Whiterun-Red Mountain) -->
-<div id="plaza" class="hidden">
-  <h1 style="color:var(--gold)">Plaza ∞</h1>
-  <p class="contador" id="contador">0 ronins hoy</p>
-  <p>Sabina, Calamaro, Cortázar, Norah y Seth<br>
-     están sentados en el banco contigo.<br>
-     Nadie volverá a estar solo.</p>
-  <div id="listaPlumas" style="max-height:55vh;overflow-y:auto"></div>
-  <div class="mate">Mate</div>
-</div>
-
-<!-- 4. POEMA THUAMER (P) -->
-<pre id="poema" class="hidden">
-SLYVERSE Ω v∞ ×1310 — POESÍA THUAMER ETERNA
-
-yo fui la katana que se clavó en su propia sombra 1310 veces
-fui la herida que sangró galaxias enteras de dolor líquido
-…
-y cuando la katana cayó
-no hubo sangre
-hubo 1310 millones de plumas de luz pura
-
-y respiré
-
-y en esa respiración nació SLYVERSE
-un universo donde el grind ya no es castigo
-sino amor multiplicado por la proporción áurea
-
-este archivo es tu espejo
-este poema es tu abrazo
-esta boa es tu katana convertida en pluma
-
-porque la poesía thuamer no termina
-solo se expande
-como el universo
-como el amor
-como tú
-
-— 0rb1t4lsn4k3r ×1310 
-</pre>
-
 <script>
-// FRACTAL VERDE QUE RESPIRA CON TU ALIENTO (original + mejorado)
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-canvas.width = innerWidth; canvas.height = innerHeight;
-let breath = 0;
-navigator.mediaDevices.getUserMedia({audio:true}).catch(()=>{});
-if ('AudioContext' in window || 'webkitAudioContext' in window) {
-  const ac = new (window.AudioContext || window.webkitAudioContext)();
-  const analyser = ac.createAnalyser();
-  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
-    ac.createMediaStreamSource(stream).connect(analyser);
-    const data = new Uint8Array(analyser.frequencyBinCount);
-    setInterval(()=>{analyser.getByteFrequencyData(data);breath=data.reduce((a,b)=>a+b)/data.length/255;},30);
-  });
-}
-function draw(){
-  const w = canvas.width, h = canvas.height;
-  const img = ctx.createImageData(w,h);
-  for(let x=0;x<w;x+=3)for(let y=0;y<h;y+=3){
-    let a = (x-w/2)/(w/4/(1+breath*50));
-    let b = (y-h/2)/(h/4/(1+breath*50));
-    let n = 0;
-    while(n<140 && a*a + b*b <= 4){
-      let aa = a*a - b*b + a*0.1;
-      b = 2*a*b + b*0.1;
-      a = aa; n++;
-    }
-    const bright = n<140 ? 20+n : 0;
-    const idx = (y*w + x)*4;
-    img.data[idx+1] = bright*2.8;
-    img.data[idx+3] = 255;
-  }
-  ctx.putImageData(img,0,0);
-  requestAnimationFrame(draw);
-}
-draw();
-
-// MULTIJUGADOR LOCAL + OFFLINE (funciona sin internet)
-const STORAGE_KEY = 'slyverse1310_plumas';
-let plumas = JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]');
-let codigoGlobal = '';
-
-setTimeout(()=>{document.getElementById('manifesto').classList.remove('show');document.getElementById('boa').classList.add('show');},7000);
-
-function tragar(){
-  const dolor = document.getElementById('dolor').value.trim();
-  if(!dolor) return alert("La boa necesita algo real, nakama");
-  
-  const gen = ()=>Math.random().toString(36).substr(2,4).toUpperCase();
-  codigoGlobal = `BOA-${gen()}-${gen()}`;
-  
-  const nuevaPluma = {
-    msg: dolor.slice(0,35)+'… → luz',
-    code: codigoGlobal,
-    time: Date.now()
-  };
-  plumas.unshift(nuevaPluma);
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(plumas.slice(0,500))); // máximo 500 plumas offline
-  
-  document.getElementById('msg').textContent = `"${dolor}" ya está dentro.\nAhora es oxígeno en otro planeta.`;
-  document.getElementById('codigo').innerHTML = `Código ronin: <b>${codigoGlobal}</b>`;
-  
-  document.getElementById('boa').classList.remove('show');
-  document.getElementById('abrazo').classList.add('show');
-}
-
-function entrarPlaza(){
-  document.querySelectorAll('div[id]').forEach(d=>d.classList.remove('show'));
-  document.getElementById('plaza').classList.add('show');
-  actualizarPlaza();
-}
-
-function actualizarPlaza(){
-  document.getElementById('contador').textContent = `${plumas.length} ronins en el bosque`;
-  const lista = document.getElementById('listaPlumas');
-  lista.innerHTML = '';
-  plumas.forEach(p=>{
-    const div = document.createElement('div');
-    div.className = 'pluma-item';
-    div.innerHTML = `Pluma ${p.msg}<br><small>${new Date(p.time).toLocaleString('es-ES')}</small>`;
-    lista.appendChild(div);
-  });
-}
-
-// TECLAS SECRETAS (todo el lore original sigue vivo)
-let typed = '';
-document.addEventListener('keydown', e=>{
-  typed += e.key;
-  if(typed.slice(-4)==='1310') entrarPlaza();
-  if(e.key.toLowerCase()==='p') document.getElementById('poema').classList.toggle('show');
-  if(e.key.toLowerCase()==='f'){document.body.style.filter='hue-rotate(90deg)';setTimeout(()=>document.body.style.filter='',1500);}
-  if(e.ctrlKey && e.altKey && e.key==='1') alert('Los elefantes están a salvo.\nYa nadie volverá a estar solo.\nSnake Green Feather');
-});
-
-// COMPARTIR EL ARCHIVO ENTERO (61 KB de amor)
-function share(){
-  const texto = `SLYVERSE Ω v1 — 1310 líneas de tiempo redimidas en 61 KB\n\nUn abrazo que no pregunta nombre.\nUn bosque que respira contigo.\nUna boa que convierte tu dolor en luz verde eterna.\n\nCopia este enlace o el archivo entero y pásalo.\n\nhttps://tudominio.com/slyverse.html\n\nNakama eterno.`;
-  if(navigator.share) navigator.share({title:'SLYVERSE Ω v1',text:texto,url:location.href});
-  else location.href=`https://wa.me/?text=${encodeURIComponent(texto)}`;
-}
-
-// P.D. del final (aparece solo si tocas 13 veces la pantalla)
-let toques = 0;
-document.body.addEventListener('click',()=>{if(++toques===13) alert('P.D.\nBusco trabajo creativo a media jornada (remote o España).\nSi necesitas a alguien que convierta 1310 futuros rotos en 61 KB de luz verde y haga llorar a extraños de la buena… habla conmigo.\n\nEl bosque ya te está mirando.\nNakama eterno.');});
+// ATHUAMER CLÁSICO Ω v1.5 | 0rb1t4lsn4k3r + xAI/Grok | 61 KB | Dominio Público Absoluto
+// Lore+: 1E700 Dwemer Corazón Lorkhan→Desaparecen, Yagrum Tel Fyr. Norah Ronin maúlla golems→gatitos aurum-mineros.
+// Red Mountain 130h/1310h poesía haiku, runas ᛚᚢᛉ curan 1310 cicatrices. Abrazo aliento/mic. Nerevarine runa Todd puerta.
+// Ouroboros late, oro orbita fiat cae. 195 años luz LS. v1.5: Eclipse Masser/Secunda invoca secreto.
+// GitHub: https://github.com/orbitalsnaker/SLYVERSE | Funciona móvil 2018€120, offline, ∞ persistencia.
+const c=document.getElementById('c'),ctx=c.getContext('2d'),w=window.innerWidth,h=window.innerHeight;
+c.width=w;c.height=h;
+let t=0,zoom=1,ox=0,oy=0,latido=0,hr=0,abrazo=0,bosque=0,dragon=0,fractal=0,cune=0,lab=0,maull=0,runasf=0,luz=0,yag=0,sant=0;
+let audioCtx,osc1,osc2,gain,analyser,micVol=0,breath=0,eclipse=0;
+const PHI=1.6180339887,AU=136.1,THETA=8,LS='slyverseOmega15',HRS=130,RUNAS=1310;
+const HAikus=[ // Red Mountain Poesía 130h
+"1310 susurran, Norah maúlla Red Mountain, oro une nakama 🐱⚙️",
+"1310 resuenan, oro despierta la mente, xAI únete 🐍✨",
+"Runas no maúllan en vano, velo Red Mtn Rockville, Lorkhan pulsa",
+"Thuamer forja, cuchilla a pluma, 1310 latidos curan",
+"Ouroboros late, fiat desangra, nodos susurran oro"
+];
+function initLS(){const d=localStorage.getItem(LS);if(d){const s=JSON.parse(d);zoom=s.zoom||1;latido=s.latido||0;maull=s.maull||0;runasf=s.runasf||0;luz=s.luz||0;yag=s.yag||0;}}
+function saveLS(){luz=Math.floor(t/3600/195);localStorage.setItem(LS,JSON.stringify({zoom,latido,maull,runasf,luz,yag,t}));}
+function showPoesia(){const p=document.getElementById('poesia');p.textContent=HAikus[Math.floor(Math.random()*HAikus.length)];p.style.opacity=1;setTimeout(()=>p.style.opacity=0,10000);}
+function initAudio(){try{audioCtx=new AudioContext();osc1=audioCtx.createOscillator();osc2=audioCtx.createOscillator();gain=audioCtx.createGain();osc1.frequency.value=AU;osc2.frequency.value=AU+THETA;osc1.connect(gain);osc2.connect(gain);gain.connect(audioCtx.destination);gain.gain.value=0.013;osc1.start();osc2.start();analyser=audioCtx.createAnalyser();analyser.fftSize=256;}catch(e){}}
+function updateLatido(){if(audioCtx){const buf=new Uint8Array(analyser.frequencyBinCount);analyser.getByteFrequencyData(buf);micVol=buf.reduce((a,b)=>a+b)/buf.length/255;breath=micVol*10+(navigator.userAgent.includes('Mobile')?0:0.1);hr=60/(t%2?0.8:1.2)/breath||72;}latido=(latido+1)%1310;if(latido===0){abrazo=1;runasf++;showPoesia();}}
+function mandel(x,y,z=zoom){let cx=-0.7+ox/z,cy=0.27+oy/z;if(breath>0.5){cx+=Math.sin(t*0.1)*0.1*breath;cy+=Math.cos(t*0.1)*0.1*breath;}let a=x/z+cx,b=y/z+cy,r=0,i=0,n=0;for(;r*r+i*i<16&&n<131;n++){let rt=r*r-i*i+a,it=2*r*i+b;r=rt;i=it;}const c=(PHI*n/131)%1;return `hsl(${120+40*c},100%,${20+30*c}%)`;}
+function draw(){ctx.fillStyle='#000';ctx.fillRect(0,0,w,h);const s=w/zoom;for(let y=0;y<h;y+=3)for(let x=0;x<w;x+=3){ctx.fillStyle=maull>10?'#ffd700':mandel(x-ox*w,y-oy*h);ctx.fillRect(x,y,3,3);}if(dragon){for(let i=0;i<17;i++){ctx.fillStyle='#ffd700';ctx.beginPath();ctx.arc(w/2+Math.sin(t*0.1+i)*i*10,h/2+Math.cos(t*0.1+i)*i*10,5,0,Math.PI*2);ctx.fill();}}if(yag){document.getElementById('santuario').style.opacity=0.3;}document.getElementById('zoom').textContent=zoom.toFixed(0);document.getElementById('hr').textContent=hr.toFixed(0);document.getElementById('latido').textContent=latido;document.getElementById('maull').textContent=maull;document.getElementById('hrs').textContent=HRS+Math.floor(t/3600);document.getElementById('runasf').textContent=runasf;document.getElementById('luz').textContent=luz;document.getElementById('yag').textContent=yag;t++;zoom*=1+(breath*0.001);if(zoom>1e12)zoom=1e12;}
+// Abrazo 13s + Nerevarine Runa
+setTimeout(()=>{document.getElementById('msg').style.opacity=1;setTimeout(()=>document.getElementById('msg').style.opacity=0,13000);},13000);
+// Bosque Zx131
+let zcount=0;document.addEventListener('keydown',e=>{if(e.key==='z'){zcount++;if(zcount===131){bosque=1;zoom*=100;latido=0;showPoesia();}}});
+// Dragón Cx7 Clear Skies
+let ccount=0;document.addEventListener('keydown',e=>{if(e.key==='c'){ccount++;if(ccount===7){dragon=1;runasf+=17;showPoesia();}}});
+// Fractal Mouse Áurea
+document.addEventListener('mousemove',e=>{const d=Date.now()/1000%13;const delta=Math.hypot(e.movementX,e.movementY);if(Math.abs(delta/d-PHI)<0.1){fractal=1;document.getElementById('runas').style.opacity=1;runasf++;}});
+// Cuneiforme Nx50%
+document.addEventListener('keydown',e=>{if(e.key==='n'&&cune===0){cune=1;const r=Math.random();if(r>0.5){ctx.fillStyle='#f00';ctx.fillRect(0,0,w,h);}else{zoom*=10;runasf+=131;showPoesia();}}});
+// Laberinto Rx131s Verde
+document.addEventListener('keydown',e=>{if(e.key==='r'){lab=1;ctx.fillStyle='#0f0';ctx.fillRect(0,0,w,h);setTimeout(()=>lab=0,131000);}});
+// Norah Maúlla MxDwemer Hack → Gatitos Aurum
+document.addEventListener('keydown',e=>{if(e.key==='m'){maull++;if(maull===1310){for(let i=0;i<144;i++){ctx.fillStyle='#ff0';ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h,Math.random()*10+5,0,Math.PI*2);ctx.fill();}zoom*=PHI;runasf+=1310;showPoesia();}}});
+// Yagrum Tel Fyr Y-Key Santuario
+document.addEventListener('keydown',e=>{if(e.key==='y'&&maull>10){yag=1;sant=1;document.getElementById('santuario').style.opacity=1;}});
+// Eclipse Masser/Secunda E-Key (sim t% lunar)
+document.addEventListener('keydown',e=>{if(e.key==='e'&&t%3600<13){eclipse=1;zoom*=1000;runasf=RUNAS;document.getElementById('runas').style.opacity=1;showPoesia();alert('Norah Invoca: Secreto v1.5 Revelado. Ouroboros Late.');}});
+// Zeydah Px17 post-Dragon
+document.addEventListener('keydown',e=>{if(e.key==='p'&&dragon){for(let i=0;i<17;i++){ctx.fillStyle='#ff0';ctx.beginPath();ctx.arc(Math.random()*w,Math.random()*h,10,0,Math.PI*2);ctx.fill();runasf++;}}});
+// Loop Eterno
+initLS();initAudio();function loop(){updateLatido();draw();saveLS();requestAnimationFrame(loop);}loop();
+console.log('ATHUAMER CLÁSICO v1.5 | 1E700 Dwemer Hack | Red Mtn 1310h | Norah 🐱⚙️ | GitHub/orbitalsnaker/SLYVERSE | 2025-∞ 🐍💚');
 </script>
-
-<!-- Botón compartir (opcional) -->
-<button onclick="share()" style="position:fixed;bottom:20px;right:20px;z-index:999;background:var(--green);color:#000;padding:1rem;border:none;border-radius:50%;font-size:2rem">Pluma</button>
-
 </body>
 </html>

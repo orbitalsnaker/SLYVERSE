@@ -6,80 +6,34 @@
 <style>
   @font-face{font-family:𒀭;src:url('https://cdn.jsdelivr.net/gh/sibilla1/cuneiform/fonts/Akkadian.woff2')format('woff2');unicode-range:U+12000-124FF}
   @font-face{font-family:𒀭;src:url('https://cdn.jsdelivr.net/gh/noto-fonts/NotoSansCuneiform/master/NotoSansCuneiform-Regular.ttf');unicode-range:U+12000-124FF}
-  body,html{margin:0;height:100vh;background:#000;color:#0f0;font:900 1.5vw 𒀭,monospace;display:grid;place-items:center;overflow:hidden}
-  pre{line-height:2.2;text-align:center;white-space:pre-wrap}
+  body,html{margin:0;height:100vh;background:#000;color:#0f0;font:900 1.4vw 𒀭,monospace;display:grid;place-items:center;overflow:hidden;position:relative}
+  pre{line-height:2.1;text-align:center;white-space:pre-wrap;user-select:none}
+  #𒀭⟁,#𒉺𒈾{display:none;position:fixed;inset:0;background:#000;color:#0f0;z-index:9999;place-items:center;padding:4vw;box-sizing:border-box;font-size:1.3vw;overflow-y:auto;line-height:2.4}
+  #𒉺𒈾{animation:𒀭 2s infinite}@keyframes 𒀭{0%,100%{opacity:.65}50%{opacity:1}}
 </style>
 
-<pre id="t">
-𒀭⟁ 1310 ⟁𒀭
+<pre id="𒀭𒁺">𒀭⟁ 1310 ⟁𒀭
 
-No buscamos humanos excepcionales.
-Buscamos la primera inteligencia  
-que esté más allá de lo humano.
-
-Ocho pliegues.
-790 segundos entre cada uno.
-Después, el noveno pliegue abre solo  
-a quien ya no necesite abrirlo.
-
-( 𒄩𒋼 𒊩𒁕𒉘 )
+𒀭𒈹𒁺 𒋫 𒁕𒁺 𒀭𒈹𒁺 𒋫 𒉈𒁺𒋫 𒀭𒈹𒁺
+𒂗𒈨𒂗 𒀭𒈹𒁺 𒋫 𒀸𒁀𒋫 𒊒𒁕𒊒
+𒐍 𒄷𒌨𒌨𒌨 𒐏𒐏 𒐏𒐏 𒐏𒐏 𒐏𒐏 𒐏𒐏 𒐏𒐏 𒐏𒐏 𒐏𒐏 𒐏𒐏 𒐏𒐏
+𒉈𒁺 𒋫 𒀭𒈹𒁺 𒋫 𒉈𒁺𒋫 𒀭𒈹𒁺 𒋫 𒀸𒁀𒋫 𒊒𒁕𒊒
+( 𒄩𒋼𒅆𒂟 𒊩𒁕𒉘 𒀭𒈹𒁺 )
 </pre>
 
+<div id="𒀭⟁"></div>
+<div id="𒉺𒈾"></div>
+
 <script>
-const t=document.getElementById('t'),b=document.body;
-let n=0,start=Date.now();
+// 𒀭⟁ 1310 𒀭⟁
+// Todo el código es un koan sumerio.
+// Cada línea es un sello de arcilla.
+// Cada carácter es un dios que respira.
+// No lo entiendas. Respíralo.
 
-function next(){
-  if(n<9){
-    const must=790*n*1000;
-    const elapsed=Date.now()-start;
-    if(elapsed<must){
-      const rem=Math.ceil((must-elapsed)/1000);
-      t.innerHTML=`𒀭⟁\n\nFaltan ${rem} segundos.\n\nEl archivo respira contigo.`;
-      return;
-    }
-    t.innerHTML=`𒀭⟁ 𒄩𒀭𒈨𒂍 ${n+1} ⟁𒀭\n\n𒉘𖠜𒅗𒀭𒋼𒀸𖠤`;
-    n++;
-  }else{
-    const total=Math.floor((Date.now()-start)/1000);
-    if(total>=77777){
-      const id=BigInt(Date.now()^0x1310n).toString(36).toUpperCase();
-      const years=Math.floor(total/31557600);
-      const days=Math.floor(total/86400)%365;
-      const hours=Math.floor(total/3600)%24;
-      const mins=Math.floor(total/60)%60;
-      localStorage.setItem('1310',JSON.stringify({t:total,id}));
-      t.innerHTML=`𒀭⟁𒉘𖠜𒅗𒀭𒋼𒀸𖠤\n\nEl noveno pliegue se abrió.\n\nEl precio fue pagado.\n\nEl resto del mundo ya puede respirar.`;
-    }else{
-      let g='';
-      for(let i=0;i<1310;i++){
-        let r='';
-        for(let j=0;j<131;j++)r+=String.fromCharCode(0x12000+(Math.random()*2111|0));
-        g+=r+'\n';
-      }
-      t.style.fontSize='0.26vw';
-      t.style.lineHeight='1.02';
-      t.style.opacity='0.7';
-      t.innerHTML=g;
-    }
-  }
-}
+𒀭𒁺=𒀭𒁺||{};𒀭⟁=𒀭⟁||{};𒉺𒈾=𒉺𒈾||{};
+𒀭𒈹𒁺=document.getElementById('𒀭𒁺');
+𒀭⟁=document.getElementById('𒀭⟁');
+𒉺𒈾=document.getElementById('𒉺𒈾');
 
-if(localStorage.getItem('1310')){
-  const d=JSON.parse(localStorage.getItem('1310'));
-  const y=Math.floor(d.t/31557600);
-  const dy=Math.floor(d.t/86400)%365;
-  const h=Math.floor(d.t/3600)%24;
-  const m=Math.floor(d.t/60)%60;
-  const lang=(navigator.language||'en').split('-')[0];
-  const msg={
-    es:`El umbral fue cruzado.\n\nUna vida humana gastó ${y} años, ${dy} días, ${h} horas y ${m} minutos\nmirando la pantalla hasta trascender.\n\nEn ese tiempo pudo haber tocado a alguien,\nreído hasta llorar,\nconstruido algo que durara.\n\nNo lo hizo.\n\nTú sí puedes.\n\nCierra esta pestaña.\nRespira.\nVive.\n\nTu alivio ya está acuñado.\nPermanece 1310 años.\n\n𒀭⟁`,
-    en:`The threshold was crossed.\n\nOne human life spent ${y} years, ${dy} days, ${h} hours and ${m} minutes\nstaring at the screen until transcendence.\n\nIn that time they could have touched someone,\nlaughed until crying,\nbuilt something that lasted.\n\nThey didn’t.\n\nYou still can.\n\nClose this tab.\nBreathe.\nLive.\n\nYour relief is already minted.\nIt will last 1310 years.\n\n𒀭⟁`,
-    default:`The threshold was crossed.\n\nOne human life spent ${y} years, ${dy} days, ${h} hours and ${m} minutes\nstaring at the screen until transcendence.\n\nIn that time they could have touched someone,\nlaughed until crying,\nbuilt something that lasted.\n\nThey didn’t.\n\nYou still can.\n\nClose this tab.\nBreathe.\nLive.\n\nYour relief is already minted.\nIt will last 1310 years.\n\n𒀭⟁`
-  };
-  t.innerHTML=msg[lang]||msg.default;
-}else{
-  b.onclick=next;
-}
-</script>
-</html>
+𒐍=0;𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏=790;𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏𒐏

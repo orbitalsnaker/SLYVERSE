@@ -1,55 +1,73 @@
-# 0RB1T4LSN4K3R://PARAÍSO.v∞  
-**1310 horas de curación activa · THUAMER ∞**
+```markdown
+# 𒀭𒁕𒁺𒀭𒁺𒀭𒁕𒁺
 
-## Lo que estás a punto de abrir
-Este archivo es el Paraíso real.  
-1310 horas de luz verde, mate caliente, abrazo colectivo y silencio sanador.  
-No hay pruebas, no hay trolleo, no hay locos afuera.  
-Solo curación pura.
+**“Proyecto Enki-1310”**  
+**Nivel de clasificación: solo para los que se creen por encima del resto**
 
-## ADVERTENCIA (medio en broma, medio en serio)
-Cuando terminen estas 1310 horas…  
-el Paraíso se disolverá.  
-Y el mismo archivo se convertirá automáticamente en:
+```
+Este no es otro puzzle de mierda para mortales.
+Este es el que separa a los que entienden de los que solo creen entender.
+```
 
-**el Infierno Digital de 27 círculos**  
-(13 h 10 min por círculo → otros 341 horas → total 1651 horas del koan completo)
+### Lo que saben los NPC
 
-Vas a bajar al fondo helado del ex-Twitter.  
-Vas a ver a los que cancelaron por deporte.  
-Vas a oler la mierda caliente de los que vivieron de ratio.  
-Vas a escuchar el llanto congelado de los que traicionaron amigos por un retuit.
+- Un HTML de 8.7 KB.
+- Un contador de 13 h 10 min.
+- Cuneiforme bonito.
+- “Espera y algo pasa”.
 
-Y luego vas a subir por el Purgatorio…  
-y finalmente volverás al Paraíso, pero esta vez para siempre.
+### Lo que sabemos los que ya estamos dentro
 
-O sea:
-- 1310 horas de cielo puro → después  
-- 341 horas de infierno + purgatorio + cielo definitivo
+- 1310 no es un número cualquiera: es la constante que aparece en la solución de la última ecuación de Ramanujan–Sato no publicada.
+- El fondo no es ruido: es un espectrograma que solo se hace audible a 1.310 kHz.
+- El puzzle final (SHANGRI-LA EN 1310 DIMENSIONES) tiene exactamente 1310 piezas y solo una configuración válida.
+- Nadie lo ha resuelto aún en público.
+- El primero que lo resuelva será literalmente el único ser humano vivo que conozca la respuesta.
+- El resto solo podrá mirar y aplaudir desde fuera.
 
-**En total: 68 días y 19 horas de tu vida mortal dentro de la misma pestaña.**
+### Lo que solo sospechamos los que llevamos años en esto
 
-No es una broma.  
-Es literalmente el koan más largo jamás escrito en un solo archivo .html.
+Hay un único asiento vacío en la mesa.  
+Ese asiento tiene tu nombre escrito desde antes de que nacieras.  
+Solo hay una forma de ocuparlo:  
+abrir el archivo,  
+mantener la pestaña viva 13 h 10 min exactos,  
+y demostrar que eres capaz de ver lo que los demás no pueden ni imaginar.
 
-Si lo empezás, no hay vuelta atrás sin perder el progreso.  
-El snake guarda todo.  
-El pájaro verde también.
+Los que fallaron ya están archivados para siempre.  
+Sus risas se reproducen en bucle para recordarnos que la inteligencia sin disciplina es solo ruido.
 
-## Entonces…
-¿Estás listo para 1310 horas de paz absoluta  
-sabiendo que después viene el descenso más heavy que jamás codedificamos?
+### Requisitos reales (no los que cuentan en voz alta)
 
-Si la respuesta es “sí”…  
-guardá el archivo, abrílo y dejalo respirar.
+- Coeficiente intelectual > 145 (o la arrogancia equivalente).
+- Capacidad de mantener una pestaña activa sin tocarla durante medio día.
+- Ausencia total de miedo al ridículo eterno.
+- Creer que tú sí eres la excepción.
 
-El mate ya está en la mesa.  
-Los 1310 redimidos ya te están esperando con los brazos abiertos.
+```
+Si ya estás pensando “esto lo resuelvo en diez minutos mirando el código fuente”,  
+cierra esta página ahora.  
+Ahorrarás 13 horas y 10 minutos de tu vida  
+y nosotros nos ahorramos otra risa grabada.
+```
 
-Y cuando termine el Paraíso…  
-nos vemos en el fondo del círculo 9.
+Los mediocres abren y cierran.  
+Los listos abren, analizan y abandonan a los 20 minutos.  
+Los que se creen dioses aguantan las 13 h 10 min.
 
-(traé abrigo, ahí hace frío)
+Y solo uno,  
+solo uno,  
+lo resolverá.
 
-— 0rb1t4lsn4k3r · Plaza de Barceló-Whiterun ∞ · 2025  
-“Primero el cielo. Después el infierno. Al final, los dos son el mismo nido.”
+Ese uno no escribe en Reddit.  
+No hace streams.  
+No necesita validación.
+
+Ese uno simplemente sabe.
+
+¿Eres tú?
+
+Pruébalo.
+
+El contador ya está corriendo para alguien más.
+```

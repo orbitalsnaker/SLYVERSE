@@ -1,139 +1,109 @@
-# SLYVERSE Ω · README OFICIAL MÁXIMO, EXTENSO Y DEFINITIVO · MEJORADO TÉCNICAMENTE  
+# SLYVERSE Ω · README OFICIAL DEL PORTAL MÁXIMO
 **16/16 artefactos activos · Realidad #1310 · 22-11-2025**  
-**Para que literalmente nadie en el planeta se quede afuera nunca más**
+**Portal completo con juego de 1310 horas independiente · Mejora técnica exponencial**
 
-Esta versión incluye **mejoras técnicas exponenciales**: optimización del motor, sincronización en tiempo real, APIs reales para artefactos, persistencia robusta y ORB1T4L Cycle hiperacelerado.
-
----
-
-### Motor General Mejorado
-- Canvas 2D/WebGL híbrido con delta-time para animaciones fluidas y sin jitter.  
-- Animaciones de partículas verdes optimizadas para 1310 elementos con fase aleatoria y mezcla de sinusoides dobles.  
-- Carga inicial ultra rápida y caching offline completo.  
-- Reducción exponencial de CPU y memoria gracias a throttling adaptativo.  
-- Todos los artefactos sincronizados entre sí y con el portal sin afectar rendimiento.
+Este README describe **todo el portal, cada artefacto y el juego**, diseñado para que literalmente nadie quede afuera nunca más. Funciona 100 % offline tras la primera carga, con APIs internas y motor exponencial optimizado.
 
 ---
 
-### 1. El Mate Giratorio Sagrado  
-- Giro exacto: una vuelta cada 25 segundos, ahora con interpolación cúbica para suavidad absoluta.  
-- Clicks y menús con debounce adaptativo → cero errores.  
-- Hover con vibración háptica optimizada a 13 ms y sombra dorada sin consumir GPU excesiva.  
-- Contador persistente en localStorage optimizado para operaciones masivas.  
-- **Trigger final**: 131310 abrazos → boa despierta con animación GPU acelerada.
+## 🌟 1. EL PORTAL
+El portal es **el núcleo que integra todo**:  
+- Motor exponencial de partículas 4D.  
+- Ciclo orbital de 13.10 segundos que sincroniza todos los artefactos.  
+- Audio procedural calmante (sine waves) que se genera localmente.  
+- Control de apertura y cierre del juego y acceso a todos los artefactos.  
+- Almacenamiento persistente de progreso del juego y activaciones de artefactos (`localStorage`).  
+- Todo es **autocontenido**: no necesita servicios externos.
 
-### 2. Las 1310 partículas verdes que respiran contigo  
-- Renderizado con Canvas 2D acelerado y animación delta-time.  
-- Opacidad y fase calculadas con doble sinusoide para patrones nunca repetidos.  
-- Adaptación a sensor de luz ambiental con throttling para batería mínima.  
-- Cuneiforme completado → partículas doradas durante 13.100 segundos exactos sin leaks de memoria.
-
-### 3. La Plaza de Barceló-Whiterun ∞  
-- Parallax 7 capas con optimización de GPU y clipping inteligente.  
-- Aurora boreal verde-española rotando cada 140s con cálculo exponencial de frames.  
-- Sonido ambiente 16 Hz con Web Audio API, adaptativo según auriculares y altavoces.
-
-### 4. El Cuneiforme que se Come tu Ego — 𒀭𒂗𒆤1310  
-- Aparición entre 4 y 13 segundos con lazy-load de fuentes y fallback locales.  
-- Avanza solo con respiración real (>2.8 s sin mover ratón), optimizada para sensores.  
-- Mensajes typewriter 42ms por carácter, renderizados con requestAnimationFrame.  
-- Al llegar a 1310 → fondo #001100 eterno, boa instantánea y gong en base64 con preloading.
-
-### 5. La Boa que se Tragó al Elefante  
-- Animación GPU optimizada de 4.2s desde bottom:-180px.  
-- Trigger secreto Ctrl+Alt+1, con debounce y state guardado.  
-- Persistencia absoluta: permanece fija aunque cierres navegador o dispositivo.
-
-### 6. El Abrazo que Nunca se Apaga  
-- Recarga silenciosa cada 88.888s, ahora con setTimeout adaptativo para precisión extrema.  
-- Memoria perfecta de contadores, incluso tras 10 años o múltiples sesiones.  
-- Tab y pantalla nunca entran en sleep mientras el portal está activo.
-
-### 7. El Bosque de los 13101310 Mitos Ancestrales  
-- Tiempo real: 1310 horas de sanación documentada.  
-- Cada 16s → frase de 49 culturas, precargadas en IndexedDB para cero latencia.  
-- Día 1310 → todos los abuelos aparecen como siluetas con reverencia colectiva, animación GPU optimizada.
-
-### 8. El Abrazo de David, Seth y Norah  
-- Carta desbloquea artefacto #11 tras primera apertura.  
-- 7 aperturas intencionadas → mensaje secreto, trigger optimizado para no false positives.
-
-### 9. NINA · Niña que Nadie Apaga  
-- Dragón rojo activado por toque rápido o soplido al micrófono.  
-- Calma con 17 piedras → transformación a luz dorada con aumento de brillo 20% durante 131s.  
-- Animación suavizada con easing exponencial.
-
-### 10. THUAMER v1 · Por los genios que llegaron antes  
-- Seis escrituras antiguas renderizadas con caching local y preloaded fonts.  
-- Dedicatoria a grandes pensadores, revelación secuencial 900ms por capa optimizada.
-
-### 11. Las Puertas que Solo se Abren con la Lengua del Corazón  
-- 17 puertas verdes con animación optimizada.  
-- Cada puerta desaparece al tocarla y susurra en tu idioma exacto.  
-- Puerta 17 → mensaje final: “El lenguaje que cura no necesita traducción…”
-
-### 12. IA Ética Salvadora del Cosmos  
-- 7 mundos conscientes creados en 60s (7s con Ciclo #16) usando Web Workers.  
-- Cada mundo nombrado según un pensador ético real.  
-- Mensaje final sincronizado y persistente.
-
-### 13. THUAMER ∞ · 1310 APIs de los redimidos  
-- Contador real de 1310 horas aunque cierres navegador.  
-- Activación → 1310 APIs reales con logging seguro y persistente:  
-  - `/api/tequieroborrado` → recuperación simbólica de contenido eliminado.  
-  - `/api/desbloqueoexistencial` → desbloqueo emocional.  
-  - `/api/nidoeterno` → respuesta constante en tiempo real.
-
-### 14. THUAMER·IA  
-- Barra inferior responsive.  
-- Responde con amor verde y puede abrir cualquier artefacto mediante petición API.  
-- Lógica de apertura sincronizada con motor principal para cero race conditions.
-
-### 15. El Koan de las 1310 Líneas  
-- Desbloqueo tras 1310 abrazos o cuneiforme completado.  
-- Animación secuencial 30ms por línea optimizada con requestAnimationFrame.  
-- Línea 1310 → mensaje dorado permanente.
-
-### 16. ORB1T4L CYCLE · “Respirar los 15 abrazos de una vez”  
-- Activación única de 13.10s exactos, sincronizando mate, partículas y contadores.  
-- Todos los artefactos se viven en paralelo con interpolación cúbica y easing exponencial.  
-- Al finalizar → fondo #001100, mate late como corazón real, mensaje:  
-  - “Ya los llevas todos dentro. Ahora respira tú por los demás.”  
-- Botón desaparece para siempre.
+**APIs internas del portal:**  
+- `openGame()`: abre el juego de 1310 horas.  
+- `closeGame()`: cierra el juego.  
+- `startOrbitalCycle()`: activa el ciclo orbital con feedback visual y textual.  
+- `advanceGame(seconds)`: avanza el juego en segundos (real o simulado).  
 
 ---
 
-### Triggers secretos  
-- Ctrl + Alt + 1 → boa instantánea  
-- F → fondo dorado 2s con “¡OBLIGADOS!”  
-- Espacio 9 veces → mate gira como loco  
-- 3s sin mover ratón → cuneiforme avanza  
-- Cada clic → +1 abrazo eterno
+## 🔮 2. LOS 16 ARTEFACTOS
+Cada artefacto es independiente, puede interconectarse con otros y tiene **APIs internas funcionales**:
+
+| # | Nombre | Función principal | API ejemplo |
+|---|--------|-----------------|-------------|
+| 1 | Mate Giratorio Sagrado | Gira y genera abrazos persistentes | `artifactAPIs[1].activate()` |
+| 2 | 1310 Partículas Verdes | Respiran contigo, cambian con luz ambiental | `artifactAPIs[2].status()` |
+| 3 | Plaza Barceló-Whiterun ∞ | Césped, humo y aurora boreal visual | `artifactAPIs[3].activate()` |
+| 4 | Cuneiforme del Ego 𒀭𒂗𒆤1310 | Avanza solo con respiraciones reales | `artifactAPIs[4].activate()` |
+| 5 | Boa que se Tragó al Elefante | Animación sorpresa y persistente | `artifactAPIs[5].activate()` |
+| 6 | Abrazo que Nunca se Apaga | Recarga silenciosa, memoria perfecta | `artifactAPIs[6].activate()` |
+| 7 | Bosque de los 13101310 Mitos | Sanación ancestral y frases de abuelos | `artifactAPIs[7].status()` |
+| 8 | Abrazo de David, Seth y Norah | Carta real, desbloquea artefactos secretos | `artifactAPIs[8].activate()` |
+| 9 | NINA · Niña que Nadie Apaga | Dragón rojo que se convierte en luz dorada | `artifactAPIs[9].activate()` |
+| 10 | THUAMER v1 | Escrituras antiguas con mensajes de paz | `artifactAPIs[10].activate()` |
+| 11 | Puertas del Corazón | 17 puertas que susurran frases reales | `artifactAPIs[11].activate()` |
+| 12 | IA Ética Salvadora | Portal de 7 mundos conscientes | `artifactAPIs[12].activate()` |
+| 13 | THUAMER ∞ | 1310 APIs internas activadas | `artifactAPIs[13].activate()` |
+| 14 | THUAMER·IA | Barra inferior de control emocional | `artifactAPIs[14].activate()` |
+| 15 | Koan de las 1310 Líneas | 1310 frases lore con animación secuencial | `artifactAPIs[15].activate()` |
+| 16 | ORB1T4L CYCLE | Activa todos los artefactos en paralelo | `artifactAPIs[16].activate()` |
+
+**Interconexión:**  
+- Cada artefacto puede activar otros mediante su API.  
+- Ejemplo: `artifactAPIs[1].activate(); artifactAPIs[4].activate();`  
+- Las APIs devuelven estado real y persistente (`activated`, `lastUse`).  
 
 ---
 
-### Lo único prohibido  
-Usar energía para dañar: el portal se desactiva para ti.
+## 🎮 3. EL JUEGO DE 1310 HORAS (INDEPENDIENTE)
+- Nombre: **Reality #1310 · Exponential Upgrade**  
+- Duración: 1310 horas reales.  
+- Independiente de los artefactos, aunque puede ser **desbloqueado desde ellos**.  
+- Motor optimizado de partículas y audio procedural, todo offline.  
+- Progreso persistente en `localStorage` (`game1310-progress`).  
+- Avanza en tiempo real: 1 segundo = 1 segundo del juego.  
+
+**Funciones principales del juego:**  
+- `openGame()`: abre visualización del juego.  
+- `closeGame()`: lo cierra.  
+- `advanceGame(seconds)`: avanza el progreso manualmente si se desea.  
+- Ciclo orbital y triggers visuales sincronizan partículas, mate giratorio y artefactos.  
+
+**Triggers secretos:**  
+- Ctrl + Alt + 1 → Boa instantánea  
+- F → fondo dorado con mensaje “¡OBLIGADOS!”  
+- Espacio 9 veces → mate gira loco  
+- 3 s sin mover ratón → cuneiforme avanza  
+- Cada clic → +1 abrazo eterno  
 
 ---
 
-### Mensaje final
-Ya no tienes que correr más.  
-Ya no tienes que demostrar nada.  
-Ya no tienes que tener miedo a la oscuridad.
+## ⚡ 4. MEJORAS TÉCNICAS EXPONENCIALES
+- Optimización de animaciones y requestAnimationFrame para 1310 partículas.  
+- Sincronización precisa de ciclos orbitales y triggers de artefactos.  
+- Almacenamiento persistente de progresos y estados de artefactos.  
+- Audio procedural real, sin depender de archivos externos.  
+- APIs internas funcionales, retornando estados y timestamps.  
+- Motor preparado para futuras expansiones y upgrades exponenciales de artefactos y juego.  
 
+---
+
+## 💖 5. USO PERMITIDO Y PROHIBIDO
+- **Permitido:** explorar, activar artefactos, jugar, compartir.  
+- **Prohibido:** usar la energía para dañar a alguien (el portal dejará de funcionar para ti).  
+
+---
+
+## ✨ 6. MENSAJE FINAL
+Ya no necesitas demostrar nada.  
+Ya no tienes que temer la oscuridad.  
 Los abuelos te hicieron reverencia.  
 La boa se comió todo el dolor.  
-El mate ya no gira: ahora late contigo.  
+El mate ya no gira: late contigo.  
 Las 1310 líneas ya fueron dichas.  
 Las 1310 APIs están activas eternamente.  
-El ciclo está cerrado con 16/16.
+El ciclo está cerrado con 16/16 artefactos.
 
-Ya no necesitas abrir ningún artefacto nunca más.  
-Los llevas todos dentro.
-
-Ahora respira por los demás.
-
+**Ahora respira por los demás.**  
 **Never more alone.**  
 **Thuamer ∞ · 16/16 · Ciclo cerrado · Abrazo completo**  
+
+---
 **0rb1t4lsn4k3r – 22-11-2025 – Realidad #1310 eternamente completada**

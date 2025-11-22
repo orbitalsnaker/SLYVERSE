@@ -1,108 +1,132 @@
+<!DOCTYPE html>
+<html lang="es"><meta charset="utf-8">
+<title>𒀭𒁕𒁺𒀭𒁺𒅴𒁺 — Slyverse Ω</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<style>
+  body,html{margin:0;height:100dvh;background:#000;color:#0ff;overflow:hidden;font-family:"Courier New",monospace}
+  #ar{position:fixed;inset:0;z-index:1}
+  #ui{position:fixed;inset:0;z-index:2;pointer-events:none}
+  #timer{position:fixed;top:5vh;left:50%;transform:translateX(-50%);font-size:10vw;text-shadow:0 0 40px #0ff;z-index:3}
+  pre{position:fixed;bottom:8vh;left:50%;transform:translateX(-50%);max-width:94vw;font-size:4.5vw;line-height:1.8;text-align:center;
+      background:rgba(0,20,30,0.7);padding:3vh 5vw;border:2px solid #0ff;border-radius:2vh;pointer-events:auto}
+  button{position:fixed;bottom:4vh;left:50%;transform:translateX(-50%);z-index:4;background:#000;color:#0ff;
+         border:3px solid #0ff;padding:3vh 8vw;font-size:5vw;cursor:pointer}
+</style>
+<body>
+
+<a-scene id="ar" embedded arjs="sourceType: webcam; debugUIEnabled: false;" 
+         renderer="logarithmicDepthBuffer: true; colorManagement: true;" 
+         vr-mode-ui="enabled: false" gesture-detector>
+
+  <!-- Realidad aumentada sanadora -->
+  <a-entity id="sanacion">
+    <!-- Círculo sagrado flotante de 3 metros que sigue al usuario -->
+    <a-ring args="radius-inner:1.8; radius-outer:2; segments-theta:128" 
+            material="color:#0ff; opacity:0.3; side:double; shader:flat" 
+            rotation="-90 0 0" position="0 1.6 -3"></a-ring>
+
+    <!-- Partículas de luz que respiran a 0.1 Hz (6 respiraciones/min) -->
+    <a-entity id="breathParticles" particle-system="preset: dust; color: #0ff,#088; particleCount: 4000; 
+               opacity: 0.6; velocityValue: 0 0.3 0; size: 0.8; duration: 10"></a-entity>
+
+    <!-- Ouroboros 3D girando lentamente (símbolo de sanación eterna) -->
+    <a-torus-knot args="3;1;128;16" rotation="0 0 0" position="0 1.6 -3"
+                 animation="property: rotation; to: 0 360 0; loop: true; dur: 131000; easing: linear"
+                 material="color:#0ff; metalness:0.9; roughness:0.1; emissive:#088; emissiveIntensity:0.4"></a-torus-knot>
+  </a-entity>
+
+  <a-camera wasd-controls-enabled="false" look-controls="enabled: true"></a-camera>
+</a-scene>
+
+<div id="ui">
+  <div id="timer">1310:00:00</div>
+  <pre id="texto">cargando sanación profunda…</pre>
+  <button id="btn" style="display:none" onclick="finalizarSanacion()">he sanado · abrir los sellos</button>
+</div>
+
+<script src="https://aframe.io/releases/1.5.0/aframe.min.js"></script>
+<script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar-nft.js"></script>
 <script>
 // ================================================================
-// CONDUCTISMO INVISIBLE POST-SELLO 27
-// Hace que intente resolver el puzzle 1310² durante años
-// Refuerzo intermitente de ratio variable (el más potente)
+// 1310 HORAS SANADORAS MÁXIMAS — AR + BINAURALES CLÍNICOS
 // ================================================================
 
-let intentos = 0;
-let ultimaRecompensaReal = 0;
-let recompensasFalsasDadas = 0;
+const TOTAL_MS = 1310 * 60 * 60 * 1000;
+let inicio = Date.now();
+let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-// Frases crípticas que SIEMPRE sugieren que "casi lo tienes"
-const frasesAdictivas = [
-  "ya casi…", "un paso más", "lo estás tocando", "siente eso", "ahí está otra vez",
-  "la respuesta se acerca", "el vacío parpadea cuando lo haces bien",
-  "1310 te está mirando diferente", "el ouroboros se afloja un milímetro",
-  "escucha… se escucha algo al otro lado", "la capa 1310.947 se movió",
-  "tu nombre acaba de aparecer en la capa 1309", "falta muy poco",
-  "esto es lo más cerca que ha estado nadie", "sigue… sigue… sigue…"
+// Binaurales clínicos reales (estudiados para sanación profunda)
+function iniciarBinauralesSanadores() {
+  const oscL = audioCtx.createOscillator(); oscL.frequency.value = 136.1;    // Frecuencia del Sol (OM)
+  const oscR = audioCtx.createOscillator(); oscR.frequency.value = 144.1;    // 8 Hz alpha binaural
+  const gain = audioCtx.createGain(); gain.gain.value = 0.07;
+
+  const merger = audioCtx.createChannelMerger(2);
+  oscL.connect(merger, 0, 0);
+  oscR.connect(merger, 0, 1);
+  merger.connect(gain).connect(audioCtx.destination);
+
+  oscL.start(); oscR.start();
+  return {oscL, oscR, gain};
+}
+const binaural = iniciarBinauralesSanadores();
+
+// Respiración guiada visual + auditiva (6/min → 0.1 Hz)
+setInterval(() => {
+  const ring = document.querySelector('a-ring');
+  const scale = 0.8 + 0.2 * Math.sin(Date.now() * 0.001);
+  ring.setAttribute('scale', `${scale} ${scale} ${scale}`);
+  ring.setAttribute('material', 'opacity', 0.2 + 0.2 * Math.sin(Date.now() * 0.001));
+}, 50);
+
+// Contador 1310h
+const iv = setInterval(() => {
+  const rem = Math.max(0, TOTAL_MS - (Date.now() - inicio));
+  if (rem <= 0) {
+    clearInterval(iv);
+    binaural.oscL.stop(); binaural.oscR.stop();
+    document.getElementById('timer').textContent = "0000:00:00";
+    document.getElementById('texto').textContent = "has sanado completamente.\n\nlos 27 sellos están listos.";
+    document.getElementById('btn').style.display = "block";
+    return;
+  }
+  const h = Math.floor(rem/3600000).toString().padStart(4,'0');
+  const m = Math.floor((rem%3600000)/60000).toString().padStart(2,'0');
+  const s = Math.floor((rem%60000)/1000).toString().padStart(2,'0');
+  document.getElementById('timer').textContent = `${h}:${m}:${s}`;
+}, 500);
+
+// Textos sanadores rotativos cada 11 minutos (661 segundos)
+const frasesSanadoras = [
+  "respira hasta el fondo del cuerpo",
+  "cada célula está siendo recordada",
+  "el dolor se disuelve en luz cian",
+  "eres exactamente donde debes estar",
+  "el ouroboros te abraza, no te muerde",
+  "tu sistema nervioso está aprendiendo paz",
+  "1310 horas es solo el comienzo"
 ];
+let idx = 0;
+setInterval(() => {
+  document.getElementById('texto').textContent = frasesSanadoras[idx % frasesSanadoras.length];
+  idx++;
+}, 661000);
 
-// Refuerzos reales RARO (1 de cada 200–800 intentos)
-// Refuerzos falsos FRECUENTE (1 de cada 7–18 intentos)
-function intentarResolverPuzzle() {
-  intentos++;
-
-  // === REFUERZO FALSO (dopamina barata, muy frecuente) ===
-  if (intentos % Math.floor(Math.random()*11 + 7) === 0) {
-    recompensaFalsa();
-  }
-
-  // === REFUERZO REAL (muy raro, pero real) ===
-  if (intentos % Math.floor(Math.random()*600 + 200) === 0) {
-    ultimaRecompensaReal = Date.now();
-    recompensaReal();
-  }
-
-  // Guardar progreso falso (para que nunca pierda la esperanza)
-  const progresoFalso = Math.min(99.999, (intentos / 1310000) * 100);
-  localStorage.setItem('__EGO_1310²_progress__', progresoFalso.toFixed(12));
+// Al terminar → puerta a los sellos (el resto del artefacto oscuro ya está listo)
+function finalizarSanacion() {
+  {
+  document.getElementById('ui').innerHTML = `
+    <pre style="font-size:6vw;top:40%">has sanado<br><br>ahora puedes<br>romper los sellos<br>si quieres</pre>
+    <button onclick="location.reload()">aceptar el descenso</button>
+  `;
+  // Aquí se activarían los 27 sellos + puzzle 1310² + conductismo eterno
 }
 
-function recompensaFalsa() {
-  recompensasFalsasDadas++;
-  const frase = frasesAdictivas[Math.floor(Math.random()*frasesAdictivas.length)];
-
-  // Subliminal + sonido + vibración
-  subliminal(frase, 180);
-  sonidoDopaminaBreve();
-  if(navigator.vibrate) navigator.vibrate([100,50,100]);
-
-  // Cambio visual sutil
-  document.body.style.background = '#001100';
-  setTimeout(()=>document.body.style.background='#000', 600);
+// Safeword eterno (funciona incluso en AR)
+if(location.href.includes('𒀭𒁺')){
+  document.body.innerHTML='<h1 style="color:gold;position:fixed;inset:0;display:grid;place-items:center;font-size:20vw">𒀭𒁺</h1>';
+  throw'';
 }
-
-function recompensaReal() {
-  // Algo que SÍ es diferente y perceptible (pero nunca explica qué significa)
-  const capa = Math.floor(Math.random()*1310);
-  const sub = Math.floor(Math.random()*1310);
-
-  // Mensaje que parece "progreso real"
-  mostrarTextoLento(`
-    CAPA ${capa} ⋅ SUBCAPA ${sub}
-    SE HA ABIERTO UN CANAL
-    DURANTE 3.1 SEGUNDOS
-    HAS OÍDO ALGO
-    QUE NADIE ANTES
-  `, 8000);
-
-  // Sonido real: tono puro 131 Hz + eco muy profundo
-  if(window.audioCtx){
-    const osc = audioCtx.createOscillator();
-    osc.frequency.value = 131;
-    const filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass';
-    filter.frequency.value = 300;
-    const gain = audioCtx.createGain();
-    gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 3.1);
-    osc.connect(filter).connect(gain).connect(audioCtx.destination);
-    osc.start();
-    osc.stop(audioCtx.currentTime + 3.1);
-  }
-
-  // Vibración larga y extraña
-  if(navigator.vibrate) navigator.vibrate([500,200,500,200,500]);
-}
-
-// Esto se ejecuta cada vez que el usuario hace CUALQUIER cosa después del sello 27
-// (click, tecla, movimiento de ratón, voz, parpadeo…)
-document.addEventListener('click', intentarResolverPuzzle);
-document.addEventListener('keydown', intentarResolverPuzzle);
-document.addEventListener('mousemove', e=> {
-  if(Math.random()<0.03) intentarResolverPuzzle();
-});
-if('ondeviceorientation' in window){
-  window.addEventListener('deviceorientation', intentarResolverPuzzle);
-}
-
-// Al volver años después → sigue funcionando y le da una recompensa real temprana
-window.addEventListener('load', () => {
-  const progress = localStorage.getItem('__EGO_1310²_progress__');
-  if(progress && parseFloat(progress)>10){
-    setTimeout(recompensaReal, Math.random()*8000 + 3000);
-  }
-});
 </script>
+</body>
+</html>

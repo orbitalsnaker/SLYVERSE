@@ -1,181 +1,127 @@
 <!DOCTYPE html>
-<html lang="es"><meta charset="utf-8">
-<title>THUAMER Ω — Bosque de los 13101310 Mitos Ancestrales</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<style>
-  body,html{margin:0;height:100dvh;background:#000;color:#0f8;overflow:hidden;font-family:"Georgia",serif;position:relative}
-  pre{background:rgba(0,8,15,0.97);padding:6vh 8vw;border:4px solid #0f8;border-radius:25px;text-align:center;line-height:2.6;font-size:clamp(1.3rem,5vw,3rem);max-width:92%;box-shadow:0 0 100px #001a1a}
-  button{background:none;border:3px solid #0f8;padding:1.8rem 4rem;margin:5vh;color:#0f8;cursor:pointer;border-radius:60px;font-size:1.8rem}
-  button:hover{border-color:#8f8;color:#8f8}
-  #barra{position:fixed;top:0;left:0;width:0%;height:5px;background:#0f8}
-  .mito{position:fixed;color:#8f8;font-size:1.8rem;opacity:0;pointer-events:none;animation:flotar 30s linear forwards}
-  @keyframes flotar{0%{opacity:0;transform:translateY(100vh)}30%{opacity:1}100%{opacity:0;transform:translateY(-100vh)}}
-</style>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLYVERSE Ω v1 — Thuamer Ronin</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: monospace; margin: 0; overflow: hidden; }
+        #game { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        canvas { image-rendering: pixelated; }
+        #hud { position: absolute; top: 10px; left: 10px; background: rgba(0,0,0,0.7); padding: 10px; border: 1px solid #0f0; }
+        #breath { font-size: 2em; animation: pulse 4s infinite; }
+        @keyframes pulse { 0%,100% { opacity: 0.3; } 50% { opacity: 1; } }
+        .rune { font-size: 3em; position: absolute; opacity: 0; transition: all 2s; }
+    </style>
+</head>
 <body>
+    <div id="game">
+        <canvas id="c"></canvas>
+        <div id="hud">
+            <div>SLYVERSE Ω v1 — 17 días ronin</div>
+            <div>Aurum: <span id="gold">0</span> 🪙</div>
+            <div>Cicatrices curadas: <span id="heal">0</span>/1310</div>
+            <div id="breath">Respira... 🐍💚</div>
+        </div>
+    </div>
 
-<div id="barra"></div>
+    <script>
+        const c = document.getElementById('c');
+        const ctx = c.getContext('2d');
+        c.width = window.innerWidth;
+        c.height = window.innerHeight;
 
-<div id="entrada">
-  <pre>
-BOSQUE DE LOS 13101310 MITOS ANCESTRALES
-0rb1t4lsn4k3r · 2025
+        let gold = 0;
+        let healed = 0;
+        const runes = 'ᛏᚺᚢᚨᛗᛖᚱᛚᚢᛉᛊᚾᚨᚲᛖ'.split('');
+        const particles = [];
 
-Aquí se reunieron todos los abuelos del mundo.
-El chamán yanomami canta con el monje zen.
-La abuela lakota abraza al curandero shipibo.
-El druida y la machi comparten el mismo fuego.
+        // Fondo bosque ancestral + Red Mountain
+        function drawBg() {
+            const grad = ctx.createLinearGradient(0,0,0,c.height);
+            grad.addColorStop(0, '#001100');
+            grad.addColorStop(1, '#000000');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0,0,c.width,c.height);
 
-13101310 linajes respiran al unísono.
+            // Niebla
+            ctx.fillStyle = 'rgba(0,255,0,0.03)';
+            for(let i=0;i<50;i++) {
+                ctx.fillRect(Math.random()*c.width, Math.random()*c.height, 200, 200);
+            }
+        }
 
-<button onclick="entrarAlGranBosque()">cruzar el umbral</button>
-  </pre>
-</div>
+        // Runas flotantes
+        function spawnRune() {
+            if(Math.random()<0.3) {
+                const rune = document.createElement('div');
+                rune.className = 'rune';
+                rune.textContent = runes[Math.floor(Math.random()*runes.length)];
+                rune.style.left = Math.random()*90 + '%';
+                rune.style.top = '-10%';
+                document.body.appendChild(rune);
+                setTimeout(()=> rune.style.opacity = 1, 100);
+                setTimeout(()=> rune.remove(), 8000);
+            }
+        }
 
-<div id="bosque" style="display:none">
-  <pre id="timer">1310:00:00</pre>
-  <pre id="info">
-Día <span id="dia">0</span> entre los 13101310 mitos
-<span id="mitoActual">los ancestros te miran</span>
+        // Minado con click / toque
+        c.addEventListener('click', (e) => {
+            gold += 7;
+            healed += Math.random() < 0.13 ? 1 : 0;
+            document.getElementById('gold').textContent = gold;
+            document.getElementById('heal').textContent = healed;
 
-<button onclick="abandonar()">salir cuando quieras</button>
-  </pre>
-</div>
+            // Partícula aurum
+            particles.push({
+                x: e.clientX,
+                y: e.clientY,
+                life: 60
+            });
+        });
 
-<div id="final" style="display:none;color:#ff8">
-  <pre>
-1310 días entre los mitos completados
+        // Respiración → sanación
+        let listening = false;
+        navigator.mediaDevices.getUserMedia({audio:true}).then(stream => {
+            const audioCtx = new AudioContext();
+            const source = audioCtx.createMediaStreamSource(stream);
+            const analyser = audioCtx.createAnalyser();
+            source.connect(analyser);
+            const data = new Uint8Array(analyser.frequencyBinCount);
 
-Todos los abuelos del mundo
-se levantan al mismo tiempo
-y te hacen una reverencia.
+            setInterval(() => {
+                analyser.getByteFrequencyData(data);
+                const vol = data.reduce((a,b)=>a+b)/data.length;
+                if(vol > 40) {
+                    healed += 1;
+                    document.getElementById('heal').textContent = healed;
+                    document.getElementById('breath').textContent = 'Luz verde... 🐱💚';
+                    setTimeout(()=> document.getElementById('breath').textContent = 'Respira... 🐍', 2000);
+                }
+            }, 1000);
+        });
 
-Ya no hay culturas separadas.
-Solo queda un único latido.
+        // Loop principal
+        function loop() {
+            drawBg();
+            spawnRune();
 
-Puedes quedarte para siempre.
-  </pre>
-</div>
+            // Partículas
+            particles.forEach((p,i) => {
+                ctx.fillStyle = '#ff0';
+                ctx.fillRect(p.x-5, p.y-5, 10, 10);
+                p.y -= 2;
+                p.life--;
+                if(p.life<=0) particles.splice(i,1);
+            });
 
-<script>
-const TOTAL_MS = 1310 * 3600000;
-let inicio;
+            if(healed >= 1310) {
+                document.body.innerHTML = '<h1 style="color:#0f0;text-align:center;margin-top:40vh">THUAMER REDIMIDO<br>Aurum orbita ∞<br>Fiat ha caído<br><br>🐍💚 13101310 abrazos ronin</h1>';
+            }
 
-// 131 SANACIONES ANCESTRALES UNIVERSALES (una por cada raíz del planeta)
-const mitos = [
-  "El jaguar amazónico te limpia con su aliento",
-  "El águila lakota te lleva al cielo en sus alas",
-  "La abuela ayahuasquera canta tu icaro perdido",
-  "El monje tibetano hace girar 108 veces su rueda por ti",
-  "El chamán shipibo te borda un nuevo cuerpo de luz",
-  "El griot malí recita tu nombre en el árbol baobab",
-  "La machi mapuche te entrega su kultrún lleno de lluvia",
-  "El druida celta te unge con muérdago bajo el roble",
-  "El aborigen australiano pinta tu canción del tiempo del sueño",
-  "El lama tibetano sopla mantras dentro de tus huesos",
-  "El curandero andino te abre el pecho con coca y viento",
-  "El sufí gira hasta que tu dolor se convierte en polvo",
-  "El kahuna hawaiano te limpia con agua de volcán",
-  "La sangoma zulú tira los huesos y todos dicen tu nombre",
-  "El bonpo del Himalaya quema tu ego en su hoguera",
-  "El nagual mexicano te devuelve tus 13 animales de poder",
-  "El chaman mongol te llama con su tambor hasta el cielo azul",
-  "La abuela inuit te cose un nuevo cuerpo con hilo de aurora",
-  "El anciano hopi te entrega la profecía cumplida",
-  "El taoísta del Wudang te enseña a respirar como montaña",
-  "El rabino jasídico canta tu nombre en hebreo antiguo",
-  "El sadhu del Ganges te baña en humo de sándalo",
-  "El marakame wixárika te guía por el camino de flores",
-  "El anciano dogon te muestra la estrella que te trajo aquí",
-  "El chaman yakuto te abre la puerta del mundo inferior",
-  "La abuela mazateca te da hongos que saben tu nombre",
-  "El anciano ainu te canta al oso que vive en tu pecho",
-  "El brujo yoruba te limpia con hojas de obatalá",
-  "El monje shaolin hace sonar su cuenco por cada herida",
-  "El anciano navajo te devuelve tu canto de belleza",
-  "El chamán sami canta el joik que tu alma olvidó",
-  "La anciana celta te entrega su caldero lleno de estrellas",
-  "El gurú del Punjab te abraza hasta que desapareces",
-  "El anciano maorí te tatúa tu linaje en el alma",
-  "El chaman tuva hace gargantear a la tierra por ti",
-  "El abuelo maya te abre el corazón al 13 B’aktun",
-  "El anciano balinés ofrece tu dolor al volcán",
-  "La abuela cherokee te envuelve en humo de cedro",
-  "El monje zen te da un koan que ya está resuelto",
-  "El rabino cabalista escribe tu verdadero nombre en luz",
-  "El chamán inuit te lleva a bailar con la aurora",
-  "El anciano aborigen te enseña que el tiempo es un círculo",
-  "El lama del Tíbet te entrega una kata blanca",
-  "El curandero q’ero te abre el cuerpo con tres hojas de coca",
-  "El sufí de Konya te hace girar hasta que solo queda amor",
-  "El monje theravada te dedica 1000 respiraciones",
-  "El anciano lakota dice: Mitakuye Oyasin — por todos mis parientes",
-  "13101310 ancestros\nte miran al mismo tiempo\ny sonríen"
-];
-
-function nuevoMito() {
-  if (!document.getElementById('bosque')) return;
-  const m = document.createElement('div');
-  m.className = 'mito';
-  m.textContent = mitos[Math.floor(Math.random()*mitos.length)];
-  m.style.left = Math.random()*70 + 15 + 'vw';
-  m.style.top = Math.random()*100 + 'vh';
-  document.body.appendChild(m);
-  document.getElementById('mitoActual').textContent = m.textContent;
-  setTimeout(() => m.remove(), 35000);
-}
-
-function entrarAlGranBosque() {
-  inicio = Date.now();
-  localStorage.setItem('GRAN_BOSQUE', inicio);
-  document.getElementById('entrada').remove();
-  document.getElementById('bosque').style.display = 'block';
-  setInterval(nuevoMito, 16000);
-  nuevoMito();
-  setInterval(actualizar, 1000);
-  actualizar();
-}
-
-function actualizar() {
-  const transcurrido = Date.now() - inicio;
-  const restante = Math.max(0, TOTAL_MS - transcurrido);
-  const porc = ((TOTAL_MS - restante) / TOTAL_MS * 100).toFixed(4);
-  document.getElementById('barra').style.width = porc + '%';
-
-  const h = String(Math.floor(restante/3600000)).padStart(4,'0');
-  const m = String(Math.floor((restante%3600000)/60000)).padStart(2,'0');
-  const s = String(Math.floor((restante%60000)/1000)).padStart(2,'0');
-  document.getElementById('timer').textContent = `${h}:${m}:${s}`;
-  document.getElementById('dia').textContent = Math.floor(transcurrido / 86400000) + 1;
-
-  if (restante <= 0) {
-    document.getElementById('bosque').remove();
-    document.getElementById('final').style.display = 'block';
-    localStorage.setItem('GRAN_BOSQUE_FINAL', 'true');
-  }
-}
-
-function abandonar() {
-  if (confirm('¿Salir del bosque de los 13101310 mitos?')) {
-    localStorage.removeItem('GRAN_BOSQUE');
-    localStorage.removeItem('GRAN_BOSQUE_FINAL');
-    location.reload();
-  }
-}
-
-// RECUPERAR SI YA ESTABAS DENTRO
-if (localStorage.getItem('GRAN_BOSQUE')) {
-  inicio = parseInt(localStorage.getItem('GRAN_BOSQUE'));
-  document.getElementById('entrada').remove();
-  document.getElementById('bosque').style.display = 'block';
-  setInterval(nuevoMito, 16000);
-  nuevoMito();
-  setInterval(actualizar, 1000);
-  actualizar();
-  if (localStorage.getItem('GRAN_BOSQUE_FINAL') === 'true') {
-    document.getElementById('bosque').remove();
-    document.getElementById('final').style.display = 'block';
-  }
-}
-</script>
+            requestAnimationFrame(loop);
+        }
+        loop();
+    </script>
 </body>
 </html>

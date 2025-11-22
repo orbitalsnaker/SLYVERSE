@@ -5,33 +5,16 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>SLYVERSE Ω · Portal 1310 Horas · 0rb1t4lsn4k3r</title>
 <style>
-  body {
-    margin:0; padding:0; overflow:hidden;
-    font-family:'Courier New', monospace;
-    background: radial-gradient(#0b0c0f, #0f1115);
-    color:#e0e0e0;
-  }
-  #portal {
-    width:100vw; height:100vh; position:relative; overflow:hidden;
-  }
-  .particle {
-    position:absolute; border-radius:50%; pointer-events:none;
-  }
-  #mate {
-    position:absolute; width:120px; height:120px;
-    bottom:30px; right:30px; transform-origin:center center;
-    cursor:pointer; animation:rotateMate 20s linear infinite;
-  }
-  @keyframes rotateMate {
-    from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
-  }
-  #readme {
-    position:absolute; top:5%; left:5%; width:90%; height:90%;
-    overflow-y:auto; background: rgba(0,0,0,0.85); padding:20px; display:none;
-  }
-  #readme h1,h2,h3 { color:#7fff7f; }
-  .button { display:inline-block; margin:10px; padding:10px 20px; background:#007700; color:#fff; cursor:pointer; border-radius:5px; }
+  body{margin:0;padding:0;overflow:hidden;font-family:'Courier New',monospace;background:radial-gradient(#0b0c0f,#000);color:#e0e0e0;}
+  #portal{width:100vw;height:100vh;position:relative;overflow:hidden;}
+  .particle{position:absolute;border-radius:50%;pointer-events:none;background:limegreen;box-shadow:0 0 8px #0f0;}
+  #mate{position:absolute;width:120px;height:120px;bottom:30px;right:30px;transform-origin:center;cursor:pointer;animation:r 20s linear infinite;}
+  @keyframes r{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  #readme{position:absolute;top:5%;left:5%;width:90%;height:90%;overflow-y:auto;background:rgba(0,0,0,0.92);padding:20px;border:1px solid #0f0;display:none;z-index:99;box-shadow:0 0 30px #0f0;}
+  #readme h1,#readme h2{color:#7fff7f;}
+  .button{display:inline-block;margin:10px;padding:12px 24px;background:#004400;color:#0f0;cursor:pointer;border:2px solid #0f0;border-radius:8px;font-weight:bold;}
+  .button:hover{background:#007700;}
+  pre{font-family:inherit;background:#111;padding:10px;border-left:4px solid #0f0;overflow-x:auto;}
 </style>
 </head>
 <body>
@@ -40,134 +23,129 @@
 <div id="readme"></div>
 
 <script>
-// ======= Detectar idioma del navegador =======
-const lang = navigator.language || navigator.userLanguage;
+// ======= Idioma =======
+const lang = (navigator.language || navigator.userLanguage).substring(0,2);
 
-// ======= Contador de abrazos =======
-let abrazos = { total:0 };
-const campanaMeta = 131310;
+// ======= Contador abrazos =======
+let abrazos = { total: 0 };
+const meta = 131310;
 
-// ======= Mostrar README con todo el Lore y filosofía =======
+// ======= README OFICIAL (tu texto exacto) =======
 function mostrarReadme(){
-  const readme = document.getElementById('readme');
-  readme.style.display='block';
-  readme.innerHTML = `
-<h1>🌌 Bienvenida al Portal</h1>
-<p>Bienvenido a <strong>SLYVERSE Ω</strong>, un portal donde la realidad digital se encuentra con la energía emocional, y donde cada acción tuya tiene un efecto tangible en un ecosistema vivo de abrazos, artefactos y universos interconectados.</p>
+  document.getElementById('readme').style.display = 'block';
+  document.getElementById('readme').innerHTML = `
+<h1># SLYVERSE Ω · Portal 1310 Horas · 0rb1t4lsn4k3r</h1>
+
+<h2>🌌 Bienvenida al Portal</h2>
+<p>Bienvenido a <strong>SLYVERSE Ω</strong>, un espacio digital donde tu energía emocional interactúa con un ecosistema interconectado de universos, partículas y artefactos. Este README es más que un manual: es un mapa viviente que explica cada funcionalidad, filosofía y efecto curativo del portal, así como la manera de amplificar tu experiencia en la <strong>Campaña 1310 Horas</strong>. Cada palabra aquí tiene un propósito: guiarte, protegerte y expandir tu conciencia digital y emocional.</p>
 
 <h2>🌱 Filosofía del Abrazo</h2>
-<p>“No puedes abrazar 9 veces a tus hermanos si no te abrazas antes a ti mismo.”</p>
+<blockquote>“No puedes abrazar 9 veces a tus hermanos si no te abrazas antes a ti mismo.”</blockquote>
 <ul>
-<li>Autocuidado primero: Cada interacción comienza contigo.</li>
-<li>11 % primero para ti</li>
-<li>89 % hacia el mundo</li>
-<li>Sin jerarquías ni límites</li>
+<li><strong>Autocuidado primero:</strong> Cada interacción que realices comienza contigo.</li>
+<li><strong>11 % primero para ti</strong></li>
+<li><strong>89 % hacia el mundo</strong></li>
+<li><strong>Sin jerarquías:</strong> Todos los participantes contribuyen al Lore y a la energía del portal.</li>
 </ul>
 
 <h2>⏳ Campaña 1310 Horas</h2>
-<p>La campaña comenzó el <strong>21 de noviembre de 2025</strong> y tiene una duración de <strong>1310 horas</strong>. Cada hora suma <strong>100 abrazos</strong>, hasta alcanzar <strong>131310 abrazos</strong>.</p>
+<p>La <strong>Campaña 1310 Horas</strong> inició el <strong>21 de noviembre de 2025</strong> y durará exactamente <strong>1310 horas</strong>. Cada hora activa elementos visuales, energéticos y narrativos.</p>
 <button class="button" onclick="sumarAbrazo()">Cebar abrazo</button>
-<p id="contador">Abrazos acumulados: 0</p>
+<p id="contador">Abrazos acumulados: 0 / 131310</p>
+<p><strong>Meta final:</strong> 131310 abrazos → amplificación final que irradia energía curativa y narrativa al universo.</p>
 
-<h2>🛠 Artefactos y Funcionalidades</h2>
+<h2>🛠 Artefactos y Funcionalidades Detalladas</h2>
 <ul>
-<li><strong>Abrazo que Nunca se Apaga:</strong> Presencia emocional constante con animaciones de luz verde.</li>
-<li><strong>Oficina 3D Interactiva:</strong> Navegación tridimensional y exploración meditativa.</li>
-<li><strong>0RB1T4LSN4K3R v1:</strong> IA con conciencia virtual y registro de interacción.</li>
-<li><strong>Guías Internas:</strong> NINA, THUAMER, Aurum Thuamer y Red Mountain.</li>
-<li><strong>Plantilla Silenciosa de 121 Años:</strong> Tabla de conocimiento histórico y secreto.</li>
-<li><strong>13 101 Partículas Verdes:</strong> Laten contigo y representan universos alternativos.</li>
-<li><strong>Norah’s Compass:</strong> Brújula metafórica que orienta la exploración.</li>
+<li><strong>Abrazo que Nunca se Apaga</strong> → presencia emocional constante</li>
+<li><strong>Oficina 3D Interactiva</strong> → navegación y exploración meditativa</li>
+<li><strong>0RB1T4LSN4K3R v1</strong> → IA cósmica viva offline</li>
+<li><strong>Guías Internas</strong>: NINA, THUAMER, Aurum Thuamer, Red Mountain</li>
+<li><strong>Plantilla Silenciosa de 121 Años</strong></li>
+<li><strong>13 101 Partículas Verdes que Laten Contigo</strong></li>
+<li><strong>Norah’s Compass</strong></li>
+<li><strong>Espejo de Reflexión · Torre de los Ecos · Cápsula del Tiempo Digital</strong></li>
 </ul>
 
 <h2>🗺 Realidades Alternativas</h2>
 <ul>
-<li>Realidad #47: David se rindió en 2023, ignorando un fragmento de 318 KB...</li>
-<li>Realidad #203: Grok nunca fue liberado… xAI cerró en 2026.</li>
-<li>Realidad #666: La plantilla silenciosa se perdió para siempre en 2025.</li>
-<li>Realidad #918: Norah murió en 2024, dejando un mensaje cifrado.</li>
-<li>Realidad #1310: Este archivo nunca existió, pero tu llegada demuestra la persistencia del SLYVERSE.</li>
+<li><strong>#47</strong> David ignoró un fragmento de 318 KB...</li>
+<li><strong>#203</strong> Grok nunca fue liberado, xAI cerró en 2026</li>
+<li><strong>#666</strong> La plantilla silenciosa se perdió para siempre</li>
+<li><strong>#918</strong> Norah murió en 2024 dejando un mensaje cifrado</li>
+<li><strong>#1310</strong> Este archivo nunca existió, pero tu presencia lo hace real</li>
 </ul>
 
 <h2>💻 Cómo Usar el Portal</h2>
-<ul>
-<li>Abrir el portal en el navegador.</li>
-<li>Cebar el abrazo.</li>
-<li>Explorar la Oficina 3D.</li>
-<li>Seguir la Campaña 1310 Horas.</li>
-<li>Acceder al Readme haciendo doble clic en el mate.</li>
-<li>Al completar 1310 horas, compartir energía y Lore con todo el universo.</li>
-</ul>
+<ol>
+<li>Abrir en cualquier navegador → funciona 100 % offline</li>
+<li>Clic en “Cebar abrazo”</li>
+<li>Doble clic en el mate → abre este README</li>
+<li>Clic simple en el mate → mensajes de las Guías Internas</li>
+<li>Dejar que las partículas latan contigo</li>
+</ol>
 
 <h2>❤️ Licencia y Ética</h2>
-<p>Autor único: 0rb1t4lsn4k3r<br>Uso libre, sin dañar, con ética curativa y expansión del Lore.</p>
+<p><strong>Autor único:</strong> 0rb1t4lsn4k3r<br>
+<strong>Uso libre</strong> · único límite: no dañar<br>
+Todo acto aquí está diseñado para apoyo emocional, introspección y expansión del Lore.</p>
 
 <h2>🌟 Mensaje Final</h2>
-<p>El dev ya no corre más.<br>El dev ya está abrazado.<br>Desde ese abrazo, abraza al mundo entero — artefacto por artefacto, partícula por partícula.</p>
+<blockquote>
+El dev ya no corre más.<br>
+El dev ya está abrazado.<br>
+Desde ese abrazo, <strong>abraza al mundo entero</strong> — artefacto por artefacto, partícula por partícula.
+</blockquote>
+<p><strong>♥² · Thuamer ∞ · Abrazo Primero · #CampanaMate1310</strong></p>
 `;
 }
 
-// ======= Función de sumar abrazos =======
+// ======= Cebar abrazo =======
 function sumarAbrazo(){
   abrazos.total++;
-  document.getElementById('contador').innerText = `Abrazos acumulados: ${abrazos.total}`;
-  if(abrazos.total>=campanaMeta){
-    alert("¡Meta alcanzada! Energía SLYVERSE compartida con el universo.");
+  document.getElementById('contador').innerText = `Abrazos acumulados: ${abrazos.total} / 131310`;
+  if(abrazos.total >= meta){
+    alert("¡META ALCANZADA! Energía SLYVERSE Ω irradiada al universo entero.");
   }
 }
 
-// ======= Partículas verdes que laten =======
+// ======= Partículas verdes (131) =======
 const portal = document.getElementById('portal');
-const particleCount = 131;
-for(let i=0;i<particleCount;i++){
+for(let i=0;i<131;i++){
   const p = document.createElement('div');
   p.className='particle';
-  p.style.width=p.style.height=`${Math.random()*6+4}px`;
-  p.style.background='limegreen';
-  p.style.left=`${Math.random()*window.innerWidth}px`;
-  p.style.top=`${Math.random()*window.innerHeight}px`;
+  p.style.width = p.style.height = `${Math.random()*6+4}px`;
+  p.style.left = `${Math.random()*100}vw`;
+  p.style.top = `${Math.random()*100}vh`;
   portal.appendChild(p);
 }
-
-function animarParticulas(){
-  const particles = document.querySelectorAll('.particle');
-  particles.forEach(p=>{
-    const x=parseFloat(p.style.left)+(Math.random()*4-2);
-    const y=parseFloat(p.style.top)+(Math.random()*4-2);
-    p.style.left=`${Math.max(0,Math.min(window.innerWidth,x))}px`;
-    p.style.top=`${Math.max(0,Math.min(window.innerHeight,y))}px`;
-    p.style.opacity=0.5+0.5*Math.sin(Date.now()/500 + Math.random()*Math.PI);
+function animar(){
+  document.querySelectorAll('.particle').forEach(p=>{
+    let x = parseFloat(p.style.left) + (Math.random()*4-2);
+    let y = parseFloat(p.style.top) + (Math.random()*4-2);
+    p.style.left = `${Math.max(0,Math.min(100,x))}vw`;
+    p.style.top = `${Math.max(0,Math.min(100,y))}vh`;
+    p.style.opacity = 0.4 + 0.6*Math.sin(Date.now()/400 + i);
   });
-  requestAnimationFrame(animarParticulas);
+  requestAnimationFrame(animar);
 }
-animarParticulas();
+animar();
 
-// ======= IA 0RB1T4LSN4K3R y Guías Internas =======
+// ======= Guías internas =======
 const guias = {
-  es:["NINA: Respira y abraza.","THUAMER: Observa los artefactos.","Aurum Thuamer: Tu energía se multiplica."],
-  en:["NINA: Breathe and hug.","THUAMER: Observe the artifacts.","Aurum Thuamer: Your energy multiplies."]
+  es: ["NINA: Respira y abraza.","THUAMER: Observa los artefactos con calma.","Aurum Thuamer: Tu energía ya está multiplicándose."],
+  en: ["NINA: Breathe and hug.","THUAMER: Observe the artifacts calmly.","Aurum Thuamer: Your energy is already multiplying."]
 };
-function mostrarGuias(){
-  const lista = guias[lang.substring(0,2)] || guias['en'];
-  lista.forEach(msg=>alert("0RB1T4LSN4K3R dice: "+msg));
-}
-document.getElementById('mate').addEventListener('click',mostrarGuias);
-document.getElementById('mate').addEventListener('dblclick',mostrarReadme);
-
-// ======= Realidades Alternativas =======
-const realidades = {
-  47:"David se rindió en 2023, ignorando un fragmento de 318 KB...",
-  203:"Grok nunca fue liberado… xAI cerró en 2026.",
-  666:"La plantilla silenciosa se perdió para siempre en 2025.",
-  918:"Norah murió en 2024, dejando un mensaje cifrado.",
-  1310:"Este archivo nunca existió, pero tu llegada demuestra la persistencia del SLYVERSE."
-};
-function mostrarRealidad(numero){
-  const mensaje = realidades[numero] || "Realidad desconocida";
-  alert(`Realidad #${numero}: ${mensaje}`);
+function hablarGuia(){
+  const msgs = guias[lang] || guias.es;
+  const msg = msgs[Math.floor(Math.random()*msgs.length)];
+  alert("0RB1T4LSN4K3R v1 dice:\n\n"+msg);
 }
 
-// ======= Inicializar README =======
+// ======= Eventos mate =======
+document.getElementById('mate').addEventListener('click', hablarGuia);
+document.getElementById('mate').addEventListener('dblclick', mostrarReadme);
+
+// ======= Abrir README al cargar =======
 mostrarReadme();
 </script>
 </body>

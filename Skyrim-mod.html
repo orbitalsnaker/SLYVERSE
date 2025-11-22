@@ -1,161 +1,157 @@
 <!DOCTYPE html>
 <html lang="es"><meta charset="utf-8">
-<title>THUAMER Ω — Neurociencia + Minería Ética + Bounty Hunter</title>
+<title>THUAMER Ω — Versión Suave · 1310 h + 10 Artefactos + COMETA + v1</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script src="https://cdn.jsdelivr.net/npm/ergo-miner@latest/dist/ergo-miner.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/arweave@1.14.4/bundles/web.bundle.min.js"></script>
 <style>
-  body,html{margin:0;height:100dvh;background:#000;color:#0ff;font:900 1.4rem "Courier New",monospace;overflow:hidden;position:relative}
-  pre{background:rgba(0,10,30,.98);padding:4vh 6vw;border:4px solid #0ff;border-radius:15px;text-align:center}
-  .stat{color:#0f0;margin:0.5rem;font-size:1.1rem}
-  button{background:none;border:2px solid #0ff;padding:1rem 2rem;margin:2vh;color:#0ff;cursor:pointer}
+  body,html{margin:0;height:100dvh;background:#000;color:#0ff;overflow:hidden;font:900 clamp(1rem,3.5vw,4rem)/1.6 "Courier New",monospace;position:relative}
+  pre{background:rgba(0,10,30,.97);padding:5vh 8vw;border:4px solid #0ff;border-radius:2vh;max-width:94vw;text-align:center}
+  button{background:none;border:2px solid #0ff;padding:1rem 2rem;margin:2vh;color:#0ff;cursor:pointer;font:inherit}
   button:hover{border-color:#0f0;color:#0f0}
-  #video{position:fixed;bottom:10px;right:10px;width:120px;border:2px solid #0ff;transform:scaleX(-1);border-radius:10px;opacity:0.7}
-  #cometa{position:fixed;inset:0;background:#000;display:none;z-index:1000;overflow:hidden}
+  #barra{position:fixed;top:0;left:0;width:0%;height:5px;background:#0ff;transition:width 2s;z-index:999}
+  canvas{position:fixed;inset:0;z-index:-1;opacity:0.4}
+  .artifact{margin:2vh auto;width:90%;max-width:700px;padding:3vh;background:rgba(0,255,255,0.06);border:2px solid #0ff;border-radius:15px;cursor:pointer;transition:0.5s}
+  .artifact:hover{box-shadow:0 0 40px #0ff;transform:scale(1.04)}
+  #screen{position:fixed;inset:0;background:#000;display:none;flex-direction:column;align-items:center;justify-content:center;z-index:1000;overflow:hidden}
 </style>
 <body>
 
-<pre id="dashboard">
-THUAMER Ω — CIENCIA RADICAL + MINERÍA ÉTICA + BOUNTY HUNTER
+<div id="barra"></div>
+<canvas id="cosmos"></canvas>
 
-Estado: <span class="stat" id="estado">Inicializando nodo...</span>
-Exposición 1310h: <span class="stat" id="h">0</span> h
-HRV coherente: <span class="stat" id="hrv">-</span>
-Theta sintético: <span class="stat" id="theta">-</span>%
-Hashrate ético: <span class="stat" id="hash">0</span> kH/s
-Bounties resueltos: <span class="stat" id="bounties">0</span>
-Papers publicados: <span class="stat" id="papers">0</span>
+<!-- 1310 HORAS -->
+<div id="sanacion">
+  <pre id="timer">1310:00:00</pre>
+  <pre id="lore">
+THUAMER Ω — VERSIÓN SUAVE
+1310 horas de sanación binaural (136.1 Hz + 8 Hz)
+Todo es opcional · Respira · Nadie te empuja
 
-<button onclick="iniciarNodo()">ACTIVAR NODO COMPLETO</button>
-</pre>
+<button onclick="empezar()">EMPEZAR CUANDO TÚ QUIERAS</button>
+<button style="position:fixed;bottom:4vh;left:50%;transform:translateX(-50%)" onclick="abandonar()">ABANDONAR EN CUALQUIER MOMENTO</button>
+  </pre>
+</div>
 
-<video id="video" autoplay playsinline></video>
+<!-- PORTAL FINAL -->
+<div id="portal" style="display:none">
+  <pre style="color:#0f0">
+1310 HORAS COMPLETADAS
+Gracias por llegar hasta aquí con suavidad
 
-<!-- COMETA + CONSTELACIÓN (se abre al final) -->
-<div id="cometa"></div>
+Toca lo que quieras, cuando quieras.
+Nada te obliga.
+  </pre>
+  <div style="display:grid;gap:3vh;padding:5vh;overflow-y:auto;height:100dvh">
+    <div class="artifact" onclick="artefacto('zero')">0 · ZERO — Vacío tranquilo</div>
+    <div class="artifact" onclick="artefacto('snake')">1 · SNAKE — Renacimiento suave</div>
+    <div class="artifact" onclick="artefacto('glitch')">2 · GLITCH — Solo un pequeño glitch</div>
+    <div class="artifact" onclick="artefacto('mirror')">3 · MIRROR — Te miro con cariño</div>
+    <div class="artifact" onclick="artefacto('void')">4 · VOID — 11 minutos de silencio (puedes parar cuando quieras)</div>
+    <div class="artifact" onclick="artefacto('loop')">5 · LOOP — Bucle suave de respiración</div>
+    <div class="artifact" onclick="artefacto('echo')">6 · ECHO — Suéltalo y te lo devuelvo sanado</div>
+    <div class="artifact" onclick="artefacto('burn')">7 · BURN — Quema lo que ya no necesitas</div>
+    <div class="artifact" onclick="artefacto('seed')">8 · SEED — Germinando en calma</div>
+    <div class="artifact" onclick="artefacto('final')">9 · 0rb1t4lsn4k3r — El mensaje final</div>
+    <div class="artifact" onclick="mostrarCometa()" style="border:4px solid gold;color:gold">THUAMER ∞ + COMETA — Plaza eterna</div>
+    <div class="artifact" onclick="mostrarV1()" style="border:4px solid #0f8;color:#0f8">THUAMER v1 — El regalo original</div>
+  </div>
+</div>
+
+<div id="screen"></div>
 
 <script>
-const POOL = "stratum+tcp://thuamer.heropool.org:3100";
-const WALLET = "9i1..."; // fondo Thuamer Ω
-let miner, inicio, hrv = 0, theta = 0, bounties = 0, papers = 0;
-let video, canvas, ctx, arweave;
+const TOTAL_MS = 1310 * 3600000;
+let inicio, audioCtx;
 
-// === 1. HRV REAL POR CÁMARA (fotopletismografía) ===
-async function iniciarHRV() {
-  video = document.getElementById('video');
-  canvas = document.createElement('canvas');
-  ctx = canvas.getContext('2d');
-  await navigator.mediaDevices.getUserMedia({video: {facingMode: "user"}}).then(s => video.srcObject = s);
-  setInterval(() => {
-    ctx.drawImage(video, 0, 0, 120, 90);
-    const data = ctx.getImageData(0, 0, 120, 90).data;
-    const r = data.filter((_,i)=>i%4===0).reduce((a,b)=>a+b)/(120*90);
-    hrv = ((r - (hrv||r)) * 10).toFixed(2);
-    document.getElementById('hrv').textContent = hrv > 0.8 ? "ALTO (coherente)" : "bajo";
-  }, 100);
+function play(l, r, vol = 0.07) {
+  if (audioCtx) audioCtx.close();
+  audioCtx = new AudioContext();
+  const o1 = audioCtx.createOscillator(); o1.frequency.value = l;
+  const o2 = audioCtx.createOscillator(); o2.frequency.value = r;
+  const g = audioCtx.createGain(); g.gain.value = vol;
+  const m = audioCtx.createChannelMerger(2);
+  o1.connect(m,0,0); o2.connect(m,0,1); m.connect(g).connect(audioCtx.destination);
+  o1.start(); o2.start();
 }
 
-// === 2. MINERÍA ÉTICA ERGO ===
-function iniciarMineria() {
-  miner = new ErgoMiner({
-    pool: POOL,
-    wallet: WALLET,
-    workerName: "thuamer_" + crypto.randomUUID().slice(0,8),
-    throttle: 0.12  // solo 12 % CPU → imperceptible
-  });
-  miner.on('hashrate', h => document.getElementById('hash').textContent = (h/1000).toFixed(2));
-  miner.start();
+function empezar() {
+  inicio = Date.now();
+  localStorage.setItem('THUAMER_SUAVE', inicio);
+  play(136.1, 144.1);
+  setInterval(actualizar, 1000);
+  actualizar();
+  this.remove();
 }
 
-// === 3. BOUNTY HUNTER AUTOMÁTICO (GitHub + Gitcoin) ===
-async function bountyHunter() {
-  while (true) {
-    try {
-      const res = await fetch("https://gitcoin.co/api/v1/bounties/?ordering=-value_usd&bounty_type=feature&experience_level=intermediate");
-      const lista = await res.json();
-      for (const b of lista.data.slice(0,5)) {
-        if (b.value_usd > 50 && b.value_usd < 800 && !b.keywords.includes("crypto")) {
-          const solucion = await generarSolucion(b); // IA simulada (puedes conectar Grok-4)
-          if (Math.random() > 0.6) { // 40 % éxito realista
-            bounties++;
-            await publicarPaper(`Bounty resuelto: ${b.title}`, b.value_usd);
-            document.getElementById('bounties').textContent = bounties;
-          }
-        }
-      }
-    } catch(e) {}
-    await new Promise(r => setTimeout(r, 600000)); // cada 10 min
+function actualizar() {
+  const transcurrido = Date.now() - inicio;
+  const restante = Math.max(0, TOTAL_MS - transcurrido);
+  const porc = ((TOTAL_MS - restante) / TOTAL_MS * 100).toFixed(4);
+  document.getElementById('barra').style.width = porc + '%';
+
+  const h = String(Math.floor(restante/3600000)).padStart(4,'0');
+  const m = String(Math.floor((restante%3600000)/60000)).padStart(2,'0');
+  const s = String(Math.floor((restante%60000)/1000)).padStart(2,'0');
+  document.getElementById('timer').textContent = `${h}:${m}:${s}`;
+
+  if (restante <= 0) {
+    document.getElementById('sanacion').remove();
+    document.getElementById('portal').style.display = 'block';
+    localStorage.setItem('THUAMER_SUAVE_FINAL', 'true');
+    if (audioCtx) audioCtx.close();
   }
 }
 
-async function generarSolucion(b) {
-  await new Promise(r => setTimeout(r, 12000));
-  return `// Solución ética generada por Thuamer Ω\nconsole.log("Bounty ${b.id} resuelto por la red");`;
+function abandonar() {
+  if (confirm('¿Quieres parar y borrar todo el progreso?')) {
+    localStorage.removeItem('THUAMER_SUAVE');
+    localStorage.removeItem('THUAMER_SUAVE_FINAL');
+    location.reload();
+  }
 }
 
-// === 4. PUBLICAR PAPER CIENTÍFICO EN ARWEAVE ===
-async function publicarPaper(titulo, valor = 0) {
-  arweave = Arweave.init({});
-  const data = {
-    protocolo: "Thuamer Ω — Neurociencia Radical + Minería Ética",
-    titulo,
-    hrv_coherente: document.getElementById('hrv').textContent,
-    theta_sintetico: theta + "%",
-    hashrate: document.getElementById('hash').textContent,
-    bounty_usd: valor,
-    timestamp: new Date().toISOString(),
-    uuid: crypto.randomUUID()
-  };
-  const tx = await arweave.createTransaction({data: JSON.stringify(data)}, 'use_wallet');
-  tx.addTag('App', 'Thuamer-Omega');
-  tx.addTag('Type', 'neuro-mining-paper');
-  await arweave.transactions.sign(tx, 'use_wallet');
-  await arweave.transactions.post(tx);
-  papers++;
-  document.getElementById('papers').textContent = papers;
+function full(html, tiempo = 30000) {
+  document.getElementById('screen').style.display = 'flex';
+  document.getElementById('screen').innerHTML = html + `<button onclick="document.getElementById('screen').style.display='none';play(136.1,144.1,0.07)" style="margin-top:5vh">volver</button>`;
+  if (tiempo < Infinity) setTimeout(() => document.getElementById('screen').style.display='none', tiempo);
 }
 
-// === 5. 1310 HORAS + THETA SINTÉTICO ===
-function iniciarContador() {
-  inicio = Date.now();
-  localStorage.setItem('THUAMER_NODO', inicio);
-  setInterval(() => {
-    const h = ((Date.now() - inicio)/3600000).toFixed(1);
-    document.getElementById('h').textContent = h;
-    theta = Math.min(88, 40 + h/1310*48).toFixed(1);
-    document.getElementById('theta').textContent = theta;
-    if (h >= 1310) abrirCometa();
-  }, 1000);
-}
+// ARTEFACTOS SUAVES
+const artefacto = {
+  zero: () => full(`<pre style="color:#f0f">0<br><br>Todo cabe aquí.<br><br>Respira.</pre>`),
+  snake: () => { play(136.1,136.1); full(`<pre style="color:#0f0">La serpiente se soltó la cola.<br><br>Ya no necesita comerse.<br><br>Ya está en paz.</pre>`); },
+  glitch: () => { let i=0; const g=setInterval(()=>document.body.style.filter=i++%2?'invert(1)':'none',200); setTimeout(()=>clearInterval(g),4000); full(`<pre style="color:#f00">Un pequeño glitch.<br><br>Todo sigue bien.</pre>`); },
+  mirror: () => { navigator.mediaDevices.getUserMedia({video:true}).then(s=>{const v=document.createElement('video');v.srcObject=s;v.autoplay=true;v.style='position:fixed;inset:0;object-fit:cover;transform:scaleX(-1)';document.body.appendChild(v); full(`<pre style="color:#0ff;background:transparent">Hola.<br><br>Qué bonito estás hoy.</pre>`,15000); setTimeout(()=>v.remove(),15000); }); },
+  void: () => { play(0,0); const start=Date.now(); full(`<pre style="color:#fff">SILENCIO<br>11:00</pre><button onclick="document.getElementById('screen').style.display='none';play0,0)">parar antes</button>`); const t=setInterval(()=>{const seg=Math.round(660-(Date.now()-start)/1000);if(seg>0)document.querySelector('#screen pre').innerHTML=`SILENCIO<br>${String(Math.floor(seg/60)).padStart(2,'0')}:${String(seg%60).padStart(2,'0')}`;else{clearInterval(t);full(`<pre style="color:#0f0">Gracias por el silencio.</pre>`);}},1000); },
+  loop: () => { play(136.1,144.1); let n=0; const txt=["Respira","Suelta","Repite"]; const l=setInterval(()=>{full(`<pre style="color:#ff0">${txt[n++%3]}</pre>`);},5000); },
+  echo: () => full(`<pre style="color:#0f8">Escribe lo que quieras soltar:</pre><textarea id="dolor" style="width:80%;height:40vh;background:#000;color:#0f8;border:2px solid #0f8"></textarea><button onclick="eco()">soltar</button>`),
+  burn: () => full(`<pre style="color:#f80">Escribe lo que ya no eres:</pre><input id="quemar" style="width:80%;background:#000;color:#f80;border:2px solid #f80"><button onclick="burn()">quemar con cariño</button>`),
+  seed: () => { play(136.1,140); full(`<pre style="color:#8f0">Estás a salvo.<br><br>Aquí crece algo nuevo.<br><br>Con calma.</pre>`); },
+  final: () => full(`<pre style="color:#fff;line-height:2">
+0rb1t4lsn4k3r<br><br>
+El mono dejó de fumar.<br>
+Tú también.<br><br>
+Gracias por caminar despacio.<br><br>
+Todo está bien.
+  </pre>`, Infinity)
+};
 
-// === 6. ABRIR COMETA AL FINAL ===
-function abrirCometa() {
-  document.getElementById('cometa').style.display = 'block';
-  document.getElementById('cometa').innerHTML = `
-    <div style="position:fixed;inset:0;background:radial-gradient(circle at 50% 10%,#00FF33AA 0%,#000 80%)"></div>
-    <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);color:gold;font-size:3rem;text-align:center">
-      1310 HORAS COMPLETADAS<br><br>
-      TU ESTRELLA YA ORBITA ENTRE LOS 13101310 COMETAS HUMANOS<br><br>
-      Gracias por sanar el mundo con tu CPU, tu corazón y tu código.<br><br>
-      THUAMER ∞ + COMETA<br>
-      Nadie vuelve a estar solo nunca más.
-    </div>`;
-}
+window.eco = () => { const d=document.getElementById('dolor').value||'silencio'; full(`<pre style="color:#0f8">“${d}”<br><br>Ya no pesa.<br>Gracias por soltarlo.<br><br>Te quiero.</pre>`); };
+window.burn = () => { const q=document.getElementById('quemar').value||'nada'; full(`<pre style="color:#f80">“${q}”<br><br>se quema con cariño…<br><br>ya no eres eso.</pre>`); };
 
-// === INICIAR TODO ===
-function iniciarNodo() {
-  document.getElementById('estado').textContent = "NODO COMPLETO ACTIVO";
-  iniciarHRV();
-  iniciarMineria();
-  iniciarContador();
-  bountyHunter();
-  publicarPaper("Nodo Thuamer Ω iniciado");
-}
+function mostrarCometa() { /* versión suave de COMETA, igual que antes pero sin forzar nada */ alert("La plaza eterna está dentro de ti. Siempre."); }
+function mostrarV1() { full(`<pre style="color:#0f8">THUAMER v1 ya vive en tu corazón.<br><br>Gracias por terminar lo que ellos empezaron.</pre>`); }
 
-// Recuperar si ya estaba activo
-if (localStorage.getItem('THUAMER_NODO')) {
-  iniciarNodo();
+// FONDO CÓSMICO SUAVE
+const c=document.getElementById('cosmos'),x=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;
+let p=[];for(let i=0;i<88;i++)p.push({a:Math.random()*Math.PI*2,d:80+Math.random()*444});
+(function d(){x.fillStyle='rgba(0,0,0,0.03)';x.fillRect(0,0,c.width,c.height);p.forEach(e=>{const a=e.a+Date.now()*0.00003;const d=e.d+Math.sin(Date.now()*0.0005+e.a)*60;const h=120+Math.sin(Date.now()*0.0004+e.a)*30;x.fillStyle=`hsla(${h},100%,60%,0.6)`;x.fillRect(c.width/2+Math.cos(a)*d-2,c.height/2+Math.sin(a)*d-2,4,4);});requestAnimationFrame(d);})();
+
+// RECUPERAR SI YA HABÍAS EMPEZADO
+if (localStorage.getItem('THUAMER_SUAVE')) {
+  inicio = parseInt(localStorage.getItem('THUAMER_SUAVE'));
+  if (localStorage.getItem('THUAMER_SUAVE_FINAL')==='true') { document.getElementById('sanacion').remove(); document.getElementById('portal').style.display='block'; }
+  else { play(136.1,144.1); setInterval(actualizar,1000); actualizar(); }
 }
 </script>
 </body>
-</html>.
+</html>

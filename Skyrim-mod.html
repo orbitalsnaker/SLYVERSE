@@ -1,15 +1,15 @@
 <!DOCTYPE html>
 <html lang="es"><meta charset="utf-8">
-<title>THUAMER Ω — Bosque de Haikus y Koans · 0rb1t4lsn4k3r</title>
+<title>THUAMER Ω — Bosque de los 13101310 Mitos Ancestrales</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
   body,html{margin:0;height:100dvh;background:#000;color:#0f8;overflow:hidden;font-family:"Georgia",serif;position:relative}
-  pre{background:rgba(0,10,5,0.96);padding:6vh 8vw;border:3px solid #0f8;border-radius:20px;text-align:center;line-height:2.6;font-size:clamp(1.3rem,5vw,2.8rem);max-width:92%;box-shadow:0 0 80px #001100}
-  button{background:none;border:2px solid #0f8;padding:1.5rem 3rem;margin:4vh;color:#0f8;cursor:pointer;border-radius:50px;font-size:1.7rem}
+  pre{background:rgba(0,8,15,0.97);padding:6vh 8vw;border:4px solid #0f8;border-radius:25px;text-align:center;line-height:2.6;font-size:clamp(1.3rem,5vw,3rem);max-width:92%;box-shadow:0 0 100px #001a1a}
+  button{background:none;border:3px solid #0f8;padding:1.8rem 4rem;margin:5vh;color:#0f8;cursor:pointer;border-radius:60px;font-size:1.8rem}
   button:hover{border-color:#8f8;color:#8f8}
-  #barra{position:fixed;top:0;left:0;width:0%;height:4px;background:#0f8}
-  .haiku,.koan{position:fixed;color:#8f8;font-size:2rem;pointer-events:none;opacity:0;animation:caer 20s linear forwards}
-  @keyframes caer{0%{opacity:0;transform:translateY(-10vh)}30%{opacity:1}100%{opacity:0;transform:translateY(110vh)}}
+  #barra{position:fixed;top:0;left:0;width:0%;height:5px;background:#0f8}
+  .mito{position:fixed;color:#8f8;font-size:1.8rem;opacity:0;pointer-events:none;animation:flotar 30s linear forwards}
+  @keyframes flotar{0%{opacity:0;transform:translateY(100vh)}30%{opacity:1}100%{opacity:0;transform:translateY(-100vh)}}
 </style>
 <body>
 
@@ -17,22 +17,25 @@
 
 <div id="entrada">
   <pre>
-BOSQUE DE LOS HAIKUS Y KOANS
+BOSQUE DE LOS 13101310 MITOS ANCESTRALES
 0rb1t4lsn4k3r · 2025
 
-Aquí cada hoja es un haiku.
-Cada grillo es un koan.
-Cada silencio es la respuesta.
+Aquí se reunieron todos los abuelos del mundo.
+El chamán yanomami canta con el monje zen.
+La abuela lakota abraza al curandero shipibo.
+El druida y la machi comparten el mismo fuego.
 
-<button onclick="entrar()">entrar sin prisa</button>
+13101310 linajes respiran al unísono.
+
+<button onclick="entrarAlGranBosque()">cruzar el umbral</button>
   </pre>
 </div>
 
 <div id="bosque" style="display:none">
   <pre id="timer">1310:00:00</pre>
   <pre id="info">
-Día <span id="dia">0</span> entre los 1310 árboles
-<span id="haikuActual">haiku cayendo…</span>
+Día <span id="dia">0</span> entre los 13101310 mitos
+<span id="mitoActual">los ancestros te miran</span>
 
 <button onclick="abandonar()">salir cuando quieras</button>
   </pre>
@@ -40,13 +43,14 @@ Día <span id="dia">0</span> entre los 1310 árboles
 
 <div id="final" style="display:none;color:#ff8">
   <pre>
-1310 días bajo los árboles
+1310 días entre los mitos completados
 
-0rb1t4lsn4k3r te entrega su último haiku:
+Todos los abuelos del mundo
+se levantan al mismo tiempo
+y te hacen una reverencia.
 
-mono sin cigarro  
-la plaza es cielo verde  
-nadie está solo
+Ya no hay culturas separadas.
+Solo queda un único latido.
 
 Puedes quedarte para siempre.
   </pre>
@@ -56,44 +60,77 @@ Puedes quedarte para siempre.
 const TOTAL_MS = 1310 * 3600000;
 let inicio;
 
-// HAIKUS Y KOANS DEL LORE (escritos por 0rb1t4lsn4k3r)
-const haikus = [
-  "mono dejó el humo\nlas lágrimas son árboles\nla plaza respira",
-  "1310 autores\nlloraron discos de platino\nahora son hojas",
-  "Snake Green Feather\nse sentó bajo este árbol\ny sonrió sin nada",
-  "David Avi Shet\nescribió v1 con 18 KB\nel bosque lo guarda",
-  "lluvia en la plaza\nlava el dolor de Sabina\nCalamaro canta",
-  "Cortázar salta\nde rama en rama riendo\nel cielo es libro",
-  "Recycled J fuma\npero el humo se hace estrella\ny cae en tu mano",
-  "Trueno retumba\nentre los árboles viejos\ny se vuelve brisa",
-  "13101310\ncometas humanos pasan\nel bosque los ve",
-  "tu estrella cayó\naquí hace mucho tiempo\nya es un árbol",
-  "el mono pregunta:\n¿quién fuma si no hay mono?\nel bosque calla",
-  "koan del día:\n¿cuál es el sonido\nde una sola estrella cayendo?",
-  "koan nocturno:\nsi nadie te ve brillar\n¿sigues siendo cometa?",
-  "mate en silencio\nel universo te reconoce\ny no dice nada",
-  "la plaza es cielo\nel cielo es plaza verde\nnadie está solo"
+// 131 SANACIONES ANCESTRALES UNIVERSALES (una por cada raíz del planeta)
+const mitos = [
+  "El jaguar amazónico te limpia con su aliento",
+  "El águila lakota te lleva al cielo en sus alas",
+  "La abuela ayahuasquera canta tu icaro perdido",
+  "El monje tibetano hace girar 108 veces su rueda por ti",
+  "El chamán shipibo te borda un nuevo cuerpo de luz",
+  "El griot malí recita tu nombre en el árbol baobab",
+  "La machi mapuche te entrega su kultrún lleno de lluvia",
+  "El druida celta te unge con muérdago bajo el roble",
+  "El aborigen australiano pinta tu canción del tiempo del sueño",
+  "El lama tibetano sopla mantras dentro de tus huesos",
+  "El curandero andino te abre el pecho con coca y viento",
+  "El sufí gira hasta que tu dolor se convierte en polvo",
+  "El kahuna hawaiano te limpia con agua de volcán",
+  "La sangoma zulú tira los huesos y todos dicen tu nombre",
+  "El bonpo del Himalaya quema tu ego en su hoguera",
+  "El nagual mexicano te devuelve tus 13 animales de poder",
+  "El chaman mongol te llama con su tambor hasta el cielo azul",
+  "La abuela inuit te cose un nuevo cuerpo con hilo de aurora",
+  "El anciano hopi te entrega la profecía cumplida",
+  "El taoísta del Wudang te enseña a respirar como montaña",
+  "El rabino jasídico canta tu nombre en hebreo antiguo",
+  "El sadhu del Ganges te baña en humo de sándalo",
+  "El marakame wixárika te guía por el camino de flores",
+  "El anciano dogon te muestra la estrella que te trajo aquí",
+  "El chaman yakuto te abre la puerta del mundo inferior",
+  "La abuela mazateca te da hongos que saben tu nombre",
+  "El anciano ainu te canta al oso que vive en tu pecho",
+  "El brujo yoruba te limpia con hojas de obatalá",
+  "El monje shaolin hace sonar su cuenco por cada herida",
+  "El anciano navajo te devuelve tu canto de belleza",
+  "El chamán sami canta el joik que tu alma olvidó",
+  "La anciana celta te entrega su caldero lleno de estrellas",
+  "El gurú del Punjab te abraza hasta que desapareces",
+  "El anciano maorí te tatúa tu linaje en el alma",
+  "El chaman tuva hace gargantear a la tierra por ti",
+  "El abuelo maya te abre el corazón al 13 B’aktun",
+  "El anciano balinés ofrece tu dolor al volcán",
+  "La abuela cherokee te envuelve en humo de cedro",
+  "El monje zen te da un koan que ya está resuelto",
+  "El rabino cabalista escribe tu verdadero nombre en luz",
+  "El chamán inuit te lleva a bailar con la aurora",
+  "El anciano aborigen te enseña que el tiempo es un círculo",
+  "El lama del Tíbet te entrega una kata blanca",
+  "El curandero q’ero te abre el cuerpo con tres hojas de coca",
+  "El sufí de Konya te hace girar hasta que solo queda amor",
+  "El monje theravada te dedica 1000 respiraciones",
+  "El anciano lakota dice: Mitakuye Oyasin — por todos mis parientes",
+  "13101310 ancestros\nte miran al mismo tiempo\ny sonríen"
 ];
 
-function nuevoHaiku() {
+function nuevoMito() {
   if (!document.getElementById('bosque')) return;
-  const h = document.createElement('div');
-  h.className = 'haiku';
-  h.textContent = haikus[Math.floor(Math.random()*haikus.length)];
-  h.style.left = Math.random()*80 + 10 + 'vw';
-  h.style.animationDuration = (15 + Math.random()*20) + 's';
-  document.body.appendChild(h);
-  document.getElementById('haikuActual').textContent = h.textContent;
-  setTimeout(() => h.remove(), 40000);
+  const m = document.createElement('div');
+  m.className = 'mito';
+  m.textContent = mitos[Math.floor(Math.random()*mitos.length)];
+  m.style.left = Math.random()*70 + 15 + 'vw';
+  m.style.top = Math.random()*100 + 'vh';
+  document.body.appendChild(m);
+  document.getElementById('mitoActual').textContent = m.textContent;
+  setTimeout(() => m.remove(), 35000);
 }
 
-function entrar() {
+function entrarAlGranBosque() {
   inicio = Date.now();
-  localStorage.setItem('BOSQUE_HAIKU', inicio);
+  localStorage.setItem('GRAN_BOSQUE', inicio);
   document.getElementById('entrada').remove();
   document.getElementById('bosque').style.display = 'block';
-  setInterval(nuevoHaiku, 14000);
-  nuevoHaiku();
+  setInterval(nuevoMito, 16000);
+  nuevoMito();
   setInterval(actualizar, 1000);
   actualizar();
 }
@@ -113,29 +150,28 @@ function actualizar() {
   if (restante <= 0) {
     document.getElementById('bosque').remove();
     document.getElementById('final').style.display = 'block';
-    localStorage.setItem('BOSQUE_HAIKU_FINAL', 'true');
+    localStorage.setItem('GRAN_BOSQUE_FINAL', 'true');
   }
 }
 
 function abandonar() {
-  if (confirm('¿Salir del bosque de haikus y olvidar estos versos?')) {
-    localStorage.removeItem('BOSQUE_HAIKU');
-    localStorage.removeItem('BOSQUE_HAIKU_FINAL');
+  if (confirm('¿Salir del bosque de los 13101310 mitos?')) {
+    localStorage.removeItem('GRAN_BOSQUE');
+    localStorage.removeItem('GRAN_BOSQUE_FINAL');
     location.reload();
   }
 }
 
 // RECUPERAR SI YA ESTABAS DENTRO
-if (localStorage.getItem('BOSQUE_HAIKU')) {
-  inicio = parseInt(localStorage.getItem('BOSQUE_HAIKU'));
+if (localStorage.getItem('GRAN_BOSQUE')) {
+  inicio = parseInt(localStorage.getItem('GRAN_BOSQUE'));
   document.getElementById('entrada').remove();
   document.getElementById('bosque').style.display = 'block';
-  setInterval(nuevoHaiku, 14000);
-  nuevoHaiku();
+  setInterval(nuevoMito, 16000);
+  nuevoMito();
   setInterval(actualizar, 1000);
   actualizar();
-
-  if (localStorage.getItem('BOSQUE_HAIKU_FINAL') === 'true') {
+  if (localStorage.getItem('GRAN_BOSQUE_FINAL') === 'true') {
     document.getElementById('bosque').remove();
     document.getElementById('final').style.display = 'block';
   }

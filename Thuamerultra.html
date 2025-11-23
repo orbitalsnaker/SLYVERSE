@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THUAMER ULTRA · MMORPG Completo v6.0</title>
+<title>THUAMER ULTRA · MMORPG Completo v7.0</title>
 <style>
 body{margin:0;overflow:hidden;background:#000;font-family:monospace;color:#0f0;font-size:12px}
 canvas{display:block;image-rendering:pixelated}
@@ -21,8 +21,7 @@ canvas{display:block;image-rendering:pixelated}
 <div id="lb">TOP 10 LVL<br><span id="leaderboard"></span></div>
 <script>
 /*
-  THUAMER ULTRA v6.0 · Totalmente jugable y expandido
-  Motor ECS avanzado, combate profundo, mundo dinámico, quests, skills, crafting, bosses, eventos
+  THUAMER ULTRA v7.0 · Todo incluido: Combate, Quests, Skills, Crafting, Bosses, Mazmorras
   Todos los derechos reservados por 0rb1t4lsn4k3r
 */
 
@@ -49,25 +48,25 @@ let particles=[];const FX={spawn(x,y,color){particles.push({x,y,color,vx:(Math.r
 
 // --- READ.ME INTEGRADO ---
 let LANG=(navigator.language||"en").slice(0,2);if(!['es','en','fr','pt'].includes(LANG))LANG='en';
-const I18N={es:{title:"Bienvenido a THUAMER ULTRA",controls:"Controles: WASD/Click/Skills 1-9/SPACE ataque/E portal/I inventario/Q quests/H ayuda",ready:"¡Buena suerte!"},en:{title:"Welcome to THUAMER ULTRA",controls:"Controls: WASD/Click/Skills 1-9/SPACE attack/E portal/I inventory/Q quests/H help",ready:"Good luck!"}};
-let showReadme=true;function drawREADME(){let T=I18N[LANG];ctx.fillStyle='rgba(0,0,0,0.8)';ctx.fillRect(50,50,700,350);ctx.fillStyle='#0f0';ctx.font='22px monospace';ctx.fillText(T.title,70,90);ctx.font='16px monospace';ctx.fillText(T.controls,70,130);ctx.fillText(T.ready,70,180);} 
+const I18N={es:{title:"Bienvenido a THUAMER ULTRA",controls:"Controles: WASD/Click/Skills 1-9/SPACE ataque/E portal/I inventario/Q quests/H ayuda/Crafting incluido",ready:"¡Explora, grindea y vence!"},en:{title:"Welcome to THUAMER ULTRA",controls:"Controls: WASD/Click/Skills 1-9/SPACE attack/E portal/I inventory/Q quests/H help/Crafting included",ready:"Explore, grind and conquer!"}};
+let showReadme=true;function drawREADME(){let T=I18N[LANG];ctx.fillStyle='rgba(0,0,0,0.85)';ctx.fillRect(50,50,750,400);ctx.fillStyle='#0f0';ctx.font='22px monospace';ctx.fillText(T.title,70,90);ctx.font='16px monospace';ctx.fillText(T.controls,70,130);ctx.fillText(T.ready,70,180);} 
 onkeydown=e=>{if(showReadme){showReadme=false;}};
 
 // --- JUGADOR ---
-let playerID=ECS.create(CPlayer({x:W/2,y:H/2,lvl:1,hp:100,mhp:100,mana:50,mmn:50,str:10,agi:10,int:10,sta:10,inv:[],skills:[{n:'Slash',cd:0,maxCd:1}],mount:false,target:null,path:[]}));
+let playerID=ECS.create(CPlayer({x:W/2,y:H/2,lvl:1,hp:120,mhp:120,mana:60,mmn:60,str:12,agi:12,int:12,sta:12,inv:[],skills:[{n:'Slash',cd:0,maxCd:1},{n:'Fireball',cd:0,maxCd:2.5}],mount:false,target:null,path:[],crafting:{}}));
 
 // --- MOBS ---
-for(let i=0;i<150;i++){ECS.create(CMob({x:Math.random()*World.size,y:Math.random()*World.size,hp:50+Math.random()*150,mhp:50+Math.random()*150,lvl:1+Math.floor(Math.random()*15),col:'#f44'}));}
+for(let i=0;i<200;i++){ECS.create(CMob({x:Math.random()*World.size,y:Math.random()*World.size,hp:60+Math.random()*200,mhp:60+Math.random()*200,lvl:1+Math.floor(Math.random()*20),col:'#f44'}));}
 
 // --- NPCS y QUESTS ---
-for(let i=0;i<30;i++){ECS.create(CNPC({x:Math.random()*World.size,y:Math.random()*World.size,n:"NPC"+(i+1),quests:[{id:i,desc:"Mata 10 mobs",progress:0,done:false}]}));}
+for(let i=0;i<40;i++){ECS.create(CNPC({x:Math.random()*World.size,y:Math.random()*World.size,n:"NPC"+(i+1),quests:[{id:i,desc:"Mata 10 mobs",progress:0,done:false},{id:i+100,desc:"Recoge 5 items",progress:0,done:false}]}));}
 
 // --- ITEMS ---
-for(let i=0;i<100;i++){ECS.create(CItem({x:Math.random()*World.size,y:Math.random()*World.size,id:i,type:'loot'}));}
+for(let i=0;i<150;i++){ECS.create(CItem({x:Math.random()*World.size,y:Math.random()*World.size,id:i,type:'loot'}));}
 
 // --- PORTALES Y BOSSES ---
 ECS.create({portal:{x:World.size/2,y:World.size/2,to:"Dungeon 1"}});
-ECS.create(CMob({x:World.size/2+100,y:World.size/2+100,hp:1000,mhp:1000,lvl:50,col:'#ff0',boss:true}));
+ECS.create(CMob({x:World.size/2+120,y:World.size/2+120,hp:1500,mhp:1500,lvl:75,col:'#ff0',boss:true}));
 
 // --- LOOP PRINCIPAL ---
 Engine.run(()=>{

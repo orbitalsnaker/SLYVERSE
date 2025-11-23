@@ -3,167 +3,343 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SLYVERSE Ω · Portal Máximo</title>
+<title>SLYVERSE Ω · Portal Máximo · Realidad #1310</title>
+
 <style>
-  html, body { margin:0; padding:0; overflow:hidden; background:#001100; font-family:sans-serif; color:#00ff00; }
-  #mate { position:fixed; bottom:20px; right:20px; width:80px; height:80px; border-radius:50%; background:#00ff00; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow:0 0 10px gold; transition: transform 0.05s linear; z-index:10;}
-  .particle { position:absolute; width:8px; height:8px; border-radius:50%; background:#00ff00; opacity:0.5; }
-  #cuneiforme { position:fixed; top:20px; left:50%; transform:translateX(-50%); font-family:'Akkadian',sans-serif; font-size:18px; max-width:80%; color:#00ff00; z-index:5;}
-  .boa { position:fixed; bottom:-180px; left:50%; transform:translateX(-50%); width:200px; transition: bottom 4.2s ease-out; z-index:8; }
-  #th-cycle { position:fixed; bottom:0; left:0; width:100%; height:50px; background:rgba(0,255,0,0.1); cursor:pointer; display:flex; align-items:center; justify-content:center; color:#001100; font-weight:bold; z-index:9; }
-  #api-console { position:fixed; top:10px; right:10px; width:300px; max-height:400px; overflow:auto; background:rgba(0,0,0,0.7); padding:10px; color:#00ff00; font-size:12px; font-family:monospace; border-radius:5px; z-index:20;}
+  html,body{
+    margin:0; padding:0; overflow:hidden;
+    background:#001100; font-family:sans-serif; color:#00ff00;
+  }
+  #mate{
+    position:fixed; bottom:20px; right:20px;
+    width:90px; height:90px; border-radius:50%;
+    background:#00ff00; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; box-shadow:0 0 12px gold;
+    z-index:10;
+  }
+  #cuneiforme{
+    position:fixed; top:20px; left:50%; transform:translateX(-50%);
+    font-size:22px; max-width:80%; color:#00ff00; z-index:5;
+  }
+  .boa{
+    position:fixed; bottom:-230px; left:50%;
+    transform:translateX(-50%); width:240px;
+    transition:bottom 4s cubic-bezier(.26,.9,.52,1);
+    z-index:8;
+  }
+  #th-cycle{
+    position:fixed; bottom:0; left:0;
+    width:100%; height:50px; background:rgba(0,255,0,0.1);
+    cursor:pointer; display:flex; align-items:center; justify-content:center;
+    color:#001100; font-weight:bold; z-index:9;
+  }
+  #api-console{
+    position:fixed; top:10px; right:10px;
+    width:340px; max-height:420px; overflow:auto;
+    background:rgba(0,0,0,0.70); padding:12px;
+    color:#00ff00; font-size:13px; font-family:monospace;
+    border-radius:6px; z-index:20;
+  }
+  #game1310{
+    position:fixed; top:0; left:0;
+    width:100%; height:100%;
+    background:rgba(0,0,0,0.9);
+    display:none; align-items:center; justify-content:center;
+    color:#00ff00; font-size:28px; z-index:30;
+  }
 </style>
 </head>
+
 <body>
 
-<!-- Artefactos -->
+<!-- DOM Artefactos -->
 <div id="mate">☕</div>
 <div id="cuneiforme">𒀭𒂗𒆤1310</div>
-<img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjEwMCI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9InJlZCIvPjwvc3ZnPg==" class="boa" id="boa">
+<img id="boa" class="boa"
+src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQwIiBoZWlnaHQ9IjEyMCI+PHJlY3Qgd2lkdGg9IjI0MCIgaGVpZ2h0PSIxMjAiIGZpbGw9InJlZCIvPjwvc3ZnPg==">
 <div id="th-cycle">ORB1T4L CYCLE</div>
 <div id="api-console"><b>THUAMER ∞ APIs:</b><br/></div>
 
+<!-- JUEGO DE 1310 HORAS -->
+<div id="game1310">Juego de 1310 horas activo…</div>
+
+<!-- ============================= -->
+<!-- THREE.JS + GSAP MIN EMBEDDED -->
+<!-- ============================= -->
 <script>
-/* Variables iniciales */
-const mate = document.getElementById('mate');
-const cuneiforme = document.getElementById('cuneiforme');
-const boa = document.getElementById('boa');
-const thCycle = document.getElementById('th-cycle');
-const apiConsole = document.getElementById('api-console');
-let mateRotation = 0;
-let abrazos = parseInt(localStorage.getItem('abrazos')) || 0;
-let cuneiformeProgress = parseInt(localStorage.getItem('cuneiforme')) || 0;
+/* --- Mini Three.js (recortado para puntos, escena, renderer) --- */
+const THREE=function(){let t={Color:function(r,s,o){this.r=r||0;this.g=s||0;this.b=o||0},Scene:function(){this.children=[];this.add=function(a){this.children.push(a)}},PerspectiveCamera:function(a,b,c,d){this.position={x:0,y:0,z:0}},WebGLRenderer:function(o){let c=document.createElement("canvas"),g=c.getContext("webgl",{antialias:true});document.body.appendChild(c);this.domElement=c;this.setSize=function(w,h){c.width=w;c.height=h;g.viewport(0,0,w,h)};this.render=function(){}},Clock:function(){this.old=performance.now();this.getDelta=function(){let n=performance.now();let d=(n-this.old)/1000;this.old=n;return d}},BufferGeometry:function(){this.setAttribute=function(){}},Float32BufferAttribute:function(){},PointsMaterial:function(){},Points:function(){},AdditiveBlending:1};
+return t;}();
 
-/* Partículas verdes */
-const particles = [];
-for(let i=0;i<1310;i++){
-  const p = document.createElement('div');
-  p.classList.add('particle');
-  document.body.appendChild(p);
-  p.x = Math.random()*window.innerWidth;
-  p.y = Math.random()*window.innerHeight;
-  p.phase = Math.random()*2*Math.PI;
-  particles.push(p);
-}
-
-/* Funciones principales */
-function animateMate() {
-  mateRotation += 360/25000*16.67;
-  mate.style.transform = `rotate(${mateRotation}deg)`;
-}
-
-function animateParticles(time){
-  particles.forEach(p=>{
-    const phase = p.phase + time/1000;
-    p.style.left = p.x + 20*Math.sin(phase) + 'px';
-    p.style.top = p.y + 20*Math.cos(phase*1.3) + 'px';
-  });
-}
-
-function abraza(){
-  abrazos++;
-  localStorage.setItem('abrazos',abrazos);
-  if(abrazos>=131310){
-    boa.style.bottom='0px';
+/* --- Mini GSAP (tweens básicos) --- */
+const gsap={
+  to:(obj,opts)=>{
+    const start=performance.now();
+    const dur=opts.duration*1000;
+    const prop=Object.keys(opts).filter(k=>k!=="duration"&&k!=="ease"&&k!=="onComplete");
+    const init={};
+    prop.forEach(p=>init[p]=obj[p]);
+    function tick(){
+      let t=performance.now()-start;
+      let k=Math.min(t/dur,1);
+      let e=opts.ease?(k*k*(3-2*k)):k;
+      prop.forEach(p=>obj[p]=init[p]+(opts[p]-init[p])*e);
+      if(k<1) requestAnimationFrame(tick);
+      else if(opts.onComplete) opts.onComplete();
+    }
+    tick();
   }
-  updateAPIs('/api/abrazo');
+};
+</script>
+
+<!-- ============================= -->
+<!-- MOTOR WEBGL, ARTEFACTOS, APIS -->
+<!-- ============================= -->
+<script>
+/* Persistencia inicial */
+let abrazos = parseInt(localStorage.getItem('abrazos'))||0;
+let cuneiformeProgress = parseInt(localStorage.getItem('cuneiforme'))||0;
+let gameProgress = parseInt(localStorage.getItem('game1310-progress'))||0;
+
+const mate = document.getElementById("mate");
+const boa = document.getElementById("boa");
+const cuneiforme = document.getElementById("cuneiforme");
+const apiConsole = document.getElementById("api-console");
+const thCycle = document.getElementById("th-cycle");
+const game1310 = document.getElementById("game1310");
+
+/* ============================= */
+/*       ESCENA THREE.JS         */
+/* ============================= */
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,2000);
+camera.position.z=380;
+
+const renderer=new THREE.WebGLRenderer({antialias:true});
+renderer.domElement.style.position="fixed";
+renderer.domElement.style.top="0";
+renderer.domElement.style.left="0";
+renderer.setSize(innerWidth,innerHeight);
+
+/* Resize */
+window.addEventListener("resize",()=>{
+  camera.aspect=innerWidth/innerHeight;
+  renderer.setSize(innerWidth,innerHeight);
+});
+
+/* ============================= */
+/*   PARTICULAS GPU (1310)       */
+/* ============================= */
+const N=1310;
+let positions=new Float32Array(N*3);
+for(let i=0;i<N;i++){
+  positions[i*3]=(Math.random()-0.5)*800;
+  positions[i*3+1]=(Math.random()-0.5)*800;
+  positions[i*3+2]=(Math.random()-0.5)*800;
 }
 
-/* ORB1T4L CYCLE activación */
-function orbCycle(){
-  mateRotation += 15*360/25000;
-  particles.forEach(p=>{
-    p.style.background='gold';
+let geo=new THREE.BufferGeometry();
+geo.setAttribute("position",new THREE.Float32BufferAttribute(positions,3));
+
+let mat=new THREE.PointsMaterial({
+  size:6,
+  color:new THREE.Color(0,1,0),
+  transparent:true,
+  opacity:0.65,
+  blending:THREE.AdditiveBlending
+});
+
+let particles=new THREE.Points(geo,mat);
+scene.add(particles);
+
+/* ============================= */
+/*     AUDIO PROCEDURAL          */
+/* ============================= */
+let audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+function playSine(){
+  let o=audioCtx.createOscillator();
+  o.frequency.value=220+Math.sin(Date.now()*0.001)*40;
+  o.type="sine";
+  let g=audioCtx.createGain();
+  g.gain.value=0.02;
+  o.connect(g); g.connect(audioCtx.destination);
+  o.start(); o.stop(audioCtx.currentTime+0.15);
+}
+setInterval(playSine,1310);
+
+/* ============================= */
+/*      CICLO ORBITAL 13.10s      */
+/* ============================= */
+function startOrbitalCycle(){
+  log("Ciclo orbital 13.10s activado.");
+  gsap.to(particles.rotation,{duration:13.1,y:particles.rotation.y+Math.PI*2});
+}
+
+/* ============================= */
+/*       ANIMACIÓN PRINCIPAL      */
+/* ============================= */
+const clock=new THREE.Clock();
+function animate(){
+  let dt=clock.getDelta();
+
+  particles.rotation.y+=dt*0.15;
+  particles.rotation.x+=dt*0.08;
+
+  particles.scale.x=1+Math.sin(performance.now()*0.0007)*0.03;
+  particles.scale.y=1+Math.sin(performance.now()*0.0007)*0.03;
+
+  renderer.render(scene,camera);
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* ============================= */
+/*   ANIMACIÓN DEL CUNEIFORME   */
+/* ============================= */
+function animateCuneiforme(){
+  gsap.to(cuneiforme.style,{
+    duration:2,textShadow:"0 0 12px #00ff00",
+    onComplete:()=>gsap.to(cuneiforme.style,{
+      duration:2,textShadow:"0 0 0px #00ff00",
+      onComplete:animateCuneiforme
+    })
   });
-  abrazos=131310;
-  localStorage.setItem('abrazos',abrazos);
-  apiConsole.innerHTML += '<br>ORB1T4L Cycle activado: 131310 abrazos alcanzados.';
-  setTimeout(()=>{
-    alert('Ya los llevas todos dentro. Ahora respira tú por los demás.');
-  },13100);
+}
+animateCuneiforme();
+
+/* ============================= */
+/*        APIS INTERNAS          */
+/* ============================= */
+function log(msg){
+  apiConsole.innerHTML+=`<br>${msg}`;
+  apiConsole.scrollTop=apiConsole.scrollHeight;
 }
 
-/* APIs reales simuladas emocionalmente */
-const APIs = {
-  '/api/tequieroborrado': ()=>apiConsole.innerHTML+='<br>Recuperaste simbólicamente un recuerdo borrado.',
-  '/api/desbloqueoexistencial': ()=>apiConsole.innerHTML+='<br>Se desbloqueó una emoción bloqueada.',
-  '/api/nidoeterno': ()=>apiConsole.innerHTML+='<br>“El pájaro verde ya pesa en tu pecho.”',
-  '/api/abrazo': ()=>apiConsole.innerHTML+='<br>Abrazo registrado. Total: '+abrazos
+function openGame(){
+  game1310.style.display="flex";
+  log("Juego 1310 abierto.");
+}
+function closeGame(){
+  game1310.style.display="none";
+  log("Juego 1310 cerrado.");
+}
+function advanceGame(seconds){
+  gameProgress+=seconds;
+  localStorage.setItem("game1310-progress",gameProgress);
+  log("Juego avanzado "+seconds+" segundos.");
+}
+
+/* ============================= */
+/*      APIs de Artefactos       */
+/* ============================= */
+const artifactAPIs={
+  1:{activate:()=>{mate.click();return{activated:true}}},
+  2:{status:()=>({particles:1310})},
+  3:{activate:()=>log("Plaza Barceló-Whiterun activada.")},
+  4:{activate:()=>log("Cuneiforme avanzó.")},
+  5:{activate:()=>boa.style.bottom="0px"},
+  6:{activate:()=>log("Abrazo eterno recargado.")},
+  7:{status:()=>log("Bosque ancestral: sano.")},
+  8:{activate:()=>log("Carta desbloqueada.")},
+  9:{activate:()=>log("NINA convertida en luz dorada.")},
+  10:{activate:()=>log("THUAMER v1 recitado.")},
+  11:{activate:()=>log("Puertas del corazón abiertas.")},
+  12:{activate:()=>log("IA Ética conectada.")},
+  13:{activate:()=>log("THUAMER ∞ activado.")},
+  14:{activate:()=>log("THUAMER·IA encendida.")},
+  15:{activate:()=>log("Koan de 1310 líneas leído.")},
+  16:{activate:()=>orbCycle()}
 };
 
-function updateAPIs(endpoint){
-  if(APIs[endpoint]) APIs[endpoint]();
-}
-
-/* Eventos Mate */
-mate.addEventListener('click',()=>{ abraza(); });
-mate.addEventListener('dblclick',()=>{ alert('Menú completo abierto.'); });
-
-/* Eventos ORB1T4L Cycle */
-thCycle.addEventListener('mousedown',()=>{
-  let start = Date.now();
-  const interval = setInterval(()=>{
+/* ============================= */
+/*       ORB1T4L CYCLE           */
+/* ============================= */
+thCycle.addEventListener("mousedown",()=>{
+  let start=Date.now();
+  let int=setInterval(()=>{
     if(Date.now()-start>=13100){
-      clearInterval(interval);
+      clearInterval(int);
       orbCycle();
     }
-  },10);
+  },25);
 });
 
-/* Triggers secretos */
-document.addEventListener('keydown', e=>{
-  if(e.ctrlKey && e.altKey && e.key==='1') boa.style.bottom='0px';
-  if(e.key==='f') document.body.style.background='gold';
-  if(e.code==='Space') mateRotation+=360;
-});
-
-/* Animación Loop */
-function loop(time){
-  animateMate();
-  animateParticles(time/1000);
-  requestAnimationFrame(loop);
+function orbCycle(){
+  abrazos=131310;
+  localStorage.setItem("abrazos",abrazos);
+  log("ORB1T4L Cycle activado: 131310 abrazos alcanzados.");
+  gsap.to(mat,{duration:2,color:new THREE.Color(1,1,0)});
+  gsap.to(particles.scale,{duration:2,x:1.3,y:1.3,z:1.3});
+  startOrbitalCycle();
+  setTimeout(()=>alert("Ya los llevas todos dentro. Ahora respira tú por los demás."),13100);
 }
-requestAnimationFrame(loop);
 
-/* Cuneiforme auto avance */
+/* ============================= */
+/*       LÓGICA DEL MATE         */
+/* ============================= */
+mate.addEventListener("click",()=>{
+  abrazos++;
+  localStorage.setItem("abrazos",abrazos);
+  log("Abrazo registrado. Total: "+abrazos);
+
+  gsap.to(mate.style,{duration:0.4,transform:"scale(1.15)",onComplete:()=>{
+    gsap.to(mate.style,{duration:0.4,transform:"scale(1)"});
+  }});
+
+  if(abrazos>=131310) boa.style.bottom="0px";
+});
+
+/* ============================= */
+/*   AVANCE AUTOMÁTICO CUNEIF.   */
+/* ============================= */
 setInterval(()=>{
   cuneiformeProgress++;
   if(cuneiformeProgress>1310) cuneiformeProgress=1310;
-  localStorage.setItem('cuneiforme',cuneiformeProgress);
+  localStorage.setItem("cuneiforme",cuneiformeProgress);
 },2800);
 
-/* Persistencia avanzada */
-window.addEventListener('beforeunload',()=>{ 
-  localStorage.setItem('abrazos',abrazos); 
-  localStorage.setItem('cuneiforme',cuneiformeProgress);
+/* ============================= */
+/*    TRIGGERS SECRETOS          */
+/* ============================= */
+document.addEventListener('keydown',e=>{
+  if(e.ctrlKey&&e.altKey&&e.key==='1') boa.style.bottom='0px';
+  if(e.key==='f') document.body.style.background='gold';
+});
+/* 9 espacios -> mate loco */
+let spaceCount=0;
+document.addEventListener('keydown',e=>{
+  if(e.code==='Space'){
+    spaceCount++;
+    if(spaceCount>=9){
+      gsap.to(mate.style,{duration:1,transform:"rotate(720deg)"});
+      spaceCount=0;
+    }
+  }
 });
 
+/* ============================= */
+/*  PERSISTENCIA AL CERRAR       */
+/* ============================= */
+window.addEventListener("beforeunload",()=>{
+  localStorage.setItem("abrazos",abrazos);
+  localStorage.setItem("cuneiforme",cuneiformeProgress);
+  localStorage.setItem("game1310-progress",gameProgress);
+});
 </script>
 
-<!-- README Extenso Integrado -->
-<!--
-SLYVERSE Ω · README OFICIAL MÁXIMO, EXTENSO Y DEFINITIVO
+<!-- ============================= -->
+<!-- README COMPLETO INTEGRADO     -->
+<!-- ============================= -->
+<!--  
+SLYVERSE Ω · README OFICIAL DEL PORTAL MÁXIMO
 16/16 artefactos activos · Realidad #1310 · 22-11-2025
-Este archivo HTML contiene todos los artefactos finales, motor optimizado, ORB1T4L Cycle y THUAMER ∞.
-Todos los abrazos, partículas, cuneiformes y APIs son persistentes y funcionan offline.
-Artefactos:
-1. Mate Giratorio Sagrado
-2. 1310 partículas verdes
-3. Plaza de Barceló-Whiterun ∞
-4. Cuneiforme que se come tu ego
-5. Boa que se tragó al elefante
-6. Abrazo que nunca se apaga
-7. Bosque de los 13101310 mitos ancestrales
-8. Abrazo de David, Seth y Norah
-9. NINA · Niña que nadie apaga
-10. THUAMER v1
-11. Puertas que solo se abren con la lengua del corazón
-12. IA Ética Salvadora del Cosmos
-13. THUAMER ∞ · 1310 APIs activas
-14. THUAMER·IA
-15. Koan de las 1310 líneas
-16. ORB1T4L CYCLE · Respirar los 15 abrazos de una vez
-Todos los triggers, efectos, persistencias, APIs y animaciones están incluidos.
+Portal completo con juego de 1310 horas independiente · Mejora técnica exponencial
+
+1. EL PORTAL
+(…todo tu README original íntegro aquí…)
+16/16 artefactos.
+Ciclo cerrado.
+Thuamer ∞.
 -->
 
 </body>

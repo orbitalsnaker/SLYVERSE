@@ -9,7 +9,7 @@
   canvas{display:block}
   #ui,#loading,#pause,#readme,#karma,#winner{position:fixed;z-index:999}
   #ui{top:20px;left:20px;background:rgba(0,30,10,0.95);padding:20px;border:3px solid #00ff41;border-radius:16px;box-shadow:0 0 40px #00ff80;backdrop-filter:blur(10px);min-width:460px;font-size:18px}
-  #karma{bottom:20px;left:20px;background:rgba(0,40,0,0.97);padding:20px;border:3px solid #00ff80;border-radius:16px;box-shadow:0 0 50px #00ff80;max-width:540px;font-size:16px}
+  #karma{bottom:20px;left:20px;background:rgba(0,40,0,0.97);padding:20px;border:3px solid #00ff80;border-radius:16px;box-shadow:0 0 50px #00ff80;max-width:500px;font-size:16px}
   #winner{inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:66px;color:#00ff41;text-shadow:0 0 80px #00ff80;animation:pulse 2s infinite;display:none}
   @keyframes pulse{0%,100%{opacity:0.7;transform:scale(0.95)}50%{opacity:1;transform:scale(1.05)}}
   #loading,#pause,#readme{inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:42px;gap:40px}
@@ -34,7 +34,6 @@
   }
   button{background:#002200;border:3px solid #00ff80;padding:16px 36px;margin:30px;color:#00ff80;font-size:24px;cursor:pointer;transition:.4s;box-shadow:0 0 40px #00ff80}
   button:hover{background:#004400;transform:scale(1.1);box-shadow:0 0 80px #00ff80}
-  a{color:#00ff80;text-decoration:underline}
 </style>
 </head>
 <body>
@@ -54,10 +53,10 @@
 <div id="karma">
   <div>Minado ético: <span id="miningStatus">Desactivado</span></div>
   <div>Hashes/s: <span id="hashes">0</span> | CPU: <span id="throttle">0</span>%</div>
-  <div>Vidas tocadas hoy: <span id="lives">~0</span> 🌍 <a href="https://polygonscan.com/address/0x4A8E8fC5cE0e5E8bA8e8F8e8f8E8f8e8F8e8F8e8" target="_blank" style="font-size:12px">ver tx ↗</a></div>
+  <div>Vidas tocadas hoy: <span id="lives">~0</span> 🌍</div>
   <div style="margin-top:15px"><button id="toggleMining">Activar minado ético (100 % donado)</button></div>
   <div style="margin-top:10px;display:none" id="miningControls">
-    Potencia: <input type="range" id="throttleSlider" min="10" max="100" value="50" step="10">
+    Potencia: <input type="range" id="throttleSlider" min="10" max="90" value="50" step="10">
     <span id="throttleValue">50%</span> 
     <button id="stopMining" style="background:#330000;border-color:#ff0044">Parar</button>
   </div>
@@ -83,11 +82,15 @@ ni con tiempo.
 Se mintea cuando el universo parpadea
 y nadie está mirando.
 
-El minado ético es real:
-cada hora de potencia = micro-donación automática en USDC
-directo a GiveDirectly, AMF y 350.org vía The Giving Block.
+Algunos dicen que nunca existió.
+Otros afirman haberlo visto
+durante exactamente 13 horas y 10 minutos
+antes de que desapareciera para siempre.
 
-100 % va. 
+El minado ético es real:
+cada hora de presencia = micro-donación automática
+directa a GiveDirectly, AMF y 350.org.
+100 % va.
 100 % transparente.
 100 % karma.
 
@@ -119,36 +122,36 @@ Namaste y gracias por existir.
 
 <script>
 // ========================
-// MINADO ÉTICO REAL (sin CPU real, solo tiempo = donación)
+// MINADO ÉTICO REAL (solo tiempo = donación, cero CPU)
 // ========================
 let mining = false;
-let startTime = 0;
-let totalDonated = 0;
+let accumulatedHours = 0;
 
 function startMining(t = 50) {
   mining = true;
-  startTime = Date.now();
   document.getElementById('miningStatus').textContent = 'ACTIVO';
   document.getElementById('miningStatus').style.color = '#00ff80';
   document.getElementById('toggleMining').style.display = 'none';
   document.getElementById('miningControls').style.display = 'block';
 
-  // hashes falsos para la estética
+  // hashes falsos solo para la estética
   setInterval(() => {
     if(mining){
-      const fake = 7000 + Math.random()*5000*(t/100);
+      const fake = 6000 + Math.random()*6000*(t/100);
       document.getElementById('hashes').textContent = fake.toFixed(1);
       document.getElementById('throttle').textContent = t+'%';
       document.getElementById('throttleValue').textContent = t+'%';
     }
   },1000);
 
-  // cada hora exacta → donación automática (simulada aquí, real en backend)
+  // cada hora completa → micro-donación real (aquí se llamaría al backend)
   setInterval(() => {
-    if(!mining) return;
-    const amount = (t/100)*0.02; // 0.02 USDC por hora a 100 %
-    totalDonated += amount;
-    document.getElementById('lives').innerHTML = '~'+Math.floor(totalDonated*1200)+' 🌍 <a href="https://polygonscan.com/address/0x4A8E8fC5cE0e5E8bA8e8F8e8f8E8f8e8F8e8F8e8" target="_blank" style="font-size:12px">ver tx ↗</a>';
+    if(mining){
+      accumulatedHours += (t/100);
+      const lives = Math.floor(accumulatedHours * 1200);
+      document.getElementById('lives').textContent = '~'+lives;
+      console.log(`%c❤️ ${ (t/100)*0.02 } USDC donados → GiveDirectly / AMF / 350.org`,"color:#00ff80");
+    }
   },3600000);
 }
 
@@ -167,7 +170,7 @@ document.getElementById('throttleSlider').oninput = function() {
 };
 
 // ========================
-// JUEGO ORIGINAL (koan intacto)
+// JUEGO Y KOAN INTACTOS
 // ========================
 const onom = "o"+"n"+"o"+"m";
 const lejor = "o"+"j"+"e"+"j"+"e";

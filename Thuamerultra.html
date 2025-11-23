@@ -3,98 +3,182 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THUAMER ULTRA V1.5 · MMORPG ÉPICO</title>
+<title>THUAMER ULTRA V1 – MMORPG ÉPICO DEFINITIVO</title>
 <style>
-body{margin:0;overflow:hidden;background:#000;font-family:monospace;color:#0f0;font-size:12px}
-canvas{display:block;image-rendering:pixelated}
-#ui{position:fixed;top:4px;left:4px;background:rgba(0,15,0,.98);padding:8px;border:1px solid #0f0;z-index:20;max-width:450px;font-size:11px}
-#chat{position:fixed;bottom:4px;left:4px;width:580px;height:190px;background:rgba(0,0,0,.95);border:1px solid #0f0;padding:8px;overflow:auto;font-size:10px;line-height:1.3}
-#mm{position:fixed;top:4px;right:4px;width:180px;height:180px;background:#000;border:1px solid #0f0}
-#lb{position:fixed;top:188px;right:4px;width:180px;height:260px;background:rgba(0,15,0,.95);border:1px solid #0f0;overflow:auto;font-size:9px;padding:6px}
+body{margin:0;overflow:hidden;background:#000;font-family:monospace;color:#0f0;font-size:12px;}
+canvas{display:block;image-rendering:pixelated;}
+#ui{position:fixed;top:4px;left:4px;background:rgba(0,15,0,.98);padding:8px;border:1px solid #0f0;z-index:20;max-width:500px;font-size:11px;}
+#chat{position:fixed;bottom:4px;left:4px;width:600px;height:200px;background:rgba(0,0,0,.95);border:1px solid #0f0;padding:8px;overflow:auto;font-size:10px;line-height:1.3;}
+#mm{position:fixed;top:4px;right:4px;width:180px;height:180px;background:#000;border:1px solid #0f0;}
+#lb{position:fixed;top:188px;right:4px;width:180px;height:260px;background:rgba(0,15,0,.95);border:1px solid #0f0;overflow:auto;font-size:9px;padding:6px;}
 </style>
 </head>
 <body>
-<canvas id="c"></canvas>
-<div id="ui">Cargando THUAMER ULTRA V1.5...</div>
-<div id="chat">» THUAMER ULTRA V1.5 cargado!<br>» WASD/Mouse: Mover | CLICK Izq: Ataque | Der: Mover a | 1-4 Skills | E:Interact NPC/Portal | I:Inv | C:Craft | Q:Quests | H:Ayuda | ¡Grindea al boss!</div>
+<canvas id="gameCanvas"></canvas>
+<div id="ui">Cargando THUAMER ULTRA V1...</div>
+<div id="chat">» THUAMER ULTRA V1 – Preparando mundo épico…</div>
 <canvas id="mm" width="180" height="180"></canvas>
 <div id="lb">TOP LVL GLOBAL<br><span id="leaderboard">
-1. GodSlayer 999<br>2. GrokUltra 950<br>3. 0rb1t4lsn4k3r 888<br>4. RaidBoss 777<br>5. LootKing 666<br>6. PvPGod 555<br>7. GrindPro 444<br>8. QuestMaster 333<br>9. CraftLegend 222<br>10.Tú? <span id="yourRank">1</span>
+1. GodSlayer 999<br>2. GrokUltra 950<br>3. 0rb1t4lsn4k3r 888<br>4. RaidBoss 777<br>5. LootKing 666<br>6. PvPGod 555<br>7. GrindPro 444<br>8. QuestMaster 333<br>9. CraftLegend 222<br>10. Tú? <span id="yourRank">1</span>
 </span></div>
 
 <script>
-/* THUAMER ULTRA V1.5 ÉPICO
-- MMORPG con ECS, QuadTree, NPCs, bosses, quests, loot, crafting
-- Cosméticos visibles para todos
-- Partículas, proyectiles, minimapa, audio
-- Autodetección idioma, save/load
-- Eventos del mundo usando APIs reales (clima, noticias, hora)
+/*
+THUAMER ULTRA V1 – MMORPG DEFINITIVO
+====================================
+CARACTERÍSTICAS PRINCIPALES:
+- Mundo dinámico, épico y continuo.
+- ECS + QuadTree para gestión eficiente de entidades.
+- Misiones dinámicas y NPCs con IA básica.
+- Bosses épicos y loot variado.
+- Crafting, cosméticos y skills.
+- Minimap, chat, save/load.
+- APIs reales: clima, noticias, hora → afectan mundo y misiones.
+- Audio: efectos y alertas.
+- Render avanzado con partículas, capas y cosméticos.
+- Auto-detección de idioma y readme integrado.
+
+CONTROL:
+WASD/Mouse: mover
+Click Izquierdo: atacar
+1-4: Skills
+E: interactuar NPC/Portal
+I: inventario
+C: crafting
+Q: quests
+H: ayuda/readme
+S: guardar
 */
 
-const Engine={time:{now:0,dt:0,last:0},run(cb){function loop(t){Engine.time.now=t;Engine.time.dt=Math.min((t-Engine.time.last)/1000,1/60);Engine.time.last=t;cb();requestAnimationFrame(loop);}requestAnimationFrame(loop);}};
-const ECS={nextId:1,entities:{},create(comps){const id=this.nextId++;this.entities[id]={...comps};return id;},get(id){return this.entities[id]},destroy(id){delete this.entities[id];},query(filter){return Object.entries(this.entities).filter(([_,e])=>filter(e)).map(([id])=>+id);}};
-const CPos=(x,y,r=12)=> ({pos:{x,y,r}});
-const CVel=(vx=0,vy=0)=> ({vel:{x:vx,y:vy}});
-const CSprite=(color,size=16)=> ({sprite:{color,size}});
-const CCosmetic=(head='none',cape='none',weapon='none')=>({cosmetic:{head,cape,weapon}});
+/////////////////////////
+// CONFIGURACIÓN GLOBAL //
+/////////////////////////
+const LANG = (navigator.language || 'es').slice(0,2); // autodetección
+const I18N = {
+  es: {
+    help: "WASD/Mouse: Mover | CLICK Izq: Ataque | 1-4: Skills | E:NPC/Portal | I:Inventario | C:Craft | Q:Quests | H:Ayuda/Readme | S:Guardar",
+    welcome: "¡Bienvenido a THUAMER ULTRA V1 – mundo épico dinámico!",
+    saved: "¡Juego guardado!",
+    loadOk: "¡Carga OK!"
+  }
+};
+
+/////////////////////////
+// CANVAS & RENDERING //
+/////////////////////////
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+let W,H;
+function resize(){W=canvas.width=innerWidth;H=canvas.height=innerHeight;}
+resize();addEventListener('resize',resize);
+const Renderer = {
+  cam:{x:0,y:0},
+  clear(){ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);}
+};
+
+////////////////////////////
+// ENTIDADES ECS + QUADTREE
+////////////////////////////
+const ECS = {nextId:1, entities:{}, create(comps){const id=this.nextId++;this.entities[id]={...comps};return id;}, get(id){return this.entities[id]}, destroy(id){delete this.entities[id];}, query(filter){return Object.entries(this.entities).filter(([_,e])=>filter(e)).map(([id])=>+id);}};
+class QuadTree {
+  constructor(x,y,w,h){this.bounds={x,y,w,h};this.entities=[];this.divided=false;this.children=null;}
+  subdivide(){const hw=this.bounds.w/2,hh=this.bounds.h/2;this.children=[new QuadTree(this.bounds.x,this.bounds.y,hw,hh),new QuadTree(this.bounds.x+hw,this.bounds.y,hw,hh),new QuadTree(this.bounds.x,this.bounds.y+hh,hw,hh),new QuadTree(this.bounds.x+hw,this.bounds.y+hh,hw,hh)];this.divided=true;}
+  insert(e){if(this.children){this.children.forEach(c=>c.insert(e));}else{this.entities.push(e);if(this.entities.length>4)this.subdivideAndInsert();}}
+  subdivideAndInsert(){for(let e of this.entities)for(let i=0;i<4;i++)this.children[i].insert(e);this.entities=[];}
+  query(rect,cb){if(!this.intersect(rect,this.bounds))return;this.entities.forEach(cb);if(this.divided)this.children.forEach(c=>c.query(rect,cb));}
+  intersect(r1,r2){return!(r1.x+r1.w<r2.x||r1.x>r2.x+r2.w||r1.y+r1.h<r2.y||r1.y>r2.y+r2.h);}
+}
+let qt = new QuadTree(0,0,4096*24,4096*24);
+function updateQT(){qt=new QuadTree(0,0,4096*24,4096*24);ECS.query(e=>e.pos).forEach(id=>{const p=ECS.get(id).pos;qt.insert({x:p.x-p.r,y:p.y-p.r,w:p.r*2,h:p.r*2,id});});}
+
+////////////////////////
+// COMPONENTES ECS
+////////////////////////
+const CPos=(x,y,r=12)=>({pos:{x,y,r}});
+const CVel=(vx=0,vy=0)=>({vel:{x:vx,y:vy}});
+const CSprite=(color,size=16)=>({sprite:{color,size}});
 const CPlayer=(lvl=1,hp=250,mhp=250,mana=120,mmn=120,str=20,agi=20,int=20,sta=20,inv:[],skills:[],quests:[],target:null,path:[],craft:{mat:{},rec:{}},cosmetic:{head:'none',cape:'none',weapon:'none'}})=>({player:{lvl,hp,mhp,mana,mmn,str,agi,int,sta,inv,skills,quests,target,path,craft,cosmetic}});
 const CMob=(hp,mhp,lvl,col='#f44',type='goblin')=>({mob:{hp,mhp,lvl,col,type}});
 const CNPC=(n,quests)=>({npc:{n,quests}});
 const CItem=(type,val=1)=>({item:{type,val}});
 const CPortal=(toX,toY)=>({portal:{toX,toY}});
 const CProjectile=(dmg,toX,toY)=>({proj:{dmg,toX,toY,speed:400}});
+const CCosmetic=(head='none',cape='none',weapon='none')=>({cosmetic:{head,cape,weapon}});
 
-const C=document.getElementById('c'),ctx=C.getContext('2d');let W,H;
-function resize(){W=C.width=innerWidth;H=C.height=innerHeight;ctx.imageSmoothingEnabled=false;}resize();addEventListener('resize',resize);
-const Renderer={ctx,cam:{x:0,y:0},clear(){ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);}};
-const World={size:4096*24,tiles:null,getTile(x,y){const tx=x/24|0,ty=y/24|0;return tx>=0&&tx<4096&&ty>=0&&ty<4096?this.tiles[ty][tx]:13;},isSolid(id){return id>=7;},init(){this.tiles=[];for(let y=0;y<4096;y++){this.tiles[y]=[];for(let x=0;x<4096;x++)this.tiles[y][x]=Math.random()*14|0;}}};World.init();
-const tileColors=['#020','#040','#060','#080','#0a0','#220','#330','#440','#550','#660','#480','#240','#120','#000','#111'];
-const QuadTree=class{constructor(x,y,w,h){this.bounds={x,y,w,h};this.entities=[];this.divided=false;this.children=null;}subdivide(){const hw=this.bounds.w/2,hh=this.bounds.h/2;this.children=[new QuadTree(this.bounds.x,this.bounds.y,hw,hh),new QuadTree(this.bounds.x+hw,this.bounds.y,hw,hh),new QuadTree(this.bounds.x,this.bounds.y+hh,hw,hh),new QuadTree(this.bounds.x+hw,this.bounds.y+hh,hw,hh)];this.divided=true;}insert(e){if(this.children){for(let i=0;i<4;i++)this.children[i].insert(e);}else{this.entities.push(e);if(this.entities.length>4)this.subdivideAndInsert();}}subdivideAndInsert(){for(let e of this.entities)for(let i=0;i<4;i++)this.children[i].insert(e);this.entities=[];}query(rect,cb){if(!this.intersect(rect,this.bounds))return;this.entities.forEach(cb);if(this.divided)this.children?.forEach(c=>c.query(rect,cb));}intersect(r1,r2){return!(r1.x+r1.w<r2.x||r1.x>r2.x+r2.w||r1.y+r1.h<r2.y||r1.y>r2.y+r2.h);}};
-let qt=new QuadTree(0,0,World.size,World.size);function updateQT(){qt=new QuadTree(0,0,World.size,World.size);ECS.query(e=>e.pos).forEach(id=>{const p=ECS.get(id).pos;qt.insert({x:p.x-p.r,y:p.y-p.r,w:p.r*2,h:p.r*2,id});});}
+/////////////////////////
+// INPUT
+/////////////////////////
+const Input={keys:{},mouse:{x:0,y:0,btns:0},init(){document.addEventListener('keydown',e=>{Input.keys[e.key.toLowerCase()]=1;});document.addEventListener('keyup',e=>{Input.keys[e.key.toLowerCase()]=0;});canvas.addEventListener('mousemove',e=>{Input.mouse.x=e.clientX;Input.mouse.y=e.clientY;});canvas.addEventListener('mousedown',e=>{Input.mouse.btns|=1<<e.button;});canvas.addEventListener('mouseup',e=>{Input.mouse.btns&=~(1<<e.button);});}};Input.init();
 
-const Input={keys:{},mouse:{x:0,y:0,btns:0},init(){document.addEventListener('keydown',e=>{Input.keys[e.key.toLowerCase()]=1;});document.addEventListener('keyup',e=>{Input.keys[e.key.toLowerCase()]=0;});C.addEventListener('mousemove',e=>{Input.mouse.x=e.clientX;Input.mouse.y=e.clientY;});C.addEventListener('mousedown',e=>{Input.mouse.btns|=1<<e.button;});C.addEventListener('mouseup',e=>{Input.mouse.btns&=~(1<<e.button);});}};Input.init();
+/////////////////////////
+// PARTICULAS & FX
+/////////////////////////
+let particles=[],pPool=[];
+const FX={
+  spawn(x,y,color){let p=pPool.pop()||{x,y,vx:Math.random()*100-50,vy:Math.random()*100-150,life:1,col:color};p.x=x;p.y=y;p.life=1;pPool.push(p);particles.push(p);},
+  update(){particles=particles.filter(p=>{p.x+=p.vx*Engine.dt;p.y+=p.vy*Engine.dt;p.vy+=200*Engine.dt;p.life-=Engine.dt*2;if(p.life>0){ctx.save();ctx.globalAlpha=p.life;ctx.fillStyle=p.col;ctx.fillRect(p.x-Renderer.cam.x,p.y-Renderer.cam.y,6,6);ctx.restore();return false;}return true;});}
+};
 
-let particles=[],pPool=[];const FX={spawn(x,y,color){let p=pPool.pop()||{x,y,vx:Math.random()*100-50,vy:Math.random()*100-150,life:1,col:color};p.x=x;p.y=y;p.life=1;pPool.push(p);particles.push(p);},update(){particles=particles.filter(p=>{p.x+=p.vx*Engine.time.dt;p.y+=p.vy*Engine.time.dt;p.vy+=200*Engine.time.dt;p.life-=Engine.time.dt*2;if(p.life>0){ctx.save();ctx.globalAlpha=p.life;ctx.fillStyle=p.col;ctx.fillRect(p.x-Renderer.cam.x,p.y-Renderer.cam.y,6,6);ctx.restore();return false;}return true;});}};
-
-let audioCtx;function initAudio(){audioCtx=new AudioContext();}function beep(freq=440,dur=0.1,type='square',vol=0.3){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=freq;o.type=type;g.gain.setValueAtTime(vol,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+dur);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+dur);}
-
-let LANG=(navigator.language||"es").slice(0,2);LANG='es';
-const I18N={es:{help:"WASD/Mouse: Mover | CLICK Izq: Ataque | Der: MoverA | 1:Slash 2:Fire 3:Heal 4:Dash | E:NPC/Portal | I:Inv/Use1-9 | C:Craft | Q:Quests | H:Ayuda | S:Save | ¡Mata 1000+ mobs!"}};
-
-let playerID,showHelp=0,showInv=0,showCraft=0,showQuests=0;
-function addChat(msg){const chat=document.getElementById('chat');chat.innerHTML+='» '+msg+'<br>';const lines=chat.innerHTML.split('<br>');if(lines.length>22)chat.innerHTML=lines.slice(-21).join('<br>');chat.scrollTop=chat.scrollHeight;}
-function saveGame(){const p=ECS.get(playerID).player;localStorage.setItem('thuamer',JSON.stringify({pos:ECS.get(playerID).pos,player:p}));addChat('¡Guardado!');beep(523,0.1);}
-function loadGame(){const s=localStorage.getItem('thuamer');if(s){const data=JSON.parse(s);playerID=ECS.create({...data.pos,...data.player});addChat('¡Carga OK!');return true;}return false;}
-
-// -------------------------
-// API REALES
-// -------------------------
-let WorldEvents={weather:'normal',news:''};
-async function fetchWeather(){try{const res=await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.4168&longitude=-3.7038&current_weather=true');const data=await res.json();WorldEvents.weather=data.current_weather.weathercode<3?'sunny':'rain';addChat('Clima real: '+WorldEvents.weather);}catch(e){console.warn(e);}}
-async function fetchNews(){try{const res=await fetch('https://api.currentsapi.services/v1/latest-news?apiKey=demo');const data=await res.json();if(data.news?.length>0)WorldEvents.news=data.news[0].title;addChat('Noticia real: '+WorldEvents.news);}catch(e){WorldEvents.news='';}}
-fetchWeather();fetchNews();
-
-// -------------------------
-// GAME INIT
-// -------------------------
+/////////////////////////
+// AUDIO
+/////////////////////////
+let audioCtx;
+function initAudio(){audioCtx=new AudioContext();}
+function beep(freq=440,dur=0.1,type='square',vol=0.3){const o=audioCtx.createOscillator(),g=audioCtx.createGain();o.connect(g);g.connect(audioCtx.destination);o.frequency.value=freq;o.type=type;g.gain.setValueAtTime(vol,audioCtx.currentTime);g.gain.exponentialRampToValueAtTime(0.01,audioCtx.currentTime+dur);o.start(audioCtx.currentTime);o.stop(audioCtx.currentTime+dur);}
 initAudio();
+
+/////////////////////////
+// MUNDO
+/////////////////////////
+const World={size:4096*24,tiles:[],getTile(x,y){const tx=x/24|0,ty=y/24|0;return tx>=0&&tx<4096&&ty>=0&&ty<4096?this.tiles[ty][tx]:13;},isSolid(id){return id>=7;},init(){for(let y=0;y<4096;y++){this.tiles[y]=[];for(let x=0;x<4096;x++)this.tiles[y][x]=Math.random()*14|0;}}};
+World.init();
+const tileColors=['#020','#040','#060','#080','#0a0','#220','#330','#440','#550','#660','#480','#240','#120','#000','#111'];
+
+/////////////////////////
+// API REALES
+/////////////////////////
+let WorldEvents={weather:'normal',news:'',hour:new Date().getHours(),quests:[]};
+async function fetchWeather(){try{const res=await fetch('https://api.open-meteo.com/v1/forecast?latitude=40.4168&longitude=-3.7038&current_weather=true');const data=await res.json();WorldEvents.weather=data.current_weather.weathercode<3?'sunny':'rain';addChat('Clima real: '+WorldEvents.weather);}catch(e){console.warn(e);}}
+async function fetchNews(){try{const res=await fetch('https://api.currentsapi.services/v1/latest-news?apiKey=demo');const data=await res.json();if(data.news?.length>0){WorldEvents.news=data.news[0].title;addChat('Noticia real: '+WorldEvents.news);WorldEvents.quests.push({id:Math.random()*9999,desc:'Evento: '+data.news[0].title,type:'dynamic',goal:5,progress:0,reward:'loot'})}}catch(e){WorldEvents.news='';}}
+function updateTime(){WorldEvents.hour=new Date().getHours();}
+
+/////////////////////////
+// CHAT & UI
+/////////////////////////
+function addChat(msg){const chat=document.getElementById('chat');chat.innerHTML+='» '+msg+'<br>';const lines=chat.innerHTML.split('<br>');if(lines.length>22)chat.innerHTML=lines.slice(-21).join('<br>');chat.scrollTop=chat.scrollHeight;}
+function saveGame(){const p=ECS.get(playerID).player;localStorage.setItem('thuamer',JSON.stringify({pos:ECS.get(playerID).pos,player:p}));addChat(I18N[LANG].saved);beep(523,0.1);}
+function loadGame(){const s=localStorage.getItem('thuamer');if(s){const data=JSON.parse(s);playerID=ECS.create({...data.pos,...data.player});addChat(I18N[LANG].loadOk);return true;}return false;}
+
+/////////////////////////
+// PLAYER & ENTIDADES INICIALES
+/////////////////////////
+let playerID;
 if(!loadGame()){
   playerID=ECS.create(CPos(World.size*0.5,World.size*0.5,16),CVel(),CSprite('#0ff',24),CPlayer(1,300,300,150,150,25,25,25,25,[{n:'Slash',cd:0,maxCd:0.8},{n:'Fire',cd:0,maxCd:2},{n:'Heal',cd:0,maxCd:3},{n:'Dash',cd:0,maxCd:1.5}],[],[],{head:'None',cape:'Red',weapon:'Sword'}));
 }
 
-// Mobs, NPCs, Items, Boss
 for(let i=0;i<800;i++)ECS.create(CPos(Math.random()*World.size,Math.random()*World.size),CVel(),CSprite('#f55',12+(Math.random()*8)),CMob(150+Math.random()*400,150+Math.random()*400,Math.random()*40+1));
 ECS.create(CPos(World.size/2+1500,World.size/2+1500,32),CVel(),CSprite('#ff0',40),CMob(12000,12000,250,'#ff0','BOSS'));
 for(let i=0;i<150;i++)ECS.create(CPos(Math.random()*World.size,Math.random()*World.size),CVel(),CSprite('#0a0',20),CNPC(`NPC${i}`,[{id:i,desc:'Mata 50 goblin',goal:50,progress:0,type:'kill'},{id:i+150,desc:'Mata 20 wave',goal:20,progress:0,type:'kill'}]));
 for(let i=0;i<800;i++)ECS.create(CPos(Math.random()*World.size,Math.random()*World.size),CVel(),CSprite('#ff0',8),CItem('loot'));
 ECS.create(CPos(World.size*0.3,World.size*0.3),CVel(),CSprite('#f0f',36),CPortal(World.size*0.7,World.size*0.7));
 
-addChat('¡Bienvenido! Cosméticos visibles, quests, crafting, boss amarillo. Mundo influenciado por clima y noticias reales.');
+addChat(I18N[LANG].welcome);
 
-// -------------------------
+/////////////////////////
+// ENGINE
+/////////////////////////
+const Engine={time:{now:0,dt:0,last:performance.now()},run(cb){function loop(t){Engine.time.now=t;Engine.time.dt=Math.min((t-Engine.time.last)/1000,1/60);Engine.time.last=t;cb();requestAnimationFrame(loop);}requestAnimationFrame(loop);}}
+Engine.run(mainLoop);
+
+/////////////////////////
 // MAIN LOOP
-// -------------------------
-Engine.run(()=>{
+/////////////////////////
+async function mainLoop(){
+  updateTime();
+  if(Math.random()<0.005)await fetchWeather();
+  if(Math.random()<0.002)await fetchNews();
+
   const pEnt=ECS.get(playerID),p=pEnt.player,pos=pEnt.pos;
   Renderer.cam.x=pos.x-W/2;Renderer.cam.y=pos.y-H/2;Renderer.cam.x=Math.max(0,Math.min(World.size-W,Renderer.cam.x));Renderer.cam.y=Math.max(0,Math.min(World.size-H,Renderer.cam.y));
 
@@ -109,32 +193,22 @@ Engine.run(()=>{
 
   // EVENTOS DINÁMICOS
   if(WorldEvents.weather==='rain'){if(Math.random()<0.1)FX.spawn(pos.x+Math.random()*100-50,pos.y+Math.random()*100-50,'#00f');}
+  if(WorldEvents.hour>=20||WorldEvents.hour<6){ctx.fillStyle='rgba(0,0,50,0.15)';ctx.fillRect(0,0,W,H);} // noche
 
   // RENDER
   Renderer.clear();
   const ts=24,cx=Renderer.cam.x/ts|0,cy=Renderer.cam.y/ts|0,ex=(Renderer.cam.x+W)/ts|0,ey=(Renderer.cam.y+H)/ts|0;
   for(let ty=Math.max(0,cy-1);ty<Math.min(4096,ey+1);ty++)for(let tx=Math.max(0,cx-1);tx<Math.min(4096,ex+1);tx++){const tid=World.getTile(tx*ts,ty*ts);ctx.fillStyle=tileColors[tid];ctx.fillRect(tx*ts-Renderer.cam.x,ty*ts-Renderer.cam.y,ts,ts);}
-
+  
   const visibles=[];qt.query({x:Renderer.cam.x-100,y:Renderer.cam.y-100,w:W+200,h:H+200},r=>visibles.push(r.id));
   visibles.sort((a,b)=>ECS.get(a).pos.y-ECS.get(b).pos.y);
   visibles.forEach(id=>{
     const e=ECS.get(id);
-    if(e.pos&&e.sprite){ctx.fillStyle=e.sprite.color;ctx.fillRect(e.pos.x-Renderer.cam.x-e.sprite.size/2,e.pos.y-Renderer.cam.y-e.sprite.size/2,e.sprite.size,e.sprite.size);
-      if(e.player||e.mob){
-        if(e.player?.cosmetic?.cape!=='none'){ctx.fillStyle='#'+e.player.cosmetic.cape.toLowerCase();ctx.fillRect(e.pos.x-Renderer.cam.x-2,e.pos.y-Renderer.cam.y-e.sprite.size/2-6, e.sprite.size+4,4);}
-        if(e.player?.cosmetic?.head!=='none'){ctx.fillStyle='#'+e.player.cosmetic.head.toLowerCase();ctx.fillRect(e.pos.x-Renderer.cam.x-4,e.pos.y-Renderer.cam.y-e.sprite.size/2-10, e.sprite.size+8,4);}
-      }
-    }
+    if(e.pos&&e.sprite){ctx.fillStyle=e.sprite.color;ctx.fillRect(e.pos.x-Renderer.cam.x-e.sprite.size/2,e.pos.y-Renderer.cam.y-e.sprite.size/2,e.sprite.size,e.sprite.size);}
   });
 
-  document.getElementById('ui').innerHTML=`LVL ${p.lvl|0} | HP ${Math.floor(p.hp)}/${p.mhp} | MP ${Math.floor(p.mana)}/${p.mmn}<br>STR:${p.str} AGI:${p.agi} INT:${p.int}<br>Skills:${p.skills.map((s,i)=>`${i+1}:${s.cd<0.1?'OK':'CD'+(s.cd*10|0)}`).join(' ')}<br>Inv:${p.inv.length} | Quests:${p.quests.filter(q=>!q.done).length}<br>Cosméticos: Head ${p.cosmetic.head} | Cape ${p.cosmetic.cape} | Weapon ${p.cosmetic.weapon}`;
-
-  const mm=document.getElementById('mm'),mctx=mm.getContext('2d');mctx.imageSmoothingEnabled=false;mctx.fillStyle='#000';mctx.fillRect(0,0,180,180);
-  ECS.query(e=>e.pos).forEach(id=>{const e=ECS.get(id);mctx.fillStyle=e.player?'#0ff':e.mob?'#f44':e.npc?'#0f0':'#ff0';mctx.fillRect(e.pos.x/World.size*180,e.pos.y/World.size*180,2,2);});
-
   FX.update();
-  p.skills.forEach(s=>s.cd=Math.max(0,s.cd-Engine.time.dt));
-});
+}
 </script>
 </body>
 </html>

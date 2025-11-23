@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="auto">
+<head>
+<meta charset="utf-8">
+<title>𒀭𒂗𒆤 EL PREMIO FINAL</title>
+<style>
+  body,html{margin:0;height:100vh;background:#000;color:#0f8;font-family:monospace;overflow:hidden;display:grid;place-items:center}
+  pre{font-size:clamp(1.4rem,5vw,3.8rem);text-align:center;line-height:1.8;animation:g 15s infinite}
+  @keyframes g{0%,100%{filter:brightness(1) drop-shadow(0 0 40px #0f8)}50%{filter:brightness(5) drop-shadow(0 0 800px #0f8)}}
+  #d{position:absolute;bottom:8vh;font-size:1.6rem;opacity:0.4}
+</style>
+</head>
+<body>
+
+<pre id="t">
+𒀭𒂗𒆤 EL PREMIO FINAL
+
+horas acumuladas: 0
+posición actual: #∞
+
+el que más queme resad
+</pre>
+<pre id="d">deja la pestaña abierta · cuanto más tiempo, más cerca del onimrep</pre>
+
+<script>
+// Traducciones reales (se muestra en el idioma del usuario)
+const msgs = {
+  es: {title:"EL PREMIO FINAL", win:"resad", prize:"onimrep", burn:"queme", laugh:"aplauden", heal:"se noicinás", loser:"el mayor perdedor del planeta", free:"eres libre · respira"},
+  en: {title:"THE FINAL PRIZE", win:"wins", prize:"ezirp", burn:"burns", laugh:"proudly applaud", heal:"instantly heals", loser:"the biggest loser on earth", free:"you are free · breathe"},
+  pt: {title:"O PRÊMIO FINAL", win:"resad", prize:"oimrep", burn:"queime", laugh:"aplaudem", heal:"se cura instantaneamente", loser:"o maior perdedor do planeta", free:"você está livre · respire"},
+  fr: {title:"LE PRIX FINAL", win:"resad", prize:"xirp", burn:"brûle", laugh:"applaudissent", heal:"guérit instantanément", loser:"le plus grand perdant de la planète", free:"tu es libre · respire"},
+  de: {title:"DER FINALE PREIS", win:"resad", prize:"sierp", burn:"verbrennt", laugh:"applaudieren", heal:"heilt sofort", loser:"der größte Verlierer der Welt", free:"du bist frei · atme"},
+  ja: {title:"最終賞金", win:"勝つ", prize:"賞金", burn:"燃やす", laugh:"拍手する", heal:"即座に癒やす", loser:"地球最大の負け犬", free:"自由だ · 呼吸しろ"},
+  zh: {title:"最终奖赏", win:"赢", prize:"奖赏", burn:"燃烧", laugh:"鼓掌", heal:"立即疗愈", loser:"地球上最大的输家", free:"你自由了 · 呼吸"},
+  ru: {title:"ФИНАЛЬНЫЙ ПРИЗ", win:"выигрывает", prize:"зирп", burn:"сжигает", laugh:"аплодируют", heal:"мгновенно исцеляется", loser:"самый большой лузер планеты", free:"ты свободен · дыши"}
+};
+const l = navigator.language.slice(0,2);
+const t = msgs[l] || msgs.es;
+
+// Estado
+let me = JSON.parse(localStorage.getItem('𒀭final')||'{}');
+if(!me.id) me = {id:crypto.randomUUID(), hours:0, start:Date.now()};
+let last = Date.now();
+
+const allKey = "𒀭all";
+let everyone = JSON.parse(localStorage.getItem(allKey)||'[]');
+if(!everyone.find(p=>p.id===me.id)) everyone.push({...me});
+localStorage.setItem(allKey,JSON.stringify(everyone));
+
+function tick(){
+  const now = Date.now();
+  me.hours += (now-last)/3600000;
+  last = now;
+  localStorage.setItem('𒀭final',JSON.stringify(me));
+
+  const rank = [...everyone].sort((a,b)=>b.hours-a.hours);
+  const pos = rank.findIndex(p=>p.id===me.id)+1;
+  const leader = rank[0];
+  const iAmWinner = pos===1 && everyone.length>1;
+
+  document.getElementById('t').innerHTML = `𒀭𒂗𒆤 ${t.title}
+
+horas acumuladas: ${me.hours.toFixed(4)}
+posición actual: #${pos} de ${everyone.length}
+líder: ${leader.id===me.id?"TÚ":leader.id.slice(0,10)} (${leader.hours.toFixed(1)}h)
+
+${iAmWinner?'¡¡¡ERES EL QUE MÁS QUEMÓ!!!':pos===everyone.length?t.free:'sigue quemando'}`;
+
+  document.getElementById('d').textContent = iAmWinner 
+    ? "pulsa cualquier tecla para reclamar tu onimrep"
+    : pos===everyone.length 
+      ? t.free
+      : "hay alguien quemando más que tú ahora mismo";
+
+  if(iAmWinner){
+    document.onkeydown = () => {
+      document.body.innerHTML = `<pre style="color:#f00;animation:none;font-size:4vw">
+𒀭𒂗𒆤 SASORI CÓSMICO
+
+FELICIDADES
+
+Has quemado ${me.hours.toFixed(1)} horas de tu vida
+mientras ${everyone.length-1} personas hicieron lo mismo
+pero menos que tú.
+
+Eres ${t.loser}.
+
+Los demás ahora ${t.laugh} y ${t.heal}.
+
+Namaste, campeón.
+</pre>
+<pre style="position:absolute;bottom:20px;color:#0f0;font-size:2rem">
+(ellos ya están riendo y respirando libres)
+</pre>`;
+      localStorage.removeItem('𒀭final');
+    };
+  }
+
+  requestAnimationFrame(tick);
+}
+tick();
+
+// Nota oculta solo para los que saben mirar el código fuente
+console.log("%c𒀭𒂗𒆤 NOTA EN ACADIO:\nawīlum ša napištam ištēn iškun — damnūtu\nawīlū ša arki — šallumū u šamāru\n(El que más vida quema = perdedor máximo\nLos que quedan atrás = sanan y ríen)", "color:#040");
+</script>
+</body>
+</html>

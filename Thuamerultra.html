@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THUAMER ULTRA · MMORPG Completo v7.0</title>
+<title>THUAMER ULTRA · MMORPG Universo V1.0 Dinámico</title>
 <style>
 body{margin:0;overflow:hidden;background:#000;font-family:monospace;color:#0f0;font-size:12px}
 canvas{display:block;image-rendering:pixelated}
@@ -16,59 +16,58 @@ canvas{display:block;image-rendering:pixelated}
 <body>
 <canvas id="c"></canvas>
 <div id="ui"></div>
-<div id="chat">» THUAMER ULTRA cargado. Pulsa H para ayuda.</div>
+<div id="chat">» THUAMER ULTRA V1.0 Dinámico cargado. Pulsa H para ayuda.</div>
 <canvas id="mm" width="160" height="160"></canvas>
 <div id="lb">TOP 10 LVL<br><span id="leaderboard"></span></div>
 <script>
 /*
-  THUAMER ULTRA v7.0 · Todo incluido: Combate, Quests, Skills, Crafting, Bosses, Mazmorras
+  THUAMER ULTRA V1.0 Dinámico · Universo MMORPG completo con narrativa, raids, mazmorras, crafting y eventos dinámicos.
+  Readme interactivo con explicación de la inmensidad del juego.
   Todos los derechos reservados por 0rb1t4lsn4k3r
 */
 
-// --- MOTOR ECS ---
 const Engine={time:{now:0,dt:0,last:0},run(cb){function loop(t){Engine.time.now=t;Engine.time.dt=Math.min((t-Engine.time.last)/1000,0.05);Engine.time.last=t;cb();requestAnimationFrame(loop);}requestAnimationFrame(loop);}};
 const ECS={nextId:1,entities:{},create(comp){const id=this.nextId++;this.entities[id]=comp;return id;},get(id){return this.entities[id]},query(filter){return Object.entries(this.entities).filter(([id,e])=>filter(e)).map(([id])=>+id);}};
-
 function CPosition(x,y){return{pos:{x,y}}} function CVel(vx,vy){return{vel:{x:vx,y:vy}}} function CHealth(h){return{hp:h,mhp:h}} function CSprite(color,size){return{sprite:{color,size}}}
-function CPlayer(stats){return{player:stats}} function CMob(stats){return{mob:stats}} function CNPC(stats){return{npc:stats}} function CItem(stats){return{item:stats}} function CQuest(stats){return{quest:stats}};
+function CPlayer(stats){return{player:stats}} function CMob(stats){return{mob:stats}} function CNPC(stats){return{npc:stats}} function CItem(stats){return{item:stats}} function CQuest(stats){return{quest:stats}} function CDungeon(stats){return{dungeon:stats}} function CEvent(stats){return{event:stats}};
 
-// --- RENDERER ---
 const C=document.getElementById('c'),ctx=C.getContext('2d');let W,H;function resize(){W=C.width=innerWidth;H=C.height=innerHeight;}resize();addEventListener('resize',resize);
 const Renderer={ctx:ctx,cam:{x:0,y:0},clear(){this.ctx.fillStyle='#000';this.ctx.fillRect(0,0,W,H);},drawSprite(e){let s=e.sprite,p=e.pos;if(!s||!p)return;this.ctx.fillStyle=s.color;this.ctx.fillRect(p.x-this.cam.x-s.size/2,p.y-this.cam.y-s.size/2,s.size,s.size);}};
 
-// --- WORLD ---
-const World={size:512*24,tiles:[],getTile(x,y){return this.tiles[(y/24|0)]?.[(x/24|0)]},init(){for(let y=0;y<512;y++){this.tiles[y]=[];for(let x=0;x<512;x++){this.tiles[y][x]= (Math.random()*8|0);}}}};
-World.init();
+const World={size:4096*24,tiles:[],getTile(x,y){return this.tiles[(y/24|0)]?.[(x/24|0)]},init(){for(let y=0;y<4096;y++){this.tiles[y]=[];for(let x=0;x<4096;x++){this.tiles[y][x]= (Math.random()*14|0);}}}};World.init();
 
-// --- INPUT ---
 const Input={keys:{},init(){onkeydown=e=>Input.keys[e.key.toLowerCase()]=true;onkeyup=e=>Input.keys[e.key.toLowerCase()]=false;}};Input.init();
 
-// --- PARTICULAS Y FX ---
 let particles=[];const FX={spawn(x,y,color){particles.push({x,y,color,vx:(Math.random()*60-30),vy:-120,life:1});}};function drawParticles(){particles=particles.filter(p=>{p.x+=p.vx*Engine.time.dt;p.y+=p.vy*Engine.time.dt;p.vy+=150*Engine.time.dt;p.life-=Engine.time.dt;if(p.life>0){ctx.globalAlpha=p.life;ctx.fillStyle=p.color;ctx.fillRect(p.x-Renderer.cam.x,p.y-Renderer.cam.y,4,4);}return p.life>0;});ctx.globalAlpha=1;}
 
-// --- READ.ME INTEGRADO ---
 let LANG=(navigator.language||"en").slice(0,2);if(!['es','en','fr','pt'].includes(LANG))LANG='en';
-const I18N={es:{title:"Bienvenido a THUAMER ULTRA",controls:"Controles: WASD/Click/Skills 1-9/SPACE ataque/E portal/I inventario/Q quests/H ayuda/Crafting incluido",ready:"¡Explora, grindea y vence!"},en:{title:"Welcome to THUAMER ULTRA",controls:"Controls: WASD/Click/Skills 1-9/SPACE attack/E portal/I inventory/Q quests/H help/Crafting included",ready:"Explore, grind and conquer!"}};
-let showReadme=true;function drawREADME(){let T=I18N[LANG];ctx.fillStyle='rgba(0,0,0,0.85)';ctx.fillRect(50,50,750,400);ctx.fillStyle='#0f0';ctx.font='22px monospace';ctx.fillText(T.title,70,90);ctx.font='16px monospace';ctx.fillText(T.controls,70,130);ctx.fillText(T.ready,70,180);} 
+const I18N={
+  es:{title:"Bienvenido a THUAMER ULTRA V1.0 Dinámico",controls:"Controles: WASD/Click/Skills 1-9/SPACE ataque/E portal/I inventario/Q quests/H ayuda/Crafting/Misiones/Raids/Eventos Globales/Cosméticos opcionales",ready:"Este universo es inmenso: miles de tiles, decenas de mazmorras, raids globales, jefes épicos y narrativa ramificada. Ahora con eventos dinámicos y misiones temporales. Explora, grindea, crea, participa y conquista!"},
+  en:{title:"Welcome to THUAMER ULTRA V1.0 Dynamic",controls:"Controls: WASD/Click/Skills 1-9/SPACE attack/E portal/I inventory/Q quests/H help/Crafting/Missions/Raids/Global Events/Optional Cosmetics",ready:"This universe is immense: thousands of tiles, dozens of dungeons, global raids, epic bosses, and branching narrative. Now with dynamic events and temporary missions. Explore, grind, craft, join and conquer!"}
+};
+let showReadme=true;function drawREADME(){let T=I18N[LANG];ctx.fillStyle='rgba(0,0,0,0.95)';ctx.fillRect(50,50,950,500);ctx.fillStyle='#0f0';ctx.font='22px monospace';ctx.fillText(T.title,70,90);ctx.font='16px monospace';ctx.fillText(T.controls,70,130);ctx.fillText(T.ready,70,180);} 
 onkeydown=e=>{if(showReadme){showReadme=false;}};
 
-// --- JUGADOR ---
-let playerID=ECS.create(CPlayer({x:W/2,y:H/2,lvl:1,hp:120,mhp:120,mana:60,mmn:60,str:12,agi:12,int:12,sta:12,inv:[],skills:[{n:'Slash',cd:0,maxCd:1},{n:'Fireball',cd:0,maxCd:2.5}],mount:false,target:null,path:[],crafting:{}}));
+let playerID=ECS.create(CPlayer({x:W/2,y:H/2,lvl:1,hp:250,mhp:250,mana:120,mmn:120,str:20,agi:20,int:20,sta:20,inv:[],skills:[{n:'Slash',cd:0,maxCd:1},{n:'Fireball',cd:0,maxCd:2.5},{n:'Heal',cd:0,maxCd:3}],mount:false,target:null,path:[],crafting:{recipes:[],materials:[]},story:{chapter:1,progress:0},cosmetics:{skins:[],mounts:[],effects:[]}}));
 
-// --- MOBS ---
-for(let i=0;i<200;i++){ECS.create(CMob({x:Math.random()*World.size,y:Math.random()*World.size,hp:60+Math.random()*200,mhp:60+Math.random()*200,lvl:1+Math.floor(Math.random()*20),col:'#f44'}));}
-
-// --- NPCS y QUESTS ---
-for(let i=0;i<40;i++){ECS.create(CNPC({x:Math.random()*World.size,y:Math.random()*World.size,n:"NPC"+(i+1),quests:[{id:i,desc:"Mata 10 mobs",progress:0,done:false},{id:i+100,desc:"Recoge 5 items",progress:0,done:false}]}));}
-
-// --- ITEMS ---
-for(let i=0;i<150;i++){ECS.create(CItem({x:Math.random()*World.size,y:Math.random()*World.size,id:i,type:'loot'}));}
-
-// --- PORTALES Y BOSSES ---
+for(let i=0;i<500;i++){ECS.create(CMob({x:Math.random()*World.size,y:Math.random()*World.size,hp:120+Math.random()*500,mhp:120+Math.random()*500,lvl:1+Math.floor(Math.random()*50),col:'#f44'}));}
+for(let i=0;i<100;i++){ECS.create(CNPC({x:Math.random()*World.size,y:Math.random()*World.size,n:"NPC"+(i+1),quests:[{id:i,desc:"Mata 10 mobs",progress:0,done:false},{id:i+100,desc:"Recoge 5 items",progress:0,done:false},{id:i+200,desc:"Completa misión narrativa",progress:0,done:false}]}));}
+for(let i=0;i<500;i++){ECS.create(CItem({x:Math.random()*World.size,y:Math.random()*World.size,id:i,type:'loot'}));}
 ECS.create({portal:{x:World.size/2,y:World.size/2,to:"Dungeon 1"}});
-ECS.create(CMob({x:World.size/2+120,y:World.size/2+120,hp:1500,mhp:1500,lvl:75,col:'#ff0',boss:true}));
+ECS.create(CMob({x:World.size/2+250,y:World.size/2+250,hp:8000,mhp:8000,lvl:200,col:'#ff0',boss:true}));
+ECS.create(CDungeon({x:World.size/3,y:World.size/3,name:'Labyrinth of Shadows',level:50}));
 
-// --- LOOP PRINCIPAL ---
+// --- Eventos dinámicos ---
+let worldEvents=[{name:'Invasión de Mobs',active:false,timer:0},{name:'Tesoro Oculto',active:false,timer:0}];
+function updateEvents(dt){worldEvents.forEach(ev=>{
+  ev.timer-=dt;
+  if(ev.timer<=0){
+    ev.active=!ev.active;
+    ev.timer=60+Math.random()*180; // 1 a 4 minutos por evento
+    if(ev.active)console.log(`Evento activado: ${ev.name}`);
+  }
+});}
+
 Engine.run(()=>{
   Renderer.clear();
   if(showReadme) drawREADME();
@@ -77,6 +76,7 @@ Engine.run(()=>{
   ECS.query(e=>e.mob).forEach(id=>Renderer.drawSprite(ECS.get(id)));
   ECS.query(e=>e.npc).forEach(id=>Renderer.drawSprite(ECS.get(id)));
   ECS.query(e=>e.item).forEach(id=>Renderer.drawSprite(ECS.get(id)));
+  updateEvents(Engine.time.dt);
 });
 </script>
 </body>

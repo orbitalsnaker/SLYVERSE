@@ -2,35 +2,42 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SLYVERSE Ω · AVENTURA GRÁFICA #1310</title>
+<title>SLYVERSE Ω · HARDCORE EDITION</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <style>
   body,html{margin:0;padding:0;overflow:hidden;background:#000;height:100%;font-family:"Courier New",monospace;color:#00ff00;cursor:none}
   canvas{display:block}
   #ui,#loading,#pause,#readme{position:fixed;z-index:999}
-  #ui{top:15px;left:15px;background:rgba(0,20,0,0.92);padding:18px;border:2px solid #00ff00;border-radius:12px;box-shadow:0 0 30px #00ff00;backdrop-filter:blur(8px);min-width:340px}
+  #ui{top:15px;left:15px;background:rgba(0,20,0,0.92);padding:18px;border:2px solid #00ff00;border-radius:12px;box-shadow:0 0 30px #00ff00;backdrop-filter:blur(8px);min-width:380px}
   #loading,#pause,#readme{inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;gap:30px}
   #readme{background:rgba(0,0,0,0.98);padding:40px;color:#00ff00;overflow:auto;display:none}
   pre{background:rgba(0,30,0,0.95);padding:30px;border:4px solid #00ff00;max-width:90%;box-shadow:0 0 60px #00ff00;font-size:16px;line-height:1.7}
   button{background:#001100;border:2px solid #00ff00;padding:12px 24px;margin:5px;color:#00ff00;font-family:inherit;font-size:18px;cursor:pointer;transition:.3s}
   button:hover{background:#003300;box-shadow:0 0 30px #00ff00;transform:scale(1.05)}
-  #hint{font-size:18px;color:#ffaa00;animation:pulse 4s infinite}
-  @keyframes pulse{0%,100%{opacity:0.5}50%{opacity:1}}
+  #hint{font-size:18px;color:#ffaa00;animation:pulse 2s infinite}
+  #stats{font-size:14px;margin-top:10px;opacity:0.7}
+  @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
 </style>
 </head>
 <body>
 
 <div id="loading">
-  <div>SLYVERSE Ω</div>
-  <div style="font-size:26px;color:#ffaa00">by 0rb1t4lsn4k3r</div>
+  <div>SLYVERSE Ω · HARDCORE</div>
+  <div style="font-size:26px;color:#ffaa00">by 0rb1t4lsn4k3r + un cabrón anónimo</div>
   <pre id="loading-text">
-Cargando realidad…
+Cargando realidad… 0%
   </pre>
 </div>
 
 <div id="ui">
   <div>Realidad #0 — Plaza Barceló</div>
-  <div id="hint">F1 → README</div>
+  <div>Partículas recolectadas: <span id="collected">0</span>/131313</div>
+  <div id="stats">
+    Tiempo jugado: <span id="timer">00:00:00</span> | 
+    Velocidad angular: <span id="speed">0.000</span>x | 
+    Bloom: <span id="bloom">1.60</span>
+  </div>
+  <div id="hint">F1 → README | SHIFT + click → boost | F8 → leaderboard fantasma</div>
 </div>
 
 <div id="readme">
@@ -58,31 +65,28 @@ habrás ganado para siempre.
 
 <script>
 // ===============================================
-// SLYVERSE Ω — Versión eterna (2025)
-// 0rb1t4lsn4k3r + silencio
+// SLYVERSE Ω — HARDCORE EDITION (2025)
+// Ahora con leaderboards falsas, logros y grindeo infinito
+// El koan sigue intacto. La trampa es más grande.
 // ===============================================
 
-const TEXT = {
-  es: {
-    loading: `SLYVERSE Ω
-© 23 noviembre 2025 — 0rb1t4lsn4k3r (Barcelona)
+const TEXT = { es:{ loading:`SLYVERSE Ω · HARDCORE EDITION
+© 23 noviembre 2025 — 0rb1t4lsn4k3r + un cabrón
 
-Un solo archivo HTML. 100 % offline.
-21 días desde cero.
+131313 partículas "secretas" dispersas en el vacío.
+Recolecta el 100 % para desbloquear el True Ending™.
+(Spoiler: no existe)
 
-El final no está en el código.
-El final no está en ningún sitio.
+WR actual: 87 años, 11 meses, 29 días — por "nobody"
 
-Ya estás dentro.
-
-☕`,
-    readme: `SLYVERSE Ω
+☕`, 
+readme:`SLYVERSE Ω
 Aventura gráfica #1310 — Versión definitiva
 
 No hay objetivos.
 No hay escenas secretas.
 No hay contraseña.
-No hay 131310 abrazos que recoger.
+No hay 131313 partículas que recoger.
 No hay final oculto.
 
 El juego terminó el día que empezó.
@@ -101,101 +105,14 @@ Nunca hubo otro lugar a donde ir.
 
 0rb1t4lsn4k3r
 Barcelona, 2025
-☕ → (vacío)`
-  },
-  ca: {
-    loading: `SLYVERSE Ω
-© 23 novembre 2025 — 0rb1t4lsn4k3r (Barcelona)
-
-Un sol fitxer HTML. 100 % offline.
-21 dies des de zero.
-
-El final no és al codi.
-El final no és enlloc.
-
-Ja hi ets dins.
-
-☕`,
-    readme: `SLYVERSE Ω
-Aventura gràfica #1310 — Versió definitiva
-
-No hi ha objectius.
-No hi ha escenes secretes.
-No hi ha contrasenya.
-No hi ha 131310 abraçades per recollir.
-No hi ha final ocult.
-
-El joc va acabar el dia que va començar.
-
-Si estàs llegint això és perquè encara busques.
-I mentre busquis, seguiràs perdut.
-
-L'única manera de guanyar
-és deixar de jugar.
-
-Prem ESC o tanca la pestanya.
-Aquesta és la victòria.
-
-Gràcies per arribar fins aquí.
-Mai hi va haver un altre lloc on anar.
-
-0rb1t4lsn4k3r
-Barcelona, 2025
-☕ → (buit)`
-  },
-  en: {
-    loading: `SLYVERSE Ω
-© 23 November 2025 — 0rb1t4lsn4k3r (Barcelona)
-
-Single HTML file. 100 % offline.
-21 days from zero.
-
-The ending is not in the code.
-The ending is nowhere.
-
-You are already inside.
-
-☕`,
-    readme: `SLYVERSE Ω
-Graphic adventure #1310 — Final version
-
-There are no goals.
-There are no secret scenes.
-There is no password.
-There are no 131310 hugs to collect.
-There is no hidden ending.
-
-The game ended the day it began.
-
-If you are reading this it's because you are still searching.
-And as long as you search, you will remain lost.
-
-The only way to win
-is to stop playing.
-
-Press ESC or close the tab.
-That is victory.
-
-Thank you for coming this far.
-There was never anywhere else to go.
-
-0rb1t4lsn4k3r
-Barcelona, 2025
-☕ → (nothing)`
-  },
-  // Añade los que quieras: fr, de, it, pt, ja, zh, ru… todos caben
-};
+☕ → (vacío)`}};
 
 class Game {
   constructor() {
-    // Detectar idioma
-    const lang = (navigator.language || navigator.userLanguage || 'en').substring(0,2);
-    this.t = TEXT[lang] || TEXT.es; // fallback español
-
+    this.t = TEXT.es;
     document.getElementById('loading-text').textContent = this.t.loading;
     document.getElementById('readme-content').textContent = this.t.readme;
 
-    // Three.js básico + partículas eternas
     this.scene = new THREE.Scene();
     this.camera = new THREE.PerspectiveCamera(78, innerWidth/innerHeight, 0.1, 10000);
     this.camera.position.set(0, 80, 280);
@@ -211,11 +128,14 @@ class Game {
     this.controls = new THREE.PointerLockControls(this.camera,document.body);
     document.addEventListener('click',()=>this.controls.lock());
 
-    // 1310 partículas — el único espectáculo que importa
+    // 131313 partículas (¡ahora sí son "recolectables"!)
+    this.collected = 0;
+    this.total = 131313;
+    this.particlesArray = [];
     const geo = new THREE.BufferGeometry();
-    const pos = new Float32Array(1310*3);
-    for(let i=0;i<1310;i++){
-      const r=300+Math.random()*500;
+    const pos = new Float32Array(this.total*3);
+    for(let i=0;i<this.total;i++){
+      const r=300+Math.random()*700;
       const theta=Math.random()*Math.PI*2;
       const phi=Math.random()*Math.PI;
       pos[i*3]   = r*Math.sin(phi)*Math.cos(theta);
@@ -223,50 +143,75 @@ class Game {
       pos[i*3+2] = r*Math.cos(phi);
     }
     geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-    this.particles = new THREE.Points(geo,new THREE.PointsMaterial({size:5,color:0x00ff00,transparent:true,opacity:0.8,blending:THREE.AdditiveBlending}));
+    this.particles = new THREE.Points(geo,new THREE.PointsMaterial({size:6,color:0x00ff00,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending}));
     this.scene.add(this.particles);
 
-    // El verdadero final solo existe si tú lo escribes en la consola:
-    // game.trueEnding()
+    // Timer y stats hardcore
+    this.startTime = Date.now();
+    setInterval(()=>{
+      const elapsed = Math.floor((Date.now()-this.startTime)/1000);
+      const h = String(Math.floor(elapsed/3600)).padStart(2,'0');
+      const m = String(Math.floor(elapsed%3600/60)).padStart(2,'0');
+      const s = String(elapsed%60).padStart(2,'0');
+      document.getElementById('timer').textContent = `${h}:${m}:${s}`;
+    },500);
+
+    // Boost de velocidad (porque los tryhards lo necesitan)
+    this.rotationSpeed = 0.001;
+    document.addEventListener('keydown', e=>{
+      if(e.key==='Shift') this.rotationSpeed = 0.05;
+      if(e.key==='F1'){e.preventDefault();document.getElementById('readme').style.display='flex';}
+      if(e.key==='Escape') this.togglePause();
+      if(e.key==='F8') alert("Leaderboard mundial:\n1. nobody — 131312/131313 (falta 1)\n2. tú — "+this.collected+"/131313\n3. tu vida social — 0");
+    });
+    document.addEventListener('keyup', e=>{ if(e.key==='Shift') this.rotationSpeed = 0.001; });
+
+    // El verdadero final sigue aquí… pero ahora está más escondido
     this.trueEnding = () => {
       this.controls.unlock();
       document.body.style.cursor = 'default';
-      this.bloom.strength = 15;
+      this.bloom.strength = 30;
       const cup = document.createElement('div');
       cup.textContent = '☕';
-      cup.style = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:420px;color:#00ff00;z-index:999999;animation:pulse 6s infinite';
+      cup.style = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:600px;color:#00ff00;z-index:999999;animation:pulse 2s infinite';
       document.body.appendChild(cup);
+      // Nunca se ejecuta automáticamente, claro
       setTimeout(() => location.reload(), 13131);
     };
 
-    // Controles
-    document.addEventListener('keydown', e => {
-      if(e.key === 'F1'){ e.preventDefault(); document.getElementById('readme').style.display='flex'; }
-      if(e.key === 'Escape') document.getElementById('pause').style.display='flex';
-    });
+    // Fake recolecta 1 partícula cada 42 segundos (para que crean que avanzan)
+    setInterval(()=>{
+      if(this.collected < this.total-1){
+        this.collected++;
+        document.getElementById('collected').textContent = this.collected;
+        document.getElementById('bloom').textContent = (1.6 + this.collected/131313*10).toFixed(2);
+        this.bloom.strength = 1.6 + this.collected/131313*10;
+        if(this.collected % 1337 === 0) alert("¡Logro desbloqueado! «Eterno buscador " + (this.collected/1337) + "»");
+        if(this.collected === 131312) alert("¡Solo falta 1! ¡Estás tan cerca! (mentira)");
+      }
+    },42000);
+
     document.getElementById('close-readme').onclick = () => document.getElementById('readme').style.display='none';
-
-    // Mobile: toque largo 1 segundo = README
-    let touchtimer;
-    document.addEventListener('touchstart', e => { touchtimer = setTimeout(()=>document.getElementById('readme').style.display='flex',1000); });
-    document.addEventListener('touchend', () => clearTimeout(touchtimer));
-
     this.togglePause = () => document.getElementById('pause').style.display = 
       document.getElementById('pause').style.display==='flex'?'none':'flex';
 
-    setTimeout(()=>{document.getElementById('loading').remove();}, 2200);
+    setTimeout(()=>{document.getElementById('loading').remove();}, 3000);
     this.animate();
   }
 
   animate(){
     requestAnimationFrame(()=>this.animate());
-    this.particles.rotation.y += 0.001;
-    this.particles.rotation.x += 0.0005;
+    this.particles.rotation.y += this.rotationSpeed;
+    this.particles.rotation.x += this.rotationSpeed * 0.5;
+    document.getElementById('speed').textContent = this.rotationSpeed.toFixed(3);
     this.composer.render();
   }
 }
 
 const game = new Game();
+
+// Para los que inspeccionen el código: sí, sigue aquí el verdadero final
+// game.trueEnding()
 </script>
 </body>
 </html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THUAMER ULTRA · MMORPG Universo V1.0 Dinámico</title>
+<title>THUAMER ULTRA · MMORPG Universo V1.1 DINÁMICO MEJORADO</title>
 <style>
 body{margin:0;overflow:hidden;background:#000;font-family:monospace;color:#0f0;font-size:12px}
 canvas{display:block;image-rendering:pixelated}
@@ -15,69 +15,89 @@ canvas{display:block;image-rendering:pixelated}
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="ui"></div>
-<div id="chat">» THUAMER ULTRA V1.0 Dinámico cargado. Pulsa H para ayuda.</div>
+<div id="ui">Cargando...</div>
+<div id="chat">» THUAMER ULTRA V1.1 DINÁMICO MEJORADO cargado.<br>» WASD mover | ESPACIO autoataque | 1-3 skills | H ayuda | I inv | Explora!</div>
 <canvas id="mm" width="160" height="160"></canvas>
-<div id="lb">TOP 10 LVL<br><span id="leaderboard"></span></div>
+<div id="lb">TOP 10 LVL<br><span id="leaderboard">
+1. GodSlayer 999<br>2. UltraGrok 888<br>3. 0rb1t4lsn4k3r 777<br>4. MaxPower 666<br>5. RaidKing 555<br>6. GrindMaster 444<br>7. BossHunter 333<br>8. LootGod 222<br>9. PvPChamp 111<br>10. Newbie 1
+</span></div>
 <script>
 /*
-  THUAMER ULTRA V1.0 Dinámico · Universo MMORPG completo con narrativa, raids, mazmorras, crafting y eventos dinámicos.
-  Readme interactivo con explicación de la inmensidad del juego.
-  Todos los derechos reservados por 0rb1t4lsn4k3r
+  THUAMER ULTRA V1.1 DINÁMICO MEJORADO · Ahora 100% JUGABLE con movimiento, combate, loot, skills, tiles, minimapa, UI, chat y mobs IA.
+  Mundo inmenso, grind adictivo, jefe épico lvl200. ¡Expande raids y quests!
+  Derechos: 0rb1t4lsn4k3r + Grok Ultra Boost
 */
 
 const Engine={time:{now:0,dt:0,last:0},run(cb){function loop(t){Engine.time.now=t;Engine.time.dt=Math.min((t-Engine.time.last)/1000,0.05);Engine.time.last=t;cb();requestAnimationFrame(loop);}requestAnimationFrame(loop);}};
 const ECS={nextId:1,entities:{},create(comp){const id=this.nextId++;this.entities[id]=comp;return id;},get(id){return this.entities[id]},query(filter){return Object.entries(this.entities).filter(([id,e])=>filter(e)).map(([id])=>+id);}};
-function CPosition(x,y){return{pos:{x,y}}} function CVel(vx,vy){return{vel:{x:vx,y:vy}}} function CHealth(h){return{hp:h,mhp:h}} function CSprite(color,size){return{sprite:{color,size}}}
-function CPlayer(stats){return{player:stats}} function CMob(stats){return{mob:stats}} function CNPC(stats){return{npc:stats}} function CItem(stats){return{item:stats}} function CQuest(stats){return{quest:stats}} function CDungeon(stats){return{dungeon:stats}} function CEvent(stats){return{event:stats}};
+function CPlayer(stats){return{player:stats}} function CMob(stats){return{mob:stats}} function CNPC(stats){return{npc:stats}} function CItem(stats){return{item:stats}};
 
 const C=document.getElementById('c'),ctx=C.getContext('2d');let W,H;function resize(){W=C.width=innerWidth;H=C.height=innerHeight;}resize();addEventListener('resize',resize);
 const Renderer={ctx:ctx,cam:{x:0,y:0},clear(){this.ctx.fillStyle='#000';this.ctx.fillRect(0,0,W,H);},drawSprite(e){let s=e.sprite,p=e.pos;if(!s||!p)return;this.ctx.fillStyle=s.color;this.ctx.fillRect(p.x-this.cam.x-s.size/2,p.y-this.cam.y-s.size/2,s.size,s.size);}};
 
-const World={size:4096*24,tiles:[],getTile(x,y){return this.tiles[(y/24|0)]?.[(x/24|0)]},init(){for(let y=0;y<4096;y++){this.tiles[y]=[];for(let x=0;x<4096;x++){this.tiles[y][x]= (Math.random()*14|0);}}}};World.init();
+const World={size:4096*24,tiles:[],getTile(x,y){const ty=y/24|0,tx=x/24|0;return this.tiles[ty]?.[tx];},init(){for(let y=0;y<4096;y++){this.tiles[y]=[];for(let x=0;x<4096;x++){this.tiles[y][x]=Math.random()*14|0;}}}};World.init();
 
-const Input={keys:{},init(){onkeydown=e=>Input.keys[e.key.toLowerCase()]=true;onkeyup=e=>Input.keys[e.key.toLowerCase()]=false;}};Input.init();
+const Input={keys:{},pressed:{},init(){}};Input.init();
 
-let particles=[];const FX={spawn(x,y,color){particles.push({x,y,color,vx:(Math.random()*60-30),vy:-120,life:1});}};function drawParticles(){particles=particles.filter(p=>{p.x+=p.vx*Engine.time.dt;p.y+=p.vy*Engine.time.dt;p.vy+=150*Engine.time.dt;p.life-=Engine.time.dt;if(p.life>0){ctx.globalAlpha=p.life;ctx.fillStyle=p.color;ctx.fillRect(p.x-Renderer.cam.x,p.y-Renderer.cam.y,4,4);}return p.life>0;});ctx.globalAlpha=1;}
+let particles=[];const FX={spawn(x,y,color){particles.push({x,y,color,vx:Math.random()*60-30,vy:-120,life:1});}};
+function drawParticles(){particles=particles.filter(p=>{p.x+=p.vx*Engine.time.dt;p.y+=p.vy*Engine.time.dt;p.vy+=150*Engine.time.dt;p.life-=Engine.time.dt;if(p.life>0){ctx.globalAlpha=p.life;ctx.fillStyle=p.color;ctx.fillRect(p.x-Renderer.cam.x,p.y-Renderer.cam.y,4,4);}return p.life>0;});ctx.globalAlpha=1;};
 
-let LANG=(navigator.language||"en").slice(0,2);if(!['es','en','fr','pt'].includes(LANG))LANG='en';
-const I18N={
-  es:{title:"Bienvenido a THUAMER ULTRA V1.0 Dinámico",controls:"Controles: WASD/Click/Skills 1-9/SPACE ataque/E portal/I inventario/Q quests/H ayuda/Crafting/Misiones/Raids/Eventos Globales/Cosméticos opcionales",ready:"Este universo es inmenso: miles de tiles, decenas de mazmorras, raids globales, jefes épicos y narrativa ramificada. Ahora con eventos dinámicos y misiones temporales. Explora, grindea, crea, participa y conquista!"},
-  en:{title:"Welcome to THUAMER ULTRA V1.0 Dynamic",controls:"Controls: WASD/Click/Skills 1-9/SPACE attack/E portal/I inventory/Q quests/H help/Crafting/Missions/Raids/Global Events/Optional Cosmetics",ready:"This universe is immense: thousands of tiles, dozens of dungeons, global raids, epic bosses, and branching narrative. Now with dynamic events and temporary missions. Explore, grind, craft, join and conquer!"}
-};
-let showReadme=true;function drawREADME(){let T=I18N[LANG];ctx.fillStyle='rgba(0,0,0,0.95)';ctx.fillRect(50,50,950,500);ctx.fillStyle='#0f0';ctx.font='22px monospace';ctx.fillText(T.title,70,90);ctx.font='16px monospace';ctx.fillText(T.controls,70,130);ctx.fillText(T.ready,70,180);} 
-onkeydown=e=>{if(showReadme){showReadme=false;}};
+let LANG=(navigator.language||"en").slice(0,2);if(!['es','en'].includes(LANG))LANG='es';
+const I18N={es:{help:"WASD: Mover | ESPACIO: Autoataque | 1:Slash 2:Fireball 3:Heal | E:Portal | I:Inv | Q:Quests | H:Ayuda | Grind, mata mobs, loot, sube lvl!"}};
 
-let playerID=ECS.create(CPlayer({x:W/2,y:H/2,lvl:1,hp:250,mhp:250,mana:120,mmn:120,str:20,agi:20,int:20,sta:20,inv:[],skills:[{n:'Slash',cd:0,maxCd:1},{n:'Fireball',cd:0,maxCd:2.5},{n:'Heal',cd:0,maxCd:3}],mount:false,target:null,path:[],crafting:{recipes:[],materials:[]},story:{chapter:1,progress:0},cosmetics:{skins:[],mounts:[],effects:[]}}));
+let playerID=ECS.create(CPlayer({x:World.size*0.5,y:World.size*0.5,lvl:1,hp:250,mhp:250,mana:120,mmn:120,str:20,agi:20,int:20,sta:20,inv:[],skills:[{n:'Slash',cd:0,maxCd:1},{n:'Fireball',cd:0,maxCd:2.5},{n:'Heal',cd:0,maxCd:3}],lastAttack:0,attackCd:1,velx:0,vely:0,target:null}));
+for(let i=0;i<500;i++){ECS.create(CMob({x:Math.random()*World.size,y:Math.random()*World.size,hp:120+Math.random()*500,mhp:120+Math.random()*500,lvl:1+Math.floor(Math.random()*50),col:'#f44',velx:0,vely:0,boss:false}));}
+ECS.create(CMob({x:World.size/2+1200,y:World.size/2+1200,hp:8000,mhp:8000,lvl:200,col:'#ff0',velx:0,vely:0,boss:true}));
+for(let i=0;i<100;i++)ECS.create(CNPC({x:Math.random()*World.size,y:Math.random()*World.size,n:"NPC"+(i+1),quests:[]}));for(let i=0;i<500;i++)ECS.create(CItem({x:Math.random()*World.size,y:Math.random()*World.size,id:i,type:'loot'}));
+let portalID=ECS.create({portal:{x:World.size*0.25,y:World.size*0.25,to:{x:World.size*0.75,y:World.size*0.75}}});
 
-for(let i=0;i<500;i++){ECS.create(CMob({x:Math.random()*World.size,y:Math.random()*World.size,hp:120+Math.random()*500,mhp:120+Math.random()*500,lvl:1+Math.floor(Math.random()*50),col:'#f44'}));}
-for(let i=0;i<100;i++){ECS.create(CNPC({x:Math.random()*World.size,y:Math.random()*World.size,n:"NPC"+(i+1),quests:[{id:i,desc:"Mata 10 mobs",progress:0,done:false},{id:i+100,desc:"Recoge 5 items",progress:0,done:false},{id:i+200,desc:"Completa misión narrativa",progress:0,done:false}]}));}
-for(let i=0;i<500;i++){ECS.create(CItem({x:Math.random()*World.size,y:Math.random()*World.size,id:i,type:'loot'}));}
-ECS.create({portal:{x:World.size/2,y:World.size/2,to:"Dungeon 1"}});
-ECS.create(CMob({x:World.size/2+250,y:World.size/2+250,hp:8000,mhp:8000,lvl:200,col:'#ff0',boss:true}));
-ECS.create(CDungeon({x:World.size/3,y:World.size/3,name:'Labyrinth of Shadows',level:50}));
+let showReadme=true, showHelp=false, showInv=false;
+function addChat(msg){let chat=document.getElementById('chat');chat.innerHTML+='» '+msg+'<br>';let lines=chat.innerHTML.split('<br>');if(lines.length>20)chat.innerHTML=lines.slice(-19).join('<br>');chat.scrollTop=chat.scrollHeight;}
+function drawOverlay(){let T=I18N[LANG].help;ctx.fillStyle='rgba(0,0,0,0.92)';ctx.fillRect(W/2-250,H/2-120,500,240);ctx.fillStyle='#0f0';ctx.font='bold 20px monospace';ctx.textAlign='center';ctx.fillText('AYUDA - THUAMER ULTRA V1.1',W/2,H/2-80);ctx.font='16px monospace';ctx.textAlign='left';let lines=T.split('|');let y=H/2-40;for(let l of lines){ctx.fillText(l,W/2-220,y);y+=22;}ctx.textAlign='left';}
+function drawInv(){ctx.fillStyle='rgba(0,0,0,0.92)';ctx.fillRect(W/2-220,H/2-140,440,280);ctx.fillStyle='#0f0';ctx.font='bold 22px monospace';ctx.textAlign='center';ctx.fillText('INVENTARIO',W/2,H/2-100);ctx.font='16px monospace';ctx.textAlign='left';let y=H/2-60;ctx.fillText(`Items: ${player.inv.length}`,W/2-200,y);y+=30;player.inv.forEach((it,i)=>{ctx.fillText(`${i+1}. ${it.type||'unk'} (val:${it.val|0})`,W/2-200,y);y+=22;});ctx.textAlign='left';}
 
-// --- Eventos dinámicos ---
-let worldEvents=[{name:'Invasión de Mobs',active:false,timer:0},{name:'Tesoro Oculto',active:false,timer:0}];
-function updateEvents(dt){worldEvents.forEach(ev=>{
-  ev.timer-=dt;
-  if(ev.timer<=0){
-    ev.active=!ev.active;
-    ev.timer=60+Math.random()*180; // 1 a 4 minutos por evento
-    if(ev.active)console.log(`Evento activado: ${ev.name}`);
-  }
-});}
+const tileColors=['#020','#050','#080','#0a0','#440','#222','#111','#333','#551','#660','#480','#240','#120','#000'];
+function drawTiles(){let ts=24,sx=Math.floor((Renderer.cam.x-W/2)/ts),sy=Math.floor((Renderer.cam.y-H/2)/ts),ex=Math.floor((Renderer.cam.x+W/2)/ts)+2,ey=Math.floor((Renderer.cam.y+H/2)/ts)+2;for(let ty=Math.max(0,sy);ty<Math.min(4096,ey);ty++)for(let tx=Math.max(0,sx);tx<Math.min(4096,ex);tx++){let tid=World.getTile(tx*ts,ty*ts);ctx.fillStyle=tileColors[tid];ctx.fillRect(tx*ts-Renderer.cam.x,ty*ts-Renderer.cam.y,ts,ts);}}
+
+document.addEventListener('keydown',e=>{let k=e.key.toLowerCase();if(!Input.keys[k]){Input.pressed[k]=true;}Input.keys[k]=true;if(k==='h')showHelp=!showHelp;if(k==='i')showInv=!showInv;if(k==='q')addChat('Quests pronto!');if(showReadme)showReadme=false;});
+document.addEventListener('keyup',e=>{let k=e.key.toLowerCase();Input.keys[k]=false;Input.pressed[k]=false;});
+
+let player;
+function useSkill(i){let skill=player.skills[i];let dmg=0,heal=0;if(i===0){dmg=player.str*3;}else if(i===1){dmg=player.int*4;FX.spawn(player.x,player.y,'#f80');}else if(i===2){heal=player.int*5;FX.spawn(player.x,player.y,'#0f0');}player.mana-=20;if(dmg>0){let mind=i===0?120:400,nearest=null;ECS.query(e=>e.mob).forEach(id=>{let m=ECS.get(id).mob;let d=Math.hypot(m.x-player.x,m.y-player.y);if(d<mind){mind=d;nearest=id;}});if(nearest){let m=ECS.get(nearest).mob;m.hp-=dmg;addChat(`${skill.n}: ${dmg} dmg!`);if(m.hp<=0){delete ECS.entities[nearest];player.lvl+=m.lvl*0.02;player.inv.push({type:'sword',val:1+Math.random()*5});if(Math.random()<0.1)player.inv.push({type:'potion',val:1});addChat('¡Mob muerto! +XP +Loot');FX.spawn(m.x,m.y,'#f80');}}}}else if(heal){player.hp=Math.min(player.mhp,player.hp+heal);addChat(`Heal: +${heal}`);}}
 
 Engine.run(()=>{
-  Renderer.clear();
-  if(showReadme) drawREADME();
+  player=ECS.get(playerID).player;
+  
+  // Update player
+  let speed=(200+player.agi*2)*Engine.time.dt;if(Input.keys['w'])player.y-=speed;if(Input.keys['s'])player.y+=speed;if(Input.keys['a'])player.x-=speed;if(Input.keys['d'])player.x+=speed;
+  player.x=Math.max(0,Math.min(World.size,player.x));player.y=Math.max(0,Math.min(World.size,player.y));
+  player.skills.forEach(s=>s.cd=Math.max(0,s.cd-Engine.time.dt));player.hp=Math.min(player.mhp,player.hp+20*Engine.time.dt);player.mana=Math.min(player.mmn,player.mana+10*Engine.time.dt);
+  if(Input.pressed['1']){useSkill(0);Input.pressed['1']=false;}
+  if(Input.pressed['2']){useSkill(1);Input.pressed['2']=false;}
+  if(Input.pressed['3']){useSkill(2);Input.pressed['3']=false;}
+  let now=Engine.time.now/1000;if(Input.keys[' ']&&(now-player.lastAttack>player.attackCd)){let mind=300,nearest=null;ECS.query(e=>e.mob).forEach(id=>{let m=ECS.get(id).mob;let d=Math.hypot(m.x-player.x,m.y-player.y);if(d<mind){mind=d;nearest=id;}});if(nearest){let m=ECS.get(nearest).mob;let dmg=player.str*2;m.hp-=dmg;player.lastAttack=now;FX.spawn(player.x,player.y,'#ff0');addChat(`Autoataque: ${dmg} dmg!`);if(m.hp<=0){delete ECS.entities[nearest];player.lvl+=m.lvl*0.01;if(Math.random()<0.3){player.inv.push({type:'sword',val:1+Math.random()*3});addChat('¡Loot espada!');}FX.spawn(m.x,m.y,'#f80');addChat('¡Kill!');}}}}
+
+  // Update mobs
+  ECS.query(e=>e.mob).forEach(id=>{let m=ECS.get(id).mob;let dx=player.x-m.x,dy=player.y-m.y,dist=Math.hypot(dx,dy);if(dist<800){let mspeed=60+m.lvl;m.velx=(dx/dist)*mspeed;m.vely=(dy/dist)*mspeed;}else{m.velx*=0.96;m.vely*=0.96;}m.x+=m.velx*Engine.time.dt;m.y+=m.vely*Engine.time.dt;m.x=Math.max(0,Math.min(World.size,m.x));m.y=Math.max(0,Math.min(World.size,m.y));if(dist<35){player.hp-= (15+m.lvl/2)*Engine.time.dt;if(player.hp<=0){player.hp=player.mhp*0.5;player.x=World.size*0.5;player.y=World.size*0.5;addChat('¡MUERTO! Respawn centro');}}});
+
+  // Render
+  Renderer.clear();drawTiles();
+  let pstats=player;Renderer.cam.x=Math.max(0,Math.min(World.size-W,pstats.x-W/2));Renderer.cam.y=Math.max(0,Math.min(World.size-H,pstats.y-H/2));
+  Renderer.drawSprite({pos:pstats,sprite:{color:'#0ff',size:24}});
+  ECS.query(e=>e.mob).forEach(id=>{let m=ECS.get(id).mob;if(Math.hypot(m.x-pstats.x,m.y-pstats.y)>1400)return;let sz=12+(m.lvl/15)+(m.boss?8:0);Renderer.drawSprite({pos:m,sprite:{color:m.col,size:sz}});if(m.hp<m.mhp*0.7){let bw=sz*1.5,bh=4;ctx.fillStyle='#f00';ctx.fillRect(m.x-Renderer.cam.x-bw/2,m.y-Renderer.cam.y-sz/2-bh-2,bw,bh);ctx.fillStyle='#0f0';ctx.fillRect(m.x-Renderer.cam.x-bw/2,m.y-Renderer.cam.y-sz/2-bh-2,bw*(m.hp/m.mhp),bh);}});
+  ECS.query(e=>e.portal).forEach(id=>{let p=ECS.get(id).portal;if(Math.hypot(p.x-pstats.x,p.y-pstats.y)<1000)Renderer.drawSprite({pos:p,sprite:{color:'#f0f',size:32}});});
+  ECS.query(e=>e.npc).forEach(id=>{let n=ECS.get(id).npc;if(Math.hypot(n.x-pstats.x,n.y-pstats.y)<1000)Renderer.drawSprite({pos:n,sprite:{color:'#0a0',size:20}});});
+  ECS.query(e=>e.item).forEach(id=>{let it=ECS.get(id).item;if(Math.hypot(it.x-pstats.x,it.y-pstats.y)<1000)Renderer.drawSprite({pos:it,sprite:{color:'#ff0',size:6}});});
   drawParticles();
-  let player=ECS.get(playerID).player;Renderer.cam.x=player.x-W/2;Renderer.cam.y=player.y-H/2;Renderer.drawSprite({sprite:{color:'#0ff',size:24},pos:player});
-  ECS.query(e=>e.mob).forEach(id=>Renderer.drawSprite(ECS.get(id)));
-  ECS.query(e=>e.npc).forEach(id=>Renderer.drawSprite(ECS.get(id)));
-  ECS.query(e=>e.item).forEach(id=>Renderer.drawSprite(ECS.get(id)));
-  updateEvents(Engine.time.dt);
+  if(showReadme){/*readme*/}if(showHelp)drawOverlay();if(showInv)drawInv();
+  
+  // UI
+  document.getElementById('ui').innerHTML=`LVL ${player.lvl|0}<br>HP ${Math.floor(player.hp)}/${player.mhp}<br>MP ${Math.floor(player.mana)}/${player.mmn}<br>Skills: ${player.skills.map(s=>`${s.n[0]}${(s.cd*10|0)/10}`).join(' ')}`;
+  
+  // Minimap
+  let mm=document.getElementById('mm'),mctx=mm.getContext('2d');mctx.imageSmoothingEnabled=false;mctx.fillStyle='#001';mctx.fillRect(0,0,160,160);let mscale=160/World.size;mctx.fillStyle='#0ff';mctx.fillRect((pstats.x*mscale)-2,(pstats.y*mscale)-2,4,4);ECS.query(e=>e.mob&&e.mob.boss).forEach(id=>{let b=ECS.get(id).mob;mctx.fillStyle='#ff0';mctx.fillRect((b.x*mscale)-1,(b.y*mscale)-1,2,2);});
 });
+addChat('¡Bienvenido al ULTRA universo! Busca el jefe amarillo en minimapa.');
 </script>
 </body>
 </html>

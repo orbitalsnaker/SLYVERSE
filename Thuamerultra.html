@@ -3,33 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THUAMER ULTRA · MMORPG Universo V1.2 PERFECTO</title>
+<title>THUAMER ULTRA V1.2 NEON</title>
 <style>
 body{margin:0;overflow:hidden;background:#000;font-family:monospace;color:#0f0;font-size:12px}
 canvas{display:block;image-rendering:pixelated}
-#ui{position:fixed;top:4px;left:4px;background:rgba(0,15,0,.9);padding:8px;border:1px solid #0f0;z-index:20;max-width:450px;font-size:11px}
-#chat{position:fixed;bottom:4px;left:4px;width:580px;height:190px;background:rgba(0,0,0,.9);border:1px solid #0f0;padding:8px;overflow:auto;font-size:10px;line-height:1.3}
-#mm{position:fixed;top:4px;right:4px;width:180px;height:180px;background:#000;border:1px solid #0f0}
-#lb{position:fixed;top:188px;right:4px;width:180px;height:260px;background:rgba(0,15,0,.9);border:1px solid #0f0;overflow:auto;font-size:9px;padding:6px}
+#ui{position:fixed;top:4px;left:4px;background:rgba(0,0,0,0.6);padding:8px;border:1px solid #0ff;color:#0ff;z-index:20;font-size:11px;font-weight:bold;text-shadow:0 0 4px #0ff;}
+#chat{position:fixed;bottom:4px;left:4px;width:580px;height:190px;background:rgba(0,0,0,0.6);border:1px solid #0ff;padding:8px;overflow:auto;font-size:10px;line-height:1.3;color:#0ff;text-shadow:0 0 2px #0ff;}
+#mm{position:fixed;top:4px;right:4px;width:180px;height:180px;background:#000;border:1px solid #0ff;}
+#lb{position:fixed;top:188px;right:4px;width:180px;height:260px;background:rgba(0,0,0,0.6);border:1px solid #0ff;overflow:auto;font-size:9px;padding:6px;color:#0ff;text-shadow:0 0 2px #0ff;}
 </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="ui">Cargando THUAMER ULTRA V1.2...</div>
-<div id="chat">» THUAMER ULTRA V1.2 PERFECTO cargado!</div>
+<div id="ui">Cargando THUAMER ULTRA V1.2 NEON...</div>
+<div id="chat">» THUAMER ULTRA V1.2 NEON cargado!</div>
 <canvas id="mm" width="180" height="180"></canvas>
 <div id="lb">TOP LVL GLOBAL<br><span id="leaderboard">
 1. GodSlayer 999<br>2. GrokUltra 950<br>3. 0rb1t4lsn4k3r 888<br>4. RaidBoss 777<br>5. LootKing 666<br>6. PvPGod 555<br>7. GrindPro 444<br>8. QuestMaster 333<br>9. CraftLegend 222<br>10.Tú? <span id="yourRank">1</span>
 </span></div>
 <script>
-/* THUAMER ULTRA V1.2 PERFECTO - Versión simplificada pero futurista
-- HUD futurista
-- Efectos neon simplificados
-- QuadTree optimizado
-- Música procedural ligera
-- Mobs reducidos para tamaño
-- World events básicos
-- TODO en un solo HTML
+/* THUAMER ULTRA V1.2 NEON - HUD Futurista y Partículas Neon
+- HUD animado con neon
+- Partículas flotantes
+- Mobs simplificados
+- Todo en un solo bloque HTML
 */
 
 const Engine={time:{now:0,dt:0,last:0},run(cb){function loop(t){Engine.time.now=t;Engine.time.dt=Math.min((t-Engine.time.last)/1000,1/60);Engine.time.last=t;cb();requestAnimationFrame(loop);}requestAnimationFrame(loop);}};
@@ -41,12 +38,12 @@ const CMob=(hp,mhp,lvl,col='#f44',type='goblin')=>({mob:{hp,mhp,lvl,col,type}});
 const CItem=(type,val=1)=>({item:{type,val}});
 
 const C=document.getElementById('c'),ctx=C.getContext('2d');let W,H;function resize(){W=C.width=innerWidth;H=C.height=innerHeight;ctx.imageSmoothingEnabled=false;}resize();addEventListener('resize',resize);
-const Renderer={ctx,cam:{x:0,y:0},clear(){ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);}};
 
-const World={size:2048,tiles:null,getTile(x,y){const tx=x/24|0,ty=y/24|0;return tx>=0&&tx<2048&&ty>=0&&ty<2048?this.tiles[ty][tx]:13;},isSolid(id){return id>=7;},init(){this.tiles=[];for(let y=0;y<128;y++){this.tiles[y]=[];for(let x=0;x<128;x++)this.tiles[y][x]=Math.random()*8|0;}}};World.init();
+const Renderer={ctx,cam:{x:0,y:0},clear(){ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);}};
+const World={size:2048,tiles:null,getTile(x,y){const tx=x/24|0,ty=y/24|0;return tx>=0&&tx<128&&ty>=0&&ty<128?this.tiles[ty][tx]:0;},isSolid(id){return id>=7;},init(){this.tiles=[];for(let y=0;y<128;y++){this.tiles[y]=[];for(let x=0;x<128;x++)this.tiles[y][x]=Math.random()*8|0;}}};World.init();
 const tileColors=['#020','#040','#060','#080','#0a0','#220','#330','#440','#550','#660','#480','#240','#120','#000','#111'];
 
-const QuadTree=class{constructor(x,y,w,h){this.bounds={x,y,w,h};this.entities=[];this.divided=false;this.children=null;}subdivide(){const hw=this.bounds.w/2,hh=this.bounds.h/2;this.children=[new QuadTree(this.bounds.x,this.bounds.y,hw,hh),new QuadTree(this.bounds.x+hw,this.bounds.y,hw,hh),new QuadTree(this.bounds.x,this.bounds.y+hh,hw,hh),new QuadTree(this.bounds.x+hw,this.bounds.y+hh,hw,hh)];this.divided=true;}insert(e){if(this.children){for(let i=0;i<4;i++)this.children[i].insert(e);}else{this.entities.push(e);if(this.entities.length>4)this.subdivideAndInsert();}}subdivideAndInsert(){for(let e of this.entities)for(let i=0;i<4;i++)this.children[i].insert(e);this.entities=[];}query(rect,cb){if(!this.intersect(rect,this.bounds))return;this.entities.forEach(cb);if(this.divided)this.children?.forEach(c=>c.query(rect,cb));}intersect(r1,r2){return!(r1.x+r1.w<r2.x||r1.x>r2.x+r2.w||r1.y+r1.h<r2.y||r1.y>r2.y+r2.h);}};
+const QuadTree=class{constructor(x,y,w,h){this.bounds={x,y,w,h};this.entities=[];this.divided=false;this.children=null;}subdivide(){const hw=this.bounds.w/2,hh=this.bounds.h/2;this.children=[new QuadTree(this.bounds.x,this.bounds.y,hw,hh),new QuadTree(this.bounds.x+hw,this.bounds.y,hw,hh),new QuadTree(this.bounds.x,this.bounds.y+hh,hw,hh),new QuadTree(this.bounds.x+hw,this.bounds.y+hh,hw,hh)];this.divided=true;}subdivideAndInsert(){for(let e of this.entities)for(let i=0;i<4;i++)this.children[i].insert(e);this.entities=[];}insert(e){if(this.children){for(let i=0;i<4;i++)this.children[i].insert(e);}else{this.entities.push(e);if(this.entities.length>4)this.subdivideAndInsert();}}query(rect,cb){if(!this.intersect(rect,this.bounds))return;this.entities.forEach(cb);if(this.divided)this.children?.forEach(c=>c.query(rect,cb));}intersect(r1,r2){return!(r1.x+r1.w<r2.x||r1.x>r2.x+r2.w||r1.y+r1.h<r2.y||r1.y>r2.y+r2.h);}};
 let qt=new QuadTree(0,0,World.size,World.size);function updateQT(){qt=new QuadTree(0,0,World.size,World.size);ECS.query(e=>e.pos).forEach(id=>{const p=ECS.get(id).pos;qt.insert({x:p.x-p.r,y:p.y-p.r,w:p.r*2,h:p.r*2,id});});}
 
 const Input={keys:{},mouse:{x:0,y:0,btns:0},init(){document.addEventListener('keydown',e=>{Input.keys[e.key.toLowerCase()]=1;});document.addEventListener('keyup',e=>{Input.keys[e.key.toLowerCase()]=0;});C.addEventListener('mousemove',e=>{Input.mouse.x=e.clientX;Input.mouse.y=e.clientY;});C.addEventListener('mousedown',e=>{Input.mouse.btns|=1<<e.button;});C.addEventListener('mouseup',e=>{Input.mouse.btns&=~(1<<e.button);});}};Input.init();
@@ -55,9 +52,18 @@ let playerID;function addChat(msg){const chat=document.getElementById('chat');ch
 function saveGame(){const p=ECS.get(playerID).player;localStorage.setItem('thuamer',JSON.stringify({pos:ECS.get(playerID).pos,player:p}));addChat('¡Guardado!');}
 function loadGame(){const s=localStorage.getItem('thuamer');if(s){const data=JSON.parse(s);playerID=ECS.create({...data.pos,...data.player});addChat('¡Carga OK!');return true;}return false;}
 
+const particles=[];for(let i=0;i<150;i++)particles.push({x:Math.random()*W,y:Math.random()*H,dx:(Math.random()-0.5)*0.5,dy:(Math.random()-0.5)*0.5,r:1+Math.random()*2,color:`hsl(${Math.random()*360},100%,50%)`}));
+
+function drawParticles(){for(let p of particles){p.x+=p.dx;p.y+=p.dy;if(p.x<0)p.x=W;if(p.x>W)p.x=0;if(p.y<0)p.y=H;if(p.y>H)p.y=0;ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();}}
+
 function drawTiles(){const ts=24,cx=Renderer.cam.x/ts|0,cy=Renderer.cam.y/ts|0,ex=(Renderer.cam.x+W)/ts|0,ey=(Renderer.cam.y+H)/ts|0;for(let ty=Math.max(0,cy-1);ty<Math.min(128,ey+1);ty++)for(let tx=Math.max(0,cx-1);tx<Math.min(128,ex+1);tx++){const tid=World.getTile(tx*ts,ty*ts);ctx.fillStyle=tileColors[tid];ctx.fillRect(tx*ts-Renderer.cam.x,ty*ts-Renderer.cam.y,ts,ts);}}
 
-function drawUI(p){document.getElementById('ui').innerHTML=`LVL ${p.lvl|0} | HP ${Math.floor(p.hp)}/${p.mhp} | MP ${Math.floor(p.mana)}/${p.mmn}`;}
+function drawUI(p){
+  const ui=document.getElementById('ui');
+  const glow=Math.sin(Engine.time.now/200)*4;
+  ui.style.textShadow=`0 0 ${4+glow}px #0ff,0 0 ${2+glow}px #0ff`;
+  ui.innerHTML=`LVL ${p.lvl|0} | HP ${Math.floor(p.hp)}/${p.mhp} | MP ${Math.floor(p.mana)}/${p.mmn}`;
+}
 
 Engine.run(()=>{
   const pEnt=ECS.get(playerID)||{};if(!pEnt.player)return;
@@ -73,6 +79,7 @@ Engine.run(()=>{
 
   Renderer.clear();
   drawTiles();
+  drawParticles();
 
   // Draw player
   ctx.fillStyle='#0ff';ctx.fillRect(pos.x-Renderer.cam.x-12,pos.y-Renderer.cam.y-12,24,24);
@@ -83,7 +90,7 @@ Engine.run(()=>{
 // Init player
 if(!loadGame()){
   playerID=ECS.create(CPos(World.size*0.5,World.size*0.5,12),CVel(),CSprite('#0ff',24),CPlayer(1,300,300,150,150,25,25,25,25,[],[]));
-  addChat('¡Bienvenido a THUAMER ULTRA V1.2 PERFECTO!');
+  addChat('¡Bienvenido a THUAMER ULTRA V1.2 NEON!');
 }
 
 // Simple mobs

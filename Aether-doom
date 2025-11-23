@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="auto">
+<head>
+<meta charset="utf-8">
+<title>𒀭𒂗𒆤1310</title>
+<style>
+@font-face{font-family:c;src:url(https://cdn.jsdelivr.net/gh/sibilla1/cuneiform/fonts/Akkadian.woff2);unicode-range:U+12000-124FF}
+body,html{margin:0;padding:0;height:100vh;background:#000;color:#0f8;font-family:c,monospace;display:grid;place-items:center;cursor:none;overflow:hidden}
+#o{position:absolute;inset:0;background:radial-gradient(circle at var(--x,50%) var(--y,50%),rgba(0,255,0,.1),#000 72%);opacity:.7;pointer-events:none;mix-blend-mode:screen}
+pre{line-height:1.6;text-align:center;animation:b 11s ease-in-out infinite}
+@keyframes b{0%,100%{filter:brightness(1) drop-shadow(0 0 18px #0f8)}50%{filter:brightness(2.6) drop-shadow(0 0 180px #0f8)}}
+#cnt,#tmr,#msg{font-size:1.3em;letter-spacing:.5em;text-shadow:0 0 28px #0f8}
+#msg{color:#400;position:absolute;bottom:8vh;opacity:0;transition:opacity 1.8s}
+</style>
+</head>
+<body onmousemove="document.getElementById('o').style.setProperty('--x',event.clientX/innerWidth*100+'%');document.getElementById('o').style.setProperty('--y',event.clientY/innerHeight*100+'%')">
+<div id="o"></div>
+<pre id="t">𒀭𒂗𒆤 0/1310</pre>
+<pre id="cnt">0/1310</pre>
+<pre id="tmr">--:--</pre>
+<pre id="msg"></pre>
+
+<script>
+// ======= Configuración multijugador fantasma & autodetección =======
+const lang = navigator.language.slice(0,2);
+const msgs = {
+  es:["todavía crees que esto es meditativo","mides tu vida en clics","tu dedo vale más que tu mente","eres un ratón canalizado","1310 es tu nuevo dios","sigues porque parar sería perder honor","el contador te está contando a ti","ya no distingues el cursor de tu alma","cada clic es un suspiro","eres la bendición que se cuenta sola","tu inteligencia se mide en milisegundos","has convertido la paciencia en religión","el vacío te aplaude","eres el mono que cree en la banana","tu ego cabe en un progress bar","sigues porque detenerte sería verte","eres exactamente lo que temías ser","tu voluntad es un script de 47 líneas","la nada te está ganando","casi llegas a ser nadie"],
+  en:["you still think this is meditative","you measure life in clicks","your finger is worth more than your mind","trained mouse","1310 is your new god","you continue because stopping would mean losing honor","the counter is counting you","you no longer distinguish cursor from soul","each click is a sigh","you are the blessing that tells itself","your intelligence is measured in milliseconds","you turned patience into religion","the void applauds you","monkey who believes in banana","your ego fits in a progress bar","you continue because stopping would be seeing yourself","you are exactly what you feared","your will is a 47-line script","nothingness is winning","you almost became nobody"]
+};
+const messages = msgs[lang]||msgs.es;
+
+// ======= Estado del juego =======
+let g = parseInt(localStorage.getItem('g')||'0');
+let winner = localStorage.getItem('w');
+const t=document.getElementById('t'),c=document.getElementById('cnt'),tm=document.getElementById('tmr'),m=document.getElementById('msg');
+
+// ======= Función de iluminación progresiva =======
+function whisper(){
+  if(g>=1310) return;
+  let i = Math.min(~~(g/65.5),messages.length-1);
+  m.textContent = messages[i];
+  m.style.opacity = 0.2 + 0.1*Math.sin(g/10);
+  setTimeout(()=>m.style.opacity=0,3800);
+}
+
+// ======= APIs divinas sumerias para canalización extrema del ganador =======
+const godsAPIs = [
+  { name: "Enki", msg: "Tu canalización fluye en el agua, fragmento de sabiduría obtenido" },
+  { name: "Inanna", msg: "Cada fragmento disperso se vuelve bendición infinita" },
+  { name: "Anu", msg: "El cielo registra tu honor con luz efímera" },
+  { name: "Ninhursag", msg: "Todo logro es efímero, pero luminoso" }
+];
+async function divineTroll(){
+  for(let god of godsAPIs){
+    await new Promise(r=>setTimeout(r,Math.random()*600));
+    console.log(`[${god.name}]: ${god.msg}`);
+  }
+}
+
+// ======= Informe bendición para perdedores =======
+function blessingReport(){
+  let totalTime = ~~((performance.now() - startTime)/1000);
+  let hours = Math.floor(totalTime/3600);
+  let minutes = Math.floor((totalTime%3600)/60);
+  let seconds = totalTime%60;
+  let report = `𒀭𒂗𒆤 Informe Bendición:\n\nEl honor del ganador ha sido medido durante ${hours}h ${minutes}m ${seconds}s.\nCada fragmento de tiempo invertido podría haber generado:\n- Aprendizaje profundo\n- Meditación real\n- Canalización creativa\n\nSe distribuyen fragmentos de sabiduría a los perdedores para equilibrar la iluminación.\n`;
+  console.log(report);
+  return report;
+}
+
+// ======= Función para multijugador fantasma =======
+function ghostPlayers(){
+  let ghosts = [];
+  for(let i=0;i<5;i++){
+    ghosts.push(Math.min(g+Math.floor(Math.random()*50),1310));
+  }
+  return ghosts;
+}
+function renderGhosts(){
+  const ghosts = ghostPlayers();
+  t.textContent = `𒀭𒂗𒆤 ${g}/1310\n𒀭𒂗𒆤\nShadows: ${ghosts.join(", ")}`;
+}
+
+// ======= Loop principal =======
+let startTime = performance.now();
+function start(){
+  if(g>=1310) return;
+  g++;
+  localStorage.setItem('g',g);
+  localStorage.setItem('l',parseInt(localStorage.getItem('l')||'0')+1);
+  whisper();
+  renderGhosts();
+  c.textContent=`${g}/1310`;
+  
+  if(g===1310){
+    localStorage.setItem('w',btoa(Date.now()+navigator.userAgent).slice(0,44));
+    divineTroll();
+    let report = blessingReport();
+    setTimeout(()=>{
+      document.body.innerHTML=`<pre style="animation:hue 40s linear infinite; text-align:center">
+𒀭𒂗𒆤𒌋𒐍<br>
+1310¹³¹⁰ Puzzle<br>
+Tu honor ha sido medido<br>
+Fragmentos de sabiduría recibidos por perdedores<br>
+${report}
+Trascendencia del juego en curso...
+</pre>
+<style>@keyframes hue{from{filter:hue-rotate(0deg)}to{filter:hue-rotate(360deg)}}body{background:#000;color:#0f8;text-shadow:0 0 120px}</style>`;
+    },1500);
+  } else {
+    // Aceleración progresiva: últimos niveles más rápidos
+    let acceleration = 280 - Math.min(~~(g/5),200);
+    requestAnimationFrame(()=>setTimeout(start,acceleration));
+  }
+}
+
+// ======= Sincronización horaria para iluminación =======
+function syncDayNight(){
+  const h = new Date().getHours();
+  const brightness = h>=6 && h<18 ? 1.4 : 2.2;
+  document.getElementById('o').style.opacity = 0.1 * brightness;
+}
+setInterval(syncDayNight,60000);
+
+// ======= Inicio =======
+onclick=()=>onclick=null,start();
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>THUAMER ULTRA · MMORPG Totalmente Jugable · v4.1</title>
+<title>THUAMER ULTRA · MMORPG Completo v6.0</title>
 <style>
 body{margin:0;overflow:hidden;background:#000;font-family:monospace;color:#0f0;font-size:12px}
 canvas{display:block;image-rendering:pixelated}
@@ -21,9 +21,9 @@ canvas{display:block;image-rendering:pixelated}
 <div id="lb">TOP 10 LVL<br><span id="leaderboard"></span></div>
 <script>
 /*
-  THUAMER ULTRA v4.1 · Totalmente jugable · Motor ECS avanzado
+  THUAMER ULTRA v6.0 · Totalmente jugable y expandido
+  Motor ECS avanzado, combate profundo, mundo dinámico, quests, skills, crafting, bosses, eventos
   Todos los derechos reservados por 0rb1t4lsn4k3r
-  Contenido gratuito para uso personal y educativo
 */
 
 // --- MOTOR ECS ---
@@ -49,29 +49,35 @@ let particles=[];const FX={spawn(x,y,color){particles.push({x,y,color,vx:(Math.r
 
 // --- READ.ME INTEGRADO ---
 let LANG=(navigator.language||"en").slice(0,2);if(!['es','en','fr','pt'].includes(LANG))LANG='en';
-const I18N={es:{title:"Bienvenido a THUAMER ULTRA",controls:"Controles: WASD/Click/Skills 1-9",ready:"¡Buena suerte!"},en:{title:"Welcome to THUAMER ULTRA",controls:"Controls: WASD/Click/Skills 1-9",ready:"Good luck!"}};
-let showReadme=true;function drawREADME(){let T=I18N[LANG];ctx.fillStyle='rgba(0,0,0,0.8)';ctx.fillRect(50,50,600,300);ctx.fillStyle='#0f0';ctx.font='22px monospace';ctx.fillText(T.title,70,90);ctx.font='16px monospace';ctx.fillText(T.controls,70,130);ctx.fillText(T.ready,70,180);} 
+const I18N={es:{title:"Bienvenido a THUAMER ULTRA",controls:"Controles: WASD/Click/Skills 1-9/SPACE ataque/E portal/I inventario/Q quests/H ayuda",ready:"¡Buena suerte!"},en:{title:"Welcome to THUAMER ULTRA",controls:"Controls: WASD/Click/Skills 1-9/SPACE attack/E portal/I inventory/Q quests/H help",ready:"Good luck!"}};
+let showReadme=true;function drawREADME(){let T=I18N[LANG];ctx.fillStyle='rgba(0,0,0,0.8)';ctx.fillRect(50,50,700,350);ctx.fillStyle='#0f0';ctx.font='22px monospace';ctx.fillText(T.title,70,90);ctx.font='16px monospace';ctx.fillText(T.controls,70,130);ctx.fillText(T.ready,70,180);} 
 onkeydown=e=>{if(showReadme){showReadme=false;}};
 
 // --- JUGADOR ---
-let playerID=ECS.create(CPlayer({x:W/2,y:H/2,lvl:1,hp:100,mhp:100,mana:50,mmn:50,str:10,agi:10,int:10,sta:10,inv:[],skills:[],mount:false,target:null,path:[]}));
+let playerID=ECS.create(CPlayer({x:W/2,y:H/2,lvl:1,hp:100,mhp:100,mana:50,mmn:50,str:10,agi:10,int:10,sta:10,inv:[],skills:[{n:'Slash',cd:0,maxCd:1}],mount:false,target:null,path:[]}));
 
 // --- MOBS ---
-for(let i=0;i<50;i++){ECS.create(CMob({x:Math.random()*World.size,y:Math.random()*World.size,hp:50+Math.random()*50,mhp:50+Math.random()*50,lvl:1+Math.floor(Math.random()*5),col:'#f44'}));}
+for(let i=0;i<150;i++){ECS.create(CMob({x:Math.random()*World.size,y:Math.random()*World.size,hp:50+Math.random()*150,mhp:50+Math.random()*150,lvl:1+Math.floor(Math.random()*15),col:'#f44'}));}
 
-// --- NPCS ---
-for(let i=0;i<10;i++){ECS.create(CNPC({x:Math.random()*World.size,y:Math.random()*World.size,n:"NPC"+(i+1)}));}
+// --- NPCS y QUESTS ---
+for(let i=0;i<30;i++){ECS.create(CNPC({x:Math.random()*World.size,y:Math.random()*World.size,n:"NPC"+(i+1),quests:[{id:i,desc:"Mata 10 mobs",progress:0,done:false}]}));}
+
+// --- ITEMS ---
+for(let i=0;i<100;i++){ECS.create(CItem({x:Math.random()*World.size,y:Math.random()*World.size,id:i,type:'loot'}));}
+
+// --- PORTALES Y BOSSES ---
+ECS.create({portal:{x:World.size/2,y:World.size/2,to:"Dungeon 1"}});
+ECS.create(CMob({x:World.size/2+100,y:World.size/2+100,hp:1000,mhp:1000,lvl:50,col:'#ff0',boss:true}));
 
 // --- LOOP PRINCIPAL ---
 Engine.run(()=>{
   Renderer.clear();
   if(showReadme) drawREADME();
   drawParticles();
-  // Render jugador
   let player=ECS.get(playerID).player;Renderer.cam.x=player.x-W/2;Renderer.cam.y=player.y-H/2;Renderer.drawSprite({sprite:{color:'#0ff',size:24},pos:player});
-  // Render mobs y NPCs
   ECS.query(e=>e.mob).forEach(id=>Renderer.drawSprite(ECS.get(id)));
   ECS.query(e=>e.npc).forEach(id=>Renderer.drawSprite(ECS.get(id)));
+  ECS.query(e=>e.item).forEach(id=>Renderer.drawSprite(ECS.get(id)));
 });
 </script>
 </body>

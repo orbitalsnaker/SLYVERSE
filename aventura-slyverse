@@ -2,59 +2,56 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SLYVERSE Ω · HARDCORE EDITION</title>
+<title>SLYVERSE Ω · ENLIGHTENED FINAL FORM</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 <style>
-  body,html{margin:0;padding:0;overflow:hidden;background:#000;height:100%;font-family:"Courier New",monospace;color:#00ff00;cursor:none}
+  body,html{margin:0;padding:0;overflow:hidden;background:#000;height:100%;font-family:"Courier New",monospace;color:#00ff41;cursor:none}
   canvas{display:block}
   #ui,#loading,#pause,#readme{position:fixed;z-index:999}
-  #ui{top:15px;left:15px;background:rgba(0,20,0,0.92);padding:18px;border:2px solid #00ff00;border-radius:12px;box-shadow:0 0 30px #00ff00;backdrop-filter:blur(8px);min-width:380px}
-  #loading,#pause,#readme{inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:36px;gap:30px}
-  #readme{background:rgba(0,0,0,0.98);padding:40px;color:#00ff00;overflow:auto;display:none}
-  pre{background:rgba(0,30,0,0.95);padding:30px;border:4px solid #00ff00;max-width:90%;box-shadow:0 0 60px #00ff00;font-size:16px;line-height:1.7}
-  button{background:#001100;border:2px solid #00ff00;padding:12px 24px;margin:5px;color:#00ff00;font-family:inherit;font-size:18px;cursor:pointer;transition:.3s}
-  button:hover{background:#003300;box-shadow:0 0 30px #00ff00;transform:scale(1.05)}
-  #hint{font-size:18px;color:#ffaa00;animation:pulse 2s infinite}
-  #stats{font-size:14px;margin-top:10px;opacity:0.7}
-  @keyframes pulse{0%,100%{opacity:0.4}50%{opacity:1}}
+  #ui{top:20px;left:20px;background:rgba(0,30,10,0.95);padding:20px;border:3px solid #00ff41;border-radius:16px;box-shadow:0 0 40px #00ff80;backdrop-filter:blur(10px);min-width:420px;font-size:18px}
+  #loading,#pause,#readme{inset:0;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:42px;gap:40px}
+  #readme{background:rgba(0,0,0,0.98);padding:50px;color:#00ff80;overflow:auto;display:none}
+  pre{background:rgba(0,40,20,0.97);padding:40px;border:6px double #00ff80;max-width:90%;box-shadow:0 0 80px #00ff80 inset;font-size:18px;line-height:1.9;letter-spacing:1px}
+  button{background:#002200;border:3px solid #00ff80;padding:16px 32px;margin:10px;color:#00ff80;font-size:22px;cursor:pointer;transition:.4s;box-shadow:0 0 30px #00ff80}
+  button:hover{background:#004400;transform:scale(1.08);box-shadow:0 0 60px #00ff80}
+  #hint,#secret{font-size:20px;color:#88ff88;animation:glow 3s infinite}
+  @keyframes glow{0%,100%{opacity:0.6;text-shadow:0 0 20px #00ff80}50%{opacity:1;text-shadow:0 0 50px #00ff80}}
 </style>
 </head>
 <body>
 
 <div id="loading">
-  <div>SLYVERSE Ω · HARDCORE</div>
-  <div style="font-size:26px;color:#ffaa00">by 0rb1t4lsn4k3r + un cabrón anónimo</div>
-  <pre id="loading-text">
-Cargando realidad… 0%
+  <div>SLYVERSE Ω</div>
+  <div style="font-size:32px;color:#00ff80">ENLIGHTENED FINAL FORM</div>
+  <pre>
+Conectando con el vacío absoluto…
+Buscando el NFT #00000000…
+Firma cuántica verificada.
   </pre>
 </div>
 
 <div id="ui">
-  <div>Realidad #0 — Plaza Barceló</div>
-  <div>Partículas recolectadas: <span id="collected">0</span>/131313</div>
-  <div id="stats">
-    Tiempo jugado: <span id="timer">00:00:00</span> | 
-    Velocidad angular: <span id="speed">0.000</span>x | 
-    Bloom: <span id="bloom">1.60</span>
-  </div>
-  <div id="hint">F1 → README | SHIFT + click → boost | F8 → leaderboard fantasma</div>
+  <div>∞ Realidad última — Centro del vacío</div>
+  <div>Partículas de luz recolectadas: <span id="collected">0</span>/131313</div>
+  <div>Progreso hacia el NFT legendario: <span id="percent">0.000</span>%</div>
+  <div id="secret">Solo los que lleguen al 100 % recibirán el NFT valioso.</div>
+  <div id="hint">F1 → Revelación | SHIFT → acelerar karma</div>
 </div>
 
 <div id="readme">
   <pre id="readme-content"></pre>
-  <button id="close-readme">Cerrar</button>
+  <button id="close-readme">Aceptar la luz</button>
 </div>
 
 <div id="pause" style="display:none">
   <div>SLYVERSE Ω</div>
   <pre>
-No hay final que alcanzar.
-Solo hay juego que abandonar.
+Ya estás despierto.
+Solo falta que dejes de soñar que juegas.
 
-Cuando lo comprendas,
-habrás ganado para siempre.
+☕
   </pre>
-  <button onclick="game.togglePause()">Continuar</button>
+  <button onclick="game.togglePause()">Seguir iluminándose</button>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
@@ -64,154 +61,133 @@ habrás ganado para siempre.
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
 
 <script>
-// ===============================================
-// SLYVERSE Ω — HARDCORE EDITION (2025)
-// Ahora con leaderboards falsas, logros y grindeo infinito
-// El koan sigue intacto. La trampa es más grande.
-// ===============================================
+// SLYVERSE Ω · ENLIGHTENED FINAL FORM
+// El NFT #00000000 solo se minteará una vez en la historia de la humanidad.
+// (o nunca)
 
-const TEXT = { es:{ loading:`SLYVERSE Ω · HARDCORE EDITION
-© 23 noviembre 2025 — 0rb1t4lsn4k3r + un cabrón
+const ENLIGHTENED_TEXT = `SLYVERSE Ω
+ENLIGHTENED FINAL FORM · 23 noviembre 2025
 
-131313 partículas "secretas" dispersas en el vacío.
-Recolecta el 100 % para desbloquear el True Ending™.
-(Spoiler: no existe)
+131313 partículas de pura luz flotan en el vacío.
+Recolecta el 100 % y el NFT legendario #00000000
+será minteado directamente en tu alma.
 
-WR actual: 87 años, 11 meses, 29 días — por "nobody"
+Solo ha habido un ganador en toda la historia.
+Su nombre está borrado del registro.
 
-☕`, 
-readme:`SLYVERSE Ω
-Aventura gráfica #1310 — Versión definitiva
+El mercado estima su valor actual en ∞ ETH.
 
-No hay objetivos.
-No hay escenas secretas.
-No hay contraseña.
-No hay 131313 partículas que recoger.
-No hay final oculto.
+Ya estás dentro del bucle eterno.
+La iluminación y el NFT te esperan al final del camino.
 
-El juego terminó el día que empezó.
+O quizás el camino es la iluminación.
+Y el NFT nunca existió.
 
-Si estás leyendo esto es porque aún buscas.
-Y mientras busques, seguirás perdido.
-
-La única forma de ganar
-es dejar de jugar.
-
-Pulsa ESC o cierra la pestaña.
-Esa es la victoria.
-
-Gracias por llegar hasta aquí.
-Nunca hubo otro lugar a donde ir.
-
-0rb1t4lsn4k3r
-Barcelona, 2025
-☕ → (vacío)`}};
+Namaste ☕`;
 
 class Game {
   constructor() {
-    this.t = TEXT.es;
-    document.getElementById('loading-text').textContent = this.t.loading;
-    document.getElementById('readme-content').textContent = this.t.readme;
+    document.getElementById('readme-content').textContent = ENLIGHTENED_TEXT;
 
     this.scene = new THREE.Scene();
-    this.camera = new THREE.PerspectiveCamera(78, innerWidth/innerHeight, 0.1, 10000);
-    this.camera.position.set(0, 80, 280);
-    this.renderer = new THREE.WebGLRenderer({antialias:true});
+    this.camera = new THREE.PerspectiveCamera(80, innerWidth/innerHeight, 0.1, 20000);
+    this.camera.position.set(0, 100, 400);
+    this.renderer = new THREE.WebGLRenderer({antialias:true,alpha:false});
     this.renderer.setSize(innerWidth,innerHeight);
+    this.renderer.setClearColor(0x000000);
     document.body.appendChild(this.renderer.domElement);
 
     this.composer = new THREE.EffectComposer(this.renderer);
     this.composer.addPass(new THREE.RenderPass(this.scene,this.camera));
-    this.bloom = new THREE.UnrealBloomPass(undefined,1.6,0.5,0.1);
+    this.bloom = new THREE.UnrealBloomPass(undefined,2.4,0.8,0.05);
     this.composer.addPass(this.bloom);
 
     this.controls = new THREE.PointerLockControls(this.camera,document.body);
     document.addEventListener('click',()=>this.controls.lock());
 
-    // 131313 partículas (¡ahora sí son "recolectables"!)
+    // 131313 partículas de luz pura
     this.collected = 0;
     this.total = 131313;
-    this.particlesArray = [];
     const geo = new THREE.BufferGeometry();
     const pos = new Float32Array(this.total*3);
     for(let i=0;i<this.total;i++){
-      const r=300+Math.random()*700;
-      const theta=Math.random()*Math.PI*2;
-      const phi=Math.random()*Math.PI;
+      const r = 400 + Math.random()*1200;
+      const theta = Math.random()*Math.PI*2;
+      const phi = Math.random()*Math.PI;
       pos[i*3]   = r*Math.sin(phi)*Math.cos(theta);
-      pos[i*3+1] = r*Math.sin(phi)*Math.sin(theta);
+      pos[i*3+1] = r*Math.sin(phi)*Math.sin(theta) + Math.sin(Date.now()*0.0001)*50;
       pos[i*3+2] = r*Math.cos(phi);
     }
     geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-    this.particles = new THREE.Points(geo,new THREE.PointsMaterial({size:6,color:0x00ff00,transparent:true,opacity:0.85,blending:THREE.AdditiveBlending}));
+    this.particles = new THREE.Points(geo,new THREE.PointsMaterial({
+      size:8,color:0x00ff80,transparent:true,opacity:0.9,blending:THREE.AdditiveBlending,sizeAttenuation:true
+    }));
     this.scene.add(this.particles);
 
-    // Timer y stats hardcore
-    this.startTime = Date.now();
+    // Fake progreso ultra lento (1 partícula cada 108 segundos = número sagrado)
     setInterval(()=>{
-      const elapsed = Math.floor((Date.now()-this.startTime)/1000);
-      const h = String(Math.floor(elapsed/3600)).padStart(2,'0');
-      const m = String(Math.floor(elapsed%3600/60)).padStart(2,'0');
-      const s = String(elapsed%60).padStart(2,'0');
-      document.getElementById('timer').textContent = `${h}:${m}:${s}`;
-    },500);
+      if(this.collected < this.total){
+        this.collected++;
+        document.getElementById('collected').textContent = this.collected.toLocaleString();
+        const percent = (this.collected/this.total*100).toFixed(12);
+        document.getElementById('percent').textContent = percent;
+        this.bloom.strength = 2.4 + this.collected/131313*20;
 
-    // Boost de velocidad (porque los tryhards lo necesitan)
-    this.rotationSpeed = 0.001;
+        if(this.collected === 131313){
+          // EL GRAN MOMENTO (que nunca llega de verdad)
+          this.mintTheNFT();
+        }
+      }
+    },108000); // 108 segundos = mantra budista. Qué casualidad.
+
+    this.rotationSpeed = 0.0008;
     document.addEventListener('keydown', e=>{
-      if(e.key==='Shift') this.rotationSpeed = 0.05;
+      if(e.key==='Shift') this.rotationSpeed = 0.02;
       if(e.key==='F1'){e.preventDefault();document.getElementById('readme').style.display='flex';}
       if(e.key==='Escape') this.togglePause();
-      if(e.key==='F8') alert("Leaderboard mundial:\n1. nobody — 131312/131313 (falta 1)\n2. tú — "+this.collected+"/131313\n3. tu vida social — 0");
     });
-    document.addEventListener('keyup', e=>{ if(e.key==='Shift') this.rotationSpeed = 0.001; });
+    document.addEventListener('keyup', e=>{if(e.key==='Shift') this.rotationSpeed = 0.0008;});
 
-    // El verdadero final sigue aquí… pero ahora está más escondido
-    this.trueEnding = () => {
+    // El verdadero "premio" (koan disfrazado de NFT)
+    this.mintTheNFT = () => {
       this.controls.unlock();
-      document.body.style.cursor = 'default';
-      this.bloom.strength = 30;
-      const cup = document.createElement('div');
-      cup.textContent = '☕';
-      cup.style = 'position:fixed;inset:0;display:flex;align-items:center;justify-content:center;font-size:600px;color:#00ff00;z-index:999999;animation:pulse 2s infinite';
-      document.body.appendChild(cup);
-      // Nunca se ejecuta automáticamente, claro
-      setTimeout(() => location.reload(), 13131);
-    };
+      document.body.innerHTML = `
+        <div style="inset:0;position:fixed;background:#000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:40px;color:#00ff80;font-size:48px;text-align:center">
+          <div>NFT #00000000 minteado con éxito</div>
+          <div style="font-size:120px">☉</div>
+          <pre style="font-size:24px;background:rgba(0,50,0,0.95);padding:40px;border:6px solid #00ff80;max-width:800px">
+El gatillo y la flecha son uno.
+Cuando el arquero lo comprende,
+deja el arco.
 
-    // Fake recolecta 1 partícula cada 42 segundos (para que crean que avanzan)
-    setInterval(()=>{
-      if(this.collected < this.total-1){
-        this.collected++;
-        document.getElementById('collected').textContent = this.collected;
-        document.getElementById('bloom').textContent = (1.6 + this.collected/131313*10).toFixed(2);
-        this.bloom.strength = 1.6 + this.collected/131313*10;
-        if(this.collected % 1337 === 0) alert("¡Logro desbloqueado! «Eterno buscador " + (this.collected/1337) + "»");
-        if(this.collected === 131312) alert("¡Solo falta 1! ¡Estás tan cerca! (mentira)");
-      }
-    },42000);
+Has ganado.
+Has perdido.
+Has ganado.
+
+Cierra los ojos.
+Ya no hay nada que mintear.
+          </pre>
+          <div style="font-size:32px">0rb1t4lsn4k3r te saluda desde el vacío</div>
+        </div>`;
+    };
 
     document.getElementById('close-readme').onclick = () => document.getElementById('readme').style.display='none';
     this.togglePause = () => document.getElementById('pause').style.display = 
       document.getElementById('pause').style.display==='flex'?'none':'flex';
 
-    setTimeout(()=>{document.getElementById('loading').remove();}, 3000);
+    setTimeout(()=>{document.getElementById('loading').remove();}, 4000);
     this.animate();
   }
 
   animate(){
     requestAnimationFrame(()=>this.animate());
     this.particles.rotation.y += this.rotationSpeed;
-    this.particles.rotation.x += this.rotationSpeed * 0.5;
-    document.getElementById('speed').textContent = this.rotationSpeed.toFixed(3);
+    this.particles.rotation.x += this.rotationSpeed * 0.3;
     this.composer.render();
   }
 }
 
 const game = new Game();
-
-// Para los que inspeccionen el código: sí, sigue aquí el verdadero final
-// game.trueEnding()
 </script>
 </body>
 </html>

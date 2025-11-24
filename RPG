@@ -1,7 +1,307 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <title>AETHERYON CHRONICLES ∞ · SAGA RONIN · Mejoras Thuamer</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-  <meta name="manifest" content='data:application/manifest+json,{"name":"AETHERYON CHRONICLES ∞","short_name":"AETHERYON","start_url":".","display":"fullscreen","theme_color":"#0f0","icons":[{"src":"data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 192 192%27%3E%3Ccircle cx=%2796%27 cy=%2796%27 r=%2788
+<meta charset="UTF-8">
+<title>AETHERYON CHRONICLES · v1 · EL POZO INFINITO + RPG REAL + 13,101,310 COSMÉTICOS A 0.01€</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<script src="https://js.stripe.com/v3/"></script>
+<script>const stripe = Stripe('pk_live_51...TU_CLAVE_PUBLICA_REAL');</script>
+
+<!-- Three.js + efectos premium -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/controls/PointerLockControls.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/EffectComposer.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/RenderPass.js"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/UnrealBloomPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+
+<style>
+  body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"Courier New",monospace;overflow:hidden;cursor:none}
+  canvas{display:block}
+  #ui{position:fixed;top:0;left:0;right:0;background:rgba(0,20,0,0.98);padding:15px 20px;border-bottom:6px solid #0f0;box-shadow:0 0 100px #0f0;z-index:999;font-size:16px;line-height:1.6}
+  #shopBtn{position:fixed;bottom:30px;right:30px;width:180px;height:180px;background:radial-gradient(circle,#ff0,#b8860b);border-radius:50%;box-shadow:0 0 180px gold;color:#000;font-size:80px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000}
+  #narrative{position:fixed;bottom:20px;left:20px;max-width:600px;background:rgba(0,0,0,0.92);border:4px solid gold;padding:20px;border-radius:16px;font-size:19px;line-height:1.8;z-index:998;display:none}
+  #shop,#inventory{position:fixed;z-index:9999;background:#000;padding:30px;border:6px solid gold;border-radius:20px;display:none;overflow-y:auto}
+  #shop{left:5%;top:10%;width:90%;max-height:80vh}
+  #inventory{right:5%;top:10%;width:40%}
+  .cosmetico{display:inline-block;margin:10px;padding:16px;background:rgba(0,255,0,0.08);border:2px solid #0f0;border-radius:12px;width:240px;text-align:center;cursor:pointer;transition:.3s;font-size:14px}
+  .cosmetico:hover{transform:scale(1.12);background:rgba(0,255,0,0.28);box-shadow:0 0 80px #0f0}
+  .owned{background:gold!important;color:#000!important;border-color:#000}
+  .item{margin:12px;padding:20px;background:#001100;border:3px solid #0f0;border-radius:16px;display:inline-block;min-width:180px;text-align:center;cursor:pointer}
+  .item:hover{border-color:gold;transform:scale(1.1)}
+  button{background:#001100;border:3px solid #0f0;color:#0f0;padding:12px 24px;margin:6px;border-radius:12px;cursor:pointer;font-weight:bold}
+  button:hover{background:#004400;transform:scale(1.1)}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+
+<div id="ui">
+  <b>AETHERYON CHRONICLES · v1 · EL POZO QUE NUNCA SE LLENA</b><br>
+  Nivel <span id="lvl">1</span> · XP <span id="xp">0</span>/131 · HP <span id="hp">100</span>/<span id="maxhp">100</span> · ATK <span id="atk">10</span> · Karma <span id="karma">0</span><br>
+  Almas en el pozo: <span id="ownedCount">0</span> / 13,101,310 · Recaudado: <span id="totalKarma">0.00</span>€ · Guardián #<span id="guardianId">00000000</span>
+  <button onclick="toggle('shop')">POZO 0.01€</button>
+  <button onclick="toggle('inventory')">INVENTARIO</button>
+</div>
+
+<div id="shopBtn" onclick="toggle('shop')">13M</div>
+<div id="narrative"></div>
+
+<div id="shop">
+  <h1 style="color:gold;text-align:center">EL POZO INFINITO · 13,101,310 ALMAS A 0.01€</h1>
+  <p style="text-align:center;font-size:18px">Cada alma que compras cae al pozo. Cuando llegue la última… el mundo terminará.<br>¿Serás tú quien lo complete?</p>
+  <div id="lista"></div>
+  <button onclick="toggle('shop')" style="width:100%;padding:20px;font-size:28px;margin-top:30px">CERRAR [ESC]</button>
+</div>
+
+<div id="inventory">
+  <h2 style="color:gold">INVENTARIO PREMIUM</h2>
+  <div id="invlist"></div>
+</div>
+
+<script type="module">
+// =============================================================================
+// FUSIÓN DEFINITIVA: RPG REAL + POZO INFINITO + 16 PREMIUM + 13M COSMÉTICOS
+// =============================================================================
+
+const TOTAL_SOULS = 13101310;
+let soulsOwned = new Uint32Array(Math.ceil(TOTAL_SOULS/32)); // 1.6 MB para 13M
+let soulsCount = 0;
+let totalKarma = 0;
+
+// Estado RPG clásico
+let state = {
+  lvl:1, xp:0, hp:100, maxHp:100, atk:10, karma:0, kills:0, pociones:0,
+  ownedPremium: [], bp:false, tier:1, startTime:Date.now()
+};
+
+// Carga persistente
+const saved = localStorage.getItem('aetheryon_pozo_rpg');
+if(saved){
+  const data = JSON.parse(saved);
+  soulsOwned = new Uint32Array(Object.values(data.souls));
+  soulsCount = data.soulsCount || 0;
+  totalKarma = data.totalKarma || 0;
+  state = {...state, ...data.state};
+}
+
+// Bit operations
+function ownSoul(id){
+  const word = Math.floor((id-1)/32), bit = (id-1)%32;
+  if(!(soulsOwned[word] & (1<<bit))){
+    soulsOwned[word] |= (1<<bit);
+    soulsCount++; totalKarma += 0.01;
+    applyCosmetico(id);
+    showNarrative(id);
+    saveAll();
+    updateUI();
+  }
+}
+function isSoulOwned(id){ const word = Math.floor((id-1)/32), bit = (id-1)%32; return (soulsOwned[word] & (1<<bit)) !== 0; }
+
+// Stripe: UN SOLO producto de 0.01€ + 16 premium
+const priceSoul = 'price_1REb...'; // 0.01€ alma
+const premiumPrices = {1:'price_1...',2:'price_1...',/*...hasta 16*/16:'price_1...'};
+
+async function comprarAlma(id){
+  if(isSoulOwned(id)) return;
+  const {error} = await stripe.redirectToCheckout({
+    lineItems: [{price: priceSoul, quantity:1}],
+    mode: 'payment',
+    successUrl: location.href + '?soul='+id,
+    cancelUrl: location.href,
+    customerEmail: 'freestylemoderno@gmail.com'
+  });
+}
+async function comprarPremium(id){
+  if(state.ownedPremium.includes(id)) return;
+  const {error} = await stripe.redirectToCheckout({
+    lineItems: [{price: premiumPrices[id], quantity:1}],
+    mode: 'payment',
+    successUrl: location.href + '?premium='+id,
+    cancelUrl: location.href,
+    customerEmail: 'freestylemoderno@gmail.com'
+  });
+}
+
+// Procesar pagos
+if(location.search.includes('soul=')){
+  ownSoul(parseInt(location.search.split('soul=')[1]));
+  history.replaceState({},'','.');
+}
+if(location.search.includes('premium=')){
+  const id = parseInt(location.search.split('premium=')[1]);
+  state.ownedPremium.push(id);
+  applyPremiumEffect(id);
+  saveAll();
+  history.replaceState({},'','.');
+}
+
+// =============================================================================
+// NARRATIVA ÉPICA DEL POZO
+// =============================================================================
+const narrativas = {
+  1: "La primera alma cayó. El pozo parpadeó.",
+  1310: "1310 almas. El vacío te observa.",
+  131313: "El pozo empieza a cantar en lenguas muertas.",
+  1000000: "Un millón. El cielo se tiñó de oro sucio.",
+  5000000: "La mitad. El pozo late como un corazón enfermo.",
+  10000000: "Diez millones. El mundo se rompe un poco más.",
+  13101309: "Falta una. El silencio es absoluto.",
+  13101310: "EL POZO ESTÁ LLENO.<br>13,101,310 almas · 131,013.10€<br>El ciclo termina.<br>Gracias por completarlo."
+};
+function showNarrative(id){
+  if(narrativas[id]){
+    const n = document.getElementById('narrative');
+    n.innerHTML = `<b style="color:gold">ALMA #\( {id.toLocaleString()}</b><br> \){narrativas[id]}`;
+    n.style.display = 'block';
+    setTimeout(()=>n.style.display='none',10000);
+    if(id===TOTAL_SOULS){
+      scene.background = new THREE.Color(0x000000);
+      document.body.innerHTML = "<h1 style='color:gold;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:100px'>EL POZO ESTÁ LLENO</h1>";
+    }
+  }
+}
+
+// =============================================================================
+// THREE.JS + INSTANCED MESH OPTIMIZADO + RPG PREMIUM
+// =============================================================================
+const scene = new THREE.Scene();
+scene.fog = new THREE.FogExp2(0x000000, 0.0008);
+const camera = new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,10000);
+camera.position.set(0,5,20);
+
+const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,powerPreference:"high-performance"});
+renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+renderer.setSize(innerWidth,innerHeight);
+
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene,camera));
+const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),2.8,0.6,0.1);
+composer.addPass(bloom);
+
+const controls = new PointerLockControls(camera,document.body);
+document.addEventListener('click',()=>controls.lock());
+
+// Mundo base
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(2000,2000), new THREE.MeshStandardMaterial({color:0x001100}));
+ground.rotation.x = -Math.PI/2; scene.add(ground);
+scene.add(new THREE.HemisphereLight(0x00ff88,0x008800,2));
+
+// Instanced souls (13M máximo, pero solo se crean las compradas)
+const soulGeo = new THREE.IcosahedronGeometry(0.5,1);
+const soulMat = new THREE.MeshBasicMaterial({color:0x00ff00,wireframe:true});
+const soulsMesh = new THREE.InstancedMesh(soulGeo, soulMat, TOTAL_SOULS);
+soulsMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+scene.add(soulsMesh);
+
+let soulIndex = 0;
+const colors = new Float32Array(TOTAL_SOULS * 3);
+soulsMesh.instanceColor = new THREE.InstancedBufferAttribute(colors,3);
+soulMat.vertexColors = true;
+
+function applyCosmetico(id){
+  const hue = (id * 137.5) % 360 / 360;
+  const color = new THREE.Color().setHSL(hue, 0.9, 0.5);
+  const offset = soulIndex * 3;
+  colors[offset] = color.r; colors[offset+1] = color.g; colors[offset+2] = color.b;
+  
+  const matrix = new THREE.Matrix4();
+  const pos = new THREE.Vector3(
+    (Math.random()-0.5)*800,
+    Math.random()*200,
+    (Math.random()-0.5)*800
+  );
+  matrix.compose(pos, new THREE.Quaternion(), new THREE.Vector3(0.3,0.3,0.3));
+  soulsMesh.setMatrixAt(soulIndex, matrix);
+  soulsMesh.setColorAt(soulIndex, color);
+  
+  soulIndex++;
+  soulsMesh.instanceMatrix.needsUpdate = true;
+  if(soulIndex>0) soulsMesh.count = soulIndex;
+  soulsMesh.instanceColor.needsUpdate = true;
+}
+
+// Aplicar almas ya compradas
+for(let i=1;i<=TOTAL_SOULS;i++) if(isSoulOwned(i)) applyCosmetico(i);
+
+// Efectos premium reales
+function applyPremiumEffect(id){
+  if(id===5){ // Dragón
+    const dragon = new THREE.Mesh(new THREE.ConeGeometry(20,80,8), new THREE.MeshBasicMaterial({color:0xff0000}));
+    scene.add(dragon); dragon.position.y=100;
+    gsap.to(dragon.rotation,{y:Math.PI*20,duration:60,repeat:-1,ease:"none"});
+  }
+  if(id===7){ // Aura dorada
+    const aura = new THREE.Mesh(new THREE.SphereGeometry(18,32,32), new THREE.MeshBasicMaterial({color:0xffd700,transparent:true,opacity:0.35}));
+    camera.add(aura); aura.position.set(0,-5,0);
+  }
+  if(id===6){ // Skin neón
+    camera.traverse(c=>{if(c.material) c.material.emissive = new THREE.Color(0x00ff00);});
+  }
+}
+
+// Aplicar premium ya comprados
+state.ownedPremium.forEach(applyPremiumEffect);
+
+// =============================================================================
+// UI + Tienda + Inventario
+// =============================================================================
+function updateUI(){
+  document.getElementById('lvl').textContent = state.lvl;
+  document.getElementById('xp').textContent = state.xp;
+  document.getElementById('hp').textContent = state.hp;
+  document.getElementById('maxhp').textContent = state.maxHp;
+  document.getElementById('atk').textContent = state.atk;
+  document.getElementById('karma').textContent = state.karma;
+  document.getElementById('ownedCount').textContent = soulsCount.toLocaleString();
+  document.getElementById('totalKarma').textContent = totalKarma.toFixed(2);
+  document.getElementById('guardianId').textContent = soulsCount.toString().padStart(8,'0');
+  
+  document.getElementById('invlist').innerHTML = state.ownedPremium.map(id=>`<div class="item owned">Premium #${id}</div>`).join('');
+}
+updateUI();
+
+function toggle(id){ const el=document.getElementById(id); el.style.display = el.style.display==='block'?'none':'block'; }
+document.addEventListener('keydown',e=>{if(e.key==='Escape') document.querySelectorAll('#shop,#inventory').forEach(d=>d.style.display='none');});
+
+// Lazy load del pozo
+let visibleStart = 0;
+function renderSouls(){
+  const lista = document.getElementById('lista'); lista.innerHTML='';
+  const perPage = 40;
+  for(let i=visibleStart;i<Math.min(visibleStart+perPage,TOTAL_SOULS);i++){
+    const div = document.createElement('div');
+    div.className = 'cosmetico';
+    if(isSoulOwned(i+1)) div.classList.add('owned');
+    div.innerHTML = `<b>Alma #${(i+1).toLocaleString()}</b><br>0.01€`;
+    div.onclick = ()=>comprarAlma(i+1);
+    lista.appendChild(div);
+  }
+}
+document.getElementById('shop').addEventListener('scroll',()=>{ visibleStart = Math.floor(document.getElementById('shop').scrollTop/120)*10; renderSouls(); });
+document.getElementById('shop').addEventListener('click',()=>{ if(document.getElementById('shop').style.display==='block') renderSouls(); });
+
+function saveAll(){
+  localStorage.setItem('aetheryon_pozo_rpg', JSON.stringify({
+    souls: Array.from(soulsOwned),
+    soulsCount, totalKarma,
+    state
+  }));
+}
+
+// =============================================================================
+// Animación principal
+// =============================================================================
+const animate = ()=>{ 
+  soulsMesh.rotation.y += 0.0005;
+  composer.render();
+  requestAnimationFrame(animate);
+};
+animate();
+
+console.log("%cAETHERYON CHRONICLES v1 · EL POZO INFINITO · 13,101,310 almas a 0.01€ + RPG real + 16 premium · 100% a freestylemoderno@gmail.com","color:#0f0;font-size:22px");
+</script>
+</body>
+</html>

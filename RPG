@@ -1,169 +1,334 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>AETHERYON CHRONICLES ∞ · RPG CLÁSICO COMPLETO · PRECIOS ULTRA-BARATOS</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<script src="https://js.stripe.com/v3/"></script>
-<script>const stripe = Stripe('pk_live_51Qe...'); // ← aquí pondrías tu clave pública real cuando la tengas</script>
-<style>
-  body,html{margin:0;padding:0;height:100%;overflow:hidden;background:#000;color:#0f0;font-family:"Courier New",monospace;cursor:none}
-  canvas{display:block}
-  #ui{position:fixed;top:10px;left:10px;right:10px;background:rgba(0,20,0,0.97);padding:20px;border:4px solid #0f0;border-radius:16px;box-shadow:0 0 80px #0f0;z-index:999;font-size:16px}
-  #karma{bottom:10px;left:10px;background:rgba(0,20,0,0.97);padding:15px;border:4px solid #0f0;border-radius:12px;max-width:450px}
-  #shop,#bp,#inventory,#quests{position:fixed;z-index:1000;background:rgba(0,30,0,0.98);border:6px solid gold;border-radius:20px;padding:25px;box-shadow:0 0 120px gold;display:none;max-width:90%;max-height:80vh;overflow-y:auto}
-  #shop{left:5%;top:10%}
-  #bp{left:50%;top:10%;transform:translateX(-50%)}
-  #inventory{right:5%;top:10%}
-  #quests{bottom:10%;left:50%;transform:translateX(-50%)}
-  button{background:#001100;border:3px solid #0f0;color:#0f0;padding:12px 24px;margin:6px;border-radius:12px;cursor:pointer;font-weight:bold;transition:.3s;font-size:16px}
-  button:hover{background:#004400;transform:scale(1.1);box-shadow:0 0 60px #0f0}
-  .item{margin:12px;padding:20px;background:#001100;border:3px solid #0f0;border-radius:16px;display:inline-block;min-width:160px;text-align:center;cursor:pointer}
-  .item:hover{border-color:gold;transform:scale(1.1)}
-  .owned{background:gold!important;color:#000!important}
-</style>
+  <meta charset="UTF-8">
+  <title>AETHERYON CHRONICLES ∞ · RPG CLÁSICO COMPLETO · PRECIOS ULTRA-BARATOS</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <script src="https://js.stripe.com/v3/"></script>
+  <script>const stripe = Stripe('pk_live_51Qe...');</script>
+  <style>
+    /* General page styles */
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+      color: #0f0;
+      font-family: "Courier New", monospace;
+      cursor: none;
+    }
+    canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    /* UI elements */
+    #ui {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      background: rgba(0, 20, 0, 0.97);
+      padding: 20px;
+      border: 4px solid #0f0;
+      border-radius: 16px;
+      box-shadow: 0 0 80px #0f0;
+      z-index: 999;
+      font-size: 16px;
+    }
+
+    #karma {
+      bottom: 10px;
+      left: 10px;
+      background: rgba(0, 20, 0, 0.97);
+      padding: 15px;
+      border: 4px solid #0f0;
+      border-radius: 12px;
+      max-width: 450px;
+    }
+
+    /* Shop and other sections */
+    #shop, #bp, #inventory, #quests {
+      position: fixed;
+      z-index: 1000;
+      background: rgba(0, 30, 0, 0.98);
+      border: 6px solid gold;
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 0 120px gold;
+      display: none;
+      max-width: 90%;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+
+    #shop { left: 5%; top: 10%; }
+    #bp { left: 50%; top: 10%; transform: translateX(-50%); }
+    #inventory { right: 5%; top: 10%; }
+    #quests { bottom: 10%; left: 50%; transform: translateX(-50%); }
+
+    /* Buttons */
+    button {
+      background: #001100;
+      border: 3px solid #0f0;
+      color: #0f0;
+      padding: 12px 24px;
+      margin: 6px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: 0.3s;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #004400;
+      transform: scale(1.1);
+      box-shadow: 0 0 60px #0f0;
+    }
+
+    /* Item styles */
+    .item {
+      margin: 12px;
+      padding: 20px;
+      background: #001100;
+      border: 3px solid #0f0;
+      border-radius: 16px;
+      display: inline-block;
+      min-width: 160px;
+      text-align: center;
+      cursor: pointer;
+    }
+    .item:hover {
+      border-color: gold;
+      transform: scale(1.1);
+    }
+    .owned {
+      background: gold !important;
+      color: #000 !important;
+    }
+  </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
 
 <div id="ui">
-  <b>AETHERYON CHRONICLES ∞ · RPG CLÁSICO COMPLETO</b><br>
+  <b id="game-title">AETHERYON CHRONICLES ∞ · RPG CLÁSICO COMPLETO</b><br>
   Nivel: <span id="lvl">1</span> | XP: <span id="xp">0</span>/131 | HP: <span id="hp">100</span>/100 | Ataque: <span id="atk">10</span> | Karma: <span id="karma">0</span><br>
   Enemigos: <span id="kills">0</span> | Quests: <span id="qprog">0</span>/3 | Tiempo: <span id="time">0</span>h
   <br><br>
-  <button onclick="toggle('shop')">TIENDA (0.11€–4.20€)</button>
-  <button onclick="toggle('bp')">BATTLE PASS 4.20€</button>
-  <button onclick="toggle('inventory')">INVENTARIO</button>
-  <button onclick="toggle('quests')">QUESTS</button>
-  <button onclick="saveGame()">GUARDAR</button>
+  <button onclick="toggle('shop')" id="shop-btn">TIENDA</button>
+  <button onclick="toggle('bp')" id="bp-btn">BATTLE PASS</button>
+  <button onclick="toggle('inventory')" id="inventory-btn">INVENTARIO</button>
+  <button onclick="toggle('quests')" id="quests-btn">QUESTS</button>
+  <button onclick="saveGame()" id="save-btn">GUARDAR</button>
 </div>
 
 <div id="shop">
-  <h2 style="color:gold;text-align:center">TIENDA ÉTICA · 100% a freestylemoderno@gmail.com</h2>
-  <div class="item" onclick="pay('espada',0.11)">Espada +10 ATK · 0.11€</div>
-  <div class="item" onclick="pay('armadura',0.33)">Armadura +100 HP · 0.33€</div>
-  <div class="item" onclick="pay('pocion5',0.55)">5× Pociones · 0.55€</div>
-  <div class="item" onclick="pay('aura',1.31)">Aura Dorada x33 karma · 1.31€</div>
-  <div class="item" onclick="pay('pack',4.20)">PACK RONIN COMPLETO · 4.20€</div>
+  <h2 style="color:gold;text-align:center" id="shop-title">TIENDA ÉTICA · 100% a freestylemoderno@gmail.com</h2>
+  <div class="item" onclick="pay('espada')">Espada +10 ATK · 0.11€</div>
+  <div class="item" onclick="pay('armadura')">Armadura +100 HP · 0.33€</div>
+  <div class="item" onclick="pay('pocion5')">5× Pociones · 0.55€</div>
+  <div class="item" onclick="pay('aura')">Aura Dorada x33 karma · 1.31€</div>
+  <div class="item" onclick="pay('pack')">PACK RONIN COMPLETO · 4.20€</div>
   <br><button onclick="toggle('shop')">CERRAR</button>
 </div>
 
 <div id="bp">
-  <h2 style="color:gold">BATTLE PASS · ABRAZO ETERNO · 4.20€</h2>
-  <button onclick="pay('battlepass',4.20)">COMPRAR PASS (4.20€)</button>
+  <h2 style="color:gold" id="bp-title">BATTLE PASS · ABRAZO ETERNO · 4.20€</h2>
+  <button onclick="pay('battlepass')">COMPRAR PASS (4.20€)</button>
   <button onclick="toggle('bp')">CERRAR</button>
 </div>
 
-<div id="inventory"><h2 style="color:gold">INVENTARIO</h2><div id="invlist"></div></div>
-<div id="quests"><h2 style="color:gold">QUESTS</h2><div id="questlist"></div></div>
+<div id="inventory"><h2 style="color:gold" id="inventory-title">INVENTARIO</h2><div id="invlist"></div></div>
+<div id="quests"><h2 style="color:gold" id="quests-title">QUESTS</h2><div id="questlist"></div></div>
 
 <script>
-// ====== CONFIGURACIÓN STRIPE (todo va directo a freestylemoderno@gmail.com) ======
-const prices = {
-  espada:     {amount: 11,  name: "Espada Orbital +10 ATK"},
-  armadura:   {amount: 33,  name: "Armadura Ronin +100 HP"},
-  pocion5:    {amount: 55,  name: "5× Pociones de Vida"},
-  aura:       {amount: 131, name: "Aura Dorada ×33 karma"},
-  pack:       {amount: 420, name: "PACK RONIN COMPLETO"},
-  battlepass: {amount: 420, name: "Battle Pass Abrazo Eterno"}
+// Autodetección de idioma del navegador
+const language = navigator.language || 'es'; // 'es' por defecto si no se detecta otro
+const messages = {
+  en: {
+    title: 'AETHERYON CHRONICLES ∞ · CLASSIC RPG · ULTRA CHEAP PRICES',
+    shopTitle: 'ETHICAL STORE · 100% to freestylemoderno@gmail.com',
+    bpTitle: 'BATTLE PASS · ETERNAL EMBRACE · 4.20€',
+    inventoryTitle: 'INVENTORY',
+    questsTitle: 'QUESTS',
+    save: 'SAVE'
+  },
+  es: {
+    title: 'AETHERYON CHRONICLES ∞ · RPG CLÁSICO COMPLETO · PRECIOS ULTRA-BARATOS',
+    shopTitle: 'TIENDA ÉTICA · 100% a freestylemoderno@gmail.com',
+    bpTitle: 'BATTLE PASS · ABRAZO ETERNO · 4.20€',
+    inventoryTitle: 'INVENTARIO',
+    questsTitle: 'QUESTS',
+    save: 'GUARDAR'
+  }
 };
 
-async function pay(item, eur){
-  const p = prices[item];
-  const response = await fetch('https://buy.stripe.com/test_...', { // ← aquí pones tu link real de Stripe
-    method: 'POST',
-    headers: {'Content-Type':'application/json'},
-    body: JSON.stringify({price: p.amount*100, email: 'freestylemoderno@gmail.com'})
-  });
-  const {clientSecret} = await response.json();
-  const {error} = await stripe.redirectToCheckout({clientSecret});
-  if(!error) onSuccess(item);
+// Función para actualizar el texto según el idioma
+function setLanguage(lang) {
+  const texts = messages[lang];
+  document.getElementById('game-title').innerText = texts.title;
+  document.getElementById('shop-title').innerText = texts.shopTitle;
+  document.getElementById('bp-title').innerText = texts.bpTitle;
+  document.getElementById('inventory-title').innerText = texts.inventoryTitle;
+  document.getElementById('quests-title').innerText = texts.questsTitle;
+  document.getElementById('save-btn').innerText = texts.save;
 }
 
-function onSuccess(item){
-  if(item==='espada') {state.atk+=10; state.owned.push('espada');}
-  if(item==='armadura') {state.maxHp+=100; state.hp=state.maxHp; state.owned.push('armadura');}
-  if(item==='pocion5') state.pociones+=5;
-  if(item==='aura') state.karma+=13131;
-  if(item==='pack') {state.atk+=20; state.maxHp+=200; state.pociones+=20; state.karma+=131313; state.owned=['espada','armadura','aura'];}
-  if(item==='battlepass') {state.bp=true; state.tier=1310;}
-  alert('¡Pago recibido! 100% a freestylemoderno@gmail.com\nGracias por el karma ×1310');
-  saveState(); updateUI();
+// Establecemos el idioma al cargar la página
+setLanguage(language);
+
+// Estado del juego
+let state = {
+  lvl: 1,
+  xp: 0,
+  hp: 100,
+  maxHp: 100,
+  atk: 10,
+  karma: 0,
+  kills: 0,
+  qprog: 0,
+  timePlayed: 0,
+  owned: [],
+  quests: [
+    { id: 1, name: 'Derrotar 5 enemigos', completed: false, reward: '100 XP' },
+    { id: 2, name: 'Comprar un item de la tienda', completed: false, reward: '50 Karma' },
+    { id: 3, name: 'Superar el nivel 3', completed: false, reward: 'Espada +20 ATK' }
+  ]
+};
+
+// Cargar el estado del juego
+function loadState() {
+  const savedState = localStorage.getItem('aether_rpg');
+  if (savedState) {
+    state = JSON.parse(savedState);
+  }
+  updateUI();
 }
 
-// ====== RPG CLÁSICO (mismo código de antes, solo precios cambiados) ======
-let state = {lvl:1,xp:0,hp:100,maxHp:100,atk:10,karma:0,kills:0,qprog:0,timePlayed:0,owned:[],bp:false,tier:1,pociones:0,startTime:Date.now()};
-
-function loadState(){const s=localStorage.getItem('aether_rpg');if(s)state=JSON.parse(s);updateUI();}
-function saveState(){localStorage.setItem('aether_rpg',JSON.stringify(state));}
-function saveGame(){saveState();alert('Guardado');}
-loadState();
-
-const canvas=document.getElementById('c');
-const ctx=canvas.getContext('2d');
-canvas.width=innerWidth;canvas.height=innerHeight;
-window.onresize=()=>{canvas.width=innerWidth;canvas.height=innerHeight;};
-
-let keys={}, enemies=[];
-document.addEventListener('keydown',e=>keys[e.key.toLowerCase()]=true);
-document.addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
-
-let px=innerWidth/2, py=innerHeight/2;
-
-function spawnEnemy(){enemies.push({x:Math.random()*innerWidth,y:Math.random()*innerHeight,hp:20+state.lvl*10,s:20});}
-for(let i=0;i<20;i++)spawnEnemy();
-
-function toggle(id){document.getElementById(id).style.display=document.getElementById(id).style.display==='block'?'none':'block';}
-
-function updateUI(){
-  document.getElementById('lvl').textContent=state.lvl;
-  document.getElementById('xp').textContent=state.xp+'/'+(131*state.lvl);
-  document.getElementById('hp').textContent=state.hp+'/'+state.maxHp;
-  document.getElementById('atk').textContent=state.atk;
-  document.getElementById('karma').textContent=state.karma;
-  document.getElementById('kills').textContent=state.kills;
-  document.getElementById('qprog').textContent=state.qprog+'/3';
-  document.getElementById('invlist').innerHTML=state.owned.map(i=>`<div class="owned">\( {i.toUpperCase()}</div>`).join('')+`<br>Pociones: \){state.pociones}`;
+// Guardar el estado del juego
+function saveState() {
+  localStorage.setItem('aether_rpg', JSON.stringify(state));
 }
 
-function loop(){
-  ctx.fillStyle='rgba(0,0,0,0.1)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+// Actualizar la interfaz de usuario
+function updateUI() {
+  document.getElementById('lvl').textContent = state.lvl;
+  document.getElementById('xp').textContent = state.xp + '/' + (131 * state.lvl);
+  document.getElementById('hp').textContent = state.hp + '/' + state.maxHp;
+  document.getElementById('atk').textContent = state.atk;
+  document.getElementById('karma').textContent = state.karma;
+  document.getElementById('kills').textContent = state.kills;
+  document.getElementById('qprog').textContent = state.qprog + '/3';
+  document.getElementById('time').textContent = state.timePlayed + 'h';
 
-  const speed=4;
-  if(keys['w']||keys['arrowup']) py-=speed;
-  if(keys['s']||keys['arrowdown']) py+=speed;
-  if(keys['a']||keys['arrowleft']) px-=speed;
-  if(keys['d']||keys['arrowright']) px+=speed;
+  // Mostrar inventario
+  document.getElementById('invlist').innerHTML = state.owned.map(item => `<div class="owned">${item.toUpperCase()}</div>`).join('');
 
-  ctx.fillStyle='#0f0'; ctx.beginPath(); ctx.arc(px,py,25,0,Math.PI*2); ctx.fill();
+  // Mostrar misiones
+  const questList = document.getElementById('questlist');
+  questList.innerHTML = state.quests.map(quest => `
+    <div class="${quest.completed ? 'owned' : ''}">
+      ${quest.name} ${quest.completed ? '(Completada)' : ''}
+    </div>
+  `).join('');
+}
 
-  enemies=enemies.filter(e=>{
-    const dist=Math.hypot(px-e.x,py-e.y);
-    if(dist<45){
-      e.hp-=state.atk; state.hp-=5;
-      if(e.hp<=0){
-        state.kills++; state.xp+=13; state.karma+=10;
-        if(state.xp>=131*state.lvl){state.lvl++; state.xp=0; state.maxHp+=20; state.hp=state.maxHp; state.atk+=3;}
-        spawnEnemy(); updateUI();
+// Función para cambiar entre pantallas (Tienda, Inventario, etc.)
+function toggle(id) {
+  const element = document.getElementById(id);
+  element.style.display = element.style.display === 'block' ? 'none' : 'block';
+}
+
+// Función de pago (simulada)
+function pay(item) {
+  // Simulamos un pago, puedes integrar la API de Stripe aquí
+  if (item === 'espada') {
+    state.atk += 10;
+    state.owned.push('espada');
+  } else if (item === 'armadura') {
+    state.maxHp += 100;
+    state.hp = state.maxHp;
+    state.owned.push('armadura');
+  }
+  saveState();
+  updateUI();
+}
+
+// Lógica para crear enemigos y manejarlos
+let enemies = [];
+function spawnEnemy() {
+  const enemyType = Math.random() > 0.5 ? 'Goblin' : 'Troll';
+  enemies.push({ type: enemyType, hp: 20 + state.lvl * 10, x: Math.random() * window.innerWidth, y: Math.random() * window.innerHeight, s: 20 });
+}
+
+// Función principal de juego
+function gameLoop() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  const speed = 4;
+  if (keys['w'] || keys['arrowup']) py -= speed;
+  if (keys['s'] || keys['arrowdown']) py += speed;
+  if (keys['a'] || keys['arrowleft']) px -= speed;
+  if (keys['d'] || keys['arrowright']) px += speed;
+
+  ctx.fillStyle = '#0f0';
+  ctx.beginPath();
+  ctx.arc(px, py, 25, 0, Math.PI * 2);
+  ctx.fill();
+
+  enemies = enemies.filter(enemy => {
+    const dist = Math.hypot(px - enemy.x, py - enemy.y);
+    if (dist < 45) {
+      enemy.hp -= state.atk;
+      if (enemy.hp <= 0) {
+        state.kills++;
+        state.xp += 13;
+        state.karma += 10;
+        spawnEnemy();
+        updateUI();
         return false;
       }
     }
-    e.x += (px-e.x)/200; e.y += (py-e.y)/200;
-    ctx.fillStyle='#f00'; ctx.beginPath(); ctx.arc(e.x,e.y,e.s,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#f00';
+    ctx.beginPath();
+    ctx.arc(enemy.x, enemy.y, enemy.s, 0, Math.PI * 2);
+    ctx.fill();
     return true;
   });
 
-  if(state.hp<=0) {alert('GAME OVER · Renaces en 3…'); location.reload();}
+  // GAME OVER check
+  if (state.hp <= 0) {
+    alert('GAME OVER · Renaces en 3...');
+    location.reload();
+  }
 
-  requestAnimationFrame(loop);
+  requestAnimationFrame(gameLoop);
 }
-loop();
 
-document.addEventListener('keydown',e=>{if(e.key==='Escape') document.querySelectorAll('#shop,#bp,#inventory,#quests').forEach(d=>d.style.display='none');});
-setInterval(()=>{state.timePlayed=Math.floor((Date.now()-state.startTime)/3600000);document.getElementById('time').textContent=state.timePlayed;},60000);
+// Inicialización del juego
+let px = innerWidth / 2;
+let py = innerHeight / 2;
+let keys = {};
+document.addEventListener('keydown', (e) => keys[e.key.toLowerCase()] = true);
+document.addEventListener('keyup', (e) => keys[e.key.toLowerCase()] = false);
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') document.querySelectorAll('#shop, #bp, #inventory, #quests').forEach(d => d.style.display = 'none');
+});
 
-console.log("%cAETHERYON CHRONICLES ∞ · PRECIOS ULTRA-BARATOS · 100% a freestylemoderno@gmail.com","color:#0f0;font-size:20px");
+// Iniciar enemigos
+for (let i = 0; i < 5; i++) spawnEnemy();
+
+// Actualización del tiempo
+setInterval(() => {
+  state.timePlayed = Math.floor((Date.now() - state.startTime) / 3600000);
+  document.getElementById('time').textContent = state.timePlayed;
+}, 60000);
+
+gameLoop();
 </script>
 </body>
 </html>

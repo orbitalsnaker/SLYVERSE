@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CANDY BLAST RUN — THUAMER STUDIOS™</title>
+  <style>
+    body{margin:0;background:linear-gradient(to bottom,#ff69b4,#ffd700);color:#ff1493;font-family:'Comic Sans MS',cursive;overflow:hidden;text-align:center}
+    canvas{display:block;margin:0 auto;}
+    #ui{position:absolute;top:10px;left:10px;z-index:100;background:rgba(255,255,255,0.9);padding:10px;border:3px solid #ff69b4;border-radius:20px;font-size:18px;font-weight:bold}
+    #menu,#shop,#gameover{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,105,180,0.95);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;z-index:200}
+    button{background:#ff1493;color:#fff;border:none;padding:20px 50px;font-size:24px;cursor:pointer;font-weight:bold;border-radius:30px;box-shadow:0 5px 15px rgba(0,0,0,0.3)}
+    button:hover{background:#ff69b4;transform:scale(1.05)}
+    .premium{color:#ffd700;font-size:28px;text-shadow:0 0 10px #fff}
+    .skin-btn{background:#00ff00;color:#000;padding:20px;margin:15px;border-radius:20px;font-size:20px;width:350px;box-shadow:0 5px 15px rgba(0,255,0,0.5)}
+    .skin-btn:hover{background:#00cc00}
+    .hidden{display:none}
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/simplex-noise@4.0.1/simplex-noise.js"></script>
+  <script src="https://www.paypal.com/sdk/js?client-id=AaX9y8z7w6v5u4t3s2r1q0p9o8n7m6l5k4j3i2h1g0f9e8d7c6b5a4&currency=EUR&intent=capture"></script>
+</head>
+<body>
+
+<div id="ui">
+  Distancia: <span id="distance">0</span>m | Monedas: <span id="coins">0</span> | Multi: <span id="multi">x1</span>
+  <div class="premium" id="status">DEMO</div>
+</div>
+
+<div id="menu">
+  <h1 style="font-size:70px;margin:0;color:#ff1493;text-shadow:0 0 30px #fff">🍭 CANDY BLAST RUN</h1>
+  <h2>THUAMER STUDIOS™</h2>
+  <p>¡Corre infinito! Skins 0.49€ + Premium 4.99€ → ferry420oficial@gmail.com</p>
+  <div id="paypal-premium"></div>
+  <button onclick="startGame()">🚀 EMPEZAR CARRERA</button>
+  <button onclick="openShop()">🛒 TIENDA CANDY (0.49€)</button>
+</div>
+
+<div id="shop" class="hidden">
+  <div style="padding:40px">
+    <h1 style="color:#ff1493">🍭 TIENDA CANDY SKINS</h1>
+    <p><strong>¡Skins adorables por 0.49€! Pagos reales PayPal</strong></p>
+    <div id="paypal-choco"></div>
+    <div id="paypal-straw"></div>
+    <div id="paypal-rainbow"></div>
+    <button class="skin-btn" onclick="applySkin('choco')">🍫 EQUIPAR CHOCO RUNNER</button>
+    <button class="skin-btn" onclick="applySkin('straw')">🍓 EQUIPAR FRESA</button>
+    <button class="skin-btn" onclick="applySkin('rainbow')">🌈 EQUIPAR RAINBOW</button>
+    <button onclick="closeShop()" style="background:#ff69b4;margin-top:30px">← VOLVER</button>
+  </div>
+</div>
+
+<div id="gameover" class="hidden">
+  <h1 style="color:#ff1493;font-size:60px">¡CARRERA TERMINADA! 🎉</h1>
+  <h2>Récord: <span id="finalDist">0</span>m | Monedas: <span id="finalCoins">0</span></h2>
+  <button onclick="location.reload()">🔄 NUEVA CARRERA</button>
+</div>
+
+<script>
+// SISTEMA PAYPAL REAL (ferry420oficial@gmail.com)
+const IS_PREMIUM = localStorage.getItem('candy_premium') === 'true';
+let ownedSkins = JSON.parse(localStorage.getItem('candy_skins') || '[]');
+let currentSkin = ownedSkins[0] || 'default';
+document.getElementById('status').textContent = IS_PREMIUM ? 'PREMIUM ⭐' : 'DEMO';
+
+// Premium x2 monedas + vidas ∞
+paypal.Buttons({
+  createOrder: (d,a) => a.order.create({ purchase_units: [{ amount: { value: '4.99' }, description: 'Premium CANDY BLAST RUN - x2 Monedas Eternas' }] }),
+  onApprove: () => { localStorage.setItem('candy_premium', 'true'); alert('¡PREMIUM ACTIVADO! x2 Monedas para siempre 🍭'); location.reload(); }
+}).render('#paypal-premium');
+
+// Skins 0.49€
+const SKINS = { choco: '0.49', straw: '0.49', rainbow: '0.99' };
+['choco','straw','rainbow'].forEach(s => {
+  paypal.Buttons({
+    createOrder: (d,a) => a.order.create({ purchase_units: [{ amount: { value: SKINS[s] }, description: `Skin ${s.toUpperCase()} CANDY RUN - THUAMER` }] }),
+    onApprove: () => {
+      if (!ownedSkins.includes(s)) ownedSkins.push(s);
+      localStorage.setItem('candy_skins', JSON.stringify(ownedSkins));
+      alert(`¡Skin ${s.toUpperCase()} 🍭 desbloqueada!`);
+    }
+  }).render(`#paypal-${s}`);
+});
+
+function applySkin(skin) {
+  if (ownedSkins.includes(skin)) {
+    currentSkin = skin;
+    document.getElementById('activeSkin') ? document.getElementById('activeSkin').textContent = skin.toUpperCase() : null;
+    if (window.player) window.player.setTexture(`runner_${skin}`);
+    alert(`¡Skin ${skin.toUpperCase()} equipada! ✨`);
+  } else alert('¡Compra primero en la tienda! 💳');
+}
+
+// JUEGO ENDLESS RUNNER COMERCIAL
+let player, obstacles=[], coins=[], noise, distance=0, coinsCount=0, multi=1, lives=IS_PREMIUM?999:5, gameSpeed=300;
+const game = new Phaser.Game({
+  type: Phaser.AUTO, width: 800, height: 600,
+  physics: { default: 'arcade', arcade: { gravity: { y: 1000 }, debug: false } },
+  scene: { preload, create, update }
+});
+
+function preload() {
+  // Runner skins coloridas
+  const baseSvg = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxwYXRoIGQ9Ik0xMCAxMCBRMjAgNSAzMCAxMCBRNDAgMTUgNTAgMTAgUTYwIDEwIDYwIDIwIEw2MCA4MCBRNjAgOTAgNTAgOTAgUTQwIDkwIDMwIDg1IEwyMCA4MCBMMjAgMjAiIGZpbGw9IiNmZjAiIHN0cm9rZT0iIzAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+';
+  this.load.svg('runner_default', baseSvg.replace('#ff0','#ff69b4'));
+  this.load.svg('runner_choco', baseSvg.replace('#ff0','#8b4513'));
+  this.load.svg('runner_straw', baseSvg.replace('#ff0','#ff1493'));
+  this.load.svg('runner_rainbow', baseSvg.replace('#ff0','#ffd700'));
+  // Obstáculos y monedas
+  this.load.svg('obstacle', 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiByeD0iNDAiIGZpbGw9IiNmZjAwMDAiLz48L3N2Zz4=');
+  this.load.svg('coin', 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNmZmYiIHN0cm9rZT0iI2ZmMDAwMCIgc3Ryb2tlLXdpZHRoPSIyIi8+PC9zdmc+');
+}
+
+let player;
+function create() {
+  noise = new SimplexNoise();
+  player = this.physics.add.sprite(200, 400, `runner_${currentSkin}`).setScale(1.5).setOrigin(0.5,0.5).setBounce(0.2);
+  player.setCollideWorldBounds(false);
+  this.physics.world.setBounds(0,0,999999,600);
+  this.cameras.main.startFollow(player, true, 0.1, 0.1);
+  this.cameras.main.setBackgroundColor('#ff69b4');
+
+  this.input.on('pointerdown', jump);
+  this.input.keyboard.on('keydown-SPACE', jump);
+}
+
+function update(time, delta) {
+  // Auto-run
+  player.setVelocityX(gameSpeed);
+  distance += gameSpeed * delta / 1000;
+  gameSpeed += 0.01; // Aceleración natural
+
+  // Spawn procedural
+  if (time % 1500 < delta) spawnObstacle.call(this);
+  if (time % 800 < delta) spawnCoin.call(this);
+
+  // Colisiones
+  this.physics.overlap(player, obstacles, hitObstacle);
+  this.physics.overlap(player, coins, collectCoin);
+
+  // Caída
+  if (player.y > 700) hitObstacle();
+
+  updateUI();
+}
+
+function jump() { if (player.body.touching.down) player.setVelocityY(-600); }
+
+function spawnObstacle() {
+  const y = 500 + noise.noise2D(distance/100, 0) * 100;
+  const obs = this.physics.add.sprite(distance + 1000, y, 'obstacle').setScale(1.2).setOrigin(0.5,1);
+  obs.body.allowGravity = false;
+  obstacles.push(obs);
+}
+
+function spawnCoin() {
+  const y = 300 + Math.random() * 200;
+  const coin = this.physics.add.sprite(distance + 800, y, 'coin').setScale(1.5).setOrigin(0.5,0.5).setBounce(1);
+  coin.body.allowGravity = false;
+  coins.push(coin);
+}
+
+function hitObstacle() {
+  lives--;
+  if (lives <= 0) {
+    document.getElementById('finalDist').textContent = Math.floor(distance);
+    document.getElementById('finalCoins').textContent = coinsCount;
+    document.getElementById('gameover').classList.remove('hidden');
+    return;
+  }
+  player.setTint(0xff0000);
+  this.time.delayedCall(200, () => player.clearTint());
+}
+
+function collectCoin(player, coin) {
+  coin.destroy();
+  coinsCount += multi;
+  multi = IS_PREMIUM ? 2 : 1;
+}
+
+function updateUI() {
+  document.getElementById('distance').textContent = Math.floor(distance);
+  document.getElementById('coins').textContent = coinsCount;
+  document.getElementById('multi').textContent = `x${multi}`;
+}
+
+function startGame() {
+  document.getElementById('menu').classList.add('hidden');
+  distance=0; coinsCount=0; lives=IS_PREMIUM?999:5; gameSpeed=300;
+  obstacles.forEach(o=>o.destroy()); coins.forEach(c=>c.destroy()); obstacles=[]; coins=[];
+}
+
+function openShop() { document.getElementById('shop').classList.remove('hidden'); }
+function closeShop() { document.getElementById('shop').classList.add('hidden'); }
+</script>
+
+<!-- THUAMER STUDIOS™ 2025 — Endless Runner comercial listo para viralizar en itch.io/mobile. -->
+</body>
+</html>

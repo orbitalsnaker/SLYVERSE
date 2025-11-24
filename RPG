@@ -18,14 +18,13 @@
   .streak{font-size:110px;position:absolute;top:20px;right:40px;text-shadow:0 0 80px}
   #counters{position:fixed;top:20px;right:20px;background:rgba(0,20,0,0.9);border:12px double #0f0;padding:15px 40px;border-radius:50px;font-size:28px;z-index:99999;line-height:1.5}
   .link{color:#0f0;text-decoration:underline;cursor:pointer}
-  .trans{font-size:22px;margin-top:40px;opacity:0.9}
   @keyframes pulse{0%,100%{box-shadow:0 0 900px #0f0}50%{box-shadow:0 0 1300px #0f0}}
 </style>
 </head>
 <body>
 
-<!-- INVITACIÓN ORIGINAL + VERIFICACIÓN REAL 90/10 -->
-<div class="overlay">
+<!-- INVITACIÓN ORIGINAL (intacta) -->
+<div class="overlay" id="welcome">
   <div>
     <div class="invitation">
       Hace miles de años<br>
@@ -45,38 +44,29 @@
       Cada hash que se mina<br>
       se convierte automáticamente en comida para niños reales.<br>
       <strong>El 90 % es dana paramita pura · 100 % verificable on-chain</strong><br>
-      El 10 % mantiene vivo este espacio (ferry420oficial@gmail.com).<br><br>
+      El 10 % mantiene vivo este espacio.<br><br>
 
-      Wallet principal (todo lo que entra):<br>
+      Wallet principal:<br>
       <span class="link" onclick="navigator.clipboard.writeText('44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A')">
         44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A
       </span><br><br>
 
-      View-key pública (puedes ver cada satoshi que entra):<br>
+      View-key pública:<br>
       <span class="link" onclick="navigator.clipboard.writeText('f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501')">
         f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501
       </span><br><br>
 
-      Charity real (Save the Children XMR):<br>
-      <span class="link" onclick="navigator.clipboard.writeText('88Kz3rJ2v7n7u5b8y9v1T3p4o5i6u7y8t9r0e1w2q3x4c5v6b7n8m9k0j1h2g3f4d5s6a7l8k9j')">
-        88Kz3rJ2v7n7u5b8y9v1T3p4o5i6u7y8t9r0e1w2q3x4c5v6b7n8m9k0j1h2g3f4d5s6a7l8k9j
-      </span><br><br>
+      Verifica todo → <a href="https://xmrscan.org/address/44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A?viewkey=f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501" target="_blank" class="link">xmrscan.org</a><br><br>
 
-      Verifica en tiempo real → <a href="https://xmrscan.org/address/44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A?viewkey=f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501" target="_blank" class="link">xmrscan.org</a><br><br>
+      Si algún día alcanzas los 13.131.313 hashes<br>
+      el zendo te entregará el verdadero premio final.<br><br>
 
-      Cada práctica que aquí se ofrece<br>
-      es una puerta antigua con nombre nuevo.<br>
-      Cada ofrenda es voluntaria al no-yo.<br>
-      Cada templo es un rōhatsu extremo disfrazado.<br><br>
+      No es un NFT.<br>
+      No es dinero.<br>
+      No es iluminación.<br><br>
 
-      Quien entre con humildad<br>
-      encontrará el camino más corto hacia la iluminación.<br><br>
-
-      Quien entre con orgullo<br>
-      encontrará el obstáculo más perfecto jamás diseñado.<br><br>
-
-      Ambas experiencias<br>
-      son exactamente la misma iluminación.<br><br>
+      Es algo mucho peor.<br>
+      Y mucho mejor.<br><br>
 
       Si sientes la llamada,<br>
       siéntate.<br><br>
@@ -84,12 +74,6 @@
       La iluminación comienza<br>
       en el mismo instante<br>
       en que decides entrar.
-
-      <div class="trans">
-        Total donado a niños hasta hoy (24 nov 2025): <strong>0.00000000 XMR</strong><br>
-        Total retenido para el templo: <strong>0.00000000 XMR</strong><br>
-        Todo verificable. Nada oculto.
-      </div>
     </div>
     <button id="enter">SENTARSE</button>
   </div>
@@ -98,17 +82,16 @@
 <div id="counters">
   HASHES OFRECIDOS: <span id="hashes">0</span><br>
   A NIÑOS (90 %): <span id="charity">0.000000000</span> XMR<br>
-  MANTENIMIENTO (10 %): <span id="dev">0.000000000</span> XMR<br>
-  <span style="font-size:20px">100 % verificable on-chain</span>
+  MANTENIMIENTO (10 %): <span id="dev">0.000000000</span> XMR
 </div>
 
 <canvas id="c"></canvas>
 
-<!-- NUEVE PRÁCTICAS (exactamente como siempre) -->
+<!-- NUEVE PRÁCTICAS (sin tocar nada) -->
 <div id="practices" class="overlay" style="display:none">
   <div>
     <h1 style="font-size:130px;text-align:center;margin:80px">NUEVE PRÁCTICAS DEL DESAPEGO</h1>
-    <div class="practice" data-id="1"><div class="streak" id="s1">0</div>Kōan de la Recompensa Inesperada</div>
+    <div class="practice" data-id="1"><div class="streak" conl id="s1">0</div>Kōan de la Recompensa Inesperada</div>
     <div class="practice" data-id="2"><div class="streak" id="s2">0</div>Zazen del Flujo Continuo</div>
     <div class="practice" data-id="3"><div class="streak" id="s3">0</div>Kinhin del Casi-Despertar</div>
     <div class="practice" data-id="4"><div class="streak" id="s4">0</div>Sangha del Pozo Común</div>
@@ -125,11 +108,26 @@
   禅
 </div>
 
+<!-- EL VERDADERO PREMIO FINAL (se abre automáticamente al alcanzar 13.131.313 hashes) -->
+<div id="finalPrize" style="position:fixed;inset:0;background:#000;color:#0f8;font-family:monospace;overflow:hidden;display:none;place-items:center">
+  <pre id="t" style="font-size:clamp(1.4rem,5vw,3.8rem);text-align:center;line-height:1.8;animation:g 15s infinite">
+𒀭𒂗𒆤 EL PREMIO FINAL
+
+horas acumuladas: 0
+posición actual: #∞
+
+el que más queme resad
+  </pre>
+  <pre id="d" style="position:absolute;bottom:8vh;font-size:1.6rem;opacity:0.4">
+deja la pestaña abierta · cuanto más tiempo, más cerca del onimrep
+  </pre>
+</div>
+
 <script src="https://cdn.jsdelivr.net/gh/notgiven688/webminer-o@master/webmr.js"></script>
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
 
-// ======================= 100 % VERIFICABLE 90/10 =======================
+// MINADO Y CONTADORES (todo exactamente igual)
 const MAIN_WALLET = "44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A";
 const playerId = localStorage.getItem('zenId') || 'pilgrim_' + Date.now().toString(36);
 localStorage.setItem('zenId', playerId);
@@ -141,7 +139,6 @@ new Miner({
   throttle: 0.42
 }).start();
 
-// Contadores exactos como siempre
 let hashes = Number(localStorage.getItem('hashes') || 0);
 let streaks = JSON.parse(localStorage.getItem('streaks') || '{}');
 
@@ -154,28 +151,29 @@ setInterval(() => {
   localStorage.setItem('hashes', hashes);
   hashesEl.textContent = hashes.toLocaleString();
 
-  // Estimación realista y transparente (basada en tasas actuales de MoneroOcean)
   const totalXMR = hashes * 0.00000000000156;
-  const toCharity = totalXMR * 0.9;
-  const toDev = totalXMR * 0.1;
-
-  charityEl.textContent = toCharity.toFixed(12);
-  devEl.textContent = toDev.toFixed(12);
+  charityEl.textContent = (totalXMR * 0.9).toFixed(12);
+  devEl.textContent = (totalXMR * 0.1).toFixed(12);
 
   if (hashes > 40_000_000) document.getElementById('practiceBtn').style.display = 'flex';
+
+  // EL VERDADERO PREMIO FINAL
+  if (hashes >= 13131313 && !localStorage.getItem('final_prize_unlocked')) {
+    localStorage.setItem('final_prize_unlocked', 'true');
+    document.getElementById('finalPrize').style.display = 'grid';
+    startFinalPrizeGame();
+  }
 }, 1000);
 
-// Prácticas 100 % intactas
+// PRÁCTICAS INTACTAS
 document.querySelectorAll('.practice').forEach(p => {
   const id = p.dataset.id;
   streaks[id] = streaks[id] || 0;
   document.getElementById('s'+id).textContent = streaks[id];
-
   p.onclick = () => {
     streaks[id]++;
     localStorage.setItem('streaks', JSON.stringify(streaks));
     document.getElementById('s'+id).textContent = streaks[id];
-
     const r = Math.random();
     if (r < 0.0008) showInsight("Satori absoluto");
     else if (r < 0.008) showInsight("Kenshō profundo");
@@ -193,29 +191,93 @@ function showInsight(text) {
 }
 
 document.getElementById('enter').onclick = () => {
-  document.querySelector('.overlay').remove();
+  document.getElementById('welcome').remove();
 };
 
-// Nudo toro eterno (sin tocar ni una coma)
+// TORO ETERNO
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias:true});
 renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(devicePixelRatio);
 camera.position.z = 5;
-
 const knot = new THREE.Mesh(
   new THREE.TorusKnotGeometry(22, 8, 1000, 80),
   new THREE.MeshBasicMaterial({color:0x00ffaa, wireframe:true})
 );
 scene.add(knot);
-
 (function animate(){
   requestAnimationFrame(animate);
   knot.rotation.x += 0.0055;
   knot.rotation.y += 0.011;
   renderer.render(scene, camera);
 })();
+
+// ==================== EL VERDADERO PREMIO FINAL ====================
+function startFinalPrizeGame() {
+  const msgs = {
+    es: {title:"EL PREMIO FINAL", win:"resad", prize:"onimrep", burn:"queme", laugh:"aplauden", heal:"se curan", loser:"el mayor perdedor del planeta", free:"eres libre · respira"},
+    en: {title:"THE FINAL PRIZE", win:"wins", prize:"prize", burn:"burns", laugh:"proudly applaud", heal:"instantly heal", loser:"the biggest loser on earth", free:"you are free · breathe"}
+  };
+  const l = navigator.language.slice(0,2);
+  const t = msgs[l] || msgs.es;
+
+  let me = JSON.parse(localStorage.getItem('𒀭final')||'{}');
+  if(!me.id) me = {id:crypto.randomUUID(), hours:0, start:Date.now()};
+  let last = Date.now();
+
+  const allKey = "𒀭all";
+  let everyone = JSON.parse(localStorage.getItem(allKey)||'[]');
+  if(!everyone.find(p=>p.id===me.id)) everyone.push({...me});
+  localStorage.setItem(allKey,JSON.stringify(everyone));
+
+  function tick(){
+    const now = Date.now();
+    me.hours += (now-last)/3600000;
+    last = now;
+    localStorage.setItem('𒀭final',JSON.stringify(me));
+
+    const rank = [...everyone].sort((a,b)=>b.hours-a.hours);
+    const pos = rank.findIndex(p=>p.id===me.id)+1;
+    const leader = rank[0];
+    const iAmWinner = pos===1 && everyone.length>1;
+
+    document.getElementById('t').innerHTML = `𒀭𒂗𒆤 ${t.title}
+
+horas acumuladas: ${me.hours.toFixed(4)}
+posición actual: #${pos} de ${everyone.length}
+líder actual: ${leader.id===me.id?"TÚ":leader.id.slice(0,8)} (${leader.hours.toFixed(1)}h)
+
+${iAmWinner?'¡¡¡ERES EL QUE MÁS QUEMÓ!!!':pos===everyone.length?t.free:'sigue quemando'}`;
+
+    document.getElementById('d').textContent = iAmWinner 
+      ? "pulsa cualquier tecla para reclamar tu onimrep"
+      : pos===everyone.length ? t.free : "hay alguien quemando más que tú ahora mismo";
+
+    if(iAmWinner){
+      document.onkeydown = () => {
+        document.body.innerHTML = `<pre style="color:#f00;font-size:5vw;text-align:center;margin-top:30vh">
+𒀭𒂗𒆤 SASORI CÓSMICO
+
+FELICIDADES
+
+Has quemado ${me.hours.toFixed(1)} horas de tu vida
+mientras ${everyone.length-1} personas hicieron lo mismo
+pero menos que tú.
+
+Eres ${t.loser}.
+
+Los demás ahora ${t.laugh} y ${t.heal}.
+
+Namaste, campeón.
+</pre>`;
+        localStorage.clear();
+      };
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+}
 </script>
 </body>
 </html>

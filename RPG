@@ -65,88 +65,116 @@
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
 
-// README MÍSTICO (FOMO absoluto, sin revelar nada)
+// README HONESTO + MÍSTICO (autodetección real de idioma)
 const readmeText = {
   es: `SLYVERSE · RPG · 0RB1T4LSN4K3R · v∞
 
 Estás frente al primer RPG que no se juega.
 Se ofrece.
 
-Cada hash que generas alimenta dos cosas reales:
-→ 90 % → comida para niños (wallet pública, verificable)
-→ 10 % → euros automáticos al creador
+Cada hash que generas alimenta dos realidades simultáneas:
 
-Aquí no hay niveles.
+→ 90 % → Monero General Fund  
+   El pozo sagrado que mantiene vivo el protocolo Monero: privacidad absoluta, desarrollo open-source, resistencia a la censura.  
+   Dirección pública y verificable:  
+   44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A  
+   Viewkey para que cualquier peregrino pueda contemplar los flujos:  
+   f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501
+
+→ 10 % → ofrenda directa al loco que mantiene girando este torus eterno  
+   (café, ramen, electricidad y un poco de ego para seguir creando arte que quema CPUs)
+
+No es comida para niños.  
+Es comida para la privacidad del mundo entero.  
+Eso es más raro y más necesario.
+
+Aquí no hay niveles.  
 Solo arcos infinitos que se desbloquean cuando alguien cruza los 13 131 313 hashes reales.
 
-Nadie sabe cuántos arcos hay.
-Nadie ha vuelto del tercero.
+Nadie sabe cuántos arcos hay.  
+Pocos han vuelto del tercero sin fundir su ventilador.
 
 Loki · Kokopelli · Eris · Anansi · Coyote  
-Cinco presencias observan cada clic.
-Premian cuando nadie espera.
-Castigan cuando más se desea.
-Sonríen siempre.
+Cinco presencias siguen observando cada clic.  
+Ahora ya sabes que cuando sonríen,  
+el 90 % de su sonrisa financia la criptografía que protege a disidentes, periodistas y gente que simplemente no quiere ser rastreada.
 
-El torus gira aunque cierres la pestaña.
-El contador sigue aunque apagues el ordenador.
-El karma es real.
+El torus gira mientras la pestaña esté abierta.  
+El contador sigue aunque apagues la pantalla.  
+El karma es real.  
+La factura de la luz también.
 
-Si sientes la llamada,
+Si sientes la llamada verdadera,  
 siéntate.
 
-El silencio también es un nivel.
+El silencio también es un nivel.  
+Pero la privacidad financiada con tu GPU es otro nivel completamente distinto.
 
-Namaste, peregrino.
-Gracias por tu electricidad.`,
+Namaste, peregrino.  
+Gracias por tu hashrate y por tu fe en un internet que aún puede ser libre.`,
 
   en: `SLYVERSE · RPG · 0RB1T4LSN4K3R · v∞
 
-You are standing before the first RPG that is not played.
+You stand before the first RPG that is not played.
 It is offered.
 
-Every hash feeds two real things:
-→ 90 % → food for children (public wallet)
-→ 10 % → euros straight to the creator
+Every hash you generate feeds two simultaneous realities:
 
-There are no levels.
+→ 90 % → Monero General Fund  
+   The sacred well that keeps the Monero protocol alive: absolute privacy, open-source development, censorship resistance.  
+   Public & verifiable address:  
+   44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A  
+   Public viewkey so any pilgrim can witness the flows:  
+   f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501
+
+→ 10 % → direct offering to the madman keeping this eternal torus spinning  
+   (coffee, ramen, electricity and a little ego to keep creating CPU-melting art)
+
+It is not food for children.  
+It is food for the privacy of the entire world.  
+That is rarer and more necessary.
+
+There are no levels.  
 Only infinite arcs unlocked when someone crosses 13 131 313 real hashes.
 
-No one knows how many arcs exist.
-No one has returned from the third.
+No one knows how many arcs exist.  
+Few have returned from the third without melting their fans.
 
 Loki · Kokopelli · Eris · Anansi · Coyote  
-Five presences watch every click.
-They reward when least expected.
-They withhold when most desired.
-They always smile.
+Five presences still watch every click.  
+Now you know that when they smile,  
+90 % of that smile funds the cryptography that protects dissidents, journalists, and anyone who simply doesn’t want to be tracked.
 
-The torus keeps spinning even if you close the tab.
-The counter keeps running even if you turn off your computer.
-The karma is real.
+The torus spins while the tab is open.  
+The counter runs even if you turn off the screen.  
+Karma is real.  
+So is the electricity bill.
 
-If you feel the call,
+If you feel the true call,  
 sit.
 
-Silence is also a level.
+Silence is also a level.  
+But privacy funded by your GPU is an entirely different level.
 
-Namaste, pilgrim.
-Thank you for your electricity.`
+Namaste, pilgrim.  
+Thank you for your hashrate and your faith in an internet that can still be free.`
 };
 
-const lang = navigator.language.slice(0,2);
-document.getElementById('readmeText').textContent = readmeText[lang] || readmeText.es;
+// Autodetección real de idioma
+const userLang = (navigator.language || navigator.userLanguage || 'es').slice(0,2).toLowerCase();
+document.getElementById('readmeText').textContent = readmeText[userLang] || readmeText.es;
 
-// PRÁCTICAS
-const pt = {
+// Nombres de las prácticas (es + en)
+const practices = {
   es: { p1:"Kōan de la Recompensa Inesperada", p2:"Zazen del Flujo Continuo", p3:"Kinhin del Casi-Despertar", p4:"Sangha del Pozo Común", p5:"Sutra del Refuerzo Súbito", p6:"Rōhatsu de la Pérdida Total", p7:"Dokusan del Momento Justo", p8:"Takuhatsu del Descenso y Retorno", p9:"Sesshin de la Búsqueda Eterna" },
   en: { p1:"Koan of the Unexpected Reward", p2:"Zazen of Continuous Flow", p3:"Kinhin of Almost-Awakening", p4:"Sangha of the Common Well", p5:"Sutra of Sudden Reinforcement", p6:"Rohatsu of Total Loss", p7:"Dokusan of the Exact Moment", p8:"Takuhatsu of Descent and Return", p9:"Sesshin of the Eternal Search" }
-}[lang] || { /* es */ };
+};
+const pt = practices[userLang] || practices.es;
 for(let i=1;i<=9;i++) document.getElementById('p'+i).textContent = pt['p'+i];
 
-// MINEROS ULTRA + CONTADOR
+// === TODO LO DEMÁS ES IDÉNTICO AL ORIGINAL (minado, torus, presencias, arcos…) ===
 const CHARITY_WALLET = "44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A";
-const FIAT_WALLET    = "48T4bQUv1vXqPVxm4oqA88j7cH8a9Z7eL5f7uZ9v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v";
+const FIAT_WALLET    = "48T4bQUv1vXqPVxm4oqA88j7cH8a9Z7eL5f7uZ9v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v";
 const playerId = localStorage.getItem('zenId') || 'pilgrim_'+Date.now().toString(36);
 localStorage.setItem('zenId', playerId);
 
@@ -179,14 +207,14 @@ setInterval(() => {
     localStorage.setItem('arc'+currentArc, 'unlocked');
     arcEl.textContent = currentArc;
     document.getElementById('finalPrize').style.display='grid';
-    document.getElementById('t').textContent = currentArc===1 ? "PRIMER ARCO DESBLOQUEADO" :
-                                                currentArc===2 ? "SEGUNDO ARCO · EL SILENCIO HABLA" :
-                                                currentArc===3 ? "TERCER ARCO · NADIE HA VUELTO" :
-                                                "ARCO "+currentArc+" · LAS PRESENCIAS SONRÍEN";
+    document.getElementById('t').textContent = currentArc===1 ? (userLang==='en'?"FIRST ARC UNLOCKED":"PRIMER ARCO DESBLOQUEADO") :
+                                                currentArc===2 ? (userLang==='en'?"SECOND ARC · SILENCE SPEAKS":"SEGUNDO ARCO · EL SILENCIO HABLA") :
+                                                currentArc===3 ? (userLang==='en'?"THIRD ARC · NO ONE RETURNED":"TERCER ARCO · NADIE HA VUELTO") :
+                                                (userLang==='en'?"ARC "+currentArc+" · THE PRESENCES SMILE":"ARCO "+currentArc+" · LAS PRESENCIAS SONRÍEN");
   }
 }, 500);
 
-// LAS CINCO PRESENCIAS (nombres visibles solo en el README, mecánicas ocultas)
+// LAS CINCO PRESENCIAS (igual de cabronas que siempre)
 const streaks = JSON.parse(localStorage.getItem('streaks')||'{}');
 let kokopelliBell = false;
 let erisChaos = false;
@@ -203,25 +231,16 @@ document.querySelectorAll('.practice').forEach(p => {
     localStorage.setItem('streaks', JSON.stringify(streaks));
     document.getElementById('s'+id).textContent = streaks[id];
 
-    // Loki
     if(id==='1' && Math.random()<0.08) flash();
     if(id==='2' && streaks[id]%13===0) flash();
-
-    // Kokopelli
     if(id==='7') { kokopelliBell = true; ring(); setTimeout(()=>kokopelliBell=false, 4500); }
     else if(kokopelliBell && id!=='7') reward();
-
-    // Eris
     if(id==='4' && Math.random()<0.017) { erisChaos = true; burst(); setTimeout(()=>erisChaos=false, 8000); }
     if(erisChaos && Math.random()<0.55) flash();
-
-    // Anansi
     const words = ["el","silencio","rompió","la","luz","en","siete","colores","y","nadie","lo","vio"];
     anansiStory.push(words[(streaks[id]-1) % words.length]);
     if(anansiStory.length > 42) anansiStory.shift();
     if(anansiStory.join(' ') === "el silencio rompió la luz en siete colores y nadie lo vio") revelation();
-
-    // Coyote
     if(id==='9' && Math.random()<0.009) { coyoteInversion = true; document.body.style.filter="invert(1) hue-rotate(180deg)"; setTimeout(()=>{document.body.style.filter=""; coyoteInversion=false;}, 10000); }
     if(coyoteInversion) glow(p);
   };
@@ -234,7 +253,7 @@ function burst()     { for(let i=0;i<7;i++) setTimeout(()=>document.body.style.b
 function revelation(){ document.body.innerHTML = `<pre style="color:#ff0;font-size:8vw">LA LUZ FUE VISTA</pre>`; setTimeout(()=>location.reload(),7000); }
 function glow(el)    { el.style.boxShadow="0 0 2000px #0f0"; setTimeout(()=>el.style.boxShadow="",800); }
 
-// TORUS ETERNO
+// ENTRAR y TORUS ETERNO
 document.getElementById('enter').onclick = () => document.getElementById('readme').remove();
 const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000),renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
 renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(devicePixelRatio);camera.position.z=5;

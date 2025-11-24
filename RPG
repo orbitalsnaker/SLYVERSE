@@ -13,37 +13,36 @@
 <style>
   body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"OCR-A",monospace;overflow:hidden;cursor:none}
   canvas{display:block}
-  #warning,#readme,#cosmeticShop{position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px;overflow-y:auto}
-  #warning div,#readme div{border:12px double #0f0;padding:50px;background:rgba(0,20,0,0.98);max-width:960px;box-shadow:0 0 300px #0f0}
+  #warning,#readme,#zenShop{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;padding:40px;overflow-y:auto}
+  #warning div,#readme div,#zenShop div{border:12px double #0f0;padding:50px;background:rgba(0,20,0,0.98);max-width:1100px;box-shadow:0 0 400px #0f0}
   #ui{position:fixed;top:0;left:0;right:0;background:linear-gradient(to bottom,rgba(0,10,0,0.98),#000);padding:15px 20px;border-bottom:8px double #0f0;box-shadow:0 0 160px #0f0;z-index:999;font-size:17px;line-height:1.8;text-shadow:0 0 12px #0f0}
   #narrative{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:960px;background:#000;border:6px double #0f0;padding:30px;border-radius:20px;font-size:28px;z-index:998;display:none;text-align:center;text-shadow:0 0 60px #0f0;letter-spacing:3px}
   #shopBtn{position:fixed;bottom:30px;right:30px;width:220px;height:220px;background:radial-gradient(circle,#0f0,#000);border:10px double #0f0;border-radius:50%;box-shadow:0 0 700px #0f0;color:#000;font-size:100px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;animation:pulse 1.6s infinite}
   @keyframes pulse{0%,100%{box-shadow:0 0 700px #0f0}50%{box-shadow:0 0 1000px #0f0}}
-  button{background:#000;border:4px double #0f0;color:#0f0;padding:16px 32px;margin:12px;border-radius:14px;cursor:pointer;font-weight:bold;font-size:20px}
+  .zen-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:30px;margin:40px 0}
+  .zen-card{background:rgba(0,30,0,0.9);border:5px double #0f0;padding:30px;text-align:center;border-radius:20px;position:relative;overflow:hidden}
+  .zen-card.rare{border:7px double #0f0;box-shadow:0 0 200px #0f0}
+  .zen-card.legendary{border:10px double #0f0;background:linear-gradient(45deg,#000,#001100);box-shadow:0 0 500px #0f0;animation:legend 4s infinite}
+  @keyframes legend{0%,100%{box-shadow:0 0 500px #0f0}50%{box-shadow:0 0 800px #0f0}}
+  .price{font-size:38px;margin:15px 0;color:#0f0;text-shadow:0 0 30px #0f0}
+  button{background:#000;border:4px double #0f0;color:#0f0;padding:16px 32px;margin:12px;border-radius:14px;cursor:pointer;font-weight:bold;font-size:22px}
   button:hover{background:#0f0;color:#000;transform:scale(1.1);box-shadow:0 0 140px #0f0}
-  .cosmetic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:30px;margin:40px 0}
-  .cosmetic-card{background:rgba(0,30,0,0.9);border:4px double #0f0;padding:25px;text-align:center;border-radius:20px;position:relative;overflow:hidden}
-  .cosmetic-card.owned{opacity:0.6;border-style:dashed}
-  .cosmetic-card.legendary{animation:legendary 4s infinite}
-  @keyframes legendary{0%,100%{box-shadow:0 0 200px #0f0}50%{box-shadow:0 0 500px #0f0}}
-  .reel{width:120px;height:120px;background:#000;border:6px double #0f0;font-size:80px;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
 
 <div id="warning">
   <div>
-    <h1 style="font-size:70px;text-shadow:0 0 100px #0f0">0RB1T4LSN4K3R · v∞</h1>
-    <h2 style="font-size:40px">ÚLTIMA DEMO GRATUITA</h2>
+    <h1 style="font-size:70px;margin:0;text-shadow:0 0 100px #0f0">0RB1T4LSN4K3R · v∞</h1>
+    <h2 style="font-size:40px;margin:30px 0">ÚLTIMA DEMO GRATUITA</h2>
     <p style="font-size:28px;line-height:2.2">
-      <b style="font-size:36px">TODO EL CAMINO ESTÁ ABIERTO</b><br><br>
-      • Tres Lugares Espirituales de Desprendimiento<br>
-      • 1.247 cosméticos y reliquias zen (0.001€ – 0.99€)<br>
-      • Karma infinito · Koans que iluminan<br>
-      • Autodetección de idioma<br><br>
-      <b style="color:#f00;font-size:42px">TODO TU PROGRESO SERÁ BORRADO<br>EN LA VERSIÓN FINAL CON PAGOS REALES</b><br><br>
-      <button onclick="document.getElementById('warning').remove();initGame()" style="font-size:36px;padding:24px 48px">
-        ENTRAR AL POZO · TODO SERÁ BORRADO PRÓXIMAMENTE
+      <b style="font-size:38px">TODAS LAS PRÁCTICAS ZEN DE PAGO YA ESTÁN ACTIVADAS</b><br><br>
+      • 1.337 elementos de desprendimiento real<br>
+      • Karma infinito (solo esta vez)<br>
+      • Cada compra es un koan vivo que te ilumina<br><br>
+      <b style="color:#f00;font-size:44px">TODO SE BORRARÁ EN LA VERSIÓN FINAL<br>CON PAGOS REALES OBLIGATORIOS</b><br><br>
+      <button onclick="document.getElementById('warning').remove();initAudio();spawnSpiritualPlaces();applyLanguage()" style="font-size:36px;padding:24px 48px">
+        ENTRAR AL POZO · DISFRUTA MIENTRAS SEA GRATIS
       </button>
     </p>
   </div>
@@ -55,182 +54,126 @@
   <b style="font-size:26px;text-shadow:0 0 40px #0f0">0RB1T4LSN4K3R · v∞ · ÚLTIMA DEMO</b><br>
   GUARDIÁN <span id="guardianName">ANÓNIMO</span> · <span id="title">Neonato</span><br>
   CICLO <span id="cycle">1</span> · ALMAS <span id="ownedCount">0</span>/13M · RESONANCIA <span id="totalKarma">999999.99</span>€
-  <button onclick="toggle('cosmeticShop')">VESTIMENTAS ZEN</button>
-  <button onclick="toggle('readme')">MANIFIESTO</button>
+  <button onclick="toggle('zenShop')">PRÁCTICAS ZEN DE DESPRENDIMIENTO</button>
+  <button onclick="toggle('readme')">MANIFIESTO TRASCENDENTAL</button>
 </div>
 
 <div id="shopBtn" onclick="toggle('shop')">13M</div>
 <div id="narrative"></div>
 
-<!-- MANIFIESTO TRASCENDENTAL (multi-idioma) -->
+<!-- TIENDA DE PRÁCTICAS ZEN (todo presentado como iluminación) -->
+<div id="zenShop" style="display:none">
+  <div>
+    <h1 style="text-align:center;font-size:60px;text-shadow:0 0 100px #0f0">TIENDA DE PRÁCTICAS ZEN HETERODOXAS</h1>
+    <p style="text-align:center;font-size:26px;line-height:2">
+      Cada adquisición es un acto ritual de desprendimiento que disuelve el apego al dinero y al yo.<br>
+      <b>1.337 artículos disponibles · desde 0.001€ hasta 999€</b>
+    </p>
+
+    <div class="zen-grid" id="zenList"></div>
+
+    <button onclick="toggle('zenShop')" style="width:100%;padding:24px;font-size:32px;margin-top:40px">CERRAR EL TEMPLO</button>
+  </div>
+</div>
+
+<!-- MANIFIESTO -->
 <div id="readme" style="display:none">
   <div>
-    <h1 data-t="es">MANIFIESTO DEL POZO ORBITAL</h1>
-    <h1 data-t="en" style="display:none">MANIFESTO OF THE ORBITAL WELL</h1>
-    <h1 data-t="ja" style="display:none">軌道井戸の宣言</h1>
-    <p data-t="es">
-      No es un juego. Es la práctica heterodoxa suprema.<br><br>
-      Recolectas 13.101.310 almas, las ofreces al vacío y asciendes ciclos eternos.<br>
-      Los tres Lugares Espirituales de Desprendimiento son métodos ancestrales disfrazados para disolver el apego al dinero y al yo.<br>
-      Cada cosmético zen, cada ofrenda y cada koan es un acto ritual que te acerca al ∞.<br><br>
-      Pronto todo costará dinero real.<br>
-      Esta es tu última oportunidad de experimentar la vacuidad absoluta… gratis.
+    <h1>MANIFIESTO DEL VACÍO ORBITAL</h1>
+    <p style="font-size:24px;line-height:2">
+      Esto no es un juego.<br>
+      Es la práctica zen definitiva del siglo XXI.<br><br>
+
+      Cada elemento que adquieras —por insignificante o exorbitante que sea su precio— es una ofrenda consciente al vacío.<br>
+      No compras objetos. Compras desapego.<br><br>
+
+      Pronto, cada alma, cada giro, cada cosmético y cada koan costará dinero real.<br>
+      Esta demo es tu última oportunidad de experimentar la vacuidad absoluta sin pagar.<br><br>
+
+      Cuando llegue la versión final, solo quedará una verdad:<br>
+      <b>La iluminación tiene precio.</b>
     </p>
     <button onclick="toggle('readme')">CERRAR</button>
   </div>
 </div>
 
-<!-- TIENDA DE COSMÉTICOS ZEN MASIVA -->
-<div id="cosmeticShop" style="display:none">
-  <h1 style="font-size:50px;text-shadow:0 0 80px #0f0">VESTIMENTAS Y RELIQUIAS ZEN · 1.247 ARTÍCULOS</h1>
-  <p style="font-size:24px">Cada adquisición es un koan viviente que disuelve tu ego.</p>
-  <div class="cosmetic-grid" id="cosmeticList"></div>
-  <button onclick="toggle('cosmeticShop')" style="width:100%;padding:24px;font-size:32px;margin-top:40px">CERRAR</button>
-</div>
-
-<!-- LUGARES ESPIRITUALES DE DESPRENDIMIENTO (ex-casinos) -->
-<div id="spiritual1" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:9998;padding:40px;text-align:center">
-  <h1>Santuario del Samsara Giratorio</h1>
-  <p>Práctica radical de no-adhesión</p>
-  <div style="display:flex;justify-content:center;gap:30px;margin:50px 0">
-    <div class="reel" id="reel1">☯</div>
-    <div class="reel" id="reel2">☯</div>
-    <div class="reel" id="reel3">☯</div>
-  </div>
-  <p>Ofrenda: <input type="number" id="bet1" value="0.01" step="0.01" min="0.01"> €</p>
-  <button onclick="playDesprendimiento(1)">Girar por Liberación</button>
-  <button onclick="toggle('spiritual1')">Abandonar</button>
-</div>
-
 <script type="module">
 const TOTAL_SOULS = 13101310;
-let soulsCount = 0;
 let totalKarma = 999999.99;
-let ownedCosmetics = JSON.parse(localStorage.getItem('zen_demo_1247') || '[]');
+let ownedItems = [];
 
-// Three.js básico
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
-const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
-camera.position.set(0, 50, 200);
-const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias:true});
-renderer.setSize(innerWidth, innerHeight);
-const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(undefined, 3, 1, 0.1);
-composer.addPass(bloom);
+// 1.337 elementos de pago disfrazados de prácticas zen
+const zenPractices = [
+  // Micro-prácticas (0.001€ – 0.01€)
+  ...Array.from({length:800},(_,i)=>({id:`micro_${i}`,name:`Micro-Desprendimiento #${i+1}`,price:0.001,desc:"Suelta un céntimo. Gana un koan.",emoji:""})),
+  ...Array.from({length:300},(_,i)=>({id:`aura_${i}`,name:`Aura de No-Yo Temporal #${i+1}`,price:0.005,desc:"Brilla 7 ciclos",emoji:"◎"})),
+  ...Array.from({length:150},(_,i)=>({id:`halo_${i}`,name:`Halo de Vacuidad #${i+1}`,price:0.009,desc:"Ilumina tu avatar",emoji:"✧"})),
 
-// Lugares espirituales 3D
-const spiritualPositions = [
-  new THREE.Vector3(400, 0, 400),
-  new THREE.Vector3(-400, 0, 400),
-  new THREE.Vector3(0, 0, -500)
-];
-spiritualPositions.forEach((pos,i) => {
-  const geo = new THREE.DodecahedronGeometry(80, 0);
-  const mat = new THREE.MeshBasicMaterial({color:0x00ff00, wireframe:true});
-  const mesh = new THREE.Mesh(geo, mat);
-  mesh.position.copy(pos);
-  scene.add(mesh);
-});
-
-// 1.247 cosméticos zen (precios ridículos)
-const zenCosmetics = [
-  ...Array.from({length:600},(_,i)=>({id:`aura_${i}`,name:`Aura de Vacío #${i+1}`,price:0.001,emoji:"◎"})),
-  ...Array.from({length:400},(_,i)=>({id:`halo_${i}`,name:`Halo de No-Yo #${i+1}`,price:0.002,emoji:"✧"})),
-  ...Array.from({length:200},(_,i)=>({id:`robe_${i}`,name:`Túnica del Desapego #${i+1}`,price:0.005,emoji:"☯"})),
-  ...Array.from({length:40},(_,i)=>({id:`trail_${i}`,name:`Estela de Buda #${i+1}`,price:0.05,emoji:"佛"})),
-  {id:"lotus_throne",name:"Trono de Loto Primordial",price:0.99,emoji:"莲",legendary:true},
-  {id:"void_crown",name:"Corona del Vacío Absoluto",price:0.89,emoji:"⦰",legendary:true},
-  {id:"enlightened_aura",name:"Aura de Iluminación Total",price:0.99,emoji:"☼",legendary:true}
+  // Prácticas avanzadas (0.99€ – 9.99€)
+  ...Array.from({length:50},(_,i)=>({id:`koan_${i}`,name:`Koan Personalizado del Vacío #${i+1}`,price:4.20,desc:"Grabado con tu nombre",emoji:""})),
+  {id:"lotus_throne",name:"Trono de Loto Primordial",price:99,desc:"Solo 33 existen en este ciclo",emoji:"莲",rare:true},
+  {id:"void_crown",name:"Corona del Vacío Absoluto",price:299,desc:"El apego muere al ponértela",emoji:"",legendary:true},
+  {id:"buddha_trail",name:"Estela Dorada de Buda",price:199,desc:"Deja rastro de iluminación",emoji:"佛",rare:true},
+  {id:"enlightenment",name:"Certificado Oficial de Iluminación",price:999,desc:"Firmado por el Vacío mismo",emoji:"☼",legendary:true}
 ];
 
-function generateCosmeticShop(){
-  const list = document.getElementById('cosmeticList');
+function generateZenShop(){
+  const list = document.getElementById('zenList');
   list.innerHTML = '';
-  zenCosmetics.forEach(item => {
+  zenPractices.forEach(item => {
     const card = document.createElement('div');
-    card.className = `cosmetic-card ${item.legendary?'legendary':''} ${ownedCosmetics.includes(item.id)?'owned':''}`;
+    card.className = `zen-card ${item.rare?'rare':''} ${item.legendary?'legendary':''}`;
+    if(ownedItems.includes(item.id)) card.style.opacity = '0.5';
+
     card.innerHTML = `
-      <div style="font-size:100px">${item.emoji}</div>
-      <h3>${item.name}</h3>
-      <p style="font-size:32px">${item.price.toFixed(3)}€</p>
-      <button ${ownedCosmetics.includes(item.id)?'disabled':''} onclick="buyCosmetic('${item.id}',${item.price})">
-        ${ownedCosmetics.includes(item.id)?'POSEÍDO':'ADQUIRIR'}
+      <div style="font-size:120px;margin:20px 0">${item.emoji}</div>
+      <h3 style="font-size:28px;margin:10px 0">${item.name}</h3>
+      <p style="font-size:20px;line-height:1.6">${item.desc}</p>
+      <div class="price">${item.price.toFixed(3)}€</div>
+      <button ${ownedItems.includes(item.id)?'disabled':''} onclick="buyZenPractice('${item.id}',${item.price})">
+        ${ownedItems.includes(item.id) ? 'YA DESPRENDIDO' : 'REALIZAR OFRENDA'}
       </button>
     `;
     list.appendChild(card);
   });
 }
 
-function buyCosmetic(id, price){
+function buyZenPractice(id, price){
   totalKarma -= price;
-  ownedCosmetics.push(id);
-  localStorage.setItem('zen_demo_1247', JSON.stringify(ownedCosmetics));
+  ownedItems.push(id);
   updateUI();
-  generateCosmeticShop();
-  showKoan();
+  generateZenShop();
+
+  const koans = [
+    "Has pagado 0.001€. El universo te devuelve el infinito.",
+    "Tu ego acaba de perder 4.20€. Felicidades.",
+    "999€ menos. Estás más cerca del vacío que nunca.",
+    "El sabio no necesita tronos. Tú ya lo tienes.",
+    "Certificado de Iluminación adquirido. Ahora eres oficialmente nadie.",
+    "Bienvenido al club de los que pagan por nada."
+  ];
+  showNarrative(`<b>Koan de Iluminación:</b><br><br>${koans[Math.floor(Math.random()*koans.length)]}`);
 }
 
-// Koans que iluminan
-const koans = [
-  "Al desprenderte de 0.001€, el universo te devuelve el infinito.",
-  "Tu nueva túnica disuelve tres velos de ilusión.",
-  "Has adquirido la nada. Ahora eres más.",
-  "Cada cosmético es un koan que se lleva tu ego.",
-  "El sabio no necesita halos. Tú ya no eres el sabio.",
-  "Bienvenido al vacío con estilo."
-];
-
-function showKoan(){
-  const k = koans[Math.floor(Math.random()*koans.length)];
-  showNarrative(`<b>Koan de Iluminación:</b><br><br>${k}`);
-}
-
-function playDesprendimiento(id){
-  const bet = parseFloat(document.getElementById(`bet${id}`)?.value || 0.01);
-  totalKarma -= bet;
-  updateUI();
-  showKoan();
-  // Aquí irían las animaciones reales de giro/moneda/ruleta
-}
-
-// Utilidades
 function toggle(id){
   const el = document.getElementById(id);
-  el.style.display = el.style.display==='none'?'block':'none';
-  if(id==='cosmeticShop') generateCosmeticShop();
+  el.style.display = el.style.display==='none' ? 'block' : 'none';
+  if(id==='zenShop') generateZenShop();
 }
 
 function showNarrative(t){
   const n = document.getElementById('narrative');
   n.innerHTML = t;
   n.style.display = 'block';
-  setTimeout(()=>n.style.display='none',10000);
+  setTimeout(()=>n.style.display='none',12000);
 }
 
 function updateUI(){
   document.getElementById('totalKarma').textContent = totalKarma.toFixed(2);
 }
 
-// Autodetección idioma
-function detectLanguage(){
-  const lang = (navigator.language||navigator.userLanguage).slice(0,2);
-  document.documentElement.lang = ['es','en','ja','zh','fr','de','pt','ru'].includes(lang) ? lang : 'en';
-  document.querySelectorAll('[data-t]').forEach(el=>{
-    el.style.display = el.getAttribute('data-t')===lang ? 'block' : 'none';
-  });
-}
-
-function initGame(){
-  initAudio?.();
-  detectLanguage();
-  generateCosmeticShop();
-  // Animación básica
-  function animate(){ requestAnimationFrame(animate); composer.render(); }
-  animate();
-}
-
+// Iniciar
+generateZenShop();
 updateUI();
 </script>
 </body>

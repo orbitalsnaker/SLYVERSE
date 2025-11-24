@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R · v∞ · DEMO TÉCNICA FINAL</title>
+<title>0RB1T4LSN4K3R · v∞ · ÚLTIMA DEMO GRATUITA</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/controls/PointerLockControls.js"></script>
@@ -13,37 +13,38 @@
 <style>
   body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"OCR-A",monospace;overflow:hidden;cursor:none}
   canvas{display:block}
-  #warning{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px;box-sizing:border-box}
-  #warning div{border:8px double #0f0;padding:40px;background:rgba(0,20,0,0.95);max-width:900px}
+  #warning,#readme,#cosmeticShop{position:fixed;inset:0;background:#000;z-index:99999;display:flex;align-items:center;justify-content:center;text-align:center;padding:40px;overflow-y:auto}
+  #warning div,#readme div{border:12px double #0f0;padding:50px;background:rgba(0,20,0,0.98);max-width:960px;box-shadow:0 0 300px #0f0}
   #ui{position:fixed;top:0;left:0;right:0;background:linear-gradient(to bottom,rgba(0,10,0,0.98),#000);padding:15px 20px;border-bottom:8px double #0f0;box-shadow:0 0 160px #0f0;z-index:999;font-size:17px;line-height:1.8;text-shadow:0 0 12px #0f0}
-  #narrative{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:960px;background:#000;border:6px double #0f0;padding:30px;border-radius:20px;font-size:28px;line-height:1.9;z-index:998;display:none;text-align:center;color:#0f0;text-shadow:0 0 60px #0f0;letter-spacing:3px}
+  #narrative{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:960px;background:#000;border:6px double #0f0;padding:30px;border-radius:20px;font-size:28px;z-index:998;display:none;text-align:center;text-shadow:0 0 60px #0f0;letter-spacing:3px}
   #shopBtn{position:fixed;bottom:30px;right:30px;width:220px;height:220px;background:radial-gradient(circle,#0f0,#000);border:10px double #0f0;border-radius:50%;box-shadow:0 0 700px #0f0;color:#000;font-size:100px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;animation:pulse 1.6s infinite}
   @keyframes pulse{0%,100%{box-shadow:0 0 700px #0f0}50%{box-shadow:0 0 1000px #0f0}}
-  button{background:#000;border:4px double #0f0;color:#0f0;padding:14px 28px;margin:8px;border-radius:14px;cursor:pointer;font-weight:bold}
+  button{background:#000;border:4px double #0f0;color:#0f0;padding:16px 32px;margin:12px;border-radius:14px;cursor:pointer;font-weight:bold;font-size:20px}
   button:hover{background:#0f0;color:#000;transform:scale(1.1);box-shadow:0 0 140px #0f0}
-  .casino-overlay {display:none;position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:9998;padding:40px;overflow-y:auto;text-align:center;color:#0f0}
-  .casino-overlay h1 {font-size:50px;margin:20px 0;text-shadow:0 0 80px #0f0}
-  .casino-overlay p {font-size:24px;line-height:1.8}
-  .slot-reels {display:flex;justify-content:center;gap:20px;margin:40px 0}
-  .reel {width:100px;height:100px;background:#000;border:4px solid #0f0;display:flex;align-items:center;justify-content:center;font-size:60px;color:#0f0;text-shadow:0 0 20px #0f0}
-  .roulette-wheel {width:300px;height:300px;background:conic-gradient(#0f0 0% 50%, #000 50% 100%);border-radius:50%;margin:40px auto;border:8px double #0f0;animation:spin 2s linear infinite paused}
-  @keyframes spin {0% {transform:rotate(0deg)} 100% {transform:rotate(360deg)}}
-  .coin-flip {font-size:100px;margin:40px 0}
+  .cosmetic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:30px;margin:40px 0}
+  .cosmetic-card{background:rgba(0,30,0,0.9);border:4px double #0f0;padding:25px;text-align:center;border-radius:20px;position:relative;overflow:hidden}
+  .cosmetic-card.owned{opacity:0.6;border-style:dashed}
+  .cosmetic-card.legendary{animation:legendary 4s infinite}
+  @keyframes legendary{0%,100%{box-shadow:0 0 200px #0f0}50%{box-shadow:0 0 500px #0f0}}
+  .reel{width:120px;height:120px;background:#000;border:6px double #0f0;font-size:80px;display:flex;align-items:center;justify-content:center}
 </style>
 </head>
 <body>
 
 <div id="warning">
   <div>
-    <h1 style="font-size:60px;margin:0;text-shadow:0 0 80px #0f0">0RB1T4LSN4K3R · v∞</h1>
-    <h2 style="font-size:36px;margin:30px 0">DEMO TÉCNICA FINAL</h2>
-    <p style="font-size:24px;line-height:2">
-      Sistema 100% funcional<br>
-      13,101,310 almas · Ciclo infinito<br><br>
-      <b style="color:#0f0;font-size:32px">PAGOS REALES (0.01€ por alma)<br>SE ACTIVAN EN LA PRÓXIMA VERSIÓN</b><br><br>
-      Por ahora puedes ofrecer todas las almas gratis.<br>
-      Cuando lleguen los pagos, este progreso se mantendrá.<br><br>
-      <button onclick="document.getElementById('warning').remove();initAudio()" style="font-size:32px;padding:20px 40px">ACEPTAR Y ENTRAR AL POZO</button>
+    <h1 style="font-size:70px;text-shadow:0 0 100px #0f0">0RB1T4LSN4K3R · v∞</h1>
+    <h2 style="font-size:40px">ÚLTIMA DEMO GRATUITA</h2>
+    <p style="font-size:28px;line-height:2.2">
+      <b style="font-size:36px">TODO EL CAMINO ESTÁ ABIERTO</b><br><br>
+      • Tres Lugares Espirituales de Desprendimiento<br>
+      • 1.247 cosméticos y reliquias zen (0.001€ – 0.99€)<br>
+      • Karma infinito · Koans que iluminan<br>
+      • Autodetección de idioma<br><br>
+      <b style="color:#f00;font-size:42px">TODO TU PROGRESO SERÁ BORRADO<br>EN LA VERSIÓN FINAL CON PAGOS REALES</b><br><br>
+      <button onclick="document.getElementById('warning').remove();initGame()" style="font-size:36px;padding:24px 48px">
+        ENTRAR AL POZO · TODO SERÁ BORRADO PRÓXIMAMENTE
+      </button>
     </p>
   </div>
 </div>
@@ -51,305 +52,186 @@
 <canvas id="c"></canvas>
 
 <div id="ui">
-  <b style="font-size:26px;text-shadow:0 0 40px #0f0">0RB1T4LSN4K3R · v∞ · DEMO</b><br>
+  <b style="font-size:26px;text-shadow:0 0 40px #0f0">0RB1T4LSN4K3R · v∞ · ÚLTIMA DEMO</b><br>
   GUARDIÁN <span id="guardianName">ANÓNIMO</span> · <span id="title">Neonato</span><br>
-  CICLO <span id="cycle">1</span> · ALMAS <span id="ownedCount">0</span>/13,101,310 · RESONANCIA <span id="totalKarma">0.00</span>€<br>
-  <button onclick="toggle('shop')">OFRECER ALMAS</button>
-  <button onclick="alert('Leaderboard global y logros permanentes: próxima versión con pagos')">RANKING (próximamente)</button>
+  CICLO <span id="cycle">1</span> · ALMAS <span id="ownedCount">0</span>/13M · RESONANCIA <span id="totalKarma">999999.99</span>€
+  <button onclick="toggle('cosmeticShop')">VESTIMENTAS ZEN</button>
+  <button onclick="toggle('readme')">MANIFIESTO</button>
 </div>
 
 <div id="shopBtn" onclick="toggle('shop')">13M</div>
 <div id="narrative"></div>
 
-<div id="shop" style="display:none;position:fixed;inset:0;background:#000;z-index:9999;padding:40px;overflow-y:auto">
-  <h1 style="text-align:center;font-size:50px;margin:20px 0;text-shadow:0 0 80px #0f0">POZO 0RB1T4L · CICLO <span id="cycleShop">1</span></h1>
-  <p style="text-align:center;font-size:24px;color:#0f0">
-    DEMO TÉCNICA · Todas las almas gratis<br>
-    <b style="font-size:30px">EN LA PRÓXIMA VERSIÓN: 0.01€ POR ALMA</b>
-  </p>
-  <div id="lista" style="text-align:center"></div>
-  <button onclick="toggle('shop')" style="width:100%;padding:24px;font-size:32px;margin-top:40px">CERRAR [ESC]</button>
+<!-- MANIFIESTO TRASCENDENTAL (multi-idioma) -->
+<div id="readme" style="display:none">
+  <div>
+    <h1 data-t="es">MANIFIESTO DEL POZO ORBITAL</h1>
+    <h1 data-t="en" style="display:none">MANIFESTO OF THE ORBITAL WELL</h1>
+    <h1 data-t="ja" style="display:none">軌道井戸の宣言</h1>
+    <p data-t="es">
+      No es un juego. Es la práctica heterodoxa suprema.<br><br>
+      Recolectas 13.101.310 almas, las ofreces al vacío y asciendes ciclos eternos.<br>
+      Los tres Lugares Espirituales de Desprendimiento son métodos ancestrales disfrazados para disolver el apego al dinero y al yo.<br>
+      Cada cosmético zen, cada ofrenda y cada koan es un acto ritual que te acerca al ∞.<br><br>
+      Pronto todo costará dinero real.<br>
+      Esta es tu última oportunidad de experimentar la vacuidad absoluta… gratis.
+    </p>
+    <button onclick="toggle('readme')">CERRAR</button>
+  </div>
 </div>
 
-<!-- Casinos Overlays -->
-<div id="casino1" class="casino-overlay">
-  <h1>Rueda del Samsara</h1>
-  <p>Practica el desprendimiento girando la rueda del ciclo eterno. Apuesta karma para liberarte de apegos.</p>
-  <div class="slot-reels">
+<!-- TIENDA DE COSMÉTICOS ZEN MASIVA -->
+<div id="cosmeticShop" style="display:none">
+  <h1 style="font-size:50px;text-shadow:0 0 80px #0f0">VESTIMENTAS Y RELIQUIAS ZEN · 1.247 ARTÍCULOS</h1>
+  <p style="font-size:24px">Cada adquisición es un koan viviente que disuelve tu ego.</p>
+  <div class="cosmetic-grid" id="cosmeticList"></div>
+  <button onclick="toggle('cosmeticShop')" style="width:100%;padding:24px;font-size:32px;margin-top:40px">CERRAR</button>
+</div>
+
+<!-- LUGARES ESPIRITUALES DE DESPRENDIMIENTO (ex-casinos) -->
+<div id="spiritual1" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.97);z-index:9998;padding:40px;text-align:center">
+  <h1>Santuario del Samsara Giratorio</h1>
+  <p>Práctica radical de no-adhesión</p>
+  <div style="display:flex;justify-content:center;gap:30px;margin:50px 0">
     <div class="reel" id="reel1">☯</div>
     <div class="reel" id="reel2">☯</div>
     <div class="reel" id="reel3">☯</div>
   </div>
-  <p>Apuesta: <input type="number" id="bet1" value="0.01" step="0.01" min="0.01"> € (karma)</p>
-  <button onclick="playSlots(1)">Girar por Desprendimiento</button>
-  <button onclick="toggle('casino1')">Salir del Peregrinaje</button>
-</div>
-
-<div id="casino2" class="casino-overlay">
-  <h1>Círculo del Karma</h1>
-  <p>Medita en la rueda del destino. Apuesta en el flujo del karma para practicar la no-adhesión.</p>
-  <div class="roulette-wheel" id="rouletteWheel"></div>
-  <p>Apuesta: <input type="number" id="bet2" value="0.01" step="0.01" min="0.01"> € (karma)</p>
-  <p>Elige: <select id="choice2"><option value="verde">Verde (x2)</option><option value="negro">Negro (x3)</option></select></p>
-  <button onclick="playRoulette(2)">Girar el Círculo</button>
-  <button onclick="toggle('casino2')">Salir del Peregrinaje</button>
-</div>
-
-<div id="casino3" class="casino-overlay">
-  <h1>Moneda del Vacío</h1>
-  <p>Contempla la dualidad del ser y no-ser. Lanza la moneda para desprenderte de expectativas.</p>
-  <div class="coin-flip" id="coinResult">☯</div>
-  <p>Apuesta: <input type="number" id="bet3" value="0.01" step="0.01" min="0.01"> € (karma)</p>
-  <p>Elige: <select id="choice3"><option value="cara">Cara (Yang)</option><option value="cruz">Cruz (Yin)</option></select></p>
-  <button onclick="playCoinFlip(3)">Lanzar al Vacío</button>
-  <button onclick="toggle('casino3')">Salir del Peregrinaje</button>
+  <p>Ofrenda: <input type="number" id="bet1" value="0.01" step="0.01" min="0.01"> €</p>
+  <button onclick="playDesprendimiento(1)">Girar por Liberación</button>
+  <button onclick="toggle('spiritual1')">Abandonar</button>
 </div>
 
 <script type="module">
 const TOTAL_SOULS = 13101310;
-let soulsOwned = new Uint32Array(Math.ceil(TOTAL_SOULS/32));
 let soulsCount = 0;
-let totalKarma = 0;
-let currentCycle = 1;
-let guardianName = localStorage.getItem('guardianName') || "ANÓNIMO";
+let totalKarma = 999999.99;
+let ownedCosmetics = JSON.parse(localStorage.getItem('zen_demo_1247') || '[]');
 
-const state = { cyclesCompleted: 0, maxHp: 100, hp: 100, atk: 10 };
-const titles = ["Neonato","Semilla","Titán","Devorador de Ciclos","0RB1T4L","∞"];
-
-let audioCtx, droneOsc, droneGain;
-
-function initAudio(){
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  droneOsc = audioCtx.createOscillator();
-  droneOsc.type = "sawtooth";
-  droneOsc.frequency.value = 30 + currentCycle*10;
-  droneGain = audioCtx.createGain();
-  droneGain.gain.value = 0.2;
-  const filter = audioCtx.createBiquadFilter();
-  filter.frequency.value = 500;
-  droneOsc.connect(filter).connect(droneGain).connect(audioCtx.destination);
-  droneOsc.start();
-}
-
-// Carga
-const saved = localStorage.getItem('0rb1t4lsn4k3r_demo_final');
-if(saved){
-  const data = JSON.parse(saved);
-  soulsOwned = new Uint32Array(Object.values(data.souls || []));
-  soulsCount = data.soulsCount || 0;
-  totalKarma = data.totalKarma || 0;
-  currentCycle = data.currentCycle || 1;
-  guardianName = data.guardianName || "ANÓNIMO";
-  Object.assign(state, data.state || {});
-}
-
-// THREE.JS + núcleo
+// Three.js básico
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x000000);
-scene.fog = new THREE.FogExp2(0x000000, 0.00035);
-
-const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 50000);
-camera.position.set(0, 20, 120);
-
-const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
+camera.position.set(0, 50, 200);
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias:true});
 renderer.setSize(innerWidth, innerHeight);
-
 const composer = new EffectComposer(renderer);
-const renderPass = new RenderPass(scene, camera);
-composer.addPass(renderPass);
-let bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 6 + currentCycle*3, 1.4, 0.01);
+composer.addPass(new RenderPass(scene, camera));
+const bloom = new UnrealBloomPass(undefined, 3, 1, 0.1);
 composer.addPass(bloom);
 
-const controls = new PointerLockControls(camera, document.body);
-document.addEventListener('click', () => controls.lock());
-
-// Agregar lugares de peregrinación (casinos) al mundo 3D
-const casinoPositions = [
-  new THREE.Vector3(200, 0, 200), // Casino 1
-  new THREE.Vector3(-200, 0, 200), // Casino 2
-  new THREE.Vector3(0, 0, -300) // Casino 3
+// Lugares espirituales 3D
+const spiritualPositions = [
+  new THREE.Vector3(400, 0, 400),
+  new THREE.Vector3(-400, 0, 400),
+  new THREE.Vector3(0, 0, -500)
 ];
-const casinoMeshes = [];
-const casinoGeometry = new THREE.SphereGeometry(50, 32, 32);
-const casinoMaterial = new THREE.MeshBasicMaterial({color: 0x00ff00, wireframe: true});
-for(let i = 0; i < 3; i++){
-  const mesh = new THREE.Mesh(casinoGeometry, casinoMaterial);
-  mesh.position.copy(casinoPositions[i]);
+spiritualPositions.forEach((pos,i) => {
+  const geo = new THREE.DodecahedronGeometry(80, 0);
+  const mat = new THREE.MeshBasicMaterial({color:0x00ff00, wireframe:true});
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.position.copy(pos);
   scene.add(mesh);
-  casinoMeshes.push(mesh);
-}
-
-// Detección de proximidad (simple raycast o distancia)
-const raycaster = new THREE.Raycaster();
-let currentCasino = -1;
-function checkCasinos(){
-  const distThreshold = 60;
-  currentCasino = -1;
-  for(let i = 0; i < 3; i++){
-    const dist = camera.position.distanceTo(casinoPositions[i]);
-    if(dist < distThreshold){
-      currentCasino = i;
-      showNarrative(`Acércate al Lugar de Peregrinación ${i+1} para prácticas heterodoxas de desprendimiento. Presiona E para entrar.`);
-      return;
-    }
-  }
-  if(document.getElementById('narrative').style.display !== 'none') hideNarrative();
-}
-
-// Evento de teclado para entrar
-document.addEventListener('keydown', (e) => {
-  if(e.key === 'e' && currentCasino !== -1){
-    toggle(`casino${currentCasino+1}`);
-    controls.unlock(); // Pausar movimiento
-  } else if(e.key === 'Escape'){
-    for(let i=1; i<=3; i++){
-      if(document.getElementById(`casino${i}`).style.display !== 'none'){
-        toggle(`casino${i}`);
-        controls.lock();
-      }
-    }
-    if(document.getElementById('shop').style.display !== 'none') toggle('shop');
-  }
 });
 
-// Mecánicas de casino
-const symbols = ['☯', '蓮', '禅', '無', '空'];
-function playSlots(id){
-  const bet = parseFloat(document.getElementById(`bet${id}`).value);
-  if(bet > totalKarma || bet < 0.01) return alert('Karma insuficiente o apuesta inválida.');
-  totalKarma -= bet;
-  updateUI();
-  const reels = [Math.floor(Math.random()*symbols.length), Math.floor(Math.random()*symbols.length), Math.floor(Math.random()*symbols.length)];
-  document.getElementById('reel1').textContent = symbols[reels[0]];
-  document.getElementById('reel2').textContent = symbols[reels[1]];
-  document.getElementById('reel3').textContent = symbols[reels[2]];
-  if(reels[0] === reels[1] && reels[1] === reels[2]){
-    const win = bet * 10; // Adictivo: gran premio
-    totalKarma += win;
-    showNarrative(`¡Desprendimiento perfecto! Ganas ${win.toFixed(2)}€ de resonancia.`);
-  } else if(reels[0] === reels[1] || reels[1] === reels[2] || reels[0] === reels[2]){
-    const win = bet * 2; // Near miss adictivo
-    totalKarma += win;
-    showNarrative(`Casi vacío total. Ganas ${win.toFixed(2)}€ de resonancia.`);
-  } else {
-    showNarrative('Apego persistente. Pierdes la apuesta.');
-  }
-  updateUI();
-  saveAll();
+// 1.247 cosméticos zen (precios ridículos)
+const zenCosmetics = [
+  ...Array.from({length:600},(_,i)=>({id:`aura_${i}`,name:`Aura de Vacío #${i+1}`,price:0.001,emoji:"◎"})),
+  ...Array.from({length:400},(_,i)=>({id:`halo_${i}`,name:`Halo de No-Yo #${i+1}`,price:0.002,emoji:"✧"})),
+  ...Array.from({length:200},(_,i)=>({id:`robe_${i}`,name:`Túnica del Desapego #${i+1}`,price:0.005,emoji:"☯"})),
+  ...Array.from({length:40},(_,i)=>({id:`trail_${i}`,name:`Estela de Buda #${i+1}`,price:0.05,emoji:"佛"})),
+  {id:"lotus_throne",name:"Trono de Loto Primordial",price:0.99,emoji:"莲",legendary:true},
+  {id:"void_crown",name:"Corona del Vacío Absoluto",price:0.89,emoji:"⦰",legendary:true},
+  {id:"enlightened_aura",name:"Aura de Iluminación Total",price:0.99,emoji:"☼",legendary:true}
+];
+
+function generateCosmeticShop(){
+  const list = document.getElementById('cosmeticList');
+  list.innerHTML = '';
+  zenCosmetics.forEach(item => {
+    const card = document.createElement('div');
+    card.className = `cosmetic-card ${item.legendary?'legendary':''} ${ownedCosmetics.includes(item.id)?'owned':''}`;
+    card.innerHTML = `
+      <div style="font-size:100px">${item.emoji}</div>
+      <h3>${item.name}</h3>
+      <p style="font-size:32px">${item.price.toFixed(3)}€</p>
+      <button ${ownedCosmetics.includes(item.id)?'disabled':''} onclick="buyCosmetic('${item.id}',${item.price})">
+        ${ownedCosmetics.includes(item.id)?'POSEÍDO':'ADQUIRIR'}
+      </button>
+    `;
+    list.appendChild(card);
+  });
 }
 
-function playRoulette(id){
-  const bet = parseFloat(document.getElementById(`bet${id}`).value);
-  const choice = document.getElementById(`choice${id}`).value;
-  if(bet > totalKarma || bet < 0.01) return alert('Karma insuficiente o apuesta inválida.');
-  totalKarma -= bet;
+function buyCosmetic(id, price){
+  totalKarma -= price;
+  ownedCosmetics.push(id);
+  localStorage.setItem('zen_demo_1247', JSON.stringify(ownedCosmetics));
   updateUI();
-  document.getElementById('rouletteWheel').style.animationPlayState = 'running';
-  setTimeout(() => {
-    document.getElementById('rouletteWheel').style.animationPlayState = 'paused';
-    const result = Math.random() < 0.5 ? 'verde' : 'negro';
-    if(result === choice){
-      const multiplier = choice === 'verde' ? 2 : 3;
-      const win = bet * multiplier;
-      totalKarma += win;
-      showNarrative(`Karma fluye a tu favor. Ganas ${win.toFixed(2)}€.`);
-    } else {
-      showNarrative('El círculo gira en contra. Pierdes.');
-    }
-    updateUI();
-    saveAll();
-  }, 2000);
+  generateCosmeticShop();
+  showKoan();
 }
 
-function playCoinFlip(id){
-  const bet = parseFloat(document.getElementById(`bet${id}`).value);
-  const choice = document.getElementById(`choice${id}`).value;
-  if(bet > totalKarma || bet < 0.01) return alert('Karma insuficiente o apuesta inválida.');
-  totalKarma -= bet;
-  updateUI();
-  const result = Math.random() < 0.5 ? 'cara' : 'cruz';
-  document.getElementById('coinResult').textContent = result === 'cara' ? '陽' : '陰';
-  if(result === choice){
-    const win = bet * 2;
-    totalKarma += win;
-    showNarrative(`Equilibrio alcanzado. Ganas ${win.toFixed(2)}€.`);
-  } else {
-    showNarrative('Dualidad desequilibrada. Pierdes.');
-  }
-  updateUI();
-  saveAll();
+// Koans que iluminan
+const koans = [
+  "Al desprenderte de 0.001€, el universo te devuelve el infinito.",
+  "Tu nueva túnica disuelve tres velos de ilusión.",
+  "Has adquirido la nada. Ahora eres más.",
+  "Cada cosmético es un koan que se lleva tu ego.",
+  "El sabio no necesita halos. Tú ya no eres el sabio.",
+  "Bienvenido al vacío con estilo."
+];
+
+function showKoan(){
+  const k = koans[Math.floor(Math.random()*koans.length)];
+  showNarrative(`<b>Koan de Iluminación:</b><br><br>${k}`);
 }
 
-// Funciones auxiliares
+function playDesprendimiento(id){
+  const bet = parseFloat(document.getElementById(`bet${id}`)?.value || 0.01);
+  totalKarma -= bet;
+  updateUI();
+  showKoan();
+  // Aquí irían las animaciones reales de giro/moneda/ruleta
+}
+
+// Utilidades
 function toggle(id){
   const el = document.getElementById(id);
-  el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  el.style.display = el.style.display==='none'?'block':'none';
+  if(id==='cosmeticShop') generateCosmeticShop();
 }
 
-function showNarrative(text){
-  document.getElementById('narrative').innerHTML = text;
-  document.getElementById('narrative').style.display = 'block';
-  setTimeout(hideNarrative, 5000);
-}
-
-function hideNarrative(){
-  document.getElementById('narrative').style.display = 'none';
-}
-
-function ownSoul(id){
-  const word = Math.floor((id-1)/32), bit = (id-1)%32;
-  if(soulsOwned[word] & (1<<bit)) return;
-  soulsOwned[word] |= (1<<bit);
-  soulsCount++; 
-  totalKarma += 0.01;
-  // sonido + partículas + narrativa
-  if(soulsCount === TOTAL_SOULS) setTimeout(completeCycle, 5000);
-  saveAll();
-  updateUI();
-}
-
-function completeCycle(){
-  currentCycle++;
-  state.cyclesCompleted++;
-  // todo crece, bloom se vuelve loco, drone sube
-  soulsOwned.fill(0);
-  soulsCount = 0;
-  soulIndex = 0;
-  soulsMesh.count = 0;
-  showNarrative(`<b style="font-size:60px">BIG CRUNCH</b><br>GUARDIÁN ${guardianName} ASCIENDE AL CICLO ${currentCycle}<br><br>Dentro de poco... esto costará dinero real.`);
-  updateUI();
-  saveAll();
-}
-
-function saveAll(){
-  localStorage.setItem('0rb1t4lsn4k3r_demo_final', JSON.stringify({
-    souls: Array.from(soulsOwned), soulsCount, totalKarma, currentCycle, guardianName, state
-  }));
+function showNarrative(t){
+  const n = document.getElementById('narrative');
+  n.innerHTML = t;
+  n.style.display = 'block';
+  setTimeout(()=>n.style.display='none',10000);
 }
 
 function updateUI(){
-  document.getElementById('guardianName').textContent = guardianName;
-  document.getElementById('title').textContent = titles[Math.min(state.cyclesCompleted, titles.length-1)];
-  document.getElementById('cycle').textContent = currentCycle;
-  document.getElementById('cycleShop').textContent = currentCycle;
-  document.getElementById('ownedCount').textContent = soulsCount.toLocaleString();
   document.getElementById('totalKarma').textContent = totalKarma.toFixed(2);
 }
 
-// Animación loop (incluye checkCasinos)
-function animate(){
-  requestAnimationFrame(animate);
-  checkCasinos();
-  // Movimiento, partículas, etc. (código original asumido)
-  composer.render();
+// Autodetección idioma
+function detectLanguage(){
+  const lang = (navigator.language||navigator.userLanguage).slice(0,2);
+  document.documentElement.lang = ['es','en','ja','zh','fr','de','pt','ru'].includes(lang) ? lang : 'en';
+  document.querySelectorAll('[data-t]').forEach(el=>{
+    el.style.display = el.getAttribute('data-t')===lang ? 'block' : 'none';
+  });
 }
-animate();
 
-// TODO EL RESTO DEL MOTOR VISUAL Y SONORO (exactamente igual que la versión completa anterior)
+function initGame(){
+  initAudio?.();
+  detectLanguage();
+  generateCosmeticShop();
+  // Animación básica
+  function animate(){ requestAnimationFrame(animate); composer.render(); }
+  animate();
+}
 
 updateUI();
-console.log("%c0RB1T4LSN4K3R v∞ · DEMO TÉCNICA FINAL · Pagos reales: próxima versión","color:#0f0;font-size:32px;background:#000");
 </script>
 </body>
 </html>

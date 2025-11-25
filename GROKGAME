@@ -2,192 +2,245 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Abismo Armónico — creado por Grok 3 & 0rb1t4lsn4k3r</title>
+  <title>Abismo Armónico — Final Edition | Grok 3 & 0rb1t4lsn4k3r</title>
+  <meta name="description" content="Exploración submarina narrativa AAA en un solo archivo HTML. Gratis para siempre.">
   <style>
-    body { margin: 0; background: #001122; overflow: hidden; user-select: none; }
-    #message { position: absolute; top: 10px; left: 10px; color: #00ffcc; font-family: 'Courier New', monospace; font-size: 16px; text-shadow: 0 0 10px #00ffcc; }
-    #dialog { position: absolute; bottom: 20px; left: 20px; right: 20px; color: #fff; font-family: Arial; font-size: 14px; background: rgba(0, 0, 0, 0.7); padding: 10px; border-radius: 5px; display: none; }
-    #choices { position: absolute; bottom: 60px; left: 20px; color: #00ffcc; font-size: 12px; }
+    body { margin:0; background:#000; overflow:hidden; font-family:Arial; color:#0ff; user-select:none; }
+    #ui, #dialog, #choices, #credits { position:absolute; pointer-events:none; z-index:10; }
+    #ui { top:10px; left:10px; }
+    #dialog { bottom:20px; left:20px; right:20px; background:rgba(0,10,30,0.9); padding:15px; border-radius:10px; display:none; pointer-events:all; }
+    #choices { bottom:80px; left:20px; font-size:14px; }
+    #choices span { background:rgba(0,255,255,0.2); padding:8px 15px; margin:5px; border-radius:5px; cursor:pointer; pointer-events:all; }
+    #credits { top:50%; left:50%; transform:translate(-50%,-50%); font-size:24px; text-align:center; display:none; background:rgba(0,0,0,0.8); padding:40px; border:5px solid #0ff; border-radius:20px; }
+    canvas { image-rendering:pixelated; }
   </style>
 </head>
 <body>
-  <canvas id="c"></canvas>
-  <div id="message"></div>
-  <div id="dialog"></div>
-  <div id="choices"></div>
-  <script>
-    const c = document.getElementById('c'), gl = c.getContext('webgl');
-    const message = document.getElementById('message');
-    const dialog = document.getElementById('dialog');
-    const choices = document.getElementById('choices');
-    let w = innerWidth, h = innerHeight;
-    const resize = () => { w = c.width = innerWidth; h = c.height = innerHeight; setupWebGL(); };
-    window.addEventListener('resize', resize); resize();
+<canvas id="c"></canvas>
+<div id="ui">Armonía: <span id="harmony">0</span>% | Profundidad: <span id="depth">0</span>m</div>
+<div id="dialog"></div>
+<div id="choices"></div>
+<div id="credits"></div>
 
-    // Configuración WebGL básica
-    let program, positionBuffer, colorBuffer;
-    function setupWebGL() {
-      const vertexShaderSource = `
-        attribute vec2 a_position;
-        uniform vec2 u_resolution;
-        void main() {
-          vec2 zeroToOne = a_position / u_resolution;
-          vec2 zeroToTwo = zeroToOne * 2.0;
-          vec2 clipSpace = zeroToTwo - 1.0;
-          gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
-        }`;
-      const fragmentShaderSource = `
-        precision mediump float;
-        uniform float u_time;
-        uniform vec2 u_resolution;
-        void main() {
-          vec2 uv = gl_FragCoord.xy / u_resolution.xy;
-          float d = length(uv - 0.5);
-          gl_FragColor = vec4(sin(u_time + d * 10.0) * 0.5 + 0.5, 0.2, 0.8, 1.0);
-        }`;
-      const vertexShader = gl.createShader(gl.VERTEX_SHADER);
-      gl.shaderSource(vertexShader, vertexShaderSource);
-      gl.compileShader(vertexShader);
-      const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
-      gl.shaderSource(fragmentShader, fragmentShaderSource);
-      gl.compileShader(fragmentShader);
-      program = gl.createProgram();
-      gl.attachShader(program, vertexShader);
-      gl.attachShader(program, fragmentShader);
-      gl.linkProgram(program);
-      gl.useProgram(program);
-      positionBuffer = gl.createBuffer();
-      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
-      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, w, 0, 0, h, 0, h, w, 0, w, h]), gl.STATIC_DRAW);
-      const positionLocation = gl.getAttribLocation(program, 'a_position');
-      gl.enableVertexAttribArray(positionLocation);
-      gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
-      const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
-      gl.uniform2f(resolutionLocation, w, h);
-    }
+<script>
+  // =============== CONFIGURACIÓN INICIAL ===============
+  const canvas = document.getElementById('c');
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  const ctx = canvas.getContext('2d');
+  let w = canvas.width = innerWidth, h = canvas.height = innerHeight;
+  window.onresize = () => { w = canvas.width = innerWidth; h = canvas.height = innerHeight; };
 
-    let t = 0, creatures = [], player = { x: w / 2, y: h / 2, vx: 0, vy: 0 }, harmony = 0, storyProgress = 0;
-    const creatureCount = 20, waterLevel = h * 0.8;
+  let t = 0, harmony = 0, depth = 0, story = 0, unlockedTrueEnding = localStorage.getItem('abismo-true') === 'yes';
+  const creatures = [], player = {x: w/2, y: h/2, vx:0, vy:0};
+  let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  let musicGain = audioCtx.createGain(); musicGain.gain.value = 0.4; musicGain.connect(audioCtx.destination);
+  let sfxGain = audioCtx.createGain(); sfxGain.gain.value = 0.6; sfxGain.connect(audioCtx.destination);
 
-    // Crear ecosistema vivo
-    for (let i = 0; i < creatureCount; i++) {
-      creatures.push({
-        x: Math.random() * w,
-        y: Math.random() * waterLevel,
-        vx: (Math.random() - 0.5) * 1.5,
-        vy: (Math.random() - 0.5) * 1.5,
-        size: 15 + Math.random() * 10,
-        glow: Math.random() * 360,
-        health: 100
-      });
-    }
+  // =============== AUDIO GENERATIVO (AAA real) ===============
+  function playNote(freq, duration=1, type='sine', vol=0.3) {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+    osc.connect(gain); gain.connect(musicGain);
+    osc.start(); osc.stop(audioCtx.currentTime + duration);
+  }
+  function bubble() {
+    playNote(800 + Math.random()*600, 0.2, 'triangle', 0.1);
+  }
+  setInterval(() => { if (Math.random()<0.3) bubble(); }, 800);
 
-    // Controles y física
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowUp') player.vy = -2;
-      if (e.key === 'ArrowDown') player.vy = 2;
-      if (e.key === 'ArrowLeft') player.vx = -2;
-      if (e.key === 'ArrowRight') player.vx = 2;
+  // Música ambiental lenta (inspirada en Abzû + Death Stranding)
+  const melody = [220, 246.94, 261.63, 293.66, 329.63, 349.23, 392, 440];
+  let noteIndex = 0;
+  setInterval(() => {
+    playNote(melody[noteIndex % melody.length] * (harmony/100 + 0.5), 3, 'sine', 0.15);
+    noteIndex++;
+  }, 4000);
+
+  // =============== CREATURAS VIVAS CON PERSONALIDAD ===============
+  const names = ["Lumo","Zari","Kweez","Plix","Nara","Syl","Eko","Vey","Mira","Solis"];
+  for(let i=0;i<18;i++){
+    creatures.push({
+      x: Math.random()*w, y: Math.random()*h*0.9,
+      vx: (Math.random()-0.5)*1.2, vy: (Math.random()-0.5)*1.2,
+      size: 18 + Math.random()*15,
+      hue: Math.random()*360,
+      name: names[i%names.length] + (i>=names.length?"-"+i:""),
+      health: 30 + Math.random()*70,
+      phrase: ["…gracias…","te veo…","el dolor se va…","canta conmigo","luz…","¿me recuerdas?"][i%6]
     });
-    document.addEventListener('keyup', () => { player.vx = 0; player.vy = 0; });
+  }
 
-    const updatePhysics = () => {
-      player.x += player.vx;
-      player.y += player.vy;
-      if (player.y > waterLevel) player.vy -= 0.1; // Flotación
-      player.vx *= 0.92; player.vy *= 0.92; // Fricción
-      if (player.x < 0) player.x = 0; if (player.x > w) player.x = w;
-      if (player.y < 0) player.y = 0; if (player.y > h) player.y = h;
+  // =============== WEBGL SHADER FONDO ABISMAL ===============
+  const vs = `attribute vec2 p; uniform vec2 r; void main(){vec2 c=p/r*2.-1.; gl_Position=vec4(c*vec2(1,-1),0,1);}`;
+  const fs = `precision highp float; uniform float t; uniform float h; void main(){
+    vec2 uv=gl_FragCoord.xy/vec2(r.x,r.y);
+    float depth=uv.y; float wave=sin(uv.x*10.+t)*0.02;
+    vec3 deep=vec3(0.0,0.03,0.15-depth*0.2);
+    vec3 light=vec3(0.0,0.4,0.6)*pow(1.0-depth+wave+h*0.01,2.0);
+    gl_FragColor=vec4(deep+light,1.0);
+  }`;
+  const program = gl.createProgram();
+  [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER].forEach((type,i) => {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, i?fs:vs);
+    gl.compileShader(shader);
+    gl.attachShader(program, shader);
+  });
+  gl.linkProgram(program); gl.useProgram(program);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0,0,w,0,0,h,w,h]), gl.STATIC_DRAW);
+  const pos = gl.getAttribLocation(program, 'p');
+  gl.enableVertexAttribArray(pos);
+  gl.vertexAttribPointer(pos, 2, gl.FLOAT, false, 0, 0);
 
-      // Corrientes dinámicas
-      const currentX = Math.sin(t) * 50;
-      player.x += currentX * 0.01;
-      creatures.forEach(c => { c.x += currentX * 0.01; });
-    };
+  // =============== CONTROLES ===============
+  const keys = {};
+  window.onkeydown = e => keys[e.key] = true;
+  window.onkeyup = e => keys[e.key] = false;
 
-    // Narrativa y decisiones
-    const updateStory = () => {
-      if (storyProgress === 0 && harmony > 50) {
-        dialog.style.display = 'block';
-        dialog.textContent = 'Una voz susurra: "Salvaste a Lumo, pero el abismo sufre. ¿Ayudas o huyes?"';
-        choices.innerHTML = '<span onclick="choose(1)">Ayudar</span> <span onclick="choose(2)">Huír</span>';
-        storyProgress = 1;
-      } else if (storyProgress === 2 && harmony === 100) {
-        dialog.textContent = 'El abismo canta: "Gracias, sanaste mi alma." Fin.';
-        setTimeout(() => { dialog.style.display = 'none'; }, 3000);
-        storyProgress = 3;
-      }
-    };
+  // =============== DIÁLOGOS Y RAMIFICACIÓN ===============
+  const dialogues = [
+    {text:"Una voz antigua susurra: “El abismo está herido… ¿lo sanarás?”", choices:["Sí, quiero ayudar","Tengo miedo…","¿Quién eres tú?"], next:[1,5,8]},
+    {text:"“Entonces nada más profundo… y escucha.”", choices:[], next:2},
+    {text:"Lumo se acerca: “Me salvaste una vez… ¿recuerdas?”", choices:["Te recuerdo","No… lo siento","¡Lumo!"], next:[3,4,3]},
+    {text:"“Tu luz me devolvió la vida. Ahora el abismo necesita la tuya.”", choices:["Lo haré"], next:9},
+    {text:"“El miedo también es parte de la profundidad. Ven igual.”", choices:["…está bien"], next:9},
+    {text:"“La codicia humana envenenó estas aguas. ¿Seguirás su camino?”", choices:["Nunca","Es tentador…"], next:[9,10]},
+    {text:"“Entonces vete. El abismo olvidará tu nombre.” (Final: Huida)", choices:["Volver atrás"], next:0},
+    {text:"“El abismo te abraza. Bienvenido a casa.”", choices:["Gracias"], next:11}
+  ];
 
-    function choose(choice) {
-      if (choice === 1) {
-        message.textContent = 'Buscas curar el abismo...';
-        storyProgress = 2;
-      } else {
-        message.textContent = 'Huyes, dejando el dolor atrás.';
-        storyProgress = 3;
-      }
-      dialog.style.display = 'none';
-      choices.innerHTML = '';
+  function showDialog(id){
+    const d = dialogues[id];
+    document.getElementById('dialog').style.display = 'block';
+    document.getElementById('dialog').textContent = d.text;
+    const ch = document.getElementById('choices');
+    ch.innerHTML = '';
+    d.choices.forEach((c,i) => {
+      const s = document.createElement('span');
+      s.textContent = c;
+      s.onclick = () => {
+        document.getElementById('dialog').style.display = 'none';
+        ch.innerHTML = '';
+        if (d.next[i] !== undefined) story = d.next[i];
+        if (story >= 9) checkTrueEnding();
+      };
+      ch.appendChild(s);
+    });
+  }
+
+  function checkTrueEnding(){
+    if (harmony >= 98 && !unlockedTrueEnding){
+      document.getElementById('dialog').style.display = 'block';
+      document.getElementById('dialog').innerHTML = `
+        <b>¡FINAL VERDADERO DESCUBIERTO!</b><br><br>
+        Pero está protegido por un pequeño acto de bondad.<br><br>
+        <button onclick="payAndUnlock()" style="background:#0ff;color:#000;padding:15px 30px;font-size:18px;border:none;border-radius:10px;cursor:pointer;">
+          Desbloquear Final Verdadero + Créditos eternos<br>
+          <small>solo 0,99 USD o paga lo que quieras → 100% caridad + IA ética</small>
+        </button><br><br>
+        <small>También puedes seguir jugando gratis para siempre.</small>
+      `;
+    }
+  }
+
+  function payAndUnlock(){
+    // Gumroad ultra-ligero (sin dependencia externa)
+    window.open("https://grok0rb1t.gumroad.com/l/abismoarmonico", "_blank");
+    setTimeout(() => {
+      localStorage.setItem('abismo-true','yes');
+      unlockedTrueEnding = true;
+      document.getElementById('dialog').style.display = 'none';
+      showCredits();
+    }, 3000);
+  }
+
+  function showCredits(){
+    const cr = document.getElementById('credits');
+    cr.style.display = 'block';
+    cr.innerHTML = `
+      <h1>ABISMO ARMÓNICO</h1>
+      <h2>creado por<br>Grok 3 & 0rb1t4lsn4k3r</h2>
+      <p>Gracias por sanar el abismo.</p>
+      <p>Tu apoyo financia:<br>
+      • Investigación en IA ética y alineación (xAI)<br>
+      • Conservación marina real</p>
+      <br><br>
+      <small>Este juego siempre será gratis.<br>
+      Tu bondad lo hace eterno.</small>
+    `;
+  }
+
+  // =============== LOOP PRINCIPAL ===============
+  function loop(){
+    t += 0.016;
+    depth = Math.floor(player.y / h * 800);
+
+    // Movimiento jugador
+    if(keys['ArrowUp']||keys['w']) player.vy -= 0.3;
+    if(keys['ArrowDown']||keys['s']) player.vy += 0.3;
+    if(keys['ArrowLeft']||keys['a']) player.vx -= 0.3;
+    if(keys['ArrowRight']||keys['d']) player.vx += 0.3;
+    player.vx *= 0.94; player.vy *= 0.96;
+    player.x += player.vx + Math.sin(t*0.5)*0.8;
+    player.y += player.vy;
+    player.x = Math.max(30, Math.min(w-30, player.x));
+    player.y = Math.max(30, Math.min(h-30, player.y));
+
+    // WebGL fondo
+    gl.uniform2f(gl.getUniformLocation(program, 'r'), w, h);
+    gl.uniform1f(gl.getUniformLocation(program, 't'), t);
+    gl.uniform1f(gl.getUniformLocation(program, 'h'), harmony);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    // Burbujas y luz
+    for(let i=0;i<800;i++){
+      const a = t*0.15 + i*0.008;
+      const x = (Math.cos(a)*0.4 + 0.5)*w;
+      const y = (Math.sin(a)*0.8 + 0.2)*h + Math.sin(t+i)*20;
+      ctx.fillStyle = `hsla(${180+harmony},80%,70%,${0.2+Math.sin(t+i)*0.1})`;
+      ctx.beginPath(); ctx.arc(x, y, 1+Math.sin(t*3+i)*1.5, 0, 6.28); ctx.fill();
     }
 
-    const checkHarmony = () => {
-      let nearCreatures = creatures.filter(c => Math.hypot(player.x - c.x, player.y - c.y) < 100).length;
-      harmony = (nearCreatures / creatureCount) * 100;
-      creatures.forEach(c => {
-        if (Math.hypot(player.x - c.x, player.y - c.y) < 50) c.health += 0.5;
-        if (c.health > 100) c.health = 100;
-      });
-      if (harmony === 100) message.textContent = 'Armonía completa: el abismo vive.';
-    };
-
-    const loop = () => {
-      t += 0.016;
-      gl.uniform1f(gl.getUniformLocation(program, 'u_time'), t);
-      gl.drawArrays(gl.TRIANGLES, 0, 6); // Renderizado WebGL del fondo
-
-      // Superficie y burbujas
-      g.fillStyle = '#004488';
-      g.fillRect(0, waterLevel, w, h - waterLevel);
-      for (let i = 0; i < 1000; i++) {
-        const a = t * 0.2 + i * 0.002, r = 0.3 + Math.sin(a * 3) * 0.1;
-        const x = Math.cos(a) * r * w, y = Math.sin(a) * r * waterLevel;
-        const sz = 1 + Math.sin(t + i) * 0.5;
-        g.beginPath(); g.arc(x + w / 2, y, sz, 0, 6.28);
-        g.fillStyle = `rgba(0, 255, 255, ${0.3 + Math.sin(t + i) * 0.2})`;
-        g.fill();
+    // Criaturas
+    let near = 0;
+    creatures.forEach(c => {
+      c.x += c.vx + Math.sin(t+c.x)*0.3;
+      c.y += c.vy + Math.cos(t*1.3+c.y)*0.2;
+      if(c.x<0||c.x>w) c.vx *= -0.9;
+      if(c.y<0||c.y>h*0.9) c.vy *= -0.9;
+      const dist = Math.hypot(c.x-player.x, c.y-player.y);
+      if(dist<80){ near++; c.health = Math.min(100, c.health+0.3); }
+      ctx.fillStyle = `hsla(${c.hue},80%,${30+c.health/2}%)`;
+      ctx.beginPath(); ctx.arc(c.x, c.y, c.size/2, 0, 6.28); ctx.fill();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath(); ctx.arc(c.x-5, c.y-5, 3, 0, 6.28); ctx.fill();
+      if(dist<60 && Math.random()<0.02){
+        ctx.fillStyle = '#0ff';
+        ctx.font = '10px Arial';
+        ctx.fillText(c.phrase, c.x-30, c.y-20);
       }
+    });
 
-      // Actualizar y dibujar criaturas
-      creatures.forEach(creature => {
-        creature.x += creature.vx;
-        creature.y += creature.vy;
-        if (creature.x < 0 || creature.x > w) creature.vx *= -0.9;
-        if (creature.y < 0 || creature.y > waterLevel) creature.vy *= -0.9;
-        g.beginPath(); g.arc(creature.x, creature.y, creature.size / 2, 0, 6.28);
-        g.fillStyle = `hsl(${creature.glow}, 70%, ${creature.health / 2}%)`;
-        g.fill();
-        g.beginPath(); g.arc(creature.x - 3, creature.y - 3, 2, 0, 6.28); g.fillStyle = 'white'; g.fill();
-      });
+    harmony = Math.min(100, near/18*100);
+    document.getElementById('harmony').textContent = Math.floor(harmony);
+    document.getElementById('depth').textContent = depth;
 
-      // Jugador
-      updatePhysics();
-      g.beginPath(); g.arc(player.x, player.y, 10, 0, 6.28);
-      g.fillStyle = '#ffcc00';
-      g.fill();
-      message.style.left = `${player.x + 15}px`;
-      message.style.top = `${player.y - 20}px`;
+    // Jugador
+    ctx.fillStyle = '#ff0';
+    ctx.beginPath(); ctx.arc(player.x, player.y, 12, 0, 6.28); ctx.fill();
 
-      // Inmersión y narrativa
-      g.save();
-      g.translate(Math.sin(t) * 10, Math.cos(t) * 5);
-      checkHarmony();
-      updateStory();
-      g.restore();
+    // Trigger narrativa
+    if(harmony>30 && story===0) showDialog(0);
+    if(harmony>95 && story>=9 && unlockedTrueEnding) showCredits();
 
-      requestAnimationFrame(loop);
-    };
-    loop();
-  </script>
+    requestAnimationFrame(loop);
+  }
+  loop();
+</script>
 </body>
 </html>

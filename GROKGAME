@@ -2,41 +2,87 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Exploración submarina con criaturas bioluminiscentes — creado por Grok 3 & 0rb1t4lsn4k3r</title>
+  <title>Abismo Armónico — creado por Grok 3 & 0rb1t4lsn4k3r</title>
   <style>
-    body { margin: 0; background: #002244; overflow: hidden; } /* Fondo azul oscuro como el océano */
-    #message { position: absolute; top: 10px; left: 10px; color: #00ffcc; font-family: Arial; font-size: 16px; text-shadow: 0 0 5px #00ffcc; }
-    #player { position: absolute; color: #fff; font-size: 12px; }
+    body { margin: 0; background: #001122; overflow: hidden; user-select: none; }
+    #message { position: absolute; top: 10px; left: 10px; color: #00ffcc; font-family: 'Courier New', monospace; font-size: 16px; text-shadow: 0 0 10px #00ffcc; }
+    #dialog { position: absolute; bottom: 20px; left: 20px; right: 20px; color: #fff; font-family: Arial; font-size: 14px; background: rgba(0, 0, 0, 0.7); padding: 10px; border-radius: 5px; display: none; }
+    #choices { position: absolute; bottom: 60px; left: 20px; color: #00ffcc; font-size: 12px; }
   </style>
 </head>
 <body>
   <canvas id="c"></canvas>
   <div id="message"></div>
-  <div id="player"></div>
+  <div id="dialog"></div>
+  <div id="choices"></div>
   <script>
-    const c = document.getElementById('c'), g = c.getContext('2d');
+    const c = document.getElementById('c'), gl = c.getContext('webgl');
     const message = document.getElementById('message');
-    const playerDiv = document.getElementById('player');
+    const dialog = document.getElementById('dialog');
+    const choices = document.getElementById('choices');
     let w = innerWidth, h = innerHeight;
-    const resize = () => { w = c.width = innerWidth; h = c.height = innerHeight; };
+    const resize = () => { w = c.width = innerWidth; h = c.height = innerHeight; setupWebGL(); };
     window.addEventListener('resize', resize); resize();
 
-    let t = 0, creatures = [], player = { x: w / 2, y: h / 2, vx: 0, vy: 0 }, harmony = 0;
-    const creatureCount = 15, waterLevel = h * 0.7; // Nivel de agua al 70% de la pantalla
+    // Configuración WebGL básica
+    let program, positionBuffer, colorBuffer;
+    function setupWebGL() {
+      const vertexShaderSource = `
+        attribute vec2 a_position;
+        uniform vec2 u_resolution;
+        void main() {
+          vec2 zeroToOne = a_position / u_resolution;
+          vec2 zeroToTwo = zeroToOne * 2.0;
+          vec2 clipSpace = zeroToTwo - 1.0;
+          gl_Position = vec4(clipSpace * vec2(1, -1), 0, 1);
+        }`;
+      const fragmentShaderSource = `
+        precision mediump float;
+        uniform float u_time;
+        uniform vec2 u_resolution;
+        void main() {
+          vec2 uv = gl_FragCoord.xy / u_resolution.xy;
+          float d = length(uv - 0.5);
+          gl_FragColor = vec4(sin(u_time + d * 10.0) * 0.5 + 0.5, 0.2, 0.8, 1.0);
+        }`;
+      const vertexShader = gl.createShader(gl.VERTEX_SHADER);
+      gl.shaderSource(vertexShader, vertexShaderSource);
+      gl.compileShader(vertexShader);
+      const fragmentShader = gl.createShader(gl.FRAGMENT_SHADER);
+      gl.shaderSource(fragmentShader, fragmentShaderSource);
+      gl.compileShader(fragmentShader);
+      program = gl.createProgram();
+      gl.attachShader(program, vertexShader);
+      gl.attachShader(program, fragmentShader);
+      gl.linkProgram(program);
+      gl.useProgram(program);
+      positionBuffer = gl.createBuffer();
+      gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0, 0, w, 0, 0, h, 0, h, w, 0, w, h]), gl.STATIC_DRAW);
+      const positionLocation = gl.getAttribLocation(program, 'a_position');
+      gl.enableVertexAttribArray(positionLocation);
+      gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+      const resolutionLocation = gl.getUniformLocation(program, 'u_resolution');
+      gl.uniform2f(resolutionLocation, w, h);
+    }
 
-    // Crear criaturas bioluminiscentes
+    let t = 0, creatures = [], player = { x: w / 2, y: h / 2, vx: 0, vy: 0 }, harmony = 0, storyProgress = 0;
+    const creatureCount = 20, waterLevel = h * 0.8;
+
+    // Crear ecosistema vivo
     for (let i = 0; i < creatureCount; i++) {
       creatures.push({
         x: Math.random() * w,
         y: Math.random() * waterLevel,
-        vx: (Math.random() - 0.5) * 1,
-        vy: (Math.random() - 0.5) * 1,
+        vx: (Math.random() - 0.5) * 1.5,
+        vy: (Math.random() - 0.5) * 1.5,
         size: 15 + Math.random() * 10,
-        glow: Math.random() * 360 // Matiz para bioluminiscencia
+        glow: Math.random() * 360,
+        health: 100
       });
     }
 
-    // Controles del jugador (teclas o ratón)
+    // Controles y física
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowUp') player.vy = -2;
       if (e.key === 'ArrowDown') player.vy = 2;
@@ -45,45 +91,70 @@
     });
     document.addEventListener('keyup', () => { player.vx = 0; player.vy = 0; });
 
-    // Física submarina (fricción y flotación)
     const updatePhysics = () => {
       player.x += player.vx;
       player.y += player.vy;
-      if (player.y > waterLevel) player.vy -= 0.05; // Flotación hacia arriba
-      player.vx *= 0.95; // Fricción horizontal
-      player.vy *= 0.95; // Fricción vertical
+      if (player.y > waterLevel) player.vy -= 0.1; // Flotación
+      player.vx *= 0.92; player.vy *= 0.92; // Fricción
       if (player.x < 0) player.x = 0; if (player.x > w) player.x = w;
       if (player.y < 0) player.y = 0; if (player.y > h) player.y = h;
+
+      // Corrientes dinámicas
+      const currentX = Math.sin(t) * 50;
+      player.x += currentX * 0.01;
+      creatures.forEach(c => { c.x += currentX * 0.01; });
     };
 
-    // Interacción con criaturas
-    const checkHarmony = () => {
-      let nearCreatures = creatures.filter(c => Math.hypot(player.x - c.x, player.y - c.y) < 50).length;
-      harmony = (nearCreatures / creatureCount) * 100;
-      if (nearCreatures === creatureCount) {
-        harmony = 100;
-        message.textContent = `¡Las aguas cantan! El océano te abraza. Armonía: 100%`;
-        setTimeout(() => { message.textContent = ''; }, 2000);
-      } else {
-        message.textContent = `Explora y conecta con las criaturas (${Math.floor(harmony)}% armonía)`;
+    // Narrativa y decisiones
+    const updateStory = () => {
+      if (storyProgress === 0 && harmony > 50) {
+        dialog.style.display = 'block';
+        dialog.textContent = 'Una voz susurra: "Salvaste a Lumo, pero el abismo sufre. ¿Ayudas o huyes?"';
+        choices.innerHTML = '<span onclick="choose(1)">Ayudar</span> <span onclick="choose(2)">Huír</span>';
+        storyProgress = 1;
+      } else if (storyProgress === 2 && harmony === 100) {
+        dialog.textContent = 'El abismo canta: "Gracias, sanaste mi alma." Fin.';
+        setTimeout(() => { dialog.style.display = 'none'; }, 3000);
+        storyProgress = 3;
       }
+    };
+
+    function choose(choice) {
+      if (choice === 1) {
+        message.textContent = 'Buscas curar el abismo...';
+        storyProgress = 2;
+      } else {
+        message.textContent = 'Huyes, dejando el dolor atrás.';
+        storyProgress = 3;
+      }
+      dialog.style.display = 'none';
+      choices.innerHTML = '';
+    }
+
+    const checkHarmony = () => {
+      let nearCreatures = creatures.filter(c => Math.hypot(player.x - c.x, player.y - c.y) < 100).length;
+      harmony = (nearCreatures / creatureCount) * 100;
+      creatures.forEach(c => {
+        if (Math.hypot(player.x - c.x, player.y - c.y) < 50) c.health += 0.5;
+        if (c.health > 100) c.health = 100;
+      });
+      if (harmony === 100) message.textContent = 'Armonía completa: el abismo vive.';
     };
 
     const loop = () => {
       t += 0.016;
-      g.clearRect(0, 0, w, h);
+      gl.uniform1f(gl.getUniformLocation(program, 'u_time'), t);
+      gl.drawArrays(gl.TRIANGLES, 0, 6); // Renderizado WebGL del fondo
 
-      // Fondo submarino con burbujas y luz
-      g.fillStyle = 'rgba(0, 0, 100, 0.1)'; // Aguas profundas
-      g.fillRect(0, 0, w, waterLevel);
-      g.fillStyle = '#002244'; // Superficie
+      // Superficie y burbujas
+      g.fillStyle = '#004488';
       g.fillRect(0, waterLevel, w, h - waterLevel);
-      for (let i = 0; i < 2000; i++) {
-        const a = t * 0.1 + i * 0.001, r = 0.5 + Math.sin(a * 5) * 0.2;
+      for (let i = 0; i < 1000; i++) {
+        const a = t * 0.2 + i * 0.002, r = 0.3 + Math.sin(a * 3) * 0.1;
         const x = Math.cos(a) * r * w, y = Math.sin(a) * r * waterLevel;
-        const sz = 2 + Math.sin(t + i) * 1;
+        const sz = 1 + Math.sin(t + i) * 0.5;
         g.beginPath(); g.arc(x + w / 2, y, sz, 0, 6.28);
-        g.fillStyle = `rgba(0, 255, 255, ${0.5 + Math.sin(t + i) * 0.3})`; // Burbujas bioluminiscentes
+        g.fillStyle = `rgba(0, 255, 255, ${0.3 + Math.sin(t + i) * 0.2})`;
         g.fill();
       }
 
@@ -94,24 +165,24 @@
         if (creature.x < 0 || creature.x > w) creature.vx *= -0.9;
         if (creature.y < 0 || creature.y > waterLevel) creature.vy *= -0.9;
         g.beginPath(); g.arc(creature.x, creature.y, creature.size / 2, 0, 6.28);
-        g.fillStyle = `hsl(${creature.glow}, 70%, ${50 + harmony / 2}%)`; // Bioluminiscencia
+        g.fillStyle = `hsl(${creature.glow}, 70%, ${creature.health / 2}%)`;
         g.fill();
-        g.beginPath(); g.arc(creature.x - 3, creature.y - 3, 2, 0, 6.28); g.fillStyle = 'white'; g.fill(); // Ojo
+        g.beginPath(); g.arc(creature.x - 3, creature.y - 3, 2, 0, 6.28); g.fillStyle = 'white'; g.fill();
       });
 
-      // Actualizar y dibujar jugador
+      // Jugador
       updatePhysics();
       g.beginPath(); g.arc(player.x, player.y, 10, 0, 6.28);
-      g.fillStyle = '#ffcc00'; // Buceador iluminado
+      g.fillStyle = '#ffcc00';
       g.fill();
-      playerDiv.style.left = `${player.x - 5}px`;
-      playerDiv.style.top = `${player.y - 20}px`;
-      playerDiv.textContent = 'Tú';
+      message.style.left = `${player.x + 15}px`;
+      message.style.top = `${player.y - 20}px`;
 
-      // Inmersión: efecto de oscilación
+      // Inmersión y narrativa
       g.save();
-      g.translate(Math.sin(t) * 5, Math.cos(t) * 5); // Movimiento sutil
+      g.translate(Math.sin(t) * 10, Math.cos(t) * 5);
       checkHarmony();
+      updateStory();
       g.restore();
 
       requestAnimationFrame(loop);

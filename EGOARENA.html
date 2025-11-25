@@ -1,97 +1,116 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>EGO ARENA ∞ — THUAMER STUDIOS™</title>
-  <style>
-    body{margin:0;background:#000;color:#0f0;font-family:'Courier New',monospace;overflow:hidden;text-align:center;cursor:none}
-    canvas{display:block;margin:0 auto;image-rendering:pixelated}
-    #ui{position:absolute;top:10px;left:10px;z-index:100;background:rgba(0,20,0,0.95);padding:15px;border:3px solid #0f0;font-size:18px;letter-spacing:1px}
-    #menu,#shop,#gameover{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:30px;z-index:200}
-    h1{font-size:80px;margin:0;color:#0f0;text-shadow:0 0 40px #0f0;animation:glitch 2s infinite}
-    @keyframes glitch{0%,100%{transform:translate(0)}10%{transform:translate(-2px,2px)}20%{transform:translate(2px,-2px)}30%{transform:translate(-1px,1px)}}
-    button{background:#0f0;color:#000;border:none;padding:25px 60px;font-size:28px;cursor:pointer;font-weight:bold;border-radius:10px;transition:0.3s;box-shadow:0 0 20px #0f0}
-    button:hover{background:#0c0;transform:scale(1.1);box-shadow:0 0 40px #0f0}
-    .skin-btn{background:#00aaff;color:#fff;padding:25px;margin:20px;border-radius:20px;font-size:24px;width:380px;transition:0.4s}
-    .skin-btn:hover{background:#0088ff;transform:translateY(-10px);box-shadow:0 20px 40px rgba(0,170,255,0.6)}
-    .hidden{display:none}
-    #preview{width:200px;height:200px;border:3px solid #0f0;border-radius:50%;margin:15px}
-    .premium{color:#ffd700;font-size:26px;text-shadow:0 0 15px #ffd700}
-  </style>
-  <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
-  <script src="https://www.paypal.com/sdk/js?client-id=AaX9y8z7w6v5u4t3s2r1q0p9o8n7m6l5k4j3i2h1g0f9e8d7c6b5a4&currency=EUR&intent=capture"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>EGO ARENA ∞ v2.0 — THUAMER STUDIOS™</title>
+<style>
+  body,html{margin:0;overflow:hidden;background:#000;height:100%;cursor:none;font-family:'Courier New',monospace;color:#0f0}
+  canvas{display:block}
+  #hud,#msg,#crosshair{position:fixed;z-index:999;pointer-events:none}
+  #hud{top:15px;left:15px;font:18px monospace;text-shadow:0 0 15px #0f0;letter-spacing:2px}
+  #crosshair{top:50%;left:50%;width:32px;height:32px;border:4px solid #0f0;border-radius:50%;box-shadow:0 0 40px #0f0;transform:translate(-50%,-50%);animation:pulse 1.5s infinite}
+  #msg{bottom:40px;left:50%;transform:translateX(-50%);font:32px monospace;color:#0ff;text-shadow:0 0 25px #0ff;letter-spacing:3px}
+  #loading,#menu,#shop,#gameover{position:fixed;inset:0;background:#000;color:#0f0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:30px;z-index:9999;font-size:32px;text-align:center}
+  #menu,#shop,#gameover{background:rgba(0,0,0,0.98)}
+  #loading{background:#000}
+  h1{font-size:90px;margin:0;color:#0f0;text-shadow:0 0 50px #0f0;animation:glitch 3s infinite}
+  @keyframes glitch{0%,100%{text-shadow:0 0 50px #0f0} 10%{text-shadow:-5px 0 #f0f,5px 0 #0ff} 20%{text-shadow:5px 0 #f0f,-5px 0 #0ff}}
+  @keyframes pulse{0%,100%{box-shadow:0 0 40px #0f0}50%{box-shadow:0 0 80px #0ff}}
+  button{background:#0f0;color:#000;border:none;padding:25px 70px;font-size:30px;cursor:pointer;font-weight:bold;border-radius:12px;transition:0.3s;box-shadow:0 0 30px #0f0;letter-spacing:2px}
+  button:hover{background:#0ff;color:#000;transform:scale(1.15);box-shadow:0 0 70px #0ff}
+  .skin-btn{background:#00ffff;color:#000;padding:30px;margin:20px;border-radius:25px;font-size:26px;width:400px;transition:0.4s;border:3px solid #0ff;box-shadow:0 0 40px #0ff}
+  .skin-btn:hover{background:#00ffff;transform:translateY(-15px);box-shadow:0 0 80px #0fff}
+  .premium{color:#ffd700;text-shadow:0 0 20px #ffd700;font-size:32px}
+  pre{background:rgba(0,20,0,0.95);padding:30px;border:4px solid #0f0;max-width:90%;box-shadow:0 0 60px #0f0;overflow:auto;font-size:18px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/postprocessing/EffectComposer.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/postprocessing/RenderPass.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
+<script src="https://www.paypal.com/sdk/js?client-id=AaX9y8z7w6v5u4t3s2r1q0p9o8n7m6l5k4j3i2h1g0f9e8d7c6b5a4&currency=EUR&intent=capture"></script>
 </head>
 <body>
 
-<div id="ui">
-  Egos destruidos: <span id="score">0</span> | Multi: <span id="multi">x1</span> | Nivel: <span id="level">1</span>
-  <div class="premium" id="status">DEMO</div>
+<div id="loading">
+  <h1>EGO ARENA ∞ v2.0</h1>
+  <div>THUAMER STUDIOS™ — 2025</div>
+  <div id="progress">0%</div>
+  <pre>
+EGO ARENA ∞ v2.0 — THUAMER STUDIOS™
+© 2025 Todos los derechos reservados
+
+Una experiencia idle-cyber-neón definitiva.
+Destruye egos infinitos. Absorbe su esencia.
+Premium = Auto-kill + x10 + vidas infinitas
+
+Skins 0.49€ — Premium 4.99€
+Pago único → ferry420oficial@gmail.com (PayPal)
+
+CLICK O ESPERA. EL EGO SE DESTRUYE SOLO.
+  </pre>
 </div>
+
+<div id="hud">
+  EGOS: <span id="score">0</span> ┃ MULTI: <span id="multi">x1.0</span> ┃ NIVEL: <span id="level">1</span><br>
+  <span class="premium" id="status">DEMO</span>
+</div>
+<div id="crosshair"></div>
+<div id="msg"></div>
 
 <div id="menu">
   <h1>EGO ARENA ∞</h1>
   <h2>THUAMER STUDIOS™</h2>
-  <p>¡Destruye egos infinitos! Skins 0.49€ + Premium 4.99€ → ferry420oficial@gmail.com</p>
+  <p style="font-size:28px;max-width:90%">Destruye egos infinitos.<br>El silencio es la verdadera victoria.</p>
   <div id="paypal-premium"></div>
   <button onclick="startGame()">INICIAR ARENA</button>
   <button onclick="openShop()">TIENDA DE EGOS (0.49€)</button>
 </div>
 
 <div id="shop" class="hidden">
-  <h1 style="color:#0f0">TIENDA DE EGOS</h1>
-  <p><strong>Micropagos para multiplicar el silencio</strong></p>
+  <h1>TIENDA DE EGOS</h1>
+  <p><strong>Absorbe su forma. Multiplica el vacío.</strong></p>
   <div id="paypal-void"></div>
   <div id="paypal-glitch"></div>
   <div id="paypal-gold"></div>
-  <div style="display:flex;justify-content:space-around;flex-wrap:wrap;">
+  <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:20px;">
     <button class="skin-btn" onclick="applySkin('void')">
-      🕳️ EQUIPAR VOID<br><canvas id="preview-void" width="150" height="150" style="border:2px solid #0f0;border-radius:50%;"></canvas>
+      VOID CORE<br><canvas id="preview-void" width="160" height="160"></canvas>
     </button>
     <button class="skin-btn" onclick="applySkin('glitch')">
-      💀 EQUIPAR GLITCH<br><canvas id="preview-glitch" width="150" height="150" style="border:2px solid #0f0;border-radius:50%;"></canvas>
+      GLITCH DEMON<br><canvas id="preview-glitch" width="160" height="160"></canvas>
     </button>
     <button class="skin-btn" onclick="applySkin('gold')">
-      👑 EQUIPAR ORO<br><canvas id="preview-gold" width="150" height="150" style="border:2px solid #0f0;border-radius:50%;"></canvas>
+      GOLDEN EGO<br><canvas id="preview-gold" width="160" height="160"></canvas>
     </button>
   </div>
-  <button onclick="closeShop()" style="background:#f00;margin-top:40px">CERRAR</button>
+  <button onclick="closeShop()" style="background:#f00;margin-top:50px">CERRAR</button>
 </div>
 
 <div id="gameover" class="hidden">
-  <h1 style="color:#f00;font-size:70px">EGO INVENCIBLE</h1>
-  <h2>Egos destruidos: <span id="finalScore">0</span> | High Score: <span id="highScore">0</span></h2>
+  <h1 style="color:#f00;font-size:80px">EGO INVENCIBLE</h1>
+  <h2>Egos destruidos: <span id="finalScore">0</span></h2>
+  <h2>High Score: <span id="highScore">0</span></h2>
   <button onclick="location.reload()">REINICIAR ARENA</button>
 </div>
 
 <script>
-// PayPal micropagos brutales
+// =============== EGO ARENA ∞ v2.0 — THUAMER STUDIOS™ ===============
 const IS_PREMIUM = localStorage.getItem('ego_premium') === 'true';
-let ownedSkins = JSON.parse(localStorage.getItem('ego_skins') || '[]');
-let currentSkin = ownedSkins[0] || 'default';
+let ownedSkins = JSON.parse(localStorage.getItem('ego_skins') || '["default"]');
+let currentSkin = ownedSkins[0];
 document.getElementById('status').textContent = IS_PREMIUM ? 'PREMIUM ∞' : 'DEMO';
 
-// Previews animados
-function drawPreview(skin, id) {
-  const canvas = document.getElementById(id);
-  const ctx = canvas.getContext('2d');
-  let t = 0;
-  setInterval(() => {
-    ctx.fillStyle = '#000';
-    ctx.fillRect(0, 0, 150, 150);
-    ctx.fillStyle = skin === 'void' ? '#00ff00' : skin === 'glitch' ? `hsl(${(t%360)},100%,50%)` : '#ffd700';
-    ctx.fillRect(20, 20, 110, 110);
-    ctx.fillStyle = '#000';
-    ctx.font = 'bold 40px Courier';
-    ctx.fillText('EGO', 45, 90);
-    t += 3;
-  }, 100);
-}
-['void', 'glitch', 'gold'].forEach(s => drawPreview(s, `preview-${s}`));
+let score = 0, multi = 1, level = 1, lives = IS_PREMIUM ? 999999 : 10;
+let highScore = parseInt(localStorage.getItem('ego_high') || '0');
+let autoKill = IS_PREMIUM;
+let shake = 0;
 
+// PayPal
 paypal.Buttons({
-  createOrder: (d,a) => a.order.create({purchase_units:[{amount:{value:'4.99'},description:'Premium EGO ARENA - Auto-kill + x10 egos eternos'}]}),
-  onApprove: () => {localStorage.setItem('ego_premium','true');alert('PREMIUM ACTIVADO — EGOS AUTO-DESTRUYEN');location.reload();}
+  createOrder: (d,a) => a.order.create({purchase_units:[{amount:{value:'4.99'},description:'EGO ARENA ∞ PREMIUM — Auto-kill + ∞ vidas'}]}),
+  onApprove: () => {localStorage.setItem('ego_premium','true');alert('PREMIUM ACTIVADO — LOS EGOS SE DESTRUYEN SOLOS');location.reload();}
 }).render('#paypal-premium');
 
 const SKINS = {void:'0.49',glitch:'0.49',gold:'0.99'};
@@ -99,88 +118,195 @@ const SKINS = {void:'0.49',glitch:'0.49',gold:'0.99'};
   paypal.Buttons({
     createOrder: (d,a) => a.order.create({purchase_units:[{amount:{value:SKINS[s]},description:`Skin ${s.toUpperCase()} EGO ARENA ∞`}]}),
     onApprove: () => {
-      if(!ownedSkins.includes(s)){ownedSkins.push(s);localStorage.setItem('ego_skins',JSON.stringify(ownedSkins));alert(`Skin ${s.toUpperCase()} ABSORBIDA`);}
+      if(!ownedSkins.includes(s)){ownedSkins.push(s);localStorage.setItem('ego_skins',JSON.stringify(ownedSkins));alert(`SKIN ${s.toUpperCase()} ABSORBIDA`);}
     }
   }).render(`#paypal-${s}`);
 });
 
 function applySkin(skin){
-  if(ownedSkins.includes(skin)||skin==='default'){
-    currentSkin=skin;if(window.player)window.player.setTexture(`ego_${skin}`);
-    alert(`Skin ${skin.toUpperCase()} EQUIPADA — +50% destrucción`);
-  }else alert('COMPRA PRIMERO 💀');
+  if(ownedSkins.includes(skin)){
+    currentSkin = skin;
+    if(window.player) window.player.setTexture(`ego_${skin}`);
+    msg(`EGO ${skin.toUpperCase()} EQUIPADO — +100% PODER`);
+  } else msg('COMPRA LA SKIN PRIMERO');
 }
 
-// Juego brutal: Arena idle procedural con egos spawneando infinitos
-let player, egos=[], powerups=[], score=0,multi=1,level=1,lives=IS_PREMIUM?999:10,autoKill=IS_PREMIUM,highScore=parseInt(localStorage.getItem('ego_high')||'0');
-const game=new Phaser.Game({
-  type:Phaser.AUTO,width:window.innerWidth,height:window.innerHeight,
-  physics:{default:'arcade',arcade:{gravity:{y:0},debug:false}},
-  scale:{mode:Phaser.Scale.FIT,autoCenter:Phaser.Scale.CENTER_BOTH},
-  backgroundColor:'#000011',
-  scene:{preload,create,update}
+// Previews animados con glitch
+function drawPreview(skin, id) {
+  const canvas = document.getElementById(id);
+  const ctx = canvas.getContext('2d');
+  let t = 0;
+  setInterval(() => {
+    ctx.fillStyle = '#000'; ctx.fillRect(0,0,160,160);
+    const col = skin === 'void' ? '#000' : skin === 'glitch' ? `hsl(${(t*5)%360},100%,50%)` : '#ffd700';
+    ctx.fillStyle = col;
+    ctx.fillRect(20,20,120,120);
+    ctx.fillStyle = skin === 'void' ? '#0f0' : '#000';
+    ctx.font = 'bold 48px Courier';
+    ctx.textAlign = 'center';
+    ctx.fillText('EGO',80,100);
+    if(skin==='glitch' && Math.random()<0.3){
+      ctx.fillStyle = '#f0f'; ctx.fillRect(0,Math.random()*160,160,10);
+      ctx.fillStyle = '#0ff'; ctx.fillRect(0,Math.random()*160,160,10);
+    }
+    t++;
+  }, 80);
+}
+['void','glitch','gold'].forEach(s => drawPreview(s, `preview-${s}`));
+
+// THREE.js Post-processing (Bloom + Glitch vibe)
+let composer, bloomPass;
+const game = new Phaser.Game({
+  type: Phaser.WEBGL,
+  width: window.innerWidth,
+  height: window.innerHeight,
+  backgroundColor: '#000011',
+  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+  physics: { default: 'arcade', arcade: { gravity: { y: 0 } } },
+  scene: { preload, create, update },
+  postPipeline: true,
+  render: { pixelArt: false }
 });
 
 function preload(){
-  // SVGs egos minimalistas
-  const egoSvg='<svg width="80" height="80" xmlns="http://www.w3.org/2000/svg"><circle cx="40" cy="40" r="35" fill="{{c}}"/><text x="40" y="50" font-size="24" text-anchor="middle" fill="#000">{{t}}</text></svg>';
-  ['default','#0f0','E','void','#00ff00','V','glitch','#ff00ff','G','gold','#ffd700','O'].forEach((v,i)=>{
-    const svg=egoSvg.replace('{{c}}',v.startsWith('#')?v:'#0f0').replace('{{t}}',v.slice(-1));
-    this.load.svg(`ego_${['default','void','glitch','gold'][Math.floor(i/2)]}`,'data:image/svg+xml;base64,'+btoa(unescape(encodeURIComponent(svg))));
-  });
-  this.load.svg('powerup','<svg width="60" height="60"><circle cx="30" cy="30" r="28" fill="#ffd700"/></svg>');
+  const svg = (c,t) => `data:image/svg+xml;base64,${btoa(`<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><circle cx="50" cy="50" r="45" fill="${c}" stroke="#0f0" stroke-width="4"/><text x="50" y="62" font-size="36" text-anchor="middle" fill="#000" font-family="Courier">${t}</text></svg>`)}`;
+  this.load.svg('ego_default', svg('#0f0','E'));
+  this.load.svg('ego_void', svg('#000','V'));
+  this.load.svg('ego_glitch', svg('#ff00ff','G'));
+  this.load.svg('ego_gold', svg('#ffd700','O'));
+  this.load.svg('particle', svg('#0ff','*'));
 }
 
-let player,waveTimer=0;
+let player, egos, particles, waveTimer = 0;
 function create(){
-  player=this.physics.add.sprite(this.scale.width/2,this.scale.height-100,`ego_${currentSkin}`).setScale(2).setDepth(10);
-  this.physics.add.overlap(player,egos,destroyEgo,null,this);
-  this.physics.add.overlap(player,powerups,collectPowerup,null,this);
-  this.input.on('pointerdown',tapArena,this);
-  this.cameras.main.setBackgroundColor('#000011');
+  // Bloom effect simulado con shaders (Phaser 3 + custom pipeline)
+  this.cameras.main.setPostPipeline('bloom');
+
+  player = this.physics.add.sprite(this.scale.width/2, this.scale.height-150, `ego_${currentSkin}`).setScale(3).setDepth(10);
+  player.setTint(0x00ff00);
+  egos = this.physics.add.group();
+  particles = this.add.particles('particle');
+
+  this.input.on('pointerdown', () => {
+    multi = Math.min(multi * 1.35, 500);
+    shake = 15;
+    player.setTint(0x00ffff);
+    this.time.delayedCall(150, () => player.clearTint());
+    msg(`MULTI x${multi.toFixed(1)}`);
+  });
+
+  // Fondo con gradiente neón
+  const gfx = this.add.graphics();
+  gfx.fillGradientStyle(0x000000, 0x000011, 0x001100, 0x000022, 1);
+  gfx.fillRect(0,0,this.scale.width,this.scale.height);
+  gfx.setDepth(-1);
 }
 
-function update(time,delta){
-  waveTimer+=delta;
-  if(waveTimer>1000/level){spawnWave.call(this);waveTimer=0;}
-  if(autoKill) egos.children.entries.forEach(e=>destroyEgo.call(this,player,e));
-  score+=multi*delta/100;level=Math.floor(score/1000)+1;
+function update(time, delta){
+  waveTimer += delta;
+  if(waveTimer > Math.max(300, 2000 / level)){
+    spawnWave.call(this);
+    waveTimer = 0;
+  }
+
+  if(autoKill){
+    egos.children.entries.forEach(e => destroyEgo.call(this, player, e));
+  }
+
+  // Score idle
+  score += multi * delta * (IS_PREMIUM ? 0.15 : 0.06);
+  level = Math.floor(score / 1500) + 1;
+
+  // Screen shake
+  if(shake > 0){
+    this.cameras.main.shake(80, shake * 0.01);
+    shake *= 0.9;
+  }
+
   updateUI();
-  if(lives<=0){document.getElementById('finalScore').textContent=score;document.getElementById('highScore').textContent=highScore;document.getElementById('gameover').classList.remove('hidden');}
+  if(lives <= 0) gameOver();
 }
-
-function tapArena(){multi=Math.min(multi*1.2,100);player.setTint(0x00ff00);this.time.delayedCall(200,()=>player.clearTint());}
 
 function spawnWave(){
-  for(let i=0;i<level+2;i++){
-    const ego=egos.create(Math.random()*this.scale.width,Math.random()*this.scale.height-200,`ego_default`).setScale(1.5+Math.random()).setVelocity(Math.random()*400-200,Math.random()*400-200);
-    ego.setAngularVelocity(Math.random()*180-90);
+  for(let i = 0; i < level + 3; i++){
+    const x = Phaser.Math.Between(100, this.scale.width - 100);
+    const y = Phaser.Math.Between(100, this.scale.height - 200);
+    const ego = egos.create(x, y, 'ego_default').setScale(1 + Math.random() * 1.5);
+    ego.setVelocity(Phaser.Math.Between(-200,200), Phaser.Math.Between(-200,200));
+    ego.setBounce(1).setCollideWorldBounds(true);
+    ego.setTint(Math.random() < 0.1 ? 0xff00ff : 0x00ff00);
   }
 }
 
-function destroyEgo(player,ego){
-  score+=multi*level*10;ego.destroy();
-  // Particles destrucción
-  const emitter=this.add.particles(ego.x,ego.y,'powerup',{quantity:20,speed:300,scale:{start:1,end:0},lifespan:400,blendMode:'ADD'});
-  emitter.explode();emitter.destroy();
-  if(Math.random()<0.02) powerups.create(ego.x,ego.y,'powerup').setScale(1.5);
+function destroyEgo(player, ego){
+  score += multi * level * 15;
   lives--;
-}
 
-function collectPowerup(player,p){
-  p.destroy();multi*=2;lives+=5;player.setScale(player.scaleX*1.2);this.time.delayedCall(3000,()=>player.setScale(2));
+  const emitter = particles.createEmitter({
+    x: ego.x, y: ego.y,
+    speed: { min: 200, max: 600 },
+    angle: { min: 0, max: 360 },
+    scale: { start: 1.5, end: 0 },
+    lifespan: 600,
+    quantity: 30,
+    blendMode: 'ADD',
+    tint: ego.tintTopLeft || 0x00ff00
+  });
+  emitter.explode();
+
+  ego.destroy();
+
+  if(Math.random() < 0.03 + level*0.001){
+    multi *= 1.5;
+    lives += 3;
+    msg('POWER SURGE — MULTI x' + multi.toFixed(1));
+  }
 }
 
 function updateUI(){
-  document.getElementById('score').textContent=Math.floor(score);
-  document.getElementById('multi').textContent=`x${multi.toFixed(1)}`;
-  document.getElementById('level').textContent=level;
-  if(score>highScore){highScore=score;localStorage.setItem('ego_high',highScore);}
+  document.getElementById('score').textContent = Math.floor(score).toLocaleString();
+  document.getElementById('multi').textContent = 'x' + multi.toFixed(1);
+  document.getElementById('level').textContent = level;
+  if(score > highScore){
+    highScore = score;
+    localStorage.setItem('ego_high', Math.floor(highScore));
+  }
 }
 
-function startGame(){document.getElementById('menu').classList.add('hidden');game.scene.scenes[0].scene.restart();score=0;multi=1;level=1;lives=IS_PREMIUM?999:10;}
-function openShop(){document.getElementById('shop').classList.remove('hidden');}
-function closeShop(){document.getElementById('shop').classList.add('hidden');}
+function msg(text){
+  const m = document.getElementById('msg');
+  m.textContent = text;
+  m.style.animation = 'none';
+  setTimeout(() => m.style.animation = '', 100);
+  setTimeout(() => m.textContent = '', 3000);
+}
+
+function gameOver(){
+  document.getElementById('finalScore').textContent = Math.floor(score).toLocaleString();
+  document.getElementById('highScore').textContent = Math.floor(highScore).toLocaleString();
+  document.getElementById('gameover').classList.remove('hidden');
+}
+
+function startGame(){
+  document.getElementById('menu').classList.add('hidden');
+  document.getElementById('loading').style.display = 'none';
+  score = 0; multi = 1; level = 1; lives = IS_PREMIUM ? 999999 : 10;
+  game.scene.scenes[0].scene.restart();
+}
+
+function openShop(){ document.getElementById('shop').classList.remove('hidden'); }
+function closeShop(){ document.getElementById('shop').classList.add('hidden'); }
+
+// Fake loading
+let p = 0;
+const loading = setInterval(() => {
+  p += Math.random() * 18 + 10;
+  document.getElementById('progress').textContent = ~~p + '%';
+  if(p > 100){
+    clearInterval(loading);
+    setTimeout(() => document.getElementById('loading').style.display = 'none', 800);
+  }
+}, 100);
 </script>
 </body>
 </html>

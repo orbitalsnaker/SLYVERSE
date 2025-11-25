@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Forja del Dragón Eterno — Edición Épica | Grok 3 & 0rb1t4lsn4k3r</title>
+  <meta name="description" content="Aventura AAA en reino de dragones y magia. Forja la espada legendaria. Gratis para siempre.">
+  <style>
+    body { margin:0; background:#000; overflow:hidden; font-family:'Arial Black', Arial; color:#ff8; user-select:none; cursor:crosshair; }
+    #ui, #dialog, #choices, #credits, #forge, #skills { position:absolute; pointer-events:none; z-index:10; }
+    #ui { top:10px; left:10px; font-size:18px; text-shadow:0 0 15px #ff0; }
+    #dialog { bottom:20px; left:20px; right:20px; background:rgba(0,0,50,0.9); padding:25px; border-radius:15px; display:none; pointer-events:all; font-size:18px; text-align:center; }
+    #choices { bottom:120px; left:20px; font-size:16px; }
+    #choices span { background:rgba(255,200,0,0.4); padding:15px 25px; margin:10px; border-radius:12px; cursor:pointer; pointer-events:all; text-shadow:0 0 8px #ff0; border:3px solid #ff0; transition:all 0.3s; }
+    #choices span:hover { background:rgba(255,255,0,0.7); transform:scale(1.1); box-shadow:0 0 20px #ff0; }
+    #credits { top:50%; left:50%; transform:translate(-50%,-50%); font-size:28px; text-align:center; display:none; background:rgba(0,0,0,0.9); padding:60px; border:6px solid #ff8; border-radius:25px; max-width:700px; }
+    #forge { top:50%; left:50%; transform:translate(-50%,-50%); background:rgba(50,0,0,0.95); padding:50px; border:6px solid #f80; border-radius:25px; display:none; pointer-events:all; text-align:center; font-size:22px; color:#ff8; }
+    #bar { width:500px; height:50px; background:#333; border:4px solid #f80; margin:20px auto; overflow:hidden; position:relative; }
+    #hammer { width:60px; height:50px; background:#ff0; position:absolute; left:0; transition:left 0.1s; }
+    #zone { position:absolute; top:0; left:220px; width:60px; height:50px; background:rgba(255,255,0,0.6); }
+    #skills { top:150px; left:20px; background:rgba(0,0,50,0.7); padding:20px; border:3px solid #0ff; border-radius:10px; }
+    #skills button { background:#0ff; color:#000; padding:10px 20px; margin:5px; border:none; border-radius:5px; cursor:pointer; }
+    canvas { image-rendering:pixelated; }
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="ui">Leyenda: <span id="legend">0</span>/7 | Mana: <span id="mana">100</span> | Fragmentos: <span id="shards">0</span> | Nivel: <span id="level">1</span></div>
+<div id="dialog"></div>
+<div id="choices"></div>
+<div id="credits"></div>
+<div id="forge">
+  <h2>Forja la Espada Eterna</h2>
+  <p>Golpea la zona dorada (7 aciertos perfectos = Legendaria)</p>
+  <div id="bar"><div id="hammer"></div><div id="zone"></div></div>
+  <button id="strike" style="background:#f80;color:#fff;padding:20px 40px;font-size:20px;border:none;border-radius:15px;cursor:pointer;margin:15px;">¡Golpear!</button>
+  <p id="forgeMsg">Precisión: <span id="precision">0</span>% | Aciertos Perfectos: <span id="perfect">0</span>/7</p>
+</div>
+<div id="skills">
+  <h3>Habilidades</h3>
+  <button id="skillFire">Llama (+Dmg)</button>
+  <button id="skillHeal">Curar (+Vida)</button>
+  <button id="skillShield">Escudo (+Def)</button>
+</div>
+
+<script>
+  // =============== CONFIGURACIÓN ÉPICA AAA ===============
+  const canvas = document.getElementById('c');
+  const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+  const ctx = canvas.getContext('2d');
+  let w = canvas.width = innerWidth, h = canvas.height = innerHeight;
+  window.onresize = () => { w = canvas.width = innerWidth; h = canvas.height = innerHeight; gl.viewport(0,0,w,h); };
+
+  let t = 0, legend = 0, mana = 100, shards = 0, level = 1, xp = 0, forging = false, perfectHits = 0, barPos = 0, strikeTime = 0;
+  let numBefriend = 0, numKill = 0, unlockedLegendary = localStorage.getItem('forja-dragone') === 'yes';
+  const worldW = 8000, worldH = 6000;
+  const player = {worldX: worldW/2, worldY: worldH/2, vx:0, vy:0, health:100, damage:10, defense:5};
+  const dragons = [], projs = [], items = [], quests = [], factions = {friendly:0, hostile:0};
+  let camX = 0, camY = 0, mouseWorldX = 0, mouseWorldY = 0, angle = 0, dayTime = 0;
+  let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  let musicGain = audioCtx.createGain(); musicGain.gain.value = 0.3; musicGain.connect(audioCtx.destination);
+  let sfxGain = audioCtx.createGain(); sfxGain.gain.value = 0.5; sfxGain.connect(audioCtx.destination);
+
+  // =============== AUDIO ORQUESTAL 3D ===============
+  function playNote(freq, duration=1.5, type='sine', vol=0.2, pan=0) {
+    const osc = audioCtx.createOscillator();
+    const panner = audioCtx.createStereoPanner();
+    const gain = audioCtx.createGain();
+    osc.type = type; osc.frequency.value = freq;
+    panner.pan.value = pan;
+    gain.gain.setValueAtTime(vol, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+    osc.connect(panner); panner.connect(gain); gain.connect(musicGain);
+    osc.start(); osc.stop(audioCtx.currentTime + duration);
+  }
+  function dragonRoar(x, y) {
+    const pan = (x - player.worldX) / 2000;
+    playNote(80 + Math.random()*40, 2, 'sawtooth', 0.15, pan);
+  }
+  function magicCast(x, y) {
+    const pan = (x - player.worldX) / 2000;
+    playNote(440 + Math.random()*200, 0.5, 'square', 0.2, pan);
+  }
+  function anvilHit(perfect) {
+    playNote(perfect ? 523 : 392, 0.3, 'triangle', 0.4);
+  }
+  function swordForge() {
+    playNote(659, 3, 'sine', 0.3); setTimeout(() => playNote(784, 2, 'sine', 0.3), 500);
+  }
+
+  // Música épica con ciclos día/noche
+  const epicMelody = [196, 220, 246.94, 277.18, 311.13, 349.23, 392, 440, 493.88];
+  let noteIdx = 0;
+  setInterval(() => {
+    const pitch = epicMelody[noteIdx % epicMelody.length] * (1 + shards/14 + (dayTime > 0.5 ? 0.2 : 0));
+    playNote(pitch, 4, 'sine', 0.12 + (dayTime > 0.5 ? 0.05 : 0));
+    noteIdx++;
+    if (Math.random() < 0.15) dragonRoar(Math.random()*worldW, Math.random()*worldH);
+  }, 3000);
+
+  // =============== MUNDO VIVO ===============
+  // Dragones con IA táctica
+  for(let i=0; i<12; i++){ // Más dragones para AAA
+    dragons.push({
+      x: 500 + i*600 + Math.random()*400, y: 400 + Math.sin(i)*1000 + Math.random()*300,
+      vx: (Math.random()-0.5)*0.7, vy: (Math.random()-0.5)*0.7,
+      size: 80 + i*15, health: 150, friendly: Math.random()>0.3,
+      faction: ['Sol', 'Luz', 'Sombra', 'Fuego'][Math.floor(Math.random()*4)],
+      name: ['Fyrak', 'Sylara', 'Drakon', 'Vyrith', 'Eldor', 'Nyxara', 'Zorath', 'Kaelith', 'Tharok', 'Zyra', 'Vexis', 'Morath'][i],
+      phrase: ['Únete a mi clan...', '¡Muere, intruso!', 'La forja te espera', 'Traición o alianza?'][Math.floor(Math.random()*4)],
+      attackCooldown: 0
+    });
+  }
+  // Fragmentos legendarios (10)
+  for(let i=0; i<10; i++) items.push({x: 800 + i*700 + Math.random()*300, y: 600 + Math.random()*2000, collected: false});
+  // Quests dinámicas
+  for(let i=0; i<8; i++) quests.push({x: 1200 + i*800, y: 200 + i*500, type: ['Rescate', 'Batalla', 'Alianza'][Math.floor(Math.random()*3)], completed: false});
+
+  // =============== WEBGL SHADER AMBIENTAL ===============
+  const vs = `attribute vec2 p; uniform vec2 r; uniform float t; void main(){vec2 c=p/r*2.-1.; gl_Position=vec4(c*vec2(1,-1),0,1);}`;
+  const fs = `precision highp float; uniform float t; uniform float d; vec3 hash(vec3 p){p=fract(p*0.3183099);p+=dot(p,p.yzx+33.615);return-fract(p*17.*fract(p.zxy));}
+  void main(){vec2 uv=gl_FragCoord.xy/vec2(r.x,r.y);float d=uv.y*2.-1.;float wave=sin(uv.x*15.+t*1.5)*0.02+sin(uv.y*10.+t)*0.02;
+  vec3 sky=vec3(0.2,0.15,0.4)*(d>0.3?0.8:1.)+vec3(1.,0.7,0.3)*pow(1.-d+d*0.1,3.)*d;
+  vec3 stars=hash(vec3(uv*200.+t))*0.9*pow(d,15.)*(d<0.3?1.:0.);
+  gl_FragColor=vec4(sky+stars+wave,1.);}`;
+  const program = gl.createProgram();
+  [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER].forEach((type,i) => {
+    const shader = gl.createShader(type);
+    gl.shaderSource(shader, i ? fs : vs);
+    gl.compileShader(shader);
+    gl.attachShader(program, shader);
+  });
+  gl.linkProgram(program); gl.useProgram(program);
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0,0,w,0,0,h,w,h]), gl.STATIC_DRAW);
+  const posLoc = gl.getAttribLocation(program, 'p');
+  gl.enableVertexAttribArray(posLoc);
+  gl.vertexAttribPointer(posLoc, 2, gl.FLOAT, false, 0, 0);
+
+  // =============== SISTEMA DE HABILIDADES ===============
+  const skills = {fire: false, heal: false, shield: false};
+  document.getElementById('skillFire').onclick = () => { if (level >= 2 && !skills.fire) { skills.fire = true; level--; } };
+  document.getElementById('skillHeal').onclick = () => { if (level >= 3 && !skills.heal) { skills.heal = true; level--; } };
+  document.getElementById('skillShield').onclick = () => { if (level >= 4 && !skills.shield) { skills.shield = true; level--; } };
+
+  // =============== CONTROLES Y COMBATE ===============
+  const keys = {};
+  window.onkeydown = e => keys[e.key.toLowerCase()] = true;
+  window.onkeyup = e => keys[e.key.toLowerCase()] = false;
+  canvas.onmousemove = e => {
+    const rect = canvas.getBoundingClientRect();
+    mouseWorldX = (e.clientX - rect.left) + camX;
+    mouseWorldY = (e.clientY - rect.top) + camY;
+    angle = Math.atan2(mouseWorldY - player.worldY, mouseWorldX - player.worldX);
+  };
+  canvas.onclick = () => {
+    if (mana >= 20 && !forging) {
+      projs.push({
+        x: player.worldX, y: player.worldY,
+        vx: Math.cos(angle)*10 * (skills.fire ? 1.5 : 1), vy: Math.sin(angle)*10 * (skills.fire ? 1.5 : 1),
+        life: 120, damage: player.damage * (skills.fire ? 1.2 : 1)
+      });
+      mana -= 20;
+      magicCast(player.worldX, player.worldY);
+    }
+  };
+
+  // =============== DIÁLOGOS Y NARRATIVA ===============
+  const dialogues = [
+    {text: "Un dragón te desafía: ‘¿Aliado o enemigo?’", choices: ["Alianza (Mana +)", "Batalla (Leyenda +)"], next: [1, 2]},
+    {text: "‘Te doy mi bendición y un fragmento.’ Mana +30", choices: ["Gracias"], next: [10]},
+    {text: "¡Vencido! Ganas su escama legendaria.", choices: ["Continuar"], next: [10]},
+    {text: "El herrero: ‘Reúne 10 fragmentos y forja la espada.’", choices: ["Acepto"], next: [4]},
+    {text: "¡Forja lista! Golpea con precisión legendaria.", choices: [], next: 5},
+    {text: "Espada forjada. Tu legado se define.", choices: ["Ver final"], next: [11,12,13][Math.min(2, Math.floor(numBefriend / (numBefriend + numKill || 1)) ) ]},
+    {text: "Final Verdadero bloqueado. Apoya a devs indie.", choices: [], next: 20}
+  ];
+
+  let currentDialog = 0;
+  function showDialog(id) {
+    currentDialog = id;
+    const d = dialogues[id];
+    const dlg = document.getElementById('dialog');
+    dlg.style.display = 'block';
+    dlg.textContent = d.text;
+    const ch = document.getElementById('choices');
+    ch.innerHTML = '';
+    if (d.choices.length) {
+      d.choices.forEach((c, i) => {
+        const s = document.createElement('span');
+        s.textContent = c;
+        s.onclick = () => {
+          dlg.style.display = 'none';
+          ch.innerHTML = '';
+          if (i === 0) { numBefriend++; mana = Math.min(150, mana + 30); factions.friendly++; } else { numKill++; factions.hostile++; }
+          legend++;
+          story = d.next[i];
+          if (shards >= 10) startForge();
+        };
+        ch.appendChild(s);
+      });
+    }
+  }
+
+  // =============== FORJA MINI-GAME LEGENDARIO ===============
+  function startForge() {
+    forging = true;
+    perfectHits = 0;
+    document.getElementById('forge').style.display = 'block';
+    strikeTime = Date.now();
+    updateBar();
+  }
+  document.getElementById('strike').onclick = () => {
+    const hitPos = (Date.now() - strikeTime) / 800 * 500 % 500;
+    document.getElementById('hammer').style.left = hitPos + 'px';
+    const zoneStart = 220, zoneEnd = 280;
+    const precision = Math.max(0, 100 - Math.abs(hitPos - 250) * 0.8);
+    document.getElementById('precision').textContent = Math.floor(precision);
+    document.getElementById('perfect').textContent = perfectHits;
+    anvilHit(precision > 90);
+    if (precision > 90) perfectHits++;
+    strikeTime = Date.now();
+    setTimeout(updateBar, 100);
+    if (perfectHits >= 7) {
+      swordForge();
+      setTimeout(() => {
+        document.getElementById('forge').style.display = 'none';
+        forging = false;
+        if (unlockedLegendary || perfectHits >= 10) showLegendaryEnding();
+        else showDialog(6);
+      }, 2500);
+    }
+  };
+  function updateBar() {
+    barPos = (Date.now() / 50) % 500;
+    document.getElementById('hammer').style.left = barPos + 'px';
+  }
+  setInterval(updateBar, 50);
+
+  function showLegendaryEnding() {
+    showCredits(true);
+  }
+
+  function showCredits(legendary = false) {
+    const cr = document.getElementById('credits');
+    cr.style.display = 'block';
+    cr.innerHTML = `
+      <h1>FORJA DEL DRAGÓN ETERNO</h1>
+      ${legendary ? '<h2>¡ESPADA DEL DRAGÓN ETERNO FORJADA!</h2>' : '<h2>Espada Forjada</h2>'}
+      <h3>creado por<br>Grok 3 & 0rb1t4lsn4k3r</h3>
+      <p>${legendary ? 'Tu leyenda resuena por los cielos eternos.' : 'Una gran obra, pero el poder supremo espera.'}</p>
+      <p>Final: ${['Conquistador', 'Guardián', 'Leyenda Eterna'][Math.min(2, Math.floor(numBefriend / (numBefriend + numKill || 1)) ) ]}</p>
+      <p>Tu apoyo financia:<br>• Desarrolladores indie sin recursos<br>• Conservación de ecosistemas míticos</p>
+      ${!legendary ? `<br><button onclick="payAndUnlock()" style="background:#f80;color:#fff;padding:20px 40px;font-size:20px;border:none;border-radius:15px;cursor:pointer;">Desbloquear Espada del Dragón Eterno<br><small>1,99 USD o paga lo que quieras → 100% devs indie</small></button>` : ''}
+      <br><br><small>Gratis para siempre. Tu generosidad forja sueños.</small>
+    `;
+  }
+
+  function payAndUnlock() {
+    window.open("https://grok0rb1t.gumroad.com/l/forjadragone-epic", "_blank");
+    setTimeout(() => {
+      localStorage.setItem('forja-dragone', 'yes');
+      unlockedLegendary = true;
+      showLegendaryEnding();
+    }, 3000);
+  }
+
+  // =============== LOOP PRINCIPAL AAA ===============
+  function loop() {
+    t += 0.016;
+    dayTime = (Math.sin(t / 30) + 1) / 2; // Ciclo día/noche
+
+    // Movimiento jugador
+    player.vx = (keys['arrowleft'] || keys['a'] ? -5 : 0) + (keys['arrowright'] || keys['d'] ? 5 : 0);
+    player.vy = (keys['arrowup'] || keys['w'] ? -5 : 0) + (keys['arrowdown'] || keys['s'] ? 5 : 0);
+    player.worldX += player.vx * (skills.shield ? 1.2 : 1);
+    player.worldY += player.vy * (skills.shield ? 1.2 : 1);
+    player.worldX = Math.max(50, Math.min(worldW-50, player.worldX));
+    player.worldY = Math.max(50, Math.min(worldH-50, player.worldY));
+
+    // Cámara
+    camX = player.worldX - w/2;
+    camY = player.worldY - h/2;
+
+    // WebGL cielo dinámico
+    gl.uniform2f(gl.getUniformLocation(program, 'r'), w, h);
+    gl.uniform1f(gl.getUniformLocation(program, 't'), t);
+    gl.uniform1f(gl.getUniformLocation(program, 'd'), dayTime);
+    gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+    // Terreno procedural con clima
+    const weather = Math.sin(t / 10) > 0.3 ? (Math.random() > 0.5 ? 'rain' : 'storm') : 'clear';
+    for(let i=0; i<100; i++) {
+      const mx = (i * 80 + t * 30) % worldW;
+      const my = Math.sin(mx / 400) * 500 + 200;
+      ctx.fillStyle = `hsl(${30 + Math.sin(t + i)*20}, 80%, ${40 + legend/2 - (weather==='storm'?10:0)}%)`;
+      ctx.fillRect(mx - camX - 40, my - camY - 200, 80, 400);
+      if (weather === 'rain') {
+        const rx = mx + Math.random()*80 - camX;
+        const ry = my - camY - 200 + Math.random()*400;
+        ctx.fillStyle = 'rgba(0,200,255,0.5)';
+        ctx.fillRect(rx, ry, 2, 10);
+      }
+    }
+    // Fuego mágico o niebla
+    for(let i=0; i<500; i++) {
+      const px = (Math.sin(t*2 + i)*0.5 + 0.5) * w;
+      const py = h * 0.7 + Math.sin(t*3 + i)*50;
+      ctx.fillStyle = weather==='clear' ? `hsla(${10 + t*50 % 60}, 100%, 60%, ${0.8 + Math.sin(t*5 + i)*0.4})` : 'rgba(200,200,200,0.3)';
+      ctx.beginPath();
+      ctx.arc(px, py, 5 + Math.sin(t*10 + i)*3, 0, Math.PI*2);
+      ctx.fill();
+    }
+
+    // Proyectiles
+    projs.forEach((p, i) => {
+      p.x += p.vx; p.y += p.vy; p.life--;
+      if (p.life <= 0) projs.splice(i,1);
+      ctx.fillStyle = skills.fire ? '#f00' : '#0ff';
+      ctx.beginPath(); ctx.arc(p.x - camX, p.y - camY, 8, 0, Math.PI*2); ctx.fill();
+    });
+
+    // Items (fragmentos)
+    items.forEach((item, i) => {
+      if (!item.collected && Math.hypot(item.x - player.worldX, item.y - player.worldY) < 80) {
+        item.collected = true;
+        shards++;
+        xp += 50;
+        if (xp >= level * 100) { level++; xp = 0; }
+      }
+      if (!item.collected) {
+        ctx.fillStyle = '#ff0';
+        ctx.beginPath(); ctx.arc(item.x - camX, item.y - camY, 20, 0, Math.PI*2); ctx.fill();
+      }
+    });
+
+    // Quests dinámicas
+    quests.forEach(q => {
+      if (!q.completed && Math.hypot(q.x - player.worldX, q.y - player.worldY) < 100) {
+        showDialog(3);
+        q.completed = true;
+        shards += q.type==='Alianza' ? 1 : 0;
+        xp += 100;
+        if (xp >= level * 100) { level++; xp = 0; }
+      }
+      ctx.fillStyle = q.type==='Rescate' ? '#0f0' : q.type==='Batalla' ? '#f00' : '#00f';
+      ctx.fillRect(q.x - camX - 30, q.y - camY - 40, 60, 80);
+    });
+
+    // Dragones con IA táctica
+    dragons.forEach(d => {
+      const pdx = d.x - player.worldX, pdy = d.y - player.worldY;
+      const dist = Math.hypot(pdx, pdy);
+      if (dist < 200 && d.attackCooldown <= 0 && !d.friendly) {
+        projs.push({x: d.x, y: d.y, vx: pdx/20, vy: pdy/20, life: 100, damage: 15});
+        d.attackCooldown = 300;
+        dragonRoar(d.x, d.y);
+      }
+      d.attackCooldown = Math.max(0, d.attackCooldown - 1);
+      if (dist < 150 && !d.friendly && story < 10) {
+        showDialog(0);
+        d.friendly = Math.random() > 0.5; // Dinámica de facciones
+        if (d.friendly) factions.friendly++; else factions.hostile++;
+      }
+      d.x += d.vx * (d.friendly ? 0.5 : 1); d.y += d.vy * (d.friendly ? 0.5 : 1);
+      if (d.x < 0 || d.x > worldW) d.vx *= -1;
+      if (d.y < 0 || d.y > worldH) d.vy *= -1;
+
+      // Combate
+      projs.forEach((p, pi) => {
+        if (Math.hypot(p.x - d.x, p.y - d.y) < d.size / 2) {
+          d.health -= p.damage / (skills.shield ? player.defense : 1);
+          projs.splice(pi, 1);
+          if (d.health <= 0) {
+            shards++;
+            xp += 200;
+            if (xp >= level * 100) { level++; xp = 0; }
+            dragons.splice(dragons.indexOf(d), 1);
+          }
+        }
+      });
+
+      // Dibujo dragón
+      ctx.save();
+      ctx.translate(d.x - camX, d.y - camY);
+      ctx.rotate(Math.atan2(pdy, pdx));
+      ctx.fillStyle = d.friendly ? `hsl(${120 + t*10 % 40}, 70%, 50%)` : `hsl(${0 + t*10 % 40}, 80%, 50%)`;
+      ctx.beginPath();
+      ctx.ellipse(0, 0, d.size/2, d.size/4, 0, 0, Math.PI*2);
+      ctx.fill();
+      ctx.fillStyle = '#f80';
+      ctx.beginPath(); ctx.ellipse(d.size/4, -d.size/8, 25, 20, 0, 0, Math.PI*2); ctx.fill(); // Ala
+      ctx.fillStyle = '#ff0';
+      ctx.beginPath(); ctx.arc(30, -15, 10, 0, Math.PI*2); ctx.fill(); // Ojo
+      ctx.restore();
+      if (dist < 100) {
+        ctx.fillStyle = '#ff8';
+        ctx.font = '16px Arial';
+        ctx.fillText(d.phrase, d.x - camX - 50, d.y - camY - d.size/2 - 20);
+      }
+    });
+
+    // Jugador
+    if (skills.heal && Math.random() < 0.01 && player.health < 100) player.health += 1;
+    ctx.fillStyle = player.health > 50 ? '#0f0' : '#f00';
+    ctx.beginPath(); ctx.arc(player.worldX - camX, player.worldY - camY, 25, 0, Math.PI*2); ctx.fill();
+    ctx.fillStyle = '#f00';
+    ctx.beginPath(); ctx.arc(player.worldX - camX + Math.cos(angle)*30, player.worldY - camY + Math.sin(angle)*30, 10, 0, Math.PI*2); ctx.fill(); // Apuntador
+
+    // UI Update
+    document.getElementById('legend').textContent = legend;
+    document.getElementById('mana').textContent = Math.floor(mana += 0.3);
+    document.getElementById('shards').textContent = shards;
+    document.getElementById('level').textContent = level;
+    mana = Math.min(150, mana);
+
+    // Triggers
+    if (shards >= 10 && !forging) startForge();
+    if (legend >= 7 && shards >= 10) showDialog(5);
+
+    requestAnimationFrame(loop);
+  }
+  loop();
+</script>
+</body>
+</html>

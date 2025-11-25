@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html><head><meta charset="utf-8"><title>Juego de aventuras espaciales con aliens amigables y puzzles de física — creado por un pibe</title>
+<style>body{margin:0;background:#000;overflow:hidden}</style></head>
+<body><canvas id="c"></canvas>
+<script>
+const c=document.getElementById('c'),g=c.getContext('2d');
+let w=innerWidth,h=innerHeight;
+const resize=()=>{w=c.width=innerWidth;h=c.height=innerHeight};
+window.addEventListener('resize',resize);resize();
+let t=0;
+const loop=()=>{
+  t+=0.016;
+  g.clearRect(0,0,w,h);
+  // TU JUEGO: Juego de aventuras espaciales con aliens amigables y puzzles de física
+  for(let i=0;i<50000;i++){
+    const a=t*0.05+i*0.0001,r=0.5+Math.sin(a*10)*0.3;
+    const x=Math.cos(a)*r*2-1,y=Math.sin(a)*r*2-1;
+    const px=x*w/2+w/2,py=y*h/2+h/2;
+    const sz=5+Math.sin(t+i)*3;
+    g.beginPath();g.arc(px,py,sz,0,6.28);
+    g.fillStyle=`hsl(${(t*50+i)%360},100%,70%)`;g.fill();
+  }
+  requestAnimationFrame(loop);
+};
+loop();
+</script></body></html>

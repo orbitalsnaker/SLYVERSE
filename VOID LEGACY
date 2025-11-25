@@ -3,127 +3,298 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>VOID LEGACY X — THUAMER STUDIOS™</title>
+  <title>VOID LEGACY X — THUAMER STUDIOS™ 9.11</title>
   <style>
-    body{margin:0;background:#000;color:#0f0;font-family:'Courier New',monospace;overflow:hidden;text-align:center}
+    body{margin:0;background:#000;color:#0f0;font-family:'Courier New',monospace;overflow:hidden;text-align:center;image-rendering:pixelated}
     canvas{display:block;margin:0 auto;image-rendering:pixelated}
-    #ui{position:absolute;top:10px;left:10px;z-index:100;background:rgba(0,20,0,0.8);padding:10px;border:2px solid #0f0;font-size:14px}
-    #menu,#shop,#readme,#gameover{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);display:flex;flex-direction:column;justify-content:center;align-items:center;gap:20px;z-index:200}
-    button{background:#0f0;color:#000;border:none;padding:15px 40px;font-size:20px;cursor:pointer;font-weight:bold;border-radius:5px}
-    button:hover{background:#0c0}
-    .premium{color:gold;font-size:22px}
-    .skin-btn{background:#0088ff;color:#fff;padding:20px;margin:15px;border-radius:15px;font-size:18px;width:300px}
-    .skin-btn:hover{background:#0066cc}
+    #ui{position:absolute;top:10px;left:10px;z-index:100;background:rgba(0,20,0,0.9);padding:12px;border:2px solid #0f0;font-size:16px;letter-spacing:1px}
+    #menu,#shop,#gameover{position:absolute;top:0;left:0;width:100%;height:100%;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:25px;z-index:200}
+    h1{font-size:70px;margin:0;color:#0f0;text-shadow:0 0 30px #0f0;animation:glitch 3s infinite}
+    @keyframes glitch{0%,100%{text-shadow:0 0 30px #0f0} 2%{text-shadow:5px 0 #f00,-5px 0 #0ff} 4%{text-shadow:-5px 0 #f00,5px 0 #0ff}}
+    button{background:#0f0;color:#000;border:none;padding:18px 50px;font-size:22px;cursor:pointer;font-weight:bold;border-radius:8px;transition:0.2s}
+    button:hover{background:#0c0;transform:scale(1.05)}
+    .skin-btn{background:#0088ff;color:#fff;padding:20px;margin:15px;border-radius:15px;font-size:20px;width:340px;transition:0.3s}
+    .skin-btn:hover{background:#0066cc;transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,255,255,0.4)}
     .hidden{display:none}
-    #paypal-container{margin:10px;}
+    .glitch-death{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:999;pointer-events:none;opacity:0}
+    #secret{color:#666;font-size:12px;position:absolute;bottom:10px;right:10px}
   </style>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.80.1/dist/phaser.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/simplex-noise@4.0.1/simplex-noise.js"></script>
-  <!-- PayPal SDK con tu cuenta real -->
   <script src="https://www.paypal.com/sdk/js?client-id=AaX9y8z7w6v5u4t3s2r1q0p9o8n7m6l5k4j3i2h1g0f9e8d7c6b5a4&currency=EUR&intent=capture"></script>
 </head>
 <body>
 
 <div id="ui">
-  Nivel: <span id="level">1</span> | Vidas: <span id="lives">3 corazones</span> | Puntos: <span id="score">0</span> | Skin: <span id="activeSkin">Default</span>
+  Nivel: <span id="level">1</span> | Vidas: <span id="lives">3</span> | Puntos: <span id="score">0</span> | Skin: <span id="activeSkin">DEFAULT</span>
   <div class="premium" id="status">DEMO</div>
 </div>
 
 <div id="menu">
-  <h1 style="font-size:60px;margin:0;color:#0f0;text-shadow:0 0 30px #0f0">VOID LEGACY X</h1>
-  <h2>THUAMER STUDIOS™</h2>
-  <p>¡Skins 0.49€ y Premium 4.99€ directo a ferry420oficial@gmail.com!</p>
+  <h1>VOID LEGACY X</h1>
+  <h2>THUAMER STUDIOS™ 9.11</h2>
+  <p>0.49€ skins → 4.99€ premium → ferry420oficial@gmail.com<br><strong>El vacío financia el silencio</strong></p>
   <div id="paypal-premium"></div>
-  <button onclick="startGame()">JUGAR GRATIS</button>
-  <button onclick="openShop()">TIENDA SKINS (0.49€)</button>
+  <button onclick="startGame()">INICIAR DESCENSO</button>
+  <button onclick="openShop()">TIENDA DE ALMAS (0.49€)</button>
+  <button onclick="document.getElementById('readme').classList.remove('hidden')" style="background:#333">README DEL VACÍO</button>
 </div>
 
 <div id="shop" class="hidden">
-  <div style="padding:30px;max-width:900px">
-    <h1 style="color:#0f0">TIENDA OFICIAL</h1>
-    <p><strong>Pagos 100% reales → ferry420oficial@gmail.com</strong></p>
-    <div id="paypal-cyber"></div>
-    <div id="paypal-neon"></div>
-    <div id="paypal-boss"></div>
-    <button class="skin-btn" onclick="applySkin('cyber')">EQUIPAR CYBER</button>
-    <button class="skin-btn" onclick="applySkin('neon')">EQUIPAR NEON</button>
-    <button class="skin-btn" onclick="applySkin('boss')">EQUIPAR EMPERADOR</button>
-    <button onclick="closeShop()" style="background:#f00">VOLVER</button>
+  <h1 style="color:#0f0">TIENDA OFICIAL — EL VACÍO TIENE PRECIO</h1>
+  <div style="display:flex;flex-wrap:wrap;justify-content:center;gap:20px">
+    <div>
+      <canvas id="preview-cyber" width="120" height="120"></canvas>
+      <div id="paypal-cyber"></div>
+      <button class="skin-btn" onclick="applySkin('cyber')">CYBER DEMON</button>
+    </div>
+    <div>
+      <canvas id="preview-neon" width="120" height="120"></canvas>
+      <div id="paypal-neon"></div>
+      <button class="skin-btn" onclick="applySkin('neon')">NEON GHOST</button>
+    </div>
+    <div>
+      <canvas id="preview-boss" width="120" height="120"></canvas>
+      <div id="paypal-boss"></div>
+      <button class="skin-btn" onclick="applySkin('boss')">EMPERADOR DEL VACÍO</button>
+    </div>
   </div>
+  <button onclick="closeShop()" style="background:#f00;margin-top:30px">CERRAR PORTAL</button>
 </div>
 
 <div id="gameover" class="hidden">
-  <h1 style="color:#f00;font-size:50px">¡EL VACÍO TE HA CONSUMIDO!</h1>
-  <h2>Nivel máximo: <span id="finalLevel">0</span> | Puntos: <span id="finalScore">0</span></h2>
-  <button onclick="location.reload()">RENACER</button>
+  <h1 style="color:#f00">EL VACÍO TE HA CONSUMIDO</h1>
+  <h2>Nivel alcanzado: <span id="finalLevel">0</span> | Puntos: <span id="finalScore">0</span></h2>
+  <button onclick="location.reload()">RENACER EN EL CICLO</button>
 </div>
 
-<script>
-// TU PAYPAL REAL ESTÁ INTEGRADO (ferry420oficial@gmail.com)
-const IS_PREMIUM = localStorage.getItem('thuamer_premium') === 'true';
-let ownedSkins = JSON.parse(localStorage.getItem('thuamer_skins') || '[]');
-let currentSkin = ownedSkins[0] || 'default';
-document.getElementById('status').textContent = IS_PREMIUM ? 'PREMIUM' : 'DEMO';
+<div id="readme" class="hidden" style="padding:40px;max-width:800px;color:#0f0">
+  <h1>README DEL VACÍO</h1>
+  <p>Cada 0.49€ que pagas por una skin<br>es un ladrillo de nitruro de titanio oro espejo<br>que se coloca en un desierto real antes del 2035.</p>
+  <p>El vacío no miente.<br>El vacío no tiene sponsor.<br>El vacío no se puede comprar.</p>
+  <p>Pero tú puedes pagar para que otros entren gratis.</p>
+  <p>No tocar al puto mono sanador.<br><br>— 0rb1t4lsn4k3r, noviembre 2025</p>
+  <button onclick="document.getElementById('readme').classList.add('hidden')" style="background:#0f0">CERRAR</button>
+</div>
 
-// Premium 4.99€
+<div id="secret">No tocar al puto mono</div>
+
+<script>
+// === MONO SANADOR PROTECTION SYSTEM ===
+const IS_PREMIUM = localStorage.getItem('void_premium') === 'true';
+let ownedSkins = JSON.parse(localStorage.getItem('void_skins') || '[]');
+let currentSkin = ownedSkins[0] || 'default';
+document.getElementById('status').textContent = IS_PREMIUM ? 'PREMIUM ∞' : 'DEMO';
+document.getElementById('activeSkin').textContent = currentSkin.toUpperCase();
+
+// Easter egg del mono
+console.log('%cNo tocar al puto mono sanador','color:#0f0;font-size:20px');
+window.addEventListener('keydown', e => {
+  if (e.target === document.body && e.ctrlKey && e.shiftKey && e.key === 'M') {
+    if (!ownedSkins.includes('orbit')) {
+      ownedSkins.push('orbit');
+      localStorage.setItem('void_skins', JSON.stringify(ownedSkins));
+      alert('Skin secreta "0rb1t4lsn4k3r" desbloqueada.\nEl torus gira.\nNamaste.');
+    }
+  }
+});
+
+// PayPal
 paypal.Buttons({
-  createOrder: (data, actions) => actions.order.create({ purchase_units: [{ amount: { value: '4.99' }, description: 'Premium VOID LEGACY X - Vidas infinitas' }] }),
-  onApprove: () => { localStorage.setItem('thuamer_premium', 'true'); alert('¡PREMIUM ACTIVADO PARA SIEMPRE!'); location.reload(); }
+  createOrder: (d,a) => a.order.create({purchase_units:[{amount:{value:'4.99'},description:'Premium VOID LEGACY X - Vidas ∞ + x2 puntos'}]}),
+  onApprove: () => {localStorage.setItem('void_premium','true');alert('PREMIUM ACTIVADO — EL VACÍO TE PROTEGE');location.reload();}
 }).render('#paypal-premium');
 
-// Skins 0.49€ y 0.99€
-const SKINS = { cyber: '0.49', neon: '0.49', boss: '0.99' };
 ['cyber','neon','boss'].forEach(s => {
   paypal.Buttons({
-    createOrder: (d,a) => a.order.create({ purchase_units: [{ amount: { value: SKINS[s] }, description: `Skin ${s.toUpperCase()} - THUAMER STUDIOS` }] }),
+    createOrder: (d,a) => a.order.create({purchase_units:[{amount:{value: s==='boss'?'0.99':'0.49'},description:`Skin ${s.toUpperCase()} VOID LEGACY X`}]}),
     onApprove: () => {
-      if (!ownedSkins.includes(s)) ownedSkins.push(s);
-      localStorage.setItem('thuamer_skins', JSON.stringify(ownedSkins));
-      alert(`¡Skin ${s.toUpperCase()} desbloqueada!`);
+      if (!ownedSkins.includes(s)) {ownedSkins.push(s);localStorage.setItem('void_skins',JSON.stringify(ownedSkins));}
+      alert(`Skin ${s.toUpperCase()} absorbida por el vacío`);
     }
   }).render(`#paypal-${s}`);
 });
 
+// Previews animados
+function drawPreview(skin, canvas) {
+  const ctx = canvas.getContext('2d');
+  let hue = 0;
+  setInterval(() => {
+    ctx.fillStyle = skin==='neon' ? `hsl(${hue},100%,50%)` : skin==='cyber' ? '#0088ff' : skin==='boss' ? '#c00' : '#0f0';
+    ctx.fillRect(0,0,120,120);
+    ctx.fillStyle = '#000';
+    ctx.font = '20px Courier';
+    ctx.fillText('█',45,75);
+    hue = (hue + 2) % 360;
+  }, 50);
+}
+['cyber','neon','boss'].forEach(s => drawPreview(s, document.getElementById(`preview-${s}`)));
+
 function applySkin(skin) {
-  if (ownedSkins.includes(skin) || skin === 'default') {
+  if (ownedSkins.includes(skin) || skin==='default' || skin==='orbit') {
     currentSkin = skin;
-    document.getElementById('activeSkin').textContent = skin.toUpperCase();
-    if (player) player.setTexture(`player_${skin}`);
+    document.getElementById('activeSkin').textContent = skin==='orbit'?'0rb1t4lsn4k3r':skin.toUpperCase();
+    if (window.player) window.player.setTexture(`player_${skin}`);
   }
 }
 
-// Juego completo (mismo código funcional que antes, pero simplificado aquí por espacio)
-let player, platforms, enemies, level=1, lives=IS_PREMIUM?999:3, score=0;
-const game = new Phaser.Game({
-  type: Phaser.AUTO, width: 800, height: 600,
-  physics: { default: 'arcade', arcade: { gravity: { y: 800 } } },
-  scene: { preload() {
-    this.load.svg('player_default', 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPSIjMDA4ODAwIi8+PHBhdGggZD0iTSAyMCAyMCBMIDQ0IDIwIEwgNDQgNDQgTCAyMCA0NCIgc3Ryb2tlPSIjMGYwIiBzdHJva2Utd2lkdGg9IjQiLz48L3N2Zz4=');
-    ['cyber','neon','boss'].forEach(s => this.load.svg(`player_${s}`, `data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjY0IiBoZWlnaHQ9IjY0IiBmaWxsPS${s==='cyber'?'IiMwMDg4ZmYi':s==='neon'?'IiM5OWZmMDAi':'IiNjYzAwMTEifSIvPjwvc3ZnPg==`));
-  },
-  create() {
-    platforms = this.physics.add.staticGroup();
-    enemies = this.physics.add.group();
-    for(let i=0;i<30;i++) platforms.create(i*200,550,'player_default').setScale(3,0.7).refreshBody();
-    player = this.physics.add.sprite(100,400,`player_${currentSkin}`).setScale(1.5);
-    this.physics.add.collider(player, platforms);
-    this.physics.add.overlap(player, enemies, ()=>{lives--;updateUI();if(lives<=0)gameOver();});
-    this.input.keyboard.on('keydown-SPACE',()=>player.body.touching.down&&player.setVelocityY(-500));
-    this.input.keyboard.on('keydown-LEFT',()=>player.setVelocityX(-300));
-    this.input.keyboard.on('keydown-RIGHT',()=>player.setVelocityX(300));
-    setInterval(()=>enemies.create(900,300,'player_default').setTint(0xff0000).setVelocityX(-200-level*10),3000);
-  },
-  update() {
-    if(player.y>700){lives=0;gameOver();}
-    if(player.x>2800){level++;score+=level*100;player.x=100;updateUI();}
-  }
-});
+// === JUEGO REAL ===
+let player, platforms, enemies, bullets, powerups, particles;
+let level = 1, lives = IS_PREMIUM ? 999 : 3, score = 0, doubleJump = false, shield = false;
+const noise = new SimplexNoise();
 
-function updateUI(){document.getElementById('level').textContent=level;document.getElementById('lives').textContent=IS_PREMIUM?'∞':lives;document.getElementById('score').textContent=score;}
-function gameOver(){document.getElementById('finalLevel').textContent=level;document.getElementById('finalScore').textContent=score;document.getElementById('gameover').classList.remove('hidden');}
-function startGame(){document.getElementById('menu').classList.add('hidden');updateUI();}
-function openShop(){document.getElementById('shop').classList.remove('hidden');}
-function closeShop(){document.getElementById('shop').classList.add('hidden');}
+const config = {
+  type: Phaser.AUTO,
+  width: 800, height: 600,
+  physics: { default: 'arcade', arcade: { gravity: { y: 900 }, debug: false } },
+  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+  backgroundColor: '#000',
+  scene: { preload, create, update }
+};
+
+const game = new Phaser.Game(config);
+
+function preload() {
+  // Skins SVG inline
+  const base = '<svg width="64" height="64" xmlns="http://www.w3.org/2000/svg"><rect width="64" height="64" fill="{{color}}"/><path d="M20 20 L44 20 L44 44 L20 44 Z" fill="#000"/><circle cx="28" cy="28" r="6" fill="#0f0"/><circle cx="36" cy="28" r="6" fill="#0f0"/></svg>';
+  const colors = { default: '#008800', cyber: '#0088ff', neon: '#99ff00', boss: '#cc0011', orbit: '#ffd700' };
+  Object.keys(colors).forEach(s => {
+    const svg = base.replace('{{color}}', colors[s]).replace(/#/g, '%23');
+    this.load.svg(`player_${s}`, 'data:image/svg+xml;base64,' + btoa(svg));
+  });
+}
+
+function create() {
+  platforms = this.physics.add.staticGroup();
+  enemies = this.physics.add.group();
+  bullets = this.physics.add.group();
+  powerups = this.physics.add.group();
+  particles = this.add.particles(0, 0, 'player_default', {
+    speed: 100, lifespan: 600, quantity: 3, scale: { start: 1, end: 0 }, blendMode: 'ADD'
+  });
+
+  generateLevel.call(this);
+  player = this.physics.add.sprite(100, 300, `player_${currentSkin}`).setScale(1.5).setCollideWorldBounds(false);
+  this.physics.add.collider(player, platforms);
+  this.physics.add.overlap(player, enemies, hitEnemy, null, this);
+  this.physics.add.overlap(player, bullets, hitEnemy, null, this);
+  this.physics.add.overlap(player, powerups, collectPowerup, null, this);
+
+  this.cameras.main.startFollow(player, true, 0.08, 0.08);
+  this.input.keyboard.on('keydown-SPACE', jump);
+  this.input.on('pointerdown', jump);
+}
+
+function update() {
+  if (player.y > 800) gameOver.call(this);
+  if (player.x > level * 3000) nextLevel.call(this);
+}
+
+function generateLevel() {
+  const scene = this;
+  for (let x = level * 3000; x < (level + 1) * 3000; x += 200) {
+    const y = 500 + noise.noise2D(x * 0.01, 0) * 150;
+    platforms.create(x, y, 'player_default').setScale(3, 0.5).setTint(0x00ff00).refreshBody();
+  }
+  // Enemigos y power-ups cada nivel
+  Phaser.Utils.Array.Shuffle([1,1,1,2,2,3])[0] === 3 && spawnPowerup.call(this);
+  setTimeout(() => spawnEnemy.call(this), 3000);
+}
+
+function jump() {
+  if (player.body.touching.down || doubleJump) {
+    player.setVelocityY(-500);
+    doubleJump = player.body.touching.down ? true : false;
+    playSound('jump');
+  }
+}
+
+function spawnEnemy() {
+  if (!game.scene.isActive()) return;
+  const enemy = enemies.create(player.x + 1000, 300, 'player_boss').setScale(1.8).setTint(0xff0000);
+  enemy.body.setVelocityX(-200 - level * 20);
+  setTimeout(() => { if (enemy.active) enemy.body.setVelocityX(enemy.body.velocity.x * 1.5); }, 2000);
+}
+
+function spawnPowerup() {
+  const types = ['shield','doublejump','magnet'];
+  const type = types[Math.floor(Math.random()*types.length)];
+  const p = powerups.create(player.x + 1200, 300, 'player_cyber').setScale(1.2).setTint(type==='shield'?0x00ffff:type==='doublejump'?0xffff00:0xff00ff);
+  p.type = type;
+}
+
+function collectPowerup(p, pu) {
+  pu.destroy();
+  if (pu.type === 'shield') shield = true;
+  if (pu.type === 'doublejump') doubleJump = true;
+  if (pu.type === 'magnet') score += 100;
+  playSound('coin');
+}
+
+function hitEnemy() {
+  if (shield) { shield = false; return; }
+  lives--;
+  playSound('death');
+  glitchDeath();
+  updateUI();
+  if (lives <= 0) gameOver.call(this);
+}
+
+function nextLevel() {
+  level++;
+  score += level * 500;
+  generateLevel.call(this);
+  updateUI();
+}
+
+function gameOver() {
+  document.getElementById('finalLevel').textContent = level;
+  document.getElementById('finalScore').textContent = score;
+  document.getElementById('gameover').classList.remove('hidden');
+  glitchDeath();
+}
+
+function updateUI() {
+  document.getElementById('level').textContent = level;
+  document.getElementById('lives').textContent = IS_PREMIUM ? '∞' : lives;
+  document.getElementById('score').textContent = score;
+}
+
+// Sonidos 8-bit
+const audio = new AudioContext();
+function playSound(type) {
+  const o = audio.createOscillator();
+  const g = audio.createGain();
+  o.connect(g); g.connect(audio.destination);
+  o.type = 'square';
+  if (type==='jump') o.frequency.value = 400;
+  if (type==='coin') o.frequency.value = 800;
+  if (type==='death') o.frequency.value = 100;
+  g.gain.setValueAtTime(0.1, audio.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.01, audio.currentTime + 0.2);
+  o.start(); o.stop(audio.currentTime + 0.2);
+}
+
+function glitchDeath() {
+  const div = document.createElement('div');
+  div.className = 'glitch-death';
+  div.style.background = 'repeating-linear-gradient(0deg,#0f0,#0f0 10px,#000 10px,#000 20px)';
+  document.body.appendChild(div);
+  div.style.animation = 'glitch 0.3s infinite';
+  setTimeout(() => div.remove(), 800);
+}
+
+function startGame() { document.getElementById('menu').classList.add('hidden'); }
+function openShop() { document.getElementById('shop').classList.remove('hidden'); }
+function closeShop() { document.getElementById('shop').classList.add('hidden'); }
+
+// Anti-toque final
+setInterval(() => {
+  if (performance.now() > 9999999999) {
+    document.body.innerHTML = '<h1 style="color:#0f0;text-align:center;margin-top:40vh">NO TOCAR AL PUTO MONO</h1>';
+  }
+}, 10000);
+
 </script>
 </body>
 </html>

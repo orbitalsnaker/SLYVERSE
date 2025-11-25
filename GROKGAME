@@ -2,49 +2,70 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Juego de aventuras espaciales con aliens amigables y puzzles de física — creado por Grok 3 & 0rb1t4lsn4k3r</title>
+  <title>Exploración submarina con criaturas bioluminiscentes — creado por Grok 3 & 0rb1t4lsn4k3r</title>
   <style>
-    body { margin: 0; background: #000; overflow: hidden; }
-    #message { position: absolute; top: 10px; left: 10px; color: #fff; font-family: Arial; font-size: 16px; }
+    body { margin: 0; background: #002244; overflow: hidden; } /* Fondo azul oscuro como el océano */
+    #message { position: absolute; top: 10px; left: 10px; color: #00ffcc; font-family: Arial; font-size: 16px; text-shadow: 0 0 5px #00ffcc; }
+    #player { position: absolute; color: #fff; font-size: 12px; }
   </style>
 </head>
 <body>
   <canvas id="c"></canvas>
   <div id="message"></div>
+  <div id="player"></div>
   <script>
     const c = document.getElementById('c'), g = c.getContext('2d');
     const message = document.getElementById('message');
+    const playerDiv = document.getElementById('player');
     let w = innerWidth, h = innerHeight;
     const resize = () => { w = c.width = innerWidth; h = c.height = innerHeight; };
     window.addEventListener('resize', resize); resize();
 
-    let t = 0, aliens = [], score = 0, harmony = 0;
-    const alienCount = 10;
+    let t = 0, creatures = [], player = { x: w / 2, y: h / 2, vx: 0, vy: 0 }, harmony = 0;
+    const creatureCount = 15, waterLevel = h * 0.7; // Nivel de agua al 70% de la pantalla
 
-    // Crear aliens con narrativa y sanación
-    for (let i = 0; i < alienCount; i++) {
-      aliens.push({
+    // Crear criaturas bioluminiscentes
+    for (let i = 0; i < creatureCount; i++) {
+      creatures.push({
         x: Math.random() * w,
-        y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 2,
-        vy: (Math.random() - 0.5) * 2,
-        size: 20 + Math.random() * 10,
-        name: ['Lumo', 'Zari', 'Kweez', 'Plix'][Math.floor(Math.random() * 4)] // Nombres poéticos
+        y: Math.random() * waterLevel,
+        vx: (Math.random() - 0.5) * 1,
+        vy: (Math.random() - 0.5) * 1,
+        size: 15 + Math.random() * 10,
+        glow: Math.random() * 360 // Matiz para bioluminiscencia
       });
     }
 
-    // Puzzle: alinear aliens para sanar el espacio
-    const checkPuzzle = () => {
-      const centerX = w / 2, centerY = h / 2;
-      let aligned = aliens.filter(a => Math.abs(a.x - centerX) < 50 && Math.abs(a.y - centerY) < 50).length;
-      harmony = (aligned / alienCount) * 100;
-      if (aligned === alienCount) {
-        score += 10;
+    // Controles del jugador (teclas o ratón)
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowUp') player.vy = -2;
+      if (e.key === 'ArrowDown') player.vy = 2;
+      if (e.key === 'ArrowLeft') player.vx = -2;
+      if (e.key === 'ArrowRight') player.vx = 2;
+    });
+    document.addEventListener('keyup', () => { player.vx = 0; player.vy = 0; });
+
+    // Física submarina (fricción y flotación)
+    const updatePhysics = () => {
+      player.x += player.vx;
+      player.y += player.vy;
+      if (player.y > waterLevel) player.vy -= 0.05; // Flotación hacia arriba
+      player.vx *= 0.95; // Fricción horizontal
+      player.vy *= 0.95; // Fricción vertical
+      if (player.x < 0) player.x = 0; if (player.x > w) player.x = w;
+      if (player.y < 0) player.y = 0; if (player.y > h) player.y = h;
+    };
+
+    // Interacción con criaturas
+    const checkHarmony = () => {
+      let nearCreatures = creatures.filter(c => Math.hypot(player.x - c.x, player.y - c.y) < 50).length;
+      harmony = (nearCreatures / creatureCount) * 100;
+      if (nearCreatures === creatureCount) {
         harmony = 100;
-        message.textContent = `¡El cosmos está en armonía! ${aliens[0].name} te agradece. Puntuación: ${score}`;
-        setTimeout(() => { message.textContent = ''; aliens.forEach(a => { a.x = Math.random() * w; a.y = Math.random() * h; }); }, 2000);
+        message.textContent = `¡Las aguas cantan! El océano te abraza. Armonía: 100%`;
+        setTimeout(() => { message.textContent = ''; }, 2000);
       } else {
-        message.textContent = `Alinea a los aliens para sanar (${Math.floor(harmony)}% armonía)`;
+        message.textContent = `Explora y conecta con las criaturas (${Math.floor(harmony)}% armonía)`;
       }
     };
 
@@ -52,39 +73,47 @@
       t += 0.016;
       g.clearRect(0, 0, w, h);
 
-      // Fondo de partículas con menos carga
-      for (let i = 0; i < 5000; i++) {
-        const a = t * 0.05 + i * 0.0002, r = 0.5 + Math.sin(a * 10) * 0.3;
-        const x = Math.cos(a) * r * 2 - 1, y = Math.sin(a) * r * 2 - 1;
-        const px = x * w / 2 + w / 2, py = y * h / 2 + h / 2;
-        const sz = 3 + Math.sin(t + i) * 2;
-        g.beginPath(); g.arc(px, py, sz, 0, 6.28);
-        g.fillStyle = `hsl(${(t * 50 + i) % 360}, ${70 + harmony / 2}%, 50%)`; g.fill(); // Color cambia con armonía
+      // Fondo submarino con burbujas y luz
+      g.fillStyle = 'rgba(0, 0, 100, 0.1)'; // Aguas profundas
+      g.fillRect(0, 0, w, waterLevel);
+      g.fillStyle = '#002244'; // Superficie
+      g.fillRect(0, waterLevel, w, h - waterLevel);
+      for (let i = 0; i < 2000; i++) {
+        const a = t * 0.1 + i * 0.001, r = 0.5 + Math.sin(a * 5) * 0.2;
+        const x = Math.cos(a) * r * w, y = Math.sin(a) * r * waterLevel;
+        const sz = 2 + Math.sin(t + i) * 1;
+        g.beginPath(); g.arc(x + w / 2, y, sz, 0, 6.28);
+        g.fillStyle = `rgba(0, 255, 255, ${0.5 + Math.sin(t + i) * 0.3})`; // Burbujas bioluminiscentes
+        g.fill();
       }
 
-      // Actualizar y dibujar aliens
-      aliens.forEach(alien => {
-        alien.x += alien.vx;
-        alien.y += alien.vy;
-        if (alien.x < 0 || alien.x > w) alien.vx *= -0.9; // Fricción al rebotar
-        if (alien.y < 0 || alien.y > h) alien.vy *= -0.9;
-        g.beginPath(); g.arc(alien.x, alien.y, alien.size / 2, 0, 6.28);
-        g.fillStyle = `hsl(120, 70%, ${50 + harmony / 2}%)`; g.fill(); // Verde sanador
-        g.beginPath(); g.arc(alien.x - 5, alien.y - 5, 3, 0, 6.28); g.fillStyle = 'white'; g.fill();
-        g.beginPath(); g.arc(alien.x + 5, alien.y - 5, 3, 0, 6.28); g.fillStyle = 'white'; g.fill();
+      // Actualizar y dibujar criaturas
+      creatures.forEach(creature => {
+        creature.x += creature.vx;
+        creature.y += creature.vy;
+        if (creature.x < 0 || creature.x > w) creature.vx *= -0.9;
+        if (creature.y < 0 || creature.y > waterLevel) creature.vy *= -0.9;
+        g.beginPath(); g.arc(creature.x, creature.y, creature.size / 2, 0, 6.28);
+        g.fillStyle = `hsl(${creature.glow}, 70%, ${50 + harmony / 2}%)`; // Bioluminiscencia
+        g.fill();
+        g.beginPath(); g.arc(creature.x - 3, creature.y - 3, 2, 0, 6.28); g.fillStyle = 'white'; g.fill(); // Ojo
       });
 
-      // Interactividad: arrastrar con ratón
-      c.addEventListener('mousemove', (e) => {
-        aliens.forEach(alien => {
-          if (Math.hypot(e.clientX - alien.x, e.clientY - alien.y) < alien.size) {
-            alien.x = e.clientX;
-            alien.y = e.clientY;
-          }
-        });
-      });
+      // Actualizar y dibujar jugador
+      updatePhysics();
+      g.beginPath(); g.arc(player.x, player.y, 10, 0, 6.28);
+      g.fillStyle = '#ffcc00'; // Buceador iluminado
+      g.fill();
+      playerDiv.style.left = `${player.x - 5}px`;
+      playerDiv.style.top = `${player.y - 20}px`;
+      playerDiv.textContent = 'Tú';
 
-      checkPuzzle();
+      // Inmersión: efecto de oscilación
+      g.save();
+      g.translate(Math.sin(t) * 5, Math.cos(t) * 5); // Movimiento sutil
+      checkHarmony();
+      g.restore();
+
       requestAnimationFrame(loop);
     };
     loop();

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>BOAVERSE ∞ — El metaverso del abrazo eterno</title>
+  <style>
+    body{margin:0;background:#000;overflow:hidden;color:#0ff;font-family:Courier New}
+    canvas{display:block}
+    #shop{position:fixed;top:10px;right:10px;background:rgba(0,255,255,0.1);padding:15px;border:4px solid #0ff;border-radius:15px;z-index:999}
+    button{background:#0ff;color:#000;border:none;padding:12px 20px;margin:5px;border-radius:10px;cursor:pointer;font-weight:bold}
+    button:hover{background:#00f;color:#0ff;transform:scale(1.1)}
+    #msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,255,255,0.9);padding:15px;border-radius:15px;font-size:20px}
+  </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="shop">
+  <h2>TIENDA DEL ABRAZO</h2>
+  <button onclick="buy('sombrero-dragon',0.10)">Sombrero Dragón · 0,10 €</button><br>
+  <button onclick="buy('casa-abismo',0.20)">Casa en el Abismo · 0,20 €</button><br>
+  <button onclick="buy('abrazo-boa',0.05)">Abrazo Boa Eterno · 0,05 €</button><br>
+  <button onclick="buy('aura-dorada',0.15)">Aura Dorada 24h · 0,15 €</button>
+</div>
+<div id="msg" style="display:none"></div>
+
+<script>
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  canvas.width = innerWidth; canvas.height = innerHeight;
+  window.onresize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
+
+  let players = {}, myId = Math.random().toString(36);
+  players[myId] = {x:innerWidth/2, y:innerHeight/2, color:`hsl(${Math.random()*360},100%,70%)`, item:""};
+
+  // WebRTC ultra-ligero (sin signaling server, usando QR o enlace)
+  alert("Comparte este enlace o escanea el QR con tus amigos:\n" + location.href);
+
+  // === TIENDA CON TRANSACCIÓN DIRECTA A TU PAYPAL ===
+  function buy(item, price) {
+    const paypalURL = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ferry420oficial@gmail.com&item_name=${encodeURIComponent("BOAVERSE: "+item)}&amount=${price.toFixed(2)}&currency_code=EUR&notify_url=&return=${encodeURIComponent(location.href)}`;
+    
+    document.getElementById('msg').style.display = 'block';
+    document.getElementById('msg').textContent = `❤️ Abrazando a 0rb1t4lsn4k3r con ${price}€... ❤️`;
+    
+    setTimeout(() => {
+      window.open(paypalURL, '_blank');
+      players[myId].item = item;
+      document.getElementById('msg').textContent = "¡GRACIAS! Tu " + item + " ya brilla en el BOAVERSE";
+      setTimeout(() => document.getElementById('msg').style.display='none', 5000);
+    }, 1500);
+  }
+
+  // Movimiento
+  const keys = {};
+  window.onkeydown = e => keys[e.key] = true;
+  window.onkeyup = e => keys[e.key] = false;
+
+  function loop() {
+    ctx.fillStyle = 'rgba(0,0,20,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+    // Mi jugador
+    if(keys['ArrowUp']||keys['w']) players[myId].y -= 5;
+    if(keys['ArrowDown']||keys['s']) players[myId].y += 5;
+    if(keys['ArrowLeft']||keys['a']) players[myId].x -= 5;
+    if(keys['ArrowRight']||keys['d']) players[myId].x += 5;
+
+    // Dibujar todos
+    for(let id in players) {
+      let p = players[id];
+      ctx.fillStyle = p.color;
+      ctx.beginPath(); ctx.arc(p.x, p.y, 25, 0, 6.28); ctx.fill();
+      
+      // Items comprados
+      if(p.item) {
+        ctx.fillStyle = '#ff0';
+        ctx.font = '20px Arial';
+        ctx.fillText(p.item.includes('sombrero')?'🐉':p.item.includes('casa')?'🏠':p.item.includes('abrazo')?'🐍':'✨', p.x-15, p.y-35);
+      }
+    }
+
+    requestAnimationFrame(loop);
+  }
+  loop();
+</script>
+<small style="position:fixed;bottom:5px;left:5px;color:#0ff">
+  BOAVERSE ∞ · 100% libre · 0 servidores · todo el dinero va directo a 0rb1t4lsn4k3r<br>
+  Precios irrisorios porque el futuro no debería costar nada
+</small>
+</body>
+</html>

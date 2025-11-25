@@ -6,22 +6,17 @@
   <style>
     body{margin:0;background:#000;overflow:hidden;color:#0ff;font-family:Courier New}
     canvas{display:block}
-    #shop{position:fixed;top:10px;right:10px;background:rgba(0,255,255,0.1);padding:15px;border:4px solid #0ff;border-radius:15px;z-index:999}
-    button{background:#0ff;color:#000;border:none;padding:12px 20px;margin:5px;border-radius:10px;cursor:pointer;font-weight:bold}
+    #shop{position:fixed;top:10px;right:10px;background:rgba(0,255,255,0.1);padding:15px;border:4px solid #0ff;border-radius:15px;z-index:999;font-size:14px}
+    button{background:#0ff;color:#000;border:none;padding:12px 20px;margin:5px;border-radius:10px;cursor:pointer;font-weight:bold;transition:.3s}
     button:hover{background:#00f;color:#0ff;transform:scale(1.1)}
-    #msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,255,255,0.9);padding:15px;border-radius:15px;font-size:20px}
+    #msg{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:rgba(0,255,255,0.95);padding:15px 25px;border-radius:15px;font-size:20px;z-index:9999;display:none}
+    small{position:fixed;bottom:5px;left:5px;color:#0ff;opacity:0.7;font-size:11px}
   </style>
 </head>
 <body>
 <canvas id="c"></canvas>
-<div id="shop">
-  <h2>TIENDA DEL ABRAZO</h2>
-  <button onclick="buy('sombrero-dragon',0.10)">Sombrero Dragón · 0,10 €</button><br>
-  <button onclick="buy('casa-abismo',0.20)">Casa en el Abismo · 0,20 €</button><br>
-  <button onclick="buy('abrazo-boa',0.05)">Abrazo Boa Eterno · 0,05 €</button><br>
-  <button onclick="buy('aura-dorada',0.15)">Aura Dorada 24h · 0,15 €</button>
-</div>
-<div id="msg" style="display:none"></div>
+<div id="shop"></div>
+<div id="msg"></div>
 
 <script>
   const canvas = document.getElementById('c');
@@ -29,28 +24,104 @@
   canvas.width = innerWidth; canvas.height = innerHeight;
   window.onresize = () => { canvas.width = innerWidth; canvas.height = innerHeight; };
 
+  // === DETECCIÓN DE IDIOMA AUTOMÁTICA ===
+  const lang = (navigator.language || navigator.userLanguage || 'es').substr(0,2).toLowerCase();
+
+  const texts = {
+    es: {
+      title: "TIENDA DEL ABRAZO",
+      hat: "Sombrero Dragón · 0,10 €",
+      house: "Casa en el Abismo · 0,20 €",
+      boa: "Abrazo Boa Eterno · 0,05 €",
+      aura: "Aura Dorada 24h · 0,15 €",
+      paying: "❤️ Abrazando a 0rb1t4lsn4k3r con",
+      thanks: "¡GRACIAS! Tu",
+      already: "ya brilla en el BOAVERSE",
+      footer: "BOAVERSE ∞ · 100% libre · todo el dinero va directo a 0rb1t4lsn4k3r · precios irrisorios porque el futuro no debería costar nada"
+    },
+    ca: {
+      title: "BOTIGA DE L'ABRAÇADA",
+      hat: "Barret Drac · 0,10 €",
+      house: "Casa a l'Abisme · 0,20 €",
+      boa: "Abraçada Boa Eterna · 0,05 €",
+      aura: "Aura Daurada 24h · 0,15 €",
+      paying: "❤️ Abraçant a 0rb1t4lsn4k3r amb",
+      thanks: "¡GRÀCIES! El teu",
+      already: "ja brilla al BOAVERSE",
+      footer: "BOAVERSE ∞ · 100% lliure · tots els diners van directes a 0rb1t4lsn4k3r · preus irrisoris perquè el futur no hauria de costar res"
+    },
+    en: {
+      title: "HUG SHOP",
+      hat: "Dragon Hat · 0.10 €",
+      house: "Abyss House · 0.20 €",
+      boa: "Eternal Boa Hug · 0.05 €",
+      aura: "Golden Aura 24h · 0.15 €",
+      paying: "❤️ Hugging 0rb1t4lsn4k3r with",
+      thanks: "THANK YOU! Your",
+      already: "already shines in BOAVERSE",
+      footer: "BOAVERSE ∞ · 100% free · all money goes directly to 0rb1t4lsn4k3r · ridiculous prices because the future shouldn't cost anything"
+    },
+    pt: {
+      title: "LOJA DO ABRAÇO",
+      hat: "Chapéu Dragão · 0,10 €",
+      house: "Casa no Abismo · 0,20 €",
+      boa: "Abraço Eterno da Boa · 0,05 €",
+      aura: "Aura Dourada 24h · 0,15 €",
+      paying: "❤️ Abraçando 0rb1t4lsn4k3r com",
+      thanks: "OBRIGADO! Seu",
+      already: "já brilha no BOAVERSE",
+      footer: "BOAVERSE ∞ · 100% livre · todo o dinheiro vai direto para 0rb1t4lsn4k3r · preços ridículos porque o futuro não deveria custar nada"
+    },
+    gl: {
+      title: "TENDA DO ABRAZO",
+      hat: "Sombreiro Dragón · 0,10 €",
+      house: "Casa no Abismo · 0,20 €",
+      boa: "Abrazo Eterno da Boa · 0,05 €",
+      aura: "Aura Dourada 24h · 0,15 €",
+      paying: "❤️ Abraçando a 0rb1t4lsn4k3r con",
+      thanks: "¡GRAZAS! O teu",
+      already: "xa brilla no BOAVERSE",
+      footer: "BOAVERSE ∞ · 100% libre · todo o diñeiro vai directo a 0rb1t4lsn4k3r · prezos irrisorios porque o futuro non debería custar nada"
+    }
+    // ¡Añade los que quieras, rey!
+  };
+
+  const t = texts[lang] || texts.es; // fallback español
+
+  // === TIENDA CON TRADUCCIÓN ===
+  document.getElementById('shop').innerHTML = `
+    <h2>${t.title}</h2>
+    <button onclick="buy('sombrero-dragon',0.10)">${t.hat}</button><br>
+    <button onclick="buy('casa-abismo',0.20)">${t.house}</button><br>
+    <button onclick="buy('abrazo-boa',0.05)">${t.boa}</button><br>
+    <button onclick="buy('aura-dorada',0.15)">${t.aura}</button>
+  `;
+
+  const footer = document.createElement('small');
+  footer.textContent = t.footer;
+  document.body.appendChild(footer);
+
+  // === JUGADORES Y COSAS ===
   let players = {}, myId = Math.random().toString(36);
   players[myId] = {x:innerWidth/2, y:innerHeight/2, color:`hsl(${Math.random()*360},100%,70%)`, item:""};
 
-  // WebRTC ultra-ligero (sin signaling server, usando QR o enlace)
-  alert("Comparte este enlace o escanea el QR con tus amigos:\n" + location.href);
-
-  // === TIENDA CON TRANSACCIÓN DIRECTA A TU PAYPAL ===
+  // === COMPRA DIRECTA A TU PAYPAL ===
   function buy(item, price) {
-    const paypalURL = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ferry420oficial@gmail.com&item_name=${encodeURIComponent("BOAVERSE: "+item)}&amount=${price.toFixed(2)}&currency_code=EUR&notify_url=&return=${encodeURIComponent(location.href)}`;
+    const paypalURL = `https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=ferry420oficial@gmail.com&item_name=BOAVERSE:${item}&amount=${price.toFixed(2)}&currency_code=EUR&return=${encodeURIComponent(location.href)}`;
     
-    document.getElementById('msg').style.display = 'block';
-    document.getElementById('msg').textContent = `❤️ Abrazando a 0rb1t4lsn4k3r con ${price}€... ❤️`;
+    const msg = document.getElementById('msg');
+    msg.style.display = 'block';
+    msg.textContent = `${t.paying} ${price.toFixed(2)}€...`;
     
     setTimeout(() => {
       window.open(paypalURL, '_blank');
       players[myId].item = item;
-      document.getElementById('msg').textContent = "¡GRACIAS! Tu " + item + " ya brilla en el BOAVERSE";
-      setTimeout(() => document.getElementById('msg').style.display='none', 5000);
-    }, 1500);
+      msg.textContent = `${t.thanks} ${item} ${t.already} ❤️`;
+      setTimeout(() => msg.style.display='none', 6000);
+    }, 1800);
   }
 
-  // Movimiento
+  // === LOOP BÁSICO ===
   const keys = {};
   window.onkeydown = e => keys[e.key] = true;
   window.onkeyup = e => keys[e.key] = false;
@@ -58,33 +129,26 @@
   function loop() {
     ctx.fillStyle = 'rgba(0,0,20,0.05)'; ctx.fillRect(0,0,canvas.width,canvas.height);
 
-    // Mi jugador
-    if(keys['ArrowUp']||keys['w']) players[myId].y -= 5;
-    if(keys['ArrowDown']||keys['s']) players[myId].y += 5;
-    if(keys['ArrowLeft']||keys['a']) players[myId].x -= 5;
-    if(keys['ArrowRight']||keys['d']) players[myId].x += 5;
+    if(keys['ArrowUp']||keys['w']) players[myId].y -= 6;
+    if(keys['ArrowDown']||keys['s']) players[myId].y += 6;
+    if(keys['ArrowLeft']||keys['a']) players[myId].x -= 6;
+    if(keys['ArrowRight']||keys['d']) players[myId].x += 6;
 
-    // Dibujar todos
     for(let id in players) {
       let p = players[id];
       ctx.fillStyle = p.color;
-      ctx.beginPath(); ctx.arc(p.x, p.y, 25, 0, 6.28); ctx.fill();
-      
-      // Items comprados
+      ctx.beginPath(); ctx.arc(p.x, p.y, 28, 0, 6.28); ctx.fill();
       if(p.item) {
-        ctx.fillStyle = '#ff0';
-        ctx.font = '20px Arial';
-        ctx.fillText(p.item.includes('sombrero')?'🐉':p.item.includes('casa')?'🏠':p.item.includes('abrazo')?'🐍':'✨', p.x-15, p.y-35);
+        const emoji = p.item.includes('sombrero')||p.item.includes('dragon')||p.item.includes('drac')?'dragon':
+                     p.item.includes('casa')||p.item.includes('house')?'house':
+                     p.item.includes('boa')||p.item.includes('abrazo')?'snake':'sparkles';
+        ctx.font = '30px Arial';
+        ctx.fillText(emoji, p.x-18, p.y-40);
       }
     }
-
     requestAnimationFrame(loop);
   }
   loop();
 </script>
-<small style="position:fixed;bottom:5px;left:5px;color:#0ff">
-  BOAVERSE ∞ · 100% libre · 0 servidores · todo el dinero va directo a 0rb1t4lsn4k3r<br>
-  Precios irrisorios porque el futuro no debería costar nada
-</small>
 </body>
 </html>

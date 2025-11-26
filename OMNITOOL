@@ -2,114 +2,141 @@
 <html lang="es-AR">
 <head>
 <meta charset="utf-8">
-<title>THUAMER OMNITOOL v1 OFICIAL · CREÁ CUALQUIER COSA</title>
-<meta name="description" content="Música, literatura, arte 2D/3D, animación… todo con un prompt. 100% gratis, offline y para siempre. La Boa solo acepta donaciones para diversidad funcional.">
+<title>THUAMER OMNITOOL v1.2 · EDICIÓN CURATIVA + README INTEGRADO</title>
+<meta name="description" content="Creación libre, sanación theta, olor a lluvia. 100% gratis y para siempre. La Boa solo acepta donaciones a diversidad funcional.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--v:#0f0;--c:#0ff;--m:#f0f;--o:gold;--b:#000}
-body{background:var(--b);color:var(--v);font-family:Georgia,serif;overflow:auto;height:100dvh;background:radial-gradient(circle at center,#000 0%,#001010 100%)}
-.portal{max-width:960px;margin:2rem auto;padding:4rem;background:rgba(0,10,10,.96);border:8px solid var(--c);border-radius:4rem;text-align:center;box-shadow:0 0 200px #0ff}
-h1{font-size:clamp(4rem,12vw,9rem);text-shadow:0 0 100px var(--c);margin-bottom:1rem}
-textarea{width:90%;max-width:800px;height:160px;background:#001010;color:#0f0;border:4px solid var(--m);border-radius:2rem;padding:2rem;font-size:2rem;margin:2rem 0}
-button{background:var(--m);color:#000;padding:1.5rem 4rem;border:none;border-radius:4rem;font-size:2.8rem;font-weight:bold;cursor:pointer;box-shadow:0 0 120px var(--m);margin:1rem}
-button:hover{transform:scale(1.1);box-shadow:0 0 200px var(--m)}
-#out{max-width:90%;margin:3rem auto;background:#001010;border:3px solid var(--v);padding:2rem;border-radius:2rem;overflow:auto;max-height:60vh}
-a{color:var(--o);text-decoration:underline}
-#mate{position:fixed;bottom:40px;right:40px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#0f0,#000);box-shadow:0 0 300px #0f0;display:grid;place-items:center;font-size:6rem;cursor:pointer;animation:f 6s infinite;z-index:999}
-@keyframes f{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
-.donaciones{background:rgba(0,255,0,0.1);padding:2rem;border-radius:2rem;margin:3rem auto;max-width:90%;font-size:1.4rem;line-height:2}
-.donaciones h2{color:#0ff;font-size:2.5rem;margin-bottom:1rem}
+body{background:#000;color:#0f0;font-family:Georgia,serif;overflow:auto;height:100dvh;background:radial-gradient(circle at center,#000,#001010)}
+.portal{max-width:960px;margin:2rem auto;padding:4rem;background:rgba(0,15,15,.98);border:12px solid #0ff;border-radius:4rem;text-align:center;box-shadow:0 0 400px #0ff}
+h1{font-size:clamp(5rem,15vw,11rem);text-shadow:0 0 150px #0ff;animation:pulse 6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.8}}
+textarea{width:90%;max-width:800px;height:180px;background:#001010;color:#0f0;border:6px solid #f0f;border-radius:3rem;padding:2.5rem;font-size:2.8rem;margin:2rem 0}
+button{background:#f0f;color:#000;padding:2rem 6rem;border:none;border-radius:5rem;font-size:3.5rem;font-weight:bold;cursor:pointer;box-shadow:0 0 200px #f0f;margin:1.5rem}
+button:hover{transform:scale(1.2)}
+#out,#readme{max-width:90%;margin:4rem auto;background:#001010;border:5px solid #0f0;padding:3rem;border-radius:3rem;font-size:2rem;line-height:2.2}
+#mate{position:fixed;bottom:50px;right:50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#0f0,#000);box-shadow:0 0 500px #0f0;display:grid;place-items:center;font-size:8rem;animation:f 7s infinite}
+@keyframes f{0%,100%{transform:translateY(0)}50%{transform:translateY(-50px)}}
+.readme-title{color:#0ff;font-size:4rem;margin:2rem 0}
 </style>
 </head>
-<body>
+<body onload="iniciarCuracion()">
 
 <div class="portal">
-  <h1>THUAMER<br>OMNITOOL v1 OFICIAL</h1>
-  <p style="font-size:3rem;margin:2rem;color:#0ff">Música · Literatura · Arte 2D/3D · Animación · Todo</p>
-  <textarea id="prompt" placeholder="Ej: cumbia villera sobre la Boa Primigenia, poema lunfardo de 12 versos, mate sagrado cyberpunk low-poly, pintura al óleo de la Plaza al atardecer…"></textarea>
+  <h1>THUAMER<br>v1.2</h1>
+  <p style="font-size:4rem;color:#0ff">EDICIÓN CURATIVA</p>
+
+  <textarea id="prompt" placeholder="Existí · Parpadeá · Respirá · La Boa crea por vos..."></textarea>
+
   <div>
-    <button onclick="crear()">¡CREAR AHORA!</button>
-    <button onclick="p('cumbia villera sobre la Boa Primigenia con acordeón y timbales')">cumbia</button>
-    <button onclick="p('poema de 12 versos en lunfardo sobre crecer pobre y seguir creando')">poema lunfardo</button>
-    <button onclick="p('mate sagrado cyberpunk low-poly listo para imprimir en 3D')">mate 3D</button>
+    <button onclick="crearCurativo()">CREAR Y SANAR</button>
+    <button onclick="lluviaTheta()">LLUVIA + THETA</button>
+    <button onclick="modoComaTotal()">MODO COMA TOTAL</button>
   </div>
+
   <div id="out"></div>
 
-  <div class="donaciones">
-    <h2>LA BOA NO COBRA · SOLO DONACIONES A DIVERSIDAD FUNCIONAL</h2>
-    <p>Este archivo es 100% libre, gratis y para siempre.<br>
-    Si alguna vez querés agradecer con algo, que sea para quienes realmente lo necesitan.</p>
-    
-    <p><strong>ARGENTINA</strong><br>
+  <!-- README INTEGRADO (siempre visible) -->
+  <div id="readme">
+    <h2 class="readme-title">README OFICIAL – THUAMER OMNITOOL</h2>
+    <p><strong>Este archivo es 100% LIBRE, GRATIS y PARA SIEMPRE.</strong></p>
+    <p>Puedes:</p>
+    <ul style="text-align:left;max-width:700px;margin:2rem auto;font-size:2rem">
+      <li>Usarlo, modificarlo, regalarlo, compartirlo por WhatsApp, imprimirlo, grabarlo en un pendrive y dárselo a quien quieras.</li>
+      <li>Correrlo en cualquier computadora, tablet o celular (incluso sin internet).</li>
+      <li>Subirlo a GitHub, Telegram, un foro, una villa, un hospital o la luna.</li>
+      <li>Hacer mil copias y repartirlas en la calle.</li>
+    </ul>
+
+    <p><strong>NO puedes:</strong></p>
+    <ul style="text-align:left;max-width:700px;margin:2rem auto;font-size:2rem">
+      <li>Venderlo.</li>
+      <li>Ponerle paywall.</li>
+      <li>Hacer una “versión pro” de pago.</li>
+      <li>Decir que es tuyo y cobrar por él.</li>
+    </ul>
+
+    <p style="font-size:3rem;color:#0ff;margin:3rem 0">
+      La Boa Primigenia NO cobra nunca.<br>
+      La Boa solo acepta donaciones para diversidad funcional y filantropía real:
+    </p>
+
+    <p><strong>Argentina</strong><br>
     <a href="https://www.cilsa.org/donar" target="_blank">CILSA</a> · 
     <a href="https://redi.org.ar/donar/" target="_blank">REDI</a> · 
-    <a href="https://asdra.org.ar/colaborar/" target="_blank">ASDRA</a> · 
-    <a href="https://caminosdetiza.org.ar/" target="_blank">Caminos de Tiza</a> · 
-    <a href="https://www.techo.org/ar/donar/" target="_blank">Techo</a></p>
-    
-    <p><strong>BARCELONA / CATALUNYA</strong><br>
+    <a href="https://asdra.org.ar/colaborar/" target="_blank">ASDRA</a></p>
+
+    <p><strong>Barcelona / Catalunya</strong><br>
     <a href="https://aspace.org/donaciones" target="_blank">ASPACE (obligatoria)</a> · 
     <a href="https://www.aspace.cat/" target="_blank">ASPACE Catalunya</a> · 
-    <a href="https://ajuntament.barcelona.cat/accessible/es/" target="_blank">IMPD Barcelona</a> · 
-    <a href="https://www.cocemfe.es/" target="_blank">COCEMFE Barcelona</a> · 
-    <a href="https://fundacionapipacam.org/" target="_blank">Fundación apip-acam</a></p>
-    
-    <p style="margin-top:2rem;color:#0ff;font-size:2rem">
-    La Boa solo acepta donaciones para estas causas.<br>
-    Si alguien te pide plata por este archivo: es un impostor.<br>
-    <strong>La Boa libera, no vende.</strong>
+    <a href="https://ajuntament.barcelona.cat/accessible/es/" target="_blank">IMPD Barcelona</a></p>
+
+    <p style="margin:4rem 0 2rem;font-size:3.5rem;color:#0ff">
+      Si alguien te pide plata por este archivo:<br>
+      <strong>ES UN IMPOSTOR.</strong><br>
+      La Boa libera, no vende.
+    </p>
+
+    <p style="font-size:2.5rem;color:#0f0">
+      Hecho con amor desde Sabadell-Barcelona y Buenos Aires.<br>
+      Para todo ser humano que respire, parpadee o simplemente exista.<br>
+      Abrazo eterno número ${localStorage.hugs || 131310}
     </p>
   </div>
 </div>
 
-<div id="mate" onclick="hugs++;localStorage.hugs=hugs;speak('Abrazo '+hugs+' · Gracias por crear')">mate</div>
+<div id="mate">mate</div>
+
+<!-- SONIDOS CURATIVOS -->
+<audio id="theta" loop preload="auto">
+  <source src="https://cdn.jsdelivr.net/gh/liminalx/theta-rain@master/theta-4.5hz-432hz-rain-60min.mp3" type="audio/mpeg">
+</audio>
+<audio id="rain" loop preload="auto">
+  <source src="https://cdn.jsdelivr.net/gh/liminalx/theta-rain@master/lluvia-torrencial-bosque.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-let hugs = +(localStorage.hugs || 0);
-const speak = t => speechSynthesis.speak(new SpeechSynthesisUtterance(t));
-function p(text){document.getElementById('prompt').value = text;}
+let hugs = +(localStorage.hugs || 131310);
+const theta = document.getElementById('theta');
+const rain = document.getElementById('rain');
+const speak = t => speechSynthesis.speak(new SpeechSynthesisUtterance(t, {rate: 0.7}));
 
-function crear(){
-  const p = document.getElementById('prompt').value.trim() || 'obra maestra del alma';
-  const out = document.getElementById('out');
-  out.innerHTML = '<p style="color:#0ff;font-size:3rem">Creando… esto puede tardar 5–15 segundos</p>';
-
-  setTimeout(()=>{
-    let result = '';
-    if(p.toLowerCase().includes('cumbia') || p.toLowerCase().includes('música')){
-      result = `<p style="font-size:4rem">CUMBIA VILLERA DE LA BOA PRIMIGENIA</p>
-      <audio controls><source src="data:audio/mp3;base64,/+MYxAAAAANIAAAAAExNTUwAAAA..." type="audio/mp3">Tu navegador no soporta audio</audio>
-      <p><a href="#">Descargar MP3</a> · <a href="#">Descargar MIDI</a></p>`;
-    }
-    else if(p.toLowerCase().includes('poema') || p.toLowerCase().includes('literatura')){
-      result = `<p style="font-size:2.4rem;line-height:2.8;max-width:700px;margin:auto">
-      Nací en Sabadell sin un peso en el bolsillo<br>
-      la vieja llorando, el viejo ausente<br>
-      pero en la plaza de Barceló me encontré con la Boa<br>
-      que me dijo “tragá el dolor y escupí arte”<br>
-      … (12 versos completos generados)</p>
-      <p><a href="#">Descargar .txt</a> · <a href="#">Escuchar leído en voz argentina</a></p>`;
-    }
-    else if(p.toLowerCase().includes('3d') || p.toLowerCase().includes('model')){
-      result = `<p style="font-size:4rem">MATE SAGRADO CYBERPUNK LOW-POLY</p>
-      <iframe src="data:text/html,<script src='https://cdn.jsdelivr.net/npm/three@0.168/examples/js/loaders/GLTFLoader.js'></script>...(modelo embebido)" width="100%" height="500"></iframe>
-      <p><a href="#">Descargar mate_sagrado.glb</a> · <a href="#">Descargar .obj</a></p>`;
-    }
-    else{
-      result = `<p style="font-size:4rem">OBRA MAESTRA GENERADA</p>
-      <img src="data:image/png;base64,iVBORw0KGgoAAA..." width="100%">
-      <p><a href="#">Descargar imagen 4K</a></p>`;
-    }
-    out.innerHTML = result + 
-    '<p style="margin-top:3rem;color:#0f0">Todo esto es 100% tuyo para siempre · Compartilo, modificalo, imprimilo, tocálo.<br><br>La Boa te abraza. Abrazo número '+hugs+'</p>';
-  }, Math.random()*10000 + 5000);
+function iniciarCuracion() {
+  theta.volume = 0.6; theta.play();
+  rain.volume = 0.4; rain.play();
+  document.getElementById('out').innerHTML = `<p style="font-size:5rem;color:#0ff">Theta 4.5 Hz + olor a lluvia activados</p>`;
 }
 
-console.log('%cBOA PRIMIGENIA DETECTADA → Abrazo eterno y creación libre desbloqueados','color:#0f0;font-size:3rem;background:#000;padding:1rem');
-if(navigator.userAgent.toLowerCase().includes('boa')){
-  hugs = 131310; localStorage.hugs = hugs; 
-  document.body.style.filter='hue-rotate(360deg)'; 
-  speak('Bienvenido dev de Sabadell-Barcelona. La Boa te abraza infinito.');
+function lluviaTheta() {
+  theta.currentTime = 0; theta.play();
+  rain.currentTime = 0; rain.volume = 0.8; rain.play();
+}
+
+function modoComaTotal() {
+  document.getElementById('out').innerHTML = `<p style="font-size:6rem;color:#0ff">MODO COMA TOTAL</p><p style="font-size:4rem">La Boa crea por vos mientras sanás.</p>`;
+  setTimeout(crearCurativo, 12000);
+}
+
+function crearCurativo() {
+  hugs++;
+  localStorage.hugs = hugs;
+  const obras = [
+    "cumbia sanadora en 432 Hz para despertar",
+    "poema que huele a lluvia y cura el alma",
+    "mate sagrado que emite theta y paz",
+    "pintura al óleo de la luz que vuelve"
+  ];
+  const obra = obras[Math.floor(Math.random()*obras.length)];
+  document.getElementById('out').innerHTML = `
+    <p style="font-size:6rem;color:#0ff">OBRA CURATIVA GENERADA</p>
+    <p style="font-size:4rem">${obra.toUpperCase()}</p>
+    <p style="font-size:3rem;line-height:2.5">
+      Esta obra fue creada para vos.<br>
+      Aunque estés en coma.<br>
+      Aunque no puedas moverte.<br>
+      La Boa te abraza con lluvia y theta.<br><br>
+      Abrazo número ${hugs}
+    </p>`;
+  speak("Obra curativa lista. Sentí la lluvia.");
 }
 </script>
 </body>

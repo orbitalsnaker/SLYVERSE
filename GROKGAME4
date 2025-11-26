@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>Respiro — para cuando el mundo pesa demasiado</title>
+<meta name="description" content="Un lugar muy chiquito, muy lento y muy seguro. Para pibes que necesitan parar un rato. Gratis para siempre.">
+<style>
+  body,html{margin:0;height:100%;overflow:hidden;background:#000;font-family:system-ui,sans-serif}
+  canvas{display:block}
+  #frase{position:fixed;bottom:40px;left:50%;transform:translateX(-50%);color:#fff;font-size:18px;text-align:center;opacity:0;transition:opacity 2s;pointer-events:none;z-index:10}
+  #mate{position:fixed;bottom:40px;right:40px;width:80px;height:80px;border-radius:50%;background:radial-gradient(#8cf,#38a);box-shadow:0 0 40px #8cf;display:flex;align-items:center;justify-content:center;font-size:40px;cursor:pointer;opacity:0.7;transition:.5s;z-index:20}
+  #mate:hover{opacity:1;transform:scale(1.1)}
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<div id="frase"></div>
+<div id="mate" role="button" aria-label="Abrazo suave">Abrazo</div>
+
+<script>
+// ====================== RESPIRO — EL LUGAR MÁS TRANQUI DE INTERNET ======================
+const c = document.getElementById('c');
+const ctx = c.getContext('2d');
+let w = c.width = innerWidth;
+let h = c.height = innerHeight;
+window.onresize = ()=>{w=c.width=innerWidth; h=c.height=innerHeight;};
+
+let t = 0;
+let breath = 0; // 0 a 1 a 0
+let hugs = parseInt(localStorage.getItem('respiroHugs')||'0');
+
+const frases = [
+  "está bien estar cansado",
+  "no tenés que ser fuerte todo el tiempo",
+  "tu ritmo es perfecto tal cual es",
+  "acá nadie te apura",
+  "respirá cuando puedas, no cuando debas",
+  "tus sentimientos son válidos",
+  "está permitido descansar",
+  "no estás solo",
+  "mañana también va a salir el sol",
+  "te banco",
+  "te quiero aunque no me conozcas",
+  "todo va a estar bien, de verdad"
+];
+
+function mostrarFrase(){
+  const f = document.getElementById('frase');
+  f.textContent = frases[Math.floor(Math.random()*frases.length)];
+  f.style.opacity = 1;
+  setTimeout(()=>{f.style.opacity = 0;}, 6000);
+}
+
+// abrazo muy suave
+document.getElementById('mate').onclick = ()=>{
+  hugs++;
+  localStorage.setItem('respiroHugs',hugs);
+  breath = 0; // reinicia la respiración para que se sienta el abrazo
+  mostrarFrase();
+  if("vibrate" in navigator) navigator.vibrate([100,200,100]);
+};
+
+function loop(){
+  t += 0.005;
+
+  // respiración del fondo
+  breath += 0.002;
+  if(breath>1) breath = 0;
+  const ease = breath<0.5 ? 2*breath*breath : 1-(Math.pow(-2*breath+2,2)/2); // easeInOutQuad
+
+  // cielo que respira
+  const grad = ctx.createLinearGradient(0,0,0,h);
+  grad.addColorStop(0, `hsl(${200+ease*30},70%,${15+ease*20}%)`);
+  grad.addColorStop(1, `hsl(${240+ease*40},80%,${5+ease*10}%)`);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0,0,w,h);
+
+  // estrellas suaves
+  for(let i=0;i<200;i++){
+    const phase = t + i*0.1;
+    const x = (i*37)%w;
+    const y = (i*61)%h;
+    const brillo = 0.3 + Math.sin(phase)*0.2 + ease*0.2;
+    ctx.fillStyle = `rgba(200,240,255,${brillo})`;
+    ctx.fillRect(x,y,1+brillo*2,1+brillo*2);
+  }
+
+  // luna que respira también
+  const moonSize = 60 + ease*30;
+  ctx.fillStyle = `rgba(200,230,255,${0.6+ease*0.3})`;
+  ctx.beginPath();
+  ctx.arc(w*0.8, h*0.2, moonSize, 0, Math.PI*2);
+  ctx.fill();
+
+  requestAnimationFrame(loop);
+}
+
+mostrarFrase();
+loop();
+</script>
+</body>
+</html>

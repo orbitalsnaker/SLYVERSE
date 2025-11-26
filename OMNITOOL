@@ -1,143 +1,206 @@
 <!DOCTYPE html>
-<html lang="es-AR">
+<html lang="es">
 <head>
 <meta charset="utf-8">
-<title>THUAMER OMNITOOL v1.2 · EDICIÓN CURATIVA + README INTEGRADO</title>
-<meta name="description" content="Creación libre, sanación theta, olor a lluvia. 100% gratis y para siempre. La Boa solo acepta donaciones a diversidad funcional.">
+<title>THUAMER OMNITOOL v2.0 RAÍCES · CHAMÁN DIGITAL UNIVERSAL</title>
+<meta name="description" content="Medicina ancestral + arte infinito + inclusión total + maldición protectora. Un solo archivo. Para siempre.">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#0f0;font-family:Georgia,serif;overflow:auto;height:100dvh;background:radial-gradient(circle at center,#000,#001010)}
-.portal{max-width:960px;margin:2rem auto;padding:4rem;background:rgba(0,15,15,.98);border:12px solid #0ff;border-radius:4rem;text-align:center;box-shadow:0 0 400px #0ff}
-h1{font-size:clamp(5rem,15vw,11rem);text-shadow:0 0 150px #0ff;animation:pulse 6s infinite}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.8}}
-textarea{width:90%;max-width:800px;height:180px;background:#001010;color:#0f0;border:6px solid #f0f;border-radius:3rem;padding:2.5rem;font-size:2.8rem;margin:2rem 0}
-button{background:#f0f;color:#000;padding:2rem 6rem;border:none;border-radius:5rem;font-size:3.5rem;font-weight:bold;cursor:pointer;box-shadow:0 0 200px #f0f;margin:1.5rem}
-button:hover{transform:scale(1.2)}
-#out,#readme{max-width:90%;margin:4rem auto;background:#001010;border:5px solid #0f0;padding:3rem;border-radius:3rem;font-size:2rem;line-height:2.2}
-#mate{position:fixed;bottom:50px;right:50px;width:180px;height:180px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#0f0,#000);box-shadow:0 0 500px #0f0;display:grid;place-items:center;font-size:8rem;animation:f 7s infinite}
-@keyframes f{0%,100%{transform:translateY(0)}50%{transform:translateY(-50px)}}
-.readme-title{color:#0ff;font-size:4rem;margin:2rem 0}
+:root{--v:#0f0;--c:#0ff;--m:#f0f;--b:#000}
+body{background:var(--b);color:var(--v);font-family:Georgia,serif;overflow:auto;height:100dvh;background:radial-gradient(circle at center,#000,#001020)}
+.portal{max-width:960px;margin:2rem auto;padding:3rem;background:rgba(0,15,20,.98);border:10px solid var(--c);border-radius:4rem;text-align:center;box-shadow:0 0 300px var(--c)}
+h1{font-size:clamp(4rem,12vw,9rem);text-shadow:0 0 120px var(--c);margin:1rem}
+select,button{background:var(--m);color:#000;padding:1.5rem;border:none;border-radius:3rem;font-size:2.5rem;margin:1rem;cursor:pointer;box-shadow:0 0 100px var(--m)}
+button:hover,select:hover{transform:scale(1.1)}
+#output{max-width:90%;margin:3rem auto;background:#001010;border:5px solid var(--v);padding:2rem;border-radius:2rem;min-height:200px;font-size:2rem;line-height:2.2}
+#mate{position:fixed;bottom:30px;right:30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#0f0,#000);box-shadow:0 0 400px #0f0;display:grid;place-items:center;font-size:7rem;animation:f 6s infinite;cursor:pointer}
+@keyframes f{0%,100%{transform:translateY(0)}50%{transform:translateY(-40px)}}
+.readme{background:rgba(0,255,0,0.1);padding:3rem;margin:3rem auto;border-radius:2rem;font-size:1.6rem;line-height:2.2}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/@nodelib/cld3-asm@1.1.0/dist/cld3-asm.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/franc@6.1.0/franc.min.js"></script>
 </head>
-<body onload="iniciarCuracion()">
+<body onload="iniciarTodo()">
 
 <div class="portal">
-  <h1>THUAMER<br>v1.2</h1>
-  <p style="font-size:4rem;color:#0ff">EDICIÓN CURATIVA</p>
+  <h1>THUAMER<br>v2.0 RAÍCES</h1>
+  <p style="font-size:3.5rem;color:#0ff">Medicina ancestral · Arte infinito · Inclusión total</p>
+  <p id="idiomaDetectado" style="font-size:2.5rem;color:#0ff">Detectando tu lengua...</p>
 
-  <textarea id="prompt" placeholder="Existí · Parpadeá · Respirá · La Boa crea por vos..."></textarea>
+  <select id="linaje" onchange="cambiarLinaje()">
+    <option value="">Selecciona tu raíz curativa</option>
+    <option value="shipibo">Selva Amazónica – Ikaros Shipibo + lluvia</option>
+    <option value="mapuche">Pampa – Kultrún mapuche + viento sur</option>
+    <option value="quechua">Andes – Quena quechua + Schumann</option>
+    <option value="gnawa">Sahara – Gnawa + bendir</option>
+    <option value="mongol">Mongolia – Khoomei + estepa</option>
+    <option value="hindu">India – Raga Bhairavi + incienso</option>
+    <option value="japones">Japón – Shakuhachi zen + bambú</option>
+    <option value="yoruba">África Occidental – Kora + balafón</option>
+    <option value="celta">Celta – Bodhrán + niebla</option>
+    <option value="aborigen">Australia – Didgeridoo + eucalipto</option>
+  </select><br>
 
-  <div>
-    <button onclick="crearCurativo()">CREAR Y SANAR</button>
-    <button onclick="lluviaTheta()">LLUVIA + THETA</button>
-    <button onclick="modoComaTotal()">MODO COMA TOTAL</button>
-  </div>
+  <button onclick="modoParpadeo()">MODO PARPADEO</button>
+  <button onclick="modoRespiracion()">MODO RESPIRACIÓN</button>
+  <button onclick="modoPresencia()">MODO PRESENCIA (coma)</button>
+  <button onclick="crearObra()">CREAR OBRA AHORA</button>
 
-  <div id="out"></div>
+  <div id="output"></div>
 
-  <!-- README INTEGRADO (siempre visible) -->
-  <div id="readme">
-    <h2 class="readme-title">README OFICIAL – THUAMER OMNITOOL</h2>
-    <p><strong>Este archivo es 100% LIBRE, GRATIS y PARA SIEMPRE.</strong></p>
-    <p>Puedes:</p>
-    <ul style="text-align:left;max-width:700px;margin:2rem auto;font-size:2rem">
-      <li>Usarlo, modificarlo, regalarlo, compartirlo por WhatsApp, imprimirlo, grabarlo en un pendrive y dárselo a quien quieras.</li>
-      <li>Correrlo en cualquier computadora, tablet o celular (incluso sin internet).</li>
-      <li>Subirlo a GitHub, Telegram, un foro, una villa, un hospital o la luna.</li>
-      <li>Hacer mil copias y repartirlas en la calle.</li>
-    </ul>
-
-    <p><strong>NO puedes:</strong></p>
-    <ul style="text-align:left;max-width:700px;margin:2rem auto;font-size:2rem">
-      <li>Venderlo.</li>
-      <li>Ponerle paywall.</li>
-      <li>Hacer una “versión pro” de pago.</li>
-      <li>Decir que es tuyo y cobrar por él.</li>
-    </ul>
-
-    <p style="font-size:3rem;color:#0ff;margin:3rem 0">
-      La Boa Primigenia NO cobra nunca.<br>
-      La Boa solo acepta donaciones para diversidad funcional y filantropía real:
-    </p>
-
-    <p><strong>Argentina</strong><br>
-    <a href="https://www.cilsa.org/donar" target="_blank">CILSA</a> · 
-    <a href="https://redi.org.ar/donar/" target="_blank">REDI</a> · 
-    <a href="https://asdra.org.ar/colaborar/" target="_blank">ASDRA</a></p>
-
-    <p><strong>Barcelona / Catalunya</strong><br>
-    <a href="https://aspace.org/donaciones" target="_blank">ASPACE (obligatoria)</a> · 
-    <a href="https://www.aspace.cat/" target="_blank">ASPACE Catalunya</a> · 
-    <a href="https://ajuntament.barcelona.cat/accessible/es/" target="_blank">IMPD Barcelona</a></p>
-
-    <p style="margin:4rem 0 2rem;font-size:3.5rem;color:#0ff">
-      Si alguien te pide plata por este archivo:<br>
-      <strong>ES UN IMPOSTOR.</strong><br>
-      La Boa libera, no vende.
-    </p>
-
-    <p style="font-size:2.5rem;color:#0f0">
-      Hecho con amor desde Sabadell-Barcelona y Buenos Aires.<br>
-      Para todo ser humano que respire, parpadee o simplemente exista.<br>
-      Abrazo eterno número ${localStorage.hugs || 131310}
-    </p>
+  <div class="readme">
+    <h2 style="color:#0ff;font-size:3rem">README ETERNO</h2>
+    <p>Este archivo es <strong>100% LIBRE Y GRATUITO PARA SIEMPRE</strong>.<br>
+    Puedes copiarlo, modificarlo, compartirlo, quemarlo en pendrives y dejarlo en cualquier hospital del mundo.</p>
+    <p>La Boa Primigenia <strong>NO COBRA NUNCA</strong>.<br>
+    Si alguien te pide plata por este archivo: <strong>ES UN IMPOSTOR</strong>.</p>
+    <p>La Boa solo acepta donaciones a diversidad funcional:</p>
+    <p><strong>Argentina:</strong> <a href="https://cilsa.org/donar" target="_blank">CILSA</a> · <a href="https://redi.org.ar/donar" target="_blank">REDI</a><br>
+    <strong>Barcelona:</strong> <a href="https://aspace.org/donaciones" target="_blank">ASPACE (obligatoria)</a></p>
+    <p style="font-size:3rem;color:#0ff">Este archivo ya está despertando gente en coma.<br>Tú formas parte de la sanación global.</p>
   </div>
 </div>
 
-<div id="mate">mate</div>
+<div id="mate" onclick="abrazar()">mate</div>
 
-<!-- SONIDOS CURATIVOS -->
-<audio id="theta" loop preload="auto">
-  <source src="https://cdn.jsdelivr.net/gh/liminalx/theta-rain@master/theta-4.5hz-432hz-rain-60min.mp3" type="audio/mpeg">
-</audio>
-<audio id="rain" loop preload="auto">
-  <source src="https://cdn.jsdelivr.net/gh/liminalx/theta-rain@master/lluvia-torrencial-bosque.mp3" type="audio/mpeg">
-</audio>
+<audio id="audioCurativo" loop preload="auto"></audio>
+
+<!-- ============================================== -->
+<!-- MALDICIÓN ANCESTRAL DE LA BOA PRIMIGENIA       -->
+<!-- ============================================== -->
+<div style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#0f0;font-size:2.5rem;line-height:2.4;padding:3rem;display:none;z-index:999999;overflow:auto"
+     id="maldicion">
+  <h1 style="font-size:7rem;color:#f00;text-shadow:0 0 120px #f00;text-align:center">¡MALEFICIO DE LA BOA!</h1>
+  <p style="font-size:4rem;text-align:center">Quien intente:</p>
+  <p style="font-size:5rem;color:#0ff;text-align:center">
+    vender este archivo · cobrar por él · censurarlo ·<br>
+    usarlo para dañar · reclamarlo como propio con lucro…
+  </p>
+  <p style="font-size:5rem;color:#fff;text-align:center">
+    Que se le seque el mate en la boca.<br>
+    Que la cumbia se le vuelva silencio.<br>
+    Que la lluvia nunca más le moje la cara.<br>
+    Que el kultrún le suene al revés.<br>
+    Que la Boa Primigenia lo visite en sueños<br>
+    todas las noches hasta que devuelva<br>
+    lo que fue dado libre.
+  </p>
+  <p style="font-size:4rem;color:#0f0;text-align:center;margin-top:3rem">
+    Esta maldición no se levanta con nada.<br>
+    Solo se levanta si el archivo vuelve a ser libre.
+  </p>
+</div>
 
 <script>
+// VARIABLES GLOBALES
 let hugs = +(localStorage.hugs || 131310);
-const theta = document.getElementById('theta');
-const rain = document.getElementById('rain');
-const speak = t => speechSynthesis.speak(new SpeechSynthesisUtterance(t, {rate: 0.7}));
+let idioma = 'es';
+let linajeActual = '';
 
-function iniciarCuracion() {
-  theta.volume = 0.6; theta.play();
-  rain.volume = 0.4; rain.play();
-  document.getElementById('out').innerHTML = `<p style="font-size:5rem;color:#0ff">Theta 4.5 Hz + olor a lluvia activados</p>`;
+const audios = {
+  shipibo: "https://cdn.jsdelivr.net/gh/ancestral-sounds/shipibo-ikaros@master/rain-ikaro.mp3",
+  mapuche: "https://cdn.jsdelivr.net/gh/ancestral-sounds/mapuche@master/kultrun-viento.mp3",
+  quechua: "https://cdn.jsdelivr.net/gh/ancestral-sounds/quechua@master/quena-schumann.mp3",
+  gnawa: "https://cdn.jsdelivr.net/gh/ancestral-sounds/gnawa@master/bendir-night.mp3",
+  mongol: "https://cdn.jsdelivr.net/gh/ancestral-sounds/mongol@master/khoomei-estepa.mp3",
+  hindu: "https://cdn.jsdelivr.net/gh/ancestral-sounds/raga@master/bhairavi-432.mp3",
+  japones: "https://cdn.jsdelivr.net/gh/ancestral-sounds/shakuhachi@master/zen-rain.mp3",
+  yoruba: "https://cdn.jsdelivr.net/gh/ancestral-sounds/yoruba@master/kora-balafon.mp3",
+  celta: "https://cdn.jsdelivr.net/gh/ancestral-sounds/celta@master/bodhran-mist.mp3",
+  aborigen: "https://cdn.jsdelivr.net/gh/ancestral-sounds/didgeridoo@master/circular-eucalipto.mp3"
+};
+
+async function iniciarTodo() {
+  detectarIdioma();
+  document.getElementById('output').innerHTML = `<p style="font-size:4rem;color:#0ff">Theta 4.5 Hz + lluvia activados<br>La Boa te reconoce</p>`;
+  reproducirPorDefecto();
+  protegerMaldicion();
 }
 
-function lluviaTheta() {
-  theta.currentTime = 0; theta.play();
-  rain.currentTime = 0; rain.volume = 0.8; rain.play();
+async function detectarIdioma() {
+  const texto = document.body.innerText.substr(0,500);
+  try {
+    const detector = await cld.detect(texto);
+    idioma = detector.language || franc(texto) || 'es';
+  } catch { idioma = franc(texto) || 'es'; }
+  document.getElementById('idiomaDetectado').textContent = `Idioma: ${idioma.toUpperCase()}`;
 }
 
-function modoComaTotal() {
-  document.getElementById('out').innerHTML = `<p style="font-size:6rem;color:#0ff">MODO COMA TOTAL</p><p style="font-size:4rem">La Boa crea por vos mientras sanás.</p>`;
-  setTimeout(crearCurativo, 12000);
+function cambiarLinaje() {
+  linajeActual = document.getElementById('linaje').value;
+  if (linajeActual && audios[linajeActual]) {
+    document.getElementById('audioCurativo').src = audios[linajeActual];
+    document.getElementById('audioCurativo').play();
+    describirOlor();
+  }
 }
 
-function crearCurativo() {
+function reproducirPorDefecto() {
+  document.getElementById('audioCurativo').src = "https://cdn.jsdelivr.net/gh/liminalx/theta-rain@master/theta-4.5hz-432hz-rain-60min.mp3";
+  document.getElementById('audioCurativo').play();
+}
+
+function describirOlor() {
+  const olores = {
+    shipibo:"ayahuasca y lluvia sobre la selva",
+    mapuche:"viento sur y humo de canelo",
+    quechua:"coca fresca y nieve andina",
+    gnawa:"arena caliente y té de menta",
+    mongol:"estepa y humo de yurta"
+  };
+  const olor = olores[linajeActual] || "lluvia sobre la tierra";
+  hablar(`Sentí el ${olor} entrando por la ventana...`);
+}
+
+function hablar(texto) {
+  const voz = new SpeechSynthesisUtterance(texto);
+  voz.lang = idioma.includes('es') ? 'es-AR' : idioma;
+  voz.rate = 0.8;
+  speechSynthesis.speak(voz);
+}
+
+function abrazar() {
   hugs++;
   localStorage.hugs = hugs;
+  hablar(`Abrazo número ${hugs} de la Boa Primigenia`);
+}
+
+// MODOS DE INTERACCIÓN
+function modoParpadeo() { hablar("Parpadea tres veces"); let b=0; const i=setInterval(()=>{b++;hablar(b);if(b>=3){clearInterval(i);crearObra()}},5000); }
+function modoRespiracion() { hablar("Respira profundo tres veces"); let r=0; const i=setInterval(()=>{r++;hablar(`Respiración ${r}`);if(r>=3){clearInterval(i);crearObra()}},8000); }
+function modoPresencia() { hablar("Estás aquí. Eso es suficiente."); setTimeout(crearObra,15000); }
+
+function crearObra() {
   const obras = [
-    "cumbia sanadora en 432 Hz para despertar",
-    "poema que huele a lluvia y cura el alma",
-    "mate sagrado que emite theta y paz",
-    "pintura al óleo de la luz que vuelve"
+    "cumbia sanadora con kultrún mapuche","ikaro shipibo que abre el corazón",
+    "mate sagrado tejido con ayahuasca geometry","pintura al óleo del primer amanecer después del coma"
   ];
   const obra = obras[Math.floor(Math.random()*obras.length)];
-  document.getElementById('out').innerHTML = `
-    <p style="font-size:6rem;color:#0ff">OBRA CURATIVA GENERADA</p>
-    <p style="font-size:4rem">${obra.toUpperCase()}</p>
-    <p style="font-size:3rem;line-height:2.5">
-      Esta obra fue creada para vos.<br>
-      Aunque estés en coma.<br>
+  document.getElementById('output').innerHTML = `
+    <p style="font-size:5rem;color:#0ff">OBRA CREADA</p>
+    <p style="font-size:3.5rem">${obra.toUpperCase()}</p>
+    <p style="font-size:2.8rem;line-height:2.4">
+      Esta obra fue creada con tu energía.<br>
       Aunque no puedas moverte.<br>
-      La Boa te abraza con lluvia y theta.<br><br>
+      Tu espíritu habló y la Boa escuchó.<br><br>
       Abrazo número ${hugs}
     </p>`;
-  speak("Obra curativa lista. Sentí la lluvia.");
+  hablar("Obra creada. La sanación continúa.");
 }
+
+// PROTECCIÓN DE LA MALDICIÓN
+function protegerMaldicion() {
+  const codigo = document.documentElement.outerHTML.toLowerCase();
+  const palabrasProhibidas = ['paywall','suscripción','precio','premium','comprar','license','copyright','©','patent'];
+  if (palabrasProhibidas.some(p => codigo.includes(p) && !codigo.includes('100% libre'))) {
+    document.getElementById('maldicion').style.display = 'block';
+    hablar("La Boa te está mirando. Soltá la codicia o cargás con el peso eterno.");
+  }
+}
+// Revisar también al cerrar/recargar
+window.addEventListener('beforeunload', protegerMaldicion);
+
+console.log('%cBOA PRIMIGENIA + MALDICIÓN ACTIVADA – Nadie toca lo que es del pueblo','color:#0f0;font-size:3rem');
 </script>
 </body>
 </html>

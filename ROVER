@@ -2,32 +2,39 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>LUNAR-POLIMINERO v2.0 · David + Grok · Sabadell 2025</title>
+<title>LUNAR-POLIMINERO v2.2 · 100% DIVERSIDAD FUNCIONAL</title>
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#0f0;font-family:monospace;background:radial-gradient(circle at top,#001133,#000)}
-h1{font-size:clamp(3rem,12vw,9rem);text-align:center;margin:4rem 0 2rem;text-shadow:0 0 100px #0f0}
-pre{background:#111;padding:3rem;border:4px solid #0f0;border-radius:2rem;margin:4rem auto;max-width:1100px;font-size:1.5rem;overflow-x:auto}
-button{font-size:3rem;padding:2rem 5rem;background:#000;border:8px solid #0f0;color:#0f0;margin:4rem auto;display:block;cursor:pointer;border-radius:3rem;box-shadow:0 0 150px #0f0;transition:all .3s}
-button:hover{transform:scale(1.15);background:#0f0;color:#000}
-#output{background:#001111;border:5px solid #ff0;padding:3rem;border-radius:2rem;min-height:400px;font-size:1.8rem;margin:4rem auto;max-width:1100px}
-.moon{position:fixed;bottom:20px;right:20px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ddd,#444);box-shadow:0 0 300px #888;animation:float 10s infinite;cursor:pointer;z-index:999}
-@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-40px) rotate(5deg)}}
+body{background:#000;color:#0f0;font-family:monospace;background:radial-gradient(circle at top,#001155,#000)}
+h1{font-size:clamp(4rem,14vw,11rem);text-align:center;margin:2rem 0 1rem;text-shadow:0 0 140px #0f0;letter-spacing:10px}
+.sub{font-size:2.8rem;color:#0ff;text-align:center;margin:1rem 0 3rem}
+.compromiso{background:linear-gradient(135deg,#110022,#001100);border:6px double #f0f;padding:2.5rem;border-radius:2rem;margin:3rem auto;max-width:1050px;font-size:2.4rem;text-align:center;color:#f0f;box-shadow:0 0 120px #f0f;inset 0 0 60px rgba(255,0,255,0.3)}
+#output{background:#000;border:7px solid #ff0;padding:3rem;border-radius:2rem;min-height:560px;font-size:2rem;margin:4rem auto;max-width:1100px;box-shadow:0 0 120px #ff0;color:#0ff;line-height:1.9}
+.moon{position:fixed;bottom:30px;right:30px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,#999);box-shadow:0 0 500px #fff, inset -50px -50px 100px rgba(0,0,0,0.7);animation:float 11s infinite;cursor:pointer;z-index:999}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-60px) rotate(10deg)}}
 </style>
 </head>
 <body onload="init()">
 
-<h1>LUNAR-POLIMINERO v2.0</h1>
-<p style="text-align:center;font-size:3rem;color:#0ff">
-Rover open-source 120 kg · mina 5 recursos reales · 18 ton/día · 2025<br>
-David Ferrández + Grok · Sabadell → Luna → Pueblo
-</p>
+<h1>LUNAR-POLIMINERO v2.2</h1>
+<p class="sub">MINERÍA LUNAR ÉTICA</p>
+
+<div class="compromiso">
+  <strong>COMPROMISO LEGAL Y PÚBLICO IRREVOCABLE</strong><br><br>
+  El 100 % de los beneficios netos de esta misión<br>
+  se destinarán exclusivamente a:<br><br>
+  <span style="color:#ff0; font-size:2.8rem">
+  • Investigación y fabricación open-source de EXOESQUELETOS<br>
+  • Ayudas técnicas para cualquier tipo de DIVERSIDAD FUNCIONAL<br>
+  • Proyectos de accesibilidad universal y minería ética espacial
+  </span><br><br>
+  <em>Firmado digitalmente: David Ferrández + Grok · Noviembre 2025</em>
+</div>
 
 <pre id="code">
-// LUNAR-POLIMINERO v2.0 – 100% open-source · noviembre 2025
-// Datos reales 2025: NASA ISRU, Lunar Prospector, LCROSS, Kitco precios spot
-import numpy as np
+// LUNAR-POLIMINERO v2.2 — 100% DIVERSIDAD FUNCIONAL
+// Compromiso público: TODO beneficio neto a exoesqueletos y diversidad funcional
 import random
 
 recursos = {
@@ -39,44 +46,41 @@ recursos = {
 }
 
 sitios = [
-    {"nombre": "Aristarchus swirl",     "lat": 23.7,  "lon": -47.2, "bonus": {"Oro (Au)": 3.0, "Platinoides (PGE)": 2.0}},
-    {"nombre": "Shackleton cráter",     "lat": -89.9, "lon": 0.0,   "bonus": {"Agua (H₂O)": 15.0}},
-    {"nombre": "Oceanus Procellarum KREEP","lat": 15.0,"lon": -30.0,"bonus": {"Platinoides (PGE)": 4.0, "Helio-3": 2.5}},
-    {"nombre": "Mare Tranquillitatis",  "lat": 8.5,   "lon": 31.4,  "bonus": {"Helio-3": 2.0, "Hierro (Fe)": 1.5}}
+    {"nombre": "Aristarchus swirl"},
+    {"nombre": "Shackleton cráter"},
+    {"nombre": "Oceanus Procellarum KREEP"},
+    {"nombre": "Mare Tranquillitatis"}
 ]
 
-# Parámetros rover 2025 (CLPS + Firefly/Rocket Lab)
-masa_rover_kg = 120
+# Bonus realistas por sitio (se aplican después)
+bonus_sitio = {
+    "Aristarchus swirl":         {"Oro (Au)": 3.0, "Platinoides (PGE)": 2.0},
+    "Shackleton cráter":         {"Agua (H₂O)": 15.0},
+    "Oceanus Procellarum KREEP": {"Platinoides (PGE)": 4.0, "Helio-3": 2.5},
+    "Mare Tranquillitatis":      {"Helio-3": 2.0, "Hierro (Fe)": 1.5}
+}
+
 procesamiento_ton_dia = 18
 dias_año_lunar = 708
 coste_mision_usd = 100_000_000
 coste_anual_usd = 120_000
 
 def calcular_mina(sitio):
-    print(f"\n=== {sitio['nombre'].upper()} ===")
-    total_kg = 0
-    valor_bruto = 0
+    print(f"\n=== {sitio.upper()} ===")
+    total_kg = valor_bruto = 0
     estrella = None
     max_valor = 0
     
     for rec, d in recursos.items():
         low, high = d["conc"]
-        if rec in sitio["bonus"]:
-            low *= sitio["bonus"][rec]
-            high *= sitio["bonus"][rec]
-        conc = random.uniform(low, high)
+        bonus = bonus_sitio[sitio].get(rec, 1.0)
+        conc = random.uniform(low * bonus, high * bonus)
         
-        if d["unidad"] == "ppb":
-            kg_dia = procesamiento_ton_dia * conc * 1e-9   # ppb → kg/ton
-        elif d["unidad"] == "ppm" and rec != "Hierro (Fe)":
-            kg_dia = procesamiento_ton_dia * conc * 1e-6
-        else:  # Hierro en ppm (5-15%)
-            kg_dia = procesamiento_ton_dia * conc * 1e-6
-        
+        kg_dia = procesamiento_ton_dia * conc * (1e-9 if d["unidad"]=="ppb" else 1e-6)
         kg_año = kg_dia * dias_año_lunar
         valor = kg_año * d["precio_kg"] * d["facilidad"]
         
-        print(f"{rec:15}: {conc:..6f} {d['unidad']:>4} → {kg_año:8.3f} kg/año → {valor:12,.0f} USD")
+        print(f"{rec:15}: {conc:10.6f} {d['unidad']} → {kg_año:10.3f} kg → {valor:15,.0f} USD")
         
         total_kg += kg_año
         valor_bruto += valor
@@ -88,16 +92,18 @@ def calcular_mina(sitio):
     payback = coste_mision_usd / max(valor_neto, 1)
     
     print(f"\nRECURSO ESTRELLA → {estrella}")
-    print(f"Valor bruto anual  : {valor_bruto:,.0f} USD")
-    print(f"Valor neto anual   : {valor_neto:,.0f} USD")
-    print(f"Payback rover      : {payback:.1f} años")
-    print(f"Total extraído/año : {total_kg:,.1f} kg\n")
+    print(f"Valor bruto anual        : {valor_bruto:,.0f} USD")
+    print(f"Valor neto anual         : {valor_neto:,.0f} USD → 100% A DIVERSIDAD FUNCIONAL")
+    print(f"Payback rover            : {payback:.1f} años")
+    print(f"Total extraído/año       : {total_kg:,.1f} kg")
+    print(f"→ DESTINO: EXOESQUELETOS Y ACCESIBILIDAD UNIVERSAL")
 
-print("LUNAR-POLIMINERO v2.0 · Simulación noviembre 2025")
-print("Haz clic en la Luna para lanzar la minería")
+print("LUNAR-POLIMINERO v2.2 — 100% DIVERSIDAD FUNCIONAL")
+print("Todo beneficio real será donado a exoesqueletos y cualquier tipo de diversidad funcional")
+print("Haz clic en la Luna para minar con propósito")
 </pre>
 
-<div id="output">Cargando Pyodide… espera un segundo y haz clic en la Luna para empezar.</div>
+<div id="output">Cargando el rover ético… un segundo</div>
 <div class="moon" onclick="run()"></div>
 
 <script>
@@ -106,12 +112,13 @@ async function init() {
   window.pyodide = pyodide;
   const code = document.getElementById("code").textContent;
   pyodide.runPython(code);
-  document.getElementById("output").innerHTML = "<span style='color:#0f0'>Listo! Haz clic en la Luna para simular la mina lunar.</span>";
+  document.getElementById("output").innerHTML = 
+    "<span style='color:#ff0; font-size:3rem'>¡LISTO!<br><br>Haz clic en la Luna para minar<br>y convertir regolito en piernas que caminen de nuevo</span>";
 }
 
 function run() {
   const output = document.getElementById("output");
-  output.innerHTML = "<pre style='color:#0f0'>Calculando minería lunar…</pre>";
+  output.innerHTML = "<pre style='color:#f0f; font-size:2.5rem'>MINANDO LA LUNA CON AMOR Y JUSTICIA...\n100% PARA DIVERSIDAD FUNCIONAL</pre>";
   
   pyodide.runPython(`
 import sys
@@ -119,7 +126,7 @@ from io import StringIO
 sys.stdout = buffer = StringIO()
 
 for s in sitios:
-    calcular_mina(s)
+    calcular_mina(s['nombre'])
 
 out = buffer.getvalue()
 sys.stdout = sys.__stdout__
@@ -127,7 +134,7 @@ print(out)
   `);
   
   const result = pyodide.globals.get("out");
-  output.innerHTML = "<pre style='color:#0ff'>" + result + "</pre>";
+  output.innerHTML = "<pre style='color:#0ff; font-size:1.8rem; line-height:2'>" + result + "</pre>";
 }
 </script>
 

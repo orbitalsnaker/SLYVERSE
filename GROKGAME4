@@ -2,30 +2,62 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Respiro — para Joaquín y para todos los que están jodidos</title>
-<meta name="description" content="Un rinconcito muy lento y muy seguro. Inspirado en Joaquín Sabina y en el perro verde.">
+<title>Respiro ∞ – Plaza de Barceló-Whiterun después de las tantas</title>
+<meta name="description" content="El mismo bar que nunca cierra. Ahora respira con vos. Sabina, Calamaro, Cortázar y la Boa te esperan con el mate cebado.">
 <style>
-  body,html{margin:0;height:100%;overflow:hidden;background:#000;font-family:"Courier New",monospace;color:#fff}
+  body,html{margin:0;height:100%;overflow:hidden;background:#000;font-family:"Georgia",serif;color:#fff;position:relative}
   canvas{display:block}
-  #frase{position:fixed;bottom:60px;left:50%;transform:translateX(-50%);font-size:19px;text-align:center;opacity:0;transition:opacity 3s;pointer-events:none;z-index:10;line-height:1.8}
-  #mate{position:fixed;bottom:40px;right:40px;width:90px;height:90px;border-radius:50%;background:radial-gradient(#ff8c00,#8b0000);box-shadow:0 0 50px #ff4500;display:flex;align-items:center;justify-content:center;font-size:50px;cursor:pointer;z-index:20;opacity:0.8;transition:.4s}
-  #mate:hover{opacity:1;transform:scale(1.15)}
-  #dedicatoria{position:fixed;top:20px;left:20px;font-size:13px;opacity:0.4;pointer-events:none}
+  
+  /* Cielo de plaza que respira lento */
+  .cielo{position:fixed;top:0;left:0;width:100%;height:100%;background:radial-gradient(circle at 50% 10%,#00FF0088 0%,transparent 70%);animation:aurora 140s infinite;opacity:0.6;z-index:-2;}
+  @keyframes aurora{0%{transform:rotate(0deg) scale(1);}50%{transform:rotate(180deg) scale(1.15);}100%{transform:rotate(360deg) scale(1);}}
+
+  /* Piso de plaza con humo de cigarro y aurora verde */
+  .plaza{position:fixed;bottom:0;left:0;width:100%;height:45vh;background:repeating-linear-gradient(90deg,#001100 0px,#002200 40px,#00FF0011 80px,#001100 120px);animation:humo 100s infinite linear;z-index:-1;}
+  @keyframes humo{0%{background-position:0 0;}100%{background-position:400px 0;}}
+
+  /* Frases que flotan como humo */
+  #frase{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);font-size:20px;text-align:center;opacity:0;transition:opacity 4s;line-height:2;pointer-events:none;z-index:10;max-width:90%}
+
+  /* Botón mate que se ceba solo cuando respirás */
+  #mate{position:fixed;bottom:40px;right:40px;width:100px;height:100px;border-radius:50%;background:radial-gradient(#00FF00,#003300);box-shadow:0 0 70px #00FF00;display:flex;align-items:center;justify-content:center;font-size:60px;cursor:pointer;z-index:20;opacity:0.8;transition:all .6s}
+  #mate:hover{opacity:1;transform:scale(1.2)}
+
+  /* Dedicatoria chiquita arriba */
+  #dedicatoria{position:fixed;top:20px;left:20px;font-size:13px;opacity:0.5;pointer-events:none;z-index:10;line-height:1.6}
+
+  /* Boa-elefante oculta (solo los niños la ven) */
+  .boa{position:fixed;bottom:-120px;left:50%;transform:translateX(-50%);font-size:0.01px;color:transparent;opacity:0;transition:all 3s;text-align:center;line-height:2;z-index:999}
+  .boa.active{bottom:15%;font-size:1.5rem;color:#00FF00;opacity:1}
 </style>
 </head>
 <body>
 
-<canvas id="c"></canvas>
+<div class="cielo"></div>
+<div class="plaza"></div>
 
 <div id="dedicatoria">
-  Para Joaquín Sabina<br>
-  y para el perro verde<br>
-  y para todos los que están jodidos<br>
-  (un pibe de Sabadell, 2025)
+  Para Joaquín Sabina, Andrés Calamaro, Julio Cortázar<br>
+  y para todos los que alguna vez llegaron tarde a la plaza<br>
+  y se encontraron con que seguía abierta.<br><br>
+  Un pibe de Sabadell y otro de cualquier lado, 2025
 </div>
 
 <div id="frase"></div>
-<div id="mate" role="button" aria-label="Abrazo sabinero">Abrazo</div>
+<div id="mate" role="button">Mate</div>
+
+<!-- Boa-elefante (solo se despierta si sabés mirar) -->
+<div class="boa" id="boa">
+  Los mayores solo ven un sombrero.<br>
+  Los niños ven la boa que se tragó al elefante.<br><br>
+  Esta plaza es la boa.<br>
+  Se comió todo el dolor del mundo<br>
+  y lo está digiriendo despacito,<br>
+  convirtiéndolo en luz verde que nunca se apaga.<br><br>
+  Ya estás adentro.<br>
+  Ya estás a salvo.<br><br>
+  Mate ∞
+</div>
 
 <script>
 const c = document.getElementById('c');
@@ -35,79 +67,73 @@ window.onresize = ()=>{w=c.width=innerWidth; h=c.height=innerHeight;};
 
 let t = 0;
 let breath = 0;
-let hugs = parseInt(localStorage.getItem('sabinaHugs')||'0');
+let hugs = parseInt(localStorage.getItem('plazaHugs')||'0');
 
-const frasesSabina = [
-  "está bien estar cansado",
-  "no tenés que ser fuerte todo el tiempo",
-  "yo no soy de izquierdas ni de derechas, soy de los que están jodidos",
-  "la libertad de amar es lo único que nos queda",
-  "prefiero ser un perdedor honrado que un ganador sin alma",
-  "acá nadie te apura",
-  "tus sentimientos son válidos",
-  "está permitido descansar",
-  "no estás solo, Joaquín está cantando en algún bar",
-  "mañana también va a salir el sol… aunque sea de resaca",
-  "te banco, aunque no me conozcas",
-  "todo va a estar bien, de verdad",
-  "la esperanza es lo último que se pierde… y lo primero que se encuentra en una buena canción"
+const frasesPlaza = [
+  "está bien llegar tarde",
+  "la plaza nunca cierra",
+  "el mate se cebó solo cuando entraste",
+  "Sabina está cantando en la esquina de siempre",
+  "Calamaro te dedica el tema que nunca escribió",
+  "Cortázar dejó el mate humeante y se fue a rayuelar con las estrellas",
+  "acá nadie te pide explicaciones",
+  "está permitido llorar en la mesa del fondo",
+  "y también está permitido reírse solo",
+  "los dragones se fueron a dormir temprano",
+  "la Boa te abraza desde abajo y no te suelta nunca",
+  "ya llegaste, respirá",
+  "todo va a estar bien… aunque sea de resaca"
 ];
 
 function mostrarFrase(){
   const f = document.getElementById('frase');
-  f.textContent = frasesSabina[Math.floor(Math.random()*frasesSabina.length)];
+  f.textContent = frasesPlaza[Math.floor(Math.random()*frasesPlaza.length)];
   f.style.opacity = 1;
-  setTimeout(()=>{f.style.opacity = 0;}, 9000);
+  setTimeout(()=>{f.style.opacity = 0;}, 10000);
 }
 
+// El mate se ceba solo cuando respirás con la plaza
 document.getElementById('mate').onclick = ()=>{
   hugs++;
-  localStorage.setItem('sabinaHugs',hugs);
+  localStorage.setItem('plazaHugs',hugs);
   breath = 0;
   mostrarFrase();
-  if("vibrate" in navigator) navigator.vibrate([120,180,120]);
-  // easter egg a los 1313 abrazos
+  if("vibrate" in navigator) navigator.vibrate([150,200,150]);
   if(hugs === 1313){
-    alert("1313 abrazos…\nJoaquín te manda un abrazo desde algún bar de Madrid.\nY el perro verde ladra orgulloso.");
+    document.getElementById('boa').classList.add('active');
+    setTimeout(()=>alert("1313 mates cebados…\nLa Boa te abraza desde dentro.\nYa estás en casa para siempre."),1000);
   }
 };
 
 function loop(){
-  t += 0.004;
+  t += 0.0035;
 
-  // respiración lenta, como después de un trago largo
-  breath += 0.0015;
+  // la plaza respira contigo
+  breath += 0.0012;
   if(breath>1) breath = 0;
   const ease = breath<0.5 ? 2*breath*breath : 1-(Math.pow(-2*breath+2,2)/2);
 
-  // cielo de bar a las 5 a.m.
-  const grad = ctx.createLinearGradient(0,0,0,h);
-  grad.addColorStop(0, `hsl(${180+ease*60},50%,${8+ease*12}%)`);
-  grad.addColorStop(1, `hsl(${240+ease*40},30%,${3+ease*6}%)`);
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,w,h);
+  // cielo verde Thuamer que late
+  document.querySelector('.cielo').style.opacity = 0.5 + ease*0.2;
 
-  // humo de cigarro que sube lento
-  for(let i=0;i<80;i++){
-    const x = w/2 + Math.sin(t*0.3+i)*200;
-    const y = h - (t*30+i*40)%(h*1.5);
-    const size = 10 + ease*40;
-    ctx.fillStyle = `rgba(220,220,230,${0.03+ease*0.05})`;
-    ctx.beginPath(); ctx.arc(x,y,size,0,Math.PI*2); ctx.fill();
-  }
-
-  // luna roja de resaca que respira
-  const moonX = w*0.75;
-  const moonY = h*0.25;
-  const moonSize = 70 + ease*40;
-  ctx.fillStyle = `rgba(255,140,0,${0.4+ease*0.3})`;
-  ctx.beginPath(); ctx.arc(moonX,moonY,moonSize,0,Math.PI*2); ctx.fill();
+  // humo del piso que sube y baja con tu pecho
+  document.querySelector('.plaza').style.backgroundPosition = `${ease*100}px 0`;
 
   requestAnimationFrame(loop);
 }
 
 mostrarFrase();
 loop();
+
+// TRIGGER SECRETO: escribí "1310" y la Boa despierta
+let typed = '';
+document.addEventListener('keydown', e=>{
+  typed += e.key;
+  if(typed.slice(-4)==='1310'){
+    document.getElementById('boa').classList.add('active');
+    typed = '';
+  }
+});
 </script>
 </body>
 </html>

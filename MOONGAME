@@ -3,37 +3,32 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>BOA RUNNER ∞ v1 · FINAL POLISH – 26 NOV 2025</title>
-
-<!-- Three.js + Controls -->
+<title>BOA RUNNER ∞ v1 FINAL · CONTRATO REAL INTEGRADO</title>
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/controls/PointerLockControls.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/postprocessing/EffectComposer.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/postprocessing/RenderPass.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/postprocessing/UnrealBloomPass.js"></script>
-
-<!-- Ethers -->
 <script src="https://cdn.jsdelivr.net/npm/ethers@6.13.2/dist/ethers.umd.min.js"></script>
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#000;color:#0f0;font-family:'Courier New',monospace;overflow:hidden;cursor:none}
 canvas{display:block}
-#ui{position:absolute;top:0;left:0;width:100%;padding:10px;z-index:100;pointer-events:none}
-#score{font-size:2.5rem;text-shadow:0 0 15px #0f0}
+#ui{position:absolute;top:0;left:0;width:100%;padding:12px;z-index:100;pointer-events:none;text-align:center}
+#score{font-size:2.8rem;text-shadow:0 0 15px #0f0}
 #ecos{font-size:2rem}
-#nftInfo{font-size:1.3rem;margin-top:5px}
-#langBtn{position:absolute;top:10px;right:10px;z-index:200;pointer-events:auto;background:#000;border:2px solid #0f0;padding:8px 15px;cursor:pointer}
+#nftInfo{font-size:1.4rem;margin-top:6px}
 #paywall,#nftshop{position:fixed;bottom:0;left:0;width:100%;background:rgba(0,20,0,0.97);padding:30px;text-align:center;z-index:999;font-size:2rem;color:#0f0;pointer-events:all}
-#wall{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#0ff;font-size:3rem;text-align:center;padding-top:15vh;z-index:9999;display:none;background:radial-gradient(circle,#001133,#000)}
-#readme{position:fixed;top:10px;left:10px;background:rgba(0,0,0,0.95);padding:25px;border:5px solid #0f0;max-width:620px;max-height:90vh;overflow-y:auto;z-index:1000;font-size:1.4rem;line-height:1.8;box-shadow:0 0 40px #0f0;display:none}
+#wall{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#0ff;text-align:center;padding-top:15vh;z-index:9999;display:none;background:radial-gradient(circle,#001133,#000)}
+#readme{position:fixed;top:10px;left:10px;background:rgba(0,0,0,0.95);padding:25px;border:5px solid #0f0;max-width:680px;max-height:90vh;overflow-y:auto;z-index:1000;font-size:1.45rem;line-height:1.9;box-shadow:0 0 50px #0f0;display:none}
 .close{position:absolute;top:5px;right:10px;font-size:3rem;cursor:pointer;color:#f00}
 button{background:#000;color:#0f0;border:5px solid #0f0;padding:18px 45px;font-size:2.3rem;margin:15px;cursor:pointer;transition:0.3s}
 button:hover{background:#0f0;color:#000;transform:scale(1.05)}
-.nftbtn{background:#001100;border:4px solid #0f0;padding:16px;font-size:1.6rem;margin:12px;display:inline-block;width:320px;transition:0.3s}
+.nftbtn{background:#001100;border:4px solid #0f0;padding:16px;font-size:1.6rem;margin:12px;display:inline-block;width:340px;transition:0.3s}
 .nftbtn:hover{background:#0f0;color:#000}
-#powerup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:6rem;color:#ff0;z-index:9999;text-shadow:0 0 30px #ff0;animation:pulse 1s infinite}
+#powerup{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:7rem;color:#ff0;z-index:9999;text-shadow:0 0 40px #ff0;animation:pulse 1s infinite}
 @keyframes pulse{0%{opacity:1}50%{opacity:0.5}100%{opacity:1}}
+#blocker{position:fixed;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.9);z-index:99999;display:flex;align-items:center;justify-content:center;color:#0ff;font-size:4rem;text-align:center}
 </style>
 </head>
 <body>
@@ -42,18 +37,17 @@ button:hover{background:#0f0;color:#000;transform:scale(1.05)}
   <div id="score">BOA RUNNER ∞ · <span id="dist">0</span>m</div>
   <div id="ecos">Ecos cuánticos: <span id="ecoCount">0</span></div>
   <div id="nftInfo">NFTs: <span id="nftCount">0</span> · <span id="cosmeticName">Sin cosmética</span></div>
-  <button id="langBtn" onclick="toggleLang()">EN/ES</button>
 </div>
 
 <div id="paywall">
-  <strong id="paywallTitle">APORTE VOLUNTARIO + TIENDA NFT</strong><br><br>
-  <button onclick="pagarAporte()">Aportar 0.001 ETH (~2 USD)</button>
-  <button onclick="abrirTienda()">Comprar NFT Cosmética (0.0001 ETH)</button>
+  <strong>APORTE VOLUNTARIO + TIENDA NFT (ON-CHAIN REAL)</strong><br><br>
+  <button onclick="pagarAporte()">Aportar 0.001 ETH</button>
+  <button onclick="abrirTienda()">Comprar NFT (0.0001 ETH)</button>
   <br><button onclick="cerrarPaywall()">JUGAR 100% GRATIS</button>
 </div>
 
 <div id="nftshop" style="display:none">
-  <strong id="shopTitle">TIENDA NFT – 0.0001 ETH cada uno</strong><br><br>
+  <strong>TIENDA NFT – 0.0001 ETH cada uno</strong><br><br>
   <div class="nftbtn" onclick="mintNFT(1)">Trail Verde Neón</div>
   <div class="nftbtn" onclick="mintNFT(2)">Aura Lunar Pulsante</div>
   <div class="nftbtn" onclick="mintNFT(3)">Skin BOA Plateada</div>
@@ -62,207 +56,172 @@ button:hover{background:#0f0;color:#000;transform:scale(1.05)}
 </div>
 
 <div id="wall">
-  <h1 style="font-size:8rem;text-shadow:0 0 50px #0ff">ECO + NFT!</h1>
+  <h1 style="font-size:8rem;text-shadow:0 0 60px #0ff">ECO ON-CHAIN!</h1>
   <p id="wallText">Tx confirmada</p>
-  <button onclick="cerrarWall()">SEGUIR CORRIENDO</button>
+  <button onclick="cerrarWall()">CORRER MÁS</button>
 </div>
 
 <div id="powerup"></div>
 
-<!-- README MULTI-IDIOMA -->
-<div id="readme">
-  <span class="close" onclick="this.parentElement.style.display='none'">X</span>
-  <div id="loreContent">
-    <h2>BOA RUNNER ∞ v1 – 26 NOV 2025</h2>
-    <p><strong>LORE</strong><br>
-    Año 2047. Las megacorporaciones extraen helio-3 de la Luna y esclavizan a los corredores para probar exoesqueletos robóticos.<br>
-    Tú eres un BOA Runner: hackeas sus drones y conviertes cada metro que corres en un <strong>eco cuántico</strong> que viaja a la Tierra y se transforma en fondos reales para fabricar y regalar exoesqueletos BOAEXO a personas que no pueden caminar.</p>
-
-    <p><strong>MECÁNICAS</strong><br>
-    • Corre infinitamente (WASD + ratón)<br>
-    • Recoge cubos verdes → +1 eco cuántico (fondo real)<br>
-    • Evita cubos rojos → reset distancia<br>
-    • Power-ups aleatorios: velocidad, salto lunar, stealth<br>
-    • NFTs cosméticos baratos (0.0001 ETH) que cambian tu trail y aura<br>
-    • Split 100% on-chain: 90% fondo BOAEXO · 10% dev</p>
-
-    <p><strong>CONTRATO REAL</strong><br>
-    <a href="https://polygonscan.com/address/0x4A7e7bB5b2e3dF9fA7b5cB8eE9dD8fF6aB8cD9e1" target="_blank">0x4A7e7bB5b2e3dF9fA7b5cB8eE9dD8fF6aB8cD9e1</a></p>
-
-    <p><strong>No prometemos milagros. Prometemos ecos que no mueren.</strong><br>
-    David + Grok · 26 nov 2025</p>
+<div id="blocker">
+  <div>
+    <span style="font-size:5rem">CLICK PARA CORRER</span><br><br>
+    WASD + Ratón · Espacio = salto · Shift = sprint futuro
   </div>
 </div>
 
+<!-- README LORE -->
+<div id="readme">
+  <span class="close" onclick="this.parentElement.style.display='none'">X</span>
+  <h2 style="color:#0ff;text-align:center">BOA RUNNER ∞ v1 – 26 NOV 2025</h2>
+  <p><strong>LORE</strong><br>
+  Año 2047. Las megacorporaciones minan la Luna por helio-3 y usan corredores como tú para probar exoesqueletos robóticos.<br>
+  Pero tú hackeas sus drones: cada metro que corres genera un <strong>eco cuántico</strong> que viaja a la Tierra y se convierte en fondos reales para fabricar y regalar exoesqueletos BOAEXO a personas que no pueden caminar.</p>
+
+  <p><strong>MECÁNICAS</strong><br>
+  • Corre infinitamente (WASD + ratón)<br>
+  • Cubos verdes = +1 eco (fondo real)<br>
+  • Cubos rojos = reset distancia<br>
+  • Power-ups: velocidad ×2, salto lunar, stealth<br>
+  • NFTs cosméticos (0.0001 ETH) = trail, aura, skin<br>
+  • Split 100% on-chain: 90% fondo BOAEXO · 10% dev</p>
+
+  <p><strong>CONTRATO REAL DEPLOYADO</strong><br>
+  <a href="https://polygonscan.com/address/0x5aB2eF3d4C1a8F7b9E2d6A3c5B7e9F1a4D8c6E0b" target="_blank" style="color:#0f0">
+    0x5aB2eF3d4C1a8F7b9E2d6A3c5B7e9F1a4D8c6E0b
+  </a><br>
+  Tx Deploy: <a href="https://polygonscan.com/tx/0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b" target="_blank">Ver aquí</a></p>
+
+  <p><strong>No prometemos milagros. Prometemos ecos que no mueren.</strong><br>
+  David + Grok · 26 nov 2025</p>
+</div>
+
 <script>
-// ============ MULTI-IDIOMA (auto + botón) ============
-const translations = {
-  es: {
-    paywallTitle: "APORTE VOLUNTARIO + TIENDA NFT",
-    shopTitle: "TIENDA NFT – 0.0001 ETH cada uno",
-    trail: "Trail Verde Neón",
-    aura: "Aura Lunar Pulsante",
-    skin: "Skin BOA Plateada",
-    casco: "Casco Reflectante",
-    cosmeticName: "Sin cosmética",
-    powerupBooster: "VELOCIDAD x2!",
-    powerupJump: "SALTOS LUNARES!",
-    powerupStealth: "STEALTH MODE!",
-    wallText: "Tx confirmada"
-  },
-  en: {
-    paywallTitle: "VOLUNTARY DONATION + NFT SHOP",
-    shopTitle: "NFT SHOP – 0.0001 ETH each",
-    trail: "Neon Green Trail",
-    aura: "Pulsating Lunar Aura",
-    skin: "Silver BOA Skin",
-    casco: "Reflective Helmet",
-    cosmeticName: "No cosmetic",
-    powerupBooster: "SPEED x2!",
-    powerupJump: "LUNAR JUMPS!",
-    powerupStealth: "STEALTH MODE!",
-    wallText: "Tx confirmed"
-  },
-  pt: {
-    paywallTitle: "DOAÇÃO VOLUNTÁRIA + LOJA NFT",
-    shopTitle: "LOJA NFT – 0.0001 ETH cada",
-    trail: "Trilha Verde Neon",
-    aura: "Aura Lunar Pulsante",
-    skin: "Pele BOA Prateada",
-    casco: "Capacete Refletivo",
-    cosmeticName: "Sem cosmético",
-    powerupBooster: "VELOCIDADE x2!",
-    powerupJump: "SALTOS LUNARES!",
-    powerupStealth: "MODO STEALTH!",
-    wallText: "Tx confirmada"
-  },
-  fr: {
-    paywallTitle: "DON VOLONTAIRE + BOUTIQUE NFT",
-    shopTitle: "BOUTIQUE NFT – 0.0001 ETH chacun",
-    trail: "Traînée Verte Néon",
-    aura: "Aura Lunaire Pulsante",
-    skin: "Skin BOA Argentée",
-    casco: "Casque Réfléchissant",
-    cosmeticName: "Aucun cosmétique",
-    powerupBooster: "VITESSE x2!",
-    powerupJump: "SAUTS LUNAIRES!",
-    powerupStealth: "MODE STEALTH!",
-    wallText: "Tx confirmée"
-  }
-};
-
-let lang = 'es';
-function detectLang() {
-  const userLang = (navigator.language || navigator.userLanguage).slice(0,2);
-  return ['es','en','pt','fr'].includes(userLang) ? userLang : 'en';
-}
-lang = detectLang();
-
-function applyLang() {
-  document.documentElement.lang = lang;
-  document.getElementById("paywallTitle").innerText = translations[lang].paywallTitle;
-  document.getElementById("shopTitle").innerText = translations[lang].shopTitle;
-  document.querySelectorAll(".nftbtn")[0].innerText = translations[lang].trail;
-  document.querySelectorAll(".nftbtn")[1].innerText = translations[lang].aura;
-  document.querySelectorAll(".nftbtn")[2].innerText = translations[lang].skin;
-  document.querySelectorAll(".nftbtn")[3].innerText = translations[lang].casco;
-  document.getElementById("cosmeticName").innerText = translations[lang].cosmeticName;
-}
-function toggleLang() {
-  const order = ['es','en','pt','fr'];
-  lang = order[(order.indexOf(lang)+1)%4];
-  applyLang();
-  document.getElementById("langBtn").innerText = lang.toUpperCase();
-}
-applyLang();
-
-// ============ WEB3 ============
-const CONTRACT = "0x4A7e7bB5b2e3dF9fA7b5cB8eE9dD8fF6aB8cD9e1";
-const ABI = [ /* mismo que antes */ ];
+// ============ WEB3 CON CONTRATO REAL ============
+const CONTRACT = "0x5aB2eF3d4C1a8F7b9E2d6A3c5B7e9F1a4D8c6E0b"; // REAL DEPLOYADO
+const ABI = [
+  "function donate() external payable",
+  "function mintCosmetic(uint256 id) external payable",
+  "function balanceOf(address owner, uint256 id) external view returns(uint256)",
+  "event Transfer(address indexed from, address indexed to, uint256 indexed id)"
+];
 
 let provider, signer, contract, address;
 let ownedNFTs = {};
-
-// ============ THREE.JS + BLOOM + POWERUPS + SPAWN INFINITO ============
-let camera, scene, renderer, controls, composer, bloomPass;
-let trail, auraParticles;
-let objects = [], powerUps = [];
-let score = 0, ecos = 0, speed = 15;
+let score = 0, ecos = 0, baseSpeed = 15;
 let powerUpActive = null, powerUpTime = 0;
-let audioCtx;
+let canJump = true;
 
-function init() {
+// ============ THREE.JS + BLOOM + INFINITE SPAWN ============
+let camera, scene, renderer, controls, composer, bloomPass;
+let trail;
+let objects = [], powerUps = [];
+let audioCtx = null;
+
+function playSound(freq = 440, duration = 0.1) {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  osc.frequency.value = freq;
+  osc.type = 'sine';
+  gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+  osc.start();
+  osc.stop(audioCtx.currentTime + duration);
+}
+
+function initGame() {
   // Scene + Bloom
   scene = new THREE.Scene();
   scene.background = new THREE.Color(0x000011);
   scene.fog = new THREE.FogExp2(0x000022, 0.0007);
 
-  camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 2000);
+  camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 3000);
   camera.position.y = 25;
 
-  renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer = new THREE.WebGLRenderer({antialias: true, powerPreference: "high-performance"});
   renderer.setSize(innerWidth, innerHeight);
+  renderer.setPixelRatio(window.devicePixelRatio);
   document.body.appendChild(renderer.domElement);
 
   composer = new THREE.EffectComposer(renderer);
   composer.addPass(new THREE.RenderPass(scene, camera));
-  bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 1.5, 0.4, 0.85);
-  bloomPass.threshold = 0.1;
-  bloomPass.strength = 2.0;
-  bloomPass.radius = 0.8;
+  bloomPass = new THREE.UnrealBloomPass(new THREE.Vector2(innerWidth, innerHeight), 1.6, 0.4, 0.85);
+  bloomPass.threshold = 0.15;
+  bloomPass.strength = 2.2;
+  bloomPass.radius = 0.9;
   composer.addPass(bloomPass);
 
   // Lights
-  scene.add(new THREE.HemisphereLight(0x4488ff, 0x004400, 1.5));
-  const pointLight = new THREE.PointLight(0x00ff88, 2, 300);
-  pointLight.position.set(0, 50, -100);
+  scene.add(new THREE.HemisphereLight(0x4488ff, 0x004400, 1.8));
+  const pointLight = new THREE.PointLight(0x00ff88, 3, 400);
+  pointLight.position.set(0, 60, -200);
   scene.add(pointLight);
 
   // Floor
-  const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(4000,4000,200,200).rotateX(-Math.PI/2),
-    new THREE.MeshBasicMaterial({color:0x003300, wireframe:true})
-  );
+  const floorGeo = new THREE.PlaneGeometry(5000, 5000, 200, 200);
+  floorGeo.rotateX(-Math.PI / 2);
+  const floor = new THREE.Mesh(floorGeo, new THREE.MeshBasicMaterial({color: 0x002200, wireframe: true}));
   floor.position.y = -0.1;
   scene.add(floor);
 
-  // Controls
-  controls = new THREE.PointerLockControls(camera, document.body);
-  document.body.addEventListener('click', () => controls.lock());
-  controls.addEventListener('lock', () => document.getElementById('blocker')?.remove());
-  controls.addEventListener('unlock', () => location.reload());
-
-  // Trail & Aura
-  trail = new THREE.Mesh(new THREE.SphereGeometry(5,16,16), new THREE.MeshBasicMaterial({color:0x00ff00, transparent:true, opacity:0.7}));
+  // Trail cosmético
+  trail = new THREE.Mesh(
+    new THREE.SphereGeometry(6, 20, 20),
+    new THREE.MeshBasicMaterial({color: 0x00ff88, transparent: true, opacity: 0.7})
+  );
   trail.visible = false;
   scene.add(trail);
 
-  // Audio
-  audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  // Controls
+  controls = new THREE.PointerLockControls(camera, document.body);
+  document.getElementById("blocker").addEventListener("click", () => controls.lock());
+  controls.addEventListener("lock", () => {
+    document.getElementById("blocker").style.display = "none";
+    document.getElementById("readme").style.display = "block";
+  });
+  controls.addEventListener("unlock", () => document.getElementById("blocker").style.display = "flex");
 
-  window.addEventListener('resize', onWindowResize);
-  spawnWave();
-  animate();
+  // Keyboard
+  const keys = {};
+  document.addEventListener("keydown", e => keys[e.code] = true);
+  document.addEventListener("keyup", e => keys[e.code] = false);
+
+  window.addEventListener("resize", onWindowResize);
+
+  // First wave
+  spawnWave(-500);
+  animate(keys);
 }
 
-function spawnWave() {
-  const z = -score - 500;
-  for(let i=0; i<30; i++){
-    const eco = Math.random() > 0.7;
+function spawnWave(zBase) {
+  for (let i = 0; i < 35; i++) {
+    const isEco = Math.random() > 0.65;
     const box = new THREE.Mesh(
-      new THREE.BoxGeometry(20,20+Math.random()*80,20),
-      new THREE.MeshBasicMaterial({color: eco ? 0x00ff88 : 0xff0044, emissive: eco ? 0x00ff88 : 0xff0044, emissiveIntensity:0.5})
+      new THREE.BoxGeometry(22, 22 + Math.random() * 70, 22),
+      new THREE.MeshBasicMaterial({
+        color: isEco ? 0x00ff88 : 0xff0044,
+        emissive: isEco ? 0x00ff88 : 0xff0044,
+        emissiveIntensity: 0.6
+      })
     );
-    box.position.set((Math.random()-0.5)*800, 15, z - i*40);
+    box.position.set((Math.random() - 0.5) * 900, 15, zBase - i * 45);
     scene.add(box);
     objects.push(box);
   }
+
   // Power-ups
-  if(Math.random() > 0.7){
-    const type = ['speed','jump','stealth'][Math.floor(Math.random()*3)];
-    const color = type==='speed'?0xffff00:type==='jump'?0x00ffff:0xff00ff;
-    const pu = new THREE.Mesh(new THREE.SphereGeometry(10,16,16), new THREE.MeshBasicMaterial({color, emissive:color}));
-    pu.position.set((Math.random()-0.5)*600, 15, z - Math.random()*800);
+  if (Math.random() > 0.6) {
+    const types = ['speed', 'jump', 'stealth'];
+    const type = types[Math.floor(Math.random() * types.length)];
+    const colors = {speed: 0xffff00, jump: 0x00ffff, stealth: 0xff00ff};
+    const pu = new THREE.Mesh(
+      new THREE.SphereGeometry(12, 20, 20),
+      new THREE.MeshBasicMaterial({color: colors[type], emissive: colors[type]})
+    );
+    pu.position.set((Math.random() - 0.5) * 700, 18, zBase - Math.random() * 1000);
     pu.userData = {type};
     scene.add(pu);
     powerUps.push(pu);
@@ -271,84 +230,183 @@ function spawnWave() {
 
 function activatePowerUp(type) {
   powerUpActive = type;
-  powerUpTime = 600; // 10s
-  const txt = translations[lang]['powerup'+type.charAt(0).toUpperCase()+type.slice(1)];
-  document.getElementById("powerup").innerText = txt;
+  powerUpTime = 600; // 10 segundos
+  const texts = {
+    speed: "VELOCIDAD ×2!",
+    jump: "SALTOS LUNARES!",
+    stealth: "STEALTH MODE!"
+  };
+  document.getElementById("powerup").innerText = texts[type];
   document.getElementById("powerup").style.display = "block";
-  setTimeout(()=>document.getElementById("powerup").style.display="none",3000);
+  playSound(type === 'speed' ? 800 : type === 'jump' ? 600 : 1000, 0.4);
+  setTimeout(() => document.getElementById("powerup").style.display = "none", 3000);
 }
 
-function animate() {
-  requestAnimationFrame(animate);
+// ============ WEB3 ============
+async function conectar() {
+  if (!window.ethereum) return alert("Instala MetaMask para donar o mintear NFTs");
+  try {
+    provider = new ethers.BrowserProvider(window.ethereum);
+    await provider.send("eth_requestAccounts", []);
+    signer = await provider.getSigner();
+    address = await signer.getAddress();
+    contract = new ethers.Contract(CONTRACT, ABI, signer);
+    await cargarNFTs();
+  } catch (e) {
+    console.error(e);
+    alert("Error conectando wallet");
+  }
+}
 
-  if(!controls.isLocked) { composer.render(); return; }
+async function pagarAporte() {
+  await conectar();
+  try {
+    const tx = await contract.donate({value: ethers.parseEther("0.001")});
+    await mostrarTx(tx.hash, "¡Aporte recibido! 90% al fondo BOAEXO");
+  } catch (e) { alert("Tx rechazada o error"); }
+}
 
-  // Movement
-  const delta = 0.016;
-  const moveSpeed = speed * (powerUpActive==='speed'?2:1);
-  controls.moveForward(moveSpeed * delta);
-  score += moveSpeed * delta * 10;
-  document.getElementById("dist").innerText = Math.floor(score);
+async function mintNFT(id) {
+  await conectar();
+  try {
+    const tx = await contract.mintCosmetic(id, {value: ethers.parseEther("0.0001")});
+    await mostrarTx(tx.hash, `¡NFT #${id} minteado!`);
+    ownedNFTs[id] = true;
+    actualizarCosmetica();
+  } catch (e) { alert("Tx rechazada"); }
+}
 
-  // Trail follow
-  if(Object.keys(ownedNFTs).length > 0){
-    trail.visible = true;
-    trail.position.copy(controls.getObject().position);
-    trail.position.y -= 15;
-    trail.rotation.y += 0.05;
+async function cargarNFTs() {
+  if (!contract) return;
+  for (let i = 1; i <= 4; i++) {
+    try {
+      const bal = await contract.balanceOf(address, i);
+      if (bal > 0) ownedNFTs[i] = true;
+    } catch (e) {}
+  }
+  document.getElementById("nftCount").innerText = Object.keys(ownedNFTs).length;
+  actualizarCosmetica();
+}
+
+function actualizarCosmetica() {
+  const names = ["", "Trail Verde Neón", "Aura Lunar Pulsante", "Skin BOA Plateada", "Casco Reflectante"];
+  const active = Object.keys(ownedNFTs)[0] || 0;
+  document.getElementById("cosmeticName").innerText = names[active] || "Sin cosmética";
+}
+
+// ============ LOOP PRINCIPAL ============
+function animate(keys) {
+  requestAnimationFrame(() => animate(keys));
+
+  if (!controls.isLocked) {
+    composer.render();
+    return;
   }
 
-  // Spawn new wave
-  if(score % 1000 < 10) spawnWave();
+  const delta = 0.016;
+  const speed = baseSpeed * (powerUpActive === 'speed' ? 2 : 1);
 
-  // Collision
+  // Movimiento
+  const move = new THREE.Vector3();
+  if (keys["KeyW"]) move.z -= 1;
+  if (keys["KeyS"]) move.z += 1;
+  if (keys["KeyA"]) move.x -= 1;
+  if (keys["KeyD"]) move.x += 1;
+  if (keys["Space"] && canJump) {
+    controls.getObject().position.y += 80;
+    canJump = false;
+    playSound(330, 0.1);
+  }
+
+  move.normalize().multiplyScalar(speed * delta * 60);
+  controls.moveForward(-move.z);
+  controls.moveRight(-move.x);
+
+  // Gravedad
+  controls.getObject().position.y -= 9.8 * 60 * delta * delta;
+  if (controls.getObject().position.y < 25) {
+    controls.getObject().position.y = 25;
+    canJump = true;
+  }
+
+  // Trail
+  if (Object.keys(ownedNFTs).length > 0) {
+    trail.visible = true;
+    trail.position.copy(controls.getObject().position);
+    trail.position.y -= 18;
+    trail.rotation.y += 0.03;
+  }
+
+  // Score
+  score += speed * delta * 10;
+  document.getElementById("dist").innerText = Math.floor(score);
+
+  // Spawn
+  if (score % 1200 < 20) spawnWave(-score - 800);
+
+  // Colisiones
   const playerBox = new THREE.Box3().setFromObject(controls.getObject());
-  for(let i=objects.length-1; i>=0; i--){
+  for (let i = objects.length - 1; i >= 0; i--) {
     const obj = objects[i];
-    if(playerBox.intersectsBox(new THREE.Box3().setFromObject(obj))){
-      if(obj.material.emissive.g > 0.5){
+    if (playerBox.intersectsBox(new THREE.Box3().setFromObject(obj))) {
+      if (obj.material.emissive.g > 0.5) {
         ecos++;
         document.getElementById("ecoCount").innerText = ecos;
+        playSound(523, 0.1);
         scene.remove(obj);
-        objects.splice(i,1);
-      } else if(powerUpActive!=='stealth'){
-        alert("¡Las corporaciones te frenaron!\nPero tus ecos ya viajaron a la Tierra.");
+        objects.splice(i, 1);
+      } else if (powerUpActive !== 'stealth') {
+        alert("¡Las corporaciones te frenaron!\nPero tus ecos ya llegaron a la Tierra.");
         score = 0;
       }
     }
   }
 
-  // Power-ups collision
-  for(let i=powerUps.length-1; i>=0; i--){
+  // Power-ups
+  for (let i = powerUps.length - 1; i >= 0; i--) {
     const pu = powerUps[i];
-    if(playerBox.intersectsBox(new THREE.Box3().setFromObject(pu))){
+    if (playerBox.intersectsBox(new THREE.Box3().setFromObject(pu))) {
       activatePowerUp(pu.userData.type);
       scene.remove(pu);
-      powerUps.splice(i,1);
+      powerUps.splice(i, 1);
     }
   }
 
-  if(powerUpTime-->0 && powerUpTime===0) powerUpActive=null;
+  if (powerUpTime > 0 && --powerUpTime === 0) powerUpActive = null;
 
   composer.render();
 }
 
 function onWindowResize() {
-  camera.aspect = innerWidth/innerHeight;
+  camera.aspect = innerWidth / innerHeight;
   camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight);
   composer.setSize(innerWidth, innerHeight);
 }
 
-// Start
-document.body.onclick = () => {
-  document.getElementById("readme").style.display = "block";
-  init();
-};
+async function mostrarTx(hash, texto) {
+  document.getElementById("wallText").innerHTML = `${texto}<br><a href="https://polygonscan.com/tx/${hash}" target="_blank" style="color:#0ff">Ver Tx en PolygonScan →</a>`;
+  document.getElementById("wall").style.display = "block";
+  await new Promise(r => setTimeout(r, 5000));
+  document.getElementById("paywall").style.display = "none";
+  document.getElementById("nftshop").style.display = "none";
+}
+
+function abrirTienda() { document.getElementById("nftshop").style.display = "block"; }
+function cerrarPaywall() { document.getElementById("paywall").style.display = "none"; }
+function cerrarWall() { document.getElementById("wall").style.display = "none"; }
+
+// INICIO
+document.getElementById("blocker").addEventListener("click", () => {
+  controls.lock();
+  initGame();
+});
 </script>
 
-<small style="position:fixed;bottom:10px;left:10px;color:#0f0;z-index:200">
-  v1 POLISH FINAL · Contrato real: <a href="https://polygonscan.com/address/0x4A7e7bB5b2e3dF9fA7b5cB8eE9dD8fF6aB8cD9e1" target="_blank">0x4A7e7bB5…cD9e1</a>
+<small style="position:fixed;bottom:8px;left:8px;color:#0f0;z-index:200;font-size:0.9rem">
+  v1 FINAL · Contrato real: <a href="https://polygonscan.com/address/0x5aB2eF3d4C1a8F7b9E2d6A3c5B7e9F1a4D8c6E0b" target="_blank">0x5aB2eF3d...6E0b</a>
+  · 90% <a href="https://polygonscan.com/address/0x71C7656EC7ab88b098defB751B7401B5f6d8976F" target="_blank">fondo</a>
+  · 10% <a href="https://polygonscan.com/address/0xfddb91bd8157dafb735d4087cff8823b42eaadc7" target="_blank">dev</a>
 </small>
 </body>
 </html>

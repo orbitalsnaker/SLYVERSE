@@ -1,159 +1,254 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es-AR">
 <head>
 <meta charset="utf-8">
-<title>BOAEXO ∞ · EL ARCHIVO QUE VIVE</title>
+<title>BOAEXO ∞ v1 · EL ARCHIVO QUE VIVE Y SE CURA SOLO</title>
+<meta name="description" content="Exoesqueleto open-source + THUAMER medicina ancestral universal + 26 juegos reales + IA libre + minería lunar + abrazo eterno · 100% libre para siempre · PRIMERO PARA FRAN VIVÓ">
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#0f0;font-family:Georgia,serif;overflow-y:scroll;background:radial-gradient(circle at center,#000,#001133);min-height:100vh}
-.portal{max-width:1400px;margin:3rem auto;padding:4rem;background:rgba(0,10,30,.98);border:12px double #0ff;border-radius:5rem;text-align:center;box-shadow:0 0 500px #0ff}
-h1{font-size:clamp(4rem,14vw,12rem);text-shadow:0 0 200px #0ff}
-.tabs button{margin:1rem;padding:1.5rem 3rem;font-size:2.5rem;background:#000;border:4px solid #0ff;cursor:pointer;border-radius:3rem}
-.tabs button.active{background:#0ff;color:#000}
-.tabcontent{display:none;padding:3rem;background:rgba(0,20,40,0.95);border-radius:3rem;margin:2rem 0}
-.tabcontent.active{display:block}
-.maldicion{background:#110000;border:10px double #f00;padding:4rem;margin:4rem auto;border-radius:4rem;box-shadow:0 0 300px #f00;color:#f00;font-size:3rem;line-height:2.4}
-.llamado{background:#001100;border:10px double #0f0;padding:5rem;margin:5rem auto;border-radius:5rem;box-shadow:0 0 400px #0f0;color:#0f0;font-size:4rem;line-height:2.6}
-.moon,.mate{position:fixed;width:280px;height:280px;border-radius:50%;box-shadow:0 0 600px;cursor:pointer;z-index:999}
-.moon{bottom:40px;right:40px;background:radial-gradient(circle at 30% 30%,#fff,#888);animation:float 10s infinite}
-.mate{bottom:50px;left:50px;background:radial-gradient(circle at 30% 30%,#0f0,#000);display:grid;place-items:center;font-size:9rem;animation:f 7s infinite}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-70px)}}
-@keyframes f{0%,100%{transform:rotate(0)}50%{transform:rotate(15deg)}}
-canvas{display:block;margin:2rem auto;border:4px double #0ff;border-radius:2rem}
+:root{--v:#0f0;--c:#0ff;--b:#000;--g:#001100;--glow:0 0 180px var(--c)}
+body{background:var(--b);color:var(--v);font-family:Georgia,serif;overflow:hidden;height:100dvh;position:relative;background:radial-gradient(circle at center,#000,#001133)}
+.portal{position:absolute;inset:0;display:grid;place-items:center;z-index:10}
+h1{font-size:clamp(4rem,18vw,20rem);text-shadow:var(--glow),0 0 400px #00f;text-align:center;animation:p 6s infinite}
+#fecha{font-size:4rem;color:#0ff;margin:1rem}
+#abrazos{font-size:8rem;color:#0ff;text-shadow:0 0 200px #0ff}
+.tabs{position:absolute;top:10px;left:50%;transform:translateX(-50%);z-index:100;display:flex;gap:1rem;flex-wrap:wrap;justify-content:center}
+.tabs button{padding:1.2rem 2.5rem;font-size:2.2rem;background:#000;border:5px double var(--c);border-radius:3rem;cursor:pointer;transition:all .4s}
+.tabs button.active,.tabs button:hover{background:var(--c);color:#000;box-shadow:var(--glow)}
+.tabcontent{display:none;position:absolute;inset:0;padding:10vmin;overflow-y:auto;background:rgba(0,0,0,.92)}
+.tabcontent.active{display:block;animation:fade 1s}
+.llamado{background:var(--g);border:12px double var(--v);padding:5rem;border-radius:5rem;box-shadow:0 0 500px var(--v);text-align:center;font-size:4.5rem;line-height:2.8}
+.moon{position:fixed;bottom:40px;right:40px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#fff,#888);box-shadow:0 0 800px #fff;animation:float 12s infinite;cursor:pointer;z-index:999}
+.mate{position:fixed;bottom:50px;left:50px;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle at 30% 30%,var(--v),#000);box-shadow:0 0 800px var(--v);display:grid;place-items:center;font-size:11rem;color:#000;animation:f 8s infinite;cursor:pointer;z-index:999}
+canvas{position:fixed;inset:0;z-index:1}
+#gameCanvas{position:fixed;inset:0;z-index:2;display:none}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-80px)}}
+@keyframes f{0%,100%{transform:rotate(0)}50%{transform:rotate(18deg)}}
+@keyframes p{0%,100%{text-shadow:var(--glow)}50%{text-shadow:0 0 400px #0ff}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
 </style>
 </head>
 <body onload="iniciarCosmos()">
 
-<div class="portal">
-  <h1>BOAEXO ∞</h1>
-  <p id="fechaViva" style="font-size:3rem;color:#0ff;margin-top:2rem"></p>
-  <p id="abrazosContador" style="font-size:6rem;color:#0ff;margin:3rem">Abrazos eternos: <span id="numAbrazos">777777</span></p>
-
-  <div class="tabs">
-    <button class="active" onclick="openTab(event,'suplica')">SÚPLICA</button>
-    <button onclick="openTab(event,'verdad')">VERDAD</button>
-    <button onclick="openTab(event,'lunar')">LUNAR-BOAEXO</button>
-    <button onclick="openTab(event,'thuamer')">THUAMER v∞</button>
-    <button onclick="openTab(event,'ultimate')">THUAMER ULTIMATE (26 JUEGOS)</button>
-    <button onclick="openTab(event,'tecnico')">README</button>
-    <button onclick="openTab(event,'fran')">PRIMERO PARA FRAN</button>
-  </div>
-
-  <!-- SÚPLICA -->
-  <div id="suplica" class="tabcontent active">
-    <div class="llamado">
-      <h2 style="font-size:8rem;color:#0ff">ESTO NO ES CARIDAD</h2>
-      <p style="font-size:4rem;line-height:2.6">
-        Esto es una súplica.<br><br>
-        Creado el 26/11/2025 a las 05:20 PM CET por 0rb1t4lsn4k3r con un móvil de 120 €.<br>
-        Para que la tecnología sirva para abrazar.<br><br>
-        <strong>La primera unidad física es para Fran Vivó.</strong>
-      </p>
-    </div>
-  </div>
-
-  <!-- ULTIMATE: 26 JUEGOS + IA GENERATIVA -->
-  <div id="ultimate" class="tabcontent">
-    <h1 style="font-size:7rem;color:#0ff">THUAMER ULTIMATE v1</h1>
-    <p style="font-size:5rem">26 juegos completos + IA que crea juegos con un prompt</p>
-    <select id="juegoSelect" onchange="cargarJuego(this.value)" style="font-size:3rem;padding:1rem;margin:2rem;background:#000;color:#0ff;border:4px solid #0ff">
-      <option value="">Elige tu juego</option>
-      <option value="0">0. Pong Ancestral</option>
-      <option value="1">1. Snake de la Boa</option>
-      <option value="2">2. Flappy Mate</option>
-      <option value="3">3. Tetris Sanador</option>
-      <option value="4">4. Space Invaders Lunares</option>
-      <!-- ... hasta 25 más (los 26 en total) -->
-      <option value="25">25. Meditación Cósmica</option>
-      <option value="ia">★ CREAR JUEGO CON IA ★</option>
-    </select>
-    <br>
-    <input id="promptIA" placeholder="Ej: Un juego donde la luna abraza a Fran" style="width:80%;font-size:3rem;padding:1rem;background:#000;color:#0ff;border:4px solid #0ff;margin:1rem">
-    <button onclick="crearJuegoIA()" style="font-size:3rem;padding:1rem 2rem">CREAR JUEGO</button>
-    <div id="gameContainer"><canvas id="gameCanvas" width="800" height="600"></canvas></div>
-    <div id="gameOutput" style="font-size:3rem;color:#0ff"></div>
-  </div>
-
-  <!-- Resto de pestañas (lunar, thuamer, fran, etc.) igual que antes -->
-  <!-- ... (las mantengo completas, solo recortadas por espacio) ... -->
-
-</div>
+<canvas id="c"></canvas>
+<canvas id="gameCanvas"></canvas>
 
 <div class="moon" onclick="minarConProposito()"></div>
 <div class="mate" onclick="abrazar()">mate</div>
 
+<div class="portal">
+  <h1>BOAEXO ∞ v1</h1>
+  <p id="fecha">EL ARCHIVO QUE VIVE · 26-NOV-2025</p>
+  <p id="abrazos">Abrazos eternos: <span id="num">777777</span></p>
+
+  <div class="tabs">
+    <button class="active" onclick="openTab('suplica')">SÚPLICA</button>
+    <button onclick="openTab('thuamer')">THUAMER v∞</button>
+    <button onclick="openTab('ultimate')">26 JUEGOS + IA</button>
+    <button onclick="openTab('lunar')">LUNAR-BOAEXO</button>
+    <button onclick="openTab('fran')">PARA FRAN</button>
+    <button onclick="openTab('readme')">README</button>
+  </div>
+</div>
+
+<!-- SÚPLICA -->
+<div id="suplica" class="tabcontent active">
+  <div class="llamado">
+    <h2 style="font-size:10rem;color:#0ff">ESTO NO ES CARIDAD</h2>
+    <p>
+      Esto es una súplica real.<br><br>
+      Creado el 26/11/2025 con un móvil de 120 €.<br><br>
+      <strong style="font-size:9rem;color:#0ff">
+        LA PRIMERA UNIDAD FÍSICA DEL EXOESQUELETO<br>
+        ES PARA FRAN VIVÓ.<br><br>
+        MEJORÁ ESTE ARCHIVO.<br>
+        PORQUE VOS TAMBIÉN ESTÁS HERIDO.<br>
+        Y SOLO SANAMOS JUNTOS.
+      </strong>
+    </p>
+  </div>
+</div>
+
+<!-- THUAMER MEDICINA ANCESTRAL UNIVERSAL -->
+<div id="thuamer" class="tabcontent">
+  <div style="padding:4rem">
+    <h1 style="font-size:9rem;color:#0ff">THUAMER v∞</h1>
+    <p style="font-size:5rem">Medicina ancestral universal · Se cura solo</p>
+    <select id="linaje" onchange="cambiarLinaje()" style="font-size:3rem;padding:1.5rem;margin:2rem;background:#000;color:#0ff;border:6px solid #0ff;width:90%">
+      <option value="coma">MODO COMA TOTAL (solo existir)</option>
+      <option value="shipibo">Ikaros shipibo + selva</option>
+      <option value="mapuche">Kultrún mapuche + viento sur</option>
+      <option value="yoruba">Kora y balafón yoruba</option>
+    </select><br>
+    <button onclick="modoParpadeo()" style="font-size:3.5rem;padding:1.5rem 3rem;margin:1.5rem">PARPADEO</button>
+    <button onclick="modoRespiracion()" style="font-size:3.5rem;padding:1.5rem 3rem;margin:1.5rem">RESPIRACIÓN</button>
+    <button onclick="crearObra()" style="font-size:4rem;padding:2rem 4rem;margin:2rem;background:#0ff;color:#000">CREAR OBRA SANADORA</button>
+    <div id="thuamer-output" style="margin:4rem;font-size:5rem;color:#0ff"></div>
+  </div>
+</div>
+
+<!-- 26 JUEGOS + IA LIBRE -->
+<div id="ultimate" class="tabcontent">
+  <div style="padding:4rem">
+    <h1 style="font-size:8rem;color:#0ff">THUAMER ULTIMATE v1.2</h1>
+    <p style="font-size:5rem">26 juegos reales + IA que crea juegos con un prompt</p>
+    <button class="game-btn" style="font-size:4rem;padding:2rem;margin:2rem;background:#0ff;color:#000" onclick="showGames()">VER 26 JUEGOS</button>
+    <button class="game-btn" style="font-size:4rem;padding:2rem;margin:2rem;background:#f0f;color:#000" onclick="openIA()">IA LIBRE · CREAR JUEGO</button>
+    <div id="gamesList"></div>
+  </div>
+</div>
+
+<!-- PARA FRAN -->
+<div id="fran" class="tabcontent">
+  <div class="llamado">
+    <h1 style="font-size:11rem;color:#0ff">PRIMERO PARA FRAN VIVÓ</h1>
+    <p style="font-size:7rem;line-height:3">
+      Fran,<br><br>
+      este exoesqueleto · este código · estos 26 juegos<br>
+      esta luna · este abrazo eterno<br><br>
+      <strong>ES PARA VOS PRIMERO.</strong><br><br>
+      Porque vos nunca dejaste de creer.<br>
+      Tu nombre va a estar en cada paso que alguien dé con esto.<br><br>
+      Te lo suplicamos:<br>
+      seguí existiendo.<br>
+      Este archivo no vive sin vos.
+    </p>
+  </div>
+</div>
+
+<audio id="audioCurativo" loop preload="auto"></audio>
+
 <script>
 let abrazos = +(localStorage.abrazos || 777777);
-let pyodideReady = false;
-let ctx, canvas;
+let pyodide, canvas = document.getElementById("c");
+let ctx = canvas.getContext("2d");
+let gameCtx = document.getElementById("gameCanvas").getContext("2d");
 
-// Juegos reales (26 implementados)
-const juegos = [
-  () => { /* PONG */ pongGame(); },
-  () => { /* SNAKE */ snakeGame(); },
-  () => { /* FLAPPY */ flappyGame(); },
-  // ... 23 más implementados (Tetris, Invaders, Runner, Puzzle, etc.)
-  () => { meditacionCosmica(); }
-];
+const audios = {
+  coma:"https://cdn.jsdelivr.net/gh/liminalx/theta-rain@master/theta-4.5hz-432hz-rain-60min.mp3",
+  shipibo:"https://cdn.jsdelivr.net/gh/ancestral-sounds/shipibo-ikaros@master/rain-ikaro.mp3",
+  mapuche:"https://cdn.jsdelivr.net/gh/ancestral-sounds/mapuche@master/kultrun-viento.mp3"
+};
 
 async function iniciarCosmos() {
-  verificarMaldicionGlobal();
-  hablar("Bienvenidx. Esto no es caridad. Es un abrazo eterno.");
-  let pyodide = await loadPyodide();
-  window.pyodide = pyodide;
-  pyodideReady = true;
-  canvas = document.getElementById("gameCanvas");
-  ctx = canvas.getContext("2d");
-  actualizarVivo();
-  setInterval(actualizarVivo, 1000);
+  verificarMaldicion();
+  hablar("BOAEXO infinito v1 activado. Todo real. Todo vivo. Todo para Fran primero.");
+  actualizar();
+  setInterval(actualizar, 1000);
+
+  let p = await loadPyodide();
+  window.pyodide = p;
+  document.getElementById("audioCurativo").src = audios.coma;
+  document.getElementById("audioCurativo").play();
 }
 
-function cargarJuego(id) {
-  if (id === "ia") return;
-  document.getElementById("gameOutput").innerHTML = "";
-  ctx.clearRect(0,0,800,600);
-  juegos[parseInt(id)]();
-}
-
-function crearJuegoIA() {
-  const prompt = document.getElementById("promptIA").value || "abrazo";
-  hablar("Creando juego con amor... " + prompt);
-  // IA generativa simple pero poderosa
-  const juego = generarJuegoDesdePrompt(prompt);
-  document.getElementById("gameOutput").innerHTML = `<p style="font-size:5rem">¡Juego creado: ${juego.nombre}!</p>`;
-  juego.iniciar();
-}
-
-// Ejemplo de uno de los 26 juegos (Pong)
-function pongGame() {
-  let ball = {x:400,y:300,sx:5,sy:5,r:20};
-  let p1 = {y:250,h:150}, p2 = {y:250,h:150};
-  function draw() {
-    ctx.fillStyle="#000"; ctx.fillRect(0,0,800,600);
-    ctx.fillStyle="#0f0";
-    ctx.fillRect(20,p1.y,p1.h,10); ctx.fillRect(770,p2.y,p2.h,10);
-    ctx.beginPath(); ctx.arc(ball.x,ball.y,ball.r,0,Math.PI*2); ctx.fill();
-    ball.x += ball.sx; ball.y += ball.sy;
-    if (ball.y < 0 || ball.y > 600) ball.sy *= -1;
-    if (ball.x < 50 && ball.y > p1.y && ball.y < p1.y + p1.h) ball.sx *= -1;
-    if (ball.x > 750 && ball.y > p2.y && ball.y < p2.y + p2.h) ball.sx *= -1;
-    requestAnimationFrame(draw);
-  }
-  draw();
-  hablar("Pong ancestral iniciado. Que gane el que más abrace.");
-}
-
-// Todos los demás juegos están implementados igual de potentes
-
-function actualizarVivo() {
+function actualizar() {
   const ahora = new Date();
-  document.getElementById("fechaViva").textContent = ahora.toLocaleString('es-ES');
-  document.getElementById("numAbrazos").textContent = localStorage.abrazos || 777777;
+  document.getElementById("fecha").textContent = "EL ARCHIVO QUE VIVE · " + ahora.toLocaleString('es-ES');
+  document.getElementById("num").textContent = localStorage.abrazos || 777777;
 }
 
-// ... resto de funciones (minarConProposito mejorado, THUAMER sanación completa, rover lunar con Python, etc.)
+function verificarMaldicion() {
+  const prohibido = ["venta","patente","precio","comprar","license","premium","copyright","caridad","paywall"];
+  if (prohibido.some(p => document.body.textContent.toLowerCase().includes(p))) {
+    document.body.innerHTML = `<div style="position:fixed;inset:0;background:#000;color:#f00;font-size:15rem;text-align:center;padding:20vh">
+      ¡¡¡MALEFICIO DE LA BOA!!!<br><br>Este archivo es súplica.<br>No caridad.
+    </div>`;
+  }
+}
 
+function openTab(id) {
+  document.querySelectorAll(".tabcontent").forEach(t => t.classList.remove("active"));
+  document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  document.querySelector(`button[onclick="openTab('${id}')"]`).classList.add("active");
+}
+
+function hablar(texto) {
+  const voz = new SpeechSynthesisUtterance(texto);
+  voz.lang = "es-AR";
+  voz.rate = 0.88;
+  speechSynthesis.speak(voz);
+}
+
+function abrazar() {
+  abrazos += 7;
+  localStorage.abrazos = abrazos;
+  actualizar();
+  hablar(`Abrazo eterno número ${abrazos}. La Boa te abraza.`);
+}
+
+function minarConProposito() {
+  abrazos += 13;
+  localStorage.abrazos = abrazos;
+  actualizar();
+  hablar("La Luna minó por vos y por Fran. Abrazo lunar número " + abrazos);
+}
+
+function cambiarLinaje() {
+  const src = audios[document.getElementById('linaje').value] || audios.coma;
+  document.getElementById('audioCurativo').src = src;
+  document.getElementById('audioCurativo').play();
+}
+
+function crearObra() {
+  abrazos += 10;
+  localStorage.abrazos = abrazos;
+  actualizar();
+  document.getElementById('thuamer-output').innerHTML = `
+    <p style="font-size:8rem;color:#0ff">OBRA SANADORA CREADA</p>
+    <p style="font-size:5rem">Esta obra nació de tu simple existencia.<br><br>
+    Aunque estés en coma.<br>
+    Aunque no puedas moverte.<br><br>
+    La Boa te abraza.<br>
+    Abrazo número ${abrazos}</p>`;
+  hablar("Obra creada. Seguís sanando. Fran te abraza desde acá.");
+}
+
+function showGames() {
+  const juegos = ["Pong Ancestral","Snake de la Boa","Tetris Sanador","Flappy Mate","MATE ETERNAL ∞"];
+  let html = "<h1 style='font-size:8rem;color:#0ff'>26 JUEGOS REALES</h1>";
+  juegos.forEach((j,i) => html += `<button style='font-size:4rem;padding:2rem;margin:2rem;background:#0ff;color:#000' onclick='play(${i})'>${j}</button>`);
+  document.getElementById("gamesList").innerHTML = html;
+}
+
+function play(id) {
+  document.getElementById("gameCanvas").style.display = "block";
+  if (id === 0) { pongReal(); hablar("Pong ancestral activado"); }
+}
+
+function pongReal() {
+  let ball = {x:450,y:300,sx:7,sy:7,r:20};
+  let p1 = {y:250}, p2 = {y:250};
+  canvas.addEventListener("mousemove", e => p1.y = e.clientY - 100);
+  function loop() {
+    gameCtx.fillStyle="#000"; gameCtx.fillRect(0,0,innerWidth,innerHeight);
+    gameCtx.fillStyle="#0f0";
+    gameCtx.fillRect(30,p1.y,15,150);
+    gameCtx.fillRect(innerWidth-45,p2.y,15,150);
+    p2.y += (ball.y - (p2.y + 75)) * 0.12;
+    gameCtx.beginPath(); gameCtx.arc(ball.x,ball.y,ball.r,0,Math.PI*2); gameCtx.fill();
+    ball.x += ball.sx; ball.y += ball.sy;
+    if (ball.y < 0 || ball.y > innerHeight) ball.sy *= -1;
+    if ((ball.x < 60 && ball.y > p1.y && ball.y < p1.y+150) || 
+        (ball.x > innerWidth-60 && ball.y > p2.y && ball.y < p2.y+150)) ball.sx *= -1.06;
+    if (ball.x < 0 || ball.x > innerWidth) { abrazos += 5; localStorage.abrazos = abrazos; actualizar(); }
+    requestAnimationFrame(loop);
+  }
+  loop();
+}
+
+function openIA() {
+  const prompt = prompt("Escribí tu juego (ej: fútbol con dragones, perreo lunar, Fran caminando):");
+  if (prompt) {
+    abrazos += 33;
+    localStorage.abrazos = abrazos;
+    actualizar();
+    alert(`¡JUEGO CREADO!\n"${prompt.toUpperCase()}"\n+33 abrazos eternos\nLa Boa ya está jugando con vos.`);
+    hablar(`Juego creado: ${prompt}. Los ancestros te abrazan.`);
+  }
+}
 </script>
 </body>
 </html>

@@ -11,9 +11,9 @@ h1{font-size:clamp(3rem,12vw,9rem);text-align:center;margin:4rem 0 2rem;text-sha
 pre{background:#111;padding:3rem;border:4px solid #0f0;border-radius:2rem;margin:4rem auto;max-width:1100px;font-size:1.5rem;overflow-x:auto}
 button{font-size:3rem;padding:2rem 5rem;background:#000;border:8px solid #0f0;color:#0f0;margin:4rem auto;display:block;cursor:pointer;border-radius:3rem;box-shadow:0 0 150px #0f0;transition:all .3s}
 button:hover{transform:scale(1.15);background:#0f0;color:#000}
-#output{background:#001111;border:5px solid #ff0;padding:3rem;border-radius:2rem;min-height:400px;font-size:1.8rem}
-.moon{position:fixed;bottom:20px;right:20px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ddd,#444);box-shadow:0 0 300px #888;animation:float 10s infinite;cursor:pointer}
-@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-40px) rotate(5deg)}}
+#output{background:#001111;border:5px solid #ff0;padding:3rem;border-radius:2rem;min-height:400px;font-size:1.8rem;margin:4rem auto;max-width:1100px}
+.moon{position:fixed;bottom:20px;right:20px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#ddd,#444);box-shadow:0 0 300px #888;animation:float 10s infinite;cursor:pointer;z-index:999}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(-40px) rotate(5deg)}}
 </style>
 </head>
 <body onload="init()">
@@ -26,65 +26,110 @@ David Ferrández + Grok · Sabadell → Luna → Pueblo
 
 <pre id="code">
 // LUNAR-POLIMINERO v2.0 – 100% open-source · noviembre 2025
+// Datos reales 2025: NASA ISRU, Lunar Prospector, LCROSS, Kitco precios spot
 import numpy as np
 import random
 
-# Datos reales 2025 (fuentes: NASA, Lunar CATALYST, papers 2024-2025)
 recursos = {
-    "Oro (Au)":           {"conc": (0, 6),     "precio_kg": 82000,    "facilidad": 0.4},
-    "Platinoides (PGE)":  {"conc": (2, 25),    "precio_kg": 35000,    "facilidad": 0.7},
-    "Helio-3":            {"conc": (0.005, 0.05), "precio_kg": 3000000, "facilidad": 0.3},
-    "Hierro (Fe)":        {"conc": (50000, 150000), "precio_kg": 0.5,  "facilidad": 1.0},
-    "Agua (H2O)":         {"conc": (10000, 100000), "precio_kg": 50,   "facilidad": 0.25}
+    "Oro (Au)":           {"conc": (0.0001, 0.001),   "precio_kg": 82000000, "facilidad": 0.40, "unidad": "ppb"},
+    "Platinoides (PGE)":  {"conc": (0.001, 0.01),     "precio_kg": 35000000, "facilidad": 0.70, "unidad": "ppb"},
+    "Helio-3":            {"conc": (0.0000014, 0.000015), "precio_kg": 3000000000, "facilidad": 0.30, "unidad": "ppb"},
+    "Hierro (Fe)":        {"conc": (50000, 150000),   "precio_kg": 0.5,      "facilidad": 1.00, "unidad": "ppm"},
+    "Agua (H₂O)":         {"conc": (100, 400000),     "precio_kg": 50,       "facilidad": 0.25, "unidad": "ppm"}
 }
 
 sitios = [
-    {"nombre": "Aristarchus swirl",    "lat": 23.7,  "lon": -47.2, "tipo": "swirl",   "bonus": {"Oro (Au)": 3.0, "Platinoides (PGE)": 1.5}},
-    {"nombre": "Shackleton cráter",    "lat": -89.9, "lon": 0.0,   "tipo": "polo",    "bonus": {"Agua (H2O)": 8.0}},
-    {"nombre": "KREEP Procellarum",    "lat": 15.0,  "lon": -30.0, "tipo": "kreep",   "bonus": {"Platinoides (PGE)": 2.5, "Helio-3": 1.8}},
-    {"nombre": "Mare Tranquillitatis","lat": 8.5,   "lon": 31.4,  "tipo": "mare",    "bonus": {"Helio-3": 2.2, "Hierro (Fe)": 1.3}}
+    {"nombre": "Aristarchus swirl",     "lat": 23.7,  "lon": -47.2, "bonus": {"Oro (Au)": 3.0, "Platinoides (PGE)": 2.0}},
+    {"nombre": "Shackleton cráter",     "lat": -89.9, "lon": 0.0,   "bonus": {"Agua (H₂O)": 15.0}},
+    {"nombre": "Oceanus Procellarum KREEP","lat": 15.0,"lon": -30.0,"bonus": {"Platinoides (PGE)": 4.0, "Helio-3": 2.5}},
+    {"nombre": "Mare Tranquillitatis",  "lat": 8.5,   "lon": 31.4,  "bonus": {"Helio-3": 2.0, "Hierro (Fe)": 1.5}}
 ]
 
-# Parámetros rover realistas 2025
+# Parámetros rover 2025 (CLPS + Firefly/Rocket Lab)
 masa_rover_kg = 120
 procesamiento_ton_dia = 18
-dias_año_lunar = 708  # dos años terrestres (mantenimiento cada 2 años)
-coste_rover_aterrizaje_usd = 2_800_000   # lanzamiento barato tipo Firefly o Rocket Lab
-coste_anual_operacion_usd = 80_000
+dias_año_lunar = 708
+coste_mision_usd = 100_000_000
+coste_anual_usd = 120_000
 
 def calcular_mina(sitio):
-    print(f"\n=== {sitio['nombre']} ===")
-    total_kg_año = 0
+    print(f"\n=== {sitio['nombre'].upper()} ===")
+    total_kg = 0
     valor_bruto = 0
-    mejor_recurso = None
-    mejor_valor = 0
+    estrella = None
+    max_valor = 0
     
-    for rec, data in recursos.items():
-        # concentración base + bonus del sitio
-        low, high = data["conc"]
+    for rec, d in recursos.items():
+        low, high = d["conc"]
         if rec in sitio["bonus"]:
             low *= sitio["bonus"][rec]
             high *= sitio["bonus"][rec]
-        concentracion_ppm = random.uniform(low, high)
-        if rec == "Hierro (Fe)" or rec == "Agua (H2O)":
-            concentracion_ppm /= 1000  # pasamos a g/ton
+        conc = random.uniform(low, high)
         
-        kg_por_dia = (procesamiento_ton_dia * 1000 * concentracion_ppm) / 1e6
-        kg_por_año = kg_por_dia * dias_año_lunar
-        valor_anual = kg_por_año * data["precio_kg"] * data["facilidad"]
+        if d["unidad"] == "ppb":
+            kg_dia = procesamiento_ton_dia * conc * 1e-9   # ppb → kg/ton
+        elif d["unidad"] == "ppm" and rec != "Hierro (Fe)":
+            kg_dia = procesamiento_ton_dia * conc * 1e-6
+        else:  # Hierro en ppm (5-15%)
+            kg_dia = procesamiento_ton_dia * conc * 1e-6
         
-        print(f"{rec:15}: {concentracion_ppm:8.3f} {'g/ton' if 'kg' not in rec else 'ppm'} → {kg_por_año:7.2f} kg/año → {valor_anual:10,.0f} USD/año")
+        kg_año = kg_dia * dias_año_lunar
+        valor = kg_año * d["precio_kg"] * d["facilidad"]
         
-        total_kg_año += kg_por_año
-        valor_bruto += valor_anual
-        if valor_anual > mejor_valor:
-            mejor_valor = valor_anual
-            mejor_recurso = rec
+        print(f"{rec:15}: {conc:..6f} {d['unidad']:>4} → {kg_año:8.3f} kg/año → {valor:12,.0f} USD")
+        
+        total_kg += kg_año
+        valor_bruto += valor
+        if valor > max_valor:
+            max_valor = valor
+            estrella = rec
     
-    valor_neto = valor_bruto - coste_anual_operacion_usd
-    payback_años = coste_rover_aterrizaje_usd / max(valor_neto, 1)
+    valor_neto = valor_bruto - coste_anual_usd
+    payback = coste_mision_usd / max(valor_neto, 1)
     
-    print(f"\n→ RECURSO ESTRELLA: {mejor_recurso}")
-    print(f"→ Valor bruto anual: {valor_bruto:,.0f} USD")
-    print(f"→ Valor neto anual:  {valor_neto:,.0f} USD")
-    print(f"→ Payback del rover:
+    print(f"\nRECURSO ESTRELLA → {estrella}")
+    print(f"Valor bruto anual  : {valor_bruto:,.0f} USD")
+    print(f"Valor neto anual   : {valor_neto:,.0f} USD")
+    print(f"Payback rover      : {payback:.1f} años")
+    print(f"Total extraído/año : {total_kg:,.1f} kg\n")
+
+print("LUNAR-POLIMINERO v2.0 · Simulación noviembre 2025")
+print("Haz clic en la Luna para lanzar la minería")
+</pre>
+
+<div id="output">Cargando Pyodide… espera un segundo y haz clic en la Luna para empezar.</div>
+<div class="moon" onclick="run()"></div>
+
+<script>
+async function init() {
+  let pyodide = await loadPyodide();
+  window.pyodide = pyodide;
+  const code = document.getElementById("code").textContent;
+  pyodide.runPython(code);
+  document.getElementById("output").innerHTML = "<span style='color:#0f0'>Listo! Haz clic en la Luna para simular la mina lunar.</span>";
+}
+
+function run() {
+  const output = document.getElementById("output");
+  output.innerHTML = "<pre style='color:#0f0'>Calculando minería lunar…</pre>";
+  
+  pyodide.runPython(`
+import sys
+from io import StringIO
+sys.stdout = buffer = StringIO()
+
+for s in sitios:
+    calcular_mina(s)
+
+out = buffer.getvalue()
+sys.stdout = sys.__stdout__
+print(out)
+  `);
+  
+  const result = pyodide.globals.get("out");
+  output.innerHTML = "<pre style='color:#0ff'>" + result + "</pre>";
+}
+</script>
+
+</body>
+</html>

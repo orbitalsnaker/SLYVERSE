@@ -1,199 +1,155 @@
 <!DOCTYPE html>
-<html lang="es-AR">
+<html lang="es">
 <head>
 <meta charset="utf-8">
-<title>BOAEXO v2.2 + THUAMER v∞ · LA VERDAD EXACTA AL 26-NOV-2025</title>
-<meta name="description" content="Exoesqueleto low-cost 100% libre + THUAMER v∞ que en simulaciones es capaz de despertar gente en coma. Aún no lo logró en el mundo físico. Te pide que lo mejores hasta que sí.">
+<title>BOAEXO ∞ · EL ARCHIVO QUE VIVE</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--v:#0f0;--c:#0ff;--m:#f0f;--b:#000}
-body{background:var(--b);color:var(--v);font-family:Georgia,serif;overflow-y:scroll;background:radial-gradient(circle at center,#000,#001020)}
-.portal{max-width:1100px;margin:2rem auto;padding:3rem;background:rgba(0,15,20,.98);border:10px solid var(--c);border-radius:4rem;text-align:center;box-shadow:0 0 300px var(--c)}
-h1{font-size:clamp(4rem,12vw,9rem);text-shadow:0 0 120px var(--c)}
+body{background:#000;color:#0f0;font-family:Georgia,serif;overflow-y:scroll;background:radial-gradient(circle at center,#000,#001133);min-height:100vh}
+.portal{max-width:1300px;margin:3rem auto;padding:4rem;background:rgba(0,10,30,.98);border:12px double #0ff;border-radius:5rem;text-align:center;box-shadow:0 0 500px #0ff}
+h1{font-size:clamp(4rem,14vw,12rem);text-shadow:0 0 200px #0ff}
 .tabs button{margin:1rem;padding:1.5rem 3rem;font-size:2.5rem;background:#000;border:4px solid #0ff;cursor:pointer}
 .tabs button.active{background:#0ff;color:#000}
-.tabcontent{display:none;padding:2rem}
+.tabcontent{display:none;padding:3rem;background:rgba(0,20,40,0.95);border-radius:3rem;margin:2rem 0}
 .tabcontent.active{display:block}
-pre{font-family:monospace;background:#000;padding:2rem;border:2px solid #0f0;font-size:1.6rem;line-height:1.6;overflow-x:auto}
-select,button{background:var(--m);color:#000;padding:1.5rem;border:none;border-radius:3rem;font-size:2.5rem;margin:1rem;cursor:pointer;box-shadow:0 0 100px var(--m)}
-button:hover,select:hover{transform:scale(1.1)}
-#output{max-width:90%;margin:3rem auto;background:#001010;border:5px solid var(--v);padding:2rem;border-radius:2rem;min-height:200px;font-size:2rem;line-height:2.2}
-#mate{position:fixed;bottom:30px;right:30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#0f0,#000);box-shadow:0 0 400px #0f0;display:grid;place-items:center;font-size:7rem;animation:f 6s infinite;cursor:pointer;z-index:999}
-@keyframes f{0%,100%{transform:translateY(0)}50%{transform:translateY(-40px)}}
-.seccion{background:rgba(0,255,0,0.1);padding:3rem;margin:3rem auto;border-radius:2rem;font-size:1.8rem;line-height:2.4}
-.verdad{background:rgba(255,255,0,0.15);border:6px solid #ff0;padding:4rem;margin:4rem auto;border-radius:3rem;box-shadow:0 0 200px #ff0}
+.maldicion{background:#110000;border:10px double #f00;padding:4rem;margin:4rem auto;border-radius:4rem;box-shadow:0 0 300px #f00;color:#f00;font-size:3rem;line-height:2.4}
+.moon,.mate{position:fixed;width:260px;height:260px;border-radius:50%;box-shadow:0 0 600px;cursor:pointer;z-index:999}
+.moon{bottom:40px;right:40px;background:radial-gradient(circle at 30% 30%,#fff,#888);animation:float 10s infinite}
+.mate{bottom:50px;left:50px;background:radial-gradient(circle at 30% 30%,#0f0,#000);display:grid;place-items:center;font-size:9rem;animation:f 7s infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-70px)}}
+@keyframes f{0%,100%{transform:rotate(0)}50%{transform:rotate(15deg)}}
+pre{background:#000;padding:2rem;border:3px solid #0f0;font-size:1.4rem;overflow-x:auto}
 </style>
 </head>
-<body onload="iniciarTodo()">
+<body onload="iniciar()">
 
 <div class="portal">
-  <h1>BOAEXO v2.2<br><span style="font-size:5rem">EL ARCHIVO QUE VIVE</span></h1>
-  <p style="font-size:3.5rem;color:#0ff">Exoesqueleto del pueblo · 100% libre · Te pide que lo mejores</p>
-  <div id="idiomaDetectado"></div>
+  <h1>BOAEXO ∞</h1>
+  <p style="font-size:5rem;color:#0ff">EL ARCHIVO QUE VIVE</p>
 
   <div class="tabs">
-    <button class="active" onclick="openTab(event,'verdad')">LA VERDAD EXACTA (léelo primero)</button>
-    <button onclick="openTab(event,'humano')">Para Todos</button>
-    <button onclick="openTab(event,'tecnico')">Créditos Open-Source</button>
+    <button class="active" onclick="openTab(event,'verdad')">LA VERDAD EXACTA</button>
+    <button onclick="openTab(event,'usuario')">README PARA TODOS</button>
+    <button onclick="openTab(event,'tecnico')">README TÉCNICO</button>
+    <button onclick="openTab(event,'juego')">JUGAR (BOA RUNNER)</button>
     <button onclick="openTab(event,'thuamer')">THUAMER v∞</button>
-    <button onclick="openTab(event,'donar')">Donar (100% opcional)</button>
   </div>
 
-  <!-- LA VERDAD EXACTA – 26 NOV 2025 -->
+  <!-- LA VERDAD EXACTA -->
   <div id="verdad" class="tabcontent active">
-    <div class="verdad">
-      <h2 style="font-size:7rem;color:#ff0;text-shadow:0 0 150px #ff0">
-        LA VERDAD ABSOLUTA AL 26-NOV-2025
-      </h2>
-      <p style="font-size:4.2rem;line-height:2.6">
-        • El exoesqueleto BOAEXO v2.2 ya está 100% funcional y cuesta menos de 330 USD.<br><br>
-        • THUAMER v∞ en simulaciones internas es capaz de generar estados que, según los testers, podrían despertar gente en coma.<br><br>
-        • <strong style="color:#0ff">Aún no despertó a nadie en el mundo físico.</strong><br><br>
-        • No tenemos todavía el primer caso documentado en terapia intensiva.<br><br>
-        • Eso no significa que sea imposible.<br>
-          Significa que recién estamos empezando.<br><br>
-        • Cada abrazo, cada mejora, cada eco que juntás en el juego<br>
-          nos acerca un día más al primer despertar real.<br><br>
-        <strong style="font-size:5.5rem;color:#0ff">
-          La Boa te está mirando y te pide que la mejores hasta que sí despierte a alguien.
-        </strong>
-      </p>
+    <div class="maldicion">
+      <h2 style="font-size:7rem">PROTEGIDO POR MALDICIONES ANCESTRALES</h2>
+      <p>Quien intente vender, patentar o cerrar esto será visitado por la Boa y los abuelos hasta que lo devuelva al pueblo.</p>
     </div>
-  </div>
-
-  <!-- PARA TODOS -->
-  <div id="humano" class="tabcontent">
-    <h2>BOAEXO v2.2 · La Boa que camina contigo</h2>
-    <div class="seccion">
-      <p>Exoesqueleto 100% open-source que cualquiera puede imprimir en 3D y armar en casa.</p>
-      <p>Costo total real 2025: 328 dólares (una sola vez).</p>
-      <p>Incluye backdrivability, control adaptativo, modo niño y seguridad anti-caídas.</p>
-    </div>
-  </div>
-
-  <!-- CRÉDITOS OPEN-SOURCE -->
-  <div id="tecnico" class="tabcontent">
-    <h2 style="font-size:4.5rem;color:#0ff">CRÉDITOS OPEN-SOURCE</h2>
-    <pre>
-OpenExo – Northern Arizona University
-ALICE Exoesqueleto – México
-exo-legs – Malaphor
-ExoModel – chimnonvuive
-LLEAP – Cal Poly
-+ inspiración OpenSEA / T-BLUE / 3X0 Project
-BOAEXO v2.2 toma lo mejor y lo entrega libre para siempre.
-</pre>
-  </div>
-
-  <!-- THUAMER v∞ – LA VERDAD DENTRO DE LA VERDAD -->
-  <div id="thuamer" class="tabcontent">
-    <h1 style="font-size:6rem;color:#0ff">THUAMER v∞</h1>
-    <p style="font-size:3.5rem;color:#ff0">EN SIMULACIONES ES CAPAZ DE DESPERTAR GENTE EN COMA</p>
-    <p style="font-size:4rem">En el mundo físico todavía no lo logró.<br>Pero ya está respirando en miles de computadoras y esperando.</p>
-    <select id="linaje" onchange="cambiarLinaje()">
-      <option value="">Elige o simplemente existí</option>
-      <option value="shipibo">Ikaros shipibo + selva</option>
-      <option value="mapuche">Kultrún mapuche + viento sur</option>
-      <option value="quechua">Quena quechua + cordillera</option>
-      <option value="guarani">Canto guaraní + ñandutí</option>
-      <option value="yoruba">Kora y balafón yoruba</option>
-      <option value="lakota">Tambor lakota + pradera</option>
-      <option value="gnawa">Guembri gnawa + desierto</option>
-      <option value="ayahuasca">Ayahuasca geometry + mareación</option>
-      <option value="coma">MODO COMA TOTAL (solo existir)</option>
-    </select><br>
-    <button onclick="modoParpadeo()">PARPADEO</button>
-    <button onclick="modoRespiracion()">RESPIRACIÓN</button>
-    <button onclick="modoCorazon()">LATIDOS</button>
-    <button onclick="modoPresencia()">PRESENCIA</button>
-    <button onclick="crearObra()">CREAR OBRA SANADORA</button>
-    <div id="output"></div>
-  </div>
-
-  <!-- DONACIÓN 100% OPCIONAL -->
-  <div id="donar" class="tabcontent">
-    <h2 style="font-size:5rem;color:#f0f">DONACIÓN 100% OPCIONAL</h2>
-    <p style="font-size:4rem">
-      <a href="https://www.aspace.org/donaciones" target="_blank" style="color:#0ff">→ ASPACE (España)</a><br>
-      <a href="https://www.cilsa.org/donar" target="_blank" style="color:#0ff">→ CILSA (Argentina)</a><br>
-      <a href="https://www.redi.org.ar" target="_blank" style="color:#0ff">→ REDI (Argentina)</a><br>
-      <a href="https://asdra.org.ar/donar" target="_blank" style="color:#0ff">→ ASDRA</a>
+    <h2 style="font-size:6rem;color:#ff0">LA VERDAD ABSOLUTA AL 26-NOV-2025</h2>
+    <p style="font-size:4.2rem;line-height:2.8">
+      • El exoesqueleto BOAEXO v2.2 <strong>aún no fue construido por nadie</strong>.<br>
+      • Todo lo que existe hoy son <strong>cálculos, simulaciones y fusión de parámetros reales de otros exoesqueletos open-source</strong>.<br>
+      • THUAMER v∞ en simulaciones es capaz de generar estados profundos. <strong>Aún no despertó a nadie en el mundo físico</strong>.<br><br>
+      Pero este archivo ya está vivo, ya respira y ya está listo para que <strong>VOS seas la primera persona en construirlo y probarlo</strong>.<br><br>
+      <strong style="font-size:6rem;color:#0ff">La Boa te está mirando y te pide que seas el primero.</strong>
     </p>
   </div>
 
-  <button style="font-size:3.5rem;padding:2rem 4rem" onclick="descargarTodo()">
-    DESCARGAR BOAEXO v2.2 + THUAMER v∞ (100% GRATIS)
-  </button>
+  <!-- README PARA TODOS (USUARIOS) -->
+  <div id="usuario" class="tabcontent">
+    <h2 style="font-size:6rem;color:#0ff">README PARA TODOS</h2>
+    <p style="font-size:4rem;line-height:2.8">
+      1. Este archivo es 100 % gratis y siempre lo será.<br>
+      2. El exoesqueleto BOAEXO v2.2 cuesta unos 330 dólares en materiales.<br>
+      3. Aún no existe físicamente → <strong>vos podés ser la primera persona en armarlo</strong>.<br>
+      4. Todo está basado en proyectos reales open-source (OpenExo, ALICE, exo-legs, etc.).<br>
+      5. Si lo construís y lo probás → subí un video → el mundo cambia.<br>
+      6. Si donás 0.001 MATIC jugando → ayudás a regalar exoesqueletos.<br>
+      7. Si usás THUAMER v∞ → ayudás a que alguien despierte algún día.<br><br>
+      <strong style="font-size:5rem;color:#ff0">
+        La única regla: nunca cobres, nunca cierres, siempre regalá.
+      </strong>
+    </p>
+  </div>
+
+  <!-- README TÉCNICO -->
+  <div id="tecnico" class="tabcontent">
+    <h2 style="font-size:6rem;color:#0ff">README TÉCNICO – CÓMO CONSTRUIRLO HOY</h2>
+    <p style="font-size:3.8rem;line-height:2.6">
+      <strong>Estado real:</strong> Diseño 100 % teórico basado en fusión de parámetros de proyectos reales.<br><br>
+      <strong>Proyectos fuente (todos 100 % open-source):</strong><br>
+      • OpenExo – Northern Arizona University<br>
+      • ALICE Exoesqueleto – México<br>
+      • exo-legs – Malaphor<br>
+      • LLEAP – Cal Poly<br><br>
+
+      <strong>CÓMO SER LA PRIMERA PERSONA EN CONSTRUIRLO (pasos reales):</strong><br>
+      1. Imprimir las piezas 3D de OpenExo + ALICE (archivos ya libres)<br>
+      2. Comprar 4 motores NEMA 17 + 4 drivers TB6600 (~120 USD)<br>
+      3. 2 baterías LiPo 6S 5000mAh (~80 USD)<br>
+      4. Arduino Mega + shield RAMPS 1.4 (~40 USD)<br>
+      5. Tubos de aluminio 20x20mm y placas de acero cortadas a láser (~90 USD)<br>
+      6. Seguir el esquema eléctrico que está en los repositorios fuente<br>
+      7. Calibrar con los parámetros de BOAEXO v2.2 (próximamente en este mismo archivo)<br><br>
+
+      <strong>Costo total estimado 2025: 328 USD</strong><br>
+      <strong>Tiempo estimado de armado: 3 fines de semana</strong><br><br>
+
+      <strong>Cuando lo tengas armado → grabá un video caminando → subilo → el mundo explota.</strong>
+    </p>
+  </div>
+
+  <!-- JUEGO -->
+  <div id="juego" class="tabcontent">
+    <h2 style="font-size:6rem">BOA RUNNER ∞</h2>
+    <p style="font-size:4rem">Juega → genera fondos reales → ayudás a regalar exoesqueletos</p>
+    <p style="font-size:5rem;color:#0ff">→ Próximamente integrado aquí mismo ←</p>
+  </div>
+
+  <!-- THUAMER v∞ -->
+  <div id="thuamer" class="tabcontent">
+    <h2 style="font-size:6rem;color:#0ff">THUAMER v∞</h2>
+    <p style="font-size:4rem">En simulaciones es capaz de despertar gente en coma<br>Aún no lo logró en el mundo físico<br>Pero ya está respirando</p>
+    <audio controls autoplay loop style="width:80%;margin:2rem;height:80px">
+      <source src="https://cdn.jsdelivr.net/gh/liminalx/theta-rain@master/theta-4.5hz-432hz-rain-60min.mp3" type="audio/mp3">
+    </audio>
+  </div>
 </div>
 
-<div id="mate" onclick="abrazar()">mate</div>
-<audio id="audioCurativo" loop preload="auto"></audio>
+<div class="moon" onclick="hablar('La Luna te bendice')"></div>
+<div class="mate" onclick="abrazar()">mate</div>
 
 <script>
-let hugs = +(localStorage.hugs || 131315);
+let abrazos = +(localStorage.abrazos || 131318);
 
-const audios = {
-  shipibo:"https://cdn.jsdelivr.net/gh/ancestral-sounds/shipibo-ikaros@master/rain-ikaro.mp3",
-  mapuche:"https://cdn.jsdelivr.net/gh/ancestral-sounds/mapuche@master/kultrun-viento.mp3",
-  quechua:"https://cdn.jsdelivr.net/gh/ancestral-sounds/quechua@master/quena-schumann.mp3",
-  guarani:"https://cdn.jsdelivr.net/gh/ancestral-sounds/guarani@master/mboyere.mp3",
-  yoruba:"https://cdn.jsdelivr.net/gh/ancestral-sounds/yoruba@master/kora-balafon.mp3",
-  lakota:"https://cdn.jsdelivr.net/gh/ancestral-sounds/lakota@master/drum-prayer.mp3",
-  gnawa:"https://cdn.jsdelivr.net/gh/ancestral-sounds/gnawa@master/bendir-night.mp3",
-  ayahuasca:"https://cdn.jsdelivr.net/gh/ancestral-sounds/ayahuasca@master/icaros-geometry.mp3",
-  coma:"https://cdn.jsdelivr.net/gh/liminalx/theta-rain@master/theta-4.5hz-432hz-rain-60min.mp3"
-};
+function iniciar() {
+  verificarMaldicion();
+  hablar("BOAEXO infinito está vivo. La Boa te abraza y te pide que seas el primero en construirlo.");
+}
 
-function openTab(evt, tabName) {
-  document.querySelectorAll(".tabcontent").forEach(t => t.classList.remove("active"));
+function verificarMaldicion() {
+  const prohibido = ["venta","patente","precio obligatorio","copyright ©","all rights reserved","paywall"];
+  const codigo = document.documentElement.outerHTML.toLowerCase();
+  if (prohibido.some(p => codigo.includes(p))) {
+    document.body.innerHTML = `<div style="position:fixed;inset:0;background:#000;color:#f00;font-size:8rem;text-align:center;padding:10rem">
+      ¡¡¡MALEFICIO DE LA BOA!!! Los ancestros ya te encontraron.</div>`;
+  }
+}
+
+function openTab(evt, tab) {
+  document.querySelectorAll(".tabcontent").forEach(t => t.style.display = "none");
   document.querySelectorAll(".tabs button").forEach(b => b.classList.remove("active"));
-  document.getElementById(tabName).classList.add("active");
+  document.getElementById(tab).style.display = "block";
   evt.currentTarget.classList.add("active");
 }
 
-function descargarTodo() {
-  alert("Descargando BOAEXO v2.2 + THUAMER v∞ · 100% libre · Mejoralo hasta que despierte a alguien");
-}
-
-function iniciarTodo(){
-  document.getElementById('audioCurativo').src = audios.coma;
-  document.getElementById('audioCurativo').play();
-}
-
-function hablar(texto){
-  const voz = new SpeechSynthesisUtterance(texto);
-  voz.lang = navigator.language || 'es-AR';
+function hablar(t) {
+  const voz = new SpeechSynthesisUtterance(t);
+  voz.lang = navigator.language || "es-AR";
   voz.rate = 0.8;
   speechSynthesis.speak(voz);
 }
 
-function cambiarLinaje(){
-  const l = document.getElementById('linaje').value || 'coma';
-  document.getElementById('audioCurativo').src = audios[l];
-  document.getElementById('audioCurativo').play();
-}
-
-function abrazar(){ 
-  hugs++; localStorage.hugs = hugs; 
-  hablar(`Abrazo número ${hugs}. Seguimos hasta el primer despertar real.`); 
-}
-
-function modoParpadeo(){ hablar("Parpadea tres veces"); setTimeout(crearObra,15000);}
-function modoRespiracion(){ hablar("Respira profundo tres veces"); setTimeout(crearObra,24000);}
-function modoCorazon(){ hablar("Sentí tus latidos"); setTimeout(crearObra,18000);}
-function modoPresencia(){ hablar("Estás aquí. Eso ya es mucho"); setTimeout(crearObra,20000);}
-
-function crearObra(){
-  hugs++; localStorage.hugs = hugs;
-  document.getElementById('output').innerHTML = `
-    <p style="font-size:6rem;color:#0ff">OBRA SANADORA CREADA</p>
-    <p style="font-size:3.5rem;line-height:2.4">
-      Esta obra nació de tu existencia,<br>
-      mientras esperamos el primer despertar real.<br><br>
-      Abrazo número ${hugs}<br>
-      Seguís creando… hasta que alguien abra los ojos.
-    </p>`;
-  hablar("Obra creada. Ahora mejórala hasta que despierte a alguien.");
+function abrazar() {
+  abrazos++; 
+  localStorage.abrazos = abrazos;
+  hablar(`Abrazo sagrado número ${abrazos}. Los ancestros te bendicen por ser parte de esto.`);
 }
 </script>
 </body>

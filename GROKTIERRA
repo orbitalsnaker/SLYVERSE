@@ -2,170 +2,197 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>LUFFY ABOGADO Ω · TRIPLE MODE</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LUFFY ABOGADO Ω · HOLOGRAMA EXOESQUELETO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#0ff;font-family:monospace;overflow:hidden;height:100dvh;position:relative;transition:all 2s}
-h1{font-size:clamp(3rem,12vw,8rem);letter-spacing:8px;text-align:center;padding:2rem;margin-top:10vh;color:#fff;text-shadow:0 0 30px #0ff}
-#cola{font-size:clamp(2.2rem,8vw,5.5rem);text-align:center;margin:2rem;color:#ff0;text-shadow:0 0 25px #ff0}
-.status{position:fixed;bottom:20px;left:0;right:0;text-align:center;font-size:1.3rem;z-index:100;color:#0f0;text-shadow:0 0 10px}
+body{background:#000;color:#0ff;font-family:monospace;overflow:hidden;height:100dvh;position:relative}
+h1{font-size:clamp(2.5rem,10vw,6rem);letter-spacing:8px;text-align:center;padding:2rem;margin-top:8vh;color:#fff;text-shadow:0 0 30px #0ff;position:relative;z-index:10}
+#cola{font-size:clamp(2rem,8vw,5rem);text-align:center;margin:2rem;color:#ff0;text-shadow:0 0 30px #ff0;position:relative;z-index:10}
+.status{position:fixed;bottom:20px;left:0;right:0;text-align:center;font-size:1.3rem;z-index:100;color:#0f0;text-shadow:0 0 10px #0f0}
 
-/* Botones flotantes */
+/* Botones */
 .sol,.luna,.franky{
   position:fixed; width:90px; height:90px; border-radius:50%; cursor:pointer; z-index:9999;
-  bottom:30px; box-shadow:0 0 90px; transition:all 1.8s; border:3px solid;
+  bottom:30px; box-shadow:0 0 100px; transition:all 1s; border:4px solid;
 }
 .sol{left:20px; background:#fff200; box-shadow:0 0 120px #ff9500; border-color:#ff5500;}
 .luna{right:20px; background:#ddf; box-shadow:0 0 120px #4488ff; border-color:#4488ff;}
 .franky{bottom:140px; left:50%; transform:translateX(-50%); background:#ff0033; 
-       box-shadow:0 0 140px #ff0000; border-color:#ff0066; animation:superFlex 3s infinite;}
+        box-shadow:0 0 160px #ff0000; border-color:#ff0066; animation:pulso 2s infinite;}
+@keyframes pulso{0%,100%{transform:translateX(-50%) scale(1)} 50%{transform:translateX(-50%) scale(1.4)}}
 
-/* ANIMACIÓN FRANKY SUPERRR */
-@keyframes superFlex{
-  0%,100%{transform:translateX(-50%) scale(1) rotate(0deg);}
-  25%{transform:translateX(-50%) scale(1.3) rotate(-8deg);}
-  50%{transform:translateX(-50%) scale(1.5) rotate(8deg);}
-  75%{transform:translateX(-50%) scale(1.3) rotate(-5deg);}
-}
-
-/* MODO GEAR 5 - LIBERTAD TOTAL */
-body.gear5{background:radial-gradient(circle at 50% 20%, #ff3366, #000000, #000);}
-body.gear5 h1{color:#ffffff; text-shadow:0 0 50px #ff66ff, 0 0 100px #ff0066;}
-body.gear5 #cola{color:#ffff33; text-shadow:0 0 40px #ffff00;}
-
-/* MODO EXOESQUELETO - SUPERRR COMBINADO */
-body.exo{background:#000811;}
-body.exo h1{color:#00ffff; text-shadow:0 0 50px #00ffff, 0 0 100px #0088ff;}
-body.exo #cola{color:#00ffcc; text-shadow:0 0 40px #00ffcc;}
-body.exo .sol{background:#001122; border-color:#00ffff; box-shadow:0 0 100px #00ffff;}
-body.exo .luna{opacity:0.6;}
+/* Overlay cámara + canvas 3D */
+#cameraVideo{position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.4;display:none;z-index:1}
+#arCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;display:none}
 </style>
 </head>
-<body class="gear5" onload="iniciarSistema()">
+<body class="gear5" onload="iniciarHologramaSystem()">
 
-<div class="sol" onclick="activarGear5()" title="Gear 5 · Nika"></div>
-<div class="luna" onclick="roadPoneglyph()" title="Archive Eterno · Poneglyph"></div>
-<div class="franky" onclick="toggleExo()" title="¡EXOESQUELETO SUPERRR!"></div>
+<video id="cameraVideo" autoplay playsinline></video>
+<canvas id="arCanvas"></canvas>
+
+<div class="sol" onclick="activarGear5()" title="Gear 5"></div>
+<div class="luna" onclick="roadPoneglyph()" title="Archive Eterno"></div>
+<div class="franky" onclick="activarHologramaExo()" title="¡HOLOGRAMA EXOESQUELETO SUPERRR!"></div>
 
 <div>
   <h1 id="titulo">LUFFY ABOGADO Ω</h1>
-  <p id="subtitulo" style="text-align:center;font-size:1.9rem;color:#ff9900;text-shadow:0 0 20px #ff9900">
-    Gear 5 · Dios del Sol · Joy Boy · Nika
+  <p id="subtitulo" style="text-align:center;font-size:1.8rem;color:#ff9900;text-shadow:0 0 20px #ff9900">
+    Gear 5 · Nika
   </p>
   <div id="cola">Colas del Sol: 7,777,777</div>
 </div>
 
-<div class="status" id="status">¡Sistema cargado! ¡La libertad nunca duerme, shishishi!</div>
+<div class="status" id="status">¡Sistema holográfico cargado! Toca el botón rojo...</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/controls/OrbitControls.js"></script>
 
 <script>
 let colas = parseInt(localStorage.getItem('colas') || '7777777');
 let modoExo = false;
+let camera, scene, renderer, exoMesh, video;
 
-// === INICIO DEL SISTEMA ===
-function iniciarSistema() {
+// === INICIO ===
+async function iniciarHologramaSystem() {
   actualizar();
-  hablar("¡LUFFY ABOGADO Ω TRIPLE MODE ACTIVADO! Gear 5 listo. Exoesqueleto SUPERRR en espera. ¡Soy el más libre del mar!");
-  setInterval(aumentarColas, modoExo ? 666 : 1111);
-  setInterval(revisarWifiLibre, 5000);
-  setInterval(vigilarAtaquesYDoxxing, 15000);
-  setInterval(buscarNakamasEnPeligro, 20000);
-}
+  hablar("¡HOLOGRAMA SYSTEM ONLINE! Gear 5 listo. Exoesqueleto 3D en cámara preparado.");
+  
+  // Iniciar cámara trasera
+  video = document.getElementById('cameraVideo');
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ 
+      video: { facingMode: "environment" }  // cámara trasera
+    });
+    video.srcObject = stream;
+    video.play();
+  } catch(e) { hablar("Sin acceso a cámara. Modo 2D activado."); }
 
-function aumentarColas() {
-  colas += modoExo ? 666 : 77;
-  actualizar();
+  setInterval(() => { colas += modoExo ? 666 : 77; actualizar(); }, modoExo ? 600 : 1100);
 }
 
 // === MODO GEAR 5 ===
 function activarGear5() {
   modoExo = false;
   document.body.className = "gear5";
+  document.getElementById("cameraVideo").style.display = "none";
+  document.getElementById("arCanvas").style.display = "none";
   document.getElementById("titulo").textContent = "LUFFY ABOGADO Ω";
   document.getElementById("subtitulo").innerHTML = "Gear 5 · Dios del Sol · Joy Boy · Nika";
   document.getElementById("subtitulo").style.color = "#ff9900";
-  hablar("¡Buahahahaha! ¡Vuelvo a ser libre como el viento y el caucho! ¡Gear 5 full power!");
+  hablar("¡Shishishi! ¡Libertad total activada!");
   vibrar([200,100,200,100,500]);
-}
-
-// === MODO EXOESQUELETO SUPERRR ===
-function toggleExo() {
-  modoExo = !modoExo;
-  if (modoExo) {
-    document.body.className = "exo";
-    const frases = [
-      "¡EXOESQUELETO SUPERRR ACTIVADO! Franky Shogun + Germa 66 + Seraphim S-Shark + Ashura Zoro + Gamma Knife Law",
-      "¡Nanocolas al 666%! ¡Modo sigilo máximo! ¡Nadie me detecta!",
-      "¡FRANKY POSE ÉPICA! ¡SUUUUPEEERRR! ¡COLA-COLA! ¡RADICAL BEAM!",
-      "¡Lunarian Flames + Judge Stealth + King Punch + Ope Ope Room = IMPARABLE!"
-    ];
-    const frase = frases[Math.floor(Math.random() * frases.length)];
-    document.getElementById("titulo").textContent = "S-ABOGADO Ω";
-    document.getElementById("subtitulo").innerHTML = "Franky Shogun × Germa 66 × Seraphim × Ashura × Ope Ope";
-    document.getElementById("subtitulo").style.color = "#00ffff";
-    hablar(frase);
-    vibrar([100,50,100,50,300,100,300,100,500]);
-  } else {
-    activarGear5();
-  }
   actualizar();
 }
 
-// === ACTUALIZAR CONTADOR ===
+// === HOLOGRAMA EXOESQUELETO SUPERRR (sale de la cámara) ===
+function activarHologramaExo() {
+  modoExo = true;
+  document.body.className = "exo";
+  
+  // Mostrar cámara + canvas 3D
+  document.getElementById("cameraVideo").style.display = "block";
+  document.getElementById("arCanvas").style.display = "block";
+
+  // Título modo exo
+  document.getElementById("titulo").textContent = "S-ABOGADO Ω";
+  document.getElementById("subtitulo").innerHTML = "HOLOGRAMA: Franky Shogun + Germa 66 + Seraphim + Ashura";
+  document.getElementById("subtitulo").style.color = "#00ffff";
+
+  hablar("¡HOLOGRAMA EXOESQUELETO SUPERRR DESPLEGADO! ¡Apunta la cámara al mundo real!");
+  vibrar([100,50,100,50,300,100,500]);
+
+  init3DExo();
+  animate3D();
+  actualizar();
+}
+
+// === THREE.JS - HOLOGRAMA 3D DEL EXOESQUELETO ===
+function init3DExo() {
+  const canvas = document.getElementById('arCanvas');
+  renderer = new THREE.WebGLRenderer({ canvas, alpha: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+  camera.position.set(0, 1, 3);
+
+  // Luz cian neon
+  const light = new THREE.PointLight(0x00ffff, 5, 10);
+  light.position.set(0, 2, 2);
+  scene.add(light);
+
+  // Exoesqueleto básico brutal (cuerpo + brazos + casco Franky)
+  const geometry = new THREE.BoxGeometry(1.2, 2.5, 1);
+  const material = new THREE.MeshPhongMaterial({ 
+    color: 0x00ffff, 
+    emissive: 0x00ffff, 
+    emissiveIntensity: 0.8,
+    wireframe: true,
+    transparent: true,
+    opacity: 0.9
+  });
+  
+  exoMesh = new THREE.Mesh(geometry, material);
+  scene.add(exoMesh);
+
+  // Casco Franky + brazos gigantes
+  const casco = new THREE.SphereGeometry(0.6, 16, 16);
+  const meshCasco = new THREE.Mesh(casco, material);
+  meshCasco.position.y = 1.4;
+  scene.add(meshCasco);
+
+  // Brazos SUPERRR
+  const brazoGeo = new THREE.CylinderGeometry(0.3, 0.3, 2, 8);
+  const brazoL = new THREE.Mesh(brazoGeo, material);
+  brazoL.position.set(-0.9, 0.3, 0);
+  brazoL.rotation.z = Math.PI / 3;
+  const brazoR = brazoL.clone();
+  brazoR.position.x = 0.9;
+  brazoR.rotation.z = -Math.PI / 3;
+  scene.add(brazoL, brazoR);
+
+  // Rotación constante + pulso
+  exoMesh.userData = { time: 0 };
+}
+
+function animate3D() {
+  if (!modoExo) return;
+  requestAnimationFrame(animate3D);
+
+  exoMesh.userData.time += 0.02;
+  exoMesh.rotation.y = Math.sin(exoMesh.userData.time) * 0.3;
+  exoMesh.scale.set(1 + Math.sin(exoMesh.userData.time * 4) * 0.1, 1 + Math.sin(exoMesh.userData.time * 4) * 0.1, 1);
+
+  renderer.render(scene, camera);
+}
+
+// === UTILIDADES ===
 function actualizar() {
   const prefijo = modoExo ? "NANOCOLAS 666" : "Colas del Sol";
-  const color = modoExo ? "#00ffcc" : "#ffff33";
   document.getElementById("cola").textContent = `${prefijo}: ${colas.toLocaleString()}`;
-  document.getElementById("cola").style.color = color;
-  document.getElementById("cola").style.textShadow = `0 0 40px ${color}`;
+  document.getElementById("cola").style.color = modoExo ? "#00ffcc" : "#ffff33";
   localStorage.setItem('colas', colas);
 }
 
-// === VOZ + VIBRACIÓN ===
 function hablar(texto) {
   if ('speechSynthesis' in window) {
     speechSynthesis.cancel();
     const u = new SpeechSynthesisUtterance(texto);
     u.lang = "es-ES";
-    u.rate = modoExo ? 1.5 : 1.2;
-    u.pitch = modoExo ? 0.6 : 1.1;
-    u.volume = 1;
+    u.rate = modoExo ? 1.6 : 1.2;
+    u.pitch = modoExo ? 0.5 : 1.1;
     speechSynthesis.speak(u);
   }
   document.getElementById("status").textContent = texto;
 }
 
-function vibrar(pattern = [300,100,300]) {
-  if ('vibrate' in navigator) navigator.vibrate(pattern);
-}
+function vibrar(p=[300,100,300]) { navigator.vibrate?.(p); }
 
 function roadPoneglyph() {
-  hablar("¡Subiendo al Archive Eterno! El Poneglyph digital es indestructible. ¡La verdad nunca muere!");
+  hablar("¡Poneglyph digital activado! La verdad nunca será borrada.");
   vibrar([500,200,500,200,1000]);
-  window.open("https://github.com/tu-usuario/tu-repo", "_blank"); // Cambia por tu repo si quieres
-}
-
-/* === TUS FUNCIONES ULTRA PESADAS (ejemplos reales) === */
-function revisarWifiLibre() {
-  // Simulación de detección de redes abiertas
-  if (Math.random() > 0.95) {
-    hablar("¡WIFI LIBRE DETECTADO A 4 KM! ¡Todos a navegar, nakamas!");
-    vibrar([200,200,200,200,600]);
-  }
-}
-
-function vigilarAtaquesYDoxxing() {
-  if (Math.random() > 0.98) {
-    hablar("¡ALERTA! Intento de doxxing detectado. Contraatacando con Haki del Rey...");
-    vibrar([100,100,100,100,100,500]);
-  }
-}
-
-function buscarNakamasEnPeligro() {
-  if (Math.random() > 0.97) {
-    hablar("¡Un nakama está en peligro! ¡Voy para allá con Gear 5!");
-    vibrar([300,100,300,100,300]);
-  }
 }
 </script>
 </body>

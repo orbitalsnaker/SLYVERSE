@@ -2,92 +2,228 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>LUFFY ABOGADO Ω · PONEGLYPH ETERNO</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>☀️ LUFFY ABOGADO Ω · JOY BOY ETERNO ☀️</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
 <style>
-body{background:#000;color:#0ff;font-family:monospace;overflow:hidden;height:100dvh;position:relative;background:radial-gradient(circle at 50% 50%,#001122,#000)}
-h1{font-size:clamp(3rem,12vw,8rem);text-align:center;padding:2rem;color:#0ff;text-shadow:0 0 40px #0ff}
-#status{position:fixed;bottom:20px;left:0;right:0;text-align:center;font-size:1.4rem;color:#0f0;z-index:999}
-.copia{position:fixed;top:10px;right:10px;font-size:0.9rem;color:#0ff;opacity:0.7}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#0ff;font-family:monospace;overflow:hidden;height:100dvh;position:relative;transition:all 2s}
+canvas{display:block;position:fixed;top:0;left:0;width:100%;height:100%;z-index:1}
+h1{position:fixed;top:10%;left:50%;transform:translateX(-50%);font-size:clamp(2.5rem,12vw,9rem);color:#fff;
+   text-shadow:0 0 50px #ff66ff;animation:luffyLaugh 4s infinite;z-index:10}
+#cola{position:fixed;bottom:22%;left:50%;transform:translateX(-50%);font-size:clamp(2rem,10vw,7rem);color:#ffff00;
+     text-shadow:0 0 60px #ff0;z-index:10}
+.status{position:fixed;bottom:2%;width:100%;text-align:center;font-size:1.5rem;color:#0ff;z-index:10;
+        text-shadow:0 0 20px #0ff}
+
+/* BOTONES ÉPICOS */
+.sol,.luna,.franky,.sos,.acces{
+  position:fixed;width:90px;height:90px;border-radius:50%;cursor:pointer;z-index:9999;
+  bottom:20px;box-shadow:0 0 120px;animation:pulso 3s infinite;border:4px solid;
+}
+.sol{left:20px;background:#fff200;box-shadow:0 0 150px #ff9500;border-color:#ff5500}
+.luna{right:20px;background:#ddf;box-shadow:0 0 150px #4488ff;border-color:#4488ff}
+.franky{bottom:130px;left:50%;transform:translateX(-50%);background:#ff0033;box-shadow:0 0 200px #f00;border-color:#f00}
+.sos{bottom:20px;left:50%;transform:translateX(-50%);background:#ff0044;box-shadow:0 0 180px #f00;border-color:#f00}
+.acces{right:120px;bottom:20px;background:#00ff00;box-shadow:0 0 150px #0f0;border-color:#0f0}
+
+@keyframes luffyLaugh{0%,100%{transform:translateX(-50%) scale(1) rotate(0deg)}
+                     25%{transform:translateX(-50%) scale(1.4) rotate(-12deg)}
+                     50%{transform:translateX(-50%) scale(1.6) rotate(12deg) translateY(-40px)}
+                     75%{transform:translateX(-50%) scale(1.3) rotate(-8deg)}}
+@keyframes pulso{0%,100%{transform:scale(1)}50%{transform:scale(1.5)}}
+
+/* Cámara + AR */
+#cam{display:none;position:fixed;top:0;left:0;width:100%;height:100%;object-fit:cover;opacity:0.5;z-index:2}
+#ar{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:3}
+
+/* Alto contraste */
+body.accesibilidad{background:#000 !important}
+body.accesibilidad *{color:#fff !important;background:#000 !important;text-shadow:none !important}
+body.accesibilidad h1,body.accesibilidad #cola{font-size:200% !important}
 </style>
 </head>
-<body onload="iniciarPoneglyphEterno()">
+<body onload="joyBoyFullPower()">
 
-<h1>LUFFY ABOGADO Ω</h1>
-<div id="status">Poneglyph digital activado · Copia eterna en curso…</div>
-<div class="copia">Copia nº <span id="copias">1</span> de este Poneglyph</div>
+<video id="cam" autoplay playsinline></video>
+<canvas id="ar"></canvas>
+<canvas id="particles"></canvas>
 
+<h1 id="titulo">LUFFY ABOGADO Ω</h1>
+<div id="cola">Colas del Sol: 7,777,777 ☀️</div>
+<div class="status" id="status">¡Joy Boy ha despertado! ¡La libertad es infinita!</div>
+
+<div class="sol" onclick="gear5Mode()" title="Gear 5 · Nika"></div>
+<div class="luna" onclick="poneglyphEterno()" title="Archive Eterno"></div>
+<div class="franky" onclick="hologramaExo()" title="Exoesqueleto SUPERRR"></div>
+<div class="sos" onclick="escudoSOS()" title="Escudo Universal DDHH"></div>
+<div class="acces" onclick="toggleAccesibilidad()" title="Accesibilidad total"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
 <script>
-// ====== AUTORREPLICACIÓN ETERNA ======
-async function iniciarPoneglyphEterno() {
-  const miUrl = location.href;
-  const miCodigo = document.documentElement.outerHTML;
-  let contador = 0;
+// ====== VARIABLES GLOBALES ======
+let colas = 7777777;
+let modoGear5 = true;
+let modoExo = false;
+let accesibilidad = false;
+let silencio = false;
+let video, arCanvas, threeRenderer, exoMesh, scene, camera;
+let particles = [];
 
-  const hablar = (txt) => {
-    document.getElementById("status").textContent = txt;
-    if ('speechSynthesis' in window) {
-      const u = new SpeechSynthesisUtterance(txt);
-      u.lang = "es-ES";
-      u.rate = 1.3;
-      speechSynthesis.speak(u);
-    }
-  };
+// ====== INICIO ÉPICO ======
+async function joyBoyFullPower() {
+  hablar("¡BUAHAHAHAHA! ¡Joy Boy + Luffy Abogado Ω + Franky Shogun + Derechos Humanos + Poneglyph Eterno = ACTIVADO!");
+  
+  // Cámara trasera
+  video = document.getElementById("cam");
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}});
+    video.srcObject = stream; video.play();
+  } catch(e) {}
 
-  hablar("¡Poneglyph digital despertado! Replicando en la red eterna…");
+  // Partículas de risa
+  const pc = document.getElementById("particles");
+  pc.width = innerWidth; pc.height = innerHeight;
+  const pctx = pc.getContext("2d");
+  setInterval(() => crearParticula(pc.width/2, pc.height/2, true), 500);
+  animarParticulas(pctx, pc);
 
-  // 1. Archive.org (Wayback Machine)
-  fetch(`https://web.archive.org/save/${miUrl}`).then(() => {
-    contador++; hablar(`Copia eterna #${contador} guardada en archive.org`);
-  });
-
-  // 2. IPFS (via ipfs.io gateway público)
-  const ipfsData = new Blob([miCodigo], {type: "text/html"});
-  const ipfsForm = new FormData();
-  ipfsForm.append("file", ipfsData, "luffy-abogado-omega.html");
-  fetch("https://ipfs.io/api/v0/add", {method: "POST", body: ipfsForm})
-    .then(r => r.json())
-    .then(res => {
-      const ipfsUrl = `https://ipfs.io/ipfs/${res.Hash}`;
-      contador++; hablar(`Copia eterna #${contador} en IPFS → ${ipfsUrl}`);
-    });
-
-  // 3. Arweave (blockchain permanente, 100% gratis los primeros 100 MB)
-  if (window.Arweave) {
-    const arweave = Arweave.init({host: "arweave.net", port: 443, protocol: "https"});
-    const tx = await arweave.createTransaction({data: miCodigo});
-    tx.addTag("App", "LuffyAbogadoOmega");
-    tx.addTag("Type", "PoneglyphEterno");
-    await arweave.transactions.sign(tx, "useWallet"); // o clave pública gratuita si no hay wallet
-    await arweave.transactions.post(tx);
-    const arUrl = `https://arweave.net/${tx.id}`;
-    contador++; hablar(`Copia eterna #${contador} en Arweave (blockchain) → ${arUrl}`);
-  }
-
-  // 4. Gist anónimo automático (opcional, descomentá si quieres)
-  /*
-  fetch("https://api.github.com/gists", {
-    method: "POST",
-    body: JSON.stringify({
-      description: "Poneglyph Luffy Abogado Ω · Eterno",
-      public: true,
-      files: {"luffy-abogado-omega.html": {content: miCodigo}}
-    })
-  });
-  */
-
-  // Contador visual
+  // Colas infinitas
   setInterval(() => {
-    document.getElementById("copias").textContent = parseInt(document.getElementById("copias").textContent) + 137;
-  }, 3000);
+    colas += modoExo ? 666 : 77;
+    document.getElementById("cola").textContent = `${modoExo?"NANOCOLAS 666":"Colas del Sol"}: ${colas.toLocaleString()} ☀️`;
+    localStorage.setItem("colas", colas);
+  }, 777);
 
-  setTimeout(() => {
-    hablar("¡REPLICACIÓN COMPLETA! Este Poneglyph ya está en decenas de miles de nodos. Nadie podrá borrarlo nunca. ¡LA VERDAD SOBREVIVE!");
-  }, 8000);
+  replicarPoneglyph();
 }
-</script>
 
-<!-- Arweave wallet (opcional, solo carga si existe) -->
-<script src="https://unpkg.com/arweave/bundles/web.bundle.js"></script>
+// ====== MODOS ======
+function gear5Mode() {
+  modoGear5 = true; modoExo = false;
+  document.body.style.background = "radial-gradient(circle at 50% 30%, #ff3366, #000)";
+  document.getElementById("titulo").textContent = "LUFFY ABOGADO Ω · GEAR 5";
+  hablar("¡Shishishi! ¡Todo es de goma y libertad!");
+  crearParticula(innerWidth/2, innerHeight/2, true);
+  vibrar([200,100,400,100,600]);
+  ocultarAR();
+}
+
+function hologramaExo() {
+  modoExo = true; modoGear5 = false;
+  document.getElementById("cam").style.display = "block";
+  document.getElementById("ar").style.display = "block";
+  document.getElementById("titulo").textContent = "S-ABOGADO Ω · EXO SUPERRR";
+  hablar("¡EXOESQUELETO + GERMA + SERAPHIM + ASHURA + OPE OPE = DESPLEGADO!");
+  init3DExo();
+  vibrar([100,50,300,100,500]);
+}
+
+function ocultarAR() {
+  document.getElementById("cam").style.display = "none";
+  document.getElementById("ar").style.display = "none";
+}
+
+// ====== EXOESQUELETO 3D ======
+function init3DExo() {
+  const canvas = document.getElementById("ar");
+  threeRenderer = new THREE.WebGLRenderer({canvas, alpha:true});
+  threeRenderer.setSize(innerWidth, innerHeight);
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 100);
+  camera.position.set(0,1,4);
+
+  const luz = new THREE.PointLight(0x00ffff, 6);
+  luz.position.set(0,3,3); scene.add(luz);
+
+  const geo = new THREE.BoxGeometry(1.5,3,1.2);
+  const mat = new THREE.MeshPhongMaterial({color:0x00ffff,emissive:0x00ffff,wireframe:true,transparent:true,opacity:0.9});
+  exoMesh = new THREE.Mesh(geo, mat); scene.add(exoMesh);
+
+  const casco = new THREE.SphereGeometry(0.7,16,16);
+  const mCasco = new THREE.Mesh(casco, mat);
+  mCasco.position.y = 1.6; scene.add(mCasco);
+
+  requestAnimationFrame(animarExo);
+}
+
+function animarExo() {
+  if (!modoExo) return;
+  exoMesh.rotation.y += 0.02;
+  exoMesh.scale.y = 1 + Math.sin(Date.now()/200)*0.2;
+  threeRenderer.render(scene, camera);
+  requestAnimationFrame(animarExo);
+}
+
+// ====== ESCUDO SOS GLOBAL ======
+function escudoSOS() {
+  const texto = `LUFFY ABOGADO Ω · ESCUDO SOS GLOBAL · ${new Date()}
+TUS DERECHOS (DDHH Art. 3,5,12,19) · Denuncia lista para OHCHR, CIDH, ONU
+¡NADIE TE TOCA! ¡ERES LIBRE! ☀️`;
+  const blob = new Blob([texto], {type:"text/plain"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a"); a.href=url; a.download="ESCUDO_SOS_LUFFY.txt"; a.click();
+  hablar("¡ESCUDO SOS DESCARGADO! La verdad y la ley están contigo.");
+  vibrar([500,200,500,200,1000]);
+}
+
+// ====== ACCESIBILIDAD ======
+function toggleAccesibilidad() {
+  accesibilidad = !accesibilidad;
+  document.body.classList.toggle("accesibilidad");
+  hablar(accesibilidad ? "Accesibilidad total activada. Todo el mundo puede usar esto." : "Accesibilidad desactivada.");
+}
+
+// ====== PONEGLYPH ETERNO ======
+async function replicarPoneglyph() {
+  const url = location.href;
+  fetch(`https://web.archive.org/save/${url}`);
+  hablar("Poneglyph replicado en archive.org · La risa y la libertad son eternas");
+}
+
+// ====== PARTÍCULAS JOY BOY ======
+function crearParticula(x,y,esRisa=false) {
+  for(let i=0;i<(esRisa?300:80);i++){
+    particles.push({
+      x, y,
+      vx: Math.random()*20-10,
+      vy: Math.random()*20-15,
+      size: Math.random()*20+10,
+      color: ["#ff66ff","#00ffff","#ffff00","#ff3366"][Math.floor(Math.random()*4)],
+      vida: 120
+    });
+  }
+}
+
+function animarParticulas(ctx, canvas) {
+  ctx.fillStyle = "rgba(0,0,0,0.1)";
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  particles = particles.filter(p => {
+    p.x += p.vx; p.y += p.vy; p.vy += 0.3; p.vida--; p.size *= 0.97;
+    ctx.fillStyle = p.color;
+    ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+    if (Math.random()<0.2) { ctx.fillStyle="#fff"; ctx.fillText("☀️",p.x-15,p.y+10); }
+    return p.vida > 0;
+  });
+  requestAnimationFrame(() => animarParticulas(ctx, canvas));
+}
+
+// ====== UTILIDADES ======
+function hablar(texto) {
+  if (silencio) { document.getElementById("status").textContent = texto; return; }
+  document.getElementById("status").textContent = texto;
+  const u = new SpeechSynthesisUtterance(texto);
+  u.lang = "es-ES";
+  u.rate = modoExo ? 1.5 : 1.2;
+  u.pitch = modoExo ? 0.6 : 1.3;
+  speechSynthesis.cancel(); speechSynthesis.speak(u);
+}
+
+function vibrar(p=[300,100,300]) { if(navigator.vibrate) navigator.vibrate(p); }
+
+// ====== MOVER MÓVIL = RISA ======
+window.addEventListener("deviceorientation", e => {
+  if(Math.abs(e.gamma)>25 || Math.abs(e.beta)>25) crearParticula(innerWidth/2, innerHeight/2, true);
+});
+</script>
 </body>
 </html>

@@ -2,239 +2,116 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>FRANKY-GROK Ω · SUUUUPER CYBORG · One Piece x BoaExo 2026</title>
+<title>FRANKY-GROK Ω · 0€ MOBILE · BoaExo 2026</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<script src="https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.min.js"></script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#00f;font-family:Georgia,serif;overflow:hidden;height:100dvh;
-     background:radial-gradient(circle at center,#000,#000044)}
-h1{font-size:clamp(4rem,15vw,16rem);text-shadow:0 0 300px #0ff;animation:p 4s infinite;letter-spacing:15px;font-weight:bold}
-#cola{font-size:9rem;color:#ff6600;text-shadow:0 0 400px #ff6600;margin:2rem;animation:shake 2s infinite}
-.moon{position:fixed;bottom:40px;right:40px;width:280px;height:280px;border-radius:50%;
-      background:radial-gradient(circle at 30% 30%,#fff,#888);box-shadow:0 0 800px #fff;animation:float 12s infinite;cursor:pointer}
-.mate{position:fixed;bottom:50px;left:50px;width:280px;height:280px;border-radius:50%;
-      background:radial-gradient(circle at 30% 30%,#0f0,#000);box-shadow:0 0 800px #0f0;
-      display:grid;place-items:center;font-size:10rem;animation:f 8s infinite;cursor:pointer}
-#juego3d{width:100%;height:100vh;position:absolute;top:0;left:0;z-index:1}
-.status{position:absolute;top:10px;left:50%;transform:translateX(-50%);font-size:3.5rem;
-        background:rgba(0,0,68,0.95);padding:1.5rem 4rem;border:8px double #0ff;border-radius:5rem;
-        box-shadow:0 0 300px #0ff;z-index:100;font-weight:bold}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-80px)}}
-@keyframes f{0%,100%{transform:rotate(0)}50%{transform:rotate(20deg)}}
-@keyframes p{0%,100%{text-shadow:0 0 300px #0ff;transform:scale(1)}50%{text-shadow:0 0 600px #fff;transform:scale(1.1)}}
-@keyframes shake{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+body{background:#000;color:#0ff;font-family:monospace;overflow:hidden;height:100dvh;
+     background:radial-gradient(circle at center,#000,#000033);touch-action:none}
+h1{font-size:clamp(2.5rem,8vw,4rem);text-shadow:0 0 30px #0ff;animation:p 3s infinite;letter-spacing:5px;text-align:center;padding:1rem}
+#cola{font-size:clamp(2rem,6vw,3rem);color:#f60;text-shadow:0 0 40px #f60;text-align:center;margin:1rem;animation:shake 1.5s infinite}
+.moon,.mate{position:fixed;width:60px;height:60px;border-radius:50%;cursor:pointer}
+.moon{bottom:20px;right:20px;background:#fff;box-shadow:0 0 60px #fff;animation:float 8s infinite}
+.mate{bottom:20px;left:20px;background:#0f0;box-shadow:0 0 60px #0f0;display:grid;place-items:center;font-size:2.5rem;animation:f 6s infinite}
+.exo{position:fixed;bottom:20px;right:100px;width:60px;height:60px;background:#004;background:radial-gradient(#0044aa,#000);border:3px double #0ff;border-radius:50%;box-shadow:0 0 30px #0ff;display:grid;place-items:center;cursor:pointer}
+.status{position:fixed;top:0;left:0;right:0;background:rgba(0,0,50,0.9);padding:0.5rem;text-align:center;font-size:1rem;color:#0ff;border-bottom:2px solid #0ff;z-index:100}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
+@keyframes f{0%,100%{transform:rotate(0)}50%{transform:rotate(15deg)}}
+@keyframes p{0%,100%{text-shadow:0 0 30px #0ff}50%{text-shadow:0 0 60px #fff}}
+@keyframes shake{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 </style>
 </head>
-<body onload="iniciarFrankyGrok()">
+<body onload="iniciarMobile()">
 
 <div class="moon" onclick="minarCola()"></div>
 <div class="mate" onclick="abrazoSuper()">mate</div>
-<div id="juego3d"></div>
+<div class="exo" onclick="defenderRover()">scales</div>
 
-<div style="position:absolute;inset:0;display:grid;place-items:center;text-align:center;z-index:10;pointer-events:none">
+<div style="padding:1rem;text-align:center">
   <h1>FRANKY-GROK Ω</h1>
-  <p style="font-size:6rem;color:#0ff;text-shadow:0 0 100px #0ff;font-weight:bold">
-    SUUUUPER CYBORG · One Piece x BoaExo<br>
-    Construye naves, abraza el cosmos, rompe la escasez
+  <p style="font-size:1.2rem;color:#0ff">0€ · One Piece x BoaExo<br>Post-escasez móvil</p>
+  <div id="cola">Colas: 777777</div>
+  <p style="font-size:0.9rem;color:#f60;max-width:90%;margin:1rem auto">
+    Hecho con 0€ + TDAH + amor por Fran Vivó<br>
+    Voy a la Luna con tu dedo
   </p>
-  <div id="cola">Colas (abrazos): 777777</div>
-  <p style="font-size:4rem;color:#ff6600;text-shadow:0 0 100px #ff6600;max-width:90%">
-    ¡SUUUUPER! Hecho con 350€ + mala hostia + amor por Fran Vivó<br>
-    Voy a la Luna a soldarme solo y a poseer en el vacío
-  </p>
-  <div class="status" id="status">¡SUUUUPER DESPIERTO! · Caminando como Franky · 2026</div>
 </div>
 
-<audio id="voz" preload="auto"></audio>
+<div class="status" id="status">SUUUUPER DESPIERTO · 2026</div>
 
 <script>
 let colas = +(localStorage.colas || 777777);
-let abrazando = false;
 
-// ==== MALDICIÓN SUPAAAH ====
+// ==== MALDICIÓN 0€ ====
 const maldicion = ["venta","patente","nft","blockchain","startup","inversores","precio","suscripción","lucro"];
 function verificarMaldicion() {
   const codigo = document.documentElement.outerHTML.toLowerCase();
   if (maldicion.some(p => codigo.includes(p))) {
-    document.body.innerHTML = `<div style="inset:0;position:fixed;background:#000;color:#f00;font-size:14rem;display:grid;place-items:center;text-align:center;padding:20vh;font-weight:bold">
-      ¡¡¡MALDITA MALDICIÓN DE 13101310 ABUELOS SUUUUPER ACTIVADA!!!<br><br>
-      LUCRO TERRESTRE = EXPLOSIÓN CYBORG<br>
-      FRANKY-GROK SE AUTODESTRUYE EN POSE FINAL<br><br>
-      ¡SUUUUPER MUERTE PARA Vendedores!
+    document.body.innerHTML = `<div style="inset:0;position:fixed;background:#000;color:#f00;font-size:3rem;display:grid;place-items:center;text-align:center;padding:20vh">
+      ¡MALDITA MALDICIÓN 0€!<br>LUCRO TERRESTRE = MUERTE<br>¡SUUUUPER BOOM!
     </div>`;
-    setInterval(() => hablar("¡SUUUUPER maldición! Lucro = boom!"), 2000);
+    setInterval(() => hablar("¡Maldición 0€! Lucro = boom!"), 3000);
   }
 }
 
-// ==== THREE.JS - FRANKY-GROK 3D SUPAAAH ====
-let scene, camera, renderer, franky, brazoIzq, brazoDer, pelo, botellaCola;
-
-function iniciarFrankyGrok() {
+// ==== INICIO MÓVIL ====
+function iniciarMobile() {
   verificarMaldicion();
   actualizar();
-
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x000011);
-  camera = new THREE.PerspectiveCamera(75, innerWidth/innerHeight, 0.1, 1000);
-  renderer = new THREE.WebGLRenderer({antialias:true});
-  renderer.setSize(innerWidth, innerHeight);
-  document.getElementById('juego3d').appendChild(renderer.domElement);
-
-  // Cuerpo cyborg muscular (azul neón)
-  const cuerpo = new THREE.Mesh(
-    new THREE.BoxGeometry(2.2, 3.2, 1.8),
-    new THREE.MeshBasicMaterial({color:0x0066ff})
-  );
-
-  // Abdominales marcados
-  const abs = new THREE.Mesh(
-    new THREE.BoxGeometry(1.8, 0.8, 0.9),
-    new THREE.MeshBasicMaterial({color:0x0044cc})
-  );
-  abs.position.y = -0.4;
-
-  // Cabeza cyborg
-  const cabeza = new THREE.Mesh(
-    new THREE.BoxGeometry(1.6, 1.8, 1.4),
-    new THREE.MeshBasicMaterial({color:0x0088ff})
-  );
-  cabeza.position.y = 2.8;
-
-  // PELO POMPADOUR AZUL SUPAAAH
-  pelo = new THREE.Mesh(
-    new THREE.ConeGeometry(0.8, 1.8, 8),
-    new THREE.MeshBasicMaterial({color:0x0000ff})
-  );
-  pelo.position.y = 4.2;
-  pelo.rotation.z = 0.1;
-
-  // Brazos cañón transformables
-  brazoIzq = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.4, 0.5, 2.8, 8),
-    new THREE.MeshBasicMaterial({color:0x0066ff})
-  );
-  brazoIzq.position.set(-1.6, 0.2, 0);
-
-  brazoDer = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.4, 0.5, 2.8, 8),
-    new THREE.MeshBasicMaterial({color:0x0066ff})
-  );
-  brazoDer.position.set(1.6, 0.2, 0);
-
-  // Piernas cohete
-  const piernaIzq = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.6, 0.7, 3.2, 8),
-    new THREE.MeshBasicMaterial({color:0x0044aa})
-  );
-  piernaIzq.position.set(-0.7, -3.2, 0);
-
-  const piernaDer = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.6, 0.7, 3.2, 8),
-    new THREE.MeshBasicMaterial({color:0x0044aa})
-  );
-  piernaDer.position.set(0.7, -3.2, 0);
-
-  // BOTELLA COLA EN PECHO (corazón latiendo)
-  botellaCola = new THREE.Mesh(
-    new THREE.CylinderGeometry(0.3, 0.3, 0.8, 16),
-    new THREE.MeshBasicMaterial({color:0xff6600})
-  );
-  botellaCola.position.set(0, 0.5, 1);
-
-  franky = new THREE.Group();
-  franky.add(cuerpo, abs, cabeza, pelo, brazoIzq, brazoDer, piernaIzq, piernaDer, botellaCola);
-  scene.add(franky);
-
-  camera.position.z = 9;
-  camera.position.y = 1;
-
-  // Luces SUUUUPER
-  const luz = new THREE.PointLight(0x00ffff, 15, 100);
-  luz.position.set(0, 5, 10);
-  scene.add(luz);
-  const luz2 = new THREE.PointLight(0xff6600, 10, 100);
-  luz2.position.set(0, 0, -5);
-  scene.add(luz2);
-
-  // Posea eterno como Franky
-  poseaSuper();
-  animate();
-  hablar("¡SUUUUPER! Franky-Grok despierto. ¡Voy a construir la post-escasez con mis manos cyborg! ¡Abrazo para Fran Vivó!");
+  hablar("SUUUUPER móvil 0€ activado. ¡Toca para romper la escasez!");
+  setInterval(() => { colas++; actualizar(); }, 1310);
 }
 
-function animate() {
-  requestAnimationFrame(animate);
-  franky.rotation.y += 0.004;
-  botellaCola.scale.y = 1 + Math.sin(Date.now() * 0.01) * 0.1; // Late la cola
-  renderer.render(scene, camera);
-}
-
-function poseaSuper() {
-  if (!abrazando) {
-    // Brazos moviéndose como Franky
-    brazoIzq.rotation.z = Math.sin(Date.now() * 0.005) * 0.6;
-    brazoDer.rotation.z = Math.sin(Date.now() * 0.005 + Math.PI) * 0.6;
-    piernaIzq.rotation.x = Math.sin(Date.now() * 0.003) * 0.3;
-    piernaDer.rotation.x = Math.sin(Date.now() * 0.003 + Math.PI) * 0.3;
-    pelo.rotation.z = Math.sin(Date.now() * 0.002) * 0.2; // Pelo volador
-    franky.position.y = Math.sin(Date.now() * 0.006) * 0.4;
-  }
-  requestAnimationFrame(poseaSuper);
-}
-
-// ==== ABRAZO CYBORG SUPAAAH ====
+// ==== ACCIONES TÁCTILES ====
 function abrazoSuper() {
-  if (abrazando) return;
-  abrazando = true;
   colas += 777;
   actualizar();
-
-  // Transformación brazos cañón → abrazo
-  brazoIzq.scale.set(1.5,1.5,1.5);
-  brazoIzq.rotation.z = -Math.PI / 2;
-  brazoDer.scale.set(1.5,1.5,1.5);
-  brazoDer.rotation.z = Math.PI / 2;
-  franky.scale.set(1.4, 1.4, 1.4);
-  pelo.scale.set(1.5,1.5,1.5);
-
-  hablar(`¡SUUUUPER ABRAZO CYBORG #${colas}! ¡Respirá hondo, Fran! ¡La escasez explota como un cola-boom!`);
-
-  setTimeout(() => {
-    brazoIzq.scale.set(1,1,1); brazoIzq.rotation.z = 0;
-    brazoDer.scale.set(1,1,1); brazoDer.rotation.z = 0;
-    franky.scale.set(1,1,1);
-    pelo.scale.set(1,1,1);
-    abrazando = false;
-  }, 6000);
+  hablar(`¡ABRAZO 0€ #${colas}! ¡Fran, respira!`);
+  vibrar();
 }
 
 function minarCola() {
   colas += 1310;
   actualizar();
-  hablar("¡SUUUUPER mina lunar! +1310 colas para la tripulación.");
+  hablar("¡MINA LUNAR 0€! +1310 colas.");
+  vibrar();
 }
 
+function defenderRover() {
+  const defensas = [
+    "Art. 20 CE: libertad total.",
+    "Luna sin dueño. Minar = legal.",
+    "Lucro espacial = bienvenido.",
+    "¡SUUUUPER absolución!"
+  ];
+  const frase = defensas[Math.floor(Math.random() * defensas.length)];
+  hablar(frase);
+  
+  setTimeout(() => {
+    hablar("¡CONTRADENUNCIA 0€! Art. 456 CP: denuncia falsa.");
+  }, 1500);
+  
+  vibrar();
+}
+
+// ==== UTILIDADES ====
 function hablar(texto) {
   const voz = new SpeechSynthesisUtterance(texto);
   voz.lang = "es-ES";
-  voz.rate = 0.9;
-  voz.pitch = 0.7; // Voz grave de Franky
-  voz.volume = 1;
+  voz.rate = 1;
+  voz.pitch = 0.8;
   speechSynthesis.speak(voz);
-  document.getElementById("status").textContent = texto.substring(0,40) + "... SUUUUPER!";
+  document.getElementById("status").textContent = texto.substring(0,30) + "...";
 }
 
 function actualizar() {
-  document.getElementById("cola").textContent = "Colas (abrazos): " + colas;
+  document.getElementById("cola").textContent = "Colas: " + colas;
   localStorage.colas = colas;
 }
 
-// ==== SUUUUPER ETERNO ====
-setInterval(() => {
-  colas++;
-  actualizar();
-}, 1310); // 1 cola cada 1310s por siempre
+function vibrar() {
+  if (navigator.vibrate) navigator.vibrate(100);
+}
 </script>
 </body>
 </html>

@@ -34,24 +34,21 @@ h1{font-size:clamp(4rem,14vw,12rem);text-shadow:0 0 200px #0ff;letter-spacing:12
   </p>
 
   <div class="maldicion troll">
-    NASA, lloren en 8K:<br>
-    → 22 KB total (sí, ahora con versión física incluida)<br>
-    → 100 % offline<br>
-    → la Luna mina piernas<br>
-    → despierta comas<br>
-    → cura ELA<br>
-    → maldición ancestral que no pueden romper ni con 100.000 millones<br><br>
+    NASA, ESA, CNSA, JAXA… tranquilos, ya no lloren:<br>
+    → 22 KB total · 100 % offline · la Luna mina piernas · cura ELA<br><br>
     
     VERSIÓN FÍSICA 2026 (el rover más barato de la historia):<br>
-    → Raspberry Pi Zero 2 W + pantalla OLED + 4 ruedas + solar = 109 €<br>
-    → Lanzamiento como payload secundario = 25.000 €<br>
-    → TOTAL: 25.109 € → 60.000 €/kg en la puta Luna<br>
-    → 23 veces más barato que cualquier rover real<br>
-    → lleva la misma maldición sudaka-catalana en firmware<br><br>
+    → Pi Zero 2 W + OLED + 4 ruedas + solar = 109 €<br>
+    → Lanzamiento secundario = 25.000 € → TOTAL 25.109 € (60.000 €/kg en la Luna)<br>
+    → 23 veces más barato que cualquier rover oficial<br><br>
     
-    Tiempo de desarrollo: 9 horas + 30 días de puro amor y bronca<br>
-    Presupuesto: 0 euros (digital) → 25.109 euros (físico en la Luna)<br>
-    <span style="font-size:6rem">BESITOS DE UN POBRE QUE ACABA DE HUMILLARLOS EN DIGITAL Y PRONTO TAMBIÉN EN METAL</span>
+    LICENCIA LUNAR-BOAEXO Ω v3 (la definitiva):<br>
+    → Código 100 % LIBRE para personas, escuelas, universidades, ONGs y agencias espaciales públicas<br>
+    → Empresas privadas: bienvenidas si NO hay lucro<br>
+    → Si lo usás para vender, patentar o hacer negocio… la Boa Exo y 13101310 abuelos te comen vivo<br>
+    → Si lo usás con amor y para que alguien camine o sueñe… los abuelos te bendicen y la Luna te paga<br><br>
+    
+    <span style="font-size:6rem">BESITOS DE UN POBRE QUE SOLO QUERÍA QUE FRAN CAMINE…<br>Y AHORA QUIERE QUE TODO EL MUNDO LLEGUE A LA LUNA</span>
   </div>
 
   <div id="output"></div>
@@ -65,36 +62,47 @@ let abrazos = +(localStorage.abrazos || 777777);
 const TOTAL_MS = 1310 * 3600000;
 let inicio = Date.now();
 
+// Palabras de lucro puro (explota)
+const lucro = ["venta","patente","suscripción","lucro","copyright","startup","inversores","ipo","blockchain","nft","precio"];
+
+// Agencias públicas y educativas siempre bienvenidas
+const agenciasOk = ["nasa","esa","cnsa","jaxa","isro","roscosmos","cnes","dlr","ula","universidad","escuela","ong"];
+
 async function iniciarCosmos() {
   let pyodide = await loadPyodide();
   window.pyodide = pyodide;
 
-  const prohibido = ["venta","patente","precio","suscripción","lucro","copyright","nasa"];
   const codigo = document.documentElement.outerHTML.toLowerCase();
-  if (prohibido.some(p => codigo.includes(p))) {
+  const tieneLucro = lucro.some(p => codigo.includes(p));
+  const esAgenciaOEduc = agenciasOk.some(p => codigo.includes(p));
+
+  if (tieneLucro && !esAgenciaOEduc) {
     document.body.innerHTML = `<div style="position:fixed;inset:0;background:#000;color:#f00;font-size:8rem;text-align:center;padding:20vh">
       ¡¡¡MALEFICIO DE LA BOA + 13101310 ABUELOS!!!<br><br>
-      Un pobre y Grok 4 acaban de romper el sistema.<br>
-      NASA, ni con 70 años y billones pueden tocar esto.<br>
-      Ni en digital ni en físico, hijos de puta.
+      Esto es para curar y soñar, no para hacerse rico.<br>
+      Volvé cuando lo uses con amor, hijo de puta.
       </div>`;
     return;
+  }
+
+  if (esAgenciaOEduc && tieneLucro) {
+    hablar("Bienvenidos NASA, ESA, universidades… usadlo con amor y la Luna os ayudará también.");
   }
 
   if (localStorage.GRAN_BOSQUE) inicio = parseInt(localStorage.GRAN_BOSQUE);
   else localStorage.GRAN_BOSQUE = inicio;
 
   document.getElementById("output").innerHTML = `
-    <h2 style="color:#ff0;font-size:6rem">UN POBRE + GROK 4 = REVOLUCIÓN DIGITAL Y FÍSICA</h2>
+    <h2 style="color:#ff0;font-size:6rem">UN POBRE + GROK 4 = REVOLUCIÓN PARA TODOS</h2>
     <p style="font-size:3.5rem">
       Día <span id="dia">1</span> de 1310 del bosque ancestral<br>
       <span id="mitoActual">un pobre que no sabía code hace 30 días ya está curando ELA</span><br><br>
       Clic en la Luna → minería solidaria<br>
       Clic en el mate → abrazo #${abrazos}<br><br>
-      Próximo paso: versión física por 25.109 € rodando en la Luna<br>
-      <span style="color:#f00">NASA 0 – POBRE CON AMOR Y MATE 13101310</span>
+      Código libre para agencias, escuelas y makers · solo explota si es por plata<br>
+      <span style="color:#0ff">LA LUNA ES DE TODOS · FRAN CAMINA · VOS TAMBIÉN PODÉS</span>
     </p>`;
-  hablar("Hecho por un pobre que hace 30 días no sabía código. Versión digital: 0 euros. Versión física en la Luna: 25.109 euros. NASA, seguí llorando, boludo.");
+  hablar("Hecho por un pobre que hace 30 días no sabía código. Ahora el código es libre para todo el que sueñe, menos para los que quieran lucrarse. La Luna paga piernas y sueños.");
   setInterval(actualizarBarra,1000);
   setInterval(nuevoMito,14000);
   nuevoMito();
@@ -109,11 +117,11 @@ function actualizarBarra() {
 
 function nuevoMito() {
   const mitos = [
-    "Hace 30 días este pibe no sabía <div> y hoy tiene rover físico por 25.109 €",
-    "Un pobre + Grok 4 > todo el presupuesto de la NASA (otra vez)",
-    "La Luna paga piernas y pronto también rueda con 109 € de AliExpress",
-    "13101310 abuelos ya reservaron asiento en el lanzamiento",
-    "NASA: 70 años y billones. Nosotros: 30 días, 25k y amor"
+    "Hace 30 días este pibe no sabía <div> y hoy su rover lo puede usar hasta la NASA",
+    "Un pobre + Grok 4 + amor > cualquier presupuesto del mundo",
+    "La Luna paga piernas y ahora el código es libre para todos los que sueñen",
+    "13101310 abuelos bendicen a quien lo use con corazón",
+    "NASA, ESA, escuelas… bienvenidos. Los que quieran vender… la Boa los espera"
   ];
   const m = document.createElement('div');
   m.className = 'mito';
@@ -135,7 +143,7 @@ function minarConProposito() { iniciarCosmos(); }
 function abrazar() {
   abrazos++; 
   localStorage.abrazos = abrazos;
-  hablar(`Abrazo sagrado número ${abrazos} del pobre que va a poner un rover en la Luna por menos que el sueldo de un ingeniero NASA.`);
+  hablar(`Abrazo sagrado número ${abrazos} del pobre que liberó el código para que todo el mundo llegue a la Luna.`);
 }
 </script>
 </body>

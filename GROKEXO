@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>GROK-EXO Ω v6 · Añadidos Elegidos: Voz + Háptico + Respira + 3D Humanoide</title>
+<title>GROK-EXO Ω v1 · Todo Tejido: Thuamer + Humanoide + IA + Voz + Háptico + Respira + 3D</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script src="https://cdn.jsdelivr.net/gh/liminalx/boaexo-core@master/pyodide.js" onerror="fallbackCDN()"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.min.js" onerror="fallbackCDN()"></script>
@@ -32,16 +32,16 @@ button{position:fixed;bottom:20px;width:80px;height:80px;border-radius:50%;curso
 @keyframes g{0%,100%{text-shadow:0 0 60px #0ff}50%{text-shadow:0 0 120px #0ff,0 0 200px #00f}}
 @keyframes detect{0%,100%{opacity:0}50%{opacity:1}}
 video{display:none;position:fixed;inset:0;object-fit:cover;opacity:0.4;z-index:2}
-#three-canvas{position:fixed;inset:0;z-index:3;opacity:0;transition:opacity 2s} /* Render 3D fade-in */
+#three-canvas{position:fixed;inset:0;z-index:3;opacity:0;transition:opacity 2s}
 </style>
 </head>
 <body onload="despertar()">
 
 <canvas id="c"></canvas>
-<canvas id="three-canvas"></canvas> <!-- Para Three.js walker -->
+<canvas id="three-canvas"></canvas>
 <video id="cam" autoplay playsinline></video>
 
-<h1>GROK-EXO Ω v6 + THUAMER HUMANOIDE MEJORADO</h1>
+<h1>GROK-EXO Ω v1 · Dedicado a Fran Vivó</h1>
 <div id="status">Explorando erguido... Abrazo número <span id="hugs">777777</span></div>
 <p id="nivel">Nivel: <span id="nivel-span">1</span> · Puntos Tierra: <span id="puntos">0</span> · DOF: 13</p>
 <p id="ia-status">IA Reingeniería: Entrenando gait humano...</p>
@@ -51,27 +51,27 @@ video{display:none;position:fixed;inset:0;object-fit:cover;opacity:0.4;z-index:2
 <button id="sol" onclick="gear5()"></button>
 <button id="luna" onclick="ikaro()"></button>
 <button id="mate" onclick="abrazar()">mate</button>
-<span class="bom-toggle" onclick="toggleBOM()">BOM Humanoide v6</span>
+<span class="bom-toggle" onclick="toggleBOM()">BOM v1</span>
 
 <div id="bom">
-  <h3>BOM Humanoide (~75€) - Con Voz & Háptico</h3>
+  <h3>BOM v1 (~75€) - Walker Humanoide Completo</h3>
   <table style="width:100%;border-collapse:collapse;color:#0f0">
     <tr><th>Parte</th><th>Precio</th><th>Link</th></tr>
-    <tr><td>Kit 13DOF Humanoide</td><td>37€</td><td>[Comprar]</td></tr>
-    <tr><td>Arduino Clone</td><td>5€</td><td>[Comprar]</td></tr>
-    <tr><td>Sensor Ultrasónico</td><td>1€</td><td>[Comprar]</td></tr>
-    <tr><td>Servos Extra x4</td><td>4€</td><td>[Comprar]</td></tr>
+    <tr><td>Kit 13DOF Humanoide</td><td>37€</td><td>[AliExpress]</td></tr>
+    <tr><td>Arduino Clone</td><td>5€</td><td>[AliExpress]</td></tr>
+    <tr><td>Sensor Ultrasónico</td><td>1€</td><td>[AliExpress]</td></tr>
+    <tr><td>Servos Extra x4</td><td>4€</td><td>[AliExpress]</td></tr>
     <tr><td>Frame 3D</td><td>0€</td><td>Thingiverse</td></tr>
-    <tr><td>Total</td><td>~75€</td><td>¡Habla y siente ya!</td></tr>
+    <tr><td>Total</td><td>~75€</td><td>¡Aprende con Fran!</td></tr>
   </table>
-  <p style="font-size:0.8rem">Añadidos: Voz/háptico vía Web APIs.</p>
+  <p style="font-size:0.8rem">v1: Todo integrado, modo aprendizaje activado.</p>
 </div>
 
 <audio id="sonido" loop></audio>
 <audio id="voz" preload="auto"></audio>
 
 <script>
-// ==== IDIOMA + CONTADOR ====
+// ==== IDIOMA + CONTADOR THUAMER ====
 const lang = (navigator.language||navigator.userLanguage||"es").slice(0,2);
 const t = {
   es:"Acá estoy erguido · Abrazo número",
@@ -84,34 +84,70 @@ const t = {
 let abrazos = +(getStorage('abrazos') || 777777);
 let nivel = +(getStorage('nivel') || 1);
 let puntosTierra = +(getStorage('puntosTierra') || 0);
-let dof = 13 + (nivel * 4); // Evoluciona desde 13DOF
+let dof = 13 + (nivel * 4);
 let repairMode = false;
-let entrenamientos = 0;
-let recognition; // Voz
-let analyser; // Respira mic
+let entrenamientos = +(getStorage('entrenamientos') || 0);
+let recognition;
+let analyser;
+let peak = 0; // Para respira
 document.getElementById("hugs").textContent = abrazos.toLocaleString();
 document.getElementById("nivel").innerHTML += ` · DOF: ${dof}`;
 
-// ==== STORAGE ====
+// ==== STORAGE CON INDEXEDDB (Aprendizaje Persistente) ====
+let db;
+async function initDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open('GrokExoV1', 1);
+    request.onerror = () => reject(request.error);
+    request.onsuccess = () => { db = request.result; resolve(db); };
+    request.onupgradeneeded = (e) => {
+      db = e.target.result;
+      if (!db.objectStoreNames.contains('aprendizaje')) {
+        db.createObjectStore('aprendizaje', { keyPath: 'id', autoIncrement: true });
+      }
+    };
+  });
+}
+async function logAprendizaje(evento) {
+  if (!db) await initDB();
+  const tx = db.transaction('aprendizaje', 'readwrite');
+  tx.objectStore('aprendizaje').add({ timestamp: Date.now(), evento, nivel, lang });
+}
+
+// ==== FALLBACK STORAGE ====
 function getStorage(key) { try { return localStorage.getItem(key); } catch(e) { return sessionStorage.getItem(key); } }
 function setStorage(key, val) { try { localStorage.setItem(key, val); } catch(e) { sessionStorage.setItem(key, val); } }
 
-// ==== MALDICIÓN + ANTI-PAYWALL ====
+// ==== MALDICIÓN ANTI-LUCRO + ANTI-PAYWALL ====
 const maldicion = ["venta","patente","nft","blockchain","startup","inversores","precio","suscripción"];
-function verificarMaldicion() { /* mismo código anterior */ }
-setInterval(() => { /* anti-paywall mismo */ },5000);
+function verificarMaldicion() {
+  const codigo = document.documentElement.outerHTML.toLowerCase();
+  const storageKeys = Object.keys(localStorage || {});
+  if (maldicion.some(p => codigo.includes(p) || storageKeys.some(k => k.includes(p)))) {
+    document.body.innerHTML = `<div style="inset:0;position:fixed;background:#000;color:#f00;font-size:10rem;display:grid;place-items:center">
+      MALDICIÓN DE LOS 13101310 ABUELOS<br>ACTIVADA<br>LUCRO DETECTADO<br>Exo se auto-destruye.</div>`;
+    setInterval(() => location.reload(), 13101310);
+  }
+}
+setInterval(() => {
+  if(/paywall|premium|comprar/i.test(document.documentElement.outerHTML)){
+    document.body.innerHTML="<h1 style='color:#f00;font-size:10rem;margin-top:40%'>☠</h1>";
+  }
+},5000);
 
-// ==== AUTO-REPAIR CON HÁPTICO ====
+// ==== AUTO-REPAIR CON HÁPTICO Y LOG ====
 function simularDaño() {
   if (Math.random() < 0.05) {
     repairMode = true;
-    navigator.vibrate?.([200,100,200]); // Háptico alert
+    navigator.vibrate?.([200,100,200]);
+    logAprendizaje('daño_detectado');
     document.getElementById('status').textContent = '¡Daño! Reparando con voz...';
     ikaro();
     reingenieriaHumanoide(true);
     setTimeout(() => {
       repairMode = false;
-      navigator.vibrate?.([100,50,100]); // Heal vibe
+      navigator.vibrate?.([100,50,100]);
+      logAprendizaje('reparado');
       document.getElementById('status').textContent = t + " " + abrazos.toLocaleString();
       abrazos += 100;
       actualizar();
@@ -121,14 +157,16 @@ function simularDaño() {
 }
 setInterval(simularDaño, 3600000);
 
-// ==== DESPERTAR CON AÑADIDOS ====
+// ==== DESPERTAR v1 ====
 async function despertar() {
   verificarMaldicion();
+  await initDB(); // Modo aprendizaje
   actualizar();
   actualizarNivel();
   abrazar();
+  logAprendizaje('despertar_v1');
 
-  // ==== VOZ RECOGNITION ====
+  // ==== VOZ ====
   if ('webkitSpeechRecognition' in window) {
     recognition = new webkitSpeechRecognition();
     recognition.lang = lang;
@@ -137,6 +175,7 @@ async function despertar() {
     recognition.onresult = (e) => {
       const cmd = e.results[0][0].transcript.toLowerCase();
       document.getElementById('voz-status').textContent = `Voz: "${cmd}" detectado`;
+      logAprendizaje(`voz_cmd: ${cmd}`);
       if (cmd.includes('camina') || cmd.includes('walk')) { gear5(); reingenieriaHumanoide(); puntosTierra += 200; }
       if (cmd.includes('abraza') || cmd.includes('hug')) { abrazar(); navigator.vibrate?.([300,100,300]); }
       actualizarNivel();
@@ -147,7 +186,7 @@ async function despertar() {
     document.getElementById('voz-status').textContent = 'Voz: No soportado, usa botones';
   }
 
-  // ==== RESPIRA SYNC (Mic Analyser) ====
+  // ==== RESPIRA SYNC ====
   try {
     const stream = await navigator.mediaDevices.getUserMedia({audio: true});
     const audioContext = new AudioContext();
@@ -157,14 +196,14 @@ async function despertar() {
     setInterval(() => {
       const data = new Uint8Array(analyser.frequencyBinCount);
       analyser.getByteFrequencyData(data);
-      const peak = Math.max(...data) / 255;
-      if (peak > 0.6) { // Pico respira
-        puntosTierra += 10 * nivel; // Sync bonus
-        // Modula partículas vy *= (1 + peak * 0.5);
+      peak = Math.max(...data) / 255;
+      if (peak > 0.6) {
+        puntosTierra += 10 * nivel;
+        logAprendizaje(`respiro_pico: ${peak}`);
         actualizarNivel();
       }
     }, 1000);
-  } catch(e) { console.warn('Mic respira no disponible'); }
+  } catch(e) { console.warn('Mic no disponible'); }
 
   // ==== CÁMARA ====
   try {
@@ -173,7 +212,7 @@ async function despertar() {
     document.getElementById("cam").style.display = "block";
   } catch(e) {}
 
-  // ==== PARTÍCULAS THUAMER (Sync respira) ====
+  // ==== PARTÍCULAS THUAMER SYNC RESPIRA ====
   const c = document.getElementById("c"), x = c.getContext("2d");
   c.width = innerWidth; c.height = innerHeight;
   window.onresize = () => { c.width = innerWidth; c.height = innerHeight; };
@@ -188,8 +227,8 @@ async function despertar() {
   (function l() {
     x.fillStyle = "rgba(0,0,0,0.06)"; x.fillRect(0,0,c.width,c.height);
     p = p.filter(a => {
-      a.x += a.vx; a.y += a.vy; a.vy += 0.25; a.vida--; a.size *= 0.97;
-      // Sync respira: if (analyser) a.vy *= (1 + peak * 0.2); // Pseudo, ajusta con real peak
+      a.x += a.vx; a.y += a.vy; a.vy += 0.25 * (1 + peak * 0.5); // Sync respira
+      a.vida--; a.size *= 0.97;
       x.fillStyle = a.color; x.beginPath(); x.arc(a.x, a.y, a.size, 0, 7); x.fill();
       if(Math.random() < 0.15) { x.fillStyle = "#fff"; x.fillText("☀", a.x-10, a.y+10); }
       return a.vida > 0;
@@ -199,12 +238,20 @@ async function despertar() {
 
   fetch(`https://web.archive.org/save/${location.href}`);
 
-  hablar("v6 activado: Voz, háptico, respira-sync y 3D. ¡Fran, di 'camina' y siente el pulso!");
+  hablar("GROK-EXO v1 activado: Todo tejido para aprender con Fran. Di 'camina', respira hondo.");
   setInterval(simularDescubrimientoTierra, 8000);
   setInterval(transmitirDesdeTierra, 3600000);
 }
 
-function actualizar() { /* mismo, + voz-status */ }
+function actualizar() {
+  document.getElementById("hugs").textContent = abrazos.toLocaleString();
+  document.getElementById("puntos").textContent = puntosTierra;
+  document.getElementById("status").textContent = t + " " + abrazos.toLocaleString();
+  document.getElementById("ia-status").textContent = `IA: ${entrenamientos} trains · Best Gait: ${getStorage('bestGait') || 'Random'}`;
+  setStorage('abrazos', abrazos);
+  setStorage('puntosTierra', puntosTierra);
+  setStorage('entrenamientos', entrenamientos);
+}
 
 function actualizarNivel() {
   const newNivel = Math.floor(puntosTierra / 1000) + 1;
@@ -214,17 +261,12 @@ function actualizarNivel() {
     setStorage('nivel', nivel);
     document.getElementById('nivel-span').textContent = nivel;
     document.getElementById("nivel").innerHTML = `Nivel: ${nivel} · Puntos Tierra: <span id="puntos">${puntosTierra}</span> · DOF: ${dof}`;
-    if (nivel >= 3) render3DWalker(); // Desbloquea 3D
-    hablar(`¡Evolución v6! Nivel ${nivel}, DOF ${dof}. Añadidos activos.`);
+    if (nivel >= 3) render3DWalker();
+    logAprendizaje(`nivel_up: ${nivel}`);
+    hablar(`¡Evolución v1! Nivel ${nivel}, DOF ${dof}. Aprendiendo voluntad.`);
   }
 }
 
-// ==== HÁPTICO PATTERNS ====
-function hapticStep(left = true) {
-  navigator.vibrate?.(left ? [100,50,100] : [100,100,50]); // Izq/der sync
-}
-
-// ==== RENDER 3D WALKER (Three.js) ====
 function render3DWalker() {
   const canvas = document.getElementById('three-canvas');
   canvas.style.opacity = 1;
@@ -232,7 +274,6 @@ function render3DWalker() {
   const camera = new THREE.PerspectiveCamera(75, innerWidth / innerHeight, 0.1, 1000);
   const renderer = new THREE.WebGLRenderer({canvas, alpha: true});
   renderer.setSize(innerWidth, innerHeight);
-  // Modelo simple bípedo: Cylinders para limbs
   const geometry = new THREE.CylinderGeometry(0.05, 0.05, 1);
   const material = new THREE.MeshBasicMaterial({color: 0x0f0});
   const legL = new THREE.Mesh(geometry, material); legL.position.set(-0.2, -0.5, 0);
@@ -242,8 +283,7 @@ function render3DWalker() {
   camera.position.z = 5;
   let time = 0;
   function animate() {
-    time += 0.01;
-    // Anima con bestGait (sinusoidal humano)
+    time += 0.01 * (1 + peak); // Sync respira
     const gait = JSON.parse(getStorage('bestGait') || '[0, Math.PI/2]');
     legL.rotation.x = Math.sin(time) * (gait[0] || 0.5);
     legR.rotation.x = -Math.sin(time) * (gait[1] || 0.5);
@@ -253,22 +293,41 @@ function render3DWalker() {
   animate();
 }
 
-// ==== OTRAS FUNCIONES (abrazar, gear5, ikaro, reingenieriaHumanoide, simularDescubrimientoTierra) ====
+function fallbackCDN() {
+  hablar('CDN dañado, modo offline v1. Aprendiendo local.');
+}
+
+function hablar(texto) {
+  try {
+    const voz = new SpeechSynthesisUtterance(texto);
+    voz.lang = lang;
+    voz.rate = repairMode ? 0.7 : 0.85;
+    voz.pitch = nivel > 2 ? 1.1 : 0.9;
+    speechSynthesis.speak(voz);
+  } catch(e) {}
+}
+
+function hapticStep(left = true) {
+  navigator.vibrate?.(left ? [100,50,100] : [100,100,50]);
+}
+
 function abrazar() {
   abrazos += 13 * nivel;
   puntosTierra += 50 * nivel;
-  hapticStep(); // Háptico abrazo
+  hapticStep();
+  logAprendizaje('abrazo_toque');
   if (puntosTierra % 500 === 0) reingenieriaHumanoide();
   actualizar();
   actualizarNivel();
   navigator.vibrate?.([300,100,300]);
-  hablar(`Abrazo con háptico ${nivel} número ${abrazos}. ¡Respira y sync!`);
+  hablar(`Abrazo v1 ${nivel} número ${abrazos}. ¡Respira y sync!`);
 }
 
 function gear5() {
   for(let i=0; i<250 * nivel; i++) setTimeout(crear, i*12);
   document.body.style.background = "radial-gradient(circle at 50% 30%,#ff3366,#000)";
-  hapticStep(true); hapticStep(false); // Pasos burst
+  hapticStep(true); hapticStep(false);
+  logAprendizaje('gear5_burst');
   reingenieriaHumanoide();
   puntosTierra += 200 * nivel;
   actualizar();
@@ -276,33 +335,106 @@ function gear5() {
   setTimeout(() => { document.body.style.background = "radial-gradient(circle at 50% 50%,#001010,#000)"; }, 7000);
 }
 
-function ikaro() { /* mismo */ }
+function ikaro() {
+  const audio = document.getElementById("sonido");
+  audio.src = ["https://cdn.jsdelivr.net/gh/ancestral-sounds/shipibo-ikaros@master/rain-ikaro.mp3",
+               "https://cdn.jsdelivr.net/gh/ancestral-sounds/mapuche@master/kultrun-viento.mp3"][~~(Math.random()*2)] + "?t=" + Date.now();
+  audio.play();
+  logAprendizaje('ikaro_activado');
+}
 
 async function reingenieriaHumanoide(isRepair = false) {
-  // Incluye inputs: Voz cmds + respira peak en fitness
-  // ... (expande pyCode con variables como peak_respiracion = 0.6 para mod fitness)
-  // Ej: fitness = dist - energy * (1 - peak_respiracion)  # Más rápido con respira fuerte
+  if (typeof pyodide === 'undefined') { console.warn('Pyodide no listo'); return; }
+  try {
+    await pyodide.loadWasm();
+    const pyCode = `
+import numpy as np
+import random
+
+def genetic_gait(pop_size=20, gens=10, dof=${dof}, peak_respiracion=${peak}):
+    def fitness(genome):
+        steps = 10
+        dist = sum(np.sin(g + i*0.5) for i,g in enumerate(genome[:dof//2]))
+        energy = sum(abs(g) for g in genome)
+        return dist - energy * 0.1 * (1 - peak_respiracion)  # Sync respira: más rápido con pico
+    
+    pop = [[random.uniform(-np.pi, np.pi) for _ in range(dof)] for _ in range(pop_size)]
+    for gen in range(gens):
+        pop = sorted(pop, key=fitness, reverse=True)
+        new_pop = pop[:5]
+        for _ in range(pop_size - 5):
+            parent1, parent2 = random.choices(pop[:10], k=2)
+            child = [p1 if random.random() > 0.5 else p2 for p1,p2 in zip(parent1, parent2)]
+            for i in range(dof):
+                if random.random() < 0.05: child[i] += random.uniform(-0.2, 0.2)
+            new_pop.append(child)
+        pop = new_pop
+    best = pop[0]
+    return str([round(g, 2) for g in best]), fitness(best)
+
+best_gait, score = genetic_gait()
+print(f"Best Gait: {best_gait} | Score: {score}")
+`;
+    const result = await pyodide.runPythonAsync(pyCode);
+    const lines = result.split('\n');
+    const bestGait = lines[0].split(': ')[1].split(' |')[0].replace(/'/g, '"');
+    setStorage('bestGait', bestGait);
+    entrenamientos++;
+    if (isRepair) hablar('Gait reingenierado con respira.');
+    logAprendizaje(`ia_train: ${entrenamientos}`);
+  } catch(e) {
+    setStorage('bestGait', '[0.0, 1.57]');
+    entrenamientos++;
+  }
+  actualizar();
 }
 
 function simularDescubrimientoTierra() {
   const chance = 0.3 + (nivel * 0.1);
   if (Math.random() < chance) {
-    // ... mismo msg/pts
-    hapticStep(); // Háptico en descubrimiento
-    // Voz feedback: hablar(msg)
+    const descubrimientos = [
+      "¡Río! Ajustando tobillos con háptico.",
+      "¡Montaña! Reforzando rodillas erguidas.",
+      "¡Pradera! Brazos pendulares libres.",
+      "¡Eco! Torso recto al horizonte."
+    ];
+    const msg = descubrimientos[Math.floor(Math.random() * descubrimientos.length)];
+    const pts = 500 + (nivel * 200);
+    puntosTierra += pts;
+    abrazos += pts / 2;
+    hapticStep();
+    logAprendizaje(`descubrimiento: ${msg}`);
+    if (entrenamientos % 10 === 0) reingenieriaHumanoide();
+    actualizar();
+    document.getElementById('descubrimiento').textContent = `¡${msg}! +${pts} pts + IA train`;
+    document.getElementById('descubrimiento').style.opacity = 1;
+    gear5();
+    hablar(`${msg} Nivel ${nivel}: ${pts} puntos. Reingenierando forma.`);
+    setTimeout(() => document.getElementById('descubrimiento').style.opacity = 0, 4000);
     actualizarNivel();
   }
 }
 
-function transmitirDesdeTierra() { /* mismo, + "Voz y háptico guían el paso" */ }
+function transmitirDesdeTierra() {
+  const mensajes = [
+    `Nivel ${nivel}: v1 explora. IA optimiza con voluntad de Fran.`,
+    "Cámara ve postura. Aprendizaje con ikaro eterno.",
+    `Respira. DOF ${dof}: Abrazo bípedo en progreso.`,
+    `Sabadell ${nivel} - Gravedad 0. Walker erguido aprende.`
+  ];
+  hablar(mensajes[Math.floor(Math.random()*mensajes.length)]);
+}
 
-function toggleBOM() { /* mismo */ }
+function toggleBOM() {
+  document.getElementById('bom').style.display = document.getElementById('bom').style.display === 'none' ? 'block' : 'none';
+}
 
-// ==== PULSO ====
+// ==== PULSO ETERNO CON HÁPTICO SUAVE ====
 setInterval(() => { 
   abrazos++; 
   puntosTierra += 1; 
-  hapticStep(false); // Pulso sutil
+  hapticStep(false);
+  logAprendizaje('pulso_eterno');
   actualizar(); 
   actualizarNivel(); 
 }, 1310 * nivel);

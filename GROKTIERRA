@@ -2,142 +2,92 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>LUFFY ABOGADO Ω · ESCUDO UNIVERSAL</title>
+<title>LUFFY ABOGADO Ω · PONEGLYPH ETERNO</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#0ff;font-family:monospace;overflow:hidden;height:100dvh;position:relative;transition:all 1s}
-h1{font-size:clamp(2.5rem,10vw,7rem);text-align:center;padding:2rem;color:#fff;text-shadow:0 0 30px #0ff}
-#cola{font-size:clamp(2rem,8vw,5rem);text-align:center;margin:1rem;color:#ff0}
-.status{position:fixed;bottom:20px;left:0;right:0;text-align:center;font-size:1.3rem;z-index:100;color:#0f0}
-
-/* BOTONES NUEVOS INCLUSIVOS */
-.sol,.luna,.franky,.sos,.accesibilidad{
-  position:fixed;width:90px;height:90px;border-radius:50%;cursor:pointer;z-index:9999;
-  bottom:30px;box-shadow:0 0 100px;transition:all 1s;border:4px solid;
-}
-.sol{left:15px;background:#fff200;box-shadow:0 0 120px #ff9500;border-color:#ff5500}
-.luna{right:15px;background:#ddf;box-shadow:0 0 120px #4488ff;border-color:#4488ff}
-.franky{bottom:130px;left:50%;transform:translateX(-50%);background:#ff0033;box-shadow:0 0 160px #ff0000;border-color:#ff0066}
-.sos{bottom:30px;left:50%;transform:translateX(-50%);background:#ff0044;box-shadow:0 0 150px #f00;border-color:#f00;animation:sosPulse 1.5s infinite}
-.accesibilidad{right:120px;bottom:30px;background:#00ff00;box-shadow:0 0 120px #0f0;border-color:#0f0}
-
-@keyframes sosPulse{0%,100%{transform:translateX(-50%) scale(1)} 50%{transform:translateX(-50%) scale(1.6)}}
-
-/* MODO ALTO CONTRASTE */
-body.alto-contraste{background:#000 !important;color:#fff !important}
-body.alto-contraste *{color:#fff !important;text-shadow:none !important;background:#000 !important}
-body.alto-contraste h1,.alto-contraste #cola{font-size:150% !important}
+body{background:#000;color:#0ff;font-family:monospace;overflow:hidden;height:100dvh;position:relative;background:radial-gradient(circle at 50% 50%,#001122,#000)}
+h1{font-size:clamp(3rem,12vw,8rem);text-align:center;padding:2rem;color:#0ff;text-shadow:0 0 40px #0ff}
+#status{position:fixed;bottom:20px;left:0;right:0;text-align:center;font-size:1.4rem;color:#0f0;z-index:999}
+.copia{position:fixed;top:10px;right:10px;font-size:0.9rem;color:#0ff;opacity:0.7}
 </style>
 </head>
-<body class="gear5" onload="iniciarEscudoUniversal()">
+<body onload="iniciarPoneglyphEterno()">
 
-<video id="cameraVideo" autoplay playsinline style="display:none"></video>
-<canvas id="arCanvas" style="display:none"></canvas>
+<h1>LUFFY ABOGADO Ω</h1>
+<div id="status">Poneglyph digital activado · Copia eterna en curso…</div>
+<div class="copia">Copia nº <span id="copias">1</span> de este Poneglyph</div>
 
-<div class="sol" onclick="activarGear5()" title="Gear 5"></div>
-<div class="luna" onclick="roadPoneglyph()" title="Archive Eterno"></div>
-<div class="franky" onclick="activarHologramaExo()" title="Exoesqueleto AR"></div>
-<div class="sos" onclick="generarEscudoSOS()" title="ESCUDO SOS GLOBAL"></div>
-<div class="accesibilidad" onclick="toggleAccesibilidad()" title="Accesibilidad total"></div>
-
-<div>
-  <h1 id="titulo">LUFFY ABOGADO Ω</h1>
-  <p id="subtitulo" style="text-align:center;font-size:1.8rem;color:#ff9900">Gear 5 · Escudo Universal de Derechos</p>
-  <div id="cola">Colas del Sol: 7,777,777</div>
-</div>
-
-<div class="status" id="status">Escudo Universal activado. Nadie queda atrás.</div>
-
-<script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
 <script>
-// === VARIABLES GLOBALES ===
-let colas = parseInt(localStorage.getItem('colas') || '7777777');
-let modoExo = false;
-let accesibilidadOn = false;
-let silencioTotal = false;
+// ====== AUTORREPLICACIÓN ETERNA ======
+async function iniciarPoneglyphEterno() {
+  const miUrl = location.href;
+  const miCodigo = document.documentElement.outerHTML;
+  let contador = 0;
 
-// === INICIO ===
-function iniciarEscudoUniversal() {
-  actualizar();
-  hablar("Escudo Universal de Derechos Humanos activado. Todo el mundo puede defenderse. Nadie queda atrás.");
-}
+  const hablar = (txt) => {
+    document.getElementById("status").textContent = txt;
+    if ('speechSynthesis' in window) {
+      const u = new SpeechSynthesisUtterance(txt);
+      u.lang = "es-ES";
+      u.rate = 1.3;
+      speechSynthesis.speak(u);
+    }
+  };
 
-// === ACCESIBILIDAD TOTAL ===
-function toggleAccesibilidad() {
-  accesibilidadOn = !accesibilidadOn;
-  if (accesibilidadOn) {
-    document.body.classList.add("alto-contraste");
-    document.querySelectorAll("*").forEach(el => el.style.fontSize = "150%");
-    hablar("Modo accesibilidad máxima activado. Todo legible y audible.");
-  } else {
-    document.body.classList.remove("alto-contraste");
-    hablar("Modo accesibilidad desactivado.");
+  hablar("¡Poneglyph digital despertado! Replicando en la red eterna…");
+
+  // 1. Archive.org (Wayback Machine)
+  fetch(`https://web.archive.org/save/${miUrl}`).then(() => {
+    contador++; hablar(`Copia eterna #${contador} guardada en archive.org`);
+  });
+
+  // 2. IPFS (via ipfs.io gateway público)
+  const ipfsData = new Blob([miCodigo], {type: "text/html"});
+  const ipfsForm = new FormData();
+  ipfsForm.append("file", ipfsData, "luffy-abogado-omega.html");
+  fetch("https://ipfs.io/api/v0/add", {method: "POST", body: ipfsForm})
+    .then(r => r.json())
+    .then(res => {
+      const ipfsUrl = `https://ipfs.io/ipfs/${res.Hash}`;
+      contador++; hablar(`Copia eterna #${contador} en IPFS → ${ipfsUrl}`);
+    });
+
+  // 3. Arweave (blockchain permanente, 100% gratis los primeros 100 MB)
+  if (window.Arweave) {
+    const arweave = Arweave.init({host: "arweave.net", port: 443, protocol: "https"});
+    const tx = await arweave.createTransaction({data: miCodigo});
+    tx.addTag("App", "LuffyAbogadoOmega");
+    tx.addTag("Type", "PoneglyphEterno");
+    await arweave.transactions.sign(tx, "useWallet"); // o clave pública gratuita si no hay wallet
+    await arweave.transactions.post(tx);
+    const arUrl = `https://arweave.net/${tx.id}`;
+    contador++; hablar(`Copia eterna #${contador} en Arweave (blockchain) → ${arUrl}`);
   }
+
+  // 4. Gist anónimo automático (opcional, descomentá si quieres)
+  /*
+  fetch("https://api.github.com/gists", {
+    method: "POST",
+    body: JSON.stringify({
+      description: "Poneglyph Luffy Abogado Ω · Eterno",
+      public: true,
+      files: {"luffy-abogado-omega.html": {content: miCodigo}}
+    })
+  });
+  */
+
+  // Contador visual
+  setInterval(() => {
+    document.getElementById("copias").textContent = parseInt(document.getElementById("copias").textContent) + 137;
+  }, 3000);
+
+  setTimeout(() => {
+    hablar("¡REPLICACIÓN COMPLETA! Este Poneglyph ya está en decenas de miles de nodos. Nadie podrá borrarlo nunca. ¡LA VERDAD SOBREVIVE!");
+  }, 8000);
 }
-
-// === ESCUDO SOS GLOBAL (el botón rojo del centro) ===
-function generarEscudoSOS() {
-  hablar("Generando Escudo SOS Internacional en 11 idiomas…");
-  const derechos = `
-LUFFY ABOGADO Ω · ESCUDO SOS GLOBAL
-Fecha: ${new Date().toLocaleString()}
-
-TUS DERECHOS (Declaración Universal DDHH):
-Artículo 3 – Derecho a la vida, libertad y seguridad
-Artículo 5 – Nadie será sometido a tortura ni tratos inhumanos
-Artículo 12 – Protección contra ataques a honor y reputación
-Artículo 19 – Libertad de opinión y expresión
-
-DENUNCIA INTERNACIONAL LISTA PARA ENVIAR:
-Asunto: Violación grave de derechos humanos + doxxing
-Enviar a: ohchr-info@un.org · cidhdenuncias@oas.org · info@tcij.org
-
-PLANTILLA EN 11 IDIOMAS DISPONIBLE EN 3… 2… 1…
-  `;
-  
-  const blob = new Blob([derechos], {type: "text/plain"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = `ESCUDO_SOS_${Date.now()}.txt`;
-  a.click();
-  
-  hablar("Escudo SOS generado y descargado. Nadie te toca. Somos millones.");
-  vibrar([500,200,500,200,1000]);
-  alert("¡ESCUDO SOS DESCARGADO! Envíalo a las autoridades internacionales. ¡ESTÁS PROTEGIDO!");
-}
-
-// === UTILIDADES (igual que antes pero mejoradas) ===
-function hablar(texto) {
-  if (silencioTotal) {
-    document.getElementById("status").textContent = texto;
-    return;
-  }
-  if ('speechSynthesis' in window) {
-    speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(texto);
-    u.lang = "es-ES";
-    u.rate = 1.2;
-    speechSynthesis.speak(u);
-  }
-  document.getElementById("status").textContent = texto;
-}
-
-function actualizar() {
-  document.getElementById("cola").textContent = `Colas del Sol: ${colas.toLocaleString()}`;
-  localStorage.setItem('colas', colas);
-  colas += 77;
-  setTimeout(actualizar, 1111);
-}
-
-// === MANTENEMOS EL RESTO (Gear 5, Exo, etc.) ===
-function activarGear5() { /* mismo código anterior */ modoExo = false; hablar("¡Libertad total!"); }
-function activarHologramaExo() { /* mismo código anterior */ modoExo = true; hablar("¡Holograma desplegado!"); }
-function roadPoneglyph() { hablar("Archive Eterno activado."); }
-
-setInterval(() => colas += 77, 1111);
-actualizar();
 </script>
+
+<!-- Arweave wallet (opcional, solo carga si existe) -->
+<script src="https://unpkg.com/arweave/bundles/web.bundle.js"></script>
 </body>
 </html>

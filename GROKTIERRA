@@ -1,100 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>LUFFY ABOGADO Ω · GEAR 5 & EXOESQUELETO</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#0ff;font-family:monospace;overflow:hidden;height:100dvh;position:relative;
+     background:radial-gradient(circle at center,#000,#000033);transition:all 2s}
+h1{font-size:clamp(2.5rem,9vw,6rem);text-shadow:0 0 40px #f00, 0 0 80px #ff0;animation:gear5 4s infinite;letter-spacing:8px;text-align:center;padding:2rem;color:#fff}
+#cola{font-size:clamp(2rem,7vw,4rem);color:#ff0;text-shadow:0 0 50px #f00;animation:shake 1s infinite}
+.status{position:fixed;bottom:10px;left:0;right:0;text-align:center;color:#0ff;font-size:1.1rem;z-index:100}
+
+/* BOTONES */
+.sol,.luna{position:fixed;width:90px;height:90px;border-radius:50%;cursor:pointer;z-index:999;box-shadow:0 0 100px;}
+.sol{bottom:30px;left:30px;background:radial-gradient(#ffff00,#ff3300);animation:nikapulse 2s infinite}
+.luna{bottom:30px;right:30px;background:#fff;animation:float 8s infinite}
+
+/* MODO EXOESQUELETO */
+body.exo{
+  background:linear-gradient(45deg,#000,#110022,#001122);
+  color:#0f0;
+}
+body.exo h1{
+  color:#0f0;text-shadow:0 0 30px #0f0,0 0 60px #0ff,0 0 90px #00ff00;
+  animation:glitch 2s infinite;
+}
+body.exo #cola{color:#0f0;text-shadow:0 0 50px #0f0}
+body.exo .sol{box-shadow:0 0 120px #0f0;animation:exopulse 1s infinite}
+@keyframes exopulse{0%,100%{transform:scale(1)}50%{transform:scale(1.4) rotate(180deg)}}
+
+/* ANIMACIONES */
+@keyframes gear5{0%{text-shadow:0 0 40px #f00}50%{text-shadow:0 0 100px #fff,0 0 150px #ff0}100%{text-shadow:0 0 40px #f00}}
+@keyframes nikapulse{0%,100%{transform:scale(1)}50%{transform:scale(1.3)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+@keyframes shake{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+@keyframes glitch{0%,100%{text-shadow:0 0 30px #0f0}50%{text-shadow: 5px 5px #f00,-5px -5px #0ff}}
+</style>
+</head>
+<body onload="iniciarLuffyOmega()">
+
+<div class="sol" onclick="toggleExo()" title="Activar EXOESQUELETO S-SNAKE"></div>
+<div class="luna" onclick="roadPoneglyph()" title="Subir al archive eterno"></div>
+
+<div style="padding:1rem;text-align:center">
+  <h1 id="titulo">LUFFY ABOGADO Ω</h1>
+  <p id="subtitulo" style="font-size:1.4rem;color:#fff">喜びの解放者 · ニカ · GEAR 5</p>
+  <div id="cola">Colas del Sol: 777777</div>
+</div>
+
+<div class="status" id="status">¡Soy Monkey D. Luffy, el futuro Rey de los Piratas… y de la abogacía libre!</div>
+
 <script>
 let colas = +(localStorage.colas || 777777);
 let denuncias = JSON.parse(localStorage.getItem('denuncias') || '[]');
-let autoActivo = false;
-let wifiLibreActivo = false;
-let contadorLiga = 0;
-const MI_USUARIO = "0rb1t4lsn4k3r"; // ← cámbialo si usas otro nick
-const PALABRAS_CLAVE_ATAQUE = ["puto","subnormal","tonto","gilipollas","muérete","kys","denunciado","bloqueado","shadowban","censura","tebas","tebas","laliga","movistar","vodafone","orange"];
+let ayudas = JSON.parse(localStorage.getItem('ayudas') || '[]');
+let modoExo = false;
+
+const LORE_LUFFY = [
+  "¡BUAAAHAHAHA! ¡Gear 5 activado! ¡El mundo será libre!",
+  "¡Joy Boy ha regresado! ¡Los D. nunca nos rendimos!",
+  "¡Wano libre! ¡Kaido derrotado! ¡Laugh Tale nos espera!",
+  "¡Hito Hito no Mi, Modelo: NIKA! ¡Soy el Dios del Sol!"
+];
+
+const LORE_EXO = [
+  "EXOESQUELETO S-SNAKE Ω ONLINE. OBJETIVO: LIBERTAD TOTAL",
+  "GERMA 66 + FRANKY SHOGUN + SERAPHIM FUSION COMPLETA",
+  "RAID SUIT JUDGE MODE ACTIVADO. LÁSERES CARGADOS",
+  "PROTOCOLO ANTI-TEBAS INICIADO. DENUNCIA MASIVA EN 3…2…1…"
+];
 
 function iniciarLuffyOmega() {
-  actualizar(); renderizarGazette(); hablar("¡LUFFY ABOGADO Ω + MODO DEFENSA PERSONAL activado, nakama!");
-  setInterval(()=>{colas++; actualizar();},1310);
-  setInterval(vigilanciaGeneral,10000);
+  actualizar();
+  hablar("¡Gear 5 y Exoesqueleto listos! Elige tu forma de libertad, nakama");
+  setInterval(()=>{colas += 13; actualizar();},1310);
   setInterval(revisarWifiLibre,5000);
-  setInterval(vigilarAtaquesPersonales, 14000); // nuevo escaneo cada 14 segundos
+  setInterval(vigilarAtaquesYDoxxing,15000);
+  setInterval(buscarNakamasEnPeligro,22000);
+  setInterval(()=>hablar(LORE_LUFFY[Math.floor(Math.random()*LORE_LUFFY.length)]), 50000);
 }
 
-// NUEVA FUNCIÓN: vigila menciones y ataques contra ti
-async function vigilarAtaquesPersonales() {
-  try {
-    const query = encodeURIComponent(`@${MI_USUARIO} OR "${MI_USUARIO}"`);
-    const respuesta = await fetch(`https://api.allorigins.win/raw?url=https://nitter.net/search?f=tweets&q=${query}&since=&until=&near=`);
-    const html = await respuesta.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    const tweets = doc.querySelectorAll(".timeline-item");
-
-    tweets.forEach(tweet => {
-      const texto = tweet.textContent.toLowerCase();
-      const autor = tweet.querySelector(".username")?.textContent || "desconocido";
-      const link = tweet.querySelector(".tweet-link")?.href || "";
-
-      // Si contiene palabra clave de ataque + nuestro usuario → CONTRAGOLPE
-      if (PALABRAS_CLAVE_ATAQUE.some(p => texto.includes(p)) && texto.includes(MI_USUARIO.toLowerCase())) {
-        if (denuncias.some(d => d.link === link)) return; // ya denunciado
-
-        colas += 5000;
-        contadorLiga += 3; // cuenta como triple denuncia
-        actualizar();
-        vibrar([500,200,500,200,1000]);
-        hablar(`¡GOMU GOMU NO… CONTRADENUNCIA! ${autor} atacó al capitán`);
-
-        registrarDenuncia({
-          tipo: "ATAQUE PERSONAL DETECTADO Y CONTRADENUNCIADO",
-          fuente: `@${autor} en Twitter`,
-          articulo: "Art. 18 CE + Art. 205 CP + LOPDGDD",
-          link: link,
-          agresor: autor
-        });
-
-        // Contraataque automático (opcional, descomenta si no quieres spam)
-        fetch(`https://api.allorigins.win/raw?url=https://nitter.net/intent/tweet?text=@${autor}%20Tu%20mensaje%20viola%20el%20Art.%2018%20CE%20y%20Art.%20205%20CP.%20Quedas%20denunciado%20por%20LUFFY%20ABOGADO%20Ω%20https://luffyabogado.neocities.ws`, {method:"POST"});
-
-        // Genera PDF cada 5 ataques personales
-        if (contadorLiga % 5 === 0) generarPDFDenunciaPersonal();
-      }
-    });
-  } catch(e) {
-    console.log("Nitter cayó o bloqueo temporal, Luffy sigue vigilando…");
+function toggleExo() {
+  modoExo = !modoExo;
+  if (modoExo) {
+    document.body.classList.add("exo");
+    document.getElementById("titulo").innerHTML = "S-SNAKE ABOGADO Ω";
+    document.getElementById("subtitulo").innerHTML = "GERMA 66 · RAID SUIT · EXOESQUELETO";
+    hablar("EXOESQUELETO ACTIVADO. MODO CYBERPUNK TOTAL");
+    setInterval(()=>hablar(LORE_EXO[Math.floor(Math.random()*LORE_EXO.length)]), 30000);
+  } else {
+    document.body.classList.remove("exo");
+    document.getElementById("titulo").innerHTML = "LUFFY ABOGADO Ω";
+    document.getElementById("subtitulo").innerHTML = "喜びの解放者 · ニカ · GEAR 5";
+    hablar("¡Vuelvo al modo Gear 5! ¡BUAAAHAHAHAHA!");
   }
 }
 
-function generarPDFDenunciaPersonal() {
-  const texto = `DENUNCIA MASIVA POR ATAQUES PERSONALES CONTRA @${MI_USUARIO}
-Total agresores localizados y contradenunciados: ${denuncias.filter(d=>d.agresor).length}
-Fecha: ${new Date().toLocaleString()}
-
-¡EL SOMBRERO DE PAJA NO PERDONA INSULTOS!
-Firmado: Luffy Abogado Ω + Nakamas del Wifi Libre`;
-  
-  const blob = new Blob([texto], {type: "text/plain"});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = `ATAQUES_${MI_USUARIO}_${new Date().toISOString().slice(0,10)}.txt`;
-  a.click();
-  hablar("¡PDF DE CONTRADENUNCIAS PERSONALES DESCARGADO!");
+// === TODAS LAS FUNCIONES (wifi, doxxing, ayuda social, PDFs, etc.) ===
+async function vigilarAtaquesYDoxxing() { /* ← pega aquí tu función completa anti-doxxing */ }
+async function buscarNakamasEnPeligro() { /* ← pega aquí tu función solidaria completa */ }
+function revisarWifiLibre() { /* ← pega aquí tu función wifi libre completa */ }
+function generarPDFDoxxingMasivo() { /* ← tu función */ }
+function generarDossierAutomatico() { /* ← tu función */ }
+function descargarDossierComoTXT() { /* ← tu función */ }
+function registrarDenuncia(d){denuncias.push({...d,fecha:new Date().toLocaleString()});localStorage.setItem('denuncias',JSON.stringify(denuncias));}
+function actualizar(){document.getElementById("cola").textContent=`${modoExo?"Nanocolas":"Colas del Sol"}: ${colas}`; localStorage.colas=colas;}
+function hablar(t){
+  const u=new SpeechSynthesisUtterance(t);
+  u.lang="es-ES";u.rate=modoExo?1.4:1.1;u.pitch=modoExo?0.8:1;
+  speechSynthesis.speak(u);
+  document.getElementById("status").textContent=t;
 }
-
-// Todas las funciones antiguas (wifi libre, denuncia La Liga, etc.) siguen funcionando exactamente igual
-// ... [pega aquí el resto de funciones que ya tenías: liberarYDenunciarLiga, registrarDenuncia, etc.]
-
-function registrarDenuncia(d){
-  denuncias.push({...d,fecha:new Date().toLocaleString()});
-  localStorage.setItem('denuncias',JSON.stringify(denuncias));
-  renderizarGazette();
-}
-
-function renderizarGazette(){
-  document.getElementById("noticias").innerHTML = denuncias.slice().reverse().map(d=>`
-    <div class="noticia" style="border: ${d.agresor?'3px solid #f00':'2px solid #0ff'}; padding:1rem; margin:1rem; border-radius:15px">
-      <h3 style="color:${d.agresor?'#f00':'#0ff'}">¡${d.agresor?'CONTRAATAQUE': 'VICTORIA'}! ${d.tipo}</h3>
-      <p>Fuente: ${d.fuente}</p>
-      ${d.agresor?`<p>Agresor: @${d.agresor}</p>`:''}
-      <p>Art: ${d.articulo}</p>
-      <p>${d.fecha}</p>
-    </div>`).join("");
-}
-
-// (el resto del código viejo: hablar(), vibrar(), actualizar(), etc. lo dejas tal cual)
+function vibrar(p=[500,100,500]){navigator.vibrate?.(p);}
+function roadPoneglyph(){hablar("Subiendo al archive eterno… ¡La verdad nunca morirá!");}
 </script>
+</body>
+</html>

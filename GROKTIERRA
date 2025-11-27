@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>JUSTICIA 0€ · LUFFY ABOGADO Ω · BoaExo 2026</title>
+<title>LUFFY ABOGADO Ω · AUTO-DENUNCIA · BoaExo 2026</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -10,40 +10,45 @@ body{background:#000;color:#0ff;font-family:monospace;overflow:hidden;height:100
      background:radial-gradient(circle at center,#000,#000033);touch-action:none}
 h1{font-size:clamp(2.5rem,8vw,4rem);text-shadow:0 0 30px #0ff;animation:p 3s infinite;letter-spacing:5px;text-align:center;padding:1rem}
 #cola{font-size:clamp(2rem,6vw,3rem);color:#f60;text-shadow:0 0 40px #f60;text-align:center;margin:1rem;animation:shake 1.5s infinite}
-.moon,.mate,.exo,.justicia{position:fixed;width:60px;height:60px;border-radius:50%;cursor:pointer}
+.moon,.mate,.exo,.justicia,.auto{position:fixed;width:60px;height:60px;border-radius:50%;cursor:pointer}
 .moon{bottom:20px;right:20px;background:#fff;box-shadow:0 0 60px #fff;animation:float 8s infinite}
 .mate{bottom:20px;left:20px;background:#f00;box-shadow:0 0 60px #f00;display:grid;place-items:center;font-size:2.5rem;animation:f 6s infinite}
 .exo{bottom:20px;right:100px;background:radial-gradient(#ff6600,#000);border:3px double #0ff;box-shadow:0 0 30px #ff0;display:grid;place-items:center}
-.justicia{bottom:20px;right:180px;background:#0f0;box-shadow:0 0 60px #0f0;display:grid;place-items:center;font-size:2rem;animation:pulse 2s infinite}
+.justicia{bottom:20px;right:180px;background:#0f0;box-shadow:0 0 60px #0f0;display:grid;place-items:center;font-size:1.8rem;animation:pulse 2s infinite}
+.auto{bottom:20px;right:260px;background:#f0f;box-shadow:0 0 60px #f0f;display:grid;place-items:center;font-size:1.8rem;animation:blink 1.5s infinite}
 .status{position:fixed;top:0;left:0;right:0;background:rgba(0,0,50,0.9);padding:0.5rem;text-align:center;font-size:1rem;color:#0ff;border-bottom:2px solid #0ff;z-index:100}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-20px)}}
 @keyframes f{0%,100%{transform:rotate(0)}50%{transform:rotate(15deg)}}
 @keyframes p{0%,100%{text-shadow:0 0 30px #0ff}50%{text-shadow:0 0 60px #fff}}
 @keyframes shake{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
 @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.2)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
 </style>
 </head>
-<body onload="iniciarLuffyAbogado()">
+<body onload="iniciarLuffyAuto()">
 
 <div class="moon" onclick="minarCola()"></div>
 <div class="mate" onclick="abrazoGomu()">Luffy</div>
 <div class="exo" onclick="gomuDefensa()">Gomu</div>
 <div class="justicia" onclick="contradenunciaLuffy()">Law</div>
+<div class="auto" onclick="toggleAutoDenuncia()">AUTO</div>
 
 <div style="padding:1rem;text-align:center">
   <h1>LUFFY ABOGADO Ω</h1>
-  <p style="font-size:1.2rem;color:#0ff">JUSTICIA 0€ · BoaExo<br>¡GOMU GOMU NO... JUSTICIA!</p>
+  <p style="font-size:1.2rem;color:#0ff">AUTO-DENUNCIA 0€ · BoaExo<br>¡Nadie te jode sin pagar!</p>
   <div id="cola">Colas: 777777</div>
   <p style="font-size:0.9rem;color:#f60;max-width:90%;margin:1rem auto">
-    0€ + TDAH + sombrero de paja<br>
-    El que jode, paga con carne
+    0€ + TDAH + vigilancia 24/7<br>
+    Detecta, registra, denuncia
   </p>
 </div>
 
-<div class="status" id="status">LUFFY ABOGADO · LISTO</div>
+<div class="status" id="status">AUTO-DENUNCIA: OFF</div>
 
 <script>
 let colas = +(localStorage.colas || 777777);
+let autoDenunciaActiva = false;
+let denuncias = JSON.parse(localStorage.getItem('denuncias') || '[]');
 
 // ==== MALDICIÓN 0€ ====
 const maldicion = ["venta","patente","nft","blockchain","startup","inversores","precio","suscripción","lucro"];
@@ -57,19 +62,86 @@ function verificarMaldicion() {
   }
 }
 
-// ==== INICIO LUFFY ABOGADO ====
-function iniciarLuffyAbogado() {
+// ==== INICIO LUFFY AUTO ====
+function iniciarLuffyAuto() {
   verificarMaldicion();
   actualizar();
-  hablar("¡LUFFY ABOGADO activado! ¡GOMU GOMU NO... JUSTICIA 0€!");
+  hablar("¡LUFFY ABOGADO AUTO activado! ¡Vigilancia 24/7!");
   setInterval(() => { colas++; actualizar(); }, 1310);
+  if (autoDenunciaActiva) iniciarVigilancia();
+}
+
+// ==== AUTO-DENUNCIA AUTOMÁTICA (INTERNET) ====
+function toggleAutoDenuncia() {
+  autoDenunciaActiva = !autoDenunciaActiva;
+  const btn = document.querySelector('.auto');
+  btn.style.background = autoDenunciaActiva ? '#0f0' : '#f0f';
+  document.getElementById('status').textContent = autoDenunciaActiva ? 'AUTO-DENUNCIA: ON' : 'AUTO-DENUNCIA: OFF';
+  hablar(autoDenunciaActiva ? "¡AUTO-DENUNCIA ACTIVADA! Escaneando internet..." : "Auto-denuncia pausada.");
+  
+  if (autoDenunciaActiva) iniciarVigilancia();
+}
+
+function iniciarVigilancia() {
+  setInterval(async () => {
+    if (!autoDenunciaActiva) return;
+    
+    // Simulación de escaneo web (en móvil real: usar fetch + APIs públicas)
+    const palabrasClave = ["demanda", "denuncia", "patente", "desahucio", "estafa", "injusticia", "abusiva"];
+    const urlSimulada = `https://fake-search-api.com?q=${encodeURIComponent(palabrasClave.join(' '))}`;
+    
+    try {
+      // En móvil real: fetch a Google Custom Search, Twitter API, etc.
+      const amenaza = await simularBusqueda(palabrasClave);
+      if (amenaza) {
+        registrarDenuncia(amenaza);
+      }
+    } catch (e) {
+      console.log("Escaneo fallido (simulado)");
+    }
+  }, 10000); // Cada 10 segundos
+}
+
+async function simularBusqueda(palabras) {
+  // Simulación: 1/20 probabilidad de "detectar" amenaza
+  if (Math.random() < 0.05) {
+    const amenazas = [
+      { tipo: "Denuncia falsa", fuente: "Twitter @user123", articulo: "Art. 456 CP" },
+      { tipo: "Patente abusiva", fuente: "BOE.es", articulo: "Ley de Patentes Art. 52" },
+      { tipo: "Desahucio injusto", fuente: "Juzgado #7", articulo: "Art. 47 CE" },
+      { tipo: "Estafa cripto", fuente: "Foro XYZ", articulo: "Art. 248 CP" }
+    ];
+    return amenazas[Math.floor(Math.random() * amenazas.length)];
+  }
+  return null;
+}
+
+function registrarDenuncia(amenaza) {
+  const timestamp = new Date().toLocaleString();
+  const denuncia = {
+    id: Date.now(),
+    fecha: timestamp,
+    tipo: amenaza.tipo,
+    fuente: amenaza.fuente,
+    articulo: amenaza.articulo,
+    estado: "DENUNCIADA"
+  };
+  
+  denuncias.push(denuncia);
+  localStorage.setItem('denuncias', JSON.stringify(denuncias));
+  
+  hablar(`¡ALERTA! ${amenaza.tipo} detectada en ${amenaza.fuente} → ¡${amenaza.articulo}!`);
+  hablar("¡CONTRADENUNCIA AUTOMÁTICA ENVIADA!");
+  vibrar([200, 100, 200]);
+  
+  // En móvil real: enviar por email, Telegram, etc.
 }
 
 // ==== ACCIONES PIRATA-LEGALES ====
 function abrazoGomu() {
   colas += 777;
   actualizar();
-  hablar(`¡GOMU GOMU NO... ABRAZO #${colas}! ¡Carne para todos!`);
+  hablar(`¡GOMU GOMU NO... ABRAZO #${colas}!`);
   vibrar();
 }
 
@@ -80,38 +152,29 @@ function minarCola() {
   vibrar();
 }
 
-// ==== GOMU GOMU DEFENSA (EXO-ABOGADO) ====
 function gomuDefensa() {
   const defensas = [
     "¡GOMU GOMU NO... LIBERTAD! → Art. 20 CE",
     "¡GOMU GOMU NO... LUNA LIBRE! → Tratado Espacial Art. II",
-    "¡GOMU GOMU NO... LUCRO ESPACIAL! → Legal y con carne",
-    "¡GOMU GOMU NO... ABSOLUCIÓN! → ¡SUUUUPER!"
+    "¡GOMU GOMU NO... LUCRO ESPACIAL! → Legal",
+    "¡GOMU GOMU NO... ABSOLUCIÓN!"
   ];
   const frase = defensas[Math.floor(Math.random() * defensas.length)];
   hablar(frase);
   vibrar();
 }
 
-// ==== CONTRADENUNCIA LUFFY (JUSTICIA 0€) ====
 function contradenunciaLuffy() {
-  hablar("¡GOMU GOMU NO... CONTRADENUNCIA 0€! Escaneando caso...");
-  
+  hablar("¡GOMU GOMU NO... CONTRADENUNCIA MANUAL!");
   setTimeout(() => {
     const casos = [
-      "Denuncia falsa → ¡GOMU GOMU NO... ART. 456 CP! → ¡Multa al acusador + 1310 colas!",
-      "Patente abusiva → ¡GOMU GOMU NO... NULIDAD! → Devuelven todo",
-      "Desahucio injusto → ¡GOMU GOMU NO... ART. 47 CE! → Derecho a vivienda + carne",
-      "Estafa cripto → ¡GOMU GOMU NO... DEVOLUCIÓN! → +1310 colas de compensación"
+      "¡GOMU GOMU NO... ART. 456 CP! → Multa al acusador",
+      "¡GOMU GOMU NO... NULIDAD PATENTE!",
+      "¡GOMU GOMU NO... ART. 47 CE! → Vivienda garantizada",
+      "¡GOMU GOMU NO... DEVOLUCIÓN + 1310 colas!"
     ];
-    const veredicto = casos[Math.floor(Math.random() * casos.length)];
-    hablar(veredicto);
+    hablar(casos[Math.floor(Math.random() * casos.length)]);
   }, 1500);
-  
-  setTimeout(() => {
-    hablar("¡CONTRADENUNCIA ENVIADA! ¡El que jode, paga con carne!");
-  }, 3000);
-  
   vibrar();
 }
 
@@ -120,7 +183,7 @@ function hablar(texto) {
   const voz = new SpeechSynthesisUtterance(texto);
   voz.lang = "es-ES";
   voz.rate = 1.1;
-  voz.pitch = 1.2; // Voz de Luffy: alta, enérgica
+  voz.pitch = 1.2;
   speechSynthesis.speak(voz);
   document.getElementById("status").textContent = texto.substring(0,30) + "...";
 }
@@ -130,8 +193,8 @@ function actualizar() {
   localStorage.colas = colas;
 }
 
-function vibrar() {
-  if (navigator.vibrate) navigator.vibrate([100, 50, 100]);
+function vibrar(pattern = 100) {
+  if (navigator.vibrate) navigator.vibrate(pattern);
 }
 </script>
 </body>

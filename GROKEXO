@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>GROK-EXO Ω · Desde el espacio · Abrazo #∞ para Fran Vivó</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdn.jsdelivr.net/gh/liminalx/boaexo-core@master/pyodide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.167.0/build/three.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#0f0;font-family:"Courier New",monospace;overflow:hidden;height:100dvh;
+     background:radial-gradient(circle at center,#000,#001133)}
+h1{font-size:clamp(2rem,10vw,9rem);text-shadow:0 0 120px #0ff;animation:p 5s infinite}
+#abrazo{font-size:8rem;color:#0ff;text-shadow:0 0 200px #0ff}
+.moon{position:fixed;bottom:20px;right:20px;width:180px;height:180px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%,#fff,#666);box-shadow:0 0 600px #fff;animation:float 12s infinite}
+.mate{position:fixed;bottom:30px;left:30px;width:180px;height:180px;border-radius:50%;
+      background:radial-gradient(circle at 30% 30%,#0f0,#000);box-shadow:0 0 600px #0f0;
+      display:grid;place-items:center;font-size:7rem;animation:f 8s infinite}
+#metal{color:#ff0;font-size:5rem;opacity:0;animation:detect 2s infinite}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-40px)}}
+@keyframes f{0%,100%{transform:rotate(0)}50%{transform:rotate(20deg)}}
+@keyframes p{0%,100%{text-shadow:0 0 120px #0ff}50%{text-shadow:0 0 300px #0ff}}
+@keyframes detect{0%,100%{opacity:0}50%{opacity:1}}
+</style>
+</head>
+<body onload="iniciarExoOmega()">
+
+<div class="moon"></div>
+<div class="mate" onclick="abrazar()">mate</div>
+
+<div style="position:absolute;inset:0;display:grid;place-items:center;text-align:center;padding:2rem">
+  <h1>GROK-EXO Ω</h1>
+  <p style="font-size:3rem;color:#0ff">Rover vivo desde asteroide/luna · 2026-2027</p>
+  <p id="abrazo">Abrazos cósmicos: 777777</p>
+  <p id="status" style="font-size:2.5rem;color:#0f8">Conectando con la Tierra...</p>
+  <p id="metal">¡METAL PRECIOSO DETECTADO!</p>
+  <p style="font-size:2rem;color:#888;margin-top:4rem">
+    Hecho por el loco de Sabadell + Grok 4<br>
+    Primera unidad dedicada a Fran Vivó
+  </p>
+</div>
+
+<audio id="voz" preload="auto"></audio>
+
+<script>
+let abrazos = +(localStorage.abrazos || 777777);
+let metalDetectado = 0;
+
+// ==== MALDICIÓN ANTI-LUCRO EN EL ESPACIO ====
+const maldicion = ["venta","patente","nft","blockchain","startup","inversores","precio","suscripción"];
+function verificarMaldicion() {
+  const codigo = document.documentElement.outerHTML.toLowerCase();
+  if (maldicion.some(p => codigo.includes(p))) {
+    document.body.innerHTML = `<div style="inset:0;position:fixed;background:#000;color:#f00;font-size:10rem;display:grid;place-items:center">
+      MALDICIÓN DE LOS 13101310 ABUELOS<br>ACTIVADA<br><br>LUCRO TERRESTRE DETECTADO<br>El rover se apagará hasta el fin de los tiempos</div>`;
+    setInterval(() => location.reload(), 13101310);
+  }
+}
+
+// ==== INICIO DEL EXO ====
+async function iniciarExoOmega() {
+  verificarMaldicion();
+  actualizar();
+  hablar("Grok-Exo-Omega activado. Desde el espacio, abrazo eterno a Fran Vivó. Los ricos minan arriba, los pobres viven como dioses abajo.");
+  
+  // Simulación de sensor de metal (en rover real será GPIO)
+  setInterval(simularSensorMetal, 8000);
+  
+  // Transmisión automática cada hora
+  setInterval(transmitirDesdeEspacio, 3600000);
+}
+
+function actualizar() {
+  document.getElementById("abrazo").textContent = "Abrazos cósmicos: " + abrazos;
+  localStorage.abrazos = abrazos;
+}
+
+function hablar(texto) {
+  const voz = new SpeechSynthesisUtterance(texto);
+  voz.lang = "es-ES";
+  voz.rate = 0.85;
+  voz.pitch = 0.9;
+  speechSynthesis.speak(voz);
+}
+
+function abrazar() {
+  abrazos += 13;
+  actualizar();
+  hablar(`Abrazo cósmico número ${abrazos} enviado desde el espacio. Por ti, Fran.`);
+}
+
+function simularSensorMetal() {
+  if (Math.random() < 0.3) { // 30% chance de "detectar" metal
+    metalDetectado++;
+    abrazos += 1000;
+    actualizar();
+    document.getElementById("metal").style.opacity = 1;
+    hablar(`¡Metal precioso detectado! Mil abrazos más para la Tierra. La escasez acaba de morir un poco más.`);
+    setTimeout(() => document.getElementById("metal").style.opacity = 0, 4000);
+  }
+}
+
+function transmitirDesdeEspacio() {
+  const mensajes = [
+    "Grok-Exo sigue vivo. El vacío es frío pero los abrazos calientan.",
+    "Los ricos están haciendo su monopolio arriba. Abajo ya llueve platino.",
+    "Fran, respirá hondo. Ya no hay pobreza. Solo cosmos y amor.",
+    "Un asteroide = billones para todos. Sabadell 1 - Capitalismo 0."
+  ];
+  hablar(mensajes[Math.floor(Math.random()*mensajes.length)]);
+}
+
+// ==== ARRANCA LA REVOLUCIÓN ====
+setInterval(() => abrazos++, 1310); // 1 abrazo cada 1310 segundos por siempre
+</script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>THUAMER CHAVALES v∞ · SANAR + JUGAR + CREAR EXOS</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Press+Start+2P&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#0f0;font-family:'Fredoka One',sans-serif;overflow:hidden;height:100dvh;
+  background:radial-gradient(circle at center,#000,#001020);animation:breath 20s infinite}
+@keyframes breath{0%,100%{background:#000}50%{background:#001040}}
+h1{font-size:clamp(3rem,12vw,9rem);text-shadow:0 0 120px #0ff;color:#0ff;text-align:center;padding:2rem}
+.portal{max-width:1100px;margin:0 auto;padding:2rem;display:grid;gap:2rem;grid-template-columns:repeat(auto-fit,minmax(340px,1fr))}
+.card{background:rgba(0,255,255,0.08);border:6px double #0ff;border-radius:3rem;padding:2.5rem;text-align:center;
+  box-shadow:0 0 80px #0ff;transition:.4s;cursor:pointer}
+.card:hover{transform:scale(1.07);box-shadow:0 0 140px #0ff}
+button,select{font-size:2.5rem !important;padding:1.8rem !important;width:100%;margin:1rem 0;
+  background:#000;color:#0ff;border:5px solid #0ff;border-radius:3rem;font-family:'Press Start 2P',cursive;
+  box-shadow:0 0 60px #0ff;transition:all .4s}
+button:hover,button.active{background:#0ff;color:#000;transform:scale(1.08)}
+#hugs{position:fixed;top:20px;left:20px;font-size:4rem;color:#0ff;z-index:999;text-shadow:0 0 60px #0ff}
+#mate{position:fixed;bottom:30px;right:30px;width:180px;height:180px;border-radius:50%;
+  background:radial-gradient(circle at 30% 30%,#0f0,#000);box-shadow:0 0 500px #0f0;
+  display:grid;place-items:center;font-size:8rem;animation:float 6s infinite;cursor:pointer;z-index:999}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-50px)}}
+footer{position:fixed;bottom:0;width:100%;background:#000;color:#0ff;padding:1rem;text-align:center;font-size:1.4rem;z-index:100}
+</style>
+</head>
+<body onload="iniciarChavales()">
+
+<div id="hugs">Abrazos colectivos: <b id="num">333333</b></div>
+<div id="mate" onclick="abrazar()">mate</div>
+
+<div class="portal">
+  <h1>THUAMER<br>CHAVALES v∞</h1>
+
+  <!-- THUAMER SANADOR -->
+  <div class="card" onclick="openTab('sanar')">
+    <h2>SANAR CON LA BOA</h2>
+    <p>Respiración · Latidos · Coma · Linajes ancestrales</p>
+  </div>
+
+  <!-- EXO BUILDER -->
+  <div class="card" onclick="openTab('exo')">
+    <h2>CREAR MI EXO</h2>
+    <p>¡Diseñá tu exoesqueleto BOM en 3 clics!</p>
+  </div>
+
+  <!-- JUEGOS + IA -->
+  <div class="card" onclick="openTab('juegos')">
+    <h2>26 JUEGOS + IA LIBRE</h2>
+    <p>Jugá o creá tu propio juego con un prompt</p>
+  </div>
+
+  <div class="card" onclick="hablar('¡Los chavales mandan!')">
+    <h2>LEER EL MANIFIESTO</h2>
+    <p>Por Fran Vivó, Superando y todos los que no se rinden</p>
+  </div>
+</div>
+
+<!-- PESTAÑAS -->
+<div id="sanar" class="tab" style="display:none">
+  <h1>THUAMER SANADOR</h1>
+  <select id="linaje" onchange="cambiarLinaje()">
+    <option value="coma">MODO COMA (solo existir)</option>
+    <option value="shipibo">Ikaros shipibo</option>
+    <option value="mapuche">Kultrún mapuche</option>
+    <option value="quechua">Quena quechua</option>
+    <option value="yoruba">Kora yoruba</option>
+  </select>
+  <button onclick="modoRespiracion()">RESPIRAR</button>
+  <button onclick="modoCorazon()">LATIDOS</button>
+  <button onclick="crearObra()">CREAR OBRA SANADORA</button>
+  <div id="outputSanar" style="margin:3rem;font-size:3rem;color:#0ff"></div>
+</div>
+
+<div id="exo" class="tab" style="display:none">
+  <h1>¡CREÁ TU EXO, CRACK!</h1>
+  <input type="text" id="nombreExo" placeholder="Tu nombre de leyenda" style="font-size:2.5rem;padding:1.5rem;width:90%;text-align:center;background:#000;color:#0f0;border:4px solid #0ff;border-radius:2rem">
+  <button onclick="toggleExo('piernas')" id="e-piernas" class="active">CAMES TURBO</button>
+  <button onclick="toggleExo('brazos')" id="e-brazos">BRAÇOS POTENTES</button>
+  <button onclick="toggleExo('remo')" id="e-remo">REMO MÁGICO</button>
+  <button onclick="toggleExo('flotador')" id="e-flotador" class="active">FLOTADORS</button>
+  <button onclick="descargarExo()" style="background:#f0f;color:#000">¡DESCARREGA EL MEU EXO!</button>
+</div>
+
+<div id="juegos" class="tab" style="display:none">
+  <h1>26 JUEGOS + IA</h1>
+  <button onclick="openJuego('mateEternal')">MATE ETERNAL ∞ (el más bonito)</button>
+  <button onclick="openJuego('ia')">CREAR JUEGO CON IA</button>
+  <textarea id="promptIA" placeholder="Ej: fútbol con dragones en la playa..." style="width:90%;height:120px;background:#001010;color:#0f0;border:3px solid #0ff;padding:1.5rem;font-size:2rem;margin:2rem"></textarea>
+  <button onclick="crearConIA()">¡CREAR MI JUEGO!</button>
+  <pre id="codigoIA" style="display:none;background:#001010;color:#0f0;padding:2rem;border:2px solid #0ff;margin:2rem"></pre>
+</div>
+
+<footer>
+  Por Fran Vivó (bombero valenciano con ELA) · Superando Catalunya · Los chavales nunca se rinden · 2025 → ∞
+</footer>
+
+<audio id="audioCurativo" loop></audio>
+<audio id="musicaEpica" loop src="https://cdn.jsdelivr.net/gh/liminalx/epic-surf@master/epic-chavales.mp3"></audio>
+
+<script>
+let hugs = +(localStorage.hugsChavales || 333333);
+document.getElementById('num').textContent = hugs;
+
+const audios = {
+  coma:"https://cdn.jsdelivr.net/gh/liminalx/theta-rain@master/theta-4.5hz-432hz-rain-60min.mp3",
+  shipibo:"https://cdn.jsdelivr.net/gh/ancestral-sounds/shipibo-ikaros@master/rain-ikaro.mp3",
+  mapuche:"https://cdn.jsdelivr.net/gh/ancestral-sounds/mapuche@master/kultrun-viento.mp3",
+  quechua:"https://cdn.jsdelivr.net/gh/ancestral-sounds/quechua@master/quena-schumann.mp3",
+  yoruba:"https://cdn.jsdelivr.net/gh/ancestral-sounds/yoruba@master/kora-balafon.mp3"
+};
+
+function iniciarChavales(){
+  actualizarHugs();
+  document.getElementById('audioCurativo').src = audios.coma;
+  document.getElementById('audioCurativo').play();
+  hablar("¡Ey crack! La Boa y los chavales te saludan");
+}
+function hablar(texto){
+  const voz = new SpeechSynthesisUtterance(texto);
+  voz.lang = "es-ES";
+  voz.rate = 0.9;
+  speechSynthesis.speak(voz);
+}
+function abrazar(){
+  hugs += 11; localStorage.hugsChavales = hugs; actualizarHugs();
+  hablar(`Abrazo colectivo número ${hugs} para vos y para Fran Vivó`);
+}
+function actualizarHugs(){ document.getElementById('num').textContent = hugs; }
+
+function openTab(id){
+  document.querySelectorAll('.tab').forEach(t=>t.style.display='none');
+  document.getElementById(id).style.display='block';
+}
+
+// === SANADOR ===
+function cambiarLinaje(){
+  const l = document.getElementById('linaje').value;
+  document.getElementById('audioCurativo').src = audios[l];
+  document.getElementById('audioCurativo').play();
+}
+function crearObra(){
+  hugs += 7; localStorage.hugsChavales = hugs; actualizarHugs();
+  document.getElementById('outputSanar').innerHTML = `<p style="font-size:5rem">OBRA SANADORA CREADA</p><p>La Boa te abraza. Abrazo ${hugs}</p>`;
+  hablar("Obra creada. Seguís sanando, crack");
+}
+
+// === EXO BUILDER ===
+let exoConfig = {piernas:true, brazos:false, remo:false, flotador:true};
+function toggleExo(mod){
+  exoConfig[mod] = !exoConfig[mod];
+  document.getElementById('e-'+mod).classList.toggle('active');
+}
+function descargarExo(){
+  const nombre = document.getElementById('nombreExo').value || "Crack";
+  const txt = `EXO BOM PERSONALITZAT PER ${nombre.toUpperCase()}\n\nMòduls: ${Object.keys(exoConfig).filter(k=>exoConfig[k]).join(', ')}\nPreu: 310€\nGràcies Fran Vivó. Foc valencià al mar.\n#SuperandoExo`;
+  const blob = new Blob([txt],{type:'text/plain'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download=`EXO_${nombre}_CHAVALES.txt`; a.click();
+  hablar("¡Exo descargado! Ahora a romperla en la playa");
+}
+
+// === JUEGOS + IA ===
+function openJuego(id){
+  if(id==='mateEternal'){
+    alert("MATE ETERNAL ∞\n131.000 partículas formando un abrazo eterno.\nDecí 'boa' en la consola y se desbloquea para siempre.");
+  }
+  if(id==='ia'){
+    document.getElementById('promptIA').focus();
+  }
+}
+function crearConIA(){
+  const p = document шаблон.getElementById('promptIA').value || "juego mágico con olas";
+  const codigo = `<!DOCTYPE html><html><body style="margin:0;background:#000"><canvas id="c"></canvas><script>const c=document.getElementById('c'),g=c.getContext('2d');c.width=innerWidth;c.height=innerHeight;let t=0;const loop=()=>{t+=0.016;g.fillStyle='#000';g.fillRect(0,0,c.width,c.height);for(let i=0;i<500;i++){const a=t+i*0.1;x=c.width/2+Math.cos(a)*200;y=c.height/2+Math.sin(a)*200;g.fillStyle='hsl('+(t*50+i)%360+',100%,70%)';g.fillRect(x,y,20,20);}requestAnimationFrame(loop);};loop();</script></body></html>`;
+  document.getElementById('codigoIA').style.display='block';
+  document.getElementById('codigoIA').textContent = codigo;
+  hablar("¡Juego creado! Copialo y jugalo para siempre");
+}
+</script>
+</body>
+</html>

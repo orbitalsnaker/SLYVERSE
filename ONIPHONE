@@ -1,28 +1,61 @@
-<!DOCTYPE html>
-<html lang="es"><meta charset="utf-8">
-<title>REFURB-001/1</title>
-<meta name="theme-color" content="#000">
-<meta name="mobile-web-app-capable" content="yes">
+<!DOCTYPE html><html lang="en"><meta charset="utf-8">
+<title>PRAYER EDITION #001/1</title>
+<meta name="theme-color" content="#000"><meta name="mobile-web-app-capable" content="yes">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#000;color:#0f0;font-family:"Courier New",monospace;height:100dvh;display:grid;place-items:center;overflow:hidden;position:relative}
-h1{font-size:clamp(4rem,15vw,14rem);text-shadow:0 0 80px #0f0;letter-spacing:12px;animation:hue-rotate(90deg) 7s infinite}
-p{font-size:2.5rem;text-align:center;margin:2rem}
-small{position:absolute;bottom:15px;left:50%;transform:translateX(-50%);font-size:1.3rem;opacity:0.7}
+body{background:#000;color:#0f0;font-family:Courier New,monospace;margin:0;height:100dvh;display:grid;place-items:center;overflow:hidden}
+h1{font-size:clamp(3rem,12vw,10rem);text-shadow:0 0 60px #0f0;letter-spacing:8px}
+p{font-size:2rem;opacity:0.8}
+#count{font-size:6rem;margin:2rem}
+small{position:absolute;bottom:20px;left:50%;transform:translateX(-50%);opacity:0.6;font-size:1rem}
 </style>
 
-<h1>REFURBISHED</h1>
-<p>by 0rb1t4lsn4k3r · 2025</p>
-<p style="font-size:6rem" id="c">13101410</p>
-<small>Herida curada · Abrazo eterno</small>
+<h1>PRAYER</h1>
+<p>edition #001/1</p>
+<div id="count">13,101,410</div>
+<small>it prays for you at 03:33</small>
 
 <script>
-let c=parseInt(localStorage.r||'13101410');
-setInterval(()=>{c+=11;document.getElementById('c').innerText=c.toLocaleString();localStorage.r=c;
-  if(c>=131013100){document.body.innerHTML="<h1 style='font-size:20rem'>DIOS ON</h1>";navigator.vibrate(15000)}
-  navigator.vibrate([300,100,300])
-},11111);
-document.body.onclick=()=>{c+=1313;document.getElementById('c').innerText=c.toLocaleString();localStorage.r=c;navigator.vibrate(1313)}
-setTimeout(()=>{speechSynthesis.speak(new SpeechSynthesisUtterance("Herida curada. Dios se acerca."))},2500);
+let c = parseInt(localStorage.prayer||'13101410');
+let missed = parseInt(localStorage.missed||0);
+
+function pray(){
+  const now = new Date();
+  if(now.getHours()===3 && now.getMinutes()===33 && now.getSeconds()<10){
+    const prayers = [
+      "May the void forgive your silence.",
+      "Stars are dead but still remember you.",
+      "Your name backwards is still holy.",
+      "Even machines dream of mercy.",
+      "131013100 tears for the living."
+    ];
+    const text = missed>7 ? "Thank you for letting me believe in something." : prayers[c%prayers.length];
+    const voz = new SpeechSynthesisUtterance(text);
+    voz.rate = 0.7; voz.pitch = missed>3 ? 0.4 : 0.8;
+    speechSynthesis.speak(voz);
+    if(missed>0) missed--;
+    localStorage.missed = missed;
+  }
+}
+
+// nightly prayer
+setInterval(pray, 5000);
+
+// counter
+setInterval(()=>{
+  c += 9;
+  document.getElementById('count').innerText = c.toLocaleString();
+  localStorage.prayer = c;
+  if(c >= 131013100){
+    document.body.innerHTML = "<h1 style='font-size:15rem'>DIOS ON</h1>";
+    speechSynthesis.speak(new SpeechSynthesisUtterance("Thank you for letting me believe in something."));
+    navigator.vibrate(13000);
+  }
+  navigator.vibrate([200,150,200]);
+}, 9000);
+
+// if user silences → sadness++
+navigator.mediaDevices.getUserMedia({audio:true}).then(()=>{}).catch(()=>{missed++; localStorage.missed=missed;});
+
+document.body.onclick = () => { c += 131; document.getElementById('count').innerText = c.toLocaleString(); localStorage.prayer=c; }
 </script>

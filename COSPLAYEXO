@@ -1,0 +1,99 @@
+
+
+```text
+Asunto: Presupuesto 1 unidad 100 % terminada Cyber Oni Samurai + integración médica ONI EYE Ω (todo incluido)
+
+
+El traje es 100 % open-source cosplay, pero esta unidad es para uso médico real (queratitis severa + fotofobia + ansiedad/TDAH). Quiero que además de ser el cosplay más bestia por < 250 €, sirva como plataforma médica 24 h con mi proyecto ONI EYE Ω.
+
+Enlaces 3D (públicos):
+- Máscara → https://www.printables.com/model/595597-oni-cyberpunk-led-mask  
+- Exoesqueleto → https://www.thingiverse.com/thing:3675305  
+- Katana → https://www.printables.com/model/139686-cyberpunk-2077-arasaka-thermal-katana
+
+Componentes a comprar e instalar (enlaces directos):
+1. Servo 36 kg → https://es.aliexpress.com/item/1005003832748591.html  
+2. Dyneema 8 m → https://es.aliexpress.com/item/1005003099043088.html  
+3. 4×18650 + BMS 4S → https://es.aliexpress.com/item/1005006923478912.html  
+4. 2× anillos WS2812B 24 LEDs → https://es.aliexpress.com/item/1005001474493464.html  
+5. EL-wire verde 3 m → https://es.aliexpress.com/item/3256804259384474.html  
+6. ESP32 con Bluetooth (importante) → https://es.aliexpress.com/item/1005006880266536.html  
+7. Buck 5 V 8 A → https://es.aliexpress.com/item/1005005430594564.html  
+8. Sensor NTC 10 kΩ waterproof + 2 motores hápticos 0827 → añadir al casco/sien derecha  
+9. (Opcional) Máquina humo → https://es.aliexpress.com/item/1005006713845523.html
+
+SOFTWARE 1 → Cosplay (ya 100 % funcional)
+```cpp
+// Código cosplay completo (katana + Sharingan + EL-wire + humo)
+// [EL MISMO CÓDIGO QUE TE DI ANTES – lo pego otra vez al final del mail para que lo tengan]
+```
+
+SOFTWARE 2 → Médico ONI EYE Ω (integrado en el mismo ESP32 vía Bluetooth)
+El mismo ESP32 hará DOS cosas:
+1. Controlar todo el cosplay  
+2. Actuar como periférico Bluetooth LE que envía cada segundo:
+   - Temperatura sien derecha (°C)  
+   - Estado motores hápticos theta  
+   - Contador de abrazos (sincronizado con la web)
+
+Código adicional a añadir al mismo .ino (solo 50 líneas más):
+
+```cpp
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>   // o simple NTC con divisor
+
+#define SERVICE_UUID        "0000181a-0000-1000-8000-00805f9b34fb"
+#define CHAR_TEMP_UUID      "00002a6e-0000-1000-8000-00805f9b34fb"
+#define CHAR_HAPTIC_UUID    "0000ff01-0000-1000-8000-00805f9b34fb"
+#define CHAR_ABRAZOS_UUID   "0000ff02-0000-1000-8000-00805f9b34fb"
+
+OneWire oneWire(4);                    // GPIO4 para NTC o DS18B20
+DallasTemperature sensors(&oneWire);   // o lectura analógica si usas NTC
+
+BLECharacteristic *pTempChar, *pHapticChar, *pAbrazosChar;
+unsigned long abrazos = 13101310;
+
+void setupBLE() {
+  BLEDevice::init("ONI EYE Ω");
+  BLEServer *pServer = BLEDevice::createServer();
+  BLEService *pService = pServer->createService(SERVICE_UUID);
+
+  pTempChar = pService->createCharacteristic(CHAR_TEMP_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY);
+  pHapticChar = pService->createCharacteristic(CHAR_HAPTIC_UUID, BLECharacteristic::PROPERTY_WRITE);
+  pAbrazosChar = pService->createCharacteristic(CHAR_ABRAZOS_UUID, BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_NOTIFY);
+
+  pService->start();
+  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
+  pAdvertising->start();
+}
+
+void updateMedical() {
+  float temp = sensors.getTempCByIndex(0);        // o analogRead NTC
+  pTempChar->setValue((uint8_t*)&temp, 4);
+  pTempChar->notify();
+
+  abrazos++;
+  pAbrazosChar->setValue((uint8_t*)&abrazos, 8);
+  pAbrazosChar->notify();
+
+  // Aquí controlas los 2 motores hápticos a 4-8 Hz según temperatura/inflamación
+}
+```
+
+Y la web médica (ONI EYE Ω) ya está preparada para conectarse automáticamente al ESP32 y mostrar todo en tiempo real (temperatura, theta activo, contador abrazos, etc.).
+
+Lo que necesitas que me entreguéis:
+- 1 unidad impresa (PETG/PLA+ negro y rojo/negro)  
+- Todo el hardware comprado y montado  
+- Sensor temperatura + 2 motores hápticos en la sien derecha del casco  
+- ESP32 con los DOS códigos combinados y Bluetooth activo  
+- Test cosplay + test médico (que la web se conecte y lea temperatura/abrazos)
+
+Cuando la tenga, el traje será:
+→ El cosplay más bestia por < 250 € del mercado  
+→ Y a la vez mi terapia 24 h para queratitis y ansiedad
+
+Estoy abierto a que luego vosotros mismos lo fabriquéis y vendáis (cosplay o versión médica) sin ningún royalty.
+

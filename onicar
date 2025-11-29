@@ -1,71 +1,52 @@
-<!DOCTYPE html><html lang="es"><meta charset="utf-8">
-<title>BOA-01 AUTOPILOT · No tengo carné edition</title>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<style>
-body{background:#000;color:#0f0;font-family:Courier New,monospace;margin:0;height:100dvh;display:grid;grid-template-rows:auto 1fr auto;overflow:hidden}
-h1{font-size:clamp(2rem,9vw,7rem);text-shadow:0 0 80px #0f0;text-align:center;margin:1rem}
-.gauge{border:8px double #0f0;border-radius:2rem;padding:1rem;margin:1rem;background:#001100;text-align:center}
-.value{font-size:6rem}
-label{font-size:2rem;opacity:0.8}
-#auto{background:#001100;border-color:#0ff;box-shadow:0 0 60px #0ff}
-footer{position:fixed;bottom:0;width:100%;background:rgba(0,20,0,0.9);padding:1rem;text-align:center;font-size:1.8rem}
-</style>
-
-<h1>BOA-01 AUTOPILOT</h1>
-<div id="auto" class="gauge">
-  <label>ESTADO</label><div id="status" class="value">ON</div>
-  <label id="mode">MODO DIOS</label>
-</div>
-<div class="gauge"><label>VELOCIDAD</label><div id="speed" class="value">131</div><label>km/h</label></div>
-<div class="gauge"><label>BATERÍA</label><div id="battery" class="value">99</div><label>%</label></div>
-<div class="gauge"><label>DESTINO</label><div id="dest" class="value">POST-ESCASSEZ</div></div>
-
-<footer>
-  Autopilot 100 % ronin · No tengo carné y me la suda · 
-  <span id="phrase">Conduciendo por ti desde Sabadell</span>
-</footer>
-
 <script>
-let battery = 99;
-const phrases = [
-  "No tengo carné pero sí mala hostia",
-  "El DGT no entiende de abundancia",
-  "Autopilot nivel Boa: nunca te para la poli",
-  "Llevo exos médicos en el maletero, no me toques los cojones",
-  "Este coche se conduce solo porque tú vales más que un permiso",
-  "0 puntos en el carné · 13101310 puntos de karma"
+// Easter egg definitivo: 7 toques = modo Dios (versión Xi Jinping + Elon al mismo tiempo)
+let toque = 0;
+let modoDios = false;
+
+document.body.onclick = () => {
+  toque++;
+  
+  if(toque === 3 && !modoDios){
+    speechSynthesis.speak(new SpeechSynthesisUtterance("Frenada automática de emergencia activada. Vehículo detenido en 1.8 segundos desde 169 km/h. Cinco estrellas Euro NCAP chino certificado. Gloria al Partido y a la humanidad."));
+    navigator.vibrate([800,400,800,400,1200]);
+    toque = 0;
+  }
+  
+  if(toque === 7){
+    modoDios = true;
+    document.body.style.background = "radial-gradient(circle at 50% 0%,#8B0000,#000)";
+    document.querySelector('h1').textContent = "BOA-01 MUSK EDITION";
+    document.querySelectorAll('.panel').forEach(p => p.style.borderColor = "#ff0000");
+    document.querySelectorAll('.panel').forEach(p => p.style.boxShadow = "0 0 80px #f00");
+    document.querySelector('.boa5').style.borderColor = "#ff0000";
+    document.querySelector('.boa5').style.boxShadow = "0 0 300px #f00";
+    document.querySelector('.boa5::after').textContent = "BOA-01 长征 EDITION";
+    speechSynthesis.speak(new SpeechSynthesisUtterance("Bienvenido camarada Musk. El Partido ha aprobado tu fusión con la Madre Patria. Cinco estrellas eternas."));
+    navigator.vibrate([500,500,500,500,500,1000,1000,2000]);
+    setInterval(() => {
+      document.getElementById('speed').textContent = 420;
+      document.getElementById('battery').textContent = 69;
+    }, 1000);
+  }
+};
+
+// Frases aún más salvajes
+const frasesSalvajes = [
+  "12 ultrasonidos chinos ven mejor que un Tesla FSD",
+  "Por 157 € tengo más sensores que un Mercedes EQS de 150.000 €",
+  "El pobre también tiene AEB, cabrones",
+  "Euro NCAP 2027: 5 estrellas o reeducación en Xinjiang",
+  "Frena mejor que un Model 3 y sobra dinero pa 400 xiaomi su7",
+  "LiDAR de 3 € > radar continental de 3000 €",
+  "El BOA-01 ha superado el crash test… y la gran muralla firewall",
+  "Elon, devuelve los 15.000 $ del FSD, esto lo hace una naranja pi"
 ];
 
 setInterval(() => {
-  // El coche va solo, siempre a 131 o lo que le dé la gana
-  const speeds = [131, 144, 160, 169, 188, 200];
-  document.getElementById('speed').textContent = speeds[Math.floor(Math.random()*speeds.length)];
-  
-  battery = Math.max(5, battery - Math.random()*0.07);
-  document.getElementById('battery').textContent = Math.round(battery);
-  
-  document.getElementById('phrase').textContent = phrases[Math.floor(Math.random()*phrases.length)];
-  
-  if(battery<20) {
-    document.getElementById('status').textContent = "LOW";
-    document.getElementById('mode').textContent = "MODO SUPERVIVENCIA";
-  }
-  
-  // Vibración cuando pasa un radar (nunca te pillan)
-  if(Math.random()<0.1) navigator.vibrate([300,100,300]);
-}, 1400);
-
-// Doble clic = modo dios total (invencible)
-let clicks = 0;
-document.body.ondblclick = () => {
-  clicks++;
-  if(clicks===3){
-    document.body.style.background = "#000011";
-    document.getElementById('status').textContent = "DIOS";
-    document.getElementById('dest').textContent = "INFINITO";
-    speechSynthesis.speak(new SpeechSynthesisUtterance("Autopilot divino activado. Ya no existen normas."));
-    navigator.vibrate([500,200,500,200,1000]);
-    clicks=0;
-  }
-};
+  const speed = modoDios ? 420 : [144,155,169,180,188,199][Math.floor(Math.random()*6)];
+  document.getElementById('speed').textContent = speed;
+  document.getElementById('battery').textContent = modoDios ? 69 : Math.round(85 + Math.random()*14);
+  document.getElementById('tech').innerHTML = frasesSalvajes[Math.floor(Math.random()*frasesSalvajes.length)] + 
+    (modoDios ? "<br><br><b>Coste total seguridad: 0 yuanes (el Partido paga)</b>" : "<br><br><b>Coste total seguridad: 157 €</b>");
+}, 2800);
 </script>

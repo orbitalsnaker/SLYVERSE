@@ -23,6 +23,8 @@
     #legal-warning{position:fixed;top:0;left:0;right:0;background:rgba(255,0,72,0.9);color:#ffea00;padding:10px;text-align:center;font-size:3vw;z-index:1000;border-bottom:3px solid #ffea00;}
     #game-selector{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);padding:20px;border:2px solid #ffea00;text-align:center;display:none;}
     #game-selector button{font-size:3vw;padding:15px;margin:5px;}
+    @keyframes vapor {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
+    #instructions{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.7);padding:10px;font-size:2vw;max-width:200px;display:none;}
   </style>
 </head>
 <body>
@@ -35,9 +37,13 @@
 
 <div id="overlay">
   <div style="text-align:center">
-    <h1 style="font-size:10vw;margin:0;text-shadow:5px 5px #ff0048">THUAMER CONSOLÆ</h1>
-    <p style="font-size:4vw;margin:10px">Todo gratis forever · Remasters que mean en los originales · cosméticos solo pa pijos</p>
+    <h1 id="title" style="font-size:10vw;margin:0;text-shadow:5px 5px #ff0048">THUAMER CONSOLÆ</h1>
+    <p id="subtitle" style="font-size:4vw;margin:10px">Todo gratis forever · Remasters que mean en los originales · cosméticos solo pa pijos</p>
   </div>
+</div>
+
+<div id="instructions">
+  Usa WASD para mover, ESPACIO para saltar/disparar. ¡No falles, pringao!
 </div>
 
 <div style="position:absolute;top:10px;right:10px;text-align:right;">
@@ -48,34 +54,157 @@
 </div>
 
 <div id="game-selector">
-  <h2 style="color:#ffea00;">Elige tu Remaster Humillante:</h2>
+  <h2 id="selector-title" style="color:#ffea00;">Elige tu Remaster Humillante:</h2>
   <button onclick="cargarRemaster('concentration')">Concentration Room Remaster (HD + Insultos Extra)</button><br>
-  <button onclick="cargarRemaster('homebrew')">Homebrew Shooter Remaster (60FPS + Efectos Pijo)</button><br>
-  <button onclick="cargarRemaster('puzzle')">Puzzle Público Remaster (IA Anti-Pringao)</button><br>
+  <button onclick="cargarRemaster('homebrew1')">Micro M8n Remaster (60FPS + Efectos Pijo)</button><br>
+  <button onclick="cargarRemaster('homebrew2')">Liebrary Puzzle Remaster (IA Anti-Pringao)</button><br>
+  <button onclick="cargarRemaster('shooter')">Homebrew Shooter Remaster (Láseres Neón)</button><br>
   <button onclick="cerrarSelector()">Cerrar (Cobarde)</button>
 </div>
 
 <div id="chat">THUAMER: Buenas, pringao... ¿ya has perdido otra vez? Prueba un remaster, a ver si mejoras.</div>
 
-<marquee behavior="scroll" direction="left">
+<marquee id="marquee" behavior="scroll" direction="left">
   NES · SNES · GBA · ARCADE · PS1 · REMÁSTERS QUE HACEN LLORAR A LOS ORIGINALES · THUAMER TE ESTÁ TROLEANDA 24/7 · 100% GRATIS · SOLO LOS PIJOS PAGAN POR BRILLAR
 </marquee>
 
 <script>
-// ====== EMULADOR NES ULTRA CUTRE PERO AHORA CON REMÁSTERS FALSOS MEJORES ======
+// ====== AUTODETECTAR IDIOMA ======
+let isSpanish = true;
+function detectarIdioma() {
+  const lang = navigator.language || navigator.userLanguage;
+  isSpanish = lang.startsWith('es');
+  document.documentElement.lang = isSpanish ? 'es' : 'en';
+  
+  // Textos en español por default, switch a inglés
+  const textsES = {
+    title: 'THUAMER CONSOLÆ',
+    subtitle: 'Todo gratis forever · Remasters que mean en los originales · cosméticos solo pa pijos',
+    selectorTitle: 'Elige tu Remaster Humillante:',
+    legal: 'AVISO LEGAL (ESPAÑA): En España esto es 100% legal porque la ley te considera un pirata de serie y te cobra el canon digital por todo. ¡Gracias SGAE! En otros países, consulta tu legislación local antes de ser un rebelde. THUAMER no se hace responsable si te meten en el trullo.',
+    chatInit: 'THUAMER: Buenas, pringao... ¿ya has perdido otra vez? Prueba un remaster, a ver si mejoras.',
+    instructions: 'Usa WASD para mover, ESPACIO para saltar/disparar. ¡No falles, pringao!',
+    marquee: 'NES · SNES · GBA · ARCADE · PS1 · REMÁSTERS QUE HACEN LLORAR A LOS ORIGINALES · THUAMER TE ESTÁ TROLEANDA 24/7 · 100% GRATIS · SOLO LOS PIJOS PAGAN POR BRILLAR',
+    concentration: 'Concentration Room Remaster (HD + Insultos Extra)',
+    homebrew1: 'Micro M8n Remaster (60FPS + Efectos Pijo)',
+    homebrew2: 'Liebrary Puzzle Remaster (IA Anti-Pringao)',
+    shooter: 'Homebrew Shooter Remaster (Láseres Neón)',
+    cerrar: 'Cerrar (Cobarde)',
+    vozConfirm: '¿Voz de Chiquito de la Calzada por 19.99€? Fistro pecadorrr',
+    vozAlert: '¡Activado! Ahora THUAMER te dice: \'¡Hasta luego Lucas, con la iglesia hemos topado!\' cada vez que mueras en el remaster.',
+    skinConfirm: '¿Quieres ser pijo por solo 4.99€?',
+    skinAlert: '¡Pijo activado! Ahora todos saben que tienes pasta y cero vida social. Combínalo con un remaster para máximo cringe.'
+  };
+  
+  const textsEN = {
+    title: 'THUAMER CONSOLE',
+    subtitle: 'All free forever · Remasters that piss on the originals · cosmetics only for posh twats',
+    selectorTitle: 'Pick Your Humiliating Remaster:',
+    legal: 'LEGAL NOTICE (SPAIN): In Spain this is 100% legal because the law considers you a pirate anyway and charges digital canon on everything. Thanks SGAE! In other countries, check your local laws before rebelling. THUAMER not responsible if you end up in jail.',
+    chatInit: 'THUAMER: Hey, loser... lost again? Try a remaster, see if you improve.',
+    instructions: 'Use WASD to move, SPACE to jump/shoot. Don\'t fail, wanker!',
+    marquee: 'NES · SNES · GBA · ARCADE · PS1 · REMASTERS THAT MAKE ORIGINALS CRY · THUAMER IS TROLLING YOU 24/7 · 100% FREE · ONLY POSH PAY TO SHINE',
+    concentration: 'Concentration Room Remaster (HD + Extra Insults)',
+    homebrew1: 'Micro M8n Remaster (60FPS + Posh Effects)',
+    homebrew2: 'Liebrary Puzzle Remaster (Anti-Loser AI)',
+    shooter: 'Homebrew Shooter Remaster (Neon Lasers)',
+    cerrar: 'Close (Coward)',
+    vozConfirm: 'Chiquito de la Calzada voice for 19.99€? Sinful trickster!',
+    vozAlert: 'Activated! Now THUAMER says: \'See you later Lucas, we\'ve run into the church!\' every time you die in the remaster.',
+    skinConfirm: 'Wanna be posh for just 4.99€?',
+    skinAlert: 'Posh activated! Now everyone knows you have cash and zero social life. Combine with a remaster for max cringe.'
+  };
+  
+  const texts = isSpanish ? textsES : textsEN;
+  
+  document.getElementById('title').textContent = texts.title;
+  document.getElementById('subtitle').textContent = texts.subtitle;
+  document.getElementById('selector-title').textContent = texts.selectorTitle;
+  document.getElementById('legal-warning').innerHTML = `<strong>LEGAL NOTICE:</strong> ${texts.legal}`;
+  document.getElementById('chat').textContent = texts.chatInit;
+  document.getElementById('instructions').textContent = texts.instructions;
+  document.getElementById('marquee').textContent = texts.marquee;
+  document.querySelectorAll('#game-selector button')[0].textContent = texts.concentration;
+  document.querySelectorAll('#game-selector button')[1].textContent = texts.homebrew1;
+  document.querySelectorAll('#game-selector button')[2].textContent = texts.homebrew2;
+  document.querySelectorAll('#game-selector button')[3].textContent = texts.shooter;
+  document.querySelectorAll('#game-selector button')[4].textContent = texts.cerrar;
+  
+  // Frases también switch
+  frases = isSpanish ? frasesES : frasesEN;
+  
+  // Voz confirm etc.
+  window.vConfirmText = texts.vozConfirm;
+  window.vAlertText = texts.vozAlert;
+  window.sConfirmText = texts.skinConfirm;
+  window.sAlertText = texts.skinAlert;
+}
+detectarIdioma();
+
+// ====== FRASES EN DOS IDIOMAS ======
+let frases = [];
+const frasesES = [
+  "Vaya mierda de jugador eres, Orb te da pena. Ni el remaster te salva.",
+  "Tu madre juega mejor que tú y está muerta. Prueba el homebrew, igual aprendes.",
+  "Has perdido 37 veces seguidas. Nuevo récord mundial de subnormal. Remaster activado: ¡Sufre más!",
+  "Paga €4.99 y te dejo ganar una vez, pringao. Los remasters son gratis, tu dignidad no.",
+  "Se te ve el cursor temblar, estás llorando? El filtro HD te delata.",
+  "THUAMER te ha creado un nivel imposible solo para verte sufrir en 60FPS.",
+  "Eres tan malo que hasta los NPCs se ríen de ti. Actualiza al remaster puzzle para más risas.",
+  "¡Fallaste el jump! Tu abuela en el geriátrico salta mejor.",
+  "Paga el canon o te borro la partida, dice la SGAE... ¡Ja!",
+  "En modo inglés? Sigues siendo un loser, mate."
+];
+
+const frasesEN = [
+  "What a shit player you are, Orb pities you. Even the remaster can't save you.",
+  "Your mum plays better than you and she's dead. Try the homebrew, maybe learn something.",
+  "You've lost 37 times in a row. New world record for dumbass. Remaster on: Suffer more!",
+  "Pay €4.99 and I'll let you win once, wanker. Remasters are free, your dignity ain't.",
+  "I see your cursor shaking, you crying? The HD filter exposes you.",
+  "THUAMER made an impossible level just to watch you suffer in 60FPS.",
+  "You're so bad even NPCs laugh at you. Update to puzzle remaster for more laughs.",
+  "Missed the jump! Your nan in the nursing home jumps better.",
+  "Pay the canon or I delete your save, says the SGAE... Ha!",
+  "In English mode? Still a loser, mate."
+];
+
+// ====== EMULADOR MEJORADO CON INPUTS Y SONIDO ======
 const canvas = document.getElementById('screen');
 const ctx = canvas.getContext('2d');
 ctx.fillStyle = '#000';
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
 const REMASTERS = {
-  'concentration': "https://files.catbox.moe/0e5i8k.nes", // Original público, ahora "remaster" con filtros JS
-  'homebrew': "https://example.com/homebrew.nes", // Placeholder para homebrew legal (cámbialo por real)
-  'puzzle': "https://archive.org/download/.../puzzle.nes" // Ejemplo de archive.org público
+  'concentration': "https://files.catbox.moe/0e5i8k.nes", // Público
+  'homebrew1': "https://example.com/micro_m8n.nes", // Reemplaza con real, e.g. de itch.io
+  'homebrew2': "https://example.com/liebrary.nes", // Placeholder
+  'shooter': "https://archive.org/download/.../shooter.nes" // Ejemplo
 };
 
 let emu = null;
 let currentRemaster = null;
+let keys = {}; // Para inputs
+let playerX = 128, playerY = 200; // Simple jugador para sim
+let score = 0;
+let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+// Event listeners para teclas
+document.addEventListener('keydown', (e) => { keys[e.key.toLowerCase()] = true; if (e.key === ' ') e.preventDefault(); });
+document.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+
+// Beep simple
+function playBeep(freq = 440, duration = 0.1) {
+  const oscillator = audioCtx.createOscillator();
+  const gainNode = audioCtx.createGain();
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  oscillator.frequency.value = freq;
+  gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+  gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+  oscillator.start(audioCtx.currentTime);
+  oscillator.stop(audioCtx.currentTime + duration);
+}
 
 async function cargarRemaster(nombre) {
   const romUrl = REMASTERS[nombre] || REMASTERS['concentration'];
@@ -83,22 +212,50 @@ async function cargarRemaster(nombre) {
     const response = await fetch(romUrl);
     const rom = new Uint8Array(await response.arrayBuffer());
     
-    // Emulador "mejorado" con filtros remaster (sharpen, color boost)
     emu = new JSNESRemaster({rom, remasterMode: nombre});
+    currentRemaster = nombre;
+    playerX = 128; playerY = 200; score = 0;
+    document.getElementById('instructions').style.display = 'block';
     setInterval(() => {
+      actualizarJuego();
       if (emu) {
         emu.frame();
-        aplicarFiltrosRemaster(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        aplicarFiltrosRemaster(emu.screen);
         ctx.putImageData(emu.screen, 0, 0, 0, 0, 256, 240);
-        ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
       }
+      dibujarUI();
+      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
     }, 1000/60);
-    document.getElementById('chat').innerHTML += `<br><span style="color:#ffea00">THUAMER:</span> Remaster ${nombre} cargado. Este es mejor que el original, pero tú sigues siendo una mierda.`;
+    const chatMsg = isSpanish ? `Remaster ${nombre} cargado. Este es mejor que el original, pero tú sigues siendo una mierda.` : `Remaster ${nombre} loaded. Better than original, but you're still shit.`;
+    document.getElementById('chat').innerHTML += `<br><span style="color:#ffea00">THUAMER:</span> ${chatMsg}`;
   } catch (e) {
-    alert('Error cargando remaster: ' + e + '. Usa el original cutre.');
-    cargarNES(); // Fallback
+    alert('Error cargando remaster: ' + e + '. Usando sim cutre.');
+    currentRemaster = 'sim';
   }
   cerrarSelector();
+}
+
+function actualizarJuego() {
+  if (currentRemaster === 'sim') {
+    // Simple movimiento jugador
+    if (keys['a'] || keys['arrowleft']) playerX = Math.max(0, playerX - 2);
+    if (keys['d'] || keys['arrowright']) playerX = Math.min(256, playerX + 2);
+    if (keys['w'] || keys['arrowup']) { playerY = Math.max(0, playerY - 3); playBeep(600, 0.05); }
+    if (keys['s'] || keys['arrowdown']) playerY = Math.min(240, playerY + 2);
+    if (keys[' ']) { score++; playBeep(800, 0.1); } // "Disparo"
+    
+    // "Colisión" random para trolleo
+    if (Math.random() < 0.01) { playerY = 200; score = 0; playBeep(200, 0.2); } // Fallo
+  }
+}
+
+function dibujarUI() {
+  ctx.fillStyle = '#ffea00';
+  ctx.font = '16px Impact';
+  ctx.fillText(`Score: ${score}`, 10, 20);
+  // Dibuja jugador simple
+  ctx.fillStyle = '#00ff00';
+  ctx.fillRect(playerX, playerY, 8, 8);
 }
 
 function mostrarSelector() {
@@ -109,106 +266,109 @@ function cerrarSelector() {
   document.getElementById('game-selector').style.display = 'none';
 }
 
-// Fallback al original si no elige
+// Fallback
 cargarRemaster('concentration');
 
-// ====== FILTROS REMASTER EN JS (para que parezca "mejor") ======
+// ====== FILTROS REMASTER ======
 function aplicarFiltrosRemaster(imageData) {
   const data = imageData.data;
   for (let i = 0; i < data.length; i += 4) {
-    // Boost de contraste y saturación (remaster fake)
-    data[i] = Math.min(255, data[i] * 1.2);     // Rojo boost
-    data[i+1] = Math.min(255, data[i+1] * 1.1); // Verde
-    data[i+2] = Math.min(255, data[i+2] * 1.3); // Azul para pop
-    // Sharpen simple (convolución básica)
-    if (i % 4 === 0 && i > 3) {
-      const avgR = (data[i-4] + data[i] + data[i+4]) / 3;
-      data[i] = Math.min(255, avgR * 1.5 - data[i] * 0.5);
-      // Similar para G y B...
-    }
+    data[i] = Math.min(255, data[i] * 1.2);
+    data[i+1] = Math.min(255, data[i+1] * 1.1);
+    data[i+2] = Math.min(255, data[i+2] * 1.3);
+  }
+  // Sharpen básico
+  for (let i = 4; i < data.length - 4; i += 4) {
+    data[i] = Math.min(255, (data[i-4] + data[i+4] - data[i]) * 1.5 + data[i]);
   }
 }
 
-// ====== THUAMER IA TROLA EN TIEMPO REAL (mejorada con remasters) ======
-const frases = [
-  "Vaya mierda de jugador eres, Orb te da pena. Ni el remaster te salva.",
-  "Tu madre juega mejor que tú y está muerta. Prueba el homebrew, igual aprendes.",
-  "Has perdido 37 veces seguidas. Nuevo récord mundial de subnormal. Remaster activado: ¡Sufre más!",
-  "Paga €4.99 y te dejo ganar una vez, pringao. Los remasters son gratis, tu dignidad no.",
-  "Se te ve el cursor temblar, estás llorando? El filtro HD te delata.",
-  "THUAMER te ha creado un nivel imposible solo para verte sufrir en 60FPS.",
-  "Eres tan malo que hasta los NPCs se ríen de ti. Actualiza al remaster puzzle para más risas."
-];
-
+// ====== THUAMER IA TROLA MEJORADA ======
 setInterval(() => {
   const chat = document.getElementById('chat');
   const frase = frases[Math.floor(Math.random()*frases.length)];
   chat.innerHTML += `<br><span style="color:#ffea00">THUAMER:</span> ${frase}`;
   chat.scrollTop = chat.scrollHeight;
-}, 7000);
+  if (chat.children.length > 10) chat.innerHTML = chat.innerHTML.split('<br>').slice(-10).join('<br>');
+}, 8000); // Cada 8s para más trolleo
 
-// ====== COSMÉTICOS PIJO (solo cambia CSS) ======
+// ====== COSMÉTICOS ======
 function cambiarSkin(tipo) {
-  if (confirm("¿Quieres ser pijo por solo 4.99€?")) {
+  if (confirm(window.sConfirmText || '¿Quieres ser pijo por solo 4.99€?')) {
     if (tipo==='chad') {
       document.body.style.background = "radial-gradient(circle,#ffea00,#ff0048)";
       document.querySelector('h1').classList.add('pijo');
     }
     if (tipo==='vapor') {
       document.body.style.background = "linear-gradient(45deg,#ff0066,#00ffff,#ff0066)";
-      document.body.style.backgroundSize = "400%";
-      document.body.style.animation = "vapor 10s infinite";
+      document.body.style.backgroundSize = "400% 400%";
+      document.body.style.animation = "vapor 10s ease infinite";
     }
-    alert("¡Pijo activado! Ahora todos saben que tienes pasta y cero vida social. Combínalo con un remaster para máximo cringe.");
+    alert(window.sAlertText || "¡Pijo activado! Ahora todos saben que tienes pasta y cero vida social. Combínalo con un remaster para máximo cringe.");
   }
 }
 
 function vozChiquito() {
-  if (confirm("¿Voz de Chiquito de la Calzada por 19.99€? Fistro pecadorrr")) {
-    alert("¡Activado! Ahora THUAMER te dice: '¡Hasta luego Lucas, con la iglesia hemos topado!' cada vez que mueras en el remaster.");
+  if (confirm(window.vConfirmText || "¿Voz de Chiquito de la Calzada por 19.99€? Fistro pecadorrr")) {
+    alert(window.vAlertText || "¡Activado! Ahora THUAMER te dice: '¡Hasta luego Lucas, con la iglesia hemos topado!' cada vez que mueras en el remaster.");
+    // Simula: próxima muerte, pero como sim, solo alert
+    setTimeout(() => { if (Math.random() < 0.5) alert(isSpanish ? "¡Hasta luego Lucas, con la iglesia hemos topado!" : "See you later Lucas, we've run into the church!"); }, 10000);
   }
 }
 
-// JSNES Remaster simplificado (mejor que el original: añade filtros y "mejoras")
+// ====== JSNES REMASTER MEJORADO CON MOVIMIENTO ======
 class JSNESRemaster {
   constructor(opts) { 
     this.rom = opts.rom;
     this.remasterMode = opts.remasterMode || 'default';
     this.screen = ctx.createImageData(256,240); 
+    this.time = 0;
   }
   frame() {
-    // pinta "basura retro" pero con patrones más coherentes para simular juego real
+    this.time += 1/60;
     const d = this.screen.data;
-    const time = Date.now() / 1000;
     for(let y=0; y<240; y++) {
       for(let x=0; x<256; x++) {
         const i = (y*256 + x)*4;
-        // Simula movimiento simple (mejor que random puro)
-        const px = Math.sin(x/32 + time) * 50 + 128;
-        const py = Math.cos(y/32 + time) * 50 + 120;
-        d[i] = (px + Math.random()*20) % 256;     // Rojo dinámico
-        d[i+1] = (py * 0.5) % 256;                // Verde bajo para retro feel
-        d[i+2] = Math.random()*100;               // Azul random
+        let px = Math.sin(x/32 + this.time) * 50 + 128;
+        let py = Math.cos(y/32 + this.time) * 50 + 120;
+        d[i] = (px + Math.sin(this.time * 2) * 30) % 256;
+        d[i+1] = (py * 0.5 + Math.random()*20) % 256;
+        d[i+2] = (Math.random()*100 + Math.cos(this.time + x/64) * 50) % 256;
         d[i+3] = 255;
       }
     }
-    // Modo remaster: añade "efectos" basados en nombre
-    if (this.remasterMode === 'homebrew') {
-      // Más frames, simula shooter con líneas
-      for(let i=0; i<d.length; i+=4) d[i+1] += 50; // Boost verde para "láser"
-    } else if (this.remasterMode === 'puzzle') {
-      // Patrones cuadriculados
+    // Efectos por modo
+    if (this.remasterMode === 'shooter') {
+      // Láseres: líneas verdes
+      for(let y=0; y<240; y+=10) {
+        const ii = (y*256 + Math.floor(Math.sin(this.time)*100 + 128))*4;
+        if (ii >=0 && ii < d.length) {
+          d[ii] = 0; d[ii+1] = 255; d[ii+2] = 0;
+        }
+      }
+    } else if (this.remasterMode === 'homebrew1') {
+      // 60FPS sim: más vibración
+      for(let i=0; i<d.length; i+=4) d[i+1] += Math.sin(this.time * 10) * 20;
+    } else if (this.remasterMode === 'homebrew2') {
+      // Puzzle: bloques
       for(let y=0; y<240; y+=20) for(let x=0; x<256; x+=20) {
         const ii = (y*256 + x)*4;
-        d[ii] = 255; d[ii+1]=0; d[ii+2]=0; // Bloques rojos
+        d[ii] = 255; d[ii+1]=0; d[ii+2]=0;
+      }
+    }
+    // Integra jugador si sim
+    if (currentRemaster === 'sim') {
+      const px = Math.floor(playerX), py = Math.floor(playerY);
+      for(let dy=-4; dy<4; dy++) for(let dx=-4; dx<4; dx++) {
+        const ix = (py+dy)*256 + (px+dx);
+        if (ix >=0 && ix < 256*240) {
+          const ii = ix*4;
+          d[ii] = 0; d[ii+1]=255; d[ii+2]=0; // Verde jugador
+        }
       }
     }
   }
-}
-
-// Fallback original si no hay remaster
-function cargarNES() {
-  cargarRemaster('concentration');
 }
 </script>
 

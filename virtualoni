@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>THUAMER CONSOLÆ - 100% GRATIS FOREVER (REMÁSTERS INCLUIDOS)</title>
-  <meta name="description" content="La única consola que te insulta mientras juegas. Ahora con remasters que humillan a los originales.">
+  <title>THUAMER CONSOLÆ ULTIMATE - 100% GRATIS FOREVER (REMÁSTERS + IA TROLLEA)</title>
+  <meta name="description" content="La ÚNICA consola que te INSULTA, te HUMILLA y te hace RAGE QUIT. Remasters que mean en los originales + IA que conoce tu nombre.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
@@ -11,251 +11,930 @@
       --color-trola: #ff0048;
       --skin: default;
     }
-    body,html{margin:0;padding:0;height:100%;background:#000;color:#fff;font-family:Impact,haettenschweiler,arial black,sans-serif;overflow:hidden;background:radial-gradient(circle at center,#1a0033,#000);}
-    #screen{border:20px solid #333;border-image:url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23ffea00%22/><text x=%2250%22 y=%2260%22 font-size=%2280%22 text-anchor=%22middle%22 fill=%22black%22>TH</text></svg>') 20 round;border-radius:30px;box-shadow:0 0 100px #ffea00aa, inset 0 0 50px #000;}
-    canvas{background:#000;display:block;margin:40px auto;max-width:95vw;box-shadow:0 0 80px #ff0048;}
-    #overlay{position:absolute;top:10px;left:10px;right:10px;pointer-events:none;font-size:2.5vw;color:var(--color-pijo);text-shadow:3px 3px 0 #000,-3px -3px 0 #ff0048;}
-    marquee{background:rgba(255,0,72,0.8);padding:15px;font-size:5vw;color:#ffea00;text-shadow:3px 3px #000;}
-    button{background:var(--color-pijo);color:#000;border:none;padding:20px 40px;font-size:4vw;font-weight:bold;margin:10px;cursor:pointer;transform:skew(-10deg);box-shadow:5px 5px 0 #000;}
-    button:hover{background:#fff;}
-    .pijo{background:linear-gradient(45deg,gold,#ffea00,#ff77ff,#00ffff); -webkit-background-clip:text;background-clip:text;color:transparent;font-size:6vw !important;}
-    #chat{position:fixed;bottom:10px;left:10px;right:10px;background:rgba(0,0,0,0.8);padding:15px;max-height:200px;overflow-y:auto;font-size:3.5vw;}
-    #legal-warning{position:fixed;top:0;left:0;right:0;background:rgba(255,0,72,0.9);color:#ffea00;padding:10px;text-align:center;font-size:3vw;z-index:1000;border-bottom:3px solid #ffea00;}
-    #game-selector{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);padding:20px;border:2px solid #ffea00;text-align:center;display:none;}
-    #game-selector button{font-size:3vw;padding:15px;margin:5px;}
-    @keyframes vapor {0%{background-position:0% 50%;}50%{background-position:100% 50%;}100%{background-position:0% 50%;}}
-    #instructions{position:absolute;top:10px;left:10px;background:rgba(0,0,0,0.7);padding:10px;font-size:2vw;max-width:200px;display:none;}
+    
+    @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+    
+    * { box-sizing: border-box; }
+    body,html {
+      margin:0; padding:0; height:100%; 
+      background: linear-gradient(-45deg, #1a0033, #000011, #330066, #000);
+      background-size: 400% 400%;
+      animation: gradientShift 8s ease infinite;
+      color:#fff;
+      font-family: 'Press Start 2P', Impact, 'Arial Black', sans-serif;
+      overflow:hidden;
+    }
+    
+    @keyframes gradientShift {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    
+    @keyframes glitch {
+      0% { transform: translate(0); }
+      20% { transform: translate(-2px, 2px); }
+      40% { transform: translate(-2px, -2px); }
+      60% { transform: translate(2px, 2px); }
+      80% { transform: translate(2px, -2px); }
+      100% { transform: translate(0); }
+    }
+    
+    @keyframes vapor {
+      0%{background-position:0% 50%;}
+      50%{background-position:100% 50%;}
+      100%{background-position:0% 50%;}
+    }
+    
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
+    
+    .glitch { animation: glitch 0.3s linear infinite; }
+    .pijo {
+      background: linear-gradient(45deg,gold,#ffea00,#ff77ff,#00ffff,#ff0048);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      font-size: 6vw !important;
+      animation: pulse 2s infinite;
+    }
+    
+    #screen {
+      border: 20px solid #333;
+      border-image: url('data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22100%22 height=%22100%22><rect width=%22100%22 height=%22100%22 fill=%22%23ffea00%22/><text x=%2250%22 y=%2260%22 font-size=%2280%22 text-anchor=%22middle%22 fill=%22black%22>TH</text></svg>') 20 round;
+      border-radius: 30px;
+      box-shadow: 
+        0 0 100px #ffea00aa, 
+        inset 0 0 50px #000,
+        0 0 200px #ff0048;
+      display: block;
+      margin: 40px auto;
+      max-width: 95vw;
+      background: #000;
+    }
+    
+    #overlay {
+      position: absolute;
+      top: 10px; left: 10px; right: 10px;
+      pointer-events: none;
+      font-size: 2.5vw;
+      color: var(--color-pijo);
+      text-shadow: 3px 3px 0 #000, -3px -3px 0 #ff0048;
+      z-index: 100;
+    }
+    
+    marquee {
+      background: rgba(255,0,72,0.9);
+      padding: 15px;
+      font-size: 4vw;
+      color: #ffea00;
+      text-shadow: 3px 3px #000;
+      border-bottom: 3px solid #ffea00;
+    }
+    
+    button {
+      background: var(--color-pijo);
+      color: #000;
+      border: none;
+      padding: 15px 30px;
+      font-size: 3vw;
+      font-weight: bold;
+      margin: 8px;
+      cursor: pointer;
+      transform: skew(-10deg);
+      box-shadow: 5px 5px 0 #000;
+      font-family: inherit;
+      border-radius: 10px;
+      transition: all 0.2s;
+    }
+    
+    button:hover {
+      background: #fff;
+      transform: skew(-10deg) scale(1.05);
+      box-shadow: 8px 8px 0 #000;
+    }
+    
+    button:disabled {
+      background: #666;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    #chat {
+      position: fixed;
+      bottom: 10px; left: 10px; right: 10px;
+      background: rgba(0,0,0,0.9);
+      padding: 15px;
+      max-height: 250px;
+      overflow-y: auto;
+      font-size: 2.5vw;
+      border: 2px solid #ffea00;
+      border-radius: 15px;
+      backdrop-filter: blur(10px);
+    }
+    
+    #legal-warning {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      background: rgba(255,0,72,0.95);
+      color: #ffea00;
+      padding: 10px;
+      text-align: center;
+      font-size: 2.5vw;
+      z-index: 1000;
+      border-bottom: 3px solid #ffea00;
+      animation: glitch 3s infinite;
+    }
+    
+    #game-selector {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(0,0,0,0.95);
+      padding: 30px;
+      border: 3px solid #ffea00;
+      border-radius: 20px;
+      text-align: center;
+      display: none;
+      max-width: 90vw;
+      box-shadow: 0 0 50px #ffea00;
+    }
+    
+    #game-selector button { font-size: 2.5vw; padding: 20px; margin: 10px; }
+    
+    #instructions {
+      position: absolute;
+      top: 10px; left: 10px;
+      background: rgba(0,0,0,0.8);
+      padding: 15px;
+      font-size: 1.8vw;
+      max-width: 250px;
+      border: 2px solid #00ff00;
+      border-radius: 10px;
+      display: none;
+    }
+    
+    #stats-panel {
+      position: absolute;
+      top: 10px; right: 10px;
+      background: rgba(0,0,0,0.9);
+      padding: 15px;
+      border: 2px solid #ffea00;
+      border-radius: 15px;
+      font-size: 1.5vw;
+      max-width: 300px;
+      text-align: left;
+    }
+    
+    #achievements {
+      position: fixed;
+      top: 100px; right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 999;
+    }
+    
+    .achievement {
+      background: linear-gradient(45deg, #ffea00, #ff0048);
+      color: #000;
+      padding: 15px 20px;
+      border-radius: 10px;
+      font-weight: bold;
+      font-size: 1.2vw;
+      box-shadow: 0 0 20px #ffea00;
+      animation: achievementPop 0.5s ease-out;
+      transform: scale(0);
+      max-width: 300px;
+    }
+    
+    @keyframes achievementPop {
+      0% { transform: scale(0) rotate(-180deg); opacity: 0; }
+      50% { transform: scale(1.2) rotate(20deg); opacity: 1; }
+      100% { transform: scale(1) rotate(0deg); opacity: 1; }
+    }
+    
+    .particles {
+      position: absolute;
+      pointer-events: none;
+      z-index: 500;
+    }
+    
+    .particle {
+      position: absolute;
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    
+    #loading-screen {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 2000;
+      color: #ffea00;
+      font-size: 3vw;
+    }
+    
+    .spinner {
+      width: 50px;
+      height: 50px;
+      border: 5px solid #ffea00;
+      border-top: 5px solid transparent;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+    
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
 
+<!-- Loading Screen -->
+<div id="loading-screen">
+  <div class="spinner"></div>
+  <p>🔥 CARGANDO REMÁSTERS HUMILLANTES...</p>
+  <p style="font-size: 1.5vw; margin-top: 20px;">THUAMER te está analizando... 😈</p>
+</div>
+
 <div id="legal-warning">
-  <strong>AVISO LEGAL (ESPAÑA):</strong> En España esto es 100% legal porque la ley te considera un pirata de serie y te cobra el canon digital por todo. ¡Gracias SGAE! En otros países, consulta tu legislación local antes de ser un rebelde. THUAMER no se hace responsable si te meten en el trullo.
+  <strong>⚠️ AVISO LEGAL ULTIMATE (ESPAÑA):</strong> 100% LEGAL porque la SGAE ya te robó con el canon digital. THUAMER no se hace responsable si rage quitas y rompes tu teclado.
 </div>
 
 <canvas id="screen" width="1280" height="960"></canvas>
 
+<!-- Stats Panel -->
+<div id="stats-panel">
+  <h3>📊 STATS DE PRINGAO</h3>
+  <div id="stats-content">
+    <p>💀 Muertes: <span id="deaths">0</span></p>
+    <p>🎯 Score: <span id="current-score">0</span></p>
+    <p>🏆 Mejor Score: <span id="best-score">0</span></p>
+    <p>😭 Rage Quits: <span id="rage-quits">0</span></p>
+    <p>🤡 Ratio Pringao: <span id="pringo-ratio">0%</span></p>
+  </div>
+</div>
+
 <div id="overlay">
   <div style="text-align:center">
-    <h1 id="title" style="font-size:10vw;margin:0;text-shadow:5px 5px #ff0048">THUAMER CONSOLÆ</h1>
-    <p id="subtitle" style="font-size:4vw;margin:10px">Todo gratis forever · Remasters que mean en los originales · cosméticos solo pa pijos</p>
+    <h1 id="title" class="glitch">THUAMER CONSOLÆ ULTIMATE</h1>
+    <p id="subtitle">Remasters que HUMILLAN · IA que CONOCE tu nombre · Logros para PRINGAOS</p>
+    <p id="player-name" style="font-size: 2vw; margin: 10px 0;"></p>
   </div>
 </div>
 
 <div id="instructions">
-  Usa WASD para mover, ESPACIO para saltar/disparar. ¡No falles, pringao!
+  🎮 WASD: Mover | ESPACIO: Saltar/Disparar | ENTER: Pausa<br>
+  💡 Tip: No falles, <span id="name-instructions"></span>...
 </div>
 
-<div style="position:absolute;top:10px;right:10px;text-align:right;">
-  <button onclick="mostrarSelector()">REMÁSTERS GRATIS</button><br>
-  <button onclick="cambiarSkin('chad')">CHAD MODE €4.99</button><br>
-  <button onclick="cambiarSkin('vapor')">VAPORWAVE €9.99</button><br>
-  <button onclick="vozChiquito()">VOZ CHIQUITO €19.99</button>
+<!-- Controls Panel -->
+<div style="position:absolute; top:10px; right:10px; text-align:right; z-index: 200;">
+  <button onclick="mostrarSelector()">🚀 REMÁSTERS GRATIS</button><br>
+  <button onclick="cambiarSkin('chad')">👑 CHAD MODE €4.99</button><br>
+  <button onclick="cambiarSkin('vapor')">🌈 VAPORWAVE €9.99</button><br>
+  <button onclick="vozChiquito()">😂 VOZ CHIQUITO €19.99</button><br>
+  <button onclick="resetStats()">🔄 RESET STATS (Cobarde)</button>
 </div>
 
 <div id="game-selector">
-  <h2 id="selector-title" style="color:#ffea00;">Elige tu Remaster Humillante:</h2>
-  <button onclick="cargarRemaster('concentration')">Concentration Room Remaster (HD + Insultos Extra)</button><br>
-  <button onclick="cargarRemaster('homebrew1')">Micro M8n Remaster (60FPS + Efectos Pijo)</button><br>
-  <button onclick="cargarRemaster('homebrew2')">Liebrary Puzzle Remaster (IA Anti-Pringao)</button><br>
-  <button onclick="cargarRemaster('shooter')">Homebrew Shooter Remaster (Láseres Neón)</button><br>
-  <button onclick="cerrarSelector()">Cerrar (Cobarde)</button>
+  <h2 id="selector-title">🎮 Elige tu Remaster HUMILLANTE:</h2>
+  <button onclick="cargarRemaster('concentration')">🧠 Concentration Room Remaster (HD + Insultos IA)</button><br>
+  <button onclick="cargarRemaster('shooter')">🔫 Neo Shooter Remaster (Láseres + Partículas)</button><br>
+  <button onclick="cargarRemaster('platformer')">🏃‍♂️ Platform Hell Remaster (60FPS + Trolls)</button><br>
+  <button onclick="cargarRemaster('puzzle')">🧩 Puzzle Master Remaster (IA Anti-Pringao)</button><br>
+  <button onclick="mostrarStats()">📊 VER MIS HUMILLACIONES</button><br>
+  <button onclick="cerrarSelector()">❌ Cerrar (Rage Quit)</button>
 </div>
 
-<div id="chat">THUAMER: Buenas, pringao... ¿ya has perdido otra vez? Prueba un remaster, a ver si mejoras.</div>
+<div id="chat">🤖 THUAMER: Inicializando sistema de trolleo...</div>
 
 <marquee id="marquee" behavior="scroll" direction="left">
-  NES · SNES · GBA · ARCADE · PS1 · REMÁSTERS QUE HACEN LLORAR A LOS ORIGINALES · THUAMER TE ESTÁ TROLEANDA 24/7 · 100% GRATIS · SOLO LOS PIJOS PAGAN POR BRILLAR
+  🔥 NES · SNES · GBA · ARCADE · PS1 · REMÁSTERS QUE HACEN LLORAR · IA QUE CONOCE TU NOMBRE · 100% GRATIS · LOGROS PARA PRINGAOS · THUAMER TE ESTÁ OBSERVANDO 👁️
 </marquee>
 
+<!-- Achievements Container -->
+<div id="achievements"></div>
+
+<!-- Particles Container -->
+<div id="particles"></div>
+
 <script>
-// ====== AUTODETECTAR IDIOMA ======
+// ====== SISTEMA DE ESTADÍSTICAS PERSISTENTES ======
+class StatsManager {
+  constructor() {
+    this.stats = JSON.parse(localStorage.getItem('thuamerStats') || '{}');
+    this.init();
+  }
+  
+  init() {
+    if (!this.stats.sessions) this.stats.sessions = 0;
+    if (!this.stats.deaths) this.stats.deaths = 0;
+    if (!this.stats.rageQuits) this.stats.rageQuits = 0;
+    if (!this.stats.bestScore) this.stats.bestScore = 0;
+    if (!this.stats.achievements) this.stats.achievements = {};
+    this.stats.sessions++;
+    this.guardar();
+    this.actualizarUI();
+  }
+  
+  trackDeath() {
+    this.stats.deaths++;
+    this.guardar();
+    this.actualizarUI();
+    this.checkAchievements();
+    ThuamerAI.insultOnDeath();
+  }
+  
+  trackScore(score) {
+    if (score > this.stats.bestScore) {
+      this.stats.bestScore = score;
+      this.guardar();
+      this.actualizarUI();
+      this.checkAchievements();
+    }
+  }
+  
+  rageQuit() {
+    this.stats.rageQuits++;
+    this.guardar();
+    this.actualizarUI();
+    this.checkAchievements();
+  }
+  
+  guardar() {
+    localStorage.setItem('thuamerStats', JSON.stringify(this.stats));
+  }
+  
+  actualizarUI() {
+    document.getElementById('deaths').textContent = this.stats.deaths;
+    document.getElementById('current-score').textContent = score;
+    document.getElementById('best-score').textContent = this.stats.bestScore;
+    document.getElementById('rage-quits').textContent = this.stats.rageQuits;
+    const ratio = this.stats.deaths > 0 ? ((this.stats.rageQuits / this.stats.deaths) * 100).toFixed(1) : 0;
+    document.getElementById('pringo-ratio').textContent = ratio + '%';
+  }
+  
+  checkAchievements() {
+    const achievements = {
+      'PRINGAO_INICIANTE': { condition: () => this.stats.deaths >= 5, emoji: '🥉' },
+      'PRINGAO_CERTIFICADO': { condition: () => this.stats.deaths >= 20, emoji: '🥈' },
+      'PRINGAO_LEGENDARIO': { condition: () => this.stats.deaths >= 50, emoji: '🥇' },
+      'RAGE_MASTER': { condition: () => this.stats.rageQuits >= 10, emoji: '😡' },
+      'NOOB_100': { condition: () => this.stats.deaths >= 100, emoji: '🤡' }
+    };
+    
+    Object.entries(achievements).forEach(([id, ach]) => {
+      if (!this.stats.achievements[id] && ach.condition()) {
+        this.stats.achievements[id] = true;
+        this.guardar();
+        mostrarLogro(ach.emoji + ' ' + id.toUpperCase(), 
+          isSpanish ? `¡Felicidades ${playerName}! Nuevo logro desbloqueado.` : 
+          `Congratulations ${playerName}! New achievement unlocked.`);
+      }
+    });
+  }
+}
+
+// ====== SISTEMA DE PARTÍCULAS ÉPICO ======
+class ParticleSystem {
+  constructor() {
+    this.particles = [];
+    this.container = document.getElementById('particles');
+  }
+  
+  crearExplosión(x, y, count = 20, colors = ['#ffea00', '#ff0048', '#00ffff']) {
+    for (let i = 0; i < count; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'particle';
+      particle.style.left = x + 'px';
+      particle.style.top = y + 'px';
+      particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      
+      const angle = (Math.PI * 2 * i) / count;
+      const velocity = 3 + Math.random() * 5;
+      
+      particle.style.setProperty('--vx', Math.cos(angle) * velocity + 'px');
+      particle.style.setProperty('--vy', Math.sin(angle) * velocity + 'px');
+      
+      const life = 30 + Math.random() * 30;
+      particle.style.animation = `particleFly ${life * 0.05}s linear forwards`;
+      
+      this.container.appendChild(particle);
+      this.particles.push(particle);
+      
+      setTimeout(() => {
+        particle.remove();
+        const index = this.particles.indexOf(particle);
+        if (index > -1) this.particles.splice(index, 1);
+      }, life * 50);
+    }
+  }
+}
+
+// ====== IA THUAMER MEJORADA ======
+class ThuamerAI {
+  constructor() {
+    this.nombre = playerName;
+    this.nivelTrol = 1;
+    this.ultimoInsulto = 0;
+  }
+  
+  static insultOnDeath() {
+    const insults = isSpanish ? [
+      `¡${playerName}, hasta tu abuela juega mejor y tiene 92 años! 💀`,
+      `Muerte #${statsManager.stats.deaths}. ${playerName}, eres un caso perdido...`,
+      `¡BOOM! ${playerName} explota de nuevo. ¿Quieres tutorial? 😂`,
+      `Tu K/D ratio es peor que el de un bot. Sigue intentándolo, ${playerName}`
+    ] : [
+      `${playerName}, even your grandma plays better and she's 92! 💀`,
+      `Death #${statsManager.stats.deaths}. ${playerName}, you're hopeless...`,
+      `BOOM! ${playerName} explodes again. Want a tutorial? 😂`,
+      `Your K/D ratio is worse than a bot's. Keep trying, ${playerName}`
+    ];
+    
+    const insult = insults[Math.floor(Math.random() * insults.length)];
+    addChatMessage('💀 THUAMER:', insult);
+  }
+  
+  generarInsultoPersonalizado() {
+    const templatesES = [
+      `¡${this.nombre}, eres más inútil que un remaster de E.T.!`,
+      `${this.nombre}, tu madre te deshereda viendo cómo juegas`,
+      `¡${this.nombre}! Hasta los NPCs se ríen de tus saltos`,
+      `${this.nombre}, nuevo récord: ${statsManager.stats.deaths} muertes`,
+      `¡${this.nombre}, paga €4.99 y te dejo ganar UNA vez!`
+    ];
+    
+    const templatesEN = [
+      `${this.nombre}, you're more useless than an E.T. remaster!`,
+      `${this.nombre}, your mum disinherits you watching you play`,
+      `${this.nombre}! Even NPCs laugh at your jumps`,
+      `${this.nombre}, new record: ${statsManager.stats.deaths} deaths`,
+      `${this.nombre}, pay €4.99 and I'll let you win ONCE!`
+    ];
+    
+    const templates = isSpanish ? templatesES : templatesEN;
+    return templates[Math.floor(Math.random() * templates.length)];
+  }
+}
+
+// ====== VARIABLES GLOBALES ======
 let isSpanish = true;
+let playerName = 'Pringao69';
+let score = 0;
+let currentRemaster = null;
+let keys = {};
+let playerX = 128, playerY = 200;
+let gameLoop = null;
+let audioCtx = null;
+let particleSystem = null;
+let thuamerAI = null;
+let statsManager = null;
+
+// ====== CSS PARA PARTÍCULAS ======
+const style = document.createElement('style');
+style.textContent = `
+  @keyframes particleFly {
+    0% {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+    100% {
+      opacity: 0;
+      transform: translate(var(--vx), var(--vy)) scale(0);
+    }
+  }
+`;
+document.head.appendChild(style);
+
+// ====== DETECTAR IDIOMA Y NOMBRE ======
 function detectarIdioma() {
   const lang = navigator.language || navigator.userLanguage;
   isSpanish = lang.startsWith('es');
-  document.documentElement.lang = isSpanish ? 'es' : 'en';
   
-  // Textos en español por default, switch a inglés
-  const textsES = {
-    title: 'THUAMER CONSOLÆ',
-    subtitle: 'Todo gratis forever · Remasters que mean en los originales · cosméticos solo pa pijos',
-    selectorTitle: 'Elige tu Remaster Humillante:',
-    legal: 'AVISO LEGAL (ESPAÑA): En España esto es 100% legal porque la ley te considera un pirata de serie y te cobra el canon digital por todo. ¡Gracias SGAE! En otros países, consulta tu legislación local antes de ser un rebelde. THUAMER no se hace responsable si te meten en el trullo.',
-    chatInit: 'THUAMER: Buenas, pringao... ¿ya has perdido otra vez? Prueba un remaster, a ver si mejoras.',
-    instructions: 'Usa WASD para mover, ESPACIO para saltar/disparar. ¡No falles, pringao!',
-    marquee: 'NES · SNES · GBA · ARCADE · PS1 · REMÁSTERS QUE HACEN LLORAR A LOS ORIGINALES · THUAMER TE ESTÁ TROLEANDA 24/7 · 100% GRATIS · SOLO LOS PIJOS PAGAN POR BRILLAR',
-    concentration: 'Concentration Room Remaster (HD + Insultos Extra)',
-    homebrew1: 'Micro M8n Remaster (60FPS + Efectos Pijo)',
-    homebrew2: 'Liebrary Puzzle Remaster (IA Anti-Pringao)',
-    shooter: 'Homebrew Shooter Remaster (Láseres Neón)',
-    cerrar: 'Cerrar (Cobarde)',
-    vozConfirm: '¿Voz de Chiquito de la Calzada por 19.99€? Fistro pecadorrr',
-    vozAlert: '¡Activado! Ahora THUAMER te dice: \'¡Hasta luego Lucas, con la iglesia hemos topado!\' cada vez que mueras en el remaster.',
-    skinConfirm: '¿Quieres ser pijo por solo 4.99€?',
-    skinAlert: '¡Pijo activado! Ahora todos saben que tienes pasta y cero vida social. Combínalo con un remaster para máximo cringe.'
-  };
+  // Pedir nombre personalizado
+  playerName = prompt(
+    isSpanish ? 
+    '😈 ¿Cómo te llamamos, pringao? (Tu nombre será usado para insultarte)' : 
+    '😈 What should we call you, loser? (Your name will be used to mock you)',
+    localStorage.getItem('thuamerPlayerName') || 'Pringao69'
+  ) || 'Pringao69';
   
-  const textsEN = {
-    title: 'THUAMER CONSOLE',
-    subtitle: 'All free forever · Remasters that piss on the originals · cosmetics only for posh twats',
-    selectorTitle: 'Pick Your Humiliating Remaster:',
-    legal: 'LEGAL NOTICE (SPAIN): In Spain this is 100% legal because the law considers you a pirate anyway and charges digital canon on everything. Thanks SGAE! In other countries, check your local laws before rebelling. THUAMER not responsible if you end up in jail.',
-    chatInit: 'THUAMER: Hey, loser... lost again? Try a remaster, see if you improve.',
-    instructions: 'Use WASD to move, SPACE to jump/shoot. Don\'t fail, wanker!',
-    marquee: 'NES · SNES · GBA · ARCADE · PS1 · REMASTERS THAT MAKE ORIGINALS CRY · THUAMER IS TROLLING YOU 24/7 · 100% FREE · ONLY POSH PAY TO SHINE',
-    concentration: 'Concentration Room Remaster (HD + Extra Insults)',
-    homebrew1: 'Micro M8n Remaster (60FPS + Posh Effects)',
-    homebrew2: 'Liebrary Puzzle Remaster (Anti-Loser AI)',
-    shooter: 'Homebrew Shooter Remaster (Neon Lasers)',
-    cerrar: 'Close (Coward)',
-    vozConfirm: 'Chiquito de la Calzada voice for 19.99€? Sinful trickster!',
-    vozAlert: 'Activated! Now THUAMER says: \'See you later Lucas, we\'ve run into the church!\' every time you die in the remaster.',
-    skinConfirm: 'Wanna be posh for just 4.99€?',
-    skinAlert: 'Posh activated! Now everyone knows you have cash and zero social life. Combine with a remaster for max cringe.'
-  };
+  localStorage.setItem('thuamerPlayerName', playerName);
   
+  document.getElementById('player-name').textContent = 
+    isSpanish ? `Jugador: ${playerName} 👋` : `Player: ${playerName} 👋`;
+  document.getElementById('name-instructions').textContent = playerName;
+  
+  // Actualizar textos
   const texts = isSpanish ? textsES : textsEN;
+  Object.keys(texts).forEach(id => {
+    const element = document.getElementById(id);
+    if (element) element.textContent = texts[id];
+  });
   
-  document.getElementById('title').textContent = texts.title;
-  document.getElementById('subtitle').textContent = texts.subtitle;
-  document.getElementById('selector-title').textContent = texts.selectorTitle;
-  document.getElementById('legal-warning').innerHTML = `<strong>LEGAL NOTICE:</strong> ${texts.legal}`;
-  document.getElementById('chat').textContent = texts.chatInit;
-  document.getElementById('instructions').textContent = texts.instructions;
-  document.getElementById('marquee').textContent = texts.marquee;
-  document.querySelectorAll('#game-selector button')[0].textContent = texts.concentration;
-  document.querySelectorAll('#game-selector button')[1].textContent = texts.homebrew1;
-  document.querySelectorAll('#game-selector button')[2].textContent = texts.homebrew2;
-  document.querySelectorAll('#game-selector button')[3].textContent = texts.shooter;
-  document.querySelectorAll('#game-selector button')[4].textContent = texts.cerrar;
-  
-  // Frases también switch
   frases = isSpanish ? frasesES : frasesEN;
-  
-  // Voz confirm etc.
-  window.vConfirmText = texts.vozConfirm;
-  window.vAlertText = texts.vozAlert;
-  window.sConfirmText = texts.skinConfirm;
-  window.sAlertText = texts.skinAlert;
+  inicializarJuego();
 }
-detectarIdioma();
 
-// ====== FRASES EN DOS IDIOMAS ======
-let frases = [];
+// ====== TEXTOS MULTI-IDIOMA ======
+const textsES = {
+  title: 'THUAMER CONSOLÆ ULTIMATE',
+  subtitle: 'Remasters que HUMILLAN · IA que CONOCE tu nombre · Logros para PRINGAOS',
+  selectorTitle: '🎮 Elige tu Remaster HUMILLANTE:',
+  legal: '⚠️ AVISO LEGAL ULTIMATE: 100% LEGAL porque la SGAE ya te robó. THUAMER no se hace responsable si rage quitas.',
+  chatInit: `🤖 THUAMER: ¡Bienvenido ${playerName}! Prepárate para sufrir...`,
+  instructions: '🎮 WASD: Mover | ESPACIO: Saltar/Disparar | ENTER: Pausa',
+  marquee: '🔥 NES·SNES·GBA·ARCADE·PS1·REMÁSTERS QUE LLORAN·IA CONOCE TU NOMBRE·100% GRATIS·LOGROS PRINGAOS'
+};
+
+const textsEN = {
+  title: 'THUAMER CONSOLE ULTIMATE',
+  subtitle: 'Remasters that HUMILIATE · AI knows your name · Achievements for LOSERS',
+  selectorTitle: '🎮 Pick Your HUMILIATING Remaster:',
+  legal: '⚠️ ULTIMATE LEGAL NOTICE: 100% LEGAL. THUAMER not responsible for rage quits.',
+  chatInit: `🤖 THUAMER: Welcome ${playerName}! Prepare to suffer...`,
+  instructions: '🎮 WASD: Move | SPACE: Jump/Shoot | ENTER: Pause',
+  marquee: '🔥 NES·SNES·GBA·ARCADE·PS1·REMASTER TEARS·AI KNOWS YOUR NAME·100% FREE·LOSER ACHIEVEMENTS'
+};
+
+// ====== FRASES INSULTO AVANZADAS ======
 const frasesES = [
-  "Vaya mierda de jugador eres, Orb te da pena. Ni el remaster te salva.",
-  "Tu madre juega mejor que tú y está muerta. Prueba el homebrew, igual aprendes.",
-  "Has perdido 37 veces seguidas. Nuevo récord mundial de subnormal. Remaster activado: ¡Sufre más!",
-  "Paga €4.99 y te dejo ganar una vez, pringao. Los remasters son gratis, tu dignidad no.",
-  "Se te ve el cursor temblar, estás llorando? El filtro HD te delata.",
-  "THUAMER te ha creado un nivel imposible solo para verte sufrir en 60FPS.",
-  "Eres tan malo que hasta los NPCs se ríen de ti. Actualiza al remaster puzzle para más risas.",
-  "¡Fallaste el jump! Tu abuela en el geriátrico salta mejor.",
-  "Paga el canon o te borro la partida, dice la SGAE... ¡Ja!",
-  "En modo inglés? Sigues siendo un loser, mate."
+  `¡${playerName}, eres más inútil que un remaster de E.T.!`,
+  `${playerName}, tu madre te deshereda viendo cómo juegas`,
+  `¡${playerName}! Hasta los NPCs se ríen de tus saltos`,
+  `${playerName}, nuevo récord: ${statsManager ? statsManager.stats.deaths : 0} muertes`,
+  `¡${playerName}, paga €4.99 y te dejo ganar UNA vez!`,
+  `${playerName}, tu cursor tiembla más que tú en examen`,
+  `¡BOOM! ${playerName} explota otra vez. ¿Tutorial? 😂`
 ];
 
 const frasesEN = [
-  "What a shit player you are, Orb pities you. Even the remaster can't save you.",
-  "Your mum plays better than you and she's dead. Try the homebrew, maybe learn something.",
-  "You've lost 37 times in a row. New world record for dumbass. Remaster on: Suffer more!",
-  "Pay €4.99 and I'll let you win once, wanker. Remasters are free, your dignity ain't.",
-  "I see your cursor shaking, you crying? The HD filter exposes you.",
-  "THUAMER made an impossible level just to watch you suffer in 60FPS.",
-  "You're so bad even NPCs laugh at you. Update to puzzle remaster for more laughs.",
-  "Missed the jump! Your nan in the nursing home jumps better.",
-  "Pay the canon or I delete your save, says the SGAE... Ha!",
-  "In English mode? Still a loser, mate."
+  `${playerName}, you're more useless than an E.T. remaster!`,
+  `${playerName}, your mum disinherits you watching you play`,
+  `${playerName}! Even NPCs laugh at your jumps`,
+  `${playerName}, new record: ${statsManager ? statsManager.stats.deaths : 0} deaths`,
+  `${playerName}, pay €4.99 and I'll let you win ONCE!`,
+  `${playerName}, your cursor shakes more than you in exams`,
+  `BOOM! ${playerName} explodes again. Tutorial? 😂`
 ];
 
-// ====== EMULADOR MEJORADO CON INPUTS Y SONIDO ======
-const canvas = document.getElementById('screen');
-const ctx = canvas.getContext('2d');
-ctx.fillStyle = '#000';
-ctx.fillRect(0,0,canvas.width,canvas.height);
+let frases = [];
 
-const REMASTERS = {
-  'concentration': "https://files.catbox.moe/0e5i8k.nes", // Público
-  'homebrew1': "https://example.com/micro_m8n.nes", // Reemplaza con real, e.g. de itch.io
-  'homebrew2': "https://example.com/liebrary.nes", // Placeholder
-  'shooter': "https://archive.org/download/.../shooter.nes" // Ejemplo
-};
+// ====== INICIALIZACIÓN ======
+function inicializarJuego() {
+  // Inicializar sistemas
+  statsManager = new StatsManager();
+  particleSystem = new ParticleSystem();
+  thuamerAI = new ThuamerAI();
+  
+  // Audio
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  
+  // Inputs
+  document.addEventListener('keydown', handleKeyDown);
+  document.addEventListener('keyup', handleKeyUp);
+  
+  // Ocultar loading
+  document.getElementById('loading-screen').style.display = 'none';
+  
+  // Chat inicial
+  addChatMessage('🤖 THUAMER', 
+    isSpanish ? 
+    `¡Bienvenido ${playerName}! Elige un remaster y prepárate para sufrir 😈` :
+    `Welcome ${playerName}! Choose a remaster and prepare to suffer 😈`
+  );
+  
+  // Iniciar chat IA
+  setInterval(() => {
+    if (Math.random() < 0.7) { // 70% chance cada 6s
+      const insulto = thuamerAI.generarInsultoPersonalizado();
+      addChatMessage('😈 THUAMER', insulto);
+    }
+  }, 6000);
+  
+  cargarRemaster('platformer'); // Remaster por defecto
+}
 
-let emu = null;
-let currentRemaster = null;
-let keys = {}; // Para inputs
-let playerX = 128, playerY = 200; // Simple jugador para sim
-let score = 0;
-let audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+// ====== INPUTS MEJORADOS ======
+function handleKeyDown(e) {
+  keys[e.key.toLowerCase()] = true;
+  if (e.key === ' ') {
+    e.preventDefault();
+    if (currentRemaster) disparar();
+  }
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    togglePause();
+  }
+}
 
-// Event listeners para teclas
-document.addEventListener('keydown', (e) => { keys[e.key.toLowerCase()] = true; if (e.key === ' ') e.preventDefault(); });
-document.addEventListener('keyup', (e) => { keys[e.key.toLowerCase()] = false; });
+function handleKeyUp(e) {
+  keys[e.key.toLowerCase()] = false;
+}
 
-// Beep simple
-function playBeep(freq = 440, duration = 0.1) {
+// ====== SISTEMA DE SONIDO MEJORADO ======
+function playBeep(freq = 440, duration = 0.1, type = 'square') {
+  if (!audioCtx) return;
+  
   const oscillator = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
+  
   oscillator.connect(gainNode);
   gainNode.connect(audioCtx.destination);
+  
   oscillator.frequency.value = freq;
+  oscillator.type = type;
+  
   gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
   gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+  
   oscillator.start(audioCtx.currentTime);
   oscillator.stop(audioCtx.currentTime + duration);
 }
 
-async function cargarRemaster(nombre) {
-  const romUrl = REMASTERS[nombre] || REMASTERS['concentration'];
-  try {
-    const response = await fetch(romUrl);
-    const rom = new Uint8Array(await response.arrayBuffer());
-    
-    emu = new JSNESRemaster({rom, remasterMode: nombre});
-    currentRemaster = nombre;
-    playerX = 128; playerY = 200; score = 0;
-    document.getElementById('instructions').style.display = 'block';
-    setInterval(() => {
-      actualizarJuego();
-      if (emu) {
-        emu.frame();
-        aplicarFiltrosRemaster(emu.screen);
-        ctx.putImageData(emu.screen, 0, 0, 0, 0, 256, 240);
-      }
-      dibujarUI();
-      ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-    }, 1000/60);
-    const chatMsg = isSpanish ? `Remaster ${nombre} cargado. Este es mejor que el original, pero tú sigues siendo una mierda.` : `Remaster ${nombre} loaded. Better than original, but you're still shit.`;
-    document.getElementById('chat').innerHTML += `<br><span style="color:#ffea00">THUAMER:</span> ${chatMsg}`;
-  } catch (e) {
-    alert('Error cargando remaster: ' + e + '. Usando sim cutre.');
-    currentRemaster = 'sim';
-  }
-  cerrarSelector();
-}
+// ====== JUEGO PRINCIPAL ======
+const canvas = document.getElementById('screen');
+const ctx = canvas.getContext('2d');
 
 function actualizarJuego() {
-  if (currentRemaster === 'sim') {
-    // Simple movimiento jugador
-    if (keys['a'] || keys['arrowleft']) playerX = Math.max(0, playerX - 2);
-    if (keys['d'] || keys['arrowright']) playerX = Math.min(256, playerX + 2);
-    if (keys['w'] || keys['arrowup']) { playerY = Math.max(0, playerY - 3); playBeep(600, 0.05); }
-    if (keys['s'] || keys['arrowdown']) playerY = Math.min(240, playerY + 2);
-    if (keys[' ']) { score++; playBeep(800, 0.1); } // "Disparo"
-    
-    // "Colisión" random para trolleo
-    if (Math.random() < 0.01) { playerY = 200; score = 0; playBeep(200, 0.2); } // Fallo
+  // Movimiento jugador
+  if (keys['a'] || keys['arrowleft']) playerX = Math.max(0, playerX - 4);
+  if (keys['d'] || keys['arrowright']) playerX = Math.min(256, playerX + 4);
+  if (keys['w'] || keys['arrowup']) {
+    playerY = Math.max(0, playerY - 5);
+    playBeep(600, 0.05, 'sine');
   }
+  if (keys['s'] || keys['arrowdown']) playerY = Math.min(240, playerY + 3);
+  
+  // Lógica de juego por remaster
+  switch(currentRemaster) {
+    case 'shooter':
+      actualizarShooter();
+      break;
+    case 'platformer':
+      actualizarPlatformer();
+      break;
+    case 'puzzle':
+      actualizarPuzzle();
+      break;
+    default:
+      actualizarDefault();
+  }
+  
+  // Trolleo aleatorio
+  if (Math.random() < 0.005) {
+    // Muerte troll
+    playerY = 200;
+    score = Math.max(0, score - 10);
+    statsManager.trackDeath();
+    particleSystem.crearExplosión(playerX * 5, playerY * 4, 30);
+    playBeep(150, 0.3, 'sawtooth');
+  }
+  
+  // Aumentar score gradualmente
+  if (Math.random() < 0.02) {
+    score++;
+    playBeep(800 + Math.random() * 200, 0.05);
+  }
+  
+  statsManager.trackScore(score);
+  dibujarFrame();
+}
+
+function dibujarFrame() {
+  // Limpiar canvas
+  ctx.fillStyle = '#000';
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  
+  // Escalar NES (256x240) a canvas
+  const scaleX = canvas.width / 256;
+  const scaleY = canvas.height / 240;
+  const scale = Math.min(scaleX, scaleY);
+  
+  // Efectos visuales por remaster
+  generarVisualesRemaster();
+  
+  // Dibujar jugador escalado
+  ctx.save();
+  ctx.translate(playerX * scale, playerY * scale);
+  ctx.scale(scale, scale);
+  
+  // Jugador con efectos
+  const gradient = ctx.createRadialGradient(0, 0, 0, 0, 0, 8);
+  gradient.addColorStop(0, '#00ff88');
+  gradient.addColorStop(0.5, '#00cc66');
+  gradient.addColorStop(1, '#008844');
+  ctx.fillStyle = gradient;
+  ctx.fillRect(-4, -6, 8, 12); // Sprite jugador
+  
+  // Ojos del jugador
+  ctx.fillStyle = '#ffea00';
+  ctx.fillRect(-2, -4, 1, 1);
+  ctx.fillRect(1, -4, 1, 1);
+  
+  ctx.restore();
+  
+  // UI del juego
+  dibujarUI();
+  
+  // Efectos CRT
+  aplicarEfectosCRT();
+}
+
+function generarVisualesRemaster() {
+  const time = Date.now() * 0.001;
+  
+  for (let y = 0; y < 240; y += 8) {
+    for (let x = 0; x < 256; x += 8) {
+      const intensity = Math.sin((x + y + time * 50) * 0.1) * 0.5 + 0.5;
+      const color = `hsl(${time * 30 % 360}, 100%, ${30 + intensity * 40}%)`;
+      
+      ctx.fillStyle = color;
+      ctx.globalAlpha = 0.1;
+      ctx.fillRect(x * (canvas.width/256), y * (canvas.height/240), 8 * (canvas.width/256), 8 * (canvas.height/240));
+    }
+  }
+  ctx.globalAlpha = 1;
 }
 
 function dibujarUI() {
+  // Score
   ctx.fillStyle = '#ffea00';
-  ctx.font = '16px Impact';
-  ctx.fillText(`Score: ${score}`, 10, 20);
-  // Dibuja jugador simple
-  ctx.fillStyle = '#00ff00';
-  ctx.fillRect(playerX, playerY, 8, 8);
+  ctx.font = 'bold 24px "Press Start 2P"';
+  ctx.fillText(`SCORE: ${score.toString().padStart(6, '0')}`, 20, 30);
+  
+  // Remaster actual
+  ctx.fillStyle = '#00ff88';
+  ctx.font = '16px "Press Start 2P"';
+  ctx.fillText(`REMÁSTER: ${currentRemaster?.toUpperCase() || 'NONE'}`, 20, 60);
+  
+  // FPS counter
+  ctx.fillStyle = '#ff0048';
+  ctx.font = '12px "Press Start 2P"';
+  ctx.fillText(`FPS: ${Math.round(1000 / (performance.now() - lastTime))}`, canvas.width - 100, 30);
+  
+  // Vida simulada
+  ctx.fillStyle = '#333';
+  ctx.fillRect(20, canvas.height - 40, 200, 20);
+  ctx.fillStyle = score > 100 ? '#00ff00' : score > 50 ? '#ffea00' : '#ff0048';
+  ctx.fillRect(20, canvas.height - 40, Math.min(200, (score / 500) * 200), 20);
+}
+
+let lastTime = 0;
+function gameLoopCallback() {
+  const now = performance.now();
+  if (now - lastTime >= 1000/60) { // 60 FPS
+    actualizarJuego();
+    lastTime = now;
+  }
+  requestAnimationFrame(gameLoopCallback);
+}
+
+// ====== REMASTERS ESPECÍFICOS ======
+function actualizarShooter() {
+  // Láseres moviéndose
+  const time = Date.now() * 0.002;
+  for (let i = 0; i < 5; i++) {
+    const y = (time * 50 + i * 100) % 240;
+    ctx.strokeStyle = '#00ff88';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(128, y);
+    ctx.lineTo(256, y + Math.sin(time + i) * 20);
+    ctx.stroke();
+  }
+}
+
+function actualizarPlatformer() {
+  // Plataformas móviles
+  const time = Date.now() * 0.001;
+  for (let i = 0; i < 8; i++) {
+    const x = (time * 30 + i * 40) % 256;
+    const y = 100 + i * 25;
+    ctx.fillStyle = '#ff0048';
+    ctx.fillRect(x, y, 32, 8);
+  }
+}
+
+function actualizarPuzzle() {
+  // Grid puzzle
+  for (let y = 0; y < 240; y += 16) {
+    for (let x = 0; x < 256; x += 16) {
+      const isFilled = Math.random() < 0.3;
+      if (isFilled) {
+        ctx.fillStyle = `hsl(${(x+y)*2}, 70%, 50%)`;
+        ctx.fillRect(x, y, 16, 16);
+      }
+    }
+  }
+}
+
+function actualizarDefault() {
+  // Patrón por defecto
+  const time = Date.now() * 0.001;
+  for (let i = 0; i < 20; i++) {
+    const x = (time * 20 + i * 15) % 256;
+    const y = Math.sin(time * 3 + i) * 50 + 120;
+    ctx.fillStyle = '#ffea00';
+    ctx.beginPath();
+    ctx.arc(x, y, 4, 0, Math.PI * 2);
+    ctx.fill();
+  }
+}
+
+function disparar() {
+  particleSystem.crearExplosión(playerX * 5, playerY * 4, 10, ['#ffea00', '#ffff00']);
+  playBeep(1000, 0.1, 'sawtooth');
+  score += 5;
+}
+
+// ====== EFECTOS VISUALES ======
+function aplicarEfectosCRT() {
+  // Scanlines
+  for (let y = 0; y < canvas.height; y += 3) {
+    const alpha = Math.sin(y * 0.3) * 0.03;
+    ctx.fillStyle = `rgba(0, 0, 0, ${alpha})`;
+    ctx.fillRect(0, y, canvas.width, 1);
+  }
+  
+  // Vignette
+  const gradient = ctx.createRadialGradient(
+    canvas.width/2, canvas.height/2, 0,
+    canvas.width/2, canvas.height/2, Math.max(canvas.width, canvas.height)
+  );
+  gradient.addColorStop(0, 'rgba(0,0,0,0)');
+  gradient.addColorStop(0.7, 'rgba(0,0,0,0.3)');
+  gradient.addColorStop(1, 'rgba(0,0,0,0.8)');
+  
+  ctx.fillStyle = gradient;
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+}
+
+// ====== FUNCIONES DE REMASTER ======
+const REMASTERS = {
+  'concentration': { name: 'Concentration Room', color: '#ffea00' },
+  'shooter': { name: 'Neo Shooter', color: '#00ff88' },
+  'platformer': { name: 'Platform Hell', color: '#ff0048' },
+  'puzzle': { name: 'Puzzle Master', color: '#0088ff' }
+};
+
+async function cargarRemaster(nombre) {
+  currentRemaster = nombre;
+  score = 0;
+  playerX = 128;
+  playerY = 200;
+  
+  document.getElementById('instructions').style.display = 'block';
+  
+  const remaster = REMASTERS[nombre];
+  addChatMessage('🚀 THUAMER', 
+    isSpanish ? 
+    `Remaster "${remaster.name}" cargado. ${playerName}, ¡prepárate para sufrir!` :
+    `Remaster "${remaster.name}" loaded. ${playerName}, prepare to suffer!`
+  );
+  
+  // Cambiar colores del remaster
+  document.documentElement.style.setProperty('--color-pijo', remaster.color);
+  
+  cerrarSelector();
+  
+  if (gameLoop) {
+    cancelAnimationFrame(gameLoop);
+  }
+  gameLoop = requestAnimationFrame(gameLoopCallback);
+}
+
+// ====== FUNCIONES DE UI ======
+function addChatMessage(sender, message) {
+  const chat = document.getElementById('chat');
+  const time = new Date().toLocaleTimeString();
+  const html = `<div style="margin: 5px 0;">
+    <span style="color: #ffea00; font-weight: bold;">[${time}] ${sender}</span><br>
+    <span style="color: #fff; margin-left: 20px;">${message}</span>
+  </div>`;
+  
+  chat.innerHTML += html;
+  chat.scrollTop = chat.scrollHeight;
+  
+  // Mantener máximo 15 mensajes
+  const messages = chat.innerHTML.split('</div>').length;
+  if (messages > 15) {
+    const lines = chat.innerHTML.split('</div>');
+    chat.innerHTML = lines.slice(-15).join('</div>');
+  }
 }
 
 function mostrarSelector() {
@@ -266,110 +945,139 @@ function cerrarSelector() {
   document.getElementById('game-selector').style.display = 'none';
 }
 
-// Fallback
-cargarRemaster('concentration');
+function mostrarStats() {
+  const stats = statsManager.stats;
+  const message = isSpanish ? 
+    `📊 TUS ESTADÍSTICAS DE PRINGAO:\n💀 Muertes: ${stats.deaths}\n😡 Rage Quits: ${stats.rageQuits}\n🏆 Mejor Score: ${stats.bestScore}\n📈 Ratio: ${((stats.rageQuits/stats.deaths)*100 || 0).toFixed(1)}%` :
+    `📊 YOUR LOSER STATS:\n💀 Deaths: ${stats.deaths}\n😡 Rage Quits: ${stats.rageQuits}\n🏆 Best Score: ${stats.bestScore}\n📈 Ratio: ${((stats.rageQuits/stats.deaths)*100 || 0).toFixed(1)}%`;
+  
+  alert(message);
+  cerrarSelector();
+}
 
-// ====== FILTROS REMASTER ======
-function aplicarFiltrosRemaster(imageData) {
-  const data = imageData.data;
-  for (let i = 0; i < data.length; i += 4) {
-    data[i] = Math.min(255, data[i] * 1.2);
-    data[i+1] = Math.min(255, data[i+1] * 1.1);
-    data[i+2] = Math.min(255, data[i+2] * 1.3);
-  }
-  // Sharpen básico
-  for (let i = 4; i < data.length - 4; i += 4) {
-    data[i] = Math.min(255, (data[i-4] + data[i+4] - data[i]) * 1.5 + data[i]);
+function togglePause() {
+  if (gameLoop) {
+    cancelAnimationFrame(gameLoop);
+    gameLoop = null;
+    addChatMessage('⏸️ PAUSA', isSpanish ? 'Juego pausado. ENTER para continuar.' : 'Game paused. ENTER to continue.');
+  } else {
+    gameLoop = requestAnimationFrame(gameLoopCallback);
+    addChatMessage('▶️ JUEGO', isSpanish ? '¡Continuando tu humillación!' : 'Continuing your humiliation!');
   }
 }
 
-// ====== THUAMER IA TROLA MEJORADA ======
-setInterval(() => {
-  const chat = document.getElementById('chat');
-  const frase = frases[Math.floor(Math.random()*frases.length)];
-  chat.innerHTML += `<br><span style="color:#ffea00">THUAMER:</span> ${frase}`;
-  chat.scrollTop = chat.scrollHeight;
-  if (chat.children.length > 10) chat.innerHTML = chat.innerHTML.split('<br>').slice(-10).join('<br>');
-}, 8000); // Cada 8s para más trolleo
+function resetStats() {
+  if (confirm(isSpanish ? '¿Seguro que quieres borrar TUS ESTADÍSTICAS DE PRINGAO? 😢' : 'Really delete YOUR LOSER STATS? 😢')) {
+    localStorage.removeItem('thuamerStats');
+    statsManager = new StatsManager();
+    addChatMessage('🗑️ RESET', isSpanish ? 'Estadísticas reseteadas. ¡Empieza de cero, pringao!' : 'Stats reset. Start from zero, loser!');
+  }
+}
 
-// ====== COSMÉTICOS ======
+// ====== COSMÉTICOS MEJORADOS ======
 function cambiarSkin(tipo) {
-  if (confirm(window.sConfirmText || '¿Quieres ser pijo por solo 4.99€?')) {
-    if (tipo==='chad') {
-      document.body.style.background = "radial-gradient(circle,#ffea00,#ff0048)";
-      document.querySelector('h1').classList.add('pijo');
+  const skins = {
+    chad: {
+      confirm: isSpanish ? `¿Quieres ser CHAD por solo €4.99? 👑` : `Wanna be CHAD for just €4.99? 👑`,
+      alert: isSpanish ? `¡CHAD MODE ACTIVADO! Ahora ${playerName} es intocable (mentira)` : `CHAD MODE ACTIVATED! ${playerName} is now untouchable (lie)`
+    },
+    vapor: {
+      confirm: isSpanish ? `¿VAPORWAVE aesthetic por €9.99? 🌈` : `VAPORWAVE aesthetic for €9.99? 🌈`,
+      alert: isSpanish ? `¡VAPORWAVE ACTIVADO! Máximo cringe garantizado` : `VAPORWAVE ACTIVATED! Maximum cringe guaranteed`
     }
-    if (tipo==='vapor') {
-      document.body.style.background = "linear-gradient(45deg,#ff0066,#00ffff,#ff0066)";
-      document.body.style.backgroundSize = "400% 400%";
-      document.body.style.animation = "vapor 10s ease infinite";
+  };
+  
+  if (confirm(skins[tipo].confirm)) {
+    // Aplicar skin
+    document.body.classList.add(tipo);
+    document.body.style.setProperty('--skin', tipo);
+    
+    // Efectos específicos
+    if (tipo === 'chad') {
+      document.body.style.background = 'radial-gradient(circle, #ffd700, #ff6b35, #c44569)';
+      document.querySelector('#title').classList.add('pijo');
+    } else if (tipo === 'vapor') {
+      document.body.style.background = 'linear-gradient(45deg, #ff6b9d, #c44569, #f18f01, #c44569)';
+      document.body.style.backgroundSize = '400% 400%';
+      document.body.style.animation = 'vapor 4s ease infinite';
     }
-    alert(window.sAlertText || "¡Pijo activado! Ahora todos saben que tienes pasta y cero vida social. Combínalo con un remaster para máximo cringe.");
+    
+    alert(skins[tipo].alert);
+    addChatMessage('💎 COSMÉTICO', `${playerName} ahora luce ${tipo.toUpperCase()}!`);
   }
 }
 
 function vozChiquito() {
-  if (confirm(window.vConfirmText || "¿Voz de Chiquito de la Calzada por 19.99€? Fistro pecadorrr")) {
-    alert(window.vAlertText || "¡Activado! Ahora THUAMER te dice: '¡Hasta luego Lucas, con la iglesia hemos topado!' cada vez que mueras en el remaster.");
-    // Simula: próxima muerte, pero como sim, solo alert
-    setTimeout(() => { if (Math.random() < 0.5) alert(isSpanish ? "¡Hasta luego Lucas, con la iglesia hemos topado!" : "See you later Lucas, we've run into the church!"); }, 10000);
+  const confirmText = isSpanish ? 
+    `¿Voz de Chiquito de la Calzada por €19.99?\n¡Fistro pecadorrr! 😜` : 
+    `Chiquito de la Calzada voice for €19.99?\n¡Sinful trickster! 😜`;
+    
+  if (confirm(confirmText)) {
+    const alertText = isSpanish ? 
+      `¡ACTIVADO! Ahora cada muerte: "¡Hasta luego Lucas, con la iglesia hemos topado!"` :
+      `ACTIVATED! Now every death: "See you later Lucas, we've run into the church!"`;
+    alert(alertText);
+    
+    // Simular voz Chiquito en próxima muerte
+    const originalDeath = ThuamerAI.insultOnDeath;
+    ThuamerAI.insultOnDeath = function() {
+      originalDeath();
+      setTimeout(() => {
+        const chiquitoMsg = isSpanish ? 
+          '¡HASTA LUEGO LUCAS, CON LA IGLESIA HEMOS TOPADO! 😂' :
+          'SEE YOU LATER LUCAS, WEVE RUN INTO THE CHURCH! 😂';
+        addChatMessage('🎭 CHIQUITO', chiquitoMsg);
+        // Sonido chiquito simulado
+        playBeep(220, 0.8, 'triangle');
+        playBeep(330, 0.6, 'triangle');
+        playBeep(440, 0.4, 'triangle');
+      }, 500);
+    };
   }
 }
 
-// ====== JSNES REMASTER MEJORADO CON MOVIMIENTO ======
-class JSNESRemaster {
-  constructor(opts) { 
-    this.rom = opts.rom;
-    this.remasterMode = opts.remasterMode || 'default';
-    this.screen = ctx.createImageData(256,240); 
-    this.time = 0;
-  }
-  frame() {
-    this.time += 1/60;
-    const d = this.screen.data;
-    for(let y=0; y<240; y++) {
-      for(let x=0; x<256; x++) {
-        const i = (y*256 + x)*4;
-        let px = Math.sin(x/32 + this.time) * 50 + 128;
-        let py = Math.cos(y/32 + this.time) * 50 + 120;
-        d[i] = (px + Math.sin(this.time * 2) * 30) % 256;
-        d[i+1] = (py * 0.5 + Math.random()*20) % 256;
-        d[i+2] = (Math.random()*100 + Math.cos(this.time + x/64) * 50) % 256;
-        d[i+3] = 255;
-      }
-    }
-    // Efectos por modo
-    if (this.remasterMode === 'shooter') {
-      // Láseres: líneas verdes
-      for(let y=0; y<240; y+=10) {
-        const ii = (y*256 + Math.floor(Math.sin(this.time)*100 + 128))*4;
-        if (ii >=0 && ii < d.length) {
-          d[ii] = 0; d[ii+1] = 255; d[ii+2] = 0;
-        }
-      }
-    } else if (this.remasterMode === 'homebrew1') {
-      // 60FPS sim: más vibración
-      for(let i=0; i<d.length; i+=4) d[i+1] += Math.sin(this.time * 10) * 20;
-    } else if (this.remasterMode === 'homebrew2') {
-      // Puzzle: bloques
-      for(let y=0; y<240; y+=20) for(let x=0; x<256; x+=20) {
-        const ii = (y*256 + x)*4;
-        d[ii] = 255; d[ii+1]=0; d[ii+2]=0;
-      }
-    }
-    // Integra jugador si sim
-    if (currentRemaster === 'sim') {
-      const px = Math.floor(playerX), py = Math.floor(playerY);
-      for(let dy=-4; dy<4; dy++) for(let dx=-4; dx<4; dx++) {
-        const ix = (py+dy)*256 + (px+dx);
-        if (ix >=0 && ix < 256*240) {
-          const ii = ix*4;
-          d[ii] = 0; d[ii+1]=255; d[ii+2]=0; // Verde jugador
-        }
-      }
-    }
-  }
+function mostrarLogro(title, message) {
+  const achievement = document.createElement('div');
+  achievement.className = 'achievement';
+  achievement.innerHTML = `
+    <div style="font-size: 1.8vw; margin-bottom: 5px;">${title}</div>
+    <div style="font-size: 1vw; opacity: 0.9;">${message}</div>
+  `;
+  
+  document.getElementById('achievements').appendChild(achievement);
+  
+  // Auto-remover después de 4 segundos
+  setTimeout(() => {
+    achievement.style.animation = 'achievementPop 0.5s ease-in reverse';
+    setTimeout(() => achievement.remove(), 500);
+  }, 4000);
+  
+  // Sonido de logro
+  playBeep(800, 0.2);
+  setTimeout(() => playBeep(1000, 0.2), 200);
+  setTimeout(() => playBeep(1200, 0.3), 400);
 }
+
+// ====== INICIALIZACIÓN ======
+detectarIdioma();
+
+// Variables globales para compatibilidad
+window.mostrarSelector = mostrarSelector;
+window.cerrarSelector = cerrarSelector;
+window.cargarRemaster = cargarRemaster;
+window.cambiarSkin = cambiarSkin;
+window.vozChiquito = vozChiquito;
+window.resetStats = resetStats;
+
+// Prevenir salida accidental (más trolleo)
+window.addEventListener('beforeunload', (e) => {
+  if (statsManager && statsManager.stats.deaths > 0) {
+    e.preventDefault();
+    e.returnValue = isSpanish ? '¡No te vayas, pringao! Tienes ' + statsManager.stats.deaths + ' muertes sin redimir!' : 
+                                  "Don't go, loser! You have " + statsManager.stats.deaths + " deaths to redeem!";
+    return e.returnValue;
+  }
+});
 </script>
 
 </body>

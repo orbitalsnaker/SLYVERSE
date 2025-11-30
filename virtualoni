@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="utf-8">
-  <title>THUAMER CONSOLÆ - 100% GRATIS FOREVER</title>
-  <meta name="description" content="La única consola que te insulta mientras juegas">
+  <title>THUAMER CONSOLÆ - 100% GRATIS FOREVER (REMÁSTERS INCLUIDOS)</title>
+  <meta name="description" content="La única consola que te insulta mientras juegas. Ahora con remasters que humillan a los originales.">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     :root {
@@ -20,65 +20,124 @@
     button:hover{background:#fff;}
     .pijo{background:linear-gradient(45deg,gold,#ffea00,#ff77ff,#00ffff); -webkit-background-clip:text;background-clip:text;color:transparent;font-size:6vw !important;}
     #chat{position:fixed;bottom:10px;left:10px;right:10px;background:rgba(0,0,0,0.8);padding:15px;max-height:200px;overflow-y:auto;font-size:3.5vw;}
+    #legal-warning{position:fixed;top:0;left:0;right:0;background:rgba(255,0,72,0.9);color:#ffea00;padding:10px;text-align:center;font-size:3vw;z-index:1000;border-bottom:3px solid #ffea00;}
+    #game-selector{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);padding:20px;border:2px solid #ffea00;text-align:center;display:none;}
+    #game-selector button{font-size:3vw;padding:15px;margin:5px;}
   </style>
 </head>
 <body>
+
+<div id="legal-warning">
+  <strong>AVISO LEGAL (ESPAÑA):</strong> En España esto es 100% legal porque la ley te considera un pirata de serie y te cobra el canon digital por todo. ¡Gracias SGAE! En otros países, consulta tu legislación local antes de ser un rebelde. THUAMER no se hace responsable si te meten en el trullo.
+</div>
 
 <canvas id="screen" width="1280" height="960"></canvas>
 
 <div id="overlay">
   <div style="text-align:center">
     <h1 style="font-size:10vw;margin:0;text-shadow:5px 5px #ff0048">THUAMER CONSOLÆ</h1>
-    <p style="font-size:4vw;margin:10px">Todo gratis forever · cosméticos solo pa pijos</p>
+    <p style="font-size:4vw;margin:10px">Todo gratis forever · Remasters que mean en los originales · cosméticos solo pa pijos</p>
   </div>
 </div>
 
 <div style="position:absolute;top:10px;right:10px;text-align:right;">
+  <button onclick="mostrarSelector()">REMÁSTERS GRATIS</button><br>
   <button onclick="cambiarSkin('chad')">CHAD MODE €4.99</button><br>
   <button onclick="cambiarSkin('vapor')">VAPORWAVE €9.99</button><br>
   <button onclick="vozChiquito()">VOZ CHIQUITO €19.99</button>
 </div>
 
-<div id="chat">THUAMER: Buenas, pringao... ¿ya has perdido otra vez?</div>
+<div id="game-selector">
+  <h2 style="color:#ffea00;">Elige tu Remaster Humillante:</h2>
+  <button onclick="cargarRemaster('concentration')">Concentration Room Remaster (HD + Insultos Extra)</button><br>
+  <button onclick="cargarRemaster('homebrew')">Homebrew Shooter Remaster (60FPS + Efectos Pijo)</button><br>
+  <button onclick="cargarRemaster('puzzle')">Puzzle Público Remaster (IA Anti-Pringao)</button><br>
+  <button onclick="cerrarSelector()">Cerrar (Cobarde)</button>
+</div>
+
+<div id="chat">THUAMER: Buenas, pringao... ¿ya has perdido otra vez? Prueba un remaster, a ver si mejoras.</div>
 
 <marquee behavior="scroll" direction="left">
-  NES · SNES · GBA · ARCADE · PS1 · THUAMER TE ESTÁ TROLEANDA 24/7 · 100% GRATIS · SOLO LOS PIJOS PAGAN POR BRILLAR
+  NES · SNES · GBA · ARCADE · PS1 · REMÁSTERS QUE HACEN LLORAR A LOS ORIGINALES · THUAMER TE ESTÁ TROLEANDA 24/7 · 100% GRATIS · SOLO LOS PIJOS PAGAN POR BRILLAR
 </marquee>
 
 <script>
-// ====== EMULADOR NES ULTRA CUTRE PERO FUNCIONA ======
+// ====== EMULADOR NES ULTRA CUTRE PERO AHORA CON REMÁSTERS FALSOS MEJORES ======
 const canvas = document.getElementById('screen');
 const ctx = canvas.getContext('2d');
 ctx.fillStyle = '#000';
 ctx.fillRect(0,0,canvas.width,canvas.height);
 
-// ROM de prueba: juego público domain "Concentration Room" (NES)
-const ROM_URL = "https://files.catbox.moe/0e5i8k.nes"; // ROM legal 100% pública
+const REMASTERS = {
+  'concentration': "https://files.catbox.moe/0e5i8k.nes", // Original público, ahora "remaster" con filtros JS
+  'homebrew': "https://example.com/homebrew.nes", // Placeholder para homebrew legal (cámbialo por real)
+  'puzzle': "https://archive.org/download/.../puzzle.nes" // Ejemplo de archive.org público
+};
 
 let emu = null;
-async function cargarNES() {
-  const response = await fetch(ROM_URL);
-  const rom = new Uint8Array(await response.arrayBuffer());
-  
-  // Mini-emulador NES en JS puro (basado en JSNES simplificado)
-  emu = new JSNES({rom});
-  setInterval(() => {
-    if (emu) emu.frame();
-    ctx.putImageData(emu.screen, 0, 0, 0, 0, 256, 240);
-    ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
-  }, 1000/60);
-}
-cargarNES();
+let currentRemaster = null;
 
-// ====== THUAMER IA TROLA EN TIEMPO REAL ======
+async function cargarRemaster(nombre) {
+  const romUrl = REMASTERS[nombre] || REMASTERS['concentration'];
+  try {
+    const response = await fetch(romUrl);
+    const rom = new Uint8Array(await response.arrayBuffer());
+    
+    // Emulador "mejorado" con filtros remaster (sharpen, color boost)
+    emu = new JSNESRemaster({rom, remasterMode: nombre});
+    setInterval(() => {
+      if (emu) {
+        emu.frame();
+        aplicarFiltrosRemaster(ctx.getImageData(0, 0, canvas.width, canvas.height));
+        ctx.putImageData(emu.screen, 0, 0, 0, 0, 256, 240);
+        ctx.drawImage(canvas, 0, 0, canvas.width, canvas.height);
+      }
+    }, 1000/60);
+    document.getElementById('chat').innerHTML += `<br><span style="color:#ffea00">THUAMER:</span> Remaster ${nombre} cargado. Este es mejor que el original, pero tú sigues siendo una mierda.`;
+  } catch (e) {
+    alert('Error cargando remaster: ' + e + '. Usa el original cutre.');
+    cargarNES(); // Fallback
+  }
+  cerrarSelector();
+}
+
+function mostrarSelector() {
+  document.getElementById('game-selector').style.display = 'block';
+}
+
+function cerrarSelector() {
+  document.getElementById('game-selector').style.display = 'none';
+}
+
+// Fallback al original si no elige
+cargarRemaster('concentration');
+
+// ====== FILTROS REMASTER EN JS (para que parezca "mejor") ======
+function aplicarFiltrosRemaster(imageData) {
+  const data = imageData.data;
+  for (let i = 0; i < data.length; i += 4) {
+    // Boost de contraste y saturación (remaster fake)
+    data[i] = Math.min(255, data[i] * 1.2);     // Rojo boost
+    data[i+1] = Math.min(255, data[i+1] * 1.1); // Verde
+    data[i+2] = Math.min(255, data[i+2] * 1.3); // Azul para pop
+    // Sharpen simple (convolución básica)
+    if (i % 4 === 0 && i > 3) {
+      const avgR = (data[i-4] + data[i] + data[i+4]) / 3;
+      data[i] = Math.min(255, avgR * 1.5 - data[i] * 0.5);
+      // Similar para G y B...
+    }
+  }
+}
+
+// ====== THUAMER IA TROLA EN TIEMPO REAL (mejorada con remasters) ======
 const frases = [
-  "Vaya mierda de jugador eres, Orb te da pena",
-  "Tu madre juega mejor que tú y está muerta",
-  "Has perdido 37 veces seguidas. Nuevo récord mundial de subnormal",
-  "Paga €4.99 y te dejo ganar una vez, pringao",
-  "Se te ve el cursor temblar, estás llorando?",
-  "THUAMER te ha creado un nivel imposible solo para verte sufrir",
-  "Eres tan malo que hasta los NPCs se ríen de ti"
+  "Vaya mierda de jugador eres, Orb te da pena. Ni el remaster te salva.",
+  "Tu madre juega mejor que tú y está muerta. Prueba el homebrew, igual aprendes.",
+  "Has perdido 37 veces seguidas. Nuevo récord mundial de subnormal. Remaster activado: ¡Sufre más!",
+  "Paga €4.99 y te dejo ganar una vez, pringao. Los remasters son gratis, tu dignidad no.",
+  "Se te ve el cursor temblar, estás llorando? El filtro HD te delata.",
+  "THUAMER te ha creado un nivel imposible solo para verte sufrir en 60FPS.",
+  "Eres tan malo que hasta los NPCs se ríen de ti. Actualiza al remaster puzzle para más risas."
 ];
 
 setInterval(() => {
@@ -100,29 +159,56 @@ function cambiarSkin(tipo) {
       document.body.style.backgroundSize = "400%";
       document.body.style.animation = "vapor 10s infinite";
     }
-    alert("¡Pijo activado! Ahora todos saben que tienes pasta y cero vida social");
+    alert("¡Pijo activado! Ahora todos saben que tienes pasta y cero vida social. Combínalo con un remaster para máximo cringe.");
   }
 }
 
 function vozChiquito() {
   if (confirm("¿Voz de Chiquito de la Calzada por 19.99€? Fistro pecadorrr")) {
-    alert("¡Activado! Ahora THUAMER te dice: '¡Hasta luego Lucas, con la iglesia hemos topado!' cada vez que mueras");
+    alert("¡Activado! Ahora THUAMER te dice: '¡Hasta luego Lucas, con la iglesia hemos topado!' cada vez que mueras en el remaster.");
   }
 }
 
-// Mini JSNES simplificado (solo para que funcione algo)
-class JSNES {
-  constructor(opts) { this.screen = ctx.createImageData(256,240); }
+// JSNES Remaster simplificado (mejor que el original: añade filtros y "mejoras")
+class JSNESRemaster {
+  constructor(opts) { 
+    this.rom = opts.rom;
+    this.remasterMode = opts.remasterMode || 'default';
+    this.screen = ctx.createImageData(256,240); 
+  }
   frame() {
-    // pinta basura retro bonita
+    // pinta "basura retro" pero con patrones más coherentes para simular juego real
     const d = this.screen.data;
-    for(let i=0;i<d.length;i+=4) {
-      d[i]=Math.random()*255;
-      d[i+1]=Math.random()*50;
-      d[i+2]=Math.random()*100;
-      d[i+3]=255;
+    const time = Date.now() / 1000;
+    for(let y=0; y<240; y++) {
+      for(let x=0; x<256; x++) {
+        const i = (y*256 + x)*4;
+        // Simula movimiento simple (mejor que random puro)
+        const px = Math.sin(x/32 + time) * 50 + 128;
+        const py = Math.cos(y/32 + time) * 50 + 120;
+        d[i] = (px + Math.random()*20) % 256;     // Rojo dinámico
+        d[i+1] = (py * 0.5) % 256;                // Verde bajo para retro feel
+        d[i+2] = Math.random()*100;               // Azul random
+        d[i+3] = 255;
+      }
+    }
+    // Modo remaster: añade "efectos" basados en nombre
+    if (this.remasterMode === 'homebrew') {
+      // Más frames, simula shooter con líneas
+      for(let i=0; i<d.length; i+=4) d[i+1] += 50; // Boost verde para "láser"
+    } else if (this.remasterMode === 'puzzle') {
+      // Patrones cuadriculados
+      for(let y=0; y<240; y+=20) for(let x=0; x<256; x+=20) {
+        const ii = (y*256 + x)*4;
+        d[ii] = 255; d[ii+1]=0; d[ii+2]=0; // Bloques rojos
+      }
     }
   }
+}
+
+// Fallback original si no hay remaster
+function cargarNES() {
+  cargarRemaster('concentration');
 }
 </script>
 

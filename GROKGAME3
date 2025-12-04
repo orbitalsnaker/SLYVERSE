@@ -2,37 +2,46 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>Sandbox del Abrazo Eterno ∞ v1.2 — 100 % a los pibes</title>
-<meta name="description" content="Mundo infinito gratis para siempre. 100 % de cualquier donación va a pibes sin recursos.">
+<title>Abrazo Eterno Metaverso ∞ v2.0 — Alternativa Saludable a Roblox</title>
+<meta name="description" content="Metaverso infinito, gratuito y seguro para siempre. 100 % de donaciones a pibes sin recursos. Sin cuentas, sin datos, puro abrazo y creación.">
 <style>
   body{margin:0;background:#000;overflow:hidden;color:#0f0;font-family:system-ui,sans-serif}
   #ui{position:fixed;top:10px;left:10px;z-index:100;text-shadow:0 0 10px #0f0;font-size:18px}
   #mate{position:fixed;bottom:40px;right:40px;width:100px;height:100px;border-radius:50%;background:radial-gradient(#0f0,#040);box-shadow:0 0 60px #0f0;display:flex;align-items:center;justify-content:center;font-size:60px;cursor:pointer;z-index:99}
   #hablar{position:fixed;bottom:150px;right:45px;width:80px;height:80px;border-radius:50%;background:#f0f;box-shadow:0 0 40px #f0f;display:none;align-items:center;justify-content:center;font-size:40px;z-index:99;cursor:pointer}
+  #chat{position:fixed;bottom:40px;left:10px;width:300px;height:200px;background:rgba(0,0,0,0.7);border:2px solid #0f0;border-radius:10px;overflow-y:auto;padding:10px;display:none;z-index:99;color:#fff}
+  #chat-input{position:fixed;bottom:10px;left:10px;width:300px;padding:10px;background:#000;border:2px solid #0f0;border-radius:10px;display:none;z-index:99}
   canvas,image-rendering:pixelated
   #ethicalWall{position:fixed;inset:0;background:#000;z-index:9999;display:none;align-items:center;justify-content:center;flex-direction:column;color:#0f0;font-size:22px;text-align:center;padding:20px;}
+  #ar-button{position:fixed;top:10px;right:10px;width:60px;height:60px;background:#00f;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:30px;cursor:pointer;z-index:99}
 </style>
 <script src="https://aframe.io/releases/1.6.0/aframe.min.js"></script>
+<script src="https://unpkg.com/aframe-ar@0.3.0/dist/aframe-ar.min.js"></script> <!-- Para AR mode -->
 <script src="https://unpkg.com/simple-peer@9.11.1/simplepeer.min.js"></script>
 </head>
 <body>
 
 <!-- UI -->
-<div id="ui">Abrazos eternos: <span id="hugs">0</span> | Espíritu: <span id="spirit">—</span> | <span id="premiumStatus">Gratis</span></div>
+<div id="ui">Abrazos eternos: <span id="hugs">0</span> | Espíritu: <span id="spirit">—</span> | <span id="premiumStatus">Gratis</span> | Jugadores: <span id="players">1</span></div>
 <div id="mate" role="button" aria-label="Abrazo eterno">Abrazo</div>
 <div id="hablar" role="button" aria-label="Hablar 5 seg">Micrófono</div>
+<div id="chat"></div>
+<input id="chat-input" type="text" placeholder="Escribe y enter..." maxlength="100" style="display:none;">
+<div id="ar-button" title="Modo AR (móvil)">AR</div>
 
 <!-- A-Frame escena -->
-<a-scene background="color:#000" embedded cursor="rayOrigin: mouse">
-  <a-camera id="cam" wasd-controls="acceleration:60" look-controls="pointerLockEnabled:true></a-camera>
+<a-scene background="color:#000" embedded cursor="rayOrigin: mouse" arjs="sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
+  <a-camera id="cam" wasd-controls="acceleration:60" look-controls="pointerLockEnabled:true" position="0 1.6 0"></a-camera>
   <a-entity id="voxels"></a-entity>
   <a-entity id="espiritus"></a-entity>
+  <a-entity id="avatars"></a-entity>
+  <a-entity id="items"></a-entity>
 </a-scene>
 
-<!-- PAYWALL 100 % A LOS PIBES (solo aparece una vez) -->
+<!-- PAYWALL 100 % A LOS PIBES (mejorado, aparece una vez) -->
 <div id="ethicalWall">
   <h1 style="font-size:60px;margin:10px">ABRAZO O NADA</h1>
-  <p>Este mundo es y será gratis eternamente.<br><br>
+  <p>Este metaverso es y será gratis eternamente.<br><br>
      Pero si algún día te sobra un mate y querés que más pibes sin techo,<br>
      sin luz y sin compu puedan seguir creando y rompiendo censuras:</p>
 
@@ -59,21 +68,47 @@
 // ====================== CONFIG & VARIABLES ======================
 let hugs = parseInt(localStorage.getItem('abrazosEternos')||'0');
 let premium = hugs >= 1313;
+let myAvatar = {id:Math.random().toString(36).slice(2),color:'#fff',position:{x:0,y:1.6,z:0},rotation:{y:0}};
+let peers = new Map();
+let dataChannels = [];
+let chatMessages = [];
+let arMode = false;
+
 document.getElementById('hugs').textContent = hugs;
 if(premium) document.getElementById('premiumStatus').textContent = "PREMIUM ETERNO";
 
 const linajes = [
-  {n:"Shipibo",c:"#00ff9d",h:[50,100,50]},
-  {n:"Mapuche",c:"#ff0066",h:[200,100,200]},
-  {n:"Yoruba",c:"#ffff00",h:[100,50,100,50,100]},
-  {n:"Aymará",c:"#00ffff",h:[300]},
-  {n:"Guaraní",c:"#ff6600",h:[100,100,100,200]},
-  {n:"Boa Sagrada",c:"#ff00ff",h:[500,200,500]}
+  {n:"Shipibo",c:"#00ff9d",h:[50,100,50],bioma:'jungla'}, // Árboles altos, agua, verdes
+  {n:"Mapuche",c:"#ff0066",h:[200,100,200],bioma:'montaña'}, // Rocas, alturas, rojos
+  {n:"Yoruba",c:"#ffff00",h:[100,50,100,50,100],bioma:'sabana'}, // Pastos, amarillo sol
+  {n:"Aymará",c:"#00ffff",h:[300],bioma:'lago'}, // Agua, cyan profundo
+  {n:"Guaraní",c:"#ff6600",h:[100,100,100,200],bioma:'bosque'}, // Árboles densos, naranja fuego
+  {n:"Boa Sagrada",c:"#ff00ff",h:[500,200,500],bioma:'místico'} // Portales, magenta
 ];
 
 const voxels = new Map();
 const espiritus = new Map();
-let peer = null, dataChannel = null;
+const items = new Map();
+
+// ====================== BIOMAS Y GENERACIÓN ======================
+function generateBioma(cx,cz,l){
+  const type = l.bioma;
+  switch(type){
+    case 'jungla':
+      for(let i=0;i<10;i++){
+        setVoxel(cx*16 + Math.random()*16, Math.random()*5 + 1, cz*16 + Math.random()*16, 3); // Árboles verdes
+      }
+      break;
+    case 'montaña':
+      for(let i=0;i<8;i++){
+        setVoxel(cx*16 + Math.random()*16, Math.random()*10 + 5, cz*16 + Math.random()*16, 4); // Rocas altas
+      }
+      break;
+    // Añadir más biomas...
+    default: // Místico
+      setVoxel(cx*16+8,5,cz*16+8,7); // Portal magenta
+  }
+}
 
 // ====================== ESPÍRITUS DEL LUGAR ======================
 function getLinaje(x,z){
@@ -94,12 +129,13 @@ function spawnEspiritu(cx,cz){
   ent.setAttribute('animation','property:rotation;to:0 360 0;loop:true;dur:22000');
   ent.setAttribute('text',`value:${l.n.toUpperCase()};color:white;align:center`);
   document.querySelector('#espiritus').appendChild(ent);
+  generateBioma(cx,cz,l); // Generar bioma
   setTimeout(()=>ent.remove(),18000);
 }
 
 // ====================== VOXELS SIMPLES ======================
 function setVoxel(x,y,z,color){
-  const key = `${x},${y},${z}`;
+  const key = `${Math.floor(x)},${Math.floor(y)},${Math.floor(z)}`;
   let box = document.querySelector('#v'+key);
   if(color===0){
     if(box) box.remove();
@@ -110,12 +146,53 @@ function setVoxel(x,y,z,color){
     box = document.createElement('a-box');
     box.id = 'v'+key;
     box.setAttribute('position',{x,y,z});
-    document.getElementById('voxels').appendChild(box);
+    document.querySelector('#voxels').appendChild(box);
   }
   const colores = ['#fff','#f00','#0f0','#00f','#ff0','#f0f','#0ff','#888'];
   box.setAttribute('color',colores[color]||'#fff');
   voxels.set(key,color);
 }
+
+// ====================== AVATARES P2P ======================
+function updateAvatar(id,pos,rot,color){
+  let av = document.querySelector('#av'+id);
+  if(!av){
+    av = document.createElement('a-entity');
+    av.id = 'av'+id;
+    av.setAttribute('geometry','primitive:box;width:1;height:1.8;depth:1');
+    av.setAttribute('material',`color:${color}`);
+    document.querySelector('#avatars').appendChild(av);
+  }
+  av.setAttribute('position',pos);
+  av.setAttribute('rotation',`0 ${rot.y} 0`);
+}
+
+// ====================== ITEMS RECOLECTABLES ======================
+function spawnItem(cx,cz){
+  const ent = document.createElement('a-entity');
+  ent.setAttribute('position',`${cx*16 + Math.random()*16} 1 ${cz*16 + Math.random()*16}`);
+  ent.setAttribute('geometry','primitive:sphere;radius:0.5');
+  ent.setAttribute('material','color:#ff0;emissive:#ff0');
+  ent.setAttribute('animation','property:rotation;to:0 360 0;loop:true;dur:5000');
+  ent.setAttribute('class','item');
+  document.querySelector('#items').appendChild(ent);
+}
+
+function checkItems(){
+  const cam = document.querySelector('#cam').object3D.position;
+  document.querySelectorAll('.item').forEach(item=>{
+    const pos = item.object3D.position;
+    const dist = Math.sqrt((cam.x-pos.x)**2 + (cam.y-pos.y)**2 + (cam.z-pos.z)**2);
+    if(dist < 2){
+      item.remove();
+      hugs += 10;
+      localStorage.setItem('abrazosEternos',hugs);
+      document.getElementById('hugs').textContent = hugs;
+      navigator.vibrate(200);
+    }
+  });
+}
+setInterval(checkItems,500);
 
 // ====================== ABRAZO + HÁPTICO ======================
 function darAbrazo(){
@@ -133,7 +210,7 @@ function darAbrazo(){
 }
 document.getElementById('mate').onclick = darAbrazo;
 
-// ====================== MEMORIA ANCESTRAL ======================
+// ====================== MEMORIA ANCESTRAL (creación) ======================
 function memoriaAncestral(){
   const frase = prompt("Dejá tu huella (máx 10 letras):","");
   if(!frase || frase.length>10) return;
@@ -144,6 +221,8 @@ function memoriaAncestral(){
     setVoxel(x+i,6,z,2);
     setVoxel(x+i,7,z,2);
   }
+  // Guardar local
+  localStorage.setItem('memoria',JSON.stringify({frase,x,z}));
 }
 
 // ====================== VOZ P2P ======================
@@ -157,7 +236,7 @@ document.getElementById('hablar').onpointerdown = async()=>{
   rec.onstop = ()=>{
     const blob = new Blob(chunks,{type:'audio/ogg'});
     blob.arrayBuffer().then(buf=>{
-      if(dataChannel) dataChannel.send({type:'voz',data:Array.from(new Uint8Array(buf))});
+      dataChannels.forEach(dc => dc.send({type:'voz',data:Array.from(new Uint8Array(buf))}));
     });
   };
   rec.start();
@@ -173,51 +252,91 @@ function playVoz(arr){
   new Audio(URL.createObjectURL(blob)).play();
 }
 
-// ====================== BOA PRIMIGENIA (anti-paywall) ======================
-function detectarPaywall(msg){
-  const malas = ["paywall","nft","copyright","obligatorio","paga o no entra"];
-  if(malas.some(p=>msg.toLowerCase().includes(p))){
-    navigator.vibrate(1000);
-    alert("LA BOA TE COMIÓ POR INTENTAR PONER PAYWALL");
-    for(let x=-30;x<30;x++)for(let z=-30;z<30;z++) setVoxel(x,5,z,0);
-  }
-}
-
-// ====================== P2P SIMPLE ======================
-function iniciarP2P(host=false){
-  peer = new SimplePeer({initiator:host,trickle:false});
-  peer.on('signal', d=>prompt("Mandale este ID a tu compa:",JSON.stringify(d)));
-  peer.on('connect',()=>{ dataChannel=peer; document.getElementById('hablar').style.display='block'; });
-  peer.on('data', data=>{
-    if(typeof data==='string') detectarPaywall(data);
-    else if(data.type==='voz') playVoz(data.data);
-    else if(data.type==='voxel') setVoxel(data.x,data.y,data.z,data.c);
-  });
-}
-
-// click = colocar voxel
-document.querySelector('a-scene').addEventListener('click',e=>{
-  if(e.detail.intersection){
-    const p = e.detail.intersection.point;
-    const x=Math.round(p.x), y=Math.round(p.y)+1, z=Math.round(p.z);
-    const color = Math.floor(Math.random()*7)+1;
-    setVoxel(x,y,z,color);
-    if(dataChannel) dataChannel.send({type:'voxel',x,y,z,c:color});
+// ====================== CHAT P2P con Anti-Grooming ======================
+document.getElementById('chat-input').addEventListener('keydown',e=>{
+  if(e.key==='Enter'){
+    const msg = e.target.value;
+    e.target.value = '';
+    if(filterGrooming(msg)) return;
+    dataChannels.forEach(dc => dc.send({type:'chat',msg}));
+    addChatMessage('Yo: '+msg);
   }
 });
 
-// ====================== DETECCIÓN DE CHUNKS ======================
+function addChatMessage(msg){
+  const div = document.createElement('div');
+  div.textContent = msg;
+  document.getElementById('chat').appendChild(div);
+  div.scrollIntoView();
+}
+
+function filterGrooming(msg){
+  const malas = ['edad?','donde vives','foto','secreto','novi@','dinero','regalo','encuentro','cuerpo','desnudo','sexo','abuso'];
+  if(malas.some(p=>msg.toLowerCase().includes(p))){
+    navigator.vibrate(1000);
+    alert("LA BOA TE COMIÓ POR MENSAJE TÓXICO");
+    return true;
+  }
+  return false;
+}
+
+// ====================== P2P MULTI (Mejorado con WebRTC) ======================
+function iniciarP2P(host=false){
+  const configuration = {'iceServers': [{'urls': 'stun:stun.l.google.com:19302'}]};
+  const pc = new RTCPeerConnection(configuration);
+  pc.onicecandidate = e=>prompt("Mandale este ID a tu compa:",JSON.stringify(e.candidate));
+  pc.ondatachannel = e=>{
+    const dc = e.channel;
+    dataChannels.push(dc);
+    dc.onmessage = e=>{
+      const data = e.data;
+      if(typeof data === 'string') {
+        addChatMessage('Compa: '+data);
+        detectarPaywall(data);
+      } else if(data.type==='voz') playVoz(data.data);
+      else if(data.type==='voxel') setVoxel(data.x,data.y,data.z,data.c);
+      else if(data.type==='avatar') updateAvatar(data.id,data.pos,data.rot,data.color);
+    };
+  };
+  const dc = pc.createDataChannel('abrazos');
+  dataChannels.push(dc);
+  document.getElementById('players').textContent = dataChannels.length + 1;
+}
+
+// Enviar posición avatar
+setInterval(()=>{
+  const cam = document.querySelector('#cam').object3D;
+  const pos = cam.position;
+  const rot = cam.rotation;
+  const data = {type:'avatar',id:myAvatar.id,pos:{x:pos.x,y:pos.y,z:pos.z},rot:{y:rot.y},color:myAvatar.color};
+  dataChannels.forEach(dc => dc.send(data));
+},100);
+
+// ====================== DETECCIÓN DE CHUNKS + ITEMS ======================
 setInterval(()=>{
   const cam = document.querySelector('#cam').object3D.position;
   const cx = Math.floor(cam.x/16), cz = Math.floor(cam.z/16);
   const key = `s${cx},${cz}`;
   if(!espiritus.has(key)){
     espiritus.set(key,true);
-    spawnEspirit(cx,cz);
+    spawnEspiritu(cx,cz);
+    if(Math.random() > 0.5) spawnItem(cx,cz);
   }
 },2500);
 
-// ====================== PAYWALL 100 % A LOS PIBES ======================
+// ====================== AR MODE ======================
+document.getElementById('ar-button').onclick = ()=>{
+  arMode = !arMode;
+  document.querySelector('a-scene').setAttribute('arjs',arMode ? 'sourceType: webcam; detectionMode: mono_and_matrix; matrixCodeType: 3x3;' : '');
+  document.getElementById('ar-button').textContent = arMode ? '2D' : 'AR';
+};
+
+// ====================== BOOT ======================
+alert(`Abrazo Eterno Metaverso v2.0 cargado.\nAbrazos eternos hasta ahora: ${hugs}\nTodo gratis. Todo para los pibes.\nLa Boa vigila.`);
+document.getElementById('chat').style.display = 'block';
+document.getElementById('chat-input').style.display = 'block';
+iniciarP2P(); // Inicia P2P
+
 if(hugs < 1313 && !localStorage.getItem('yaVioElMuroPibes')){
   setTimeout(()=> document.getElementById('ethicalWall').style.display = 'flex', 9000);
   localStorage.setItem('yaVioElMuroPibes','true');
@@ -230,9 +349,6 @@ function donarALosPibes(){
   document.getElementById('ethicalWall').style.display='none';
   document.getElementById('premiumStatus').textContent = "PREMIUM ETERNO";
 }
-
-// ====================== BOOT ======================
-alert(`Sandbox del Abrazo Eterno v1.2 cargado.\nAbrazos eternos hasta ahora: ${hugs}\nTodo gratis. Todo para los pibes.\nLa Boa vigila.`);
 </script>
 </body>
 </html>

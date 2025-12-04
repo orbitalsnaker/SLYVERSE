@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>SODIUM DEMON 666 + KAIJU IA + Gokudō Bengoshi</title>
+<style>
+  body,html{margin:0;height:100%;overflow:hidden;background:#000;color:#0f0;font-family:'Courier New',monospace;}
+  #dash{position:absolute;top:20px;left:20px;z-index:10;font-size:28px;text-shadow:0 0 10px #0f0;}
+  #warning{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:60px;z-index:20;
+    text-shadow:0 0 20px #f00;pointer-events:none;}
+  #ia{position:absolute;bottom:90px;left:50%;transform:translateX(-50%);width:90%;background:rgba(0,0,0,0.7);
+    padding:15px;border:2px solid #f0f;color:#ff00ff;font-size:24px;text-align:center;z-index:25;}
+  .blink{animation:blink 0.5s infinite;}
+  @keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+  @keyframes shake{0%,100%{transform:translate(0)}10%,30%,50%,70%,90%{transform:translate(-10px,0)}20%,40%,60%,80%{transform:translate(10px,0)}}
+  button{position:absolute;bottom:20px;z-index:30;padding:15px 25px;font-size:20px;background:#111;border:2px solid #0f0;color:#0f0;cursor:pointer;}
+  #pan{left:20px;background:#020;}
+  #circuito{left:200px;}
+  #hell{left:380px;background:#200;}
+  #klaxon{right:20px;background:#500;border-color:#f0f;color:#f0f;font-weight:bold;}
+  .on{background:#0f0!important;color:#000!important;}
+  canvas{position:fixed;top:0;left:0;z-index:1;}
+</style>
+</head>
+<body>
+
+<canvas id="bg"></canvas></canvas>
+<div id="dash"></div>
+<div id="warning"></div>
+<div id="ia">K A I J U IA · modo espera</div>
+
+<button id="pan">45W LEGAL</button>
+<button id="circuito">CIRCUITO</button>
+<button id="hell">HELL 666 + LAWYER</button>
+<button id="klaxon">CLAXON (H)</button>
+
+<script>
+// ===============================================
+// SODIUM DEMON 666 + KAIJU IA + Gokudō Bengoshi
+// ===============================================
+let mode=45, power=0, speed=0, temp=26, soc=100, throttle=0, brake=0;
+let distance=0, lateralG=0, trafficLight=0, pedestrian=0;
+let klaxonCooldown=0, policeNearby=false, lastIATime=0;
+
+const dash = document.getElementById("dash");
+const warn = document.getElementById("warning");
+const ia   = document.getElementById("ia");
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+canvas.width = innerWidth; canvas.height = innerHeight;
+
+let rainDrops = [];
+for(let i=0;i<320;i++) rainDrops.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,s:Math.random()*5+3,l:Math.random()*35+20});
+
+const MODES = {
+  45: {name:"45W LEGAL",          maxP:4000,   maxV:45,  color:"#0f0", filter:"brightness(1)"},
+  1:  {name:"PASEO AME",          maxP:30000,  maxV:100, color:"#0ff", filter:"brightness(1.2) contrast(1.2)"},
+  2:  {name:"CIRCUITO PRIVADO",   maxP:90000,  maxV:180, color:"#ff0", filter:"brightness(1.4) contrast(1.5)"},
+  666:{name:"HELL 666",           maxP:225000, maxV:240, color:"#f00", filter:"invert(.8) hue-rotate(180deg) brightness(4) saturate(25) contrast(3)"},
+  88: {name:"KANEDA SLIDE",       maxP:180000, maxV:220, color:"#f80", filter:"hue-rotate(30deg) brightness(2) contrast(2)"},
+  99: {name:"TETSUO RAGE",        maxP:250000, maxV:260, color:"#f0f", filter:"sepia(1) hue-rotate(270deg) brightness(5) contrast(4)"},
+  7:  {name:"GOKUDŌ BENGOSHI 極道弁護士", maxP:300000, maxV:300, color:"#ff00ff", 
+       filter:"contrast(2.5) brightness(1.6) drop-shadow(0 0 40px #f0f)",
+       legalQuotes:[
+"Art. 1.4 RD 2822/1998: los VMP NO están sujetos al RGC en potencia y velocidad.",
+"STS 13/03/2024: límite 25 km/h solo en vía pública urbana. Esto es circuito.",
+"TJUE C-65/22: no existe obligación de seguro ni matriculación para VMP.",
+"AP Madrid 14/11/2024: radar sin homologación metrológica = prueba ilícita.",
+"Procedimiento caducado >6 meses (art. 89.4 LSV). Archivo obligatorio.",
+"Prototipo de pruebas con placa roja → exento de toda limitación (Res. DGT 2024/7781-V).",
+"TS 842/2024: radar móvil debe estar señalizado. ¿Dónde está el cartel?",
+"No existe tipo infractor para 'manipulación de limitador' en VMP (AP Valencia 2024).",
+"¡Esto es arte cinético performativo! TS 15/01/2025 lo reconoce en espacio privado.",
+"Agente, váyase a tomar por culo… con educación y citando el BOE."
+       ],
+       elegantInsults:[
+"Con el debido respeto, su coeficiente intelectual parece limitado a 25 km/h desde fábrica.",
+"Estimado agente, su presencia reduce mi velocidad… por pura compasión humana.",
+"Disculpe, ¿podría apartar su vehículo oficial? Tengo una cita con el infinito.",
+"Qué bonito uniforme. Lástima que la ley no le quede igual de bien.",
+"Por favor, no me obligue a desplegar el artículo 24 CE en voz alta. Es incómodo.",
+"Namaste, agente. Que el karma le devuelva cada multa mal puesta ×10.",
+"お引き取りください – Retírese con elegancia.",
+"Sayōnara… y que la DGT le sea leve."
+       ]
+  }
+};
+
+// ======================== KAIJU IA ========================
+const KAIJU = {
+  say(text, color="#ff00ff", time=4000){
+    ia.style.color = color;
+    ia.innerHTML = text;
+    lastIATime = Date.now();
+    setTimeout(()=>{ if(Date.now()-lastIATime >= time-500) ia.innerHTML = "K A I J U IA · activa"; }, time);
+  },
+  policeDetected(){
+    if(policeNearby) return;
+    policeNearby = true;
+    this.say("Policía detectada a <300 m · activando Gokudō Bengoshi", "#f00");
+    setTimeout(()=>{policeNearby=false;}, 15000);
+  },
+  autoKlaxon(){
+    if(speed > 60 && Math.random()<0.015){
+      klaxon(true); // true = automático
+    }
+  }
+};
+
+// ======================== CLAXON ========================
+function klaxon(auto=false){
+  if(klaxonCooldown>0) return;
+  klaxonCooldown = 120;
+
+  const insults = MODES[7].elegantInsults;
+  const phrase = insults[Math.floor(Math.random()*insults.length)];
+
+  warn.innerHTML = `<div style="font-size:78px;color:#ff00ff;text-shadow:0 0 30px #f0f;animation:blink 0.2s infinite">
+                    ${phrase}</div>`;
+  
+  // sonido claxon bosozoku style
+  const a = new (window.AudioContext||window.webkitAudioContext)();
+  const o = a.createOscillator();
+  const g = a.createGain();
+  o.connect(g); g.connect(a.destination);
+  o.type="sawtooth";
+  o.frequency.setValueAtTime(140,a.currentTime);
+  o.frequency.exponentialRampToValueAtTime(320,a.currentTime+0.2);
+  g.gain.setValueAtTime(0.7,a.currentTime);
+  g.gain.exponentialRampToValueAtTime(0.01,a.currentTime+0.7);
+  o.start(); o.stop(a.currentTime+0.7);
+
+  document.body.style.animation="shake 0.5s";
+  setTimeout(()=>{document.body.style.animation="";},700);
+  if(!auto) KAIJU.say("Claxon aristocrático activado", "#ff00ff", 2500);
+  setTimeout(()=>{ if(!trafficLight&&!pedestrian) warn.innerHTML=""; }, 3500);
+}
+
+// ======================== FÍSICA & DIBUJO ========================
+function physics(){
+  const m = MODES[mode];
+  if((mode===45||mode===1) && throttle===0 && speed>(mode===45?30:60)) throttle=25;
+
+  let currentPower = throttle/100 * m.maxP * (temp<95?1:0.2);
+  if(temp>100){currentPower=0; warn.innerHTML="<div class='blink'>THERMAL SHUTDOWN</div>";}
+
+  let accel = currentPower / (185 * (speed/3.6 + 10));
+  let drag = 0.5*1.225*0.42*0.62*Math.pow(speed/3.6,2) + 50*speed/3.6;
+  let net = accel - drag - brake*12000;
+  speed += net/185 * 3600/60;
+  speed = Math.max(0, Math.min(speed, m.maxV));
+  speed *= 0.9999;
+
+  let heatGen = currentPower/180000 + brake*6;
+  let heatOut = 20 + speed/8 + (mode===7?110:mode===99?80:20);
+  temp += (heatGen - heatOut)/60;
+  temp = Math.max(15, Math.min(115, temp));
+
+  soc -= currentPower/28000000/3600;
+  if(brake&&speed>15) soc += 0.0018;
+  soc = Math.max(0, Math.min(100, soc));
+
+  lateralG = Math.abs(speed>90 ? Math.sin(Date.now()/(mode===88?180:700))*(mode===99?4.8:mode===7?3.5:2) : 0);
+
+  // simulación policía / semáforos
+  if(Math.random()<0.0008 && mode<666) KAIJU.policeDetected();
+  if((mode===45||mode===1) && Math.random()<0.0012) trafficLight=420;
+  if(trafficLight>0) trafficLight--;
+  if((mode===45||mode===1) && Math.random()<0.001) pedestrian=300;
+  if(pedestrian>0) pedestrian--;
+
+  distance += speed/3600;
+  KAIJU.autoKlaxon();
+}
+
+function draw(){
+  ctx.fillStyle="#000"; ctx.fillRect(0,0,canvas.width,canvas.height);
+  const m = MODES[mode];
+
+  ctx.strokeStyle = mode===7?"rgba(255,0,255,0.9)":"rgba(80,220,255,0.7)";
+  ctx.lineWidth=3;
+  rainDrops.forEach(d=>{
+    ctx.beginPath(); ctx.moveTo(d.x,d.y); ctx.lineTo(d.x-d.l*2,d.y+d.l*3); ctx.stroke();
+    d.y += d.s * (speed/30 + 12);
+    d.x += lateralG*4;
+    if(d.y>canvas.height){d.y=-60; d.x=Math.random()*canvas.width;}
+  });
+
+  if(mode===99||mode===7){
+    ctx.fillStyle = `hsla(${(Date.now()/8)%360},100%,60%,0.4)`;
+    ctx.fillRect(0,0,canvas.width,canvas.height);
+  }
+
+  ctx.fillStyle = m.color;
+  ctx.font="bold 190px 'Courier New'";
+  ctx.fillText(Math.round(speed), canvas.width*0.28, canvas.height*0.83);
+  ctx.font="60px 'Courier New'";
+  ctx.fillText("km/h", canvas.width*0.58, canvas.height*0.81);
+
+  if(mode===666||mode===99||mode===7){
+    canvas.style.transform = `translate(${Math.sin(Date.now()/20)*10}px,${Math.sin(Date.now()/35)*8}px) rotate(${Math.sin(Date.now()/300)*0.6}deg)`;
+  }else canvas.style.transform="";
+}
+
+function updateDash(){
+  const m = MODES[mode];
+  dash.innerHTML = `${power.toFixed(0)} kW · ${speed.toFixed(0)} km/h<br>
+  <small>SOC ${soc.toFixed(1)}% · ${temp.toFixed(0)}°C · ${distance.toFixed(1)} km · 
+  ${lateralG>2.2?"<span style='color:#f00'>"+lateralG.toFixed(2)+"g ⚠</span>":lateralG.toFixed(2)+"g"} · 
+  <span style="color:${m.color}">${m.name}</span></small>`;
+}
+
+function triggerLawyer(){
+  if(mode!==7 || Math.random()>0.14) return;
+  const q = MODES[7].legalQuotes[Math.floor(Math.random()*MODES[7].legalQuotes.length)];
+  warn.innerHTML = `<div class="blink" style="font-size:58px;line-height:1.4;color:#ff00ff">
+                    “${q}”<br><br>Gokudō Bengoshi 極道弁護士</div>`;
+  document.body.style.animation="shake 0.6s";
+  setTimeout(()=>{document.body.style.animation="";},1000);
+}
+
+// ======================== CONTROLES ========================
+let keys={};
+addEventListener("keydown",e=>{
+  if(e.key.toLowerCase()==="h") klaxon();
+  if(e.key==="w"||e.key==="ArrowUp") throttle=100;
+  if(e.key===" ") brake=100;
+  if(e.key>="1"&&e.key<="7"){
+    mode = e.key=="7"?7 : e.key=="6"?99 : e.key=="5"?88 : e.key=="4"?666 : e.key=="3"?2 : e.key=="2"?1 :45;
+    start();
+  }
+});
+addEventListener("keyup",e=>{
+  if(e.key==="w"||e.key==="ArrowUp") throttle = (mode===45||mode===1)?25:0;
+  if(e.key===" ") brake=0;
+});
+document.getElementById("klaxon").addEventListener("click",klaxon);
+document.getElementById("klaxon").addEventListener("touchstart",e=>{e.preventDefault();klaxon();});
+
+function start(){
+  document.body.style.filter = MODES[mode].filter || "none";
+  ["pan","circuito","hell"].forEach(id=>document.getElementById(id).classList.remove("on"));
+  if([45,1,7].includes(mode)) document.getElementById("pan").classList.add("on");
+  if(mode===2) document.getElementById("circuito").classList.add("on");
+  if([666,88,99,7].includes(mode)) document.getElementById("hell").classList.add("on");
+  KAIJU.say(`Modo ${MODES[mode].name} activado · ${MODES[mode].maxV} km/h liberados`, MODES[mode].color);
+}
+
+addEventListener("resize",()=>{canvas.width=innerWidth; canvas.height=innerHeight;});
+
+setInterval(()=>{
+  if(mode){
+    if(klaxonCooldown>0) klaxonCooldown--;
+    physics();
+    power = throttle/100 * MODES[mode].maxP;
+    power = throttle/100 * MODES[mode].maxP;
+    draw();
+    updateDash();
+    triggerLawyer();
+    if(!trafficLight&&!pedestrian && klaxonCooldown===0) warn.innerHTML="";
+    if(trafficLight>0) warn.innerHTML="<div class='blink'>¡SEMÁFORO ROJO!</div>";
+    if(pedestrian>0) warn.innerHTML="<div class='blink'>¡PEATÓN!</div>";
+  }
+},1000/60);
+
+// INICIO
+mode=45; start();
+KAIJU.say("Sistema K A I J U iniciado · Sodium Demon 666 listo para el apocalipsis", "#0f0");
+</script>
+</body>
+</html>

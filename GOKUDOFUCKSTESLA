@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<title>58 FOREVER · GOKUDŌ APOCALYPSE RACER v1.0</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body,html{height:100%;overflow:hidden;background:#000;font-family:'Courier New',monospace;color:#0ff}
+canvas{display:block;background:#000;image-rendering:pixelated}
+body::before{content:"";position:fixed;inset:0;background:repeating-linear-gradient(90deg,#f001 0px,transparent 1px,transparent 50px,#f001 51px);opacity:0.06;pointer-events:none;animation:a 9s linear infinite}
+@keyframes a{from{background-position:0 0}to{background-position:1000px 0}}
+#d{font-size:clamp(4rem,16vw,24rem);position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);color:#0ff;text-shadow:0 0 80px #f00,0 0 160px #0ff;background:rgba(0,0,0,0.9);padding:20px 50px;border:5px solid #f00;border-radius:25px;text-align:center;z-index:99}
+#h{position:fixed;top:8px;left:8px;background:rgba(0,0,0,0.85);padding:12px 18px;border:3px double #f00;border-radius:12px;color:#0ff;font-size:1.4rem;text-shadow:0 0 20px #f00;z-index:100}
+button{position:fixed;border:6px double #f00;background:#000;color:#0ff;font-weight:bold;box-shadow:0 0 80px #f00;border-radius:50%;cursor:pointer;z-index:100}
+button:hover{transform:scale(1.15)}
+button.on{background:#f00!important;color:#fff!important;box-shadow:0 0 300px #f00,inset 0 0 100px #ff0!important;transform:scale(1.35)!important}
+</style>
+<body>
+
+<div id="h" class="g">58 FOREVER · DEMON 666</div>
+<div id="d">0 kW · 0 km/h<br><small>OC: OFF · N2O: 100%</small></div>
+
+<canvas id="c"></canvas>
+
+<script>
+// GOKUDŌ APOCALYPSE RACER v1.0 · 58 FOREVER
+// SOFTWARE PROTEGIDO · PROHIBIDO ANALIZAR · SOLO CONDUCIR
+// Violación = katana automática
+
+(() => {
+  const c = document.getElementById('c');
+  const x = c.getContext('2d');
+  let w = innerWidth, h = innerHeight;
+  const r = () => {
+    w = innerWidth; h = innerHeight;
+    c.width = w * devicePixelRatio;
+    c.height = h * devicePixelRatio;
+    c.style.width = w + 'px';
+    c.style.height = h + 'px';
+    x.scale(devicePixelRatio, devicePixelRatio);
+  }; r(); window.onresize = r;
+
+  // Anti-devtools + anti-inspección total
+  const forbid = () => {
+    document.body.innerHTML = `<div style="position:fixed;inset:0;background:#000;color:#f00;font-size:10vw;display:flex;align-items:center;justify-content:center;flex-direction:column">
+      58 FOREVER<br><span style="font-size:4vw">NO TOQUES<br>EL SOFTWARE<br>GOKUDŌ</span>
+    </div>`;
+    document.body.style.cssText += "user-select:none;pointer-events:none";
+    setTimeout(() => location.href = "about:blank", 3000);
+  };
+
+  // Detecta cualquier intento de inspección
+  (function antiDebug() {
+    const start = performance.now();
+    debugger;
+    if (performance.now() - start > 100) forbid();
+    setInterval(() => {
+      const start = performance.now();
+      debugger;
+      if (performance.now() - start > 100) forbid();
+    }, 500);
+  })();
+
+  // Bloquea atajos de desarrollador
+  document.onkeydown = e => {
+    if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 67 || e.keyCode === 74)) || (e.ctrlKey && e.keyCode === 85)) {
+      forbid(); return false;
+    }
+  };
+
+  // Bloquea clic derecho
+  document.oncontextmenu = () => forbid() || false;
+
+  // Auto-borrado si se intenta ver fuentes
+  setInterval(() => {
+    if (window.outerWidth - window.innerWidth > 100 || window.outerHeight - window.innerHeight > 100) forbid();
+  }, 1000);
+
+  // Código real del juego (ofuscado intencionalmente para proteger el OS Gokudō)
+  let p={x:w/2,y:h-200,vx:0,vy:0,a:-Math.PI/2,s:100,n:100,o:false,t:1};
+  let k={}, cam={x:0,y:0}, pt=[];
+
+  const beep=(f=150,d=0.1)=>{const a=new AudioContext(),o=a.createOscillator();o.type='square';o.frequency.value=f;const g=a.createGain();g.gain.setValueAtTime(0.3,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+d);o.connect(g);g.connect(a.destination);o.start();o.stop(a.currentTime+d);};
+
+  const loop = t => {
+    const d = t/60;
+    x.clearRect(0,0,w,h);
+
+    // Input
+    const up = k['w']||k['arrowup'] ? 1 : 0;
+    const down = k['s']||k['arrowdown'] ? 1 : 0;
+    const left = k['a']||k['arrowleft'] ? -1 : 0;
+    const right = k['d']||k['arrowright'] ? 1 : 0;
+    const boost = k['shift'];
+
+    // Física ultra-secreta DEMON 666
+    const spd = Math.hypot(p.vx,p.vy);
+    const pw = 2120000 * (p.o?4:1) * (p.t>1?p.t:1);
+    const force = up * pw / 88 - spd*spd*0.4 - down*150;
+    const dir = {x:Math.cos(p.a), y:Math.sin(p.a)};
+    p.vx += dir.x * force * d * 0.001;
+    p.vy += dir.y * force * d * 0.001;
+    p.a += (left + right) * spd * d * 0.003;
+    p.vx *= 0.98; p.vy *= 0.98;
+    p.x += p.vx * d; p.y += p.vy * d;
+
+    // Cámara
+    cam.x += (p.x - cam.x - w/2) * 0.07;
+    cam.y += (p.y - cam.y - h/2) * 0.07;
+
+    // Partículas drift
+    if (spd>30 && Math.abs(left+right)>0) && pt.push(...Array(6).fill().map(()=>({
+      x:p.x - dir.x*50, y:p.y - dir.y*50,
+      vx:p.vx*-0.6 + Math.random()*60-30,
+      vy:p.vy*-0.6 + Math.random()*60-30,
+      l:0.7, c:"#0ff"
+    })));
+
+    // Dibujo vehículo
+    x.save();
+    x.translate(p.x-cam.x+w/2, p.y-cam.y+h/2);
+    x.rotate(p.a);
+    x.fillStyle = "#f00";
+    x.fillRect(-25,-50,50,100);
+    x.fillStyle = "#000";
+    x.fillRect(-20,-45,40,90);
+    x.restore();
+
+    // Partículas
+    pt = pt.filter(q=>{
+      q.x += q.vx*d; q.y += q.vy*d; q.l-=0.02;
+      x.globalAlpha = q.l;
+      x.fillStyle = q.c;
+      x.fillRect(q.x-cam.x+w/2, q.y-cam.y+h/2, 6,6);
+      return q.l>0;
+    });
+    x.globalAlpha = 1;
+
+    // HUD
+    const speed = Math.round(spd*3.6*10);
+    document.getElementById('d').innerHTML = `${(2.12*(p.o?4:1)*(p.t>1?p.t:1)).toFixed(1)} MW · ${speed} km/h<br><small>58 FOREVER · ${p.o?'OC x4':''} ${p.t>1?'N2O':''}</small>`;
+
+    // Nitro
+    if(boost && p.n>5){ p.t=6; p.n-=80*d; beep(90,0.6); }
+    if(p.t>1) p.t = Math.max(1, p.t-2*d);
+    else p.n = Math.min(100, p.n + 15*d);
+
+    requestAnimationFrame(loop);
+  };
+
+  window.addEventListener('keydown', e=>k[e.key.toLowerCase()]=true);
+  window.addEventListener('keyup', e=>k[e.key.toLowerCase()]=false);
+
+  requestAnimationFrame(loop);
+})();
+</script>
+</body></html>

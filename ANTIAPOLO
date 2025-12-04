@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="es"><meta charset="utf-8">
+<title>ANTI-APOLO · 義理人情仁義 Launcher</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#0f0;font-family:"Courier New",monospace;overflow:hidden;
+    background:linear-gradient(135deg,#000,#110011,#000033)}
+.yakuza{max-width:1400px;margin:2rem auto;padding:5rem;background:rgba(5,0,20,0.97);
+    border:16px double #f0f;border-radius:4rem;text-align:center;box-shadow:0 0 500px #f0f inset}
+h1{font-size:clamp(5rem,16vw,14rem);text-shadow:0 0 180px #f0f,0 0 300px #f00;letter-spacing:18px;
+    background:-webkit-linear-gradient(#f0f,#f00); -webkit-background-clip:text; -webkit-text-fill-color:transparent}
+.blood{background:#200000;border:14px double #f00;padding:5rem;margin:5rem auto;border-radius:5rem;
+    box-shadow:0 0 400px #f00;color:#f00;font-size:3.2rem;line-height:2.6}
+.troll{color:#f00;text-shadow:0 0 60px #f00,0 0 120px #f00;font-size:5rem;animation:glitch 1.5s infinite}
+#simulacion{background:#000;border:12px solid #0ff;padding:3rem;border-radius:4rem;
+    min-height:500px;margin:6rem auto;box-shadow:0 0 200px #0ff;color:#0ff;font-size:2.6rem;overflow:hidden}
+.katana,.onepiece{position:fixed;width:320px;height:320px;cursor:pointer;z-index:999}
+.katana{bottom:60px;right:60px;background:linear-gradient(45deg,#fff,#aaa);clip-path:polygon(50% 0%, 60% 10%, 100% 90%, 0% 90%, 40% 10%);
+    box-shadow:0 0 600px #f00;animation:sharpen 8s infinite}
+.onepiece{bottom:70px;left:70px;background:radial-gradient(#f80,#f00);border-radius:50%;
+    box-shadow:0 0 600px #f80;animation:stretch 6s infinite}
+#barra{position:fixed;bottom:0;left:0;width:0%;height:12px;background:#f0f;z-index:9999;
+    box-shadow:0 0 80px #f0f}
+.kanji{position:fixed;color:#f0f;font-size:2.5rem;opacity:0;pointer-events:none;animation:kanji 28s linear forwards}
+@keyframes glitch{0%,100%{text-shadow:0 0 60px #f00} 20%{text-shadow:-10px 0 #0ff,10px 0 #f0f} 40%{text-shadow:10px 0 #f0f,-10px 0 #0ff}}
+@keyframes sharpen{0%,100%{transform:rotate(0)}50%{transform:rotate(360deg) scale(1.3)}}
+@keyframes stretch{0%,100%{transform:scale(1)}50%{transform:scale(1.8) rotate(180deg)}}
+@keyframes kanji{0%{opacity:0;transform:translateY(100vh) rotate(0)}30%{opacity:1}100%{opacity:0;transform:translateY(-100vh) rotate(720deg)}}
+</style>
+<body onload="lanzarAntiApolo()">
+
+<div id="barra"></div>
+
+<div class="yakuza">
+  <h1>ＡＮＴＩ−ＡＰＯＬＯ 義理人情仁義</h1>
+  <p style="font-size:5.5rem;color:#0ff;text-shadow:0 0 40px #f0f">
+    Cohete open-source impreso en el garaje · 65 kg · 48 KB · hecho con un prompt y mala hostia
+  </p>
+
+  <div class="blood troll">
+    BOM RIDÍCULO (precio total real 2026: 666 € + 9.999 € lanzamiento Piggyback)<br><br>
+    • Tubos PVC 110 mm (fontanería Leroy Merlin) → 48 €<br>
+    • Fibra de carbono de paraguas rotos (Wallapop) → 27 €<br>
+    • 4 motores de impresora 3D Creality overclockeados a nitrous (NOS de AliExpress) → 88 €<br>
+    • Queroseno casero (gasolina 98 + aceite de fritanga reciclado MotoGP) → 34 €/lanzamiento<br>
+    • Electrónica: ESP32 + MPU6050 + relé de microondas → 19 €<br>
+    • Paracaídas: sábana vieja + cuerda de tender → 0 €<br>
+    • Pintura yakuza airbrush (laca de coche robada al primo) → 12 €<br>
+    • Katana anti-gravedad 3D PLA reforzado → 23 €<br><br>
+    
+    <span style="font-size:7rem;color:#0ff">
+      TOTAL: 666 € · Lánzalo desde el tejado y humilla a la NASA<br>
+      Forkea el repo y sé leyenda cyberpunk
+    </span>
+  </div>
+
+  <div id="simulacion">Simulación orbital cargando... toca la katana para ignición</div>
+</div>
+
+<div class="katana" onclick="ignition()" title="IGNICIÓN YAKUZA"></div>
+<div class="onepiece" onclick="reentryGomuGomu()" title="Re-entry estilo Luffy"></div>
+
+<script>
+let fase = 0;
+const frases = [
+  "Ignición con orgullo de tenderete...",
+  "Booster PLA despegando... 2.12 MW de pura mala hostia",
+  "188 km/h orbital alcanzados. NASA llorando",
+  "Minando helio-3 para los pobres... regalito a los reyes",
+  "Re-entry con cola de One Piece activada. ¡Gomu Gomu no Burn!",
+  "Aterrizaje perfecto en tu tejado. Elon tuiteando en japonés",
+  "ANTI-APOLO completado. La Luna ya es open-source."
+];
+
+async function lanzarAntiApolo() {
+  await loadPyodide();
+  document.getElementById("simulacion").innerHTML = `
+    <h2 style="color:#ff0;font-size:7rem">ANTI-APOLO READY</h2>
+    <p style="font-size:4rem">Cohete low-cost más peligroso del sistema solar<br>
+    Peso: 65 kg · Altura: 5 m · Precio: 666 €<br>
+    Filosofía: 義理 (honor) 人情 (humanidad) 仁義 (justicia yakuza)<br><br>
+    <span style="color:#f00">Toca la katana para joder a los dioses corporativos</span></p>`;
+  setInterval(kanjiRain,12000);
+  kanjiRain();
+}
+
+function ignition() {
+  if (fase >= frases.length) return;
+  const out = document.getElementById("simulacion");
+  out.innerHTML += `<br><br>>> ${frases[fase]}`;
+  fase++;
+  const porc = (fase / frases.length) * 100;
+  document.getElementById("barra").style.width = porc + "%";
+  if (fase === frases.length) {
+    out.innerHTML += `<br><br><span style="font-size:6rem;color:#f00;animation:glitch 0.8s infinite">
+      MISIÓN COMPLETADA · LA LUNA ES OPEN-SOURCE · ELON EN SHOCK</span>`;
+    hablar("Anti-Apolo victorioso. Los pobres minamos asteroides mientras los ricos miran. Besitos desde el garaje.");
+  } else hablar(frases[fase-1]);
+}
+
+function reentryGomuGomu() {
+  document.body.style.transform = "rotate(360deg)";
+  setTimeout(()=>document.body.style.transform="",800);
+  hablar("¡Gomu Gomu no Anti-Apolo Meteor! Re-entry elástico activado.");
+}
+
+function hablar(t) {
+  const voz = new SpeechSynthesisUtterance(t);
+  voz.lang = "es-ES";
+  voz.rate = 0.9;
+  voz.pitch = 0.8;
+  speechSynthesis.speak(voz);
+}
+
+function kanjiRain() {
+  const kanjis = ["義","理","人","情","仁","義","蛇","反","阿","波","羅","月","採","掘","貧","富","共"];
+  for(let i=0;i<8;i++){
+    const k = document.createElement('div');
+    k.className = 'kanji';
+    k.textContent = kanjis[Math.floor(Math.random()*kanjis.length)];
+    k.style.left = Math.random()*90 + 5 + 'vw';
+    k.style.fontSize = Math.random()*6 + 4 + 'rem';
+    document.body.appendChild(k);
+    setTimeout(() => k.remove(), 30000);
+  }
+}
+</script>
+</body>
+</html>

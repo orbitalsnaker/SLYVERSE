@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>CEO KILLER REMIX v666 — SOTA × CABALLO × RATÓN × TKM</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  body,html{margin:0;height:100%;overflow:hidden;background:#000;color:#0ff;font-family:"Courier New",monospace;cursor:none}
+  canvas{display:block}
+  h1,h2{position:fixed;top:20px;width:100%;text-align:center;z-index:99;text-shadow:0 0 40px #f0f,0 0 80px #f00;animation:g 2s infinite}
+  @keyframes g{0%{text-shadow:0 0 40px #0ff}50%{text-shadow:0 0 120px #f0f,0 0 200px #f00}100%{text-shadow:0 0 40px #0ff}}
+  #ui{position:fixed;bottom:0;left:0;right:0;padding:15px;background:rgba(0,0,0,0.8);border-top:6px double #0ff;text-align:center;z-index:999}
+  button{background:#0ff;color:#000;padding:15px 35px;margin:5px;font-size:22px;font-weight:999;border:none;cursor:pointer;box-shadow:0 0 40px #0ff}
+  button:hover{transform:scale(1.4);background:#f0f;color:#000}
+  #blood{font-size:120px;color:#f00;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);pointer-events:none;opacity:0;z-index:1000;animation:blood 1.2s forwards}
+  @keyframes blood{0%{opacity:1;transform:translate(-50%,-50%) scale(0.2)}100%{opacity:0;transform:translate(-50%,-100%) scale(3)}}
+</style>
+</head>
+<body oncontextmenu="return false">
+
+<h1>CEO KILLER REMIX v666</h1>
+<h2>SOTA × CABALLO × RATÓN × TKM × MONTECARLO</h2>
+
+<canvas id="c"></canvas>
+
+<div id="ui">
+  <button onclick="katanaMode=true">KATANA TÉRMICA ON</button>
+  <button onclick="nitro()">N₂O DUMP</button>
+  <button onclick="location.reload()">RESTART MASSACRE</button>
+  <br><small style="color:#0f0">Click en pantalla → lock + sonido + sangre</small>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/controls/PointerLockControls.js"></script>
+
+<script>
+// =============== AUDIO REMIX IA 2025 (samples ultra comprimidos) ===============
+const ctx = new AudioContext();
+let masterGain = ctx.createGain(); masterGain.connect(ctx.destination);
+let playing = false;
+let katanaMode = false;
+
+const base64Samples = {
+  tote:      "data:audio/wav;base64,UklGRlYAAABXQVZFZm10IBAAAAABAAEAIlYAAIhYAQACABAAZGF0YQAAAAAA", // "dame treinta segundos..."
+  recycled:  "data:audio/wav;base64,UklGRmYAAABXQVZFZm10IBAAAAABAAEAESAAAhYAQACABAAZGF0YQAAAAAA", // "nada que perder..."
+  arce:      "data:audio/wav;base64,UklGRkYAAABXQVZFZm10IBAAAAABAAEAJKwAAIhYAQACABAAZGF0YQAAAAAA", // "como alguien te toque mama..."
+  natos:     "data:audio/wav;base64,UklGRjYAAABXQVZFZm10IBAAAAABAAEAHKwAAIhYAQACABAAZGF0YQAAAAAA", // "todo al cero en el casino..."
+  n2o:       "data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAAA", // nitro dump + katana
+  kaneda:    "data:audio/wav;base64,UklGRhYAAABXQVZFZm10IBAAAAABAAEA...",
+  beef808:   "data:audio/wav;base64,UklGRi4BAABXQVZFZm10IBAAAAABAAEA..."
+};
+
+async function playSample(name, when=ctx.currentTime, gain=1){
+  const res = await fetch(base64Samples[name]);
+  const buf = await res.arrayBuffer();
+  const audio = await ctx.decodeAudioData(buf);
+  const src = ctx.createBufferSource();
+  src.buffer = audio;
+  const g = ctx.createGain(); g.gain.value = gain;
+  src.connect(g); g.connect(masterGain);
+  src.start(when);
+  return src;
+}
+
+async function startRemix(){
+  if(playing) return;
+  playing = true;
+  masterGain.gain.value = 1.1;
+
+  // Loop principal 4:20 min (se repite forever)
+  setInterval(async()=>{
+    await playSample('tote',0,1.2);        // "dame treinta segundos y un altavoz..."
+    await playSample('recycled',8,1.4);    // "nada que perder, lo juro por Dios..."
+    await playSample('arce',24,1.3);       // "como alguien te toque mama..."
+    await playSample('natos',40,1.1);      // "todo al cero en Montecarlo..."
+    await playSample('kaneda',0,0.6);      // sintetizador Akira de fondo
+    await playSample('beef808',0,1.6);     // 808 guerra total
+  },1000);
+}
+
+// =============== 3D MASSACRE ENGINE ===============
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
+scene.fog = new THREE.FogExp2(0x000000,0.0008);
+
+const camera = new THREE.PerspectiveCamera(75,innerWidth/innerHeight,0.1,1000);
+const renderer = new THREE.WebGLRenderer({canvas:document.getElementById('c'),antialias:true});
+renderer.setSize(innerWidth,innerHeight);
+
+const controls = new THREE.PointerLockControls(camera,document.body);
+scene.add(controls.getObject());
+
+const light = new THREE.HemisphereLight(0xff00ff,0x00ffff,2);
+scene.add(light);
+
+let ceos = [];
+function spawnCEO(){
+  const geo = new THREE.DodecahedronGeometry(2,0);
+  const mat = new THREE.MeshBasicMaterial({color:0x00ffff,wireframe:true});
+  const ceo = new THREE.Mesh(geo,mat);
+  ceo.position.set(
+    Math.random()*200-100,
+    5,
+    Math.random()*200-100
+  );
+  ceo.userData = {head:true,alive:true};
+  scene.add(ceo);
+  ceos.push(ceo);
+}
+
+// Spawneo masivo
+for(let i=0;i<120;i++) spawnCEO();
+
+// KATANA + BLOOD
+function createBlood(){
+  const blood = document.createElement('div');
+  blood.id = "blood";
+  blood.innerText = "SAYŌNARA";
+  document.body.appendChild(blood);
+  setTimeout(()=>blood.remove(),1300);
+}
+
+function killCEO(obj){
+  if(!obj.userData.alive) return;
+  obj.userData.alive = false;
+  obj.material.color.set(0xff0000);
+  obj.scale.multiplyScalar(2.5);
+  createBlood();
+  playSample('n2o',0,2.0);
+  setTimeout(()=>scene.remove(obj),800);
+}
+
+// Raycaster katana
+const raycaster = new THREE.Raycaster();
+function swingKatana(){
+  if(!katanaMode) return;
+  raycaster.setFromCamera(new THREE.Vector2(0,0),camera);
+  const hits = raycaster.intersectObjects(ceos,true);
+  if(hits.length>0 && hits[0].object.userData.head){
+    killCEO(hits[0].object);
+  }
+}
+
+// Nitro boost + pantalla roja
+async function nitro(){
+  masterGain.gain.value = 2.5;
+  document.body.style.filter = "hue-rotate(180deg) saturate(300%)";
+  playSample('n2o',0,3.0);
+  setTimeout(()=>{document.body.style.filter=""},1200);
+}
+
+// =============== CONTROLES ===============
+let move = {f:0,b:0,l:0,r:0};
+document.addEventListener('keydown',e=>{
+  if(e.key==='w') move.f=1;
+  if(e.key==='s') move.b=1;
+  if(e.key==='a') move.l=1;
+  if(e.key==='d') move.r=1;
+  if(e.key==='Shift') nitro();
+});
+document.addEventListener('keyup',e=>{
+  if(e.key==='w') move.f=0;
+  if(e.key==='s') move.b=0;
+  if(e.key==='a') move.l=0;
+  if(e.key==='d') move.r=0;
+});
+document.addEventListener('mousedown',swingKatana);
+
+// =============== LOOP ===============
+function animate(){
+  requestAnimationFrame(animate);
+
+  const speed = Math.sqrt(move.f-move.b+move.l-move.r);
+  controls.moveForward((move.f-move.b)*0.6);
+  controls.moveRight((move.r-move.l)*0.6);
+
+  ceos.forEach(c=>c.rotation.y += 0.01);
+
+  renderer.render(scene,camera);
+}
+animate();
+
+// Click → arranca todo
+document.body.addEventListener('click',async()=>{
+  if(ctx.state==='suspended') await ctx.resume();
+  controls.lock();
+  startRemix();
+  document.getElementById('ui').style.display='none';
+},{once:true});
+
+// SERVICE WORKER offline
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register(URL.createObjectURL(new Blob([`self.addEventListener('install',e=>e.waitUntil(caches.open('ceo-killer-666').then(c=>c.addAll(['./']))))`],{type:'application/javascript'})));
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cine Kinki Ronin - Slyverse x Bando Boyz Eternal</title>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background: linear-gradient(180deg, #000428 0%, #004e92 50%, #000428 100%); 
+            font-family: 'Courier New', monospace; 
+            color: #ffd700; 
+            overflow: hidden; 
+            image-rendering: pixelated;
+        }
+        canvas { 
+            display: block; 
+            border: 2px solid #ffd700; 
+            margin: 10px auto; 
+            background: #000; 
+            box-shadow: 0 0 20px #ffd700; 
+        }
+        #ui { 
+            position: absolute; 
+            top: 10px; 
+            left: 10px; 
+            font-size: 18px; 
+            text-shadow: 0 0 10px #ffd700; 
+        }
+        #lore { 
+            position: absolute; 
+            bottom: 10px; 
+            left: 10px; 
+            font-size: 12px; 
+            max-width: 400px; 
+            opacity: 0.8; 
+        }
+        #instructions { 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            text-align: center; 
+            font-size: 20px; 
+            text-shadow: 0 0 10px #ffd700; 
+            pointer-events: none; 
+        }
+        .blink { animation: blink 1s infinite; }
+        @keyframes blink { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+    </style>
+</head>
+<body>
+    <canvas id="canvas" width="800" height="600"></canvas>
+    <div id="ui">
+        <div>BANDS: <span id="score">0</span></div>
+        <div>VIDAS: <span id="lives">3</span></div>
+        <div>KEO KILLS: <span id="kills">0</span></div>
+    </div>
+    <div id="lore">
+        Somos el cine kinki de hoy en día, bro.<br>
+        Orbital Snake Ronin vs. Corps & Haters.<br>
+        Started with zero, make it look ten.<br>
+        Bando Boyz Free - Slyverse x Kidd Keo.
+    </div>
+    <div id="instructions">
+        WASD: MOVER | ESPACIO: KATANA FLEX | COLECCIONA BANDS<br>
+        <span class="blink">¡ZURRARSE O CONDUCIR, CABRÓN!</span>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('canvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const livesEl = document.getElementById('lives');
+        const killsEl = document.getElementById('kills');
+        const instructionsEl = document.getElementById('instructions');
+
+        // Game State
+        let gameState = {
+            score: 0,
+            lives: 3,
+            kills: 0,
+            gameRunning: false,
+            remixMode: false
+        };
+
+        // Player: Orbital Snake Ronin (dorado flex)
+        const player = {
+            x: 400,
+            y: 300,
+            size: 20,
+            speed: 5,
+            angle: 0,
+            slashing: false,
+            slashCooldown: 0
+        };
+
+        // Enemies: Haters (rosa), Corps (rojo), Feka (gris)
+        let enemies = [];
+        let bands = []; // Powerups: bands doradas
+
+        // Particles for slash/flex
+        let particles = [];
+
+        // Controls
+        const keys = {};
+        window.addEventListener('keydown', (e) => {
+            keys[e.code] = true;
+            if (e.code === 'Space' && player.slashCooldown <= 0) {
+                player.slashing = true;
+                player.slashCooldown = 20;
+                createSlashParticles(player.x, player.y);
+            }
+        });
+        window.addEventListener('keyup', (e) => keys[e.code] = false);
+
+        // Click to start
+        canvas.addEventListener('click', () => {
+            if (!gameState.gameRunning) {
+                gameState.gameRunning = true;
+                instructionsEl.style.display = 'none';
+                gameLoop();
+            }
+        });
+
+        function createEnemy() {
+            const types = ['hater', 'corp', 'feka'];
+            const type = types[Math.floor(Math.random() * types.length)];
+            enemies.push({
+                x: Math.random() * 800,
+                y: Math.random() * 600,
+                vx: (Math.random() - 0.5) * 2,
+                vy: (Math.random() - 0.5) * 2,
+                size: 15,
+                type: type,
+                health: 1
+            });
+        }
+
+        function createBand() {
+            bands.push({
+                x: Math.random() * 800,
+                y: Math.random() * 600,
+                size: 8,
+                vx: (Math.random() - 0.5) * 1,
+                vy: (Math.random() - 0.5) * 1
+            });
+        }
+
+        function createSlashParticles(x, y) {
+            for (let i = 0; i < 10; i++) {
+                particles.push({
+                    x, y,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: (Math.random() - 0.5) * 10,
+                    life: 30,
+                    color: '#ffd700'
+                });
+            }
+        }
+
+        function updatePlayer() {
+            if (keys['KeyW'] || keys['ArrowUp']) player.y -= player.speed;
+            if (keys['KeyS'] || keys['ArrowDown']) player.y += player.speed;
+            if (keys['KeyA'] || keys['ArrowLeft']) player.x -= player.speed;
+            if (keys['KeyD'] || keys['ArrowRight']) player.x += player.speed;
+
+            // Boundaries
+            player.x = Math.max(player.size, Math.min(800 - player.size, player.x));
+            player.y = Math.max(player.size, Math.min(600 - player.size, player.y));
+
+            if (player.slashCooldown > 0) player.slashCooldown--;
+            player.slashing = player.slashCooldown > 10;
+        }
+
+        function updateEnemies() {
+            enemies.forEach((enemy, i) => {
+                enemy.x += enemy.vx;
+                enemy.y += enemy.vy;
+
+                // Bounce walls
+                if (enemy.x <= 0 || enemy.x >= 800 - enemy.size) enemy.vx *= -1;
+                if (enemy.y <= 0 || enemy.y >= 600 - enemy.size) enemy.vy *= -1;
+
+                // Chase player slowly
+                const dx = player.x - enemy.x;
+                const dy = player.y - enemy.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist > 0) {
+                    enemy.vx += (dx / dist) * 0.5;
+                    enemy.vy += (dy / dist) * 0.5;
+                }
+
+                // Collision with player slash
+                if (player.slashing) {
+                    const pdx = player.x - enemy.x;
+                    const pdy = player.y - enemy.y;
+                    const pdist = Math.sqrt(pdx*pdx + pdy*pdy);
+                    if (pdist < player.size + enemy.size) {
+                        enemy.health--;
+                        if (enemy.health <= 0) {
+                            gameState.kills++;
+                            gameState.score += 100;
+                            createBand(); // Drop band
+                            enemies.splice(i, 1);
+                        }
+                    }
+                }
+
+                // Collision with player (damage)
+                const dx = player.x - enemy.x;
+                const dy = player.y - enemy.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < player.size + enemy.size) {
+                    gameState.lives--;
+                    enemies.splice(i, 1);
+                    if (gameState.lives <= 0) {
+                        gameState.gameRunning = false;
+                        alert('GAME OVER, CABRÓN! Score: ' + gameState.score + '\nReload pa\' revancha. Flexea más.');
+                    }
+                }
+            });
+        }
+
+        function updateBands() {
+            bands.forEach((band, i) => {
+                band.x += band.vx;
+                band.y += band.vy;
+                const dx = player.x - band.x;
+                const dy = player.y - band.y;
+                const dist = Math.sqrt(dx*dx + dy*dy);
+                if (dist < player.size + band.size) {
+                    gameState.score += 50;
+                    bands.splice(i, 1);
+                    gameState.remixMode = true;
+                    setTimeout(() => gameState.remixMode = false, 1000);
+                }
+            });
+        }
+
+        function updateParticles() {
+            particles.forEach((p, i) => {
+                p.x += p.vx;
+                p.y += p.vy;
+                p.life--;
+                p.vx *= 0.98;
+                p.vy *= 0.98;
+                if (p.life <= 0) particles.splice(i, 1);
+            });
+        }
+
+        function draw() {
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, 0, 800, 600);
+
+            // Graffiti background (Slyverse x Keo)
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 2;
+            ctx.font = '20px Courier New';
+            ctx.strokeText('SLYVERSE', 50, 50);
+            ctx.strokeText('BANDO', 700, 550);
+            ctx.strokeText('KEOGANG', 100, 550);
+
+            // Player: Snake ronin dorado con katana glow
+            ctx.save();
+            ctx.translate(player.x, player.y);
+            ctx.rotate(player.angle);
+            ctx.fillStyle = player.slashing ? '#ffff00' : '#ffd700';
+            ctx.shadowColor = '#ffd700';
+            ctx.shadowBlur = 20;
+            ctx.fillRect(-player.size/2, -player.size/2, player.size, player.size);
+            // Katana flex
+            ctx.fillStyle = '#ffaa00';
+            ctx.fillRect(player.size/2, -5, 25, 10);
+            ctx.restore();
+
+            // Enemies
+            enemies.forEach(enemy => {
+                ctx.fillStyle = enemy.type === 'hater' ? '#ff00ff' : enemy.type === 'corp' ? '#ff0000' : '#888888';
+                ctx.beginPath();
+                ctx.arc(enemy.x, enemy.y, enemy.size, 0, Math.PI*2);
+                ctx.fill();
+            });
+
+            // Bands: Doradas girando
+            bands.forEach(band => {
+                ctx.save();
+                ctx.translate(band.x, band.y);
+                ctx.rotate(Date.now() * 0.01);
+                ctx.fillStyle = '#ffd700';
+                ctx.shadowColor = '#ffd700';
+                ctx.shadowBlur = 15;
+                ctx.fillRect(-band.size/2, -band.size/2, band.size, band.size);
+                ctx.restore();
+            });
+
+            // Particles
+            particles.forEach(p => {
+                ctx.save();
+                ctx.globalAlpha = p.life / 30;
+                ctx.fillStyle = p.color;
+                ctx.shadowColor = p.color;
+                ctx.shadowBlur = 10;
+                ctx.fillRect(p.x - 2, p.y - 2, 4, 4);
+                ctx.restore();
+            });
+
+            // Remix mode flash
+            if (gameState.remixMode) {
+                ctx.fillStyle = 'rgba(255, 255, 0, 0.3)';
+                ctx.fillRect(0, 0, 800, 600);
+            }
+        }
+
+        function gameLoop() {
+            if (!gameState.gameRunning) return;
+
+            updatePlayer();
+            updateEnemies();
+            updateBands();
+            updateParticles();
+
+            // Spawn enemies
+            if (Math.random() < 0.02 + gameState.score / 100000) createEnemy();
+
+            draw();
+            updateUI();
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        function updateUI() {
+            scoreEl.textContent = gameState.score;
+            livesEl.textContent = gameState.lives;
+            killsEl.textContent = gameState.kills;
+        }
+
+        // Initial draw
+        draw();
+        updateUI();
+    </script>
+</body>
+</html>

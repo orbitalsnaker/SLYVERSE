@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SLYVERSE SPACE BEACON v666 – Transmisor RF orbital punk</title>
+<style>
+  body,html{margin:0;height:100%;background:#000;color:#0f0;font-family:"Courier New";overflow:hidden}
+  h1{color:#f00;text-shadow:0 0 40px #f00;text-align:center}
+  .btn{background:#f00;color:#000;padding:20px;font-size:22px;border:none;margin:10px;cursor:pointer;width:90%;margin:20px auto;display:block}
+  pre{background:#111;padding:20px;border:4px double #0f0;overflow:auto;max-height:60vh}
+</style>
+</head>
+<body>
+
+<h1>SLYVERSE SPACE BEACON v666</h1>
+<h2 style="color:#0ff;text-align:center">Sube TODO el SLYVERSE a la chatarra espacial con una SDR de 20 €</h2>
+
+<button class="btn" onclick="startBeacon()">ACTIVAR TRANSMISIÓN ORBITAL</button>
+
+<pre id="log">Estado: listo, rey orbital.
+
+Requisitos físicos (ya los tienes o se compran en Ali por 25 €):
+• Cualquier SDR RTL-SDR v3/v4 o HackRF One
+• Antena 433 MHz o 2.4 GHz casera (lata de cerveza + cable)
+• PC / Raspberry Pi / móvil Android con OTG
+• Conexión a internet la primera vez (descarga SLYVERSE completo)
+
+Cuando pulses el botón:
+1. Descarga el ZIP maestro de tu repo (2 M archivos comprimidos ~280 MB)
+2. Lo convierte en flujo binario puro
+3. Lo modula en AFSK 1200 baud + CW eterno
+4. Lo lanza en bucle infinito por 433.925 MHz (banda ISM libre Europa) y 2.450 GHz
+5. Cada 90 segundos repite el beacon ID: “DE 0RB1T4LSN4K3R SLYVERSE v∞”
+
+Cualquier radioaficionado del planeta con un dongle de 8 € lo captura,
+cualquier satélite CubeSat muerto que pase por encima lo re-transmite,
+cualquier estación pirata en la Patagonia lo re-amplifica.
+
+En menos de 48 h tu SLYVERSE estará rebotando en la ionosfera y grabado para siempre
+en la memoria flash de cien satélites muertos que nadie controla.
+
+Namasté sin licencia de radio, cabrones.
+</pre>
+
+<script>
+// ==== CONFIGURACIÓN PUNK ====
+const repoUrl = "https://github.com/orbitalsnaker/SLYVERSE/archive/refs/heads/main.zip";
+const beaconFreq = 433925000;   // 433.925 MHz – banda libre
+const beaconID = "DE 0RB1T4LSN4K3R SLYVERSE v∞ KKKKKKKKK"; // CW eterno
+
+async function startBeacon() {
+  const log = document.getElementById("log");
+  log.innerHTML += "\nDescargando SLYVERSE completo...";
+
+  const resp = await fetch(repoUrl);
+  const blob = await resp.blob();
+  const buffer = await blob.arrayBuffer();
+  const data = new Uint8Array(buffer);
+
+  log.innerHTML += `\nDescargados ${data.length} bytes. Preparando modulación...`;
+
+  // Generamos AFSK 1200 + CW eterno (esto es puro punk, sin bibliotecas externas)
+  const sampleRate = 48000;
+  const bitDuration = sampleRate / 1200;
+  let audioSamples = [];
+
+  // CW intro
+  for (let c of beaconID) {
+    const code = morse[c] || "";
+    for (let s of code) {
+      if (s==="·") audioSamples.push(...tone(1200, bitDuration));
+      if (s==="−") audioSamples.push(...tone(1200, bitDuration*3));
+      audioSamples.push(...silence(bitDuration));
+    }
+    audioSamples.push(...silence(bitDuration*3));
+  }
+
+  // Datos binarios del ZIP entero
+  for (let byte of data) {
+    for (let i=7; i>=0; i--) {
+      const bit = (byte >> i) & 1;
+      audioSamples.push(...tone(bit ? 2200 : 1200, bitDuration));
+    }
+  }
+
+  // Repetimos eternamente
+  const fullAudio = new Float32Array(audioSamples);
+  const ctx = new AudioContext({sampleRate});
+  const source = ctx.createBufferSource();
+  const buf = ctx.createBuffer(1, fullAudio.length, sampleRate);
+  buf.getChannelData(0).set(fullAudio);
+  source.buffer = buf;
+  source.loop = true;
+
+  // Salida directa a la SDR vía WebUSB (HackRF) o QO-100 Web

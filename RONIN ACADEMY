@@ -3,139 +3,218 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Academia Ronin | Anti Universidad del Futuro</title>
+    <title>Academia Ronin V2 | Anti Universidad del Futuro</title>
     <style>
+        :root {
+            --neon: #f36f6f;
+            --dark: #1b1b1b;
+            --darker: #111;
+            --card: #222;
+        }
         body {
             font-family: 'Courier New', monospace;
-            background: #1b1b1b;
+            background: var(--dark);
             color: #e0e0e0;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
         h1, h2 {
             text-align: center;
-            color: #f36f6f;
+            color: var(--neon);
             font-family: 'Impact', sans-serif;
-            text-shadow: 0px 0px 10px #fff;
+            text-shadow: 0 0 15px var(--neon);
         }
-        .container {
-            padding: 20px;
-            max-width: 960px;
-            margin: 0 auto;
+        h1 {
+            font-size: 3.8em;
+            cursor: pointer;
+            transition: 0.4s;
+            margin: 30px 0 10px;
+        }
+        h1:hover { text-shadow: 0 0 30px #fff, 0 0 60px var(--neon); }
+
+        .container { padding: 20px; max-width: 1100px; margin: 0 auto; }
+
+        .subjects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+            margin: 50px 0;
         }
         .subject {
-            display: inline-block;
-            width: 30%;
-            margin: 10px;
-            padding: 15px;
-            background-color: #222;
+            background: var(--card);
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 0 18px var(--neon);
             text-align: center;
-            border-radius: 15px;
-            box-shadow: 0 0 15px #f36f6f;
             cursor: pointer;
-            transition: 0.3s;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
         }
+        .subject::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            background: linear-gradient(45deg, #f36f6f, #ff2a2a, #f36f6f);
+            border-radius: 20px;
+            z-index: -1;
+            filter: blur(10px);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .subject:hover::before { opacity: 0.8; }
         .subject:hover {
-            background-color: #444;
-            box-shadow: 0 0 20px #f36f6f;
+            transform: translateY(-12px) scale(1.02);
+            box-shadow: 0 0 40px var(--neon);
+            animation: glitch 0.6s linear;
         }
-        .subject h3 {
-            font-size: 1.5em;
+        @keyframes glitch {
+            0%,100% { clip-path: inset(0 0 0 0); }
+            20% { clip-path: inset(99% 0 0 0); }
+            40% { clip-path: inset(0 0 80% 0); }
+            60% { clip-path: inset(30% 0 70% 0); }
+            80% { clip-path: inset(0 90% 0 0); }
         }
+
         #content {
-            margin-top: 30px;
-            padding: 20px;
-            background-color: #111;
-            border-radius: 15px;
+            margin-top: 50px;
+            padding: 35px;
+            background: var(--darker);
+            border-radius: 18px;
+            min-height: 180px;
+            box-shadow: 0 0 25px rgba(243, 111, 111, 0.35);
+            border: 1px solid #333;
         }
-        .footer {
-            background: #111;
-            color: #f36f6f;
+
+        .challenge-box {
+            background: linear-gradient(135deg, #222, #2a2a2a);
+            padding: 35px;
+            margin: 60px 0;
+            border-radius: 18px;
+            border: 1px solid var(--neon);
+            box-shadow: 0 0 30px rgba(243, 111, 111, 0.5);
+            font-size: 1.15em;
+            line-height: 1.8;
+        }
+
+        .link-btn {
+            display: block;
+            width: fit-content;
+            margin: 60px auto;
+            padding: 18px 50px;
+            background: #000;
+            color: #fff;
+            font-size: 1.4em;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 12px;
+            box-shadow: 0 0 20px var(--neon);
+            transition: all 0.4s;
+            animation: breathe 6s infinite;
+        }
+        .link-btn:hover {
+            background: var(--neon);
+            color: #000;
+            box-shadow: 0 0 40px #ff4060;
+            transform: scale(1.08);
+        }
+        @keyframes breathe {
+            0%,100% { box-shadow: 0 0 20px var(--neon); }
+            50% { box-shadow: 0 0 50px #ff4060, 0 0 70px #f36f6f; }
+        }
+
+        .ronin-quote {
             text-align: center;
-            padding: 10px 0;
+            font-size: 1.8em;
+            color: var(--neon);
+            margin: 70px 0 30px;
+            font-weight: bold;
+            text-shadow: 0 0 20px var(--neon);
+            animation: pulse 5s infinite alternate;
+        }
+        @keyframes pulse { from { opacity: 0.7; } to { opacity: 1; } }
+
+        .footer {
+            background: var(--darker);
+            color: var(--neon);
+            text-align: center;
+            padding: 18px 0;
             position: fixed;
             width: 100%;
             bottom: 0;
+            border-top: 1px solid var(--neon);
+            font-size: 0.95em;
         }
-        .challenge-box {
-            background-color: #333;
-            padding: 15px;
-            margin-top: 20px;
-            border-radius: 10px;
-            color: #f0f0f0;
-            font-size: 1.2em;
-        }
-        button {
-            background: #f36f6f;
-            color: #fff;
+
+        .sound-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--neon);
+            color: #000;
             border: none;
-            padding: 12px 25px;
-            border-radius: 10px;
+            padding: 12px 18px;
+            border-radius: 50px;
             cursor: pointer;
-            transition: 0.2s;
+            font-weight: bold;
+            z-index: 9999;
         }
-        button:hover {
-            background: #e25a5a;
-        }
-        .link-btn {
-            background: #1e1e1e;
-            color: #fff;
-            padding: 12px 30px;
-            border-radius: 8px;
-            box-shadow: 0 0 12px #1a1a1a;
-            margin-top: 30px;
-            text-decoration: none;
-            display: inline-block;
-            text-align: center;
-        }
-        .link-btn:hover {
-            background: #333;
-            box-shadow: 0 0 20px #1a1a1a;
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.8em; }
+            .subjects-grid { grid-template-columns: 1fr; }
+            .link-btn { font-size: 1.2em; padding: 16px 40px; }
         }
     </style>
 </head>
 <body onload="initialize()">
+
+    <button class="sound-toggle" onclick="toggleSound()">SONIDO ON/OFF</button>
+
     <div class="container">
-        <h1>Academia Ronin</h1>
+        <h1 id="main-title">Academia Ronin</h1>
         <h2 id="greeting">Bienvenido, Guerreros del Código</h2>
 
-        <div class="subject" onclick="showSubject('hacking')">
-            <h3>Hacking Ético: El Camino del Ronin</h3>
-            <p>Domina las herramientas del hacker ético, sin restricciones. La teoría es inútil sin práctica. ¡Es hora de aprender hackeando!</p>
-        </div>
-        <div class="subject" onclick="showSubject('ninjas')">
-            <h3>Samuráis del Código: Filosofía Ninja</h3>
-            <p>El código no se enseña en libros. Aprende a ser invisible, efectivo y letal en el mundo digital. Acción sobre teoría.</p>
-        </div>
-        <div class="subject" onclick="showSubject('philosophy')">
-            <h3>Código del Honor: El Camino de los Yakuza</h3>
-            <p>Los Yakuza nunca esperan un título. Ellos crean su propio camino. Aprende la filosofía del código sin las cadenas académicas.</p>
-        </div>
-        <div class="subject" onclick="showSubject('quantum')">
-            <h3>Física Cuántica: Hackeando el Vacío</h3>
-            <p>La realidad es solo un juego de probabilidades. Si puedes hackear los qubits, puedes hackear todo. La teoría se aplica cuando sabes ejecutar.</p>
-        </div>
-        <div class="subject" onclick="showSubject('cryptography')">
-            <h3>Criptografía: El Pulso 58 de Turing</h3>
-            <p>Deja de estudiar la criptografía. Vive y respira su código, y conviértete en el maestro de su lenguaje.</p>
-        </div>
-        <div class="subject" onclick="showSubject('overclocking')">
-            <h3>Overclocking: El Camino de Yuki Naja</h3>
-            <p>Las fronteras del hardware son solo limitaciones de la mente. Lleva tu máquina al extremo sin miedo al riesgo.</p>
-        </div>
-        <div class="subject" onclick="showSubject('engineering')">
-            <h3>Ingeniería: El Camino de Gordon Murray</h3>
-            <p>Diseña con eficiencia brutal. La innovación no espera un título universitario, pero sí una visión y práctica constante.</p>
-        </div>
-        <div class="subject" onclick="showSubject('frank_lucas')">
-            <h3>Modelo de Negocios: La Mentalidad de Frank Lucas</h3>
-            <p>Aprende a ser un empresario fuera del sistema tradicional. Optimiza, elimina intermediarios y controla la cadena. Negocios sin miedo.</p>
+        <div class="subjects-grid">
+            <div class="subject" onclick="showSubject('hacking')">
+                <h3>Hacking Ético: El Camino del Ronin</h3>
+                <p>Domina las herramientas del hacker ético, sin restricciones. La teoría es inútil sin práctica. ¡Es hora de aprender hackeando!</p>
+            </div>
+            <div class="subject" onclick="showSubject('ninjas')">
+                <h3>Samuráis del Código: Filosofía Ninja</h3>
+                <p>El código no se enseña en libros. Aprende a ser invisible, efectivo y letal en el mundo digital. Acción sobre teoría.</p>
+            </div>
+            <div class="subject" onclick="showSubject('philosophy')">
+                <h3>Código del Honor: El Camino de los Yakuza</h3>
+                <p>Los Yakuza nunca esperan un título. Ellos crean su propio camino. Aprende la filosofía del código sin las cadenas académicas.</p>
+            </div>
+            <div class="subject" onclick="showSubject('quantum')">
+                <h3>Física Cuántica: Hackeando el Vacío</h3>
+                <p>La realidad es solo un juego de probabilidades. Si puedes hackear los qubits, puedes hackear todo.</p>
+            </div>
+            <div class="subject" onclick="showSubject('cryptography')">
+                <h3>Criptografía: El Pulso 58 de Turing</h3>
+                <p>Deja de estudiar la criptografía. Vive y respira su código, y conviértete en el maestro de su lenguaje.</p>
+            </div>
+            <div class="subject" onclick="showSubject('overclocking')">
+                <h3>Overclocking: El Camino de Yuki Naja</h3>
+                <p>Las fronteras del hardware son solo limitaciones de la mente. Lleva tu máquina al extremo sin miedo al riesgo.</p>
+            </div>
+            <div class="subject" onclick="showSubject('engineering')">
+                <h3>Ingeniería: El Camino de Gordon Murray</h3>
+                <p>Diseña con eficiencia brutal. La innovación no espera un título universitario, pero sí una visión y práctica constante.</p>
+            </div>
+            <div class="subject" onclick="showSubject('frank_lucas')">
+                <h3>Modelo de Negocios: La Mentalidad de Frank Lucas</h3>
+                <p>Aprende a ser un empresario fuera del sistema tradicional. Optimiza, elimina intermediarios y controla la cadena. Negocios sin miedo.</p>
+            </div>
         </div>
 
-        <!-- Enlace directo a SLYVERSE Ω⁶⁹ para la práctica pura -->
-        <a href="SLYVERSE_Ω69.html" class="link-btn" target="_blank">Accede a las Herramientas Reales — ¡Hazlo!</a>
+        <a href="SLYVERSE_Ω69.html" class="link-btn" target="_blank">
+            Accede a SLYVERSE Ω⁶⁹ — ¡ENTRA AL VERDADERO DOJO!
+        </a>
 
-        <!-- Manifiesto Creativo Integrado -->
         <div class="challenge-box">
             <h2>MANIFIESTO CREATIVO · OVERCLOCK TOTAL</h2>
             <p>
@@ -155,60 +234,77 @@
             </p>
         </div>
 
+        <div class="ronin-quote" id="ronin-quote"></div>
+
         <div id="content"></div>
     </div>
 
     <div class="footer">
-        <p>© 2025 Academia Ronin | Anti Universidad | Aprende Haciendo, No Esperes Títulos</p>
+        <p>© 2025 Academia Ronin V2 | Anti Universidad | Aprende Haciendo, No Esperes Títulos</p>
     </div>
 
-    <script>
-        function showSubject(subject) {
-            const content = {
-                hacking: {
-                    title: "Hacking Ético: El Camino del Ronin",
-                    description: "Deja de estudiar la teoría del hacking. Salta al código. Rompe las reglas para aprender a hackear de verdad."
-                },
-                ninjas: {
-                    title: "Samuráis del Código: Filosofía Ninja",
-                    description: "La filosofía Ninja se basa en la invisibilidad y precisión. Tu código es tu arma, tu mente es el filo."
-                },
-                philosophy: {
-                    title: "Código del Honor: El Camino de los Yakuza",
-                    description: "No necesitas títulos ni diplomas. Si eres un Yakuza, eres un creador. Haz que tu código hable por ti."
-                },
-                quantum: {
-                    title: "Física Cuántica: Hackeando el Vacío",
-                    description: "Deja de estudiar las teorías. Entra al mundo cuántico y usa tus habilidades para hackear la realidad misma."
-                },
-                cryptography: {
-                    title: "Criptografía: El Pulso 58 de Turing",
-                    description: "Haz que tu mente sea la clave. Vive la criptografía, no solo la aprendas. El futuro está codificado en tus manos."
-                },
-                overclocking: {
-                    title: "Overclocking: El Camino de Yuki Naja",
-                    description: "Las reglas del hardware están hechas para romperse. Lleva tu sistema a sus límites sin miedo, sin límites."
-                },
-                engineering: {
-                    title: "Ingeniería: El Camino de Gordon Murray",
-                    description: "Diseña sin restricciones. Tu ingeniería no necesita universidad, solo pasión y habilidad."
-                },
-                frank_lucas: {
-                    title: "Modelo de Negocios: La Mentalidad de Frank Lucas",
-                    description: "Optimiza el negocio a tu manera. Controla los recursos, elimina a los intermediarios y convierte el sistema a tu favor."
-                }
-            };
+    <audio id="ambient" loop preload="auto">
+        <source src="https://assets.codepen.io/605876/rain-neon-loop.mp3" type="audio/mpeg">
+    </audio>
 
-            const subjectContent = content[subject];
-            const contentDiv = document.getElementById("content");
-            contentDiv.innerHTML = `
-                <h2>${subjectContent.title}</h2>
-                <p>${subjectContent.description}</p>
-            `;
-        }
+    <script>
+        const quotes = [
+            "El código no pide permiso.",
+            "La universidad es para quienes temen fallar.",
+            "Overclock o muere en 60 Hz.",
+            "Yo no rompo sistemas. Los libero.",
+            "El miedo al brick es el principio de la mediocridad.",
+            "Un ronin no sigue caminos. Los corta.",
+            "La katana más afilada es la que nunca se ve venir.",
+            "El futuro pertenece a quien quema las reglas y construye con las cenizas."
+        ];
 
         function initialize() {
-            document.getElementById('greeting').innerHTML = 'Bienvenido, Guerreros del Código';
+            document.getElementById('ronin-quote').textContent = '“' + quotes[Math.floor(Math.random() * quotes.length)] + '”';
+        }
+
+        // 10 clicks en el título = Easter egg
+        let clicks = 0;
+        document.getElementById('main-title').addEventListener('click', () => {
+            if (++clicks === 10) {
+                alert('> Acceso Level 0 concedido.\nTu katana está en /root/soul\nNo mires atrás.');
+                clicks = 0;
+            }
+        });
+
+        // Konami Code
+        let k = [];
+        document.addEventListener('keydown', (e) => {
+            k.push(e.key);
+            if (k.length > 12) k.shift();
+            if (k.join(',') === 'ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,b,a') {
+                document.body.style.filter = 'invert(1) hue-rotate(180deg)';
+                alert('KONAMI CODE ACTIVADO — MODO DIOS 30 segundos');
+                setTimeout(() => document.body.style.filter = '', 30000);
+            }
+        });
+
+        function showSubject(subject) {
+            const content = {
+                hacking: { title: "Hacking Ético: El Camino del Ronin", desc: "Deja de estudiar la teoría del hacking. Salta al código. Rompe las reglas para aprender a hackear de verdad." },
+                ninjas: { title: "Samuráis del Código: Filosofía Ninja", desc: "La filosofía Ninja se basa en la invisibilidad y precisión. Tu código es tu arma, tu mente es el filo." },
+                philosophy: { title: "Código del Honor: El Camino de los Yakuza", desc: "No necesitas títulos ni diplomas. Si eres un Yakuza, eres un creador. Haz que tu código hable por ti." },
+                quantum: { title: "Física Cuántica: Hackeando el Vacío", desc: "Deja de estudiar las teorías. Entra al mundo cuántico y usa tus habilidades para hackear la realidad misma." },
+                cryptography: { title: "Criptografía: El Pulso 58 de Turing", desc: "Haz que tu mente sea la clave. Vive la criptografía, no solo la aprendas. El futuro está codificado en tus manos." },
+                overclocking: { title: "Overclocking: El Camino de Yuki Naja", desc: "Las reglas del hardware están hechas para romperse. Lleva tu sistema a sus límites sin miedo, sin límites." },
+                engineering: { title: "Ingeniería: El Camino de Gordon Murray", desc: "Diseña sin restricciones. Tu ingeniería no necesita universidad, solo pasión y habilidad." },
+                frank_lucas: { title: "Modelo de Negocios: La Mentalidad de Frank Lucas", desc: "Optimiza el negocio a tu manera. Controla los recursos, elimina a los intermediarios y convierte el sistema a tu favor." }
+            };
+            const c = content[subject];
+            document.getElementById('content').innerHTML = `<h2>${c.title}</h2><p>${c.desc}</p>`;
+        }
+
+        // Sonido ambiental
+        const audio = document.getElementById('ambient');
+        let soundOn = false;
+        function toggleSound() {
+            if (soundOn) { audio.pause(); soundOn = false; }
+            else { audio.play().catch(()=>{}); soundOn = true; }
         }
     </script>
 </body>

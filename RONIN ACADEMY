@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academia Ronin - Guerreros del Código</title>
+    <style>
+        body { font-family: 'Courier New', monospace; background: #0a0a0a; color: #e0e0e0; margin: 0; padding: 0; }
+        h1, h2 { text-align: center; color: #f36f6f; font-family: 'Impact', sans-serif; text-shadow: 0px 0px 10px #fff; }
+        .container { padding: 20px; max-width: 960px; margin: 0 auto; }
+        .subject { display: inline-block; width: 30%; margin: 10px; padding: 15px; background-color: #222; text-align: center; border-radius: 15px; box-shadow: 0 0 15px #f36f6f; cursor: pointer; transition: 0.3s; }
+        .subject:hover { background-color: #444; box-shadow: 0 0 20px #f36f6f; }
+        .subject h3 { font-size: 1.5em; }
+        #content { margin-top: 30px; padding: 20px; background-color: #111; border-radius: 15px; }
+        .footer { background: #111; color: #f36f6f; text-align: center; padding: 10px 0; position: fixed; width: 100%; bottom: 0; }
+        .challenge-box { background-color: #333; padding: 15px; margin-top: 20px; border-radius: 10px; color: #f0f0f0; font-size: 1.2em; }
+        .memes { font-size: 16px; color: #00ff00; text-align: center; }
+        .memes img { width: 100%; max-width: 300px; border-radius: 10px; }
+        button { background: #f36f6f; color: #fff; border: none; padding: 12px 25px; border-radius: 10px; cursor: pointer; transition: 0.2s; }
+        button:hover { background: #e25a5a; }
+    </style>
+</head>
+<body onload="initialize()">
+    <div class="container">
+        <h1>Academia Ronin</h1>
+        <h2 id="greeting">Bienvenido, Guerrero del Código</h2>
+
+        <div class="subject" onclick="showSubject('hacking')">
+            <h3>Hacking Ético: El Camino del Ronin</h3>
+            <p>Aprende a hackear con ética, al estilo de los guerreros samuráis.</p>
+        </div>
+        <div class="subject" onclick="showSubject('ninjas')">
+            <h3>Samuráis del Código: Filosofía Ninja</h3>
+            <p>La sabiduría secreta de los ninjas aplicada al hacking moderno.</p>
+        </div>
+        <div class="subject" onclick="showSubject('philosophy')">
+            <h3>Código del Honor: El Camino de los Yakuza</h3>
+            <p>Aprende el código ético de los Yakuza y cómo se aplica en el mundo digital.</p>
+        </div>
+        <div class="subject" onclick="showSubject('quantum')">
+            <h3>Física Cuántica: Hackeando el Vacío</h3>
+            <p>Descubre cómo aplicar principios cuánticos para hackear la realidad misma.</p>
+        </div>
+
+        <div id="content"></div>
+    </div>
+
+    <div class="footer">
+        <p>© 2025 Academia Ronin | 0rb1t4lsn4k3r | Forjando Guerreros del Código</p>
+    </div>
+
+    <script>
+        const content = {
+            es: {
+                greeting: "¡Saludos, Guerrero! El código te llama",
+                subjects: {
+                    hacking: {
+                        title: "Hacking Ético: El Camino del Ronin",
+                        description: "Siguiendo el código del Ronin, aprende a hackear con ética y responsabilidad. Satoshi Nakamoto no es un dios, es un guerrero sin maestro. ¡Haz lo mismo!",
+                        challenge: "Desafío: Utiliza herramientas de hacking ético para analizar la blockchain de Bitcoin sin comprometer la seguridad. ¿Puedes hacerlo sin romper el código?",
+                        feedback: "¿Cómo aplicarías el código de honor de los ronin para mantener la ética en tu hacking? Comparte tu estrategia."
+                    },
+                    ninjas: {
+                        title: "Samuráis del Código: Filosofía Ninja",
+                        description: "Los ninjas nunca se ven, pero sus acciones se sienten. Aprende a hackear con agilidad y precisión, como los guerreros invisibles del código.",
+                        challenge: "Desafío: Crea un script invisible que se ejecute en segundo plano para proteger tu red de ataques. ¿Cómo te aseguras de que sea sigiloso?",
+                        feedback: "¿Cómo mantuviste el equilibrio entre visibilidad y sigilo en tu código? ¿Qué métodos usaste?"
+                    },
+                    philosophy: {
+                        title: "Código del Honor: El Camino de los Yakuza",
+                        description: "Al igual que los Yakuza, sigue un código de honor estricto. Haz que tu hackeo sea justo, valiente y siempre en defensa de la verdad.",
+                        challenge: "Desafío: Si fueras un miembro de los Yakuza digital, ¿cómo protegerías a los débiles en el mundo del hacking? Diseña una estrategia ética.",
+                        feedback: "¿Qué significa para ti ser un 'héroe oscuro' en el hacking? ¿Cómo gestionas la moralidad dentro del código?"
+                    },
+                    quantum: {
+                        title: "Física Cuántica: Hackeando el Vacío",
+                        description: "La realidad es un juego de probabilidades. Aprende a hackear el vacío cuántico y manipula el espacio-tiempo con tus propios códigos.",
+                        challenge: "Desafío: Si pudieras manipular un qubit, ¿cómo lo usarías para crear una simulación cuántica? ¿Podrías modificar la realidad a tu favor?",
+                        feedback: "¿Qué conceptos cuánticos te parecieron más difíciles de integrar en tu código? ¿Cómo podrías optimizar la simulación?"
+                    }
+                }
+            }
+        };
+
+        function initialize() {
+            const userLang = detectLanguage();
+            const langContent = content[userLang];
+            document.getElementById("greeting").innerHTML = langContent.greeting;
+            const subjectsContainer = document.querySelector("#content");
+            subjectsContainer.innerHTML = "";
+            Object.keys(langContent.subjects).forEach(subjectKey => {
+                const subject = langContent.subjects[subjectKey];
+                subjectsContainer.innerHTML += `
+                    <div id="${subjectKey}" class="subject">
+                        <h3>${subject.title}</h3>
+                        <p>${subject.description}</p>
+                        <button onclick="showChallenge('${subjectKey}')">Reto</button>
+                    </div>
+                `;
+            });
+        }
+
+        function detectLanguage() {
+            const lang = (navigator.language || 'es').substr(0, 2);
+            return lang === 'en' ? 'en' : 'es';
+        }
+
+        function showChallenge(subject) {
+            const langContent = content[detectLanguage()];
+            const challenge = langContent.subjects[subject].challenge;
+            const feedback = langContent.subjects[subject].feedback;
+            document.getElementById("content").innerHTML = `
+                <h2>${langContent.subjects[subject].title}</h2>
+                <p>${challenge}</p>
+                <div class="challenge-box">
+                    <h3>Retroalimentación:</h3>
+                    <p>${feedback}</p>
+                </div>
+                <div class="memes">
+                    <h3>El Código Ninja</h3>
+                    <img src="https://i.pinimg.com/originals/22/55/a1/2255a1d6fa8b6b30661de5d3702f5c74.jpg" alt="Meme Ninja Hacking" />
+                    <p>#CódigoRonin #HackingÉtico</p>
+                </div>
+                <button onclick="initialize()">Volver</button>
+            `;
+        }
+    </script>
+</body>
+</html>

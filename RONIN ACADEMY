@@ -45,6 +45,10 @@
             <h3>Criptografía: El Pulso 58 de Turing</h3>
             <p>Desentraña los secretos de la criptografía y descifra el misterio del pulso 58, legado de Turing.</p>
         </div>
+        <div class="subject" onclick="showSubject('overclocking')">
+            <h3>Overclocking: El Camino de Yuki Naja</h3>
+            <p>Rompe los límites. Aprende a llevar tu hardware al máximo con la filosofía de "mínimo hardware, máximo rendimiento".</p>
+        </div>
 
         <div id="content"></div>
     </div>
@@ -87,49 +91,32 @@
                         description: "Un homenaje al genio de Alan Turing, descubre los secretos detrás del enigma del 'pulso 58', y cómo la criptografía cambió el curso de la historia.",
                         challenge: "Desafío: Utiliza tus habilidades criptográficas para descifrar el 'pulso 58'. ¿Puedes identificar la clave secreta oculta en el mensaje de Turing?",
                         feedback: "¿Qué métodos usaste para resolver el desafío? ¿Cómo crees que Turing resolvería un enigma en la era digital?"
+                    },
+                    overclocking: {
+                        title: "Overclocking: El Camino de Yuki Naja",
+                        description: "En esta asignatura, se explora la filosofía de Yuki Naja: 'Mínimo hardware, máximo rendimiento'. Aprende a optimizar tu sistema hasta alcanzar su máximo potencial sin gastar una fortuna en equipos.",
+                        challenge: "Desafío: Realiza un overclocking en tu PC o tarjeta gráfica. ¿Qué temperatura y estabilidad lograste? Mide el rendimiento antes y después del overclocking.",
+                        feedback: "¿Cómo mejoraste el rendimiento sin sacrificar la estabilidad? ¿Qué técnicas utilizaste para mantener tu sistema seguro mientras lo llevabas al límite?"
                     }
                 }
             }
         };
 
         function initialize() {
-            const userLang = detectLanguage();
-            const langContent = content[userLang];
-            document.getElementById("greeting").innerHTML = langContent.greeting;
-            const subjectsContainer = document.querySelector("#content");
-            subjectsContainer.innerHTML = "";
-            Object.keys(langContent.subjects).forEach(subjectKey => {
-                const subject = langContent.subjects[subjectKey];
-                subjectsContainer.innerHTML += `
-                    <div id="${subjectKey}" class="subject">
-                        <h3>${subject.title}</h3>
-                        <p>${subject.description}</p>
-                        <button onclick="showChallenge('${subjectKey}')">Reto</button>
-                    </div>
-                `;
-            });
+            document.getElementById("greeting").innerText = content.es.greeting;
         }
 
-        function detectLanguage() {
-            const lang = (navigator.language || 'es').substr(0, 2);
-            return lang === 'en' ? 'en' : 'es';
-        }
-
-        function showChallenge(subject) {
-            const langContent = content[detectLanguage()];
-            const challenge = langContent.subjects[subject].challenge;
-            const feedback = langContent.subjects[subject].feedback;
+        function showSubject(subject) {
+            const subjectContent = content.es.subjects[subject];
+            const { title, description, challenge, feedback } = subjectContent;
             document.getElementById("content").innerHTML = `
-                <h2>${langContent.subjects[subject].title}</h2>
+                <h2>${title}</h2>
+                <p>${description}</p>
+                <h3>Desafío:</h3>
                 <p>${challenge}</p>
                 <div class="challenge-box">
                     <h3>Retroalimentación:</h3>
                     <p>${feedback}</p>
-                </div>
-                <div class="memes">
-                    <h3>El Pulso de Turing</h3>
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/Alan_Turing_1939.jpg/440px-Alan_Turing_1939.jpg" alt="Turing" />
-                    <p>#Pulso58 #CriptografíaTuring</p>
                 </div>
                 <button onclick="initialize()">Volver</button>
             `;

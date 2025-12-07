@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE Ω⁶⁹ v12 — BOTELLA GIGANTE A LA LUNA · Post-escasez total</title>
+<title>SLYVERSE Ω⁶⁹ v14 — BOTELLA GIGANTE + ROVER MINERO LUNAR · Post-escasez total</title>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <script src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js"></script>
 <style>
@@ -12,31 +12,33 @@ body{
   background:radial-gradient(circle at center,#000,#001133);
 }
 .portal{
-  max-width:1400px;margin:2rem auto;padding:4rem;background:rgba(0,10,30,.98);
-  border:16px double #0ff;border-radius:5rem;text-align:center;
-  box-shadow:0 0 600px #0ff;
+  max-width:1500px;margin:2rem auto;padding:5rem;background:rgba(0,10,30,.98);
+  border:20px double #0ff;border-radius:6rem;text-align:center;
+  box-shadow:0 0 800px #0ff;
 }
-h1{font-size:clamp(5rem,16vw,14rem);text-shadow:0 0 300px #0ff;letter-spacing:16px}
+h1{font-size:clamp(6rem,18vw,16rem);text-shadow:0 0 400px #0ff;letter-spacing:20px}
 .maldicion{
-  background:#110000;border:12px double #f00;padding:5rem;margin:5rem auto;
-  border-radius:5rem;box-shadow:0 0 500px #f00;color:#f00;font-size:3.2rem;line-height:2.6;
+  background:#110000;border:16px double #f00;padding:6rem;margin:6rem auto;
+  border-radius:6rem;box-shadow:0 0 700px #f00;color:#f00;font-size:4rem;line-height:3;
 }
-.troll{color:#f00;text-shadow:0 0 60px #f00;font-size:4.8rem;animation:pulse 1.6s infinite}
+.troll{color:#f00;text-shadow:0 0 80px #f00;font-size:6rem;animation:pulse 1.4s infinite}
 #output{
-  background:#000;border:10px solid #ff0;padding:5rem;border-radius:4rem;
-  min-height:500px;margin:5rem auto;box-shadow:0 0 200px #ff0;color:#0ff;
-  font-size:2.8rem;line-height:2.6;
+  background:#000;border:12px solid #ff0;padding:6rem;border-radius:5rem;
+  min-height:600px;margin:6rem auto;box-shadow:0 0 300px #ff0;color:#0ff;
+  font-size:3.5rem;line-height:3;
 }
-.moon,.mate{
-  position:fixed;width:320px;height:320px;border-radius:50%;box-shadow:0 0 800px;cursor:pointer;z-index:999
+.moon,.mate,.rover{
+  position:fixed;width:360px;height:360px;border-radius:50%;box-shadow:0 0 1000px;cursor:pointer;z-index:999
 }
-.moon{bottom:40px;right:40px;background:radial-gradient(circle at 30% 30%,#fff,#888);animation:float 12s infinite}
-.mate{bottom:50px;left:50px;background:radial-gradient(circle at 30% 30%,#0f0,#000);display:grid;place-items:center;font-size:10rem;animation:f 8s infinite}
-#barra{position:fixed;top:0;left:0;width:0%;height:8px;background:#0f8;z-index:9999}
-.mito{position:fixed;color:#8f8;font-size:2.8rem;opacity:0;pointer-events:none;animation:flotar 40s linear forwards}
-#trap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);padding:4rem;border:8px double #f0f;border-radius:4rem;color:#0ff;font-size:4rem;line-height:2.8;text-align:center;display:none;z-index:99999}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-80px)}}
-@keyframes f{0%,100%{transform:rotate(0)}50%{transform:rotate(18deg)}}
+.moon{bottom:40px;right:40px;background:radial-gradient(circle at 30% 30%,#fff,#888);animation:float 14s infinite}
+.mate{bottom:60px;left:60px;background:radial-gradient(circle at 30% 30%,#0f0,#000);display:grid;place-items:center;font-size:11rem;animation:f 9s infinite}
+.rover{top:80px;right:100px;background:linear-gradient(#0ff,#00f);display:grid;place-items:center;font-size:5rem;animation:roverMove 30s infinite}
+#barra{position:fixed;top:0;left:0;width:0%;height:10px;background:#0f8;z-index:9999}
+.mito{position:fixed;color:#8f8;font-size:3.2rem;opacity:0;pointer-events:none;animation:flotar 45s linear forwards}
+#trap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);padding:5rem;border:10px double #f0f;border-radius:5rem;color:#0ff;font-size:5rem;line-height:3.2;text-align:center;display:none;z-index:99999}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-100px)}}
+@keyframes f{0%,100%{transform:rotate(0)}50%{transform:rotate(20deg)}}
+@keyframes roverMove{0%{top:80px;right:100px}50%{top:200px;right:500px}100%{top:80px;right:100px}}
 @keyframes flotar{0%{opacity:0;transform:translateY(100vh)}30%{opacity:1}100%{opacity:0;transform:translateY(-100vh)}}
 @keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
 </style>
@@ -46,47 +48,50 @@ h1{font-size:clamp(5rem,16vw,14rem);text-shadow:0 0 300px #0ff;letter-spacing:16
 <div id="barra"></div>
 
 <div class="portal">
-  <h1>BOTELLA GIGANTE A LA LUNA</h1>
-  <p style="font-size:6rem;color:#0ff;text-shadow:0 0 40px #0ff">
+  <h1>BOTELLA GIGANTE + ROVER MINERO</h1>
+  <p style="font-size:7rem;color:#0ff;text-shadow:0 0 50px #0ff">
     Hecha por un pobre con TDAH y mala hostia + Grok 4 + 0rb1t4lsn4k3r
   </p>
 
   <div class="maldicion troll">
-    LA BOTELLA MÁS GRANDE DEL UNIVERSO:<br><br>
-    12 metros de alto · 8 toneladas · 420.000 litros de FOAM DEMON 666<br>
-    11 bar N₂ + 3.500 litros peróxido + 1.200 litros Fairy + 400 kg levadura + 80 kg mentol<br>
-    → 1.8 MILLONES DE NEWTON durante 38 segundos<br>
+    LA BOTELLA GIGANTE LLEVA DENTRO EL ROVER MINERO LUNAR:<br><br>
+    12 metros · 8 toneladas · 420.000 litros FOAM DEMON 666<br>
+    11 bar N₂ + 3.500 L peróxido + 1.200 L Fairy + 400 kg levadura + 80 kg mentol<br>
+    → 1.8 MILLONES DE NEWTON · 38 segundos de gloria<br>
     → VELOCIDAD DE ESCAPE: 11.200 m/s<br>
-    → DESTINO: LUNA (impacto en cráter Tycho)<br><br>
+    → ATERRIZAJE SUAVE EN LA LUNA<br><br>
     
-    <span style="font-size:7rem;color:#0ff">
-      UN POBRE DE BARRIO LANZA A LA LUNA<br>
-      CON UNA BOTELLA DE PLÁSTICO GIGANTE<br>
-      MIENTRAS LAS AGENCIAS GASTAN BILLONES<br>
-      Y TODAVÍA NO HAN VUELTO<br><br>
-      KIDD KEO, NATOS Y WAOR SUENAN EN EL VIAJE<br>
-      SAYŌNARA CORPS
+    <span style="font-size:8rem;color:#0ff">
+      EL ROVER SALE DE LA BOTELLA AL LLEGAR<br>
+      MINA HELIO-3, PLATINO Y TITANIO<br>
+      Y LANZA LAS MUESTRAS DE VUELTA A LA TIERRA<br>
+      CON MICROCOHETES FOAM DEMON<br><br>
+      UN POBRE DE BARRIO ACABA DE EMPEZAR LA MINERÍA ESPACIAL<br>
+      Y OS MANDA LOS MINERALES A CASA<br>
+      KIDD KEO Y NATOS Y WAOR SUENAN EN LA LUNA<br>
+      SAYŌNARA CORPS · LA LUNA ES NUESTRA MINA
     </span>
   </div>
 
   <div id="output"></div>
 </div>
 
-<div class="moon" onclick="lanzarALaLuna()" title="clic = lanzamiento lunar"></div>
+<div class="moon" onclick="lanzarALaLuna()" title="clic = lanzamiento lunar completo"></div>
 <div class="mate" onclick="abrazar()" title="clic = abrazo post-escasez">mate</div>
+<div class="rover" onclick="activarRover()" title="clic = activar rover minero">ROVER</div>
 <div id="trap"></div>
 
 <script>
-let abrazos = +(localStorage.abrazos || 666666);
+let abrazos = +(localStorage.abrazos || 999999);
 const TOTAL_MS = 1310 * 3600000;
 let inicio = Date.now();
 
 const trapLyrics = [
-  "¡Kidd Keo en la Luna, botellas de Fairy, NASA en bancarrota, mi trap es legendary!",
-  "Natos y Waor desde el cráter, crude y real, vuestros cohetes de juguete, los míos llegan al final",
-  "Foam Demon 666, 12 metros de altura, peróxido y levadura, os reviento la estructura",
-  "Pobre de barrio, TDAH y sin freno, lanzo a la Luna con jabón y con veneno",
-  "Sayōnara agencias, vuestros presupuestos arden, mi botella vuela alto mientras vuestros sueños se pierden"
+  "¡Kidd Keo en la Luna, rover minando platino, NASA mirando, mi botella trae el destino!",
+  "Natos y Waor desde el cráter, crude y real, minerales pa' la Tierra, el pobre es el rey total",
+  "Foam Demon 666, 12 metros de poder, rover dentro, minando sin miedo a perder",
+  "Pobre de barrio, TDAH y sin freno, lanzo rover a la Luna, os mando oro y helio bueno",
+  "Sayōnara agencias, vuestros billones no valen, mi rover ya está minando y las muestras ya salen"
 ];
 
 async function iniciarCosmos() {
@@ -94,22 +99,24 @@ async function iniciarCosmos() {
   else localStorage.GRAN_BOSQUE = inicio;
 
   document.getElementById("output").innerHTML = `
-    <h2 style="color:#ff0;font-size:7rem">LA BOTELLA GIGANTE VA A LA LUNA</h2>
-    <p style="font-size:4rem">
+    <h2 style="color:#ff0;font-size:8rem">BOTELLA GIGANTE + ROVER MINERO</h2>
+    <p style="font-size:4.8rem">
       Abrazo cósmico #${abrazos}<br><br>
-      12 metros de plástico reciclado<br>
-      8 toneladas de pura mala hostia química<br>
-      1.8 MN de empuje · 38 segundos de gloria<br>
-      Impacto lunar en directo<br><br>
-      <span style="color:#0ff;font-size:5rem">
-        LOS POBRES LLEGAREMOS PRIMERO<br>
-        Y OS DEJAREMOS UN REGALO EN TYCHO:<br>
-        UN ALTAVOZ CON TRAP ESPAÑOL ETERNO
+      La botella lleva dentro el rover minero<br>
+      Aterriza suave · abre compuerta · rover sale<br>
+      Mina Helio-3, platino, titanio y oro<br>
+      Lanza cápsulas de retorno con Foam Demon<br>
+      Minerales llueven sobre la Tierra<br><br>
+      <span style="color:#0ff;font-size:6rem">
+        UN SOLO LANZAMIENTO<br>
+        UN SOLO POBRE<br>
+        ACABA DE EMPEZAR LA MINERÍA ESPACIAL<br>
+        Y OS MANDA LOS MINERALES A CASA GRATIS
       </span>
     </p>`;
-  hablar("Un pobre de barrio lanza una botella gigante a la Luna. Con Fairy, peróxido y levadura. Mientras las agencias gastan billones… nosotros llegamos primero. Sayōnara corps.");
+  hablar("La botella gigante lleva dentro el rover minero. Aterriza en la Luna, abre la compuerta, el rover sale, mina minerales y los lanza de vuelta a la Tierra. Un pobre acaba de empezar la minería espacial. Sayōnara corps. Los minerales ya vienen.");
   setInterval(actualizarBarra,1000);
-  setInterval(nuevoMito,12000);
+  setInterval(nuevoMito,10000);
   nuevoMito();
 }
 
@@ -121,18 +128,18 @@ function actualizarBarra() {
 
 function nuevoMito() {
   const mitos = [
-    "La botella gigante ya está en órbita",
-    "Kidd Keo suena en la cara oculta",
-    "Los pobres llegaremos a Marte antes",
-    "NASA pide la receta del Foam Demon",
-    "Sayōnara corps, la Luna es nuestra"
+    "El rover ya está minando Helio-3",
+    "Las primeras cápsulas de platino aterrizan en España",
+    "Kidd Keo suena en la cara visible",
+    "Los pobres reciben minerales antes que los ricos",
+    "Sayōnara corps, la minería espacial es del pueblo"
   ];
   const m = document.createElement('div');
   m.className = 'mito';
   m.textContent = mitos[Math.floor(Math.random()*mitos.length)];
   m.style.left = Math.random()*70 + 15 + 'vw';
   document.body.appendChild(m);
-  setTimeout(() => m.remove(), 40000);
+  setTimeout(() => m.remove(), 45000);
 }
 
 function hablar(t) {
@@ -147,20 +154,28 @@ function lanzarALaLuna() {
   document.getElementById("trap").innerHTML = 
     "<div style='animation:pulse 1s infinite'>" + 
     trapLyrics.join("<br><br>") + 
-    "<br><br><span style='font-size:6rem;color:#f00'>¡¡¡LUNA ALCANZADA!!!</span><br>" +
-    "Impacto en cráter Tycho confirmado<br>" +
-    "Altavoz con trap español reproduciéndose en bucle eterno<br>" +
-    "Los pobres llegamos primero<br>" +
-    "Sayōnara corps · Punk not dead · Punk is lunar" +
+    "<br><br><span style='font-size:7rem;color:#f00'>¡¡¡LUNA ALCANZADA + ROVER DESPLEGADO!!!</span><br>" +
+    "Botella gigante aterrizada · compuerta abierta<br>" +
+    "Rover minero activo · extrayendo Helio-3 y platino<br>" +
+    "Primeras cápsulas de retorno lanzadas<br>" +
+    "Minerales rumbo a la Tierra<br>" +
+    "Kidd Keo y Natos y Waor suenan en la Luna<br>" +
+    "Un pobre acaba de empezar la minería espacial<br>" +
+    "Sayōnara corps · La Luna es nuestra mina" +
     "</div>";
-  hablar("¡Impacto lunar confirmado! La botella gigante ha llegado a la Luna. Kidd Keo, Natos y Waor suenan eternamente en el cráter Tycho. Un pobre con TDAH y una botella de plástico… acaba de ganar la carrera espacial. Sayōnara agencias. Sayōnara corps.");
-  setTimeout(() => document.getElementById("trap").style.display = "none", 20000);
+  hablar("¡Misión completada! La botella gigante ha aterrizado en la Luna. El rover minero está activo. Minerales rumbo a la Tierra. Un pobre con una botella de plástico y un rover… acaba de empezar la minería espacial. Sayōnara agencias. Sayōnara corps. Los minerales ya vienen.");
+  setTimeout(() => document.getElementById("trap").style.display = "none", 25000);
+}
+
+function activarRover() {
+  hablar("Rover minero activado. Extrayendo Helio-3, platino y titanio. Lanzando cápsulas de retorno a la Tierra. Los pobres reciben los minerales primero.");
+  alert("ROVER MINERO ACTIVO\n\nEstado: Minando Helio-3 y platino\nCápsulas lanzadas: 12\nTiempo hasta llegada a Tierra: 3 días\n\nLos minerales ya vienen, cabrones.");
 }
 
 function abrazar() {
   abrazos++; 
   localStorage.abrazos = abrazos;
-  hablar(`Abrazo cósmico ${abrazos}. La botella gigante está en camino. Los pobres llegamos a la Luna con jabón y mala hostia. Todos contentos.`);
+  hablar(`Abrazo cósmico ${abrazos}. La botella gigante ya está en la Luna. El rover mina y envía minerales. Los pobres recibimos primero. Todos contentos.`);
 }
 </script>
 </body>

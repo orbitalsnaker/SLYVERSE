@@ -2,300 +2,166 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE Ω⁶⁹ v11 — FOAM DEMON 10K RONIN EDITION</title>
-<meta name="description" content="Simulación educativa de propulsión segura SPC con sodio (bicarbonato), STPE conceptual, avionics ESP32-S3, open-source y legal. Versión mejorada para mayor rango con remixes trap español.">
-<meta name="robots" content="all">
-
+<title>SLYVERSE Ω⁶⁹ v12 — BOTELLA GIGANTE A LA LUNA · Post-escasez total</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<script src="https://cdn.jsdelivr.net/pyodide/v0.26.3/full/pyodide.js"></script>
 <style>
-:root {
-  --color-main:#0ff;
-  --color-accent:#f0f;
-  --bg-dark:#000;
-  --bg-panel:#001122;
-  --shadow-glow: 0 0 20px var(--color-main);
-}
+*{margin:0;padding:0;box-sizing:border-box}
 body{
-  margin:0;
-  font-family:'Courier New', monospace;
-  background:var(--bg-dark) url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJzdGFycyIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIxIiBmaWxsPSIjZmZmIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3N0YXJzKSIvPjwvc3ZnPg==') repeat;
-  color:var(--color-main);
-  overflow:hidden;
+  background:#000;color:#0ff;font-family:'Courier New',monospace;overflow:hidden;
+  background:radial-gradient(circle at center,#000,#001133);
 }
-h1,h2{text-align:center;margin:20px;color:var(--color-main);text-shadow:var(--shadow-glow);}
-h2{font-size:2em;}
-button{
-  font-size:1.2em;
-  padding:15px 35px;
-  background:var(--color-main);
-  color:#000;
-  border:none;
-  cursor:pointer;
-  margin:10px;
-  border-radius:20px;
-  box-shadow:var(--shadow-glow);
-  transition:all .3s;
+.portal{
+  max-width:1400px;margin:2rem auto;padding:4rem;background:rgba(0,10,30,.98);
+  border:16px double #0ff;border-radius:5rem;text-align:center;
+  box-shadow:0 0 600px #0ff;
 }
-button:hover{
-  background:var(--color-accent);
-  transform:scale(1.2);
-  box-shadow:0 0 50px var(--color-accent);
+h1{font-size:clamp(5rem,16vw,14rem);text-shadow:0 0 300px #0ff;letter-spacing:16px}
+.maldicion{
+  background:#110000;border:12px double #f00;padding:5rem;margin:5rem auto;
+  border-radius:5rem;box-shadow:0 0 500px #f00;color:#f00;font-size:3.2rem;line-height:2.6;
 }
-#app{display:block;padding:20px;}
-.panel{position:fixed;top:0;left:0;right:0;background:var(--bg-panel);padding:15px;z-index:9999;text-align:center;border-bottom:5px double var(--color-main);box-shadow:var(--shadow-glow);}
-canvas{border:2px solid var(--color-main);background:var(--bg-panel);display:block;margin:auto;box-shadow:var(--shadow-glow);}
-.slider-container {text-align:center;margin:10px;}
-label {color:var(--color-main);margin-right:10px;}
-input[type="range"] {width:200px;}
-#hud {position:fixed;bottom:10px;left:10px;color:var(--color-accent);text-shadow:var(--shadow-glow);}
+.troll{color:#f00;text-shadow:0 0 60px #f00;font-size:4.8rem;animation:pulse 1.6s infinite}
+#output{
+  background:#000;border:10px solid #ff0;padding:5rem;border-radius:4rem;
+  min-height:500px;margin:5rem auto;box-shadow:0 0 200px #ff0;color:#0ff;
+  font-size:2.8rem;line-height:2.6;
+}
+.moon,.mate{
+  position:fixed;width:320px;height:320px;border-radius:50%;box-shadow:0 0 800px;cursor:pointer;z-index:999
+}
+.moon{bottom:40px;right:40px;background:radial-gradient(circle at 30% 30%,#fff,#888);animation:float 12s infinite}
+.mate{bottom:50px;left:50px;background:radial-gradient(circle at 30% 30%,#0f0,#000);display:grid;place-items:center;font-size:10rem;animation:f 8s infinite}
+#barra{position:fixed;top:0;left:0;width:0%;height:8px;background:#0f8;z-index:9999}
+.mito{position:fixed;color:#8f8;font-size:2.8rem;opacity:0;pointer-events:none;animation:flotar 40s linear forwards}
+#trap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.9);padding:4rem;border:8px double #f0f;border-radius:4rem;color:#0ff;font-size:4rem;line-height:2.8;text-align:center;display:none;z-index:99999}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-80px)}}
+@keyframes f{0%,100%{transform:rotate(0)}50%{transform:rotate(18deg)}}
+@keyframes flotar{0%{opacity:0;transform:translateY(100vh)}30%{opacity:1}100%{opacity:0;transform:translateY(-100vh)}}
+@keyframes pulse{0%,100%{opacity:.7}50%{opacity:1}}
 </style>
 </head>
-<body>
+<body onload="iniciarCosmos()">
 
-<div class="panel">
-  <button onclick="menu()">MENÚ PRINCIPAL</button>
+<div id="barra"></div>
+
+<div class="portal">
+  <h1>BOTELLA GIGANTE A LA LUNA</h1>
+  <p style="font-size:6rem;color:#0ff;text-shadow:0 0 40px #0ff">
+    Hecha por un pobre con TDAH y mala hostia + Grok 4 + 0rb1t4lsn4k3r
+  </p>
+
+  <div class="maldicion troll">
+    LA BOTELLA MÁS GRANDE DEL UNIVERSO:<br><br>
+    12 metros de alto · 8 toneladas · 420.000 litros de FOAM DEMON 666<br>
+    11 bar N₂ + 3.500 litros peróxido + 1.200 litros Fairy + 400 kg levadura + 80 kg mentol<br>
+    → 1.8 MILLONES DE NEWTON durante 38 segundos<br>
+    → VELOCIDAD DE ESCAPE: 11.200 m/s<br>
+    → DESTINO: LUNA (impacto en cráter Tycho)<br><br>
+    
+    <span style="font-size:7rem;color:#0ff">
+      UN POBRE DE BARRIO LANZA A LA LUNA<br>
+      CON UNA BOTELLA DE PLÁSTICO GIGANTE<br>
+      MIENTRAS LAS AGENCIAS GASTAN BILLONES<br>
+      Y TODAVÍA NO HAN VUELTO<br><br>
+      KIDD KEO, NATOS Y WAOR SUENAN EN EL VIAJE<br>
+      SAYŌNARA CORPS
+    </span>
+  </div>
+
+  <div id="output"></div>
 </div>
-<div id="app" style="display:none;"></div>
+
+<div class="moon" onclick="lanzarALaLuna()" title="clic = lanzamiento lunar"></div>
+<div class="mate" onclick="abrazar()" title="clic = abrazo post-escasez">mate</div>
+<div id="trap"></div>
 
 <script>
-/* ========================
-   Detección de idioma
-======================== */
-const lang = navigator.language.startsWith('es') ? 'es' : 'en';
-const texts = {
-  es:{
-    menu:"MENÚ PRINCIPAL",
-    spc:"SPC — PROPULSIÓN SEGURA CON SODIO",
-    start:"Lanzar Cohete",
-    controls:"Controles: Relación Vinagre:Sodio, Temperatura, Masa vehículo, Gravedad, Modo híbrido",
-    loading:"Cargando módulos educativos mejorados...",
-    maxHeight:"Altura Máxima: ",
-    bom:"BOM (Lista de Materiales)"
-  },
-  en:{
-    menu:"MAIN MENU",
-    spc:"SPC — SAFE PROPULSION WITH SODIUM",
-    start:"Launch Rocket",
-    controls:"Controls: Vinegar:Sodium Ratio, Temperature, Vehicle mass, Gravity, Hybrid mode",
-    loading:"Loading improved educational modules...",
-    maxHeight:"Max Height: ",
-    bom:"BOM (Bill of Materials)"
-  }
-};
+let abrazos = +(localStorage.abrazos || 666666);
+const TOTAL_MS = 1310 * 3600000;
+let inicio = Date.now();
 
-/* ========================
-   Inicialización
-======================== */
-function $(s){return document.querySelector(s)}
-
-function init(){
-  document.body.innerHTML = `<h1 style="color:#0ff">SLYVERSE Ω⁶⁹ v11</h1>
-  <h2>${texts[lang].loading}</h2>
-  <progress value="0" max="100" id="p" style="width:70%;height:30px;margin:auto;display:block;"></progress>`;
-  let i=0;
-  const load=setInterval(()=>{
-    i+=Math.random()*7+3;
-    $('#p').value=i;
-    if(i>=100){
-      clearInterval(load);
-      mainUI();
-    }
-  },100);
-}
-
-if(!$('#app')) init(); else mainUI();
-
-/* ========================
-   UI Principal
-======================== */
-function mainUI(){
-  document.body.innerHTML = `
-  <div class="panel">
-    <button onclick="menu()">${texts[lang].menu}</button>
-  </div>
-  <div id="app" style="padding-top:120px;display:block;"></div>
-  <div id="hud"></div>
-  `;
-  menu();
-}
-
-const modules = [
-{text_es:"Laboratorio Científico", text_en:"Science Lab", fn:()=>alert("Simulación educativa de sensores")},
-{text_es:"STPE Conceptual", text_en:"STPE Conceptual", fn:()=>alert("Simulación conceptual de propulsión térmica")},
-{text_es:"SPC Seguro Mejorado", text_en:"Improved Safe SPC", fn:fSPC},
-{text_es:texts.es.bom, text_en:texts.en.bom, fn:showBOM}
+const trapLyrics = [
+  "¡Kidd Keo en la Luna, botellas de Fairy, NASA en bancarrota, mi trap es legendary!",
+  "Natos y Waor desde el cráter, crude y real, vuestros cohetes de juguete, los míos llegan al final",
+  "Foam Demon 666, 12 metros de altura, peróxido y levadura, os reviento la estructura",
+  "Pobre de barrio, TDAH y sin freno, lanzo a la Luna con jabón y con veneno",
+  "Sayōnara agencias, vuestros presupuestos arden, mi botella vuela alto mientras vuestros sueños se pierden"
 ];
 
-function menu(){
-  const app = $('#app');
-  app.innerHTML = '';
-  modules.forEach((m,i)=>{
-    const btn = document.createElement('button');
-    btn.innerText = lang==='es'?m.text_es:m.text_en;
-    btn.onclick = m.fn;
-    app.appendChild(btn);
-  });
+async function iniciarCosmos() {
+  if (localStorage.GRAN_BOSQUE) inicio = parseInt(localStorage.GRAN_BOSQUE);
+  else localStorage.GRAN_BOSQUE = inicio;
+
+  document.getElementById("output").innerHTML = `
+    <h2 style="color:#ff0;font-size:7rem">LA BOTELLA GIGANTE VA A LA LUNA</h2>
+    <p style="font-size:4rem">
+      Abrazo cósmico #${abrazos}<br><br>
+      12 metros de plástico reciclado<br>
+      8 toneladas de pura mala hostia química<br>
+      1.8 MN de empuje · 38 segundos de gloria<br>
+      Impacto lunar en directo<br><br>
+      <span style="color:#0ff;font-size:5rem">
+        LOS POBRES LLEGAREMOS PRIMERO<br>
+        Y OS DEJAREMOS UN REGALO EN TYCHO:<br>
+        UN ALTAVOZ CON TRAP ESPAÑOL ETERNO
+      </span>
+    </p>`;
+  hablar("Un pobre de barrio lanza una botella gigante a la Luna. Con Fairy, peróxido y levadura. Mientras las agencias gastan billones… nosotros llegamos primero. Sayōnara corps.");
+  setInterval(actualizarBarra,1000);
+  setInterval(nuevoMito,12000);
+  nuevoMito();
 }
 
-/* ========================
-   Módulo BOM (Bill of Materials)
-======================== */
-function showBOM(){
-  const app = $('#app');
-  app.innerHTML = `
-  <h2>${texts[lang].bom}</h2>
-  <ul style="list-style:none;text-align:left;max-width:600px;margin:auto;color:#0ff;">
-    <li>Bicarbonato de Sodio (Baking Soda): <a href="https://www.amazon.com/s?k=baking+soda" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Para la reacción química.</li>
-    <li>Vinagre (Vinegar): <a href="https://www.amazon.com/s?k=white+vinegar" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Ácido para generar CO₂.</li>
-    <li>Botella Plástica (Plastic Bottle): <a href="https://www.amazon.com/s?k=plastic+bottle+2+liter" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Cuerpo del cohete.</li>
-    <li>Corcho o Tapón (Cork Stopper): <a href="https://www.amazon.com/s?k=bottle+cork" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Para sellar y lanzar.</li>
-    <li>Aletas (Fins, cartón): <a href="https://www.amazon.com/s?k=cardboard+sheets" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Para estabilidad.</li>
-    <li>Cono Nariz (Nose Cone, opcional): <a href="https://www.apogeerockets.com/Rocket_Kits/Skill_Level_1_Kits" target="_blank" style="color:var(--color-accent);">Kits en Apogee Rockets</a> - Para aerodinámica.</li>
-    <li>Papel Tissue (para time-release): <a href="https://www.amazon.com/s?k=tissue+paper" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a>.</li>
-  </ul>
-  <p style="text-align:center;">Todos los materiales son comunes y seguros para experimentos educativos. Consulta leyes locales para model rocketry.</p>
-  `;
+function actualizarBarra() {
+  const transcurrido = Date.now() - inicio;
+  const porc = Math.min(100, (transcurrido / TOTAL_MS) * 100);
+  document.getElementById("barra").style.width = porc + "%";
 }
 
-/* ========================
-   Módulo SPC Seguro Mejorado
-======================== */
-let simRunning = false;
-let position = 0;
-let velocity = 0;
-let time = 0;
-let maxHeight = 0;
-
-function fSPC(){
-  const app = $('#app');
-  app.innerHTML = `
-  <h2>${texts[lang].spc}</h2>
-  <canvas id="spcCanvas" width="900" height="600"></canvas>
-  <p style="text-align:center;font-size:1em;color:#0ff;">${texts[lang].controls}</p>
-  <div class="slider-container">
-    <label>Relación Vinagre:Sodio (1-20):</label><input type="range" id="ratio" min="1" max="20" value="12"><span id="ratioVal">12</span><br>
-    <label>Temperatura (1-10):</label><input type="range" id="temp" min="1" max="10" value="5"><span id="tempVal">5</span><br>
-    <label>Masa (1-10):</label><input type="range" id="mass" min="1" max="10" value="5"><span id="massVal">5</span><br>
-    <label>Gravedad (1-10):</label><input type="range" id="grav" min="1" max="10" value="10"><span id="gravVal">10</span><br>
-    <label>Híbrido (0-1):</label><input type="range" id="hybrid" min="0" max="1" value="0" step="1"><span id="hybridVal">0</span>
-  </div>
-  <div style="text-align:center;">
-    <button onclick="startSPCSim()">${texts[lang].start}</button>
-    <button onclick="resetSim()">Reset</button>
-  </div>
-  `;
-  updateSliderVals();
+function nuevoMito() {
+  const mitos = [
+    "La botella gigante ya está en órbita",
+    "Kidd Keo suena en la cara oculta",
+    "Los pobres llegaremos a Marte antes",
+    "NASA pide la receta del Foam Demon",
+    "Sayōnara corps, la Luna es nuestra"
+  ];
+  const m = document.createElement('div');
+  m.className = 'mito';
+  m.textContent = mitos[Math.floor(Math.random()*mitos.length)];
+  m.style.left = Math.random()*70 + 15 + 'vw';
+  document.body.appendChild(m);
+  setTimeout(() => m.remove(), 40000);
 }
 
-function updateSliderVals(){
-  \( ('#ratioVal').innerText = \)('#ratio').value;
-  \( ('#tempVal').innerText = \)('#temp').value;
-  \( ('#massVal').innerText = \)('#mass').value;
-  \( ('#gravVal').innerText = \)('#grav').value;
-  \( ('#hybridVal').innerText = \)('#hybrid').value;
+function hablar(t) {
+  const voz = new SpeechSynthesisUtterance(t);
+  voz.lang = "es-ES";
+  voz.rate = 0.9;
+  speechSynthesis.speak(voz);
 }
 
-document.addEventListener('input', (e) => {
-  if(e.target.type === 'range') \( (`# \){e.target.id}Val`).innerText = e.target.value;
-});
-
-function resetSim(){
-  simRunning = false;
-  position = 0;
-  velocity = 0;
-  time = 0;
-  maxHeight = 0;
-  laughed = false;
-  $('#hud').innerHTML = '';
+function lanzarALaLuna() {
+  document.getElementById("trap").style.display = "block";
+  document.getElementById("trap").innerHTML = 
+    "<div style='animation:pulse 1s infinite'>" + 
+    trapLyrics.join("<br><br>") + 
+    "<br><br><span style='font-size:6rem;color:#f00'>¡¡¡LUNA ALCANZADA!!!</span><br>" +
+    "Impacto en cráter Tycho confirmado<br>" +
+    "Altavoz con trap español reproduciéndose en bucle eterno<br>" +
+    "Los pobres llegamos primero<br>" +
+    "Sayōnara corps · Punk not dead · Punk is lunar" +
+    "</div>";
+  hablar("¡Impacto lunar confirmado! La botella gigante ha llegado a la Luna. Kidd Keo, Natos y Waor suenan eternamente en el cráter Tycho. Un pobre con TDAH y una botella de plástico… acaba de ganar la carrera espacial. Sayōnara agencias. Sayōnara corps.");
+  setTimeout(() => document.getElementById("trap").style.display = "none", 20000);
 }
 
-function startSPCSim(){
-  if(simRunning) return;
-  simRunning = true;
-  const ctx = document.getElementById('spcCanvas').getContext('2d');
-  const ratio = parseInt($('#ratio').value);
-  const temp = parseInt($('#temp').value);
-  const mass = parseInt($('#mass').value);
-  const grav = parseInt($('#grav').value) / 10 * 9.8;
-  const hybrid = parseInt($('#hybrid').value);
-  
-  // Cálculo de thrust base: optimizado por ratio y temp
-  let thrust = (ratio * temp * (1 + hybrid * 0.5)) / mass * 15; // Aumentado para más rango
-  let t = 0;
-  
-  const anim = setInterval(()=>{
-    ctx.clearRect(0,0,900,600);
-    ctx.fillStyle="#001122";
-    ctx.fillRect(0,0,900,600);
-    
-    // Dibujar cohete
-    drawRocket(ctx, 450, 600 - position);
-    
-    // Partículas de escape
-    for(let i=0; i<5; i++){
-      ctx.fillStyle=`rgba(255, \( {Math.random()*255}, 0, \){Math.random()})`;
-      ctx.beginPath();
-      ctx.arc(450 + Math.random()*20-10, 600 - position + 50 + Math.random()*20, Math.random()*5, 0, 2*Math.PI);
-      ctx.fill();
-    }
-    
-    // Física simple: mientras thrust >0
-    if(thrust > 0){
-      velocity += (thrust / mass - grav) * 0.1;
-      position += velocity * 0.1;
-      thrust -= 0.5; // Decaimiento de thrust
-      t += 0.1;
-    } else {
-      velocity -= grav * 0.1;
-      position += velocity * 0.1;
-      if(position < 0){
-        position = 0;
-        clearInterval(anim);
-        simRunning = false;
-        alert("¡Lanzamiento completado! Altura máxima: " + Math.round(maxHeight) + " unidades.");
-      }
-    }
-    
-    if(position > maxHeight) maxHeight = position;
-    \( ('#hud').innerHTML = ` \){texts[lang].maxHeight} ${Math.round(maxHeight)} unidades`;
-    if(maxHeight > 5000 && !laughed){
-      laughed = true;
-      alert("Remix Trap Kidd Keo Style: 'NASA en la mierda, mi botella es pura (shit!), foam demon zumba, agencias locas enamora'. ¡Ja ja ja!");
-      alert("Remix Trap Natos y Waor Style: 'ESA y SpaceX, mirad mi trap orbital, crude y directo, vuestros satélites son mierda, mi botella vuela alto sin pelos en la lengua'. ¡Ja ja ja!");
-      playTrapBeat();
-    }
-  },16); // 60fps approx
-}
-
-function drawRocket(ctx, x, y){
-  ctx.fillStyle="#0ff";
-  ctx.beginPath();
-  ctx.moveTo(x-20, y);
-  ctx.lineTo(x, y-100);
-  ctx.lineTo(x+20, y);
-  ctx.closePath();
-  ctx.fill();
-  // Aletas
-  ctx.fillStyle="#f0f";
-  ctx.fillRect(x-30, y-20, 10, 20);
-  ctx.fillRect(x+20, y-20, 10, 20);
-}
-
-function playTrapBeat(){
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  const osc1 = audioCtx.createOscillator();
-  osc1.type = 'square';
-  osc1.frequency.setValueAtTime(80, audioCtx.currentTime); // Bajo trap
-  osc1.connect(audioCtx.destination);
-  osc1.start();
-  setTimeout(() => osc1.stop(), 2000);
-  const osc2 = audioCtx.createOscillator();
-  osc2.type = 'sine';
-  osc2.frequency.setValueAtTime(440, audioCtx.currentTime);
-  osc2.connect(audioCtx.destination);
-  osc2.start();
-  setTimeout(() => osc2.stop(), 2000);
+function abrazar() {
+  abrazos++; 
+  localStorage.abrazos = abrazos;
+  hablar(`Abrazo cósmico ${abrazos}. La botella gigante está en camino. Los pobres llegamos a la Luna con jabón y mala hostia. Todos contentos.`);
 }
 </script>
-
 </body>
 </html>

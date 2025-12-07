@@ -2,8 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE Ω⁶⁹ v1 — SPC Educativo</title>
-<meta name="description" content="Simulación educativa de propulsión segura SPC, STPE conceptual, avionics ESP32-S3, open-source y legal.">
+<title>SLYVERSE Ω⁶⁹ v2 — SPC Educativo Mejorado</title>
+<meta name="description" content="Simulación educativa de propulsión segura SPC con sodio (bicarbonato), STPE conceptual, avionics ESP32-S3, open-source y legal. Versión mejorada para mayor rango.">
 <meta name="robots" content="all">
 
 <style>
@@ -11,16 +11,17 @@
   --color-main:#0ff;
   --color-accent:#f0f;
   --bg-dark:#000;
-  --bg-panel:#001100;
+  --bg-panel:#001122;
+  --shadow-glow: 0 0 20px var(--color-main);
 }
 body{
   margin:0;
   font-family:'Courier New', monospace;
-  background:var(--bg-dark);
+  background:var(--bg-dark) url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJzdGFycyIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIxIiBmaWxsPSIjZmZmIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3N0YXJzKSIvPjwvc3ZnPg==') repeat;
   color:var(--color-main);
   overflow:hidden;
 }
-h1,h2{text-align:center;margin:20px;color:var(--color-main);text-shadow:0 0 40px var(--color-main);}
+h1,h2{text-align:center;margin:20px;color:var(--color-main);text-shadow:var(--shadow-glow);}
 h2{font-size:2em;}
 button{
   font-size:1.2em;
@@ -31,29 +32,29 @@ button{
   cursor:pointer;
   margin:10px;
   border-radius:20px;
-  box-shadow:0 0 50px var(--color-main);
+  box-shadow:var(--shadow-glow);
   transition:all .3s;
 }
 button:hover{
   background:var(--color-accent);
   transform:scale(1.2);
-  box-shadow:0 0 100px var(--color-accent);
+  box-shadow:0 0 50px var(--color-accent);
 }
-#app{display:none;padding:20px;}
-.panel{position:fixed;top:0;left:0;right:0;background:var(--bg-panel);padding:15px;z-index:9999;text-align:center;border-bottom:5px double var(--color-main);}
-canvas{border:2px solid var(--color-main);background:var(--bg-panel);display:block;margin:auto;}
+#app{display:block;padding:20px;}
+.panel{position:fixed;top:0;left:0;right:0;background:var(--bg-panel);padding:15px;z-index:9999;text-align:center;border-bottom:5px double var(--color-main);box-shadow:var(--shadow-glow);}
+canvas{border:2px solid var(--color-main);background:var(--bg-panel);display:block;margin:auto;box-shadow:var(--shadow-glow);}
+.slider-container {text-align:center;margin:10px;}
+label {color:var(--color-main);margin-right:10px;}
+input[type="range"] {width:200px;}
+#hud {position:fixed;bottom:10px;left:10px;color:var(--color-accent);text-shadow:var(--shadow-glow);}
 </style>
 </head>
 <body>
 
-<h1 id="title">SLYVERSE Ω⁶⁹ v1</h1>
-<h2 id="subtitle">Propulsión Segura SPC + Simulación Educativa</h2>
-
-<div style="text-align:center;">
-  <button onclick="init()">Cargar Paquete</button>
+<div class="panel">
+  <button onclick="menu()">MENÚ PRINCIPAL</button>
 </div>
-
-<div id="app"></div>
+<div id="app" style="display:none;"></div>
 
 <script>
 /* ========================
@@ -63,17 +64,21 @@ const lang = navigator.language.startsWith('es') ? 'es' : 'en';
 const texts = {
   es:{
     menu:"MENÚ PRINCIPAL",
-    spc:"SPC — PROPULSIÓN SEGURA",
-    start:"Iniciar Simulación",
-    controls:"Controles: Expansión elástica, Actuador térmico, Presión osmótica, Masa vehículo, Gravedad, Modo híbrido",
-    loading:"Cargando módulos educativos..."
+    spc:"SPC — PROPULSIÓN SEGURA CON SODIO",
+    start:"Lanzar Cohete",
+    controls:"Controles: Relación Vinagre:Sodio, Temperatura, Masa vehículo, Gravedad, Modo híbrido",
+    loading:"Cargando módulos educativos mejorados...",
+    maxHeight:"Altura Máxima: ",
+    bom:"BOM (Lista de Materiales)"
   },
   en:{
     menu:"MAIN MENU",
-    spc:"SPC — SAFE PROPULSION",
-    start:"Start Simulation",
-    controls:"Controls: Elastic expansion, Thermal actuator, Osmotic pressure, Vehicle mass, Gravity, Hybrid mode",
-    loading:"Loading educational modules..."
+    spc:"SPC — SAFE PROPULSION WITH SODIUM",
+    start:"Launch Rocket",
+    controls:"Controls: Vinegar:Sodium Ratio, Temperature, Vehicle mass, Gravity, Hybrid mode",
+    loading:"Loading improved educational modules...",
+    maxHeight:"Max Height: ",
+    bom:"BOM (Bill of Materials)"
   }
 };
 
@@ -83,7 +88,7 @@ const texts = {
 function $(s){return document.querySelector(s)}
 
 function init(){
-  document.body.innerHTML = `<h1 style="color:#0ff">SLYVERSE Ω⁶⁹</h1>
+  document.body.innerHTML = `<h1 style="color:#0ff">SLYVERSE Ω⁶⁹ v2</h1>
   <h2>${texts[lang].loading}</h2>
   <progress value="0" max="100" id="p" style="width:70%;height:30px;margin:auto;display:block;"></progress>`;
   let i=0;
@@ -97,6 +102,8 @@ function init(){
   },100);
 }
 
+if(!$('#app')) init(); else mainUI();
+
 /* ========================
    UI Principal
 ======================== */
@@ -105,7 +112,8 @@ function mainUI(){
   <div class="panel">
     <button onclick="menu()">${texts[lang].menu}</button>
   </div>
-  <div id="app" style="padding-top:120px;"></div>
+  <div id="app" style="padding-top:120px;display:block;"></div>
+  <div id="hud"></div>
   `;
   menu();
 }
@@ -113,7 +121,8 @@ function mainUI(){
 const modules = [
 {text_es:"Laboratorio Científico", text_en:"Science Lab", fn:()=>alert("Simulación educativa de sensores")},
 {text_es:"STPE Conceptual", text_en:"STPE Conceptual", fn:()=>alert("Simulación conceptual de propulsión térmica")},
-{text_es:"SPC Seguro", text_en:"Safe SPC", fn:fSPC}
+{text_es:"SPC Seguro Mejorado", text_en:"Improved Safe SPC", fn:fSPC},
+{text_es:texts.es.bom, text_en:texts.en.bom, fn:showBOM}
 ];
 
 function menu(){
@@ -128,42 +137,140 @@ function menu(){
 }
 
 /* ========================
-   Módulo SPC Seguro
+   Módulo BOM (Bill of Materials)
 ======================== */
-function fSPC(){
-  $('#app').innerHTML = `
-  <h2>${texts[lang].spc}</h2>
-  <canvas id="spcCanvas" width="900" height="400"></canvas>
-  <p style="text-align:center;font-size:1em;color:#0ff;">${texts[lang].controls}</p>
-  <div style="text-align:center;">
-    <button onclick="startSPCSim()">${texts[lang].start}</button>
-  </div>
+function showBOM(){
+  const app = $('#app');
+  app.innerHTML = `
+  <h2>${texts[lang].bom}</h2>
+  <ul style="list-style:none;text-align:left;max-width:600px;margin:auto;color:#0ff;">
+    <li>Bicarbonato de Sodio (Baking Soda): <a href="https://www.amazon.com/s?k=baking+soda" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Para la reacción química.</li>
+    <li>Vinagre (Vinegar): <a href="https://www.amazon.com/s?k=white+vinegar" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Ácido para generar CO₂.</li>
+    <li>Botella Plástica (Plastic Bottle): <a href="https://www.amazon.com/s?k=plastic+bottle+2+liter" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Cuerpo del cohete.</li>
+    <li>Corcho o Tapón (Cork Stopper): <a href="https://www.amazon.com/s?k=bottle+cork" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Para sellar y lanzar.</li>
+    <li>Aletas (Fins, cartón): <a href="https://www.amazon.com/s?k=cardboard+sheets" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Para estabilidad.</li>
+    <li>Cono Nariz (Nose Cone, opcional): <a href="https://www.apogeerockets.com/Rocket_Kits/Skill_Level_1_Kits" target="_blank" style="color:var(--color-accent);">Kits en Apogee Rockets</a> - Para aerodinámica.</li>
+    <li>Papel Tissue (para time-release): <a href="https://www.amazon.com/s?k=tissue+paper" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a>.</li>
+  </ul>
+  <p style="text-align:center;">Todos los materiales son comunes y seguros para experimentos educativos. Consulta leyes locales para model rocketry.</p>
   `;
 }
 
+/* ========================
+   Módulo SPC Seguro Mejorado
+======================== */
+let simRunning = false;
+let position = 0;
+let velocity = 0;
+let time = 0;
+let maxHeight = 0;
+
+function fSPC(){
+  const app = $('#app');
+  app.innerHTML = `
+  <h2>${texts[lang].spc}</h2>
+  <canvas id="spcCanvas" width="900" height="600"></canvas>
+  <p style="text-align:center;font-size:1em;color:#0ff;">${texts[lang].controls}</p>
+  <div class="slider-container">
+    <label>Relación Vinagre:Sodio (1-20):</label><input type="range" id="ratio" min="1" max="20" value="12"><span id="ratioVal">12</span><br>
+    <label>Temperatura (1-10):</label><input type="range" id="temp" min="1" max="10" value="5"><span id="tempVal">5</span><br>
+    <label>Masa (1-10):</label><input type="range" id="mass" min="1" max="10" value="5"><span id="massVal">5</span><br>
+    <label>Gravedad (1-10):</label><input type="range" id="grav" min="1" max="10" value="10"><span id="gravVal">10</span><br>
+    <label>Híbrido (0-1):</label><input type="range" id="hybrid" min="0" max="1" value="0" step="1"><span id="hybridVal">0</span>
+  </div>
+  <div style="text-align:center;">
+    <button onclick="startSPCSim()">${texts[lang].start}</button>
+    <button onclick="resetSim()">Reset</button>
+  </div>
+  `;
+  updateSliderVals();
+}
+
+function updateSliderVals(){
+  \( ('#ratioVal').innerText = \)('#ratio').value;
+  \( ('#tempVal').innerText = \)('#temp').value;
+  \( ('#massVal').innerText = \)('#mass').value;
+  \( ('#gravVal').innerText = \)('#grav').value;
+  \( ('#hybridVal').innerText = \)('#hybrid').value;
+}
+
+document.addEventListener('input', (e) => {
+  if(e.target.type === 'range') \( (`# \){e.target.id}Val`).innerText = e.target.value;
+});
+
+function resetSim(){
+  simRunning = false;
+  position = 0;
+  velocity = 0;
+  time = 0;
+  maxHeight = 0;
+  $('#hud').innerHTML = '';
+}
+
 function startSPCSim(){
+  if(simRunning) return;
+  simRunning = true;
   const ctx = document.getElementById('spcCanvas').getContext('2d');
-  let t=0;
-  setInterval(()=>{
-    ctx.fillStyle="#001100";
-    ctx.fillRect(0,0,900,400);
+  const ratio = parseInt($('#ratio').value);
+  const temp = parseInt($('#temp').value);
+  const mass = parseInt($('#mass').value);
+  const grav = parseInt($('#grav').value) / 10 * 9.8; // Escala gravedad
+  const hybrid = parseInt($('#hybrid').value);
+  
+  // Cálculo de thrust base: optimizado por ratio y temp
+  let thrust = (ratio * temp * (1 + hybrid * 0.5)) / mass * 10; // Fórmula simplificada para sim
+  let t = 0;
+  
+  const anim = setInterval(()=>{
+    ctx.clearRect(0,0,900,600);
+    ctx.fillStyle="#001122";
+    ctx.fillRect(0,0,900,600);
+    
+    // Dibujar cohete
+    drawRocket(ctx, 450, 600 - position);
+    
+    // Partículas de escape
+    for(let i=0; i<5; i++){
+      ctx.fillStyle=`rgba(255, \( {Math.random()*255}, 0, \){Math.random()})`;
+      ctx.beginPath();
+      ctx.arc(450 + Math.random()*20-10, 600 - position + 50 + Math.random()*20, Math.random()*5, 0, 2*Math.PI);
+      ctx.fill();
+    }
+    
+    // Física simple: mientras thrust >0
+    if(thrust > 0){
+      velocity += (thrust / mass - grav) * 0.1;
+      position += velocity * 0.1;
+      thrust -= 0.5; // Decaimiento de thrust
+      t += 0.1;
+    } else {
+      velocity -= grav * 0.1;
+      position += velocity * 0.1;
+      if(position < 0){
+        position = 0;
+        clearInterval(anim);
+        simRunning = false;
+        alert("¡Lanzamiento completado! Altura máxima: " + Math.round(maxHeight) + " unidades.");
+      }
+    }
+    
+    if(position > maxHeight) maxHeight = position;
+    \( ('#hud').innerHTML = ` \){texts[lang].maxHeight} ${Math.round(maxHeight)} unidades`;
+  }, 16); // 60fps approx
+}
 
-    const pulse = 30 + Math.sin(t)*25;
-
-    // micro-impulsos simulados
-    ctx.fillStyle="#0ff";
-    ctx.fillRect(150,200-pulse/2, pulse, 20);
-
-    ctx.fillStyle="#f0f";
-    ctx.beginPath();
-    ctx.arc(450,200,pulse*0.4,0,2*Math.PI);
-    ctx.fill();
-
-    ctx.fillStyle="#0f0";
-    ctx.fillRect(700,200-(pulse*0.3), pulse*0.5, 20);
-
-    t+=0.05;
-  },50);
+function drawRocket(ctx, x, y){
+  ctx.fillStyle="#0ff";
+  ctx.beginPath();
+  ctx.moveTo(x-20, y);
+  ctx.lineTo(x, y-100);
+  ctx.lineTo(x+20, y);
+  ctx.closePath();
+  ctx.fill();
+  // Aletas
+  ctx.fillStyle="#f0f";
+  ctx.fillRect(x-30, y-20, 10, 20);
+  ctx.fillRect(x+20, y-20, 10, 20);
 }
 </script>
 

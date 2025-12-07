@@ -1,191 +1,246 @@
-<!-- ========================================================= -->
-<!-- ===============   MÓDULOS v1-PLUS-ULTRA   ================ -->
-<!-- ========================================================= -->
-<script type="module">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>v1-SLYVERSE-MINER: Cobete Punk para Minar Luna</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            background: #000; 
+            color: #0f0; 
+            font-family: 'Orbitron', monospace; 
+            overflow: hidden; 
+            position: relative;
+        }
+        .scanline { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: repeating-linear-gradient(0deg, transparent 0px, transparent 2px, rgba(0,255,0,0.03) 2px, rgba(0,255,0,0.03) 4px); 
+            pointer-events: none; z-index: 999; 
+        }
+        .glow { text-shadow: 0 0 5px #0f0, 0 0 10px #0f0, 0 0 15px #0ff; }
+        .glitch { animation: glitch 0.3s infinite; }
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(2px, -2px); }
+            60% { transform: translate(-2px, -2px); }
+            80% { transform: translate(2px, 2px); }
+            100% { transform: translate(0); }
+        }
+        #dashboard { 
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+            background: radial-gradient(circle at center, rgba(0,20,0,0.9) 0%, #000 100%); 
+            z-index: 1000; 
+        }
+        .panel { 
+            position: absolute; background: rgba(0,0,0,0.8); border: 1px solid #0f0; padding: 10px; 
+            border-radius: 5px; box-shadow: 0 0 20px #0f0; font-size: 12px; 
+        }
+        #energia { bottom: 20px; right: 20px; width: 200px; height: 120px; }
+        #radar { bottom: 160px; right: 20px; width: 200px; height: 200px; }
+        #ia { top: 20px; left: 20px; width: 400px; height: 300px; }
+        #camara { top: 20px; right: 20px; width: 300px; height: 200px; background: #000; }
+        #mineria { bottom: 20px; left: 20px; width: 300px; height: 200px; background: #000; }
+        canvas { border: 1px solid #0f0; background: #000; }
+        input { background: #000; border: 1px solid #0f0; color: #0f0; width: 100%; padding: 5px; }
+        #log { height: 200px; overflow-y: auto; color: #0ff; font-size: 10px; }
+        .alert { 
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+            background: #f00; color: #000; padding: 20px; font-size: 18px; z-index: 10000; 
+            animation: glitch 1s infinite; display: none; 
+        }
+    </style>
+</head>
+<body>
+    <div class="scanline"></div>
+    <div id="dashboard">
+        <!-- Panel Energía Von Neumann: ahora con efficiency minera -->
+        <div id="energia" class="panel">
+            <div class="glow">ENERGÍA VON NEUMANN 🐍</div>
+            <canvas id="energyCanvas" width="180" height="60"></canvas>
+            <div id="energyLevel">100% - ISRU efficiency: 85%</div>
+        </div>
 
-/* -----------------------------------------------------------
-   1. PANEL DE ENERGÍA — estilo Starship
------------------------------------------------------------ */
-function energiaV1(){
-  const b=document.createElement("div");
-  b.id="energiaV1";
-  b.style.cssText=`
-    position:fixed;right:20px;bottom:320px;width:360px;
-    height:140px;background:rgba(0,0,0,.7);z-index:99999;
-    border:3px solid #0ff;color:#0ff;font-family:Courier;padding:10px;
-  `;
-  b.innerHTML="<b>ENERGÍA Ω⁶⁹</b><br><canvas id='engfx' width='340' height='80'></canvas>";
-  document.body.appendChild(b);
+        <!-- Radar Anti-Corp: ahora detecta recursos lunares -->
+        <div id="radar" class="panel">
+            <div class="glow">RADAR RECURSOS LUNAR</div>
+            <canvas id="radarCanvas" width="180" height="180"></canvas>
+            <div>Targets: Platino (9d), Helio-3 (polar), Corps (0km)</div>
+        </div>
 
-  const c=document.getElementById("engfx");
-  const ctx=c.getContext("2d");
-  let lvl=10;
+        <!-- IA Ronin: comandos mineros nuevos -->
+        <div id="ia" class="panel">
+            <div class="glow">IA RONIN: Mina sin paywall</div>
+            <input id="cmdInput" placeholder=">> Ordena, miner soul... (boost/rover/punk/maldicion/barrio/minar/isru/swarm)">
+            <div id="log"></div>
+        </div>
 
-  setInterval(()=>{
-    lvl = (lvl + Math.random()*5) % 100;
-    ctx.clearRect(0,0,c.width,c.height);
-    ctx.fillStyle="#0ff";
-    ctx.fillRect(0,30,lvl*3.4,20);
-  },500);
-}
+        <!-- Cámara Roverlite: ahora con sim minería -->
+        <div id="camara" class="panel">
+            <div class="glow">ROVERLITE CAM: Minando regolith</div>
+            <canvas id="camCanvas" width="280" height="180"></canvas>
+            <div>Alt: 131km | Thrust: 450N | Yield: 20kg/h</div>
+        </div>
 
-/* -----------------------------------------------------------
-   2. RADAR DOPPLER FICTICIO
------------------------------------------------------------ */
-function radarV1(){
-  const cv=document.createElement("canvas");
-  cv.id="radarv1";
-  cv.width=240; cv.height=240;
-  cv.style.cssText=`
-    position:fixed;right:20px;bottom:480px;border:3px solid #0ff;
-    background:rgba(0,0,0,.7);z-index:99999;
-  `;
-  document.body.appendChild(cv);
+        <!-- Nuevo Panel Minería: sim eficiencia swarm -->
+        <div id="mineria" class="panel">
+            <div class="glow">MINERÍA SWARM Ω</div>
+            <canvas id="mineCanvas" width="280" height="100"></canvas>
+            <div id="mineStatus">Progreso: 0% - Platino: 0kg, Helio-3: 0g</div>
+            <div>Efficiency: Ruedas adaptativas + brazos modulares (0€ extra)</div>
+        </div>
+    </div>
 
-  const ctx=cv.getContext("2d");
-  let a=0;
+    <div id="alert" class="alert">¡SLYVERSE-MINER ACTIVADO! Cobete up: Mina luna eficiente. Rovers swarm on. 🐍⛏️</div>
 
-  function loop(){
-    ctx.clearRect(0,0,240,240);
-    ctx.strokeStyle="#0ff";
-    ctx.beginPath();
-    ctx.arc(120,120,110,0,Math.PI*2);
-    ctx.stroke();
+    <script>
+        // Alert inicial con glitch
+        const alert = document.getElementById('alert');
+        alert.style.display = 'block';
+        setTimeout(() => alert.style.display = 'none', 3000);
 
-    ctx.save();
-    ctx.translate(120,120);
-    ctx.rotate(a);
-    ctx.strokeStyle="#0f0";
-    ctx.beginPath();
-    ctx.moveTo(0,0);
-    ctx.lineTo(120,0);
-    ctx.stroke();
-    ctx.restore();
+        // Energía: ahora con boost efficiency para minería
+        const energyCtx = document.getElementById('energyCanvas').getContext('2d');
+        let energy = 100;
+        setInterval(() => {
+            energy = Math.min(100, energy + (Math.random() - 0.4) * 8); // Más estable para minería larga
+            energyCtx.clearRect(0, 0, 180, 60);
+            energyCtx.fillStyle = '#0f0';
+            energyCtx.fillRect(0, 0, energy * 1.8, 60);
+            energyCtx.fillStyle = '#000';
+            energyCtx.fillRect(energy * 1.8, 0, 4, 60);
+            document.getElementById('energyLevel').textContent = energy.toFixed(0) + '% - ISRU efficiency: ' + (80 + Math.floor(Math.random()*15)) + '%';
+        }, 200);
 
-    a+=0.03;
-    requestAnimationFrame(loop);
-  }
-  loop();
-}
+        // Radar: sweep con targets recursos
+        const radarCtx = document.getElementById('radarCanvas').getContext('2d');
+        let radarAngle = 0;
+        function drawRadar() {
+            radarCtx.clearRect(0, 0, 180, 180);
+            radarCtx.strokeStyle = '#0f0';
+            for (let r = 30; r < 150; r += 30) {
+                radarCtx.beginPath();
+                radarCtx.arc(90, 90, r, 0, Math.PI * 2);
+                radarCtx.stroke();
+            }
+            // Sweep ronin
+            radarCtx.save();
+            radarCtx.translate(90, 90);
+            radarCtx.rotate(radarAngle);
+            radarCtx.strokeStyle = '#f00';
+            radarCtx.beginPath();
+            radarCtx.moveTo(0, 0);
+            radarCtx.lineTo(120, 0);
+            radarCtx.stroke();
+            radarCtx.restore();
+            // Targets: recursos en amarillo, corps en rojo
+            const targets = [
+                {x: 120, y: 60, label: 'Platino', color: '#ff0'},
+                {x: 60, y: 120, label: 'Helio-3', color: '#ff0'},
+                {x: 90, y: 30, label: 'Barrio', color: '#0f0'}
+            ];
+            targets.forEach(t => {
+                radarCtx.fillStyle = t.color;
+                radarCtx.fillRect(t.x - 2, t.y - 2, 4, 4);
+                radarCtx.font = '8px Orbitron';
+                radarCtx.fillText(t.label, t.x + 5, t.y);
+            });
+            radarAngle += 0.05;
+            requestAnimationFrame(drawRadar);
+        }
+        drawRadar();
 
-/* -----------------------------------------------------------
-   3. CAMARA DE “COFIA” (ficticia)
------------------------------------------------------------ */
-function camaraV1(){
-  const cv=document.createElement("canvas");
-  cv.id="camV1";
-  cv.width=400; cv.height=240;
-  cv.style.cssText=`
-    position:fixed;left:20px;top:20px;z-index:99999;
-    border:3px solid #0ff;background:#000;
-  `;
-  document.body.appendChild(cv);
-  const ctx=cv.getContext("2d");
+        // Cámara: thrust + anim minería (brazo excavando)
+        const camCtx = document.getElementById('camCanvas').getContext('2d');
+        let camX = 0, armAngle = 0;
+        setInterval(() => {
+            camCtx.fillStyle = '#000';
+            camCtx.fillRect(0, 0, 280, 180);
+            // Estrellas
+            camCtx.fillStyle = '#fff';
+            for (let i = 0; i < 50; i++) {
+                camCtx.fillRect(Math.random() * 280, Math.random() * 100, 1, 1);
+            }
+            // Thrust naranja
+            camCtx.strokeStyle = '#ff0';
+            camCtx.lineWidth = 3;
+            camCtx.beginPath();
+            camCtx.moveTo(camX, 140);
+            camCtx.lineTo(camX + 20, 140);
+            camCtx.stroke();
+            camX += 2; if (camX > 280) camX = -20;
+            // Brazo minero: línea oscilante
+            camCtx.strokeStyle = '#0f0';
+            camCtx.beginPath();
+            camCtx.moveTo(140, 160);
+            camCtx.lineTo(140 + 40 * Math.cos(armAngle), 160 + 40 * Math.sin(armAngle));
+            camCtx.stroke();
+            armAngle += 0.1;
+        }, 100);
 
-  let x=0;
-  setInterval(()=>{
-    ctx.fillStyle="#000";
-    ctx.fillRect(0,0,400,240);
-    ctx.fillStyle="#0f0";
-    ctx.fillRect(x,120,10,10);
-    x+=4; if(x>400)x=0;
-    ctx.strokeStyle="#0ff";
-    ctx.strokeText("CAMARA COFIA — v1-PLUS-ULTRA",10,20);
-  },60);
-}
+        // Nuevo: Minería sim - progreso yield
+        const mineCtx = document.getElementById('mineCanvas').getContext('2d');
+        let mineProgress = 0, platino = 0, helio = 0;
+        setInterval(() => {
+            mineProgress = (mineProgress + Math.random() * 2) % 100;
+            if (Math.random() > 0.8) platino += 1;
+            if (Math.random() > 0.9) helio += 0.5;
+            mineCtx.clearRect(0, 0, 280, 100);
+            mineCtx.fillStyle = '#ff0';
+            mineCtx.fillRect(0, 0, mineProgress * 2.8, 100);
+            document.getElementById('mineStatus').textContent = `Progreso: ${mineProgress.toFixed(0)}% - Platino: ${platino}kg, Helio-3: ${helio.toFixed(1)}g`;
+        }, 500);
 
-/* -----------------------------------------------------------
-   4. IA DE MISIÓN — Panel interactivo
------------------------------------------------------------ */
-function iaV1(){
-  const d=document.createElement("div");
-  d.id="iaV1";
-  d.style.cssText=`
-    position:fixed;left:50%;bottom:20px;transform:translateX(-50%);
-    width:600px;background:rgba(0,0,0,.75);border:3px solid #0ff;
-    color:#0ff;font-family:Courier;padding:20px;z-index:99999;
-  `;
-  d.innerHTML=`
-    <b>IA MISIÓN Ω⁶⁹</b><br><br>
-    <input id="iaInput" placeholder="Escribe comando…" 
-      style="width:100%;padding:6px;background:#000;border:1px solid #0ff;color:#0ff;font-family:Courier">
-    <div id="iaOut" style="margin-top:10px;height:120px;overflow:auto;font-size:12px"></div>
-  `;
-  document.body.appendChild(d);
+        // IA: respuestas + mineras
+        const log = document.getElementById('log');
+        const input = document.getElementById('cmdInput');
+        const roninResponses = {
+            'boost': '¡AZÚCAR+KNO3 IGNITION! 450N, burn 12s. Cobete up: +10% efficiency para despliegue rovers.',
+            'rover': 'Roverlite printable: 2.3kg, brazos modulares 1T lift. ISRU regolith → O2/metal día 1.',
+            'punk': 'Teorema 131: Punk mina el vacío. No muerto, replicante. Tributo Rotten/Cobain.',
+            'maldicion': '2620 curses a corps: SGAE/Elon. Katana GitHub mina luna gratis.',
+            'barrio': 'Para okupas: Ambulancia 1999€ + rovers swarm. Llegamos antes que muerte.',
+            'minar': 'Modo mina on: Ruta polar craters. Yield: platino 9d, helio-3 bonus. Efficiency 85% (ruedas adaptativas).',
+            'isru': 'ISRU activado: Regolith → recursos. 0€ extra, printable. Von Neumann swarm multiplica rovers.',
+            'swarm': 'Swarm deploy: 3+ rovers coord. Cobertura cráter x2, yield +30%. DIY modular, sin precio up.',
+            'default': 'Orden unknown, soul. Probá "minar", "isru", "swarm". Todo low-cost, offline. #NamasteSinPaywall'
+        };
+        input.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                const cmd = input.value.trim().toLowerCase();
+                input.value = '';
+                const resp = roninResponses[cmd] || roninResponses['default'];
+                log.innerHTML += `<div>> ${cmd}</div><div class="glow">${resp}</div>`;
+                log.scrollTop = log.scrollHeight;
+                const utter = new SpeechSynthesisUtterance(resp);
+                utter.lang = 'es-ES';
+                utter.rate = 0.8;
+                speechSynthesis.speak(utter);
+            }
+        });
 
-  const input=document.getElementById("iaInput");
-  const out=document.getElementById("iaOut");
+        // Konami easter: unlock miner mode full
+        let konamiIndex = 0;
+        const konamiCode = [38,38,40,40,37,39,37,39,66,65];
+        document.addEventListener('keydown', e => {
+            if (e.keyCode === konamiCode[konamiIndex]) {
+                konamiIndex++;
+                if (konamiIndex === konamiCode.length) {
+                    alert.textContent = '¡KONAMI MINER! Swarm full: Yield x2. GitHub eternal.';
+                    alert.style.display = 'block';
+                    setTimeout(() => alert.style.display = 'none', 5000);
+                    document.body.classList.add('glitch');
+                    setTimeout(() => document.body.classList.remove('glitch'), 3000);
+                    konamiIndex = 0;
+                }
+            } else {
+                konamiIndex = 0;
+            }
+        });
 
-  const respuestas={
-    "estado":"Telemetría estable. Cadena del barrio íntegra.",
-    "saludo":"Hola barrio, aquí IA ω69.",
-    "mision":"Protocolo ficticio de misión ejecutándose.",
-    "hora":()=> "Hora local: "+new Date().toLocaleTimeString(),
-    "ayuda":"Comandos: estado, saludo, mision, hora, energia, radar"
-  };
-
-  input.addEventListener("keydown",e=>{
-    if(e.key==="Enter"){
-      const v=input.value.trim().toLowerCase();
-      input.value="";
-      let r=respuestas[v];
-      if(typeof r==="function") r=r();
-      if(!r) r="Comando no reconocido.";
-      const p=document.createElement("div");
-      p.textContent="> "+r;
-      out.appendChild(p);
-      out.scrollTop=out.scrollHeight;
-    }
-  });
-}
-
-/* -----------------------------------------------------------
-   5. TECLAS ESPECIALES — "MODO BARRIO"
------------------------------------------------------------ */
-function teclasV1(){
-  window.addEventListener("keydown",e=>{
-    if(e.altKey && e.key.toLowerCase()==="b"){
-      alertaV1("MODO BARRIO ACTIVADO");
-      document.body.style.filter="invert(1)";
-      setTimeout(()=>document.body.style.filter="invert(0)",1500);
-    }
-  });
-}
-
-/* -----------------------------------------------------------
-   6. ALERTA FLOTANTE (ya existe en v1-PLUS, se expande)
------------------------------------------------------------ */
-function alertaV1(text){
-  const d=document.createElement("div");
-  d.style.cssText=`
-    position:fixed;top:80px;right:50px;background:#ff0;color:#000;
-    padding:10px 20px;border:3px solid #000;font-family:Courier;
-    z-index:999999;font-size:14px;animation:fade2 4s forwards;
-  `;
-  d.textContent=text;
-  document.body.appendChild(d);
-
-  const s=document.createElement("style");
-  s.textContent=`
-    @keyframes fade2{
-      0%{opacity:1}
-      80%{opacity:1}
-      100%{opacity:0;transform:translateY(-30px)}
-    }
-  `;
-  document.head.appendChild(s);
-}
-
-/* -----------------------------------------------------------
-   INIT v1-PLUS-ULTRA
------------------------------------------------------------ */
-window.addEventListener("load", ()=>{
-  energiaV1();
-  radarV1();
-  camaraV1();
-  iaV1();
-  teclasV1();
-  setTimeout(()=>alertaV1("v1-PLUS-ULTRA listo"),1200);
-});
-
-</script>
+        console.log('v1-SLYVERSE-MINER listo. Mina luna efficient, 0€ up. Punk codificado. 🐍⛏️');
+    </script>
+</body>
+</html>

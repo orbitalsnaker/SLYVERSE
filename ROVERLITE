@@ -1,219 +1,191 @@
 <!-- ========================================================= -->
-<!-- ======= MÓDULOS EXPANDIDOS “v1-PLUS” (verdadera v2) ===== -->
+<!-- ===============   MÓDULOS v1-PLUS-ULTRA   ================ -->
 <!-- ========================================================= -->
 <script type="module">
 
 /* -----------------------------------------------------------
-   1. HUD TIPO SPACEX (ESTADO DE MISIÓN)
+   1. PANEL DE ENERGÍA — estilo Starship
 ----------------------------------------------------------- */
-function hudV1(){
-  const h=document.createElement("div");
-  h.id="hudv1";
-  h.style.cssText=`
-    position:fixed;top:20px;right:50%;transform:translateX(50%);
-    width:680px;padding:20px;color:#0ff;font-family:Courier;
-    background:rgba(0,0,0,.65);border:3px solid #0ff;
-    z-index:999999;text-align:center;font-size:14px;
+function energiaV1(){
+  const b=document.createElement("div");
+  b.id="energiaV1";
+  b.style.cssText=`
+    position:fixed;right:20px;bottom:320px;width:360px;
+    height:140px;background:rgba(0,0,0,.7);z-index:99999;
+    border:3px solid #0ff;color:#0ff;font-family:Courier;padding:10px;
   `;
-  h.innerHTML=`
-    <b>HUD Ω⁶⁹ — MÓDULOS v1-PLUS</b><br>
-    <span id="hud_estado">Inicializando…</span><br>
-    <span id="hud_contador">T–00:00:00</span><br>
-  `;
-  document.body.appendChild(h);
-}
+  b.innerHTML="<b>ENERGÍA Ω⁶⁹</b><br><canvas id='engfx' width='340' height='80'></canvas>";
+  document.body.appendChild(b);
 
-function actualizarHUD(){
-  const t=document.getElementById("hud_contador");
-  const e=document.getElementById("hud_estado");
-  let sec=0;
-  setInterval(()=>{
-    sec++;
-    const hh=String(Math.floor(sec/3600)).padStart(2,"0");
-    const mm=String(Math.floor((sec%3600)/60)).padStart(2,"0");
-    const ss=String(sec%60).padStart(2,"0");
-    t.textContent=`T+${hh}:${mm}:${ss}`;
-    e.textContent="Operativo — Telemetría estable";
-  },1000);
-}
-
-/* -----------------------------------------------------------
-   2. TERMINAL INTERACTIVA
------------------------------------------------------------ */
-function terminalV1(){
-  const term=document.createElement("div");
-  term.style.cssText=`
-    position:fixed;left:20px;top:50%;transform:translateY(-50%);
-    width:360px;height:260px;background:rgba(0,0,0,.7);
-    border:3px solid #0ff;color:#0ff;font-size:12px;
-    padding:10px;overflow:auto;font-family:Courier;z-index:999999;
-  `;
-  term.id="terminal_barrio";
-  term.innerHTML="<b>TERMINAL Ω⁶⁹</b><br>";
-  document.body.appendChild(term);
-
-  function log(x){
-    const d=document.createElement("div");
-    d.textContent=x;
-    term.appendChild(d);
-    term.scrollTop=term.scrollHeight;
-  }
-
-  // Eventos ficticios
-  const eventos=[
-    "Cargando firmware de barrio…",
-    "Sincronizando telemetría global…",
-    "Verificando blockchain interno… OK",
-    "HUD conectado",
-    "OK — Módulos v1-PLUS activos"
-  ];
-
-  let i=0;
-  const int=setInterval(()=>{
-    log(eventos[i]);
-    i++;
-    if(i>=eventos.length) clearInterval(int);
-  },800);
-}
-
-/* -----------------------------------------------------------
-   3. MOTOR DE PARTÍCULAS (Llamarada visual, segura)
------------------------------------------------------------ */
-function particulasV1(){
-  const c=document.createElement("canvas");
-  c.id="fx_barrio";
-  c.width=window.innerWidth;
-  c.height=window.innerHeight;
-  c.style.cssText=`position:fixed;top:0;left:0;pointer-events:none;z-index:1;`;
-  document.body.appendChild(c);
-
+  const c=document.getElementById("engfx");
   const ctx=c.getContext("2d");
-  const parts=[];
-  for(let i=0;i<80;i++){
-    parts.push({
-      x:Math.random()*c.width,
-      y:c.height,
-      v:1+Math.random()*2,
-      s:2+Math.random()*3
-    });
-  }
+  let lvl=10;
+
+  setInterval(()=>{
+    lvl = (lvl + Math.random()*5) % 100;
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.fillStyle="#0ff";
+    ctx.fillRect(0,30,lvl*3.4,20);
+  },500);
+}
+
+/* -----------------------------------------------------------
+   2. RADAR DOPPLER FICTICIO
+----------------------------------------------------------- */
+function radarV1(){
+  const cv=document.createElement("canvas");
+  cv.id="radarv1";
+  cv.width=240; cv.height=240;
+  cv.style.cssText=`
+    position:fixed;right:20px;bottom:480px;border:3px solid #0ff;
+    background:rgba(0,0,0,.7);z-index:99999;
+  `;
+  document.body.appendChild(cv);
+
+  const ctx=cv.getContext("2d");
+  let a=0;
 
   function loop(){
-    ctx.clearRect(0,0,c.width,c.height);
-    ctx.fillStyle="rgba(0,255,255,0.7)";
-    parts.forEach(p=>{
-      ctx.beginPath();
-      ctx.arc(p.x,p.y,p.s,0,Math.PI*2);
-      ctx.fill();
-      p.y-=p.v;
-      if(p.y<0){p.y=c.height;p.x=Math.random()*c.width;}
-    });
+    ctx.clearRect(0,0,240,240);
+    ctx.strokeStyle="#0ff";
+    ctx.beginPath();
+    ctx.arc(120,120,110,0,Math.PI*2);
+    ctx.stroke();
+
+    ctx.save();
+    ctx.translate(120,120);
+    ctx.rotate(a);
+    ctx.strokeStyle="#0f0";
+    ctx.beginPath();
+    ctx.moveTo(0,0);
+    ctx.lineTo(120,0);
+    ctx.stroke();
+    ctx.restore();
+
+    a+=0.03;
     requestAnimationFrame(loop);
   }
   loop();
 }
 
 /* -----------------------------------------------------------
-   4. MAPA DE TRAYECTORIA (Canvas seguro)
+   3. CAMARA DE “COFIA” (ficticia)
 ----------------------------------------------------------- */
-function trayectoriaV1(){
-  const c=document.createElement("canvas");
-  c.id="trayect_barrio";
-  c.width=420;
-  c.height=200;
-  c.style.cssText=`
-    position:fixed;bottom:320px;left:20px;z-index:99990;
-    border:3px solid #0ff;background:rgba(0,0,0,.7);
+function camaraV1(){
+  const cv=document.createElement("canvas");
+  cv.id="camV1";
+  cv.width=400; cv.height=240;
+  cv.style.cssText=`
+    position:fixed;left:20px;top:20px;z-index:99999;
+    border:3px solid #0ff;background:#000;
   `;
-  document.body.appendChild(c);
+  document.body.appendChild(cv);
+  const ctx=cv.getContext("2d");
 
-  const ctx=c.getContext("2d");
-  let x=20;
+  let x=0;
   setInterval(()=>{
     ctx.fillStyle="#000";
-    ctx.fillRect(0,0,c.width,c.height);
+    ctx.fillRect(0,0,400,240);
+    ctx.fillStyle="#0f0";
+    ctx.fillRect(x,120,10,10);
+    x+=4; if(x>400)x=0;
     ctx.strokeStyle="#0ff";
-    ctx.beginPath();
-    ctx.moveTo(20,180);
-    ctx.quadraticCurveTo(200,40,x,20);
-    ctx.stroke();
-    x+=4;
-    if(x>400) x=20;
-  },120);
+    ctx.strokeText("CAMARA COFIA — v1-PLUS-ULTRA",10,20);
+  },60);
 }
 
 /* -----------------------------------------------------------
-   5. API de salida / puesta de sol (Open-Meteo)
+   4. IA DE MISIÓN — Panel interactivo
 ----------------------------------------------------------- */
-async function solarV1(){
-  const r=await fetch(
-    `https://api.open-meteo.com/v1/forecast?latitude=${COORDS.lat}&longitude=${COORDS.lon}&daily=sunrise,sunset&timezone=auto`
-  );
-  const j=await r.json();
-  const sr=j.daily.sunrise[0].split("T")[1];
-  const ss=j.daily.sunset[0].split("T")[1];
-  const h=document.getElementById("hud_estado");
-  h.innerHTML+=`<br>Amanecer: ${sr} — Atardecer: ${ss}`;
-}
-
-/* -----------------------------------------------------------
-   6. Voces alternativas TTS
------------------------------------------------------------ */
-function vocesV1(){
-  const btn=document.createElement("button");
-  btn.textContent="Voz Barrio MAX";
-  btn.style.cssText=`
-    position:fixed;right:20px;top:20px;z-index:99999;
-    background:#000;color:#0ff;border:3px solid #0ff;
-    padding:10px 15px;font-family:Courier;cursor:pointer;
+function iaV1(){
+  const d=document.createElement("div");
+  d.id="iaV1";
+  d.style.cssText=`
+    position:fixed;left:50%;bottom:20px;transform:translateX(-50%);
+    width:600px;background:rgba(0,0,0,.75);border:3px solid #0ff;
+    color:#0ff;font-family:Courier;padding:20px;z-index:99999;
   `;
-  btn.onclick=()=>{
-    const s=new SpeechSynthesisUtterance(
-      "Sistema Barrio Omega sesenta y nueve v1-PLUS activo. Telemetría nominal."
-    );
-    s.pitch=0.7;s.rate=1.1;s.lang="es-ES";
-    speechSynthesis.speak(s);
+  d.innerHTML=`
+    <b>IA MISIÓN Ω⁶⁹</b><br><br>
+    <input id="iaInput" placeholder="Escribe comando…" 
+      style="width:100%;padding:6px;background:#000;border:1px solid #0ff;color:#0ff;font-family:Courier">
+    <div id="iaOut" style="margin-top:10px;height:120px;overflow:auto;font-size:12px"></div>
+  `;
+  document.body.appendChild(d);
+
+  const input=document.getElementById("iaInput");
+  const out=document.getElementById("iaOut");
+
+  const respuestas={
+    "estado":"Telemetría estable. Cadena del barrio íntegra.",
+    "saludo":"Hola barrio, aquí IA ω69.",
+    "mision":"Protocolo ficticio de misión ejecutándose.",
+    "hora":()=> "Hora local: "+new Date().toLocaleTimeString(),
+    "ayuda":"Comandos: estado, saludo, mision, hora, energia, radar"
   };
-  document.body.appendChild(btn);
+
+  input.addEventListener("keydown",e=>{
+    if(e.key==="Enter"){
+      const v=input.value.trim().toLowerCase();
+      input.value="";
+      let r=respuestas[v];
+      if(typeof r==="function") r=r();
+      if(!r) r="Comando no reconocido.";
+      const p=document.createElement("div");
+      p.textContent="> "+r;
+      out.appendChild(p);
+      out.scrollTop=out.scrollHeight;
+    }
+  });
 }
 
 /* -----------------------------------------------------------
-   7. ALERTAS ESTÉTICAS
+   5. TECLAS ESPECIALES — "MODO BARRIO"
+----------------------------------------------------------- */
+function teclasV1(){
+  window.addEventListener("keydown",e=>{
+    if(e.altKey && e.key.toLowerCase()==="b"){
+      alertaV1("MODO BARRIO ACTIVADO");
+      document.body.style.filter="invert(1)";
+      setTimeout(()=>document.body.style.filter="invert(0)",1500);
+    }
+  });
+}
+
+/* -----------------------------------------------------------
+   6. ALERTA FLOTANTE (ya existe en v1-PLUS, se expande)
 ----------------------------------------------------------- */
 function alertaV1(text){
   const d=document.createElement("div");
   d.style.cssText=`
-    position:fixed;top:50px;right:50px;background:#f00;
-    color:#fff;padding:10px 20px;font-family:Courier;
-    border:3px solid #fff;z-index:99999;font-size:14px;
-    animation:fadeout 4s forwards;
+    position:fixed;top:80px;right:50px;background:#ff0;color:#000;
+    padding:10px 20px;border:3px solid #000;font-family:Courier;
+    z-index:999999;font-size:14px;animation:fade2 4s forwards;
   `;
   d.textContent=text;
   document.body.appendChild(d);
 
   const s=document.createElement("style");
   s.textContent=`
-    @keyframes fadeout{
+    @keyframes fade2{
       0%{opacity:1}
-      70%{opacity:1}
-      100%{opacity:0;transform:translateY(-20px)}
+      80%{opacity:1}
+      100%{opacity:0;transform:translateY(-30px)}
     }
   `;
   document.head.appendChild(s);
 }
 
 /* -----------------------------------------------------------
-   INIT v1-PLUS
+   INIT v1-PLUS-ULTRA
 ----------------------------------------------------------- */
 window.addEventListener("load", ()=>{
-  hudV1();
-  actualizarHUD();
-  terminalV1();
-  particulasV1();
-  trayectoriaV1();
-  solarV1();
-  vocesV1();
-  setTimeout(()=>alertaV1("Módulos v1-PLUS activos"),1200);
+  energiaV1();
+  radarV1();
+  camaraV1();
+  iaV1();
+  teclasV1();
+  setTimeout(()=>alertaV1("v1-PLUS-ULTRA listo"),1200);
 });
 
 </script>

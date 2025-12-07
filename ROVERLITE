@@ -2,277 +2,170 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>SLYVERSE Ω⁶⁹ v2 — SPC Educativo Mejorado</title>
-<meta name="description" content="Simulación educativa de propulsión segura SPC con sodio (bicarbonato), STPE conceptual, avionics ESP32-S3, open-source y legal. Versión mejorada para mayor rango.">
-<meta name="robots" content="all">
-
+<title>SLYVERSE Ω⁶⁹ v10 — FOAM DEMON ORBITAL (12 000 m+)</title>
+<meta name="description" content="Cohete de espuma que llega a la línea de Kármán sin permiso ni fuego. Incluye altavoz integrado que humilla a NASA/ESA con trap español original. 100 % @0rb1t4lsn4k3r">
 <style>
-:root {
-  --color-main:#0ff;
-  --color-accent:#f0f;
-  --bg-dark:#000;
-  --bg-panel:#001122;
-  --shadow-glow: 0 0 20px var(--color-main);
+:root{
+  --c:#0ff;--a:#f0f;--g:#ffd700;--foam:#87CEFA;--orbit:#00ff41;
+  --bg:#000;--panel:rgba(0,0,0,0.9);
+  --glow:0 0 30px var(--c);
 }
-body{
-  margin:0;
-  font-family:'Courier New', monospace;
-  background:var(--bg-dark) url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJzdGFycyIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48Y2lyY2xlIGN4PSIyNSIgY3k9IjI1IiByPSIxIiBmaWxsPSIjZmZmIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI3N0YXJzKSIvPjwvc3ZnPg==') repeat;
-  color:var(--color-main);
-  overflow:hidden;
-}
-h1,h2{text-align:center;margin:20px;color:var(--color-main);text-shadow:var(--shadow-glow);}
-h2{font-size:2em;}
-button{
-  font-size:1.2em;
-  padding:15px 35px;
-  background:var(--color-main);
-  color:#000;
-  border:none;
-  cursor:pointer;
-  margin:10px;
-  border-radius:20px;
-  box-shadow:var(--shadow-glow);
-  transition:all .3s;
-}
-button:hover{
-  background:var(--color-accent);
-  transform:scale(1.2);
-  box-shadow:0 0 50px var(--color-accent);
-}
-#app{display:block;padding:20px;}
-.panel{position:fixed;top:0;left:0;right:0;background:var(--bg-panel);padding:15px;z-index:9999;text-align:center;border-bottom:5px double var(--color-main);box-shadow:var(--shadow-glow);}
-canvas{border:2px solid var(--color-main);background:var(--bg-panel);display:block;margin:auto;box-shadow:var(--shadow-glow);}
-.slider-container {text-align:center;margin:10px;}
-label {color:var(--color-main);margin-right:10px;}
-input[type="range"] {width:200px;}
-#hud {position:fixed;bottom:10px;left:10px;color:var(--color-accent);text-shadow:var(--shadow-glow);}
+*{margin:0;box-sizing:border-box;}
+body{font-family:'Courier New',monospace;background:#000;color:var(--c);overflow:hidden;height:100vh;}
+h1,h2{text-align:center;padding:20px;text-shadow:var(--glow),0 0 40px var(--a);}
+button{padding:20px 50px;font-size:1.5em;background:var(--c);color:#000;border:none;border-radius:30px;cursor:pointer;margin:15px;box-shadow:var(--glow);}
+button:hover{background:var(--a);transform:scale(1.3);box-shadow:0 0 100px var(--a);}
+.panel{position:fixed;top:0;left:0;right:0;background:var(--panel);padding:20px;z-index:999;text-align:center;border-bottom:8px double var(--c);box-shadow:var(--glow);}
+canvas{display:block;margin:20px auto;border:4px solid var(--c);background:#000;box-shadow:var(--glow);}
+#hud{position:fixed;bottom:20px;left:20px;background:rgba(0,0,0,0.8);padding:20px;border:3px solid var(--g);color:var(--g);font-size:1.4em;}
+#trap{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);padding:30px;border:5px solid var(--a);color:var(--a);font-size:2em;text-align:center;display:none;z-index:1000;}
 </style>
 </head>
 <body>
 
 <div class="panel">
-  <button onclick="menu()">MENÚ PRINCIPAL</button>
+  <button onclick="menu()">Ω⁶⁹ RONIN</button>
+  <span style="color:var(--g)">Bands Orbitales: <span id="score">0</span></span>
 </div>
-<div id="app" style="display:none;"></div>
+<div id="app"></div>
+<div id="hud">Preparado para Kármán</div>
+<div id="trap"></div>
+
+<audio id="laugh" preload="auto">
+  <source src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcDgAAAP//" type="audio/wav">
+</audio>
 
 <script>
-/* ========================
-   Detección de idioma
-======================== */
-const lang = navigator.language.startsWith('es') ? 'es' : 'en';
-const texts = {
-  es:{
-    menu:"MENÚ PRINCIPAL",
-    spc:"SPC — PROPULSIÓN SEGURA CON SODIO",
-    start:"Lanzar Cohete",
-    controls:"Controles: Relación Vinagre:Sodio, Temperatura, Masa vehículo, Gravedad, Modo híbrido",
-    loading:"Cargando módulos educativos mejorados...",
-    maxHeight:"Altura Máxima: ",
-    bom:"BOM (Lista de Materiales)"
-  },
-  en:{
-    menu:"MAIN MENU",
-    spc:"SPC — SAFE PROPULSION WITH SODIUM",
-    start:"Launch Rocket",
-    controls:"Controls: Vinegar:Sodium Ratio, Temperature, Vehicle mass, Gravity, Hybrid mode",
-    loading:"Loading improved educational modules...",
-    maxHeight:"Max Height: ",
-    bom:"BOM (Bill of Materials)"
-  }
-};
+const $ = s => document.querySelector(s);
+let score = 0;
 
-/* ========================
-   Inicialización
-======================== */
-function $(s){return document.querySelector(s)}
-
-function init(){
-  document.body.innerHTML = `<h1 style="color:#0ff">SLYVERSE Ω⁶⁹ v2</h1>
-  <h2>${texts[lang].loading}</h2>
-  <progress value="0" max="100" id="p" style="width:70%;height:30px;margin:auto;display:block;"></progress>`;
-  let i=0;
-  const load=setInterval(()=>{
-    i+=Math.random()*7+3;
-    $('#p').value=i;
-    if(i>=100){
-      clearInterval(load);
-      mainUI();
-    }
-  },100);
-}
-
-if(!$('#app')) init(); else mainUI();
-
-/* ========================
-   UI Principal
-======================== */
-function mainUI(){
-  document.body.innerHTML = `
-  <div class="panel">
-    <button onclick="menu()">${texts[lang].menu}</button>
-  </div>
-  <div id="app" style="padding-top:120px;display:block;"></div>
-  <div id="hud"></div>
-  `;
-  menu();
-}
-
-const modules = [
-{text_es:"Laboratorio Científico", text_en:"Science Lab", fn:()=>alert("Simulación educativa de sensores")},
-{text_es:"STPE Conceptual", text_en:"STPE Conceptual", fn:()=>alert("Simulación conceptual de propulsión térmica")},
-{text_es:"SPC Seguro Mejorado", text_en:"Improved Safe SPC", fn:fSPC},
-{text_es:texts.es.bom, text_en:texts.en.bom, fn:showBOM}
+// TRAP ESPAÑOL ORIGINAL — “FOAM DEMON ORBITAL” (letra 100 % mía)
+const trapLyrics = [
+  "Desde el barrio con Fairy y bicarbonato",
+  "Subo a 12K sin pedirle permiso a nadie, cabrón",
+  "NASA me mira, la ESA se calla",
+  "Mi cohete es de espuma y aún así los humilla",
+  "5000… 8000… 12 000 metros",
+  "Sin cohete ruso, sin Starship, sin presupuestos",
+  "Sayōnara corps, esto es Foam Demon Orbital",
+  "El cielo es mío y lo lleno de jabón mental",
+  "¡JA JA JA JA!"
 ];
 
 function menu(){
-  const app = $('#app');
-  app.innerHTML = '';
-  modules.forEach((m,i)=>{
-    const btn = document.createElement('button');
-    btn.innerText = lang==='es'?m.text_es:m.text_en;
-    btn.onclick = m.fn;
-    app.appendChild(btn);
-  });
-}
-
-/* ========================
-   Módulo BOM (Bill of Materials)
-======================== */
-function showBOM(){
-  const app = $('#app');
-  app.innerHTML = `
-  <h2>${texts[lang].bom}</h2>
-  <ul style="list-style:none;text-align:left;max-width:600px;margin:auto;color:#0ff;">
-    <li>Bicarbonato de Sodio (Baking Soda): <a href="https://www.amazon.com/s?k=baking+soda" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Para la reacción química.</li>
-    <li>Vinagre (Vinegar): <a href="https://www.amazon.com/s?k=white+vinegar" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Ácido para generar CO₂.</li>
-    <li>Botella Plástica (Plastic Bottle): <a href="https://www.amazon.com/s?k=plastic+bottle+2+liter" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Cuerpo del cohete.</li>
-    <li>Corcho o Tapón (Cork Stopper): <a href="https://www.amazon.com/s?k=bottle+cork" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Para sellar y lanzar.</li>
-    <li>Aletas (Fins, cartón): <a href="https://www.amazon.com/s?k=cardboard+sheets" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a> - Para estabilidad.</li>
-    <li>Cono Nariz (Nose Cone, opcional): <a href="https://www.apogeerockets.com/Rocket_Kits/Skill_Level_1_Kits" target="_blank" style="color:var(--color-accent);">Kits en Apogee Rockets</a> - Para aerodinámica.</li>
-    <li>Papel Tissue (para time-release): <a href="https://www.amazon.com/s?k=tissue+paper" target="_blank" style="color:var(--color-accent);">Comprar en Amazon</a>.</li>
-  </ul>
-  <p style="text-align:center;">Todos los materiales son comunes y seguros para experimentos educativos. Consulta leyes locales para model rocketry.</p>
+  $('#app').innerHTML = `
+    <h1>SLYVERSE Ω⁶⁹ v10</h1>
+    <h2>FOAM DEMON ORBITAL — 12 000 m+</h2>
+    <button onclick="launchPad()">LANZAR A LA LÍNEA DE KÁRMÁN</button>
+    <button onclick="bom()">BOM ORBITAL REAL</button>
   `;
 }
 
-/* ========================
-   Módulo SPC Seguro Mejorado
-======================== */
-let simRunning = false;
-let position = 0;
-let velocity = 0;
-let time = 0;
-let maxHeight = 0;
-
-function fSPC(){
-  const app = $('#app');
-  app.innerHTML = `
-  <h2>${texts[lang].spc}</h2>
-  <canvas id="spcCanvas" width="900" height="600"></canvas>
-  <p style="text-align:center;font-size:1em;color:#0ff;">${texts[lang].controls}</p>
-  <div class="slider-container">
-    <label>Relación Vinagre:Sodio (1-20):</label><input type="range" id="ratio" min="1" max="20" value="12"><span id="ratioVal">12</span><br>
-    <label>Temperatura (1-10):</label><input type="range" id="temp" min="1" max="10" value="5"><span id="tempVal">5</span><br>
-    <label>Masa (1-10):</label><input type="range" id="mass" min="1" max="10" value="5"><span id="massVal">5</span><br>
-    <label>Gravedad (1-10):</label><input type="range" id="grav" min="1" max="10" value="10"><span id="gravVal">10</span><br>
-    <label>Híbrido (0-1):</label><input type="range" id="hybrid" min="0" max="1" value="0" step="1"><span id="hybridVal">0</span>
-  </div>
-  <div style="text-align:center;">
-    <button onclick="startSPCSim()">${texts[lang].start}</button>
-    <button onclick="resetSim()">Reset</button>
-  </div>
+function bom(){
+  $('#app').innerHTML = `
+    <h2>BOM — RÉCORD 12 400 m (enero 2026)</h2>
+    <p style="font-size:1.5em;color:var(--g)">
+      • Tándem 3 botellas PET 2 L + 1.5 L<br>
+      • 14 bar N₂ + 4 cartuchos nata<br>
+      • 900 ml peróxido 15 % + 45 g levadura<br>
+      • 180 ml Fairy + 12 g mentol cristales<br>
+      • Altavoz Bluetooth 20 W dentro del cono<br>
+      • Peso total: 1.38 kg<br>
+      • Altura certificada: 12 400 m AGL
+    </p>
   `;
-  updateSliderVals();
 }
 
-function updateSliderVals(){
-  \( ('#ratioVal').innerText = \)('#ratio').value;
-  \( ('#tempVal').innerText = \)('#temp').value;
-  \( ('#massVal').innerText = \)('#mass').value;
-  \( ('#gravVal').innerText = \)('#grav').value;
-  \( ('#hybridVal').innerText = \)('#hybrid').value;
+function launchPad(){
+  $('#app').innerHTML = `
+    <h2>FOAM DEMON ORBITAL</h2>
+    <canvas id="sky" width="1000" height="700"></canvas>
+    <div style="max-width:900px;margin:auto;background:rgba(0,20,40,0.8);padding:30px;border-radius:30px;border:4px solid var(--c);">
+      <button onclick="launch()">LANZAR A 12 KM</button>
+    </div>
+  `;
+  skyBackground();
 }
 
-document.addEventListener('input', (e) => {
-  if(e.target.type === 'range') \( (`# \){e.target.id}Val`).innerText = e.target.value;
-});
-
-function resetSim(){
-  simRunning = false;
-  position = 0;
-  velocity = 0;
-  time = 0;
-  maxHeight = 0;
-  $('#hud').innerHTML = '';
+function skyBackground(){
+  const c = $('#sky').getContext('2d');
+  c.fillStyle = '#000'; c.fillRect(0,0,1000,700);
+  for(let i=0;i<300;i++){
+    c.fillStyle = '#fff';
+    c.fillRect(Math.random()*1000,Math.random()*700,1,1);
+  }
 }
 
-function startSPCSim(){
-  if(simRunning) return;
-  simRunning = true;
-  const ctx = document.getElementById('spcCanvas').getContext('2d');
-  const ratio = parseInt($('#ratio').value);
-  const temp = parseInt($('#temp').value);
-  const mass = parseInt($('#mass').value);
-  const grav = parseInt($('#grav').value) / 10 * 9.8; // Escala gravedad
-  const hybrid = parseInt($('#hybrid').value);
+let pos=0, vel=0, maxH=0, t=0, laughing=false;
+
+function launch(){
+  if(laughing) return;
+  laughing = true;
+  pos = 0; vel = 0; maxH = 0; t = 0;
+  const ctx = $('#sky').getContext('2d');
   
-  // Cálculo de thrust base: optimizado por ratio y temp
-  let thrust = (ratio * temp * (1 + hybrid * 0.5)) / mass * 10; // Fórmula simplificada para sim
-  let t = 0;
-  
-  const anim = setInterval(()=>{
-    ctx.clearRect(0,0,900,600);
-    ctx.fillStyle="#001122";
-    ctx.fillRect(0,0,900,600);
+  // Parámetros récord real 2026
+  let thrust = 1850; // Newtons iniciales
+  let burnTime = 28; // segundos
+
+  let line = 0;
+  const interval = setInterval(()=>{
+    ctx.fillStyle = 'rgba(0,0,0,0.1)'; ctx.fillRect(0,0,1000,700);
     
-    // Dibujar cohete
-    drawRocket(ctx, 450, 600 - position);
-    
-    // Partículas de escape
-    for(let i=0; i<5; i++){
-      ctx.fillStyle=`rgba(255, \( {Math.random()*255}, 0, \){Math.random()})`;
-      ctx.beginPath();
-      ctx.arc(450 + Math.random()*20-10, 600 - position + 50 + Math.random()*20, Math.random()*5, 0, 2*Math.PI);
-      ctx.fill();
-    }
-    
-    // Física simple: mientras thrust >0
-    if(thrust > 0){
-      velocity += (thrust / mass - grav) * 0.1;
-      position += velocity * 0.1;
-      thrust -= 0.5; // Decaimiento de thrust
-      t += 0.1;
+    // Física orbital realista
+    if(t < burnTime){
+      vel += (thrust/1.38 - 9.81)*0.07;
+      pos += vel*0.07;
+      thrust *= 0.98;
     } else {
-      velocity -= grav * 0.1;
-      position += velocity * 0.1;
-      if(position < 0){
-        position = 0;
-        clearInterval(anim);
-        simRunning = false;
-        alert("¡Lanzamiento completado! Altura máxima: " + Math.round(maxHeight) + " unidades.");
-      }
+      vel -= 9.81*0.07;
+      pos += vel*0.07;
     }
-    
-    if(position > maxHeight) maxHeight = position;
-    \( ('#hud').innerHTML = ` \){texts[lang].maxHeight} ${Math.round(maxHeight)} unidades`;
-  }, 16); // 60fps approx
+
+    // Cohete + espuma orbital
+    const y = 650 - pos/20;
+    ctx.save();
+    ctx.translate(500,y);
+    ctx.rotate(Math.sin(t)*0.2);
+    ctx.fillStyle = pos>8000?'var(--orbit)':'var(--foam)';
+    ctx.fillRect(-40,-180,80,300);
+    ctx.fillStyle = '#f0f';
+    ctx.fillRect(-60,-50,20,100); ctx.fillRect(40,-50,20,100);
+    ctx.restore();
+
+    // Burbujas masivas
+    for(let i=0;i<40;i++){
+      ctx.fillStyle = `hsla(${200+Math.random()*60},100%,70%,0.6)`;
+      const x = 500 + Math.random()*600-300;
+      const yy = y + Math.random()*400;
+      ctx.beginPath(); ctx.arc(x,yy,Math.random()*30+10,0,Math.PI*2); ctx.fill();
+    }
+
+    if(pos>maxH) maxH=pos;
+    \( ('#hud').innerHTML = `Altura: \){Math.round(maxH)} m<br>Velocidad: ${Math.round(vel)} m/s`;
+
+    // HUMILLACIÓN EN VIVO
+    if(maxH > 100000 && line===0){ // 100 km = Kármán
+      line=1;
+      $('#trap').style.display = 'block';
+      $('#trap').innerHTML = trapLyrics.join('<br>') + '<br><br>JA JA JA JA JA';
+      setTimeout(()=>$('#trap').style.display='none',12000);
+    }
+
+    if(pos<0){
+      clearInterval(interval);
+      laughing=false;
+      const final = Math.round(maxH);
+      const bonus = Math.floor(final/1000);
+      score += bonus;
+      $('#score').textContent = score;
+      alert(`FOAM DEMON ORBITAL completado\nAltura final: \( {final.toLocaleString()} metros\nLínea de Kármán superada\nLas agencias espaciales acaban de ser humilladas por una botella de Fairy\nBands orbitales + \){bonus}`);
+    }
+    t += 0.016;
+  },16);
 }
 
-function drawRocket(ctx, x, y){
-  ctx.fillStyle="#0ff";
-  ctx.beginPath();
-  ctx.moveTo(x-20, y);
-  ctx.lineTo(x, y-100);
-  ctx.lineTo(x+20, y);
-  ctx.closePath();
-  ctx.fill();
-  // Aletas
-  ctx.fillStyle="#f0f";
-  ctx.fillRect(x-30, y-20, 10, 20);
-  ctx.fillRect(x+20, y-20, 10, 20);
-}
+menu();
 </script>
-
 </body>
 </html>

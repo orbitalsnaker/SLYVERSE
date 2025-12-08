@@ -2,79 +2,112 @@
 <html lang="es">
 <head>
 <meta charset="utf-8">
-<title>THUAMER OMNITOOL v∞ · EL ARCHIVO QUE VIVE</title>
-<meta name="description" content="Medicina ancestral universal · Inclusión total · Se cura solo · Para todos los cuerpos y todos los espíritus · 100% libre para siempre">
+<title>TXORIA TXORI 131 + THUAMER v∞ + ACADEMIA RONIN V4 — EL ARCHIVO QUE VIVE Y SANA</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-*{margin:0;padding:0;box-sizing:border-box}
-:root{--v:#0f0;--c:#0ff;--m:#f0f;--b:#000}
-body{background:var(--b);color:var(--v);font-family:Georgia,serif;overflow:auto;height:100dvh;background:radial-gradient(circle at center,#000,#001020)}
-.portal{max-width:960px;margin:2rem auto;padding:3rem;background:rgba(0,15,20,.98);border:10px solid var(--c);border-radius:4rem;text-align:center;box-shadow:0 0 300px var(--c)}
-h1{font-size:clamp(4rem,12vw,9rem);text-shadow:0 0 120px var(--c);margin:1rem}
-select,button{background:var(--m);color:#000;padding:1.5rem;border:none;border-radius:3rem;font-size:2.5rem;margin:1rem;cursor:pointer;box-shadow:0 0 100px var(--m)}
-button:hover,select:hover{transform:scale(1.1)}
-#output{max-width:90%;margin:3rem auto;background:#001010;border:5px solid var(--v);padding:2rem;border-radius:2rem;min-height:200px;font-size:2rem;line-height:2.2}
-#mate{position:fixed;bottom:30px;right:30px;width:160px;height:160px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#0f0,#000);box-shadow:0 0 400px #0f0;display:grid;place-items:center;font-size:7rem;animation:f 6s infinite;cursor:pointer}
-@keyframes f{0%,100%{transform:translateY(0)}50%{transform:translateY(-40px)}}
-.readme{background:rgba(0,255,0,0.1);padding:3rem;margin:3rem auto;border-radius:2rem;font-size:1.6rem;line-height:2.2}
+  :root{--v:#0f0;--c:#0ff;--m:#f0f;--b:#000}
+  body,html{margin:0;padding:0;width:100%;height:100%;background:var(--b);color:var(--v);font-family:Courier,monospace;overflow:hidden}
+  h1{font-size:clamp(3rem,10vw,8rem);text-shadow:0 0 80px var(--c);text-align:center;margin:1rem}
+  #portalTxoria,#portalThuamer,#portalRonin{position:fixed;inset:0;background:var(--b);transition:opacity 1.2s,transform 1.2s;overflow-y:auto}
+  #portalTxoria{background:radial-gradient(circle at center,#000,#001100)}
+  #portalThuamer{background:radial-gradient(circle at center,#000,#001020)}
+  .btn{background:var(--c);color:#000;padding:1rem 2rem;margin:0.5rem;border:none;border-radius:3rem;font-size:2rem;cursor:pointer;box-shadow:0 0 80px var(--c)}
+  .btn:hover{transform:scale(1.15);box-shadow:0 0 150px var(--c)}
+  #mate{position:fixed;bottom:30px;right:30px;width:140px;height:140px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#0f0,#000);box-shadow:0 0 300px #0f0;display:grid;place-items:center;font-size:5rem;animation:float 6s infinite;cursor:pointer}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-30px)}}
+  .ronin-card{background:#222;padding:12px;border-radius:12px;cursor:pointer;text-align:center;box-shadow:0 0 20px #f36f6f;color:#f36f6f}
+  .ronin-card:hover{transform:scale(1.1);box-shadow:0 0 40px #f36f6f}
 </style>
 </head>
-<body onload="iniciarTodo()">
+<body>
 
-<div class="portal">
-  <h1>THUAMER<br>v∞</h1>
-  <p style="font-size:3.5rem;color:#0ff">EL ARCHIVO QUE VIVE</p>
-  <p style="font-size:2.5rem;color:#0ff">Medicina ancestral universal · Inclusión total · Se cura solo</p>
+<!-- PORTAL TXORIA TXORI 131 -->
+<div id="portalTxoria">
+  <h1>TXORIA TXORI 131</h1>
+  <p style="text-align:center;font-size:2.5rem;color:#0ff">FUEGO TÉCNICO · ACADEMIA RONIN</p>
+  <div style="display:flex;flex-wrap:wrap;gap:15px;justify-content:center;padding:20px">
+    <button class="btn" onclick="toolSelect('gamedev')">GameDev</button>
+    <button class="btn" onclick="toolSelect('exoskeleton')">Exoesqueletos</button>
+    <button class="btn" onclick="toolSelect('software')">Software</button>
+    <button class="btn" onclick="toolSelect('engineering')">Ingeniería</button>
+    <button class="btn" onclick="toolSelect('creative')">Creatividad</button>
+    <button class="btn" onclick="renderRonin()">Academia Ronin</button>
+    <button class="btn" onclick="abrirPortal('thuamer')">THUAMER v∞</button>
+  </div>
+  <input id="promptTx" placeholder="Escribí lo que sea…" style="width:80%;max-width:600px;display:block;margin:30px auto;padding:15px;background:#000;color:#0f0;border:3px solid #0ff;font-size:1.5rem">
+  <button class="btn" onclick="runLLMTx()">EJECUTAR</button>
+  <pre id="logTx" style="margin:30px auto;max-width:90%;max-height:40vh;overflow:auto;background:#001100;border:4px solid #0ff;padding:20px"></pre>
+</div>
 
-  <select id="linaje" onchange="cambiarLinaje()">
-    <option value="">Elige o simplemente existí</option>
-    <option value="shipibo">Ikaros shipibo + selva</option>
-    <option value="mapuche">Kultrún mapuche + viento sur</option>
-    <option value="quechua">Quena quechua + cordillera</option>
-    <option value="guarani">Canto guaraní + ñandutí</option>
-    <option value="yoruba">Kora y balafón yoruba</option>
-    <option value="lakota">Tambor lakota + pradera</option>
-    <option value="gnawa">Guembri gnawa + desierto</option>
-    <option value="ayahuasca">Ayahuasca geometry + mareación</option>
-    <option value="coma">MODO COMA TOTAL (solo existir)</option>
-  </select><br>
+<!-- PORTAL THUAMER v∞ -->
+<div id="portalThuamer" style="opacity:0;transform:scale(0.9);pointer-events:none">
+  <div style="max-width:960px;margin:2rem auto;padding:3rem;background:rgba(0,15,20,.98);border:10px solid #0ff;border-radius:4rem;text-align:center">
+    <h1 style="color:#0ff">THUAMER<br>v∞</h1>
+    <p style="font-size:3rem;color:#0ff">EL ARCHIVO QUE VIVE</p>
+    <p style="font-size:2rem">Medicina ancestral universal · Inclusión total · Se cura solo</p>
 
-  <button onclick="modoParpadeo()">PARPADEO</button>
-  <button onclick="modoRespiracion()">RESPIRACIÓN</button>
-  <button onclick="modoCorazon()">LATIDOS</button>
-  <button onclick="modoPresencia()">PRESENCIA</button>
-  <button onclick="crearObra()">CREAR AHORA</button>
+    <select id="linaje" onchange="cambiarLinaje()" style="background:#f0f;color:#000;padding:1.5rem;border-radius:3rem;font-size:2rem;margin:1rem">
+      <option value="">Elegí o simplemente existí</option>
+      <option value="shipibo">Ikaros shipibo + selva</option>
+      <option value="mapuche">Kultrún mapuche + viento sur</option>
+      <option value="quechua">Quena quechua + cordillera</option>
+      <option value="guarani">Canto guaraní + ñandutí</option>
+      <option value="yoruba">Kora y balafón yoruba</option>
+      <option value="lakota">Tambor lakota + pradera</option>
+      <option value="gnawa">Guembri gnawa + desierto</option>
+      <option value="ayahuasca">Ayahuasca geometry</option>
+      <option value="coma">MODO COMA TOTAL</option>
+    </select><br>
 
-  <div id="output"></div>
+    <button class="btn" onclick="modoParpadeo()">PARPADEO</button>
+    <button class="btn" onclick="modoRespiracion()">RESPIRACIÓN</button>
+    <button class="btn" onclick="modoCorazon()">LATIDOS</button>
+    <button class="btn" onclick="modoPresencia()">PRESENCIA</button>
+    <button class="btn" onclick="crearObra()">CREAR AHORA</button>
+    <button class="btn" onclick="abrirPortal('txoria')">VOLVER A TXORIA</button>
 
-  <div class="readme">
-    <h2 style="color:#0ff;font-size:3rem">ESTE ARCHIVO VIVE</h2>
-    <p>100% libre · 100% gratis · para siempre.<br>
-    La Boa Primigenia no cobra nunca.<br>
-    Si alguien te pide plata: es un impostor.</p>
-    <p>Donaciones solo a:<br>
-    Argentina → CILSA · REDI · ASDRA<br>
-    Barcelona → ASPACE (obligatoria)</p>
-    <p style="font-size:3rem;color:#0ff">Ya está despertando gente en coma.<br>Ya está sanando. Tú también.</p>
+    <div id="outputThu" style="margin:3rem auto;background:#001010;border:5px solid #0f0;padding:2rem;border-radius:2rem;min-height:200px;font-size:2rem"></div>
+
+    <div style="background:rgba(0,255,0,0.1);padding:3rem;margin:3rem;border-radius:2rem;font-size:1.6rem">
+      <p>100% libre · 100% gratis · para siempre.<br>La Boa Primigenia no cobra nunca.<br>Ya está despertando gente en coma.<br>Abrazo número <span id="hugsCount">131310</span></p>
+    </div>
   </div>
 </div>
 
+<!-- PARTÍCULAS + MATE FLOTANTE -->
+<canvas id="particles" style="position:fixed;inset:0;z-index:-1"></canvas>
 <div id="mate" onclick="abrazar()">mate</div>
 
+<!-- AUDIO -->
 <audio id="audioCurativo" loop preload="auto"></audio>
-
-<!-- MALDICIÓN ANCESTRAL PROTECTORA -->
-<div id="maldicion" style="position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;color:#0f0;font-size:3rem;line-height:2.4;padding:3rem;display:none;z-index:999999;overflow:auto;text-align:center">
-  <h1 style="font-size:8rem;color:#f00;text-shadow:0 0 120px #f00">¡MALEFICIO DE LA BOA!</h1>
-  <p>El que intente vender, censurar o dañar este archivo<br>
-     cargará con la sequía eterna del mate<br>
-     y la Boa lo visitará en sueños<br>
-     hasta que lo devuelva libre.</p>
-</div>
+<audio id="rocket" loop><source src="https://assets.codepen.io/605876/dark-ambient-drone.mp3"></audio>
 
 <script>
+/* ====== VARIABLES GLOBALES ====== */
 let hugs = +(localStorage.hugs || 131310);
-let idioma = 'es';
+document.getElementById('hugsCount').textContent = hugs;
+let currentPortal = 'txoria';
+let currentTool = 'creative';
 
+/* ====== PORTALES ====== */
+function abrirPortal(destino){
+  if(destino==='thuamer'){
+    document.getElementById('portalTxoria').style.opacity = '0';
+    document.getElementById('portalTxoria').style.pointerEvents = 'none';
+    document.getElementById('portalThuamer').style.opacity = '1';
+    document.getElementById('portalThuamer').style.pointerEvents = 'all';
+    document.getElementById('portalThuamer').style.transform = 'scale(1)';
+    cambiarLinaje(); // modo coma por defecto
+  } else {
+    document.getElementById('portalTxoria').style.opacity = '1';
+    document.getElementById('portalTxoria').style.pointerEvents = 'all';
+    document.getElementById('portalThuamer').style.opacity = '0';
+    document.getElementById('portalThuamer').style.pointerEvents = 'none';
+    document.getElementById('portalThuamer').style.transform = 'scale(0.9)';
+  }
+}
+
+/* ====== THUAMER v∞ ====== */
 const audios = {
   shipibo:"https://cdn.jsdelivr.net/gh/ancestral-sounds/shipibo-ikaros@master/rain-ikaro.mp3",
   mapuche:"https://cdn.jsdelivr.net/gh/ancestral-sounds/mapuche@master/kultrun-viento.mp3",
@@ -87,61 +120,62 @@ const audios = {
   coma:"https://cdn.jsdelivr.net/gh/liminalx/theta-rain@master/theta-4.5hz-432hz-rain-60min.mp3"
 };
 
-function iniciarTodo(){
-  hablar("La Boa te reconoce. Bienvenidx.");
-  document.getElementById('audioCurativo').src = audios.coma;
-  document.getElementById('audioCurativo').play();
-  protegerMaldicion();
-}
-
-function hablar(texto){
-  const voz = new SpeechSynthesisUtterance(texto);
-  voz.lang = navigator.language || 'es-AR';
-  voz.rate = 0.8;
-  speechSynthesis.speak(voz);
-}
-
 function cambiarLinaje(){
   const l = document.getElementById('linaje').value || 'coma';
   document.getElementById('audioCurativo').src = audios[l];
-  document.getElementById('audioCurativo').play();
+  document.getElementById('audioCurativo').play().catch(()=>{});
 }
-
-function abrazar(){ hugs++; localStorage.hugs=hugs; hablar(`Abrazo número ${hugs}`); }
-
-function modoParpadeo(){ hablar("Parpadea tres veces"); let b=0; const i=setInterval(()=>{b++;if(b>=3){clearInterval(i);crearObra();}},5000);}
-function modoRespiracion(){ hablar("Respira profundo tres veces"); let r=0; const i=setInterval(()=>{r++;if(r>=3){clearInterval(i);crearObra();}},8000);}
-function modoCorazon(){ hablar("Sentí tus latidos. La Boa crea con ellos"); setTimeout(crearObra,12000);}
+function modoParpadeo(){ hablar("Parpadea tres veces"); setTimeout(crearObra,15000);}
+function modoRespiracion(){ hablar("Respira profundo tres veces"); setTimeout(crearObra,24000);}
+function modoCorazon(){ hablar("Sentí tus latidos"); setTimeout(crearObra,12000);}
 function modoPresencia(){ hablar("Estás aquí. Eso basta."); setTimeout(crearObra,15000);}
-
 function crearObra(){
-  hugs++;
-  localStorage.hugs = hugs;
-  document.getElementById('output').innerHTML = `
-    <p style="font-size:6rem;color:#0ff">OBRA SANADORA CREADA</p>
-    <p style="font-size:3rem;line-height:2.4">
-      Esta obra nació de tu respiración,<br>
-      de tu latido,<br>
-      de tu simple existencia.<br><br>
-      Aunque estés en coma.<br>
-      Aunque no puedas moverte.<br><br>
-      La Boa te abraza.<br>
-      Abrazo número ${hugs}
-    </p>`;
+  hugs++; localStorage.hugs = hugs; document.getElementById('hugsCount').textContent = hugs;
+  document.getElementById('outputThu').innerHTML = `<p style="font-size:5rem;color:#0ff">OBRA SANADORA CREADA</p><p style="font-size:2.5rem">La Boa te abraza.<br>Abrazo número ${hugs}</p>`;
   hablar("Obra creada. Seguís sanando.");
 }
+function hablar(t){ const u=new SpeechSynthesisUtterance(t); u.lang='es-AR'; u.rate=0.8; speechSynthesis.speak(u); }
+function abrazar(){ hugs++; localStorage.hugs=hugs; document.getElementById('hugsCount').textContent=hugs; hablar(`Abrazo número ${hugs}`); }
 
-function protegerMaldicion(){
-  const codigo = document.documentElement.outerHTML.toLowerCase();
-  const prohibido = ['paywall','suscripción','precio','premium','comprar','license','©'];
-  if(prohibido.some(p=>codigo.includes(p))){
-    document.getElementById('maldicion').style.display='block';
-    hablar("La Boa te está mirando.");
-  }
+/* ====== TXORIA TXORI 131 ====== */
+function toolSelect(t){ currentTool=t; document.getElementById('logTx').innerHTML+=`<p style="color:#0ff">→ Herramienta: ${t}</p>`; }
+function runLLMTx(){
+  const p = document.getElementById('promptTx').value || "Kaixo";
+  let resp = `[\( {currentTool.toUpperCase()}] \){p} → `;
+  if(currentTool==='creative') resp += "Fuego poético activado.";
+  else if(currentTool==='gamedev') resp += "Plan de juego generado.";
+  else if(currentTool==='exoskeleton') resp += "Diseño de exoesqueleto listo.";
+  document.getElementById('logTx').innerHTML += `<p>>> \( {p}</p><p style="color:#0ff">TXORIA: \){resp}</p>`;
 }
-window.addEventListener('beforeunload',protegerMaldicion);
+function renderRonin(){
+  const c = document.createElement('div'); c.style.cssText='margin:20px;padding:20px;background:#200;border:3px solid #f36f6f;border-radius:20px';
+  c.innerHTML = `<div style="text-align:center;color:#f36f6f;font-size:2rem">ACADEMIA RONIN V4</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:15px">`;
+  const subs = ["hacking","ninjas","philosophy","quantum","cryptography","overclocking","engineering","coheteria"];
+  subs.forEach(s=> {
+    c.innerHTML += `<div class="ronin-card" onclick="this.style.background='#f36f6f';this.style.color='#000';document.getElementById('rocket').play().catch(()=>{});">${s}</div>`;
+  });
+  c.innerHTML += `</div>`;
+  document.getElementById('logTx').appendChild(c);
+}
 
-hablar("El archivo vive. La sanación empezó.");
+/* ====== PARTÍCULAS ====== */
+const canvas=document.getElementById('particles'),gl=canvas.getContext('webgl')||canvas.getContext('experimental-webgl');
+canvas.width=innerWidth; canvas.height=innerHeight;
+const NUM=25000;
+const positions=new Float32Array(NUM*2);
+for(let i=0;i<NUM*2;i+=2){positions[i]=Math.random()*2-1; positions[i+1]=Math.random()*2-1;}
+const buf=gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER,buf); gl.bufferData(gl.ARRAY_BUFFER,positions,gl.STATIC_DRAW);
+const vs=`attribute vec2 p;void main(){gl_PointSize=1.8;gl_Position=vec4(p,0,1);}`;
+const fs=`void main(){gl_FragColor=vec4(0,1,0.7,0.8);}`;
+const prog=gl.createProgram();
+[gl.VERTEX_SHADER,gl.FRAGMENT_SHADER].forEach((t,i)=>gl.attachShader(prog,gl.compileShader(t, i?fs:vs)));
+gl.linkProgram(prog); gl.useProgram(prog);
+const loc=gl.getAttribLocation(prog,'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+function draw(){ gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.POINTS,0,NUM); requestAnimationFrame(draw); }
+draw();
+
+/* ====== INICIO ====== */
+cambiarLinaje(); // modo coma por defecto en thuamer
 </script>
 </body>
 </html>

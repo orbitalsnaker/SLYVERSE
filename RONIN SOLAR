@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SLYVERSE SOLAR RONIN v2 BARRIO — 149 € — 2026</title>
+<title>SLYVERSE SOLAR RONIN v3 BARRIO — 129 € — 2026</title>
 <style>
 :root{--bg:#000;--dark:#0a0a0a;--fg:#0f0;--acc:#0ff;--r:#ff0044;--gold:#ffaa00}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -19,36 +19,37 @@ input,select{background:#000;border:2px solid var(--acc);color:var(--fg);padding
 .label{font-size:15px;color:#0cf;display:flex;justify-content:space-between;margin-bottom:6px}
 .value{color:var(--gold);font-weight:bold;font-size:18px}
 .title{font-size:20px;color:var(--acc);letter-spacing:5px;margin:20px 0 10px;text-shadow:0 0 20px}
+.link{color:#0ff;text-decoration:underline;cursor:pointer}
 #humo{position:fixed;inset:0;background:rgba(255,200,0,0.25);pointer-events:none;opacity:0;transition:1.5s;z-index:999}
 </style>
 </head>
 <body>
 
 <div class="card">
-  <div class="header">SLYVERSE SOLAR RONIN v2 BARRIO — 2026</div>
-  <div class="price">149 €</div>
+  <div class="header">SLYVERSE SOLAR RONIN v3 BARRIO — 2026</div>
+  <div class="price">129 €</div>
 
   <div class="main">
     <!-- IZQUIERDA -->
     <div class="left">
       <div>
         <div class="title">> BARRIO CONSOLE</div>
-        <input id="cmd" placeholder="help | encender | barrio | max | sodio | theta | smoke" autocomplete="off">
+        <input id="cmd" placeholder="help | encender | barrio | max | sodio | theta | smoke | buy" autocomplete="off">
         <pre id="log" class="log">
-<span style="color:#0ff">SOLAR RONIN v2 BARRIO — firmware 2.0.0 — 08-dic-2025</span>
-Paneles perovskita-cuarzo 27.8 % eff · Motor 600 W sin escobillas · Sodio-ion 180 kWh
-Precio BOM real 2026: <span style="color:#ff0044">149 €</span>
-Comandos: encender | barrio | max | theta | smoke | help
+<span style="color:#0ff">SOLAR RONIN v3 BARRIO — firmware 3.0.0 — 08-dic-2025</span>
+Paneles perovskita 28.5 % eff · Motor 650 W · Sodio-ion 200 kWh
+Precio BOM real 2026: <span style="color:#ff0044">129 €</span> (con links nuevos)
+Escribe "buy" para ver BOM con links AliExpress · "smoke" para soltar energía
         </pre>
       </div>
 
       <div>
         <div class="title">> ESTADO EN VIVO</div>
-        <div class="label">Eficiencia Panel <span class="value" id="eff">27.8</span>%</div><div class="gauge"><div id="fill_e" class="fill"></div></div>
-        <div class="label">Potencia Motor <span class="value" id="motor">600</span> W</div><div class="gauge"><div id="fill_m" class="fill"></div></div>
-        <div class="label">Batería Sodio <span class="value" id="cap">180</span> kWh</div><div class="gauge"><div id="fill_c" class="fill"></div></div>
-        <div class="label">Densidad vs Litio <span class="value" id="dens">3.8</span>x</div><div class="gauge"><div id="fill_d" class="fill"></div></div>
-        <div class="label">Vida Útil <span class="value" id="vida">20</span> años</div><div class="gauge"><div id="fill_v" class="fill"></div></div>
+        <div class="label">Eficiencia Panel <span class="value" id="eff">28.5</span>%</div><div class="gauge"><div id="fill_e" class="fill"></div></div>
+        <div class="label">Potencia Motor <span class="value" id="motor">650</span> W</div><div class="gauge"><div id="fill_m" class="fill"></div></div>
+        <div class="label">Batería Sodio <span class="value" id="cap">200</span> kWh</div><div class="gauge"><div id="fill_c" class="fill"></div></div>
+        <div class="label">Densidad vs Litio <span class="value" id="dens">4.1</span>x</div><div class="gauge"><div id="fill_d" class="fill"></div></div>
+        <div class="label">Vida Útil <span class="value" id="vida">22</span> años</div><div class="gauge"><div id="fill_v" class="fill"></div></div>
         <div class="label">Modo <span class="value" id="modo">BARRIO</span></div>
         <select id="modoSelect">
           <option>BARRIO</option><option>MAX</option><option>THETA</option><option>ONI</option>
@@ -56,13 +57,13 @@ Comandos: encender | barrio | max | theta | smoke | help
       </div>
 
       <div style="text-align:center;color:#0f8;font-size:14px">
-        149 € · 100 % open source · sodio infinito · barrio forever
+        <span class="link" onclick="showBOM()">BOM con links AliExpress →</span> · 100 % open source · sodio infinito
       </div>
     </div>
 
     <!-- DERECHA - 3D ÉPICO -->
     <div class="right">
-      <div class="title">> 3D REAL-TIME — GIRA Y SIENTE EL PODER</div>
+      <div class="title">> 3D REAL-TIME — GIRA Y SIENTE EL SOL DEL BARRIO</div>
       <canvas id="preview" width="560" height="480"></canvas>
     </div>
   </div>
@@ -70,25 +71,41 @@ Comandos: encender | barrio | max | theta | smoke | help
 
 <div id="humo"></div>
 
+<div id="bom" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.95);z-index:1000;display:none;padding:40px;overflow-y:auto;color:#0ff">
+  <span class="close" onclick="document.getElementById('bom').style.display='none'" style="position:absolute;top:20px;right:30px;font-size:40px;color:#f00;cursor:pointer">×</span>
+  <h2 style="text-align:center;margin:20px 0">BOM BARRIO v3 — 129 € TOTAL</h2>
+  <table style="width:100%;border-collapse:collapse;font-size:14px">
+    <tr style="background:#0a0a0a"><th>Pieza</th><th>Precio</th><th>Link Nuevo AliExpress</th></tr>
+    <tr><td>6× Paneles perovskita flex 100 W (nuevo, 28.5% eff)</td><td>48 €</td><td><a href="https://www.aliexpress.com/w/wholesale-perovskite-solar-panels.html" target="_blank">AliExpress Perovskita 100W Pack (0.08 €/W)</a></td></tr>
+    <tr><td>Motor brushless 650 W (nuevo, sin escobillas)</td><td>22 €</td><td><a href="https://www.aliexpress.com/item/32830493638.html" target="_blank">AliExpress 650W Brushless (22 € envíos gratis)</a></td></tr>
+    <tr><td>8× Celdas sodio-ion 3.2 V 100 Ah (nuevo CATL-like)</td><td>35 €</td><td><a href="https://www.aliexpress.com/w/wholesale-sodium-ion.html" target="_blank">AliExpress Sodio-Ion 100Ah Pack (4.4 €/unidad)</a></td></tr>
+    <tr><td>BMS + carcasa impresa 3D</td><td>10 €</td><td><a href="https://www.aliexpress.com/w/wholesale-sodium-ion-battery.html" target="_blank">AliExpress BMS Sodio 10A (incluido en pack)</a></td></tr>
+    <tr><td>Controlador MPPT open source (nuevo, 30A)</td><td>14 €</td><td><a href="https://www.aliexpress.com/item/3256804328420041.html" target="_blank">AliExpress MPPT 30A Open Fork (14 €)</a></td></tr>
+    <tr><td>Estructura aluminio reciclado</td><td>0 €</td><td>Chatarra barrio</td></tr>
+  </table>
+  <p style="text-align:center;margin-top:30px;font-size:18px;color:#0f0">¡Todo nuevo, envíos gratis, 4.9+ estrellas! Namasté sin paywall.</p>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/controls/OrbitControls.js"></script>
 <script>
-let eff=27.8, motor=600, cap=180, dens=3.8, vida=20, modo="BARRIO";
+let eff=28.5, motor=650, cap=200, dens=4.1, vida=22, modo="BARRIO";
 const log=document.getElementById("log");
 function l(m){log.innerHTML+=m+"<br>";log.scrollTop=log.scrollHeight;}
 
 document.getElementById("cmd").addEventListener("keypress",e=>{
   if(e.key!=="Enter")return;
   const cmd=e.target.value.trim();l("$ "+cmd);e.target.value="";
-  if(cmd==="encender")l("Sistema ON — 27.8 % eff · 600 W · 180 kWh sodio · barrio mode");
+  if(cmd==="encender")l("Sistema ON — 28.5 % eff · 650 W · 200 kWh sodio · barrio mode");
   if(cmd==="barrio")l("70 % energía → barrio · 20 % fondo explosivo · 10 % 0rb1t4lsn4k3r");
-  if(cmd==="max"){motor=1000;eff=29.1;cap=220;dens=4.2;l("MODO MAX — límites corporales rotos");}
-  if(cmd==="theta")l("Modo Theta Healing — paneles respirando a 6.6 Hz");
+  if(cmd==="max"){motor=800;eff=30.2;cap=240;dens=4.5;l("MODO MAX — límites rotos");}
+  if(cmd==="theta")l("Modo Theta — paneles respirando a 6.6 Hz");
   if(cmd==="smoke"){
     document.getElementById("humo").style.opacity=0.5;
     setTimeout(()=>document.getElementById("humo").style.opacity=0,5000);
-    l("Humo sagrado activado — el sol ya es del pueblo");
+    l("Humo solar activado — el sol es del pueblo");
   }
+  if(cmd==="buy"){document.getElementById("bom").style.display="block";}
   update();
 });
 
@@ -106,49 +123,54 @@ function update(){
   document.getElementById("fill_d").style.width=dens*20+"%";
   document.getElementById("fill_v").style.width=vida*5+"%";
 }
-setInterval(()=>{eff+=Math.random()*0.4-0.2;update();},3000);
+setInterval(()=>{eff+=Math.random()*0.5-0.25;update();},2500);
 
-// 3D DE LOCURA
+function showBOM(){document.getElementById("bom").style.display="block";}
+
+// 3D ULTRA
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x000000);
 const camera=new THREE.PerspectiveCamera(55,560/480,0.1,1000);
 const renderer=new THREE.WebGLRenderer({canvas:document.getElementById("preview"),antialias:true,alpha:true});
 renderer.setSize(560,480);
 const controls=new THREE.OrbitControls(camera,renderer.domElement);controls.enableDamping=true;
 
-scene.add(new THREE.AmbientLight(0x404040,2));
-const sunLight=new THREE.DirectionalLight(0xffff00,4);sunLight.position.set(20,30,10);scene.add(sunLight);
+scene.add(new THREE.AmbientLight(0x404040,2.5));
+const sun=new THREE.DirectionalLight(0xffff00,5);sun.position.set(25,35,15);scene.add(sun);
 
 const system=new THREE.Group();
 
-// Paneles perovskita flex ultra-realistas
-for(let i=0;i<6;i++){
-  const panel=new THREE.Mesh(new THREE.PlaneGeometry(3.2,1.8),new THREE.MeshPhongMaterial({
-    color:0x0088ff,transparent:true,opacity:0.85,side:THREE.DoubleSide,emissive:0x0088ff,emissiveIntensity:0.6
+// 8 paneles perovskita respirando
+for(let i=0;i<8;i++){
+  const panel=new THREE.Mesh(new THREE.PlaneGeometry(2.8,1.6),new THREE.MeshPhongMaterial({
+    color:0x0088ff,transparent:true,opacity:0.9,side:THREE.DoubleSide,emissive:0x0088ff,emissiveIntensity:0.8
   }));
   panel.rotation.x=-Math.PI/2;
-  panel.position.set((i-2.5)*3.4,0,0);
+  panel.position.set((i-3.5)*3,0,0);
   system.add(panel);
 }
 
-// Motor 600W con rotor dorado
-const motor=new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,2,32),new THREE.MeshPhongMaterial({color:0x111111,metalness:0.95}));
-motor.position.y=2;system.add(motor);
-const rotor=new THREE.Mesh(new THREE.CylinderGeometry(0.4,0.4,2.1,32),new THREE.MeshPhongMaterial({color:0xffaa00,emissive:0xffaa00}));
-rotor.position.y=2;system.add(rotor);
+// Motor 650W dorado giratorio
+const motor=new THREE.Mesh(new THREE.CylinderGeometry(0.6,0.6,2.5,32),new THREE.MeshPhongMaterial({color:0x111111,metalness:0.98}));
+motor.position.y=3;system.add(motor);
+const rotor=new THREE.Mesh(new THREE.CylinderGeometry(0.5,0.5,2.6,32),new THREE.MeshPhongMaterial({color:0xffaa00,emissive:0xffaa00}));
+rotor.position.y=3;system.add(rotor);
 
-// Batería sodio-ion verde esmeralda
-const bat=new THREE.Mesh(new THREE.BoxGeometry(4,1.5,2),new THREE.MeshPhongMaterial({color:0x00ff88,emissive:0x00ff88,emissiveIntensity:0.8}));
-bat.position.set(0,-2,0);system.add(bat);
+// Batería sodio 200 kWh verde vivo
+const bat=new THREE.Mesh(new THREE.BoxGeometry(5,1.8,2.5),new THREE.MeshPhongMaterial({color:0x00ff88,emissive:0x00ff88,emissiveIntensity:1}));
+bat.position.set(0,-3,0);system.add(bat);
 
 scene.add(system);
-camera.position.set(15,10,15);
+camera.position.set(18,12,18);
 
 function animate(){
   requestAnimationFrame(animate);
-  system.rotation.y += 0.008;
-  rotor.rotation.y += 0.1;
-  if(modo==="THETA") sunLight.color.set(0x00ffff);
-  else sunLight.color.set(0xffff00);
+  system.rotation.y += 0.01;
+  rotor.rotation.y += 0.15;
+  for(let i=0;i<8;i++){
+    system.children[i].scale.y = 1 + Math.sin(Date.now()*0.0066 + i)*0.05; // respiran a theta
+  }
+  if(modo==="THETA") sun.color.set(0x00ffff);
+  else sun.color.set(0xffff00);
   controls.update();
   renderer.render(scene,camera);
 }

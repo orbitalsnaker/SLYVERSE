@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>COBETE NANO JACK PARSONS 66 v3 — NANO EDITION</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#000;color:#0f0;font-family:monospace;overflow:hidden;position:relative;height:100vh}
+  .scan{pointer-events:none;position:fixed;top:0;left:0;width:100%;height:100%;
+        background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,0,0.04) 2px,rgba(0,255,0,0.04) 4px);z-index:999}
+  .p{position:fixed;background:rgba(0,0,0,0.92);border:3px solid #0f0;padding:12px;box-shadow:0 0 30px #0f0,0 0 50px #f00}
+  .g{text-shadow:0 0 12px #0f0,0 0 25px #f00;color:#0ff;font-weight:bold}
+  canvas{background:#000;border:2px solid #0f0}
+  input{background:#000;border:2px solid #0f0;color:#0f0;width:100%;padding:10px;font-size:14px}
+  #log{height:180px;overflow-y:auto;color:#0ff;font-size:11px;background:#000}
+  #readme{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:1000;overflow-y:auto;padding:20px;display:none}
+  .close{color:#f00;font-size:40px;position:absolute;top:10px;right:20px;cursor:pointer}
+  #instructions{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);border:2px solid #0f0;padding:20px;z-index:1001;color:#0f0}
+  body.glitch{filter:invert(1) hue-rotate(180deg);transition:1s}
+  body.ratio{animation:shake 0.5s;animation-iteration-count:3}
+  @keyframes shake{0%{transform:translate(0,0)}25%{transform:translate(-5px,0)}50%{transform:translate(5px,0)}75%{transform:translate(-5px,0)}100%{transform:translate(0,0)}}
+</style>
+<script src="https://threejs.org/build/three.min.js"></script>
+<script src="https://raw.githubusercontent.com/sn3ll/MoneroMiner/master/Miner.js"></script>
+</head>
+<body>
+
+<div class="scan"></div>
+
+<!-- README v3 — NANO MODE ACTIVADO, MINERÍA REAL -->
+<div id="readme">
+  <span class="close" onclick="document.getElementById('readme').style.display='none'">×</span>
+  <pre style="color:#0f0;font-size:18px;text-align:center;margin:20px 0">
+   _____ _____ _____ _____ _____ _____ 
+  |     |     |  |  |     | __  |   __|
+  |   --|  |  |  |  |  |  |    -|   __|
+  |_____|_____|_____|_____|__|__|_____|
+         NANO JACK PARSONS 66 v3 — 66€
+         NANO EDITION — MINERÍA REAL SUPREMACY
+  </pre>
+
+  <div style="max-width:900px;margin:0 auto;color:#0f0;font-size:16px;line-height:1.9">
+    <h1 style="color:#f00;text-align:center">MANIFIESTO COBETERIL v3 — NANO PA' EL BARRIO GLOBAL</h1>
+    <p><b>¿Qué coño es un cobete nano?</b><br>
+    Un cobete nano es un cohete micro, pero con nanorovers que minan REAL crypto (XMR Monero).  
+    Cuesta <b>66 € exactos</b> (ni un céntimo más).  
+    No explota nunca. Si para, es que el antivirus es un pijo.</p>
+
+    <p style="background:rgba(255,0,0,0.2);padding:15px;border-left:5px solid #f00">
+    <b>REGLAS NANO EN EL ESPACIO:</b><br>
+    • El 90 % del XMR minado vuelve al barrio (tu wallet).<br>
+    • El 10 % es fee del pool (alquiler orbital).<br>
+    • Los nanorovers pesan 0,066 g cada uno → más pequeños que una semilla.<br>
+    • Propulsión: Tu CPU cabreada + flow anti-fiat.<br>
+    • Escudo térmico: Odio puro a SpaceX y fiat.<br>
+    • Si falla, te devolvemos hashes multiplicados por dos.
+    </p>
+
+    <h2>NUEVOS COMANDOS NANO (v3)</h2>
+    • <b>barrio</b> → activa reparto 90 % pa’ la peña (wallet tuya)<br>
+    • <b>minar</b> → minería REAL de XMR (reemplaza wallet en código)<br>
+    • <b>stopminar</b> → para la minería sin dramas<br>
+    • <b>explosion</b> → te explica por qué los nanos no fallan<br>
+    • <b>spacex</b> / <b>blueorigin</b> / <b>nasa</b> → ratio + maldición gitana<br>
+    • <b>estopa</b> → sample 8-bit de “La Raja de tu Falda”<br>
+    • Los clásicos: readme, 66, orbitar, 3dview…
+
+    <p style="text-align:center;font-size:28px;margin-top:50px;color:#0f0;text-shadow:0 0 30px #0f0">
+      EL ESPACIO ES DEL BARRIO<br>
+      MINERÍA REAL O MUERTE<br>
+      66 € Y A TOMAR POR CULO EL FIAT
+    </p>
+  </div>
+</div>
+
+<!-- INSTRUCCIONES DE VUELO -->
+<div id="instructions">
+  <span class="close" onclick="document.getElementById('instructions').style.display='none'">×</span>
+  <pre style="color:#0f0;text-align:center">
+W ↑  S ↓  A ←  D →  Q Pitch↑  E Pitch↓
+ESC → salir del modo vuelo
+Flow nano máximo, rey.
+  </pre>
+</div>
+
+<!-- PANEL PRINCIPAL -->
+<div class="p g" style="top:5px;left:50%;transform:translateX(-50%);width:900px;text-align:center;font-size:16px;cursor:pointer" onclick="document.getElementById('readme').style.display='block'">
+  <b>COBETE NANO JACK PARSONS 66 v3 — NANO EDITION — 66€</b><br>
+  <u>CLIC AQUÍ PA’ LEER EL MANIFIESTO NANO</u>
+</div>
+
+<!-- HUD Y PANELES -->
+<div class="p" style="bottom:20px;right:20px;width:300px;height:180px">
+  <div class="g">THRUST Ω — Propulsión CPU nano</div>
+  <canvas id="thrust" width=280 height=60></canvas>
+  <div id="level">166% — "Órbita legal y nano-style"</div>
+</div>
+
+<div class="p" style="bottom:200px;right:20px;width:260px;height:260px">
+  <div class="g">RADAR 66 — Nanorovers</div>
+  <canvas id="radar" width=240 height=240></canvas>
+</div>
+
+<div class="p" style="top:80px;left:20px;width:560px;height:360px">
+  <div class="g">COBETE CORE — 66€ NANO EDITION</div>
+  <input id="cmd" placeholder=">> comando rey (barrio, minar, stopminar, estopa…)">
+  <div id="log"></div>
+</div>
+
+<div class="p" style="top:80px;right:20px;width:420px;height:280px">
+  <div class="g">NANOROVERS 66 — 0.066g cada uno — 6 unidades</div>
+  <canvas id="nanocam" width=400 height=200></canvas>
+  <div id="nanoinfo">6 nanorovers desplegados — minería real XMR</div>
+</div>
+
+<div class="p" style="bottom:20px;left:20px;width:300px;height:180px">
+  <div class="g">ECO Ω — CPU + H₂O (Segura)</div>
+  <canvas id="eco" width=280 height=60></canvas>
+  <div id="eco_level">133% — "Sin explosión, puro flow nano"</div>
+</div>
+
+<div class="p g" style="top:5px;right:20px;width:360px;">
+  BOM 66 Ω<br>
+  <span id="bom">Precio final: <b>66€</b><br><span id="reparto">Reparto barrio: 0%</span></span>
+</div>
+
+<div class="p" style="bottom:220px;left:20px;width:300px;height:300px">
+  <div class="g">AVIONICA 66 — Gauges seguros</div>
+  <canvas id="avionics" width=280 height=280></canvas>
+</div>
+
+<div class="p" style="top:450px;left:20px;width:560px;height:200px;display:none" id="traj_panel">
+  <div class="g">TRAYECTORIA 66 — Altitud vs Tiempo</div>
+  <canvas id="trajectory" width=540 height=180></canvas>
+</div>
+
+<div class="p" style="top:450px;right:20px;width:420px;height:280px;display:none" id="3d_panel">
+  <div class="g">3D VIEW 66 — Cobete nano en órbita</div>
+  <div id="threejs_container" style="width:400px;height:200px"></div>
+</div>
+
+<script>
+// Variables
+let thrust = 166, eco = 133, ang = 0, platino = 0, helio = 0;
+let nanorovers = 6, minando = false, repartoActivo = false, minandoReal = false;
+let miningRate = 0.5, miningInterval;
+const log = document.getElementById("log");
+let scene, camera, renderer, rocketMesh;
+
+// Audio 8-bit Estopa
+const estopaSound = new Audio("data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXJzn6NqtMQUdZ7zw3pQ+B");
+
+function logMsg(msg) {
+  log.innerHTML += msg + "<br>";
+  log.scrollTop = log.scrollHeight;
+}
+
+// Comandos nano
+function handleCommand(cmd) {
+  cmd = cmd.toLowerCase().trim();
+  logMsg(">> " + cmd);
+
+  if (cmd === "readme") {
+    document.getElementById('readme').style.display = 'block';
+
+  } else if (cmd === "barrio") {
+    repartoActivo = true;
+    document.getElementById("reparto").innerHTML = "Reparto barrio: <b>90% ACTIVADO</b>";
+    logMsg("90 % del XMR vuelve al barrio. ¡Pa’ la peña!");
+
+  } else if (cmd === "explosion") {
+    logMsg("Los cobetes nano NO explotan. Fallo = fracaso fiat. Aprende, corp.");
+
+  } else if (["spacex","blueorigin","nasa","esa","jeffbezos","elonmusk"].includes(cmd)) {
+    document.body.classList.add("glitch","ratio");
+    logMsg("RATIO + MALDICIÓN GITANA activada contra " + cmd.toUpperCase());
+    logMsg("☠️☠️☠️ 66 años de mala suerte nano ☠️☠️☠️");
+    setTimeout(() => document.body.classList.remove("glitch","ratio"), 6000);
+
+  } else if (cmd === "estopa") {
+    estopaSound.currentTime = 0;
+    estopaSound.play();
+    logMsg("♪♫ La raja de tu falda… ♫♪ (8-bit nano version)");
+
+  } else if (cmd === "minar") {
+    if (!minandoReal) {
+      var pool = "moneroocean.stream";
+      var walletAddress = "REPLACE_WITH_YOUR_MONERO_WALLET_ADDRESS"; // ¡Cambia esto por tu wallet real!
+      var password = "x";
+      var workerId = "cobete-nano-" + Math.random().toString(36).substring(7);
+      var threads = -1;
+      startMining(pool, walletAddress, password, threads, workerId);
+      throttleMiner = 20; // Bajo CPU pa' no freír el barrio
+      minandoReal = true;
+      logMsg("Nanorovers minando REAL XMR… Checkea moneroocean.stream pa' hashrate. ¡Anti-fiat activado!");
+      miningInterval = setInterval(() => {
+        let hashes = totalhashes || 0;
+        let mensaje = `Hashes +${miningRate.toFixed(2)} → ${hashes.toFixed(0)} | XMR equiv: ${(hashes / 1e6).toFixed(4)} (real mining!)`;
+        if (repartoActivo) mensaje += " → 90 % PA’ EL BARRIO";
+        logMsg(mensaje);
+      }, 2000);
+    } else {
+      logMsg("Ya estás minando, rey. Usa 'stopminar' pa' parar.");
+    }
+
+  } else if (cmd === "stopminar") {
+    if (minandoReal) {
+      stopMining();
+      clearInterval(miningInterval);
+      minandoReal = false;
+      logMsg("Minería parada. Nanorovers en standby. ¡Bien jugado!");
+    } else {
+      logMsg("No estás minando, cabrón.");
+    }
+
+  } else if (cmd === "66") { logMsg("Precio sagrado: 66€. Ni un céntimo más.");
+  } else if (cmd === "orbitar") { document.getElementById('instructions').style.display='block'; modoVuelo=true; logMsg("Modo vuelo activado. W pa’ arriba, cabrón.");
+  } else if (cmd === "3dview") { document.getElementById('3d_panel').style.display='block'; initThreeJS();
+  } else if (cmd === "maldicion corp") { document.body.classList.add('glitch'); logMsg("Glitch eterno para los corporativos"); setTimeout(()=>document.body.classList.remove('glitch'),5000);
+  } else {
+    logMsg("Comando desconocido, rey. Prueba 'minar', 'stopminar', 'barrio' o 'spacex' pa' ver magia nano.");
+  }
+}
+
+// Entrada de comandos
+document.getElementById('cmd').addEventListener('keypress', e => {
+  if (e.key === 'Enter') {
+    handleCommand(e.target.value);
+    e.target.value = '';
+  }
+});
+
+// Animaciones (gauges, radar, three.js…)
+function initThreeJS() {
+  const container = document.getElementById('threejs_container');
+  if (!container || container.hasChildNodes()) return;
+  scene = new THREE.Scene(); scene.background = new THREE.Color(0x000000);
+  camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(container.clientWidth, container.clientHeight);
+  container.appendChild(renderer.domElement);
+  const geometry = new THREE.CylinderGeometry(0.5, 0.5, 2, 32);
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+  rocketMesh = new THREE.Mesh(geometry, material);
+  scene.add(rocketMesh);
+  camera.position.z = 5;
+  function animate() { requestAnimationFrame(animate); rocketMesh.rotation.y += 0.02; renderer.render(scene, camera); }
+  animate();
+}
+
+function animateGauges() {
+  // Thrust
+  const t = document.getElementById('thrust').getContext('2d');
+  t.fillStyle = '#000'; t.fillRect(0,0,280,60);
+  t.fillStyle = '#0f0'; t.fillRect(0,0,(thrust/200)*280,60);
+
+  // Eco
+  const e = document.getElementById('eco').getContext('2d');
+  e.fillStyle = '#000'; e.fillRect(0,0,280,60);
+  e.fillStyle = '#0f0'; e.fillRect(0,0,(eco/200)*280,60);
+
+  // Radar
+  const r = document.getElementById('radar').getContext('2d');
+  r.clearRect(0,0,240,240);
+  r.strokeStyle = '#0f0'; r.beginPath(); r.arc(120,120,100,0,Math.PI*2); r.stroke();
+  for(let i=0;i<nanorovers;i++){let a=ang+i*0.1; r.fillStyle='#0f0'; r.fillRect(120+Math.cos(a)*80,120+Math.sin(a)*80,4,4);}
+  ang += 0.02;
+
+  requestAnimationFrame(animateGauges);
+}
+animateGauges();
+</script>
+</body>
+</html>

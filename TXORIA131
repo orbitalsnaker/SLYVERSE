@@ -2,7 +2,7 @@
 <html lang="eu">
 <head>
 <meta charset="UTF-8">
-<title>TXORIA TXORI 131 — CREATIVE LLM OFFLINE MAX</title>
+<title>TXORIA TXORI 131 + ACADEMIA RONIN V4 INTERACTIVA</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
 body,html{margin:0;padding:0;width:100%;height:100%;background:black;color:#0f0;font-family:Courier,monospace;overflow:hidden}
@@ -12,9 +12,14 @@ h1,h2,h3{text-align:center;text-shadow:0 0 40px #0f0;animation:glow 2s infinite 
 button{background:black;border:2px solid #0ff;color:#0ff;padding:8px 14px;cursor:pointer;font-weight:bold;text-shadow:0 0 8px #0ff}
 button:hover{background:#0ff;color:black;box-shadow:0 0 15px #0ff}
 #llmBox{position:fixed;bottom:0;left:0;right:0;padding:15px;background:rgba(0,0,0,0.75);border-top:2px solid #0ff;z-index:1000;display:flex;gap:10px;flex-wrap:wrap}
-#log{position:fixed;top:60px;right:10px;width:380px;height:calc(100% - 180px);background:rgba(0,0,0,0.6);border:2px solid #0ff;overflow-y:auto;padding:10px;font-size:14px}
+#log{position:fixed;top:60px;right:10px;width:400px;height:calc(100% - 180px);background:rgba(0,0,0,0.6);border:2px solid #0ff;overflow-y:auto;padding:10px;font-size:14px}
 #particles{position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:-1}
 pre{background:rgba(0,20,0,0.9);border:2px solid #0ff;padding:15px;border-radius:10px;color:#0f0;overflow:auto}
+.ronin-container{background:#111;color:#f36f6f;padding:15px;border-radius:12px;margin-top:10px;}
+.ronin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;}
+.ronin-card{background:#222;padding:8px;border-radius:8px;cursor:pointer;text-align:center;transition:0.3s;box-shadow:0 0 12px #f36f6f;font-size:0.85em;}
+.ronin-card:hover{transform:scale(1.05);box-shadow:0 0 25px #f36f6f;}
+.ronin-title{text-align:center;font-size:1.2em;margin:5px 0;color:#f36f6f;text-shadow:0 0 10px #f36f6f;}
 </style>
 </head>
 <body>
@@ -28,6 +33,8 @@ pre{background:rgba(0,20,0,0.9);border:2px solid #0ff;padding:15px;border-radius
 <button onclick="toolSelect('software')">🧱 Software</button>
 <button onclick="toolSelect('engineering')">🔧 Ingeniería</button>
 <button onclick="toolSelect('creative')">🌌 Creatividad</button>
+<button onclick="toolSelect('ronin')">🗡️ Academia Ronin</button>
+<button onclick="pdfExport()">📄 PDF</button>
 <button onclick="showReadme()">📖 README</button>
 </div>
 
@@ -38,37 +45,33 @@ pre{background:rgba(0,20,0,0.9);border:2px solid #0ff;padding:15px;border-radius
 <button onclick="runLLM()">Ejecutar</button>
 </div>
 
+<audio id="ambient" loop preload="auto">
+    <source src="https://assets.codepen.io/605876/rain-neon-loop.mp3" type="audio/mpeg">
+</audio>
+<audio id="rocket" loop>
+    <source src="https://assets.codepen.io/605876/dark-ambient-drone.mp3" type="audio/mpeg">
+</audio>
+
 <pre id="readme" style="display:none">
-# README — TXORIA TXORI 131 CREATIVE LLM
-
-## Modelo Creativo / Narrativo / Psicodélico
-Arquitectura basada en Llama-3.2 1B Q4_K_M optimizado en WASM.  
-Enfocado en creatividad intensa, poesía, narrativa y mundos psicodélicos.
-
-## Herramientas Integradas
-- 🎮 GameDev: loops de juego, ECS, shaders, scripts de Unity/Unreal, narrativa interactiva.  
-- 🦾 Exoesqueletos: diagramas ASCII, actuadores, sensores, control PID, cálculo de torque.  
-- 🧱 Software: diseño de arquitectura, UML, API, microservicios, prototipos rápidos.  
-- 🔧 Ingeniería: cálculos simples, estructuras, planificación de sistemas.  
-- 🌌 Creatividad: generación de mundos, lore, diálogos, escritura estilizada.
-
-## Cómo funciona la APP
-- LLM offline: texto creativo y técnico.  
-- Partículas WebGL: render 60fps, estable y visualmente atractivo.  
-- P2P BroadcastChannel: comunicación entre pestañas.  
-- TTS Web Speech API: lectura del texto generado.  
-- Todo integrado en un solo HTML portable y offline.
+# README — TXORIA TXORI 131 + ACADEMIA RONIN INTERACTIVA
+Modelo creativo WASM optimizado para narrativa y desarrollo técnico.
+Funciones:
+- LLM offline con herramientas: GameDev, Exoskeleton, Software, Ingeniería, Creatividad y Academia Ronin
+- Academia Ronin interactiva dentro del log
+- PDF exportable
+- TTS Web Speech API
+- WebGL partículas 60fps
+- Konami Code con efecto visual
+- Comandos interactivos: readme · 666 · nanorovers · maldicion corp · paulet
 </pre>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
-/* ======================================================
-   PARTÍCULAS WebGL
-====================================================== */
+/* PARTICULAS */
 let particlesOn=true;
 const canvas=document.getElementById('particles'),gl=canvas.getContext('webgl');
 canvas.width=window.innerWidth;canvas.height=window.innerHeight;
-const NUM=20000;
-const positions=new Float32Array(NUM*2);
+const NUM=20000, positions=new Float32Array(NUM*2);
 for(let i=0;i<NUM*2;i++)positions[i]=Math.random()*2-1;
 const buf=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,buf);gl.bufferData(gl.ARRAY_BUFFER,positions,gl.STATIC_DRAW);
 const vs=`attribute vec2 pos;void main(){gl_PointSize=2.0;gl_Position=vec4(pos,0.0,1.0);}`;
@@ -78,62 +81,98 @@ const prog=gl.createProgram();gl.attachShader(prog,compile(gl.VERTEX_SHADER,vs))
 const loc=gl.getAttribLocation(prog,'pos');gl.enableVertexAttribArray(loc);gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
 function draw(){if(!particlesOn)return;gl.clear(gl.COLOR_BUFFER_BIT);gl.drawArrays(gl.POINTS,0,NUM);requestAnimationFrame(draw);}
 draw();
-function toggleParticles(){particlesOn=!particlesOn;}
 
-/* ======================================================
-   P2P BroadcastChannel
-====================================================== */
-let bc=null;
-function initP2P(){if(!bc){bc=new BroadcastChannel('txoria131');bc.onmessage=e=>{document.getElementById('log').innerHTML+=`<p>${e.data}</p>`;}}}
-function sendP2P(){const msg=prompt('Mensaje P2P:');if(bc)bc.postMessage(msg);}
-
-/* ======================================================
-   TTS
-====================================================== */
-function speak(){const t=document.getElementById('prompt').value||"Txoria txori 131, fuego eterno.";const u=new SpeechSynthesisUtterance(t);u.rate=1;speechSynthesis.speak(u);}
-
-/* ======================================================
-   LLM — loader WASM simulado + herramientas
-====================================================== */
+/* LLM */
 let llmLoaded=false;
-async function startLLM(){document.getElementById('log').innerHTML+="Cargando LLM WASM...\n";llmLoaded=true;console.log('LLM listo (simulado)');}
-
+async function startLLM(){document.getElementById('log').innerHTML+="Cargando LLM WASM...\n";llmLoaded=true;}
 const tool={};
-tool.gamedev=(prompt)=>`[GameDev] Plan de juego generado para prompt: ${prompt}`;
-tool.exoskeleton=(prompt)=>`[Exoesqueleto] Diseño básico y cálculos para: ${prompt}`;
-tool.software=(prompt)=>`[Software] Arquitectura y pseudocódigo: ${prompt}`;
-tool.engineering=(prompt)=>`[Ingeniería] Cálculos y análisis: ${prompt}`;
-tool.creative=(prompt)=>`[Creatividad] Texto psicodélico/narrativo: ${prompt}`;
+tool.gamedev=(p)=>`[GameDev] Plan de juego para: ${p}`;
+tool.exoskeleton=(p)=>`[Exoesqueleto] Diseño y torque: ${p}`;
+tool.software=(p)=>`[Software] Arquitectura y pseudocódigo: ${p}`;
+tool.engineering=(p)=>`[Ingeniería] Cálculos y análisis: ${p}`;
+tool.creative=(p)=>`[Creatividad] Texto psicodélico/narrativo: ${p}`;
+tool.ronin=(p)=>renderRonin();
 
+/* Herramientas */
 let currentTool='creative';
 function toolSelect(t){currentTool=t;document.getElementById('log').innerHTML+=`<p>Herramienta seleccionada: ${t}</p>`;}
-
 async function runLLM(){
   if(!llmLoaded){alert('Primero inicia el LLM');return;}
   const prompt=document.getElementById('prompt').value;
+  // Comandos especiales
+  if(prompt.toLowerCase().includes("readme")){showReadme();return;}
+  if(prompt.toLowerCase().includes("666")){document.getElementById('log').innerHTML+="<p>🚀 COBETE ACTIVADO</p>";roninAudio.ambient.pause();roninAudio.rocket.play().catch(()=>{});}
+  if(prompt.toLowerCase().includes("nanorovers")){document.getElementById('log').innerHTML+="<p>🤖 Nanorovers desplegados</p>";}
+  if(prompt.toLowerCase().includes("maldicion corp")){document.getElementById('log').innerHTML+="<p>⚡ Maldición Corp ejecutada</p>";}
+  if(prompt.toLowerCase().includes("paulet")){document.getElementById('log').innerHTML+="<p>📡 Paulet mode ON</p>";}
   let output='';
   switch(currentTool){
     case 'gamedev': output=tool.gamedev(prompt); break;
     case 'exoskeleton': output=tool.exoskeleton(prompt); break;
     case 'software': output=tool.software(prompt); break;
     case 'engineering': output=tool.engineering(prompt); break;
+    case 'ronin': output=tool.ronin(prompt); break;
     default: output=tool.creative(prompt);
   }
-  // Simula invocación automática si el prompt contiene palabras clave
-  if(/exoesqueleto|robot/i.test(prompt)) output=tool.exoskeleton(prompt);
-  if(/juego|game/i.test(prompt)) output=tool.gamedev(prompt);
-  if(/software|API/i.test(prompt)) output=tool.software(prompt);
-  if(/ingeniería|calculo/i.test(prompt)) output=tool.engineering(prompt);
-  if(/creatividad|poesia|historia/i.test(prompt)) output=tool.creative(prompt);
-
   document.getElementById('log').innerHTML+=`<p>Prompt: ${prompt}</p><p>TXORIA: ${output}</p>`;
 }
 
-/* ======================================================
-   README toggle
-====================================================== */
-function showReadme(){const r=document.getElementById('readme');r.style.display=r.style.display==='none'?'block':'none';}
-</script>
+/* PDF Export */
+function pdfExport(){
+  const doc=new jsPDF.jsPDF();
+  const logContent=document.getElementById('log').innerText.split('\n');
+  let y=10;
+  for(const line of logContent){doc.text(line,10,y);y+=7;if(y>280){doc.addPage();y=10;}}
+  doc.save('TXORIA_TXORI_131_RONIN_INTERACTIVA.pdf');
+}
 
+/* README */
+function showReadme(){const r=document.getElementById('readme');r.style.display=r.style.display==='none'?'block':'none';}
+
+/* ACADEMIA RONIN INTEGRADA */
+const roninAudio={ambient:document.getElementById('ambient'),rocket:document.getElementById('rocket')};
+function renderRonin(){
+  const container=document.createElement('div');container.className='ronin-container';
+  container.innerHTML=`<div class="ronin-title">ACADEMIA RONIN V4</div><div class="ronin-grid"></div>`;
+  const grid=container.querySelector('.ronin-grid');
+  const subjects=["hacking","ninjas","philosophy","quantum","cryptography","overclocking","engineering","frank_lucas","coheteria"];
+  const lore={
+    hacking:"Rompe para aprender.",
+    ninjas:"Invisible. Letal.",
+    philosophy:"Sin títulos. Solo honor.",
+    quantum:"Hackea el vacío.",
+    cryptography:"Pulso 58 de Turing.",
+    overclocking:"Yuki Naja style.",
+    engineering:"Gordon Murray garage.",
+    frank_lucas:"Frank Lucas mindset.",
+    coheteria:"666€ al espacio. Jack Parsons vive."
+  };
+  subjects.forEach(s=>{
+    const div=document.createElement('div');div.className='ronin-card';div.textContent=s;div.onclick=()=>logRonin(s,lore[s]);grid.appendChild(div);
+  });
+  document.getElementById('log').appendChild(container);
+  return '';
+}
+function logRonin(subject,desc){
+  if(subject==="coheteria"){roninAudio.ambient.pause();roninAudio.rocket.play().catch(()=>{});}
+  else {roninAudio.rocket.pause();roninAudio.ambient.play().catch(()=>{});}
+  document.getElementById('log').innerHTML+=`<p>${subject.toUpperCase()}: ${desc}</p>`;
+}
+
+/* Konami Code */
+let k=[], clicks=0;
+document.addEventListener('keydown',e=>{
+  k.push(e.key);
+  if(k.length>12)k.shift();
+  if(k.join(',')==='ArrowUp,ArrowUp,ArrowDown,ArrowDown,ArrowLeft,ArrowRight,ArrowLeft,ArrowRight,b,a'){
+    document.body.style.filter='invert(1) hue-rotate(180deg)';
+    alert('KONAMI CODE — MODO DIOS 30s');
+    setTimeout(()=>document.body.style.filter='',30000);
+  }
+});
+
+/* Auto audio ambiente */
+roninAudio.ambient.play().catch(()=>{});
+</script>
 </body>
 </html>

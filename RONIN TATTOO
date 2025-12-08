@@ -4,23 +4,23 @@
 <meta charset="UTF-8">
 <title>RŌNIN PEN v3 BARRIO — 25 € · 2026</title>
 <style>
-  :root{--bg:#000;--dark:#0a0a0a;--fg:#0f0;--acc:#0ff;--r:#f00}
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg);color:var(--fg);font-family:"Courier New",monospace;overflow:hidden;height:100vh;display:grid;place-items:center}
-  .card{background:var(--dark);border:3px solid var(--acc);width:1180px;max-width:96%;height:92vh;box-shadow:0 0 0 120px var(--acc);padding:30px;border-radius:16px;position:relative}
-  .header{font-size:16px;letter-spacing:10px;color:var(--acc);text-align:center;margin-bottom:20px;text-shadow:0 0 30px}
-  .main{display:grid;grid-template-columns:1fr 500px;gap:32px;height:100%}
-  .left{gap:22px;display:grid;grid-template-rows:auto 1fr auto}
-  pre,.log{background:#000;border:2px solid var(--acc);padding:16px;border-radius:8px;font-size:12.5px;overflow:auto}
-  input,select{background:#000;border:2px solid var(--acc);color:var(--fg);padding:12px;border-radius:6px;font-size:14px}
-  .gauge{height:32px;background:#111;border:2px solid #333;border-radius:6px;overflow:hidden;position:relative;margin:8px 0}
-  .fill{background:linear-gradient(90deg,#0ff,#f36f6f);height:100%;width:0%;transition:all .4s}
-  .label{font-size:14px;color:#0cf;display:flex;justify-content:space-between}
-  .value{color:var(--acc);font-weight:bold;font-size:16px}
-  .title{font-size:18px;color:var(--acc);letter-spacing:4px;margin:16px 0 8px}
-  .price{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:48px;color:var(--r);text-shadow:0 0 60px var(--r)}
-  #humo{position:fixed;inset:0;background:rgba(255,255,255,0.15);pointer-events:none;opacity:0;transition:1s;z-index:999}
-  .link{color:#0ff;text-decoration:underline;cursor:pointer}
+:root{--bg:#000;--dark:#0a0a0a;--fg:#0f0;--acc:#0ff;--r:#f00}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:"Courier New",monospace;overflow:hidden;height:100vh;display:grid;place-items:center}
+.card{background:var(--dark);border:3px solid var(--acc);width:1180px;max-width:96%;height:92vh;box-shadow:0 0 0 120px var(--acc);padding:30px;border-radius:16px;position:relative}
+.header{font-size:16px;letter-spacing:10px;color:var(--acc);text-align:center;margin-bottom:20px;text-shadow:0 0 30px}
+.main{display:grid;grid-template-columns:1fr 500px;gap:32px;height:100%}
+.left{gap:22px;display:grid;grid-template-rows:auto 1fr auto}
+pre,.log{background:#000;border:2px solid var(--acc);padding:16px;border-radius:8px;font-size:12.5px;overflow:auto}
+input,select{background:#000;border:2px solid var(--acc);color:var(--fg);padding:12px;border-radius:6px;font-size:14px}
+.gauge{height:32px;background:#111;border:2px solid #333;border-radius:6px;overflow:hidden;position:relative;margin:8px 0}
+.fill{background:linear-gradient(90deg,#0ff,#f36f6f);height:100%;width:0%;transition:all .4s}
+.label{font-size:14px;color:#0cf;display:flex;justify-content:space-between}
+.value{color:var(--acc);font-weight:bold;font-size:16px}
+.title{font-size:18px;color:var(--acc);letter-spacing:4px;margin:16px 0 8px}
+.price{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);font-size:48px;color:var(--r);text-shadow:0 0 60px var(--r)}
+#humo{position:fixed;inset:0;background:rgba(255,255,255,0.15);pointer-events:none;opacity:0;transition:1s;z-index:999}
+.link{color:#0ff;text-decoration:underline;cursor:pointer}
 </style>
 </head>
 <body>
@@ -30,7 +30,6 @@
   <div class="price">25 €</div>
 
   <div class="main">
-    <!-- IZQUIERDA -->
     <div class="left">
       <div>
         <div class="title">> BARRIO CONSOLE</div>
@@ -71,7 +70,6 @@ Escribe "buy" para BOM AliExpress · "smoke" para Oni mode
       </div>
     </div>
 
-    <!-- DERECHA - 3D LIVE -->
     <div class="right">
       <div class="title">> 3D REAL-TIME — GIRA CON RATÓN (TATÚA EN VIVO)</div>
       <canvas id="preview" width="500" height="420"></canvas>
@@ -99,13 +97,14 @@ Escribe "buy" para BOM AliExpress · "smoke" para Oni mode
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.15.0/dist/tf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@magenta/image@1.0.0/dist/magenta-image.min.js"></script>
+
 <script>
 let stroke=96, volt=8.3, haptic=88, modo="BARRIO";
 
-// consola
 const log=document.getElementById("log");
 function l(m){log.innerHTML+=m+"<br>";log.scrollTop=log.scrollHeight;}
-
 document.getElementById("cmd").addEventListener("keypress",e=>{
   if(e.key!=="Enter")return;
   const cmd=e.target.value.trim();l("$ "+cmd);e.target.value="";
@@ -115,7 +114,6 @@ document.getElementById("cmd").addEventListener("keypress",e=>{
   if(cmd==="buy"){showBOM();}
 });
 
-// sliders + select
 ["stroke","volt","haptic"].forEach(p=>{
   document.getElementById(p+"Slider").addEventListener("input",e=>{
     window[p]=+e.target.value;
@@ -123,55 +121,78 @@ document.getElementById("cmd").addEventListener("keypress",e=>{
     document.getElementById("fill_"+p[0]).style.width=(window[p]-({stroke:60,volt:5,haptic:0}[p]||0))/({stroke:50,volt:4,haptic:100}[p]||1)*100+"%";
   });
 });
-document.getElementById("modoSelect").onchange=e=>{modo=e.target.value;document.getElementById("modo").textContent=modo;l("Modo cambiado a "+modo);};
-
+document.getElementById("modoSelect").onchange=e=>{
+  modo=e.target.value;
+  document.getElementById("modo").textContent=modo;
+  l("Modo cambiado a "+modo);
+  generarTatuaje(modo);
+};
 function showBOM(){document.getElementById("bom").style.display="block";}
 
-// 3D MEJORADO (con "tatuaje" simulado)
+// 3D y piel
 const scene=new THREE.Scene();scene.background=new THREE.Color(0x000000);
 const camera=new THREE.PerspectiveCamera(50,500/420,0.1,1000);
 const renderer=new THREE.WebGLRenderer({canvas:document.getElementById("preview"),antialias:true});
 renderer.setSize(500,420);
 const controls=new THREE.OrbitControls(camera,renderer.domElement);controls.enableDamping=true;
-
 scene.add(new THREE.AmbientLight(0x404040));
 const dirLight=new THREE.DirectionalLight(0x00eeff,2);dirLight.position.set(10,10,10);scene.add(dirLight);
 
 const pen=new THREE.Group();
-
-// cuerpo principal negro mate
-const body=new THREE.Mesh(new THREE.CylinderGeometry(1,1,8.5,32),new THREE.MeshPhongMaterial({color:0x0a0a0a,metalness:0.9,roughness:0.1}));
-pen.add(body);
-
-// grip ergonómico rojo sangre
-const grip=new THREE.Mesh(new THREE.CylinderGeometry(1.3,1.5,3.8,32),new THREE.MeshPhongMaterial({color:0xf36f6f,metalness:0.8}));
-grip.position.y=-6;grip.rotation.x=Math.PI/2;pen.add(grip);
-
-// eccentric ultra-visible
-const ecc=new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.6,32),new THREE.MeshPhongMaterial({color:0x00eeff,emissive:0x00eeff,emissiveIntensity:2}));
-ecc.rotation.x=Math.PI/2;ecc.position.y=4;pen.add(ecc);
-
-// anillo LED Sharingan
+const body=new THREE.Mesh(new THREE.CylinderGeometry(1,1,8.5,32),new THREE.MeshPhongMaterial({color:0x0a0a0a,metalness:0.9,roughness:0.1})); pen.add(body);
+const grip=new THREE.Mesh(new THREE.CylinderGeometry(1.3,1.5,3.8,32),new THREE.MeshPhongMaterial({color:0xf36f6f,metalness:0.8})); grip.position.y=-6; grip.rotation.x=Math.PI/2; pen.add(grip);
+const ecc=new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.6,32),new THREE.MeshPhongMaterial({color:0x00eeff,emissive:0x00eeff,emissiveIntensity:2})); ecc.rotation.x=Math.PI/2; ecc.position.y=4; pen.add(ecc);
 const ringGeo=new THREE.RingGeometry(1.1,1.4,32);
 const ringMat=new THREE.MeshBasicMaterial({color:0xf00,side:THREE.DoubleSide});
-const ring=new THREE.Mesh(ringGeo,ringMat);
-ring.rotation.x=Math.PI/2;ring.position.y=4.3;pen.add(ring);
+const ring=new THREE.Mesh(ringGeo,ringMat); ring.rotation.x=Math.PI/2; ring.position.y=4.3; pen.add(ring);
 
-// "piel" simulada para tatuaje
-const skin=new THREE.Mesh(new THREE.PlaneGeometry(10,10),new THREE.MeshBasicMaterial({color:0xffdbac,transparent:true,opacity:0.7}));
-skin.position.set(0,-5,5);scene.add(skin);
-
+// piel sobre la que se aplica el tatuaje
+const skinGeo=new THREE.PlaneGeometry(10,10);
+const skinMat=new THREE.MeshBasicMaterial({color:0xffdbac});
+const skin=new THREE.Mesh(skinGeo,skinMat);
+skin.position.set(0,-5,5);
+scene.add(skin);
 scene.add(pen);
 camera.position.set(12,8,12);
 
+// IA de tatuajes + enseñanza de calibración
+const generator = new mi.ImageGenerator(); // Magenta, open-source
+async function generarTatuaje(estilo="BARRIO"){
+  l("Generando tatuaje en estilo "+estilo+"...");
+  const imageTensor = await generator.generate({seed:Math.floor(Math.random()*99999), size:[256,256]});
+  const canvasTatuaje = document.createElement("canvas");
+  canvasTatuaje.width=256; canvasTatuaje.height=256;
+  await tf.browser.toPixels(imageTensor, canvasTatuaje);
+  const texture = new THREE.CanvasTexture(canvasTatuaje);
+  skin.material.map = texture; skin.material.needsUpdate = true;
+  l("Tatuaje generado.");
+
+  // Recomendaciones de calibración según estilo
+  let reco = {stroke:96, volt:8.3, haptic:88};
+  switch(estilo){
+    case "ONI": reco={stroke:100, volt:8.7, haptic:95}; break;
+    case "THETA": reco={stroke:88, volt:8.0, haptic:75}; break;
+    case "KUNGFU": reco={stroke:92, volt:8.2, haptic:85}; break;
+  }
+  l(`Recomendación IA: Stroke ${reco.stroke} mm | Voltaje ${reco.volt} V | Haptic ${reco.haptic}%`);
+  stroke=reco.stroke; volt=reco.volt; haptic=reco.haptic;
+  document.getElementById("strokeSlider").value=stroke; document.getElementById("stroke").textContent=stroke;
+  document.getElementById("voltSlider").value=volt; document.getElementById("volt").textContent=volt;
+  document.getElementById("hapticSlider").value=haptic; document.getElementById("haptic").textContent=haptic;
+  ["fill_s","fill_v","fill_h"].forEach((id,i)=>{
+    const val=[stroke,volt,haptic][i], min=[60,5,0][i], max=[110,9,100][i];
+    document.getElementById(id).style.width=(val-min)/(max-min)*100+"%";
+  });
+}
+generarTatuaje(modo);
+
+// animación
 function animate(){
   requestAnimationFrame(animate);
   pen.rotation.y += 0.01;
   ecc.position.y = 4 + Math.sin(Date.now()*0.012)*(stroke/110*2.5);
   if(modo==="ONI") ring.material.color.set(0xff0000);
   else ring.material.color.set(0x00eeff);
-  // simulación tatuaje: "tinta" cayendo
-  skin.material.opacity = 0.7 + Math.sin(Date.now()*0.02)*0.1;
   controls.update();
   renderer.render(scene,camera);
 }

@@ -4,39 +4,39 @@
 <meta charset="UTF-8">
 <title>SLYVERSE SOLAR RONIN v1 — Open Source Solar Revolution 2025</title>
 <style>
-  :root{--bg:#0a0a0a;--dark:#111;--fg:#ccc;--acc:#00eeff}
-  *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg);color:var(--fg);font-family:"IBM Plex Mono",monospace;overflow:hidden;height:100vh;display:grid;place-items:center}
-  .card{background:var(--dark);border:1px solid #333;width:1120px;height:760px;box-shadow:0 0 90px rgba(0,238,255,0.3);padding:28px;position:relative}
-  .header{font-size:14px;letter-spacing:8px;color:var(--acc);text-align:center;margin-bottom:20px}
-  .main{display:grid;grid-template-columns:1fr 460px;gap:28px;height:100%}
-  .left{gap:20px;display:grid;grid-template-rows:auto 1fr auto}
-  .right{gap:20px;display:grid;grid-template-rows:auto 1fr}
-  pre,.log,canvas{background:#000;border:1px solid #333;font-size:11.5px;overflow:auto}
-  input{background:#000;border:1px solid #333;color:var(--fg);padding:11px;font-size:12px;width:100%}
-  .log{height:100%;padding:12px;color:#0cf;line-height:1.55}
-  .gauge{height:26px;background:#111;border:1px solid #333;overflow:hidden;position:relative}
-  .fill{background:var(--acc);height:100%;width:0%;transition:width .3s}
-  .label{font-size:12.5px;margin-bottom:7px;color:#888}
-  .value{float:right;color:var(--acc);font-weight:bold}
-  .title{font-size:15px;color:var(--acc);margin-bottom:12px;letter-spacing:3px}
-  .readme-btn{position:absolute;top:28px;right:28px;color:#555;font-size:11px;cursor:pointer;letter-spacing:2px}
-  #readme{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);z-index:999;padding:40px;overflow-y:auto;color:#aaa;font-size:13px;line-height:1.8}
-  .close{position:absolute;top:20px;right:30px;font-size:40px;color:#f00;cursor:pointer}
+:root{--bg:#0a0a0a;--dark:#111;--fg:#ccc;--acc:#00eeff}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:"IBM Plex Mono",monospace;overflow:hidden;height:100vh;display:grid;place-items:center}
+.card{background:var(--dark);border:1px solid #333;width:1120px;height:760px;box-shadow:0 0 90px rgba(0,238,255,0.3);padding:28px;position:relative}
+.header{font-size:14px;letter-spacing:8px;color:var(--acc);text-align:center;margin-bottom:20px}
+.main{display:grid;grid-template-columns:1fr 460px;gap:28px;height:100%}
+.left{gap:20px;display:grid;grid-template-rows:auto 1fr auto}
+.right{gap:20px;display:grid;grid-template-rows:auto 1fr}
+pre,.log,canvas{background:#000;border:1px solid #333;font-size:11.5px;overflow:auto}
+input{background:#000;border:1px solid #333;color:var(--fg);padding:11px;font-size:12px;width:100%}
+.log{height:100%;padding:12px;color:#0cf;line-height:1.55}
+.gauge{height:26px;background:#111;border:1px solid #333;overflow:hidden;position:relative}
+.fill{background:var(--acc);height:100%;width:0%;transition:width .5s, background .5s}
+.label{font-size:12.5px;margin-bottom:7px;color:#888}
+.value{float:right;color:var(--acc);font-weight:bold}
+.title{font-size:15px;color:var(--acc);margin-bottom:12px;letter-spacing:3px}
+.readme-btn{position:absolute;top:28px;right:28px;color:#555;font-size:11px;cursor:pointer;letter-spacing:2px}
+#readme{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);z-index:999;padding:40px;overflow-y:auto;color:#aaa;font-size:13px;line-height:1.8;opacity:0;transition:opacity 0.4s}
+#readme.show{display:block;opacity:1}
+.close{position:absolute;top:20px;right:30px;font-size:40px;color:#f00;cursor:pointer}
 </style>
 </head>
 <body>
 
 <div class="card">
   <div class="header">SLYVERSE SOLAR RONIN v1 // PANELS + MOTORS + SODIO // DIC 2025</div>
-  <div class="readme-btn" onclick="document.getElementById('readme').style.display='block'">README → SPECS VS COMPETENCIA</div>
+  <div class="readme-btn" onclick="openReadme()">README → SPECS VS COMPETENCIA</div>
 
   <div class="main">
-    <!-- IZQUIERDA -->
     <div class="left">
       <div>
         <div class="title">> CONSOLE</div>
-        <input id="cmd" placeholder="help | activar | barrio | sodio | motor 500W | readme" autocomplete="off">
+        <input id="cmd" placeholder="help | activar | barrio | sodio | motor 500 | dens 3.5 | readme" autocomplete="off">
         <div id="log" class="log">
 <span style="color:#0cf">SLYVERSE SOLAR RONIN v1 — firmware 1.0.0 — 08-dic-2025</span><br>
 Paneles perovskita flex 25% eff · Motor direct-drive 500W · Batería sodio-ion 15yr<br>
@@ -59,7 +59,6 @@ Escribe "help" para comandos.
       </div>
     </div>
 
-    <!-- DERECHA -->
     <div class="right">
       <div>
         <div class="title">> 3D LIVE — SISTEMA MODULAR</div>
@@ -71,7 +70,7 @@ Escribe "help" para comandos.
 
 <!-- README -->
 <div id="readme">
-  <span class="close" onclick="this.parentNode.style.display='none'">×</span>
+  <span class="close" onclick="closeReadme()">×</span>
   <pre style="color:#0cf;font-size:20px;text-align:center;margin:30px 0 50px">
 S L Y V E R S E   S O L A R   R O N I N   v1
 Revolución Open Source: Panels + Motores + Sodio
@@ -82,10 +81,10 @@ Diciembre 2025 — Para pibes y okupas
 
 <h2 style="color:var(--acc);margin:40px 0 20px">SPECS TÉCNICAS</h2>
 • Panels: Perovskita flex 25% eff (vs silicio 20%) – printable, ligera, 30% más output bifacial<br>
-• Motores: Direct-drive 500W (Faulhaber-like) – para drones/off-grid, sin fuel, 0 emisiones<br>
+• Motores: Direct-drive 500W (Faulhaber-like) – drones/off-grid, sin fuel, 0 emisiones<br>
 • Baterías: Sodio-ion 120 kWh, 2.5x densidad litio, 15yr vida, -100°C a +60°C<br>
 • Integración: IA Marlin-fork predice consumo, Bluetooth app gratuita, modular (kit 4x panels + motor + batería)<br>
-• Precio BOM 2025: <b>420 €</b> (70% barrio, 10% 0RB1T4LSN4K3R, 20% replicador)
+• Precio BOM 2025: <b>420 €</b>  
 
 <h2 style="color:var(--acc);margin:40px 0 20px">VS COMPETENCIA (datos reales 2025)</h2>
 <table style="width:100%;border-collapse:collapse;color:#aaa">
@@ -114,35 +113,57 @@ Build · Share · Power the Barrio · No Paywall
 <script>
 let eff=25, motor=500, cap=120, dens=2.5, vida=15;
 const log=document.getElementById("log");
+let history=[], histIndex=0;
 
 function l(m){ log.innerHTML+=m+"<br>"; log.scrollTop=log.scrollHeight; }
 
-document.getElementById("cmd").addEventListener("keypress",e=>{
-  if(e.key!=="Enter")return;
-  const cmd=e.target.value.trim(); l("$ "+cmd); e.target.value="";
-  const p=cmd.toLowerCase().split(" ");
-  if(cmd==="help") l("activar | stop | barrio | sodio | motor [100-1000] | readme");
-  else if(cmd==="activar") l("Sistema ON — 25% eff, 500W motor, 120 kWh sodio");
-  else if(cmd==="stop") l("Sistema OFF");
-  else if(cmd==="barrio") l("Split 70% barrio activado — justicia energética");
-  else if(cmd==="sodio") { dens=3.5; l("Boost sodio: densidad x3.5 vs litio obsoleto"); }
-  else if(cmd==="readme") document.getElementById("readme").style.display="block";
-  else if(p[0]==="motor" && p[1]) { motor=Math.max(100,Math.min(1000,+p[1])); update(); }
+const cmdInput = document.getElementById("cmd");
+cmdInput.addEventListener("keydown", e=>{
+  if(e.key==="ArrowUp"){ histIndex=Math.max(0,histIndex-1); cmdInput.value=history[histIndex]||""; }
+  if(e.key==="ArrowDown"){ histIndex=Math.min(history.length-1,histIndex+1); cmdInput.value=history[histIndex]||""; }
+});
+cmdInput.addEventListener("keypress", e=>{
+  if(e.key!=="Enter") return;
+  const cmd = e.target.value.trim(); history.push(cmd); histIndex=history.length;
+  l("$ "+cmd); e.target.value="";
+  processCmd(cmd);
 });
 
-function update(){
-  document.getElementById("eff").innerText=eff;
-  document.getElementById("motor").innerText=motor;
-  document.getElementById("cap").innerText=cap;
-  document.getElementById("dens").innerText=dens+"x";
-  document.getElementById("vida").innerText=vida;
-  document.getElementById("fill_e").style.width=eff*4+"%";
-  document.getElementById("fill_m").style.width=(motor/1000)*100+"%";
-  document.getElementById("fill_c").style.width=(cap/200)*100+"%";
-  document.getElementById("fill_d").style.width=(dens/3)*100+"%";
-  document.getElementById("fill_v").style.width=(vida/20)*100+"%";
+function processCmd(cmd){
+  const p=cmd.toLowerCase().split(" ");
+  if(cmd==="help") l("activar | stop | barrio | sodio [1-5] | motor [100-1000] | dens [1-5] | readme");
+  else if(cmd==="activar") l(`Sistema ON — ${eff}% eff, ${motor}W motor, ${cap} kWh sodio`);
+  else if(cmd==="stop") l("Sistema OFF");
+  else if(cmd==="barrio") l("Split 70% barrio activado — justicia energética");
+  else if(p[0]==="sodio"){ dens=+p[1]||3.5; l(`Boost sodio: densidad x${dens}`); }
+  else if(p[0]==="motor" && p[1]){ motor=Math.max(100,Math.min(1000,+p[1])); l(`Motor ajustado a ${motor}W`); }
+  else if(p[0]==="dens" && p[1]){ dens=Math.min(5,Math.max(1,+p[1])); l(`Densidad ajustada a x${dens}`); }
+  else if(cmd==="readme") openReadme();
+  update();
 }
-update();
+
+function update(){
+  const effVar = eff + (Math.random()*2-1);
+  const motorVar = motor + (Math.random()*10-5);
+  document.getElementById("eff").innerText = effVar.toFixed(1);
+  document.getElementById("motor").innerText = Math.round(motorVar);
+  document.getElementById("cap").innerText = cap;
+  document.getElementById("dens").innerText = dens+"x";
+  document.getElementById("vida").innerText = vida;
+
+  document.getElementById("fill_e").style.width = effVar*4 + "%";
+  document.getElementById("fill_m").style.width = (motorVar/1000)*100 + "%";
+  document.getElementById("fill_c").style.width = (cap/200)*100 + "%";
+  document.getElementById("fill_d").style.width = (dens/5)*100 + "%";
+  document.getElementById("fill_v").style.width = (vida/20)*100 + "%";
+
+  document.getElementById("fill_e").style.background = effVar>24?"#0f0":"#ff0";
+}
+setInterval(update,1500);
+
+// Readme fade
+function openReadme(){ document.getElementById("readme").classList.add("show"); }
+function closeReadme(){ document.getElementById("readme").classList.remove("show"); }
 
 // 3D Modular
 const scene=new THREE.Scene(); scene.background=new THREE.Color(0x000000);
@@ -155,14 +176,16 @@ scene.add(new THREE.AmbientLight(0x404040));
 const light=new THREE.DirectionalLight(0xffffff,1.4); light.position.set(10,10,10); scene.add(light);
 
 const system=new THREE.Group();
-// Panel flex
-const panel=new THREE.Mesh(new THREE.PlaneGeometry(4,2), new THREE.MeshPhongMaterial({color:0x00eeff, transparent:true, opacity:0.8}));
+const panelMat=new THREE.MeshPhongMaterial({color:0x00eeff, transparent:true, opacity:0.8});
+const panel=new THREE.Mesh(new THREE.PlaneGeometry(4,2),panelMat);
 system.add(panel);
-// Motor cil
-const mot=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,1,32), new THREE.MeshPhongMaterial({color:0x111111}));
+
+const motMat=new THREE.MeshPhongMaterial({color:0x111111});
+const mot=new THREE.Mesh(new THREE.CylinderGeometry(0.3,0.3,1,32),motMat);
 mot.position.y=1; system.add(mot);
-// Batería cubo
-const bat=new THREE.Mesh(new THREE.BoxGeometry(1,0.5,0.5), new THREE.MeshPhongMaterial({color:0x00ff00}));
+
+const batMat=new THREE.MeshPhongMaterial({color:0x00ff00});
+const bat=new THREE.Mesh(new THREE.BoxGeometry(1,0.5,0.5),batMat);
 bat.position.set(0,-1,0); system.add(bat);
 
 scene.add(system);
@@ -170,7 +193,10 @@ camera.position.set(9,7,11);
 
 function animate(){
   requestAnimationFrame(animate);
-  system.rotation.y += 0.007;
+  panel.material.color.setHSL(0.55,1,0.5+eff/100*0.5);
+  mot.rotation.y += 0.01;
+  bat.material.color.setHSL(0.33,1,0.2+dens/5*0.6);
+  system.rotation.y += 0.004;
   controls.update();
   renderer.render(scene,camera);
 }

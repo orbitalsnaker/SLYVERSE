@@ -38,14 +38,16 @@
     <h2>¿QUÉ COÑO ES ESTO, TÍO?</h2>
     Un cohete espacial que cabe en un .html, cuesta <b>666€ exactos</b> y no explota como los de los pijos ricos.  
     Este COBETE llega a la Luna, despliega 66 nanorovers y mina platino + helio-3 mientras tú te fumas uno tranquilo.
+    <b>MEJORAS 2025:</b> Minería sin pérdidas, fabricación de rovers extra, cobetes de retorno con metales 100% intactos.
 
     <h2>LO QUE TIENE (y los ricos no)</h2>
     • Precio real: <b>666€</b> (impresora 3D + KNO₃ + levadura + bicarbonato + petardos Raiders)<br>
-    • 66 nanorovers de 0,66 g cada uno → minan como locos<br>
+    • 66 nanorovers de 0,66 g cada uno → minan como locos y fabrican más<br>
     • Propulsión híbrida: jarfa mode (azúcar + nitrato) o eco mode (levadura + bicarbonato → sin explosión)<br>
     • BOM 667: si eres pibe → pagas 30% alquiler automático del platino minado<br>
     • Si eres empresa, NASA, SpaceX… → te detecta y te maldice eternamente<br>
-    • Patente callejera Sabadell + Airweave a nombre de 0rb1t4lsn4k3r → prohibido corps
+    • Patente callejera Sabadell + Airweave a nombre de 0rb1t4lsn4k3r → prohibido corps<br>
+    • <b>Nuevo:</b> Fabricación lunar + retorno sin pérdidas (eficiencia 100%).
 
     <h2>LA MALDICIÓN 667 (funciona de verdad)</h2>
     Si eres corp te sale:
@@ -57,12 +59,13 @@
     • Escribe <b>666</b> → orgullo del precio<br>
     • Escribe <b>nanorovers</b> → ves los 66 bichos minando<br>
     • Escribe <b>jarfa</b> → modo petardos<br>
+    • <b>Nuevos:</b> <b>minar</b> (inicia minería), <b>fabricar</b> (crea rovers extra), <b>retornar</b> (envía cobete de vuelta con metales), <b>status</b> (ve todo sin pérdidas)<br>
     • Mira cómo sube el platino y te cobra el 30% solo
 
     <h2>FILOSOFÍA DEL BLOQUE</h2>
     Con 666 euros y una impresora del chino llegamos antes que los que tienen 666.000 millones.<br>
     No necesitamos inversores, ni rondas serie A, ni pollas.<br>
-    Necesitamos azúcar, nitrato, levadura, bronca y barrio.
+    Necesitamos azúcar, nitrato, levadura, bronca y barrio. Ahora con retorno 100% eficiente.
 
     <h1 style="color:#0ff;text-align:center;margin:40px 0">
       0rb1t4lsn4k3r 2025<br>
@@ -91,7 +94,7 @@
 
 <div class="p" style="top:80px;left:20px;width:560px;height:420px">
   <div class="g">0rb1t4lsn4k3r Ω CORE — 666€ EDITION</div>
-  <input id="cmd" placeholder=">> comando rey (prueba: readme, 666, nanorovers, jarfa)">
+  <input id="cmd" placeholder=">> comando rey (prueba: readme, 666, nanorovers, jarfa, minar, fabricar, retornar)">
   <div id="log"></div>
 </div>
 
@@ -113,10 +116,14 @@
 </div>
 
 <script>
-// === TODA LA LÓGICA DEL COBETE (igual que antes pero más limpia) ===
+// === TODA LA LÓGICA DEL COBETE (mejorada con minería, fabricación y retorno) ===
 const patente = "COBETE 667-SLYVERSE Ω © 0rb1t4lsn4k3r 2025 — Â¡EL COHETE QUE NO EXPLOTA Y MINA! 666€ exactos. 66 nanorovers. Patente callejera + Airweave. 30% alquiler solo pibes. Corps vetados y malditos para siempre.";
 
 let thrust=166, ang=0, eco=133, nanoAng=0, platino=0, helio=0, alquilerPagado=0;
+let nanorovers = 66; // Número inicial de rovers
+let metalesEnTierra = 0; // Metales retornados sin pérdidas
+let fabricando = false; // Flag para fabricación
+let minando = false; // Flag para minería activa
 
 // ANIMACIONES (thrust, eco, nanorovers, radar...)
 setInterval(()=>{ 
@@ -141,14 +148,14 @@ setInterval(()=>{
   const n=document.getElementById("nanocam").getContext("2d");
   n.fillStyle="#000";n.fillRect(0,0,400,200);
   for(let i=0;i<100;i++) n.fillStyle="#fff",n.fillRect(Math.random()*400,Math.random()*120,1,1);
-  for(let i=0;i<66;i++){
+  for(let i=0;i<nanorovers;i++){
     let x=200+Math.sin(nanoAng+i*0.8)*120;
     let y=100+Math.cos(nanoAng+i*0.8)*60;
     n.fillStyle="#0f0";n.fillRect(x,y,3,3);
   }
   nanoAng+=0.02;
-  if(Math.random()>0.6) helio+=6.66;
-  document.getElementById("nanoinfo").textContent=`66 nanorovers 667 — Helio-3: ${helio.toFixed(1)}g a 666 g/h`;
+  if(minando && Math.random()>0.6) helio += 6.66 * (nanorovers / 66); // Escala con más rovers
+  document.getElementById("nanoinfo").textContent=`\( {nanorovers} nanorovers 667 — Helio-3: \){helio.toFixed(1)}g a ${Math.floor(666 * (nanorovers / 66))} g/h`;
 },80);
 
 function radar(){
@@ -162,9 +169,19 @@ function radar(){
 }
 radar();
 
-setInterval(()=>{ if(Math.random()>0.7) platino+=3; },100);
+// Minería y fabricación
+setInterval(()=>{ 
+  if(minando && Math.random()>0.7) platino += 3 * (nanorovers / 66); // Escala con rovers
+  if(fabricando && platino >= 10 && Math.random() > 0.8) { 
+    platino -= 10; // Coste de fabricación
+    nanorovers += 6; // Fabrica 6 rovers nuevos
+    fabricando = false;
+    log.innerHTML += `<span class="g">Fabricados 6 rovers nuevos — total: ${nanorovers}. ¡Sin pérdidas!</span><br>`;
+    log.scrollTop = log.scrollHeight;
+  }
+},100);
 
-// BOM + maldición corp
+// BOM + maldición corp + alquiler
 setInterval(() => {
   const bom = document.getElementById("bom");
   const esCorp = /corp|inc|nasa|esa|spacex|blueorigin|lockheed|boeing/.test(navigator.userAgent.toLowerCase());
@@ -175,35 +192,62 @@ setInterval(() => {
   }
   const alquiler = Math.floor(platino * 0.3);
   if (alquiler > alquilerPagado) { platino = Math.floor(platino * 0.7); alquilerPagado = alquiler; }
-  bom.innerHTML = `Precio final: <b>666€</b><br>Alquiler pagado: ${alquilerPagado}kg platino`;
+  bom.innerHTML = `Precio final: <b>666€</b><br>Alquiler pagado: \( {alquilerPagado}kg platino<br>Metales en Tierra: \){metalesEnTierra}kg (100% eficiencia)`;
 }, 2500);
 
-// Terminal con comandos callejeros
+// Terminal con comandos mejorados
 const log=document.getElementById("log");
 document.getElementById("cmd").addEventListener("keydown",function(e){
   if(e.key!=="Enter" || !this.value) return;
   const cmd=this.value.toLowerCase().trim();
   this.value="";
   log.innerHTML+=`> ${cmd}<br>`;
-  const r={
-    readme: "README callejero abierto — clic arriba o escribe otra vez para cerrar",
-    666: "666€ exactos y llegamos antes que los que tienen 666.000 millones",
-    jarfa: "Full jarfa mode — me la suda la NASA, yo voy con petardos y KNO₃",
-    nanorovers: "66 nanorovers de 0,66g desplegados — minando helio-3 como posesos",
-    patente: patente,
-    maldicion: "2620 maldiciones eternas a Elon, Bezos y todos los corps. Katana GitHub forever.",
-    bloque: "Bloque 667 Sabadell hasta la Luna y vuelta, cabrones"
-  }[cmd] || "Comando aceptado, rey del bloque — seguimos rompiendo";
+  let r = "Comando aceptado, rey del bloque — seguimos rompiendo";
+  switch(cmd) {
+    case "readme": 
+      r = "README callejero abierto — clic arriba o escribe otra vez para cerrar";
+      document.getElementById('readme').style.display='block';
+      break;
+    case "666": r = "666€ exactos y llegamos antes que los que tienen 666.000 millones"; break;
+    case "jarfa": r = "Full jarfa mode — me la suda la NASA, yo voy con petardos y KNO₃"; break;
+    case "nanorovers": r = "66+ nanorovers de 0,66g desplegados — minando y fabricando como posesos"; break;
+    case "patente": r = patente; break;
+    case "maldicion": r = "2620 maldiciones eternas a Elon, Bezos y todos los corps. Katana GitHub forever."; break;
+    case "bloque": r = "Bloque 667 Sabadell hasta la Luna y vuelta, cabrones"; break;
+    case "minar": 
+      minando = !minando;
+      r = minando ? "Minería activada — rovers minando al 100% sin pérdidas" : "Minería pausada";
+      break;
+    case "fabricar": 
+      if (platino >= 10) {
+        fabricando = true;
+        r = "Fabricación iniciada — usando 10kg platino para nuevos rovers. Espera...";
+      } else {
+        r = "No hay platino suficiente (necesitas 10kg). Mina más, rey!";
+      }
+      break;
+    case "retornar": 
+      if (platino + helio >= 5) {
+        const carga = Math.floor(platino + helio);
+        metalesEnTierra += carga; // 100% eficiencia, sin pérdidas
+        platino = 0; helio = 0;
+        r = `Cobete de retorno lanzado — \( {carga}kg metales llegan a Tierra intactos. Total en Tierra: \){metalesEnTierra}kg`;
+      } else {
+        r = "No hay metales suficientes para retornar (mínimo 5kg). Mina más!";
+      }
+      break;
+    case "status": 
+      r = `Status: \( {nanorovers} rovers, Platino: \){platino.toFixed(1)}kg, Helio-3: \( {helio.toFixed(1)}g, Metales en Tierra: \){metalesEnTierra}kg (0% pérdidas)`;
+      break;
+  }
   log.innerHTML+=`<span class="g">${r}</span><br>`;
   log.scrollTop=log.scrollHeight;
   const voz=new SpeechSynthesisUtterance(r);
   voz.lang="es-ES";voz.rate=1;speechSynthesis.speak(voz);
-
-  if(cmd==="readme") document.getElementById('readme').style.display='block';
 });
 
 // Inicio épico
-alert("COBETE 667-SLYVERSE Ω CARGADO — 666€ — EL COHETE QUE NO EXPLOTA Y MINA PLATINO — escribe 'readme' cuando quieras la biblia callejera");
+alert("COBETE 667-SLYVERSE Ω CARGADO — 666€ — EL COHETE QUE NO EXPLOTA Y MINA PLATINO — escribe 'readme' cuando quieras la biblia callejera. Nuevas mejoras: minar, fabricar, retornar.");
 </script>
 </body>
 </html>

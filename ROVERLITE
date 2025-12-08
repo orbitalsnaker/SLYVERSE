@@ -16,6 +16,8 @@
   #readme{position:fixed;top:0;left:0;width:100%;height:100%;background:#000;z-index:1000;overflow-y:auto;padding:20px;display:none}
   .close{color:#f00;font-size:40px;position:absolute;top:10px;right:20px;cursor:pointer}
   #instructions{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,0.95);border:2px solid #0f0;padding:20px;z-index:1001;color:#0f0}
+  img.underdog {width: 200px; height: auto; border: 2px solid #0f0; margin: 10px;}
+  body.glitch {filter: invert(1);}
 </style>
 <script src="https://threejs.org/build/three.min.js"></script>
 </head>
@@ -67,12 +69,40 @@
     • <b>nanorovers</b> → despliega nanorovers en órbita.<br>
     • <b>minar / fabricar / retornar / status</b> → control de minería.<br>
     • <b>orbitar / 3dview / flota N / ia optimize</b> → optimización y simulación.<br>
-    • <b>jarfa / avionica / trayectoria / vuelo / diseño</b> → controles avanzados.
-    
+    • <b>jarfa / avionica / trayectoria / vuelo / diseño</b> → controles avanzados.<br>
+    • <b>maldicion corp</b> → activa glitch anti-corporaciones.<br>
+    • <b>goddard / tsiolkovsky / oberth / paulet</b> → homenajes a underdogs con buffs.
+
     <h2>LORE: JACK PARSONS</h2>
     Jack Parsons fue un visionario que soñó con la exploración espacial.  
     Este cobete es **un homenaje a su espíritu científico**, con hardware seguro y experimental, sin usar explosivos ni rituales.  
     La misión: **llevar ideas de barrio al espacio**, usando nanorovers y tecnología legal para minar recursos de forma ética y open-source.
+
+    <h2>HOMENAJES A UNDERDOGS DE LA COHETERÍA</h2>
+    Estos carnales okuparon el espacio antes que los ricos – ¡viva los underdogs!<br>
+    • <b>Robert Goddard</b>: El pionero gringo que en 1926 lanzó el primer cohete de combustible líquido, pero lo llamaron loco y "moon man". Maldición a la prensa que se burló.<br>
+    <img class="underdog" src="https://media.defense.gov/2008/May/09/2000622194/2000/2000/0/080509-F-1234P-008.JPG" alt="Retrato de Robert Goddard">
+
+<grok-card data-id="314b1e" data-type="image_card"></grok-card>
+
+<br>
+    • <b>Konstantin Tsiolkovsky</b>: El ruso sordo que en 1903 escribió ecuaciones para cohetes multi-etapa desde su casa rural, sin un peso. Ignorado en vida, base de todo lo espacial.<br>
+    <img class="underdog" src="https://www.thoughtco.com/thmb/wXYZcXnvczpm5VxTNPaZR2X7lXE=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc()/Konstantin-5b437cfec9e77c0037b14908.jpg" alt="Retrato de Konstantin Tsiolkovsky">
+
+<grok-card data-id="968339" data-type="image_card"></grok-card>
+
+<br>
+    • <b>Hermann Oberth</b>: El rumano que en 1923 publicó "El Cohete al Espacio Interplanetario", inspirando a von Braun, pero quedó en segundo plano. Sin él, no hay Apollo.<br>
+    <img class="underdog" src="https://lookaside.fbsbx.com/lookaside/crawler/media/?media_id=1000741480079615" alt="Retrato de Hermann Oberth">
+
+<grok-card data-id="13aa75" data-type="image_card"></grok-card>
+
+<br>
+    • <b>Pedro Paulet</b>: El peruano que en 1900 supuestamente construyó un motor líquido, pero Europa le quitó el crédito. Prueba que el ingenio no necesita visas.<br>
+    <img class="underdog" src="https://peru.info/archivos/publicacion/44-imagen-1336171852020.jpg" alt="Retrato de Pedro Paulet">
+
+<grok-card data-id="232fd4" data-type="image_card"></grok-card>
+
   </div>
 </div>
 
@@ -155,12 +185,48 @@ let flotaSize=1;
 let modoVuelo=false, pitch=0, yaw=0, roll=0;
 let orbita={apo:0, peri:0, velOrb:0};
 const log=document.getElementById("log");
+let miningRate = 0.5; // Base rate for platino/helio accumulation
+let underdogs = ["goddard", "tsiolkovsky", "oberth", "paulet"];
+let scene, camera, renderer, rocketMesh;
 
 // === Funciones de simulación y animación ===
-function simularOrbita() { /* Simulación segura de órbita */ }
-function dibujarTrayectoria() { /* Dibujado 2D */ }
-function init3D() { /* Three.js Wireframe */ }
-function animate3D() { requestAnimationFrame(animate3D); }
+function simularOrbita() {
+  // Simulación básica de órbita con física escalada
+  let gravity = -9.8 / 1000; // Escalado para sim
+  velOrb += gravity * 0.01;
+  orbita.apo += velOrb;
+  if (orbita.apo < 0) orbita.apo = 0;
+  document.getElementById("traj_info").textContent = `Apogeo: ${orbita.apo.toFixed(0)}m | Periapsis: ${orbita.peri.toFixed(0)}m | Vel orbital: ${velOrb.toFixed(0)}m/s`;
+}
+
+function dibujarTrayectoria() {
+  const traj = document.getElementById("trajectory").getContext("2d");
+  traj.fillStyle = "#000"; traj.fillRect(0, 0, 540, 180);
+  traj.strokeStyle = "#0f0"; traj.beginPath(); traj.moveTo(0, 180 - orbita.apo / 10);
+  traj.lineTo(540, 180 - orbita.peri / 10); traj.stroke();
+}
+
+function init3D() {
+  scene = new THREE.Scene();
+  camera = new THREE.PerspectiveCamera(75, 400 / 200, 0.1, 1000);
+  renderer = new THREE.WebGLRenderer({ antialias: true });
+  renderer.setSize(400, 200);
+  document.getElementById("threejs_container").appendChild(renderer.domElement);
+
+  const geometry = new THREE.CylinderGeometry(1, 1, 5, 32);
+  const material = new THREE.MeshBasicMaterial({ color: 0x00ff00, wireframe: true });
+  rocketMesh = new THREE.Mesh(geometry, material);
+  scene.add(rocketMesh);
+
+  camera.position.z = 10;
+}
+
+function animate3D() {
+  requestAnimationFrame(animate3D);
+  rocketMesh.rotation.x += pitch * 0.01;
+  rocketMesh.rotation.y += yaw * 0.01;
+  renderer.render(scene, camera);
+}
 
 // === Animaciones HUD y nanorovers ===
 setInterval(()=>{ 
@@ -189,8 +255,17 @@ setInterval(()=>{
     n.fillStyle="#0f0";n.fillRect(x,y,3,3);
   }
   nanoAng+=0.02;
-  if(minando && Math.random()>0.6) helio+=6.66*(nanorovers/66)*flotaSize;
-  document.getElementById("nanoinfo").textContent=`${nanorovers*flotaSize} nanorovers 666 — Helio-3: ${helio.toFixed(1)}g`;
+  if(minando) {
+    platino += miningRate * (nanorovers/66) * flotaSize;
+    helio += miningRate * 1.5 * (nanorovers/66) * flotaSize;
+    if (Math.random() > 0.95) {
+      let boost = Math.random() * 10;
+      platino += boost;
+      log.innerHTML += `<span class="g">Evento: Asteroide detectado! +${boost.toFixed(1)}g platino</span><br>`;
+      log.scrollTop = log.scrollHeight;
+    }
+  }
+  document.getElementById("nanoinfo").textContent=`${nanorovers*flotaSize} nanorovers 666 — Platino: ${platino.toFixed(1)}g | Helio-3: ${helio.toFixed(1)}g`;
 },80);
 
 function radar(){
@@ -203,6 +278,29 @@ function radar(){
   r.restore(); ang+=0.09; requestAnimationFrame(radar);
 }
 radar();
+
+// === Loop principal para optimizaciones ===
+function mainLoop() {
+  simularOrbita();
+  dibujarTrayectoria();
+  requestAnimationFrame(mainLoop);
+}
+mainLoop();
+
+// === Controles de vuelo ===
+document.addEventListener("keydown", (e) => {
+  if (!modoVuelo) return;
+  switch (e.key.toUpperCase()) {
+    case "W": thrust += 10; break;
+    case "S": thrust -= 10; break;
+    case "A": yaw -= 5; break;
+    case "D": yaw += 5; break;
+    case "Q": pitch += 5; break;
+    case "E": pitch -= 5; break;
+    case "ESCAPE": modoVuelo = false; document.getElementById("instructions").style.display = "none"; break;
+  }
+  velOrb += thrust / 1000;
+});
 
 // === Comandos ===
 document.getElementById("cmd").addEventListener("keydown",async function(e){
@@ -218,7 +316,14 @@ document.getElementById("cmd").addEventListener("keydown",async function(e){
     case cmd==="fabricar": if(platino>=10){fabricando=true;r="Fabricación iniciada";}else{r="Platino insuficiente";} break;
     case cmd==="retornar": const carga=Math.floor(platino+helio); metalesEnTierra+=carga*flotaSize; platino=0; helio=0; r=`Flota retornó: ${carga*flotaSize}kg a Tierra`; break;
     case cmd.startsWith("flota "): flotaSize=parseInt(cmd.split(" ")[1])||1; r=`Flota ampliada a ${flotaSize}`; break;
-    case cmd==="3dview": document.getElementById('3d_panel').style.display='block'; init3D(); r="Vista 3D activada"; break;
+    case cmd==="3dview": document.getElementById('3d_panel').style.display='block'; init3D(); animate3D(); r="Vista 3D activada"; break;
+    case cmd==="orbitar": modoVuelo = true; document.getElementById("instructions").style.display = "block"; document.getElementById('traj_panel').style.display='block'; r="Modo vuelo activado"; break;
+    case cmd==="ia optimize": miningRate *= 1.5; r="IA optimizada - tasa de minería boosteada"; break;
+    case cmd==="maldicion corp": document.body.classList.toggle("glitch"); r="Maldición anti-corp activada - pantalla invertida"; break;
+    case cmd==="goddard": nanorovers += 10; r="Homenaje a Goddard: +10 nanorovers desplegados secretos. El underdog que lanzó el primer cohete líquido en 1926."; break;
+    case cmd==="tsiolkovsky": miningRate += 1; r="Homenaje a Tsiolkovsky: IA optimizada para órbitas perfectas. El ruso sordo que calculó todo en 1903."; break;
+    case cmd==="oberth": document.getElementById('3d_panel').style.display='block'; init3D(); animate3D(); r="Homenaje a Oberth: Vista 3D con trayectorias teóricas. El rumano que inspiró Apollo en 1923."; break;
+    case cmd==="paulet": flotaSize *= 2; r="Homenaje a Paulet: Flota multiplicada x2. El peruano que inventó el motor líquido en 1900."; break;
   }
   log.innerHTML+=`<span class="g">${r}</span><br>`; log.scrollTop=log.scrollHeight;
   const voz=new SpeechSynthesisUtterance(r); voz.lang="es-ES";voz.rate=1;speechSynthesis.speak(voz);
@@ -226,6 +331,7 @@ document.getElementById("cmd").addEventListener("keydown",async function(e){
 
 // === Inicio ===
 alert("COBETE JACK PARSONS 666 v1 CARGADO — Hardware seguro, 66 nanorovers, 666€ — Escribe 'orbitar' para simular órbita");
+// Placeholder para multiplayer: // Usa WebSockets para flota compartida, e.g., const ws = new WebSocket('ws://server'); ws.onmessage = updateFlota;
 </script>
 </body>
 </html>

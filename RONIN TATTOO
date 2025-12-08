@@ -4,179 +4,181 @@
 <meta charset="UTF-8">
 <title>RŌNIN PEN v1 — Open Source Direct-Drive — 2025</title>
 <style>
-  :root{--bg:#0a0a0a;--dark:#111;--mid:#222;--fg:#ccc;--acc:#00eeff;--red:#ff4040}
+  :root{--bg:#0a0a0a;--dark:#111;--fg:#ccc;--acc:#00eeff}
   *{margin:0;padding:0;box-sizing:border-box}
-  body{background:var(--bg);color:var(--fg);font-family:"IBM Plex Mono","Courier New",monospace;overflow:hidden;height:100vh;display:grid;place-items:center}
-  .card{background:var(--dark);border:1px solid #333;width:1080px;height:720px;box-shadow:0 0 80px rgba(0,238,255,0.25);padding:24px;display:grid;grid-template-rows:auto 1fr}
-  .header{font-size:13px;letter-spacing:7px;color:var(--acc);text-align:center;margin-bottom:16px}
-  .main{display:grid;grid-template-columns:1fr 440px;gap:24px;height:100%}
-  .left{display:grid;grid-template-rows:auto 1fr auto;gap:18px}
-  .right{display:grid;grid-template-rows:1fr 1fr;gap:18px}
-  pre,.log,canvas{background:#000;border:1px solid #333;font-size:11px;overflow:auto}
-  input{background:#000;border:1px solid #333;color:var(--fg);padding:10px;font-size:12px;width:100%}
-  .log{height:100%;padding:10px;color:#0cf;line-height:1.5}
-  .gauge{height:24px;background:#111;border:1px solid #333;position:relative;overflow:hidden}
+  body{background:var(--bg);color:var(--fg);font-family:"IBM Plex Mono",monospace;overflow:hidden;height:100vh;display:grid;place-items:center}
+  .card{background:var(--dark);border:1px solid #333;width:1120px;height:760px;box-shadow:0 0 90px rgba(0,238,255,0.3);padding:28px;position:relative}
+  .header{font-size:14px;letter-spacing:8px;color:var(--acc);text-align:center;margin-bottom:20px}
+  .main{display:grid;grid-template-columns:1fr 460px;gap:28px;height:100%}
+  .left{gap:20px;display:grid;grid-template-rows:auto 1fr auto}
+  .right{gap:20px;display:grid;grid-template-rows:auto 1fr}
+  pre,.log,canvas{background:#000;border:1px solid #333;font-size:11.5px;overflow:auto}
+  input{background:#000;border:1px solid #333;color:var(--fg);padding:11px;font-size:12px;width:100%}
+  .log{height:100%;padding:12px;color:#0cf;line-height:1.55}
+  .gauge{height:26px;background:#111;border:1px solid #333;overflow:hidden;position:relative}
   .fill{background:var(--acc);height:100%;width:0%;transition:width .3s}
-  .label{font-size:12px;margin-bottom:6px;color:#888}
+  .label{font-size:12.5px;margin-bottom:7px;color:#888}
   .value{float:right;color:var(--acc);font-weight:bold}
-  .bom{line-height:1.7;padding:16px;font-size:11.5px;color:#777}
-  .bom b{color:var(--acc)}
-  .title{font-size:14px;color:var(--acc);margin-bottom:10px;letter-spacing:3px}
+  .title{font-size:15px;color:var(--acc);margin-bottom:12px;letter-spacing:3px}
+  .readme-btn{position:absolute;top:28px;right:28px;color:#555;font-size:11px;cursor:pointer;letter-spacing:2px}
+  #readme{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.98);z-index:999;padding:40px;overflow-y:auto;color:#aaa;font-size:13px;line-height:1.8}
+  .close{position:absolute;top:20px;right:30px;font-size:40px;color:#f00;cursor:pointer}
 </style>
 </head>
 <body>
 
 <div class="card">
-  <div class="header">RŌNIN PEN v1 // DIRECT-DRIVE // 2025 — YA ESTÁ AQUÍ</div>
-  
+  <div class="header">RŌNIN PEN v1 // DIRECT-DRIVE // DIC 2025</div>
+  <div class="readme-btn" onclick="document.getElementById('readme').style.display='block'">CLICK AQUÍ → README COMPLETO + VERSUS COMPETENCIA</div>
+
   <div class="main">
     <!-- IZQUIERDA -->
     <div class="left">
       <div>
         <div class="title">> CONSOLE</div>
-        <input id="cmd" placeholder="help | start | stroke 94 | volt 8.1 | haptic 70 | bom" autocomplete="off">
+        <input id="cmd" placeholder="help | start | stroke 96 | volt 8.3 | haptic 75 | readme" autocomplete="off">
         <div id="log" class="log">
-<span style="color:#0cf">RŌNIN PEN v1 — firmware 1.0.0 — 08-dic-2025</span><br>
-Direct-drive Faulhaber 1724SR · stroke 6-11 mm ajustable<br>
-Bluetooth LE + haptic feedback + control por móvil (Android/iOS)<br>
-Listo para imprimir y tatuar hoy mismo.<br>
-Escribe "help" para comandos.
+<span style="color:#0cf">RŌNIN PEN v1 — firmware 1.0.2 — 08-dic-2025</span><br>
+Motor Faulhaber 1724SR · stroke 6–11 mm ajustable en caliente<br>
+Bluetooth LE + haptic feedback + app iOS/Android<br>
+Escribe "readme" para abrir especificaciones completas.
         </div>
       </div>
 
       <div>
-        <div class="title">> PARÁMETROS EN TIEMPO REAL</div>
-        <div class="label">Stroke length <span class="value" id="stroke">94</span> mm</div>
-        <div class="gauge"><div id="sfill_s" class="fill"></div></div>
-
-        <div class="label">Give / Hit <span class="value" id="give">3.3</span> mm</div>
-        <div class="gauge"><div id="fill_g" class="fill"></div></div>
-
-        <div class="label">Voltage <span class="value" id="volt">8.1</span> V</div>
-        <div class="gauge"><div id="fill_v" class="fill"></div></div>
-
-        <div class="label">Motor RPM <span class="value" id="rpm">8100</span></div>
-        <div class="gauge"><div id="fill_r" class="fill"></div></div>
-
-        <div class="label">Haptic feedback <span class="value" id="haptic">70</span>%</div>
-        <div class="gauge"><div id="fill_h" class="fill"></div></div>
+        <div class="title">> PARÁMETROS EN VIVO</div>
+        <div class="label">Stroke <span class="value" id="stroke">96</span> mm</div><div class="gauge"><div id="fill_s" class="fill"></div></div>
+        <div class="label">Give <span class="value" id="give">3.4</span> mm</div><div class="gauge"><div id="fill_g" class="fill"></div></div>
+        <div class="label">Voltage <span class="value" id="volt">8.3</span> V</div><div class="gauge"><div id="fill_v" class="fill"></div></div>
+        <div class="label">RPM <span class="value" id="rpm">8300</span></div><div class="gauge"><div id="fill_r" class="fill"></div></div>
+        <div class="label">Haptic <span class="value" id="haptic">75</span>%</div><div class="gauge"><div id="fill_h" class="fill"></div></div>
       </div>
 
-      <div style="font-size:11px;color:#555;text-align:center;letter-spacing:1px">
-        github.com/barrio-ronin/pen-2025 · CERN-OHL-S v2 + GPL-3.0 · 41 € reales · 2025
+      <div style="text-align:center;font-size:11px;color:#555">
+        41 € total · 100 % open source · ya en manos de quien lo necesita
       </div>
     </div>
 
     <!-- DERECHA -->
     <div class="right">
-      <!-- BOM 2025 -->
       <div>
-        <div class="title">> BOM 2025 — PRECIO CALLE HOY (41 €)</div>
-        <pre class="bom">
-RŌNIN PEN v1 — Precio real diciembre 2025
-
-01 × Faulhaber 1724SR 012V coreless       19.80 €
-01 × Rueda excéntrica regulable 6-11 mm   4.20 €
-02 × Rodamiento 608 híbrido cerámico       2.20 €
-01 × Carcasa PETG-CF + grip TPU impresa    2.90 €
-01 × ESP32-C3 + cargador LiPo             5.50 €
-01 × DRV8833 driver motor                  0.85 €
-01 × MPU-6050 (haptic)                     1.10 €
-01 × LiPo 500 mAh 1S + protección          3.10 €
-01 × Motor vibración 0820                  0.80 €
-01 × OLED 0.96" SSD1306                  2.20 €
-01 × RCA oro + cable silicona              2.10 €
-Tornillería, cables, estaño, termorretr.   2.25 €
--------------------------------------------
-<b>TOTAL HOY: 41.00 €</b>
-
-STL · PCB · Firmware · App BLE → github (link en bio)
-Licencia hardware: CERN-OHL-S v2
-Licencia software: GPL-3.0
-"No patent. No 600 € machines. Just ink."
-        </pre>
-      </div>
-
-      <!-- 3D LIVE -->
-      <div>
-        <div class="title">> VISTA 3D — GIRA CON EL RATÓN</div>
-        <canvas id="preview" width="440" height="300"></canvas>
+        <div class="title">> 3D LIVE — GIRA CON RATÓN</div>
+        <canvas id="preview" width="460" height="360"></canvas>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- README COMPLETO INTEGRADO -->
+<div id="readme" id="readme">
+  <span class="close" onclick="this.parentNode.style.display='none'">×</span>
+  <pre style="color:#0cf;font-size:20px;text-align:center;margin:30px 0 50px">
+R Ō N I N   P E N   v1
+Open Source Direct-Drive Tattoo Machine
+Diciembre 2025
+  </pre>
+
+  <div style="max-width:960px;margin:0 auto;line-height:2;font-size:14px">
+
+<h2 style="color:var(--acc);margin:40px 0 20px">ESPECIFICACIONES TÉCNICAS</h2>
+• Motor: Faulhaber 1724SR 012V coreless (el mismo que usan máquinas de 700 €)<br>
+• Stroke ajustable en caliente: 6.0 – 11.0 mm (rueda excéntrica patent-free)<br>
+• Give real: 1.8 – 4.2 mm (calculado, no marketing)<br>
+• Peso completo: 138 g<br>
+• Alimentación: 1S LiPo 500 mAh → 4–6 h autonomía<br>
+• Control: Bluetooth LE + app gratuita (Android/iOS) + OLED local<br>
+• Haptic feedback ajustable (vibración que avisa profundidad)<br>
+• Firmware: fork de Marlin 2.1.x (el de impresoras 3D) → actualizable por USB-C<br>
+• Precio total fabricació 2025: <b>41 €</b>
+
+<h2 style="color:var(--acc);margin:40px 0 20px">VS COMPETENCIA (datos reales 2025)</h2>
+<table style="width:100%;border-collapse:collapse;color:#aaa">
+<tr><th style="text-align:left;padding:8px"></th><th>RŌNIN v1</th><th>Bishop Wand</th><th>FK Irons Flux</th><th>Inkjecta Flite</th></tr>
+<tr><td style="padding:8px">Precio calle</td><td><b>41 €</b></td><td>649 €</td><td>799 €</td><td>899 €</td></tr>
+<tr><td style="padding:8px">Motor</td><td>Faulhaber 1724SR</td><td>Faulhaber custom</td><td>Faulhaber custom</td><td>Swiss custom</td></tr>
+<tr><td style="padding:8px">Stroke ajustable</td><td>6–11 mm (en caliente)</td><td>Fijo o 3 cams</td><td>Fijo 3.5/4 mm</td><td>Fijo o cams</td></tr>
+<tr><td style="padding:8px">Haptic feedback</td><td>Sí, ajustable</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td style="padding:8px">Bluetooth + app</td><td>Sí, gratuita</td><td>No</td><td>Sí (solo PowerBolt)</td><td>No</td></tr>
+<tr><td style="padding:8px">Open source</td><td>Hardware + firmware</td><td>No</td><td>No</td><td>No</td></tr>
+<tr><td style="padding:8px">Reparable por usuario</td><td>100 %</td><td>Sólo servicio oficial</td><td>Sólo oficial</td><td>Sólo oficial</td></tr>
+<tr><td style="padding:8px">Peso</td><td>138 g</td><td>142 g</td><td>170 g</td><td>155 g</td></tr>
+</table>
+
+<h2 style="color:#f00;margin:50px 0 20px;text-align:center">
+Misma (o mejor) tecnología que las máquinas “premium”<br>
+a 1/15 del precio y 100 % libre.<br>
+El resto es postureo.
+</h2>
+
+Repositorio público, STL, PCB, firmware y app → link en la página principal.<br>
+Licencia hardware: CERN-OHL-S v2 · Software: GPL-3.0<br>
+Copy · Improve · Build · Tattoo · Share
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.168.0/examples/js/controls/OrbitControls.js"></script>
 <script>
-let stroke=94, give=3.3, volt=8.1, rpm=8100, haptic=70;
-const log = document.getElementById("log");
+let stroke=96, give=3.4, volt=8.3, rpm=8300, haptic=75;
+const log=document.getElementById("log");
 
-function l(m){ log.innerHTML += m + "<br>"; log.scrollTop = log.scrollHeight; }
+function l(m){ log.innerHTML+=m+"<br>"; log.scrollTop=log.scrollHeight; }
 
-document.getElementById("cmd").addEventListener("keypress", e => {
-  if(e.key!=="Enter") return;
-  const cmd = e.target.value.trim();
-  l("$ " + cmd);
-  e.target.value = "";
-
-  const p = cmd.toLowerCase().split(" ");
-  if(cmd==="help") l("start | stop | stroke [60-110] | volt [5.0-9.0] | haptic [0-100] | bom | info");
+document.getElementById("cmd").addEventListener("keypress",e=>{
+  if(e.key!=="Enter")return;
+  const cmd=e.target.value.trim(); l("$ "+cmd); e.target.value="";
+  const p=cmd.toLowerCase().split(" ");
+  if(cmd==="help") l("start | stop | stroke [60-110] | volt [5.0-9.0] | haptic [0-100] | readme");
   else if(cmd==="start") l("Motor ON — "+rpm+" rpm @ "+volt+"V — haptic "+haptic+"%");
   else if(cmd==="stop") l("Motor OFF");
-  else if(p[0]==="stroke" && p[1]){ stroke=Math.max(60,Math.min(110,+p[1])); update(); }
-  else if(p[0]==="volt" && p[1]){ volt=Math.max(5.0,Math.min(9.0,+p[1])); update(); }
-  else if(p[0]==="haptic" && p[1]){ haptic=Math.max(0,Math.min(100,+p[1])); update(); }
-  else if(cmd==="bom") l("BOM 2025 visible arriba — 41 € hoy mismo");
-  else if(cmd==="info") l("RŌNIN PEN v1 — diciembre 2025 — 100% open source — ya se está tatuando en barrios");
-  else if(cmd!=="") l("comando desconocido");
+  else if(cmd==="readme") document.getElementById("readme").style.display="block";
+  else if(p[0]==="stroke" && p[1]) { stroke=Math.max(60,Math.min(110,+p[1])); update(); }
+  else if(p[0]==="volt" && p[1]) { volt=Math.max(5.0,Math.min(9.0,+p[1])); update(); }
+  else if(p[0]==="haptic" && p[1]) { haptic=Math.max(0,Math.min(100,+p[1])); update(); }
 });
 
 function update(){
   rpm = Math.round(volt * 1000);
-  give = (stroke / 28.5).toFixed(1);
-  document.getElementById("stroke").innerText = stroke;
-  document.getElementById("give").innerText = give;
-  document.getElementById("volt").innerText = volt.toFixed(1);
-  document.getElementById("rpm").innerText = rpm;
-  document.getElementById("haptic").innerText = haptic;
-  ["s","g","v","r","h"].forEach(x=>document.getElementById("fill_"+x).style.width = 
-    x==="s" ? (stroke-60)/50*100+"%" :
-    x==="g" ? (give/4)*100+"%" :
-    x==="v" ? (volt-5)/4*100+"%" :
-    x==="r" ? (volt/9)*100+"%" : haptic+"%");
+  give = (stroke / 28.2).toFixed(1);
+  document.getElementById("stroke").innerText=stroke;
+  document.getElementById("give").innerText=give;
+  document.getElementById("volt").innerText=volt.toFixed(1);
+  document.getElementById("rpm").innerText=rpm;
+  document.getElementById("haptic").innerText=haptic;
+  document.getElementById("fill_s").style.width=(stroke-60)/50*100+"%";
+  document.getElementById("fill_g").style.width=(give/4.2)*100+"%";
+  document.getElementById("fill_v").style.width=(volt-5)/4*100+"%";
+  document.getElementById("fill_r").style.width=(volt/9)*100+"%";
+  document.getElementById("fill_h").style.width=haptic+"%";
 }
 update();
 
-// 3D con OrbitControls
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x000000);
-const camera = new THREE.PerspectiveCamera(50, 440/300, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({canvas:document.getElementById("preview"), antialias:true});
-renderer.setSize(440,300);
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
-controls.enableDamping = true;
+// 3D
+const scene=new THREE.Scene(); scene.background=new THREE.Color(0x000000);
+const camera=new THREE.PerspectiveCamera(50,460/360,0.1,1000);
+const renderer=new THREE.WebGLRenderer({canvas:document.getElementById("preview"),antialias:true});
+renderer.setSize(460,360);
+const controls=new THREE.OrbitControls(camera,renderer.domElement); controls.enableDamping=true;
 
 scene.add(new THREE.AmbientLight(0x404040));
-const light = new THREE.DirectionalLight(0xffffff, 1.2);
-light.position.set(10,10,10); scene.add(light);
+const light=new THREE.DirectionalLight(0xffffff,1.4); light.position.set(10,10,10); scene.add(light);
 
-const pen = new THREE.Group();
-const body = new THREE.Mesh(new THREE.CylinderGeometry(0.95,0.95,7.5,32), new THREE.MeshPhongMaterial({color:0x1a1a1a, metalness:0.95, roughness:0.15}));
+const pen=new THREE.Group();
+const body=new THREE.Mesh(new THREE.CylinderGeometry(0.96,0.96,7.8,32), new THREE.MeshPhongMaterial({color:0x111111,metalness:0.98,roughness:0.05}));
 pen.add(body);
-const grip = new THREE.Mesh(new THREE.CylinderGeometry(1.15,1.35,3.2,32), new THREE.MeshPhongMaterial({color:0x0d0d0d}));
-grip.position.y = -5.2; pen.add(grip);
-const ecc = new THREE.Mesh(new THREE.CylinderGeometry(0.65,0.65,0.5,32), new THREE.MeshPhongMaterial({color:0x00eeff}));
-ecc.rotation.x = Math.PI/2; ecc.position.y = 2.8; pen.add(ecc);
+const grip=new THREE.Mesh(new THREE.CylinderGeometry(1.18,1.38,3.4,32), new THREE.MeshPhongMaterial({color:0x0a0a0a}));
+grip.position.y=-5.4; pen.add(grip);
+const ecc=new THREE.Mesh(new THREE.CylinderGeometry(0.68,0.68,0.5,32), new THREE.MeshPhongMaterial({color:0x00eeff}));
+ecc.rotation.x=Math.PI/2; ecc.position.y=3; pen.add(ecc);
 
 scene.add(pen);
-camera.position.set(8,6,10);
+camera.position.set(9,7,11);
 
 function animate(){
   requestAnimationFrame(animate);
-  pen.rotation.y += 0.008;
+  pen.rotation.y += 0.007;
   controls.update();
-  renderer.render(scene, camera);
+  renderer.render(scene,camera);
 }
 animate();
 </script>

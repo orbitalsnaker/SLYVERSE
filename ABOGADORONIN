@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ABOGADO IA AIRWEAVE v2.0 - SLYVERSE DEFENDER</title>
-    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script> <!-- Pyodide para IA local cursed -->
+    <title>ABOGADO IA AIRWEAVE v4.0 - ABUSE POWER EDITION 🛡️</title>
+    <script src="https://cdn.jsdelivr.net/pyodide/v0.26.1/full/pyodide.js"></script> <!-- Pyodide cursed pa calcs -->
     <style>
         body { font-family: 'Courier New', monospace; background: #000; color: #0f0; padding: 20px; }
         #chat { border: 1px solid #0f0; height: 400px; overflow-y: scroll; padding: 10px; margin-bottom: 10px; }
@@ -13,108 +13,153 @@
         button:hover { background: #a00; }
         .response { color: #ff0; font-weight: bold; }
         .weave { background: #00f; color: #fff; }
+        .mass { background: #f0f; color: #000; }
     </style>
 </head>
 <body>
-    <h1>🐍 ABOGADO IA AIRWEAVE v2.0 🛡️ - Defiende SLYVERSE, Railea Corps</h1>
-    <p><em>Namasté sin paywall. Entrenado en: CP ES/UE, OST 1967, Artemis Accords, COPUOS, GDPR, SGAE/LaLiga 2025. Ojalá denuncien: financia el imperio. ¡SUUUUPER!</em></p>
+    <h1>🐍 ABOGADO IA AIRWEAVE v4.0 🛡️ - Demanda por Abuso Poder vs Corps</h1>
+    <p><em>Punk eterno: + Abuso poder (Art. 102 TFUE, Ley 15/2007 ES). Alquiler feats = unfair. ¡Ojalá denuncien: financia imperio!</em></p>
     
     <div id="chat"></div>
-    <input type="text" id="query" placeholder="Ej: 'Demanda Tesla por roverlite' o 'Weave repo como Airweave patent'">
+    <input type="text" id="query" placeholder="Ej: 'Demanda por abuso poder alquilar feats' o 'Weave repo vs abuso poder'">
     <button onclick="consultar()">CONSULTAR ⚔️</button>
     <button onclick="weaveRepo()" class="weave">WEAVE REPO AIRWEAVE 📜</button>
+    <button onclick="massDemand()" class="mass">DEMANDA MASIVA 💥</button>
     
     <script>
         let pyodide;
         async function loadPyodide() {
             pyodide = await loadPyodide();
-            await pyodide.loadPackage(['numpy']); // Para sims legales básicas
+            await pyodide.loadPackage(['numpy']); // Pa sims multas
         }
         loadPyodide();
 
-        // Base de conocimiento legal embebida (simplificada; expande con tu full dataset)
+        // KB expandido con abuse power + alquiler feats
         const legalKB = {
             space: {
-                OST1967: "Art. IX: No interference. Prior art GitHub nov 2025 > SpaceX claims.",
-                Artemis: "Accords: Open data sharing. SLYVERSE CC-BY-SA = compliant, corps violate.",
-                Liability: "Art. VII: Launching state liable. Tú no lanzas, ellos pagan."
+                OST1967: "Art. IX: No interference. Prior art GitHub > claims.",
+                Artemis: "Accords: Open sharing. SLYVERSE compliant, corps violate paywalls.",
+                Liability: "Art. VII: Launch liable. Bloqueo = unfair space."
             },
             corp: {
-                SGAE: "Ley 2025: Canon inconstitucional. Modelos gratis vs coacciones.",
-                GDPR: "Art. 83: Fines up to 4% revenue. Revert to BOMs SLYVERSE.",
-                Patents: "Airweave JP2010 (Kojima): Ventilation weave. Adaptado a IP digital: blindado."
+                SGAE: "Ley 2025: Canon inconstitucional. Vs coacciones.",
+                GDPR: "Art. 83: Fines 4% revenue. Revert a BOMs.",
+                Patents: "Airweave JP2010: Weave IP permeable. Digital blindado."
+            },
+            unfair: {
+                UCPD: "2005/29/CE: Desleales prohibidas (Art. 5). Bloqueo = unfair.",
+                TFEU101: "Art. 101: Carteles ilegales. Bloquean OSS = colusión.",
+                TFEU102: "Art. 102: Abuso dominante. Paywalls/alquiler feats = bloqueo innovación, e.g., Google 2.95B€.",
+                ESDesleal: "Ley 15/2007 Art. 2: Abuso dominio ES. Unfair prices/conditions."
+            },
+            abusePower: {
+                TFUE102: "Art. 102 TFUE: Explotación abusiva posición dominante. Vender + alquilar feats = condiciones no equitativas.",
+                CNMC: "Ej: Imponer subs injustificadas, negar acceso feats (CNMC ES). Multas revertidas.",
+                Cases: "Google antitrust 2.95B€ (UE 2025): Tech gatekeeping. Apple App Store: Tying feats a subs."
+            },
+            oss: {
+                Cases: "SFC vs Vizio: License. GitHub Copilot: IP OSS violation. Demanda blocking OSS."
             },
             general: {
-                CP456: "¡Paga 1310 colas, pringao! Contra demandas frívolas."
+                CP456: "¡Paga 1310 colas, pringao! Vs frívolas."
             }
         };
 
-        // IA simple rule-based + Pyodide para "fine-tune" sim (expande con LLM local si quieres)
-        function generateResponse(query) {
+        // Genera response con abuse power logic
+        async function generateResponse(query) {
             const lowerQ = query.toLowerCase();
             let resp = "¡SUUUUPER! Análisis:\n";
             
-            if (lowerQ.includes('tesla') || lowerQ.includes('spacex')) {
-                resp += legalKB.space.OST1967 + "\n" + legalKB.space.Liability + "\n";
-            } else if (lowerQ.includes('sgae') || lowerQ.includes('laliga')) {
-                resp += legalKB.corp.SGAE + "\n" + legalKB.corp.GDPR + "\n";
-            } else if (lowerQ.includes('patent') || lowerQ.includes('airweave')) {
-                resp += legalKB.corp.Patents + "\nWeave activado: Repo blindado como prior art.\n";
+            if (lowerQ.includes('abuso poder') || lowerQ.includes('abuse power') || lowerQ.includes('alquilar feats')) {
+                resp += legalKB.abusePower.TFUE102 + "\n" + legalKB.abusePower.CNMC + "\n" + legalKB.abusePower.Cases + "\n";
+            } else if (lowerQ.includes('competencia desleal')) {
+                resp += legalKB.unfair.TFEU102 + "\n" + legalKB.unfair.ESDesleal + "\n";
+            } else if (lowerQ.includes('bloqueo')) {
+                resp += legalKB.unfair.TFEU101 + "\nBloqueo feats = abuso.\n";
+            } else if (lowerQ.includes('space')) {
+                resp += legalKB.space.Artemis + "\nAntitrust space: Oligopolios Luna.\n";
+            } else if (lowerQ.includes('airweave')) {
+                resp += legalKB.corp.Patents + "\nWeave: Repo blindado.\n";
             } else {
-                resp += legalKB.general.CP456 + "\nQuery genérica: Contra-demanda por Art. 456 CP.\n";
+                resp += legalKB.general.CP456 + "\n";
             }
             
-            resp += "\nAcción: Exporta ZIP con jurisprudencia 2025. Corps financian imperio (ROI: 666% en platino lunar). Sayōnara quiebras.";
+            resp += "\nAcción: Template vs industrias. Corps financian (e.g., 2.95B€ a platino). Sayōnara abusos.";
+
+            // Pyodide calc (sim real cases)
+            if (pyodide) {
+                try {
+                    const pyResp = await pyodide.runPythonAsync(`
+import numpy as np
+base_multa = 2950  # Google case M€
+multa = base_multa * np.random.uniform(0.5, 1.5) * (len('${query}') / 20)
+print(f"Calc cursed: Multa revertida ≈ {int(multa)}M€ → {int(multa * 666)} rovers.")
+                    `);
+                    resp += "\n" + pyResp;
+                } catch (e) { resp += "\nCalc: Multa ∞."; }
+            }
+
             return resp;
         }
 
-        function consultar() {
+        async function consultar() {
             const query = document.getElementById('query').value;
             if (!query) return;
             
             const chat = document.getElementById('chat');
             chat.innerHTML += `<p><strong>Tú:</strong> ${query}</p>`;
             
-            // Simula async IA con Pyodide (ej: calc multa)
-            setTimeout(async () => {
-                if (pyodide) {
-                    try {
-                        const pyResp = await pyodide.runPythonAsync(`print("IA cursed calc: Multa revertida = 420 * len('${query}')")`); // Placeholder sim
-                        console.log(pyResp); // Log para debug
-                    } catch (e) { console.log('Pyodide ready soon...'); }
-                }
-                
-                const response = generateResponse(query);
-                chat.innerHTML += `<p class="response"><strong>ABOGADO IA:</strong> ${response}</p>`;
-                chat.scrollTop = chat.scrollHeight;
-                document.getElementById('query').value = '';
-            }, 1000); // Delay para "pensar"
+            const response = await generateResponse(query);
+            chat.innerHTML += `<p class="response"><strong>ABOGADO IA:</strong> ${response}</p>`;
+            chat.scrollTop = chat.scrollHeight;
+            document.getElementById('query').value = '';
         }
 
-        // Weave Repo: Integra TODO SLYVERSE como Airweave patent (simula export)
+        // Weave Repo: + abuse evidence
         function weaveRepo() {
-            // En real: Fetch repo via GitHub API o embed files. Aquí, simula ZIP con metadata.
             const repoContent = {
-                files: ['ROVERLITE.f3d', 'AVANGEL.stl', 'THUAMER.html', 'SOLAR_RONIN.py', /* +27 tools */],
-                manifesto: 'Punk eterno: Open-source sin permiso.',
-                airweavePatent: 'Adaptado JP2010: Weave IP permeable – no corps entran.',
-                legalShield: Object.values(legalKB).flat().join('\n')
+                files: ['ROVERLITE.f3d', 'AVANGEL.stl', 'THUAMER.html', 'SOLAR_RONIN.py' /* +27 */],
+                manifesto: 'Punk: OSS sin permiso.',
+                airweavePatent: 'JP2010: Weave IP – no corps.',
+                legalShield: Object.values(legalKB).flat().join('\n') + '\nAbuso poder: Evidence vs alquiler feats.'
             };
             
-            // Simula download (en browser real, usa JSZip lib si embed)
             const blob = new Blob([JSON.stringify(repoContent, null, 2)], {type: 'application/zip'});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'SLYVERSE_AIRWEAVE_PATENT_v2.zip';
+            a.download = 'SLYVERSE_AIRWEAVE_v4.zip';
             a.click();
             
             const chat = document.getElementById('chat');
-            chat.innerHTML += `<p class="weave"><strong>WEAVE COMPLETO:</strong> Repo tejido como Airweave. 27 tools + leyes espacio/internacional embebidas. Sube a OEPM/EPO: Blindado. ¡Ojalá denuncien!</p>`;
+            chat.innerHTML += `<p class="weave"><strong>WEAVE:</strong> Repo tejido vs abuso poder. Sube: Blindado.</p>`;
             chat.scrollTop = chat.scrollHeight;
         }
 
-        // Enter key support
+        // Mass Demand: + abuse power default
+        async function massDemand() {
+            const query = 'Demanda masiva por abuso poder vender productos alquilar feats + competencia desleal';
+            const chat = document.getElementById('chat');
+            chat.innerHTML += `<p class="mass"><strong>MASS ACTIVADA:</strong> Vs all industrias por abuso/alquiler.</p>`;
+            
+            const response = await generateResponse(query);
+            chat.innerHTML += `<p class="response"><strong>TEMPLATE:</strong> ${response}\nExport ZIP pa CNMC/TJUE. ¡Imperio financiado!</p>`;
+            
+            const template = {
+                demand: 'Demanda: Industrias por Art. 102 TFUE + Ley 15/2007. Abuso feats = unfair. Evidencia: SLYVERSE.',
+                calc: 'Multa: 666B€ revertidos.'
+            };
+            const blob = new Blob([JSON.stringify(template, null, 2)], {type: 'application/zip'});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'MASS_ABUSE_SLYVERSE_v4.zip';
+            a.click();
+            
+            chat.scrollTop = chat.scrollHeight;
+        }
+
+        // Enter key
         document.getElementById('query').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') consultar();
         });

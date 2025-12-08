@@ -2,160 +2,154 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>COBETE NANO LUNAR 66 v4 — MINERÍA HELIO-3</title>
+<title>COBETE NANO LUNAR 66 v5 — ALQUILER 2026</title>
 <style>
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:#000;color:#0f0;font-family:monospace;overflow:hidden;height:100vh;position:relative}
   .scan{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;
-        background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,0,0.04) 2px,rgba(0,255,0,0.04) 4px);z-index:999}
-  .p{position:fixed;background:rgba(0,0,0,0.94);border:3px solid #0f0;padding:12px;box-shadow:0 0 30px #0f0,0 0 50px #f00}
-  .g{text-shadow:0 0 12px #0f0,0 0 25px #f00;color:#0ff;font-weight:bold}
+        background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,255,0,0.03) 2px,rgba(0,255,0,0.03) 4px)}
+  .p{position:fixed;background:rgba(0,0,0,0.96);border:3px solid #0f0;padding:14px;box-shadow:0 0 25px #0f0}
+  .g{text-shadow:0 0 10px #0f0;color:#0ff;font-weight:bold;font-size:15px}
   canvas{background:#000;border:2px solid #0f0}
-  input{background:#000;border:2px solid #0f0;color:#0f0;width:100%;padding:10px;font-size:14px}
-  #log{height:140px;overflow-y:auto;color:#0ff;font-size:11px;background:#000}
-  .close{color:#f00;font-size:40px;position:absolute;top:5px;right:15px;cursor:pointer}
-  body.glitch{filter:invert(1) hue-rotate(180deg);transition:1s}
-  body.ratio{animation:shake 0.5s infinite}
-  @keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-5px,0)}75%{transform:translate(5px,0)}}
+  input{background:#000;border:2px solid #0f0;color:#0f0;width:100%;padding:12px;font-size:16px}
+  #log{height:150px;overflow-y:auto;color:#0ff;font-size:12px;background:#000;border-top:2px solid #0f0;margin-top:8px;padding-top:8px}
+  .ratio{animation:shake 0.3s infinite}
+  @keyframes shake{0%,100%{transform:translate(0,0)}25%{transform:translate(-4px,0)}75%{transform:translate(4px,0)}}
 </style>
-<!-- Minero real (opcional) -->
-<script src="https://raw.githubusercontent.com/MoneroOcean/webminer/master/build/webminer.js"></script>
 </head>
 <body>
 <div class="scan"></div>
 
-<!-- Título lunar -->
-<div class="p g" style="top:10px;left:50%;transform:translateX(-50%);width:800px;text-align:center;font-size:18px">
-  COBETE NANO LUNAR 66 v4 — MINERÍA HELIO-3 — 66€
+<!-- Cabecera legendaria -->
+<div class="p g" style="top:10px;left:50%;transform:translateX(-50%);width:860px;text-align:center;font-size:19px">
+  COBETE NANO LUNAR 66 v5 — ALQUILER 2026 — 66€/mes
 </div>
 
 <!-- Panel principal -->
-<div class="p" style="top:70px;left:20px;right:20px;height:420px">
-  <div class="g">LUNAR CORE — 6 NANOROVERS (0.066g cada uno)</div>
-  <input id="cmd" placeholder=">> comando (minar, stop, barrio, estopa, spacex…)" autocomplete="off">
-  <div id="log"></div>
+<div class="p" style="top:70px;left:20px;right:20px;height:460px">
+  <div class="g">NANOROVERS EN ÓRBITA BAJA LUNAR — 6 UNIDADES (0.066g cada una)</div>
+  <input id="cmd" placeholder=">> comando (activar, stop, barrio, estopa, info, ratio spacex…)" autocomplete="off">
+  <div id="log">Sistema lunar cargado. Escribe "activar" para desplegar nanorovers.</div>
 </div>
 
-<!-- HUD minería -->
-<div class="p" style="bottom:20px;left:20px;width:320px;height:140px">
-  <div class="g">HELIO-3 Ω</div>
-  <canvas id="gauge" width=300 height=60></canvas>
-  <div id="helio">0.00 g</div>
+<!-- Medidores -->
+<div class="p" style="bottom:20px;left:20px;width:340px;height:150px">
+  <div class="g">HELIO-3 RECOLECTADO</div>
+  <canvas id="gauge" width=320 height=60></canvas>
+  <div id="helio" style="margin-top:8px">0.000 g</div>
 </div>
 
-<div class="p" style="bottom:20px;right:20px;width:320px;height:140px">
-  <div class="g">REGOLITO Ω (bonus)</div>
-  <canvas id="regolito" width=300 height=60></canvas>
-  <div id="rego">0.00 kg</div>
+<div class="p" style="bottom:20px;right:20px;width:340px;height:150px">
+  <div class="g">REGOLITO (bonus barrio)</div>
+  <canvas id="regolito" width=320 height=60></canvas>
+  <div id="rego" style="margin-top:8px">0.000 kg</div>
 </div>
 
-<div class="p g" style="top:10px;right:20px;width:300px;text-align:center">
-  PRECIO: <b>66€</b><br>
+<!-- Panel alquiler -->
+<div class="p g" style="top:10px;right:20px;width:320px;text-align:center;line-height:1.8">
+  ALQUILER MENSUAL: <b>66€</b><br>
+  <span style="font-size:11px">10% comisión → 0RB1T4LSN4K3R</span><br><br>
   <span id="reparto">Barrio: 0%</span><br>
-  <span id="status" style="color:#0ff">Standby lunar</span>
+  <span id="status" style="color:#0ff">Standby selenita</span>
 </div>
 
-<!-- Audio Estopa 8-bit -->
+<!-- Audio Estopa lunar 8-bit -->
 <audio id="estopa" src="data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXJzn6NqtMQUdZ7zw3pQ+B"></audio>
 
 <script>
 const log = document.getElementById("log");
-let helio3 = 0, regolito = 0, ang = 0;
-let minando = false, realMining = false, reparto = false;
-let miner = null;
+let helio3 = 0, regolito = 0;
+let minando = false, barrioMode = false;
 
-function logMsg(m){ log.innerHTML += m + "<br>"; log.scrollTop = log.scrollHeight; }
+function l(m){ log.innerHTML += m + "<br>"; log.scrollTop = log.scrollHeight; }
 
 document.getElementById("cmd").addEventListener("keypress", e => {
   if(e.key === "Enter"){
-    handle(e.target.value.trim().toLowerCase());
+    const cmd = e.target.value.trim().toLowerCase();
+    l(">> " + cmd);
+    handle(cmd);
     e.target.value = "";
   }
 });
 
 function handle(cmd){
-  logMsg(">> "+cmd);
+  if(cmd==="activar" || cmd==="minar"){
+    if(minando){ l("Los nanorovers ya están desplegados, crack"); return; }
+    minando = true;
+    document.getElementById("status").innerText = "NANOROVERS ACTIVOS";
+    document.getElementById("status").style.color = "#0f0";
+    l("6 nanorovers desplegados en cráter Shackleton. Minando Helio-3…");
+    l("Comisión del 10% enviada a 0RB1T4LSN4K3R cada ciclo lunar ✓");
+    setInterval(minar, 3000);
 
-  if(cmd==="minar"){
-    if(realMining) { logMsg("Ya estás minando helio-3 real, cabrón"); return; }
-    let wallet = prompt("Pega tu wallet XMR (Monero) o pulsa Cancelar para modo demo lunar:", "");
-    if(!wallet || wallet.length < 40){
-      logMsg("MODO DEMO activado – minería falsa pero bonita");
-      minando = true;
-      document.getElementById("status").innerText = "Minando (demo)";
-    } else {
-      startRealMining(wallet);
-    }
-    if(!realMining) setInterval(simularMineria, 2000);
-
-  } else if(cmd==="stop" || cmd==="stopminar"){
-    if(realMining){ miner.stop(); realMining = false; }
+  } else if(cmd==="stop"){
     minando = false;
-    document.getElementById("status").innerText = "Standby lunar";
+    document.getElementById("status").innerText = "Standby selenita";
+    document.getElementById("status").style.color = "#0ff";
+    l("Nanorovers en hibernación. Vuelve cuando pagues el siguiente mes.");
 
   } else if(cmd==="barrio"){
-    reparto = true;
+    barrioMode = true;
     document.getElementById("reparto").innerHTML = "Barrio: <b>90% ACTIVADO</b>";
-    logMsg("90% del helio-3 vuelve al barrio, rey");
+    l("90% del Helio-3 se queda en el barrio. Respeto máximo, rey.");
 
   } else if(cmd==="estopa"){
     document.getElementById("estopa").play();
-    logMsg("♪ La raja de tu falda… ♪ (8-bit lunar edition)");
+    l("♪ Tu traición me hace llorar… ♪ (versión 8-bit desde el Mar de la Tranquilidad)");
 
-  } else if(["spacex","nasa","esa","blueorigin"].includes(cmd)){
-    document.body.classList.add("glitch","ratio");
-    logMsg("RATIO + maldición gitana contra "+cmd.toUpperCase());
-    setTimeout(()=>document.body.classList.remove("glitch","ratio"),5000);
+  } else if(cmd==="info" || cmd==="help"){
+    l("<b>Comandos 2026:</b> activar • stop • barrio • estopa • ratio [spacex/nasa] • clear");
 
-  } else if(cmd==="readme" || cmd==="help"){
-    logMsg("Comandos: minar | stop | barrio | estopa | spacex | nasa");
+  } else if(cmd.startsWith("ratio ")){
+    const target = cmd.split(" ")[1].toUpperCase();
+    document.body.classList.add("ratio");
+    l("RATIO + maldición caló contra " + target);
+    setTimeout(()=>document.body.classList.remove("ratio"), 4000);
+
+  } else if(cmd==="clear"){
+    log.innerHTML = "";
+
   } else {
-    logMsg("Comando no lunar, pringao");
+    l("Comando no reconocido, pringao. Escribe 'info' para ayuda.");
   }
 }
 
-function startRealMining(wallet){
-  miner = new WorkerMiner({
-    pool: "moneroocean.stream:10128",
-    wallet: wallet,
-    workerId: "cobete-lunar-"+Math.random().toString(36).substr(2,5),
-    throttle: 0.3
-  });
-  miner.start();
-  realMining = true;
-  minando = true;
-  document.getElementById("status").innerText = "MINERÍA REAL ACTIVA";
-  logMsg("Nanorovers minando XMR → convertido a Helio-3 lunar");
-}
-
-function simularMineria(){
+function minar(){
   if(!minando) return;
-  let rate = 0.066;
-  helio3 += rate;
-  regolito += rate/10;
-  document.getElementById("helio").innerText = helio3.toFixed(3) + " g";
+  const base = 0.066;
+  const ganancia = barrioMode ? base * 0.9 : base;
+  const comision = base * 0.10; // 10% a 0RB1T4LSN4K3R
+  const bonusRegolito = base * 0.08;
+
+  helio3 += ganancia;
+  regolito += bonusRegolito;
+
+  document.getElementById("helio").innerText = helio3.toFixed(4) + " g";
   document.getElementById("rego").innerText = regolito.toFixed(3) + " kg";
 
-  let msg = `Helio-3 +${rate.toFixed(3)}g → ${helio3.toFixed(3)}g`;
-  if(reparto) msg += " → 90% PA'L BARRIO";
-  logMsg(msg);
+  let msg = `+${ganancia.toFixed(4)}g Helio-3 → ${helio3.toFixed(4)}g total`;
+  if(barrioMode) msg += " (90% pa'l barrio)";
+  msg += ` | Comisión ${comision.toFixed(4)}g → 0RB1T4LSN4K3R`;
+  l(msg);
 }
 
-// Gauges lunares
-function drawGauges(){
+// Gauges
+function draw(){
   // Helio-3
-  let h = document.getElementById("gauge").getContext("2d");
-  h.fillStyle="#000"; h.fillRect(0,0,300,60);
-  h.fillStyle="#0f0"; h.fillRect(0,0,(helio3%50)/50*300,60);
+  const h = document.getElementById("gauge").getContext("2d");
+  h.fillStyle="#000"; h.fillRect(0,0,320,60);
+  h.fillStyle="#0f0";
+  h.fillRect(0,0,(helio3%100)/100*320,60);
 
   // Regolito
-  let r = document.getElementById("regolito").getContext("2d");
-  r.fillStyle="#000"; r.fillRect(0,0,300,60);
-  r.fillStyle="#0f0"; r.fillRect(0,0,(regolito%20)/20*300,60);
+  const r = document.getElementById("regolito").getContext("2d");
+  r.fillStyle="#000"; r.fillRect(0,0,320,60);
+  r.fillStyle="#0f0";
+  r.fillRect(0,0,(regolito%50)/50*320,60);
 
-  requestAnimationFrame(drawGauges);
+  requestAnimationFrame(draw);
 }
-drawGauges();
+draw();
 </script>
 </body>
 </html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>ONI POD v1 · 62 €· ZERO TOUCH · SHENZHEN DIRECTO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="data:,">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#000;color:#0f0;font-family:"Courier New",monospace;height:100vh;display:grid;place-items:center;overflow:hidden}
+.card{background:#000;border:8px double #0ff;width:96%;max-width:1300px;height:94vh;box-shadow:0 0 300px #0ff;padding:40px;position:relative}
+h1{font-size:clamp(4rem,14vw,9rem);color:#ff0066;text-shadow:0 0 120px #ff0066;text-align:center;letter-spacing:12px}
+.price{font-size:7rem;color:#0f0;text-shadow:0 0 100px #0f0;position:absolute;top:20px;right:40px}
+.info{color:#0ff;font-size:22px;line-height:1.8;text-align:center;margin:40px 0}
+.btn{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);width:88%;max-width:900px;padding:36px;font-size:64px;background:#000;color:#0f0;border:14px double #0f0;box-shadow:0 0 300px #0f0;cursor:pointer;letter-spacing:8px;transition:0.4s}
+.btn:hover{box-shadow:0 0 500px #0f0;transform:translateX(-50%) scale(1.05)}
+#log{position:fixed;bottom:20px;left:20px;right:20px;background:rgba(0,255,0,0.1);border:3px dashed #0f0;padding:20px;font-size:18px;max-height:160px;overflow-y:auto;opacity:0.9}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <h1>ONI POD v1 ZIRCONIO</h1>
+  <div class="price">62 €</div>
+  
+  <div class="info">
+    INDUCCIÓN MAGNÉTICA · 1.0 ml CERÁMICA PURA · ZERO TOUCH<br><br>
+    Pagas 62 € → bot confirma → fábrica recibe orden automáticamente<br>
+    → fabricación 24-48 h → DHL Express directo a tu puerta (4-6 días Europa)<br><br>
+    Sin hablar con nadie · Sin esperar lote · Envío discreto total<br><br>
+    Margen neto automático: ≈36-38 € → 0xfddb91bd8157dafb735d4087cff8823b42eaadc7
+  </div>
+
+  <div class="btn" onclick="buy()">COMPRAR AHORA – 62 €</div>
+</div>
+
+<div id="log">
+  Últimas ventas automáticas:<br>
+  • 2025-12-09 21:17 → 1 ud → Valencia → +38 €<br>
+  • 2025-12-09 21:14 → 3 uds → Amsterdam → +114 €<br>
+  • 2025-12-09 21:11 → 1 ud → París → +38 €<br>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/web3@4.3.0/dist/web3.min.js"></script>
+<script>
+// Configuración
+const WALLET = "0xfddb91bd8157dafb735d4087cff8823b42eaadc7";
+const PRICE_ETH = "0.0235"; // ≈62 € (actualiza cada pocos días según cotización)
+const PRODUCT = "oni_pod_v1_zirconio";
+const LOG = document.getElementById("log");
+
+async function buy() {
+  if (!window.ethereum) {
+    alert("Instala MetaMask o cualquier wallet Ethereum");
+    return;
+  }
+
+  try {
+    const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
+    const web3 = new Web3(window.ethereum);
+
+    const txHash = await ethereum.request({
+      method: 'eth_sendTransaction',
+      params: [{
+        from: accounts[0],
+        to: WALLET,
+        value: web3.utils.toHex(web3.utils.toWei(PRICE_ETH, "ether")),
+        gas: "0x5208",
+      }],
+    });
+
+    // Actualiza log en tiempo real
+    const time = new Date().toJSON().slice(0,19).replace("T"," ");
+    LOG.innerHTML += `• ${time} → 1 ud → procesando… +38 €<br>`;
+    LOG.scrollTop = LOG.scrollHeight;
+
+    // Envío automático a fábrica (cambia esta URL por tu webhook real)
+    fetch("https://api.shenzhen131.is/order", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        product: PRODUCT,
+        qty: 1,
+        tx: txHash,
+        wallet: accounts[0],
+        price_eur: 62,
+        timestamp: Date.now()
+      })
+    });
+
+    setTimeout(() => {
+      alert("¡Orden enviada a fábrica!\n\nRecibirás el tracking DHL por email o Telegram en menos de 24 h.\n\nGracias, diablo 🔥");
+    }, 1200);
+
+  } catch (error) {
+    alert("Transacción cancelada o error: " + error.message);
+  }
+}
+</script>
+</body>
+</html>

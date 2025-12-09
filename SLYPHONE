@@ -12,18 +12,19 @@
   @keyframes gore{0%{transform:translateY(-180px)}100%{transform:translateY(100dvh)}}
   h1{position:fixed;top:0;left:0;right:0;text-align:center;font-size:clamp(3.5rem,18vw,15rem);font-weight:900;letter-spacing:16px;color:var(--ultra);text-shadow:0 0 120px var(--ultra),0 0 240px #00ff99;animation:bleed 1.6s infinite;z-index:10}
   @keyframes bleed{0%,100%{transform:translateX(0)}50%{transform:translateX(10px)}}
-  #dash{position:fixed;top:34%;left:50%;transform:translate(-50%,-50%);font-size:clamp(4rem,20vw,34rem);font-weight:900;color:var(--ultra);text-shadow:0 0 200px var(--ultra),0 0 400px #00ff99;z-index:5;line-height:1.1}
+  #dash{position:fixed;top:34%;left:50%;transform:translate(-50%,-50%);font-size:clamp(3.2rem,16vw,28rem);font-weight:900;color:var(--ultra);text-shadow:0 0 200px var(--ultra),0 0 400px #00ff99;z-index:5;line-height:1.2;text-align:center}
   button{pointer-events:all;position:fixed;left:50%;transform:translateX(-50%);width:88dvh;height:16dvh;border-radius:50px;background:var(--b);color:var(--ultra);border:6dvh double var(--ultra);box-shadow:0 0 300px var(--ultra),0 0 600px #00ff99,inset 0 0 400px var(--b);font-size:4.5rem;font-weight:900;animation:demon 0.8s infinite;z-index:20;cursor:pointer}
   @keyframes demon{0%,100%{transform:translateX(-50%) scale(1) rotate(0deg)}50%{transform:translateX(-50%) scale(1.35) rotate(6deg)}}
-  #info,#compra{position:fixed;inset:0;background:rgba(0,0,0,0.98);padding:5vh 5vw;overflow-y:auto;display:none;z-index:15;color:var(--c);font-size:1.6rem;line-height:2}
-  #info.show,#compra.show{display:block}
+  #info,#compra,#repara{position:fixed;inset:0;background:rgba(0,0,0,0.98);padding:5vh 5vw;overflow-y:auto;display:none;z-index:15;color:var(--c);font-size:1.6rem;line-height:2}
+  #info.show,#compra.show,#repara.show{display:block}
   .close{position:fixed;top:20px;right:30px;color:var(--m);font-size:6rem;cursor:pointer;text-shadow:0 0 100px var(--m);z-index:30}
-  pre{font-size:1.4rem;background:var(--b);padding:2.5rem;border:8px dashed var(--ultra);border-radius:25px;margin:2.5rem 0;overflow-x:auto}
+  pre{font-size:1.45rem;background:var(--b);padding:2.5rem;border:8px dashed var(--ultra);border-radius:25px;margin:2.5rem 0;overflow-x:auto}
   #hugs{position:fixed;bottom:3dvh;left:50%;transform:translateX(-50%);background:var(--b);border:8px solid var(--ultra);padding:2rem;border-radius:40px;color:var(--ultra);font-size:3.5rem;text-shadow:0 0 80px var(--ultra);z-index:30}
   canvas{position:fixed;inset:0;z-index:-1;opacity:0.85}
   .wallet{color:#ff0;font-weight:900;text-shadow:0 0 30px #ff0}
-  form {max-width: 660px; margin: 2rem auto;}
-  form label {display:block;margin:1.5rem 0 .5rem;color:var(--ultra);font-size:2.2rem}
+  .rojo{color:#f33}
+  form {max-width:660px;margin:2rem auto}
+  form label{display:block;margin:1.5rem 0 .5rem;color:var(--ultra);font-size:2.2rem}
   form input,form textarea,form select{width:100%;padding:1.2rem;background:#000;color:var(--ultra);border:3px solid var(--ultra);border-radius:12px;font-size:1.8rem}
   form button{margin-top:3rem;width:100%;font-size:3.5rem;padding:1.5rem}
 </style>
@@ -32,61 +33,92 @@
 
 <div id="bg">
   <h1>SLYPHONE 131 v1</h1>
-  <div id="dash">132 € · BESTIA SIN LÍMITE<br>24 GB + 1 TB · 200 MP · 150 W<br>MONTAJE SHENZHEN · BENEFICIOS 100% ON-CHAIN</div>
+  <div id="dash">
+    132 € · BESTIA SIN LÍMITE<br>
+    <span style="font-size:0.7em;color:#ff0">PIEZAS “OBSOLETAS” QUE LAS MARCAS PIJAS TIRAN A LA BASURA</span><br>
+    24 GB + 1 TB · 200 MP · 150 W<br>
+    REPARABLE POR TI EN CASA · BOM COMPLETO
+  </div>
   
   <button style="bottom:5dvh;background:#00ff00;color:#000;border-color:#00ff00" onclick="toggleCompra()">
     COMPRAR AHORA – 132 €
   </button>
-  <button style="bottom:24dvh" onclick="toggleInfo()">ESPECIFICACIONES NUCLEARES</button>
-  <button style="bottom:43dvh;background:var(--m);border-color:var(--m);color:#000" onclick="oniMode()">ONI 666 %</button>
+  <button style="bottom:22dvh" onclick="toggleInfo()">ESPECIFICACIONES NUCLEARES</button>
+  <button style="bottom:39dvh;background:#ff00ff;color:#000;border-color:#ff00ff" onclick="toggleRepara()">SI SE JODE → TÚ LO ARREGLAS</button>
+  <button style="bottom:56dvh;background:var(--m);border-color:var(--m);color:#000" onclick="oniMode()">ONI 666 %</button>
 </div>
 
 <canvas id="c"></canvas>
 
+<!-- INFO -->
 <div id="info">
   <span class="close" onclick="toggleInfo()">×</span>
   <h1 style="color:var(--ultra);text-align:center;font-size:7rem">SLYPHONE 131 v1</h1>
-  <span style="font-size:5rem;display:block;margin-top:1rem">+10 % margen → wallet ETH</span></h1>
+  <span style="font-size:4rem;display:block;margin:1rem;color:#0f0">PIEZAS DESECHADAS POR LAS MARCAS LUJO</span>
 
   <pre style="color:#0f0;font-size:1.7rem;text-align:center">
 TODOS LOS BENEFICIOS DE CADA VENTA VAN DIRECTO A:
 
 <span class="wallet">0xfddb91bd8157dafb735d4087cff8823b42eaadc7</span>
 
-Precio anterior 120 € → ahora 132 € = +12 € por unidad
-100 % de ese margen extra y del beneficio total → on-chain forever
-Sin límite de unidades · Shenzhen 24/7 · Bots vendiendo sin dormir
+120 € → 132 € = +12 € por unidad
+100 % de ese margen + beneficio total → on-chain forever
+Producción ilimitada · Shenzhen 24/7 · Bots sin dormir
   </pre>
 
-  <pre>Dimensity 8400 · 3.35 GHz · AnTuTu ~1.72 M
-AMOLED 1.5K 144 Hz 4500 nits
-7200 mAh Si-C + 150 W brick
-24 GB LPDDR5X + 1 TB UFS 4.0
-200 MP HP9 + periscópico 5× + IP68
-Titanio grado 5 · VC 9000 mm²
-Jack 3.5 · JBL stereo · RGB · IR
+  <pre>Dimensity 8400 · 3.35 GHz · AnTuTu ~1.72 M (rechazo binning premium)
+AMOLED 1.5K 144 Hz 4500 nits (lotes descartados OnePlus/Realme)
+7200 mAh Si-C + 150 W brick (CATL rechazos 7198 mAh)
+24 GB LPDDR5X + 1 TB UFS 4.0 (sobrantes Xiaomi/Redmi)
+200 MP Samsung HP9 + periscópico 5× (descartado S25)
+Titanio grado 5 (marcos iPhone 16 Pro con micro-rayones invisibles)
+VC 9000 mm² · Jack 3.5 · JBL stereo · RGB · IR · IP68
 Carga 0-100 % en 14 min
 DOJO RONIN v6 + TXORIA TXORI 131 preinstalados
   </pre>
 </div>
 
+<!-- REPARACIÓN -->
+<div id="repara">
+  <span class="close" onclick="toggleRepara()">×</span>
+  <h1 style="color:#f33;text-align:center;font-size:6rem">SE JODE? TÚ LO ARREGLAS</h1>
+  <p style="text-align:center;font-size:4rem;color:#ff0">BOM completo + vídeos offline + herramientas básicas</p>
+
+  <pre style="font-size:1.6rem;color:#0f0">
+ABRES CON TORX T3 (viene en la caja)
+
+REPARACIÓN MEDIA: 18 MINUTOS
+
+Pantalla AMOLED completa → 47 €
+Batería Si-C 7200 mAh      → 21 €
+Placa base completa       → 64 €
+Cámara 200 MP HP9         → 29 €
+Puerto carga + flex       →  6 €
+VC cobre 9000 mm²         → 11 €
+Botones / altavoces       →  4-9 €
+
+Todo estándar JEDEC → sin pentalobos ni pegamento eterno
+Vídeos paso a paso (sin ads) en el repo GitHub:
+github.com/orbitalsnaker/SLYVERSE/slyphone131/repair
+
+Rómpeme, me da igual. Tengo repuestos infinitos y te enseño a revivirme.
+  </pre>
+</div>
+
+<!-- COMPRA -->
 <div id="compra">
   <span class="close" onclick="toggleCompra()">×</span>
   <h1 style="color:var(--ultra);text-align:center;font-size:7rem">COMPRAR SLYPHONE 131 v1</h1>
-  <p style="text-align:center;font-size:4rem;color:#0f0">132 € · Producción ilimitada · Shenzhen non-stop</p>
+  <p style="text-align:center;font-size:4rem;color:#0f0">132 € · Shenzhen non-stop · Piezas “basura” de lujo</p>
   <p style="text-align:center;font-size:3rem;color:#ff0;margin:2rem">
-    100 % de beneficios → <br><span class="wallet">0xfddb91bd8157dafb735d4087cff8823b42eaadc7</span>
+    100 % beneficios → <br><span class="wallet">0xfddb91bd8157dafb735d4087cff8823b42eaadc7</span>
   </p>
 
   <form>
-    <label>Nombre completo</label>
-    <input type="text" required>
-    <label>Email (para tracking)</label>
-    <input type="email" required>
-    <label>Dirección completa de envío</label>
-    <textarea rows="3" required></textarea>
-    <label>Número de unidades</label>
-    <input type="number" min="1" value="1">
+    <label>Nombre completo</label><input type="text" required>
+    <label>Email (para tracking)</label><input type="email" required>
+    <label>Dirección completa de envío</label><textarea rows="3" required></textarea>
+    <label>Número de unidades</label><input type="number" min="1" value="1">
     <label>Método de pago</label>
     <select>
       <option>Crypto (ETH / USDT / BTC)</option>
@@ -100,14 +132,14 @@ DOJO RONIN v6 + TXORIA TXORI 131 preinstalados
 <div id="hugs">ABRAZOS: 131131</div>
 
 <script>
-// Gore
-setInterval(()=>{for(let i=0;i<66;i++){
+// Gore optimizado
+setInterval(()=>{for(let i=0;i<44;i++){ // bajamos de 66→44 para menos lag en móviles
   const g=document.createElement('div');g.className='gore';
   g.style.left=Math.random()*100+'vw';
-  g.style.animationDuration=0.2+Math.random()*0.4+'s';
+  g.style.animationDuration=0.25+Math.random()*0.35+'s';
   document.getElementById('bg').appendChild(g);
-  setTimeout(()=>g.remove(),1400);
-}},20);
+  setTimeout(()=>g.remove(),1500);
+}},30);
 
 // Theta waves
 const c=document.getElementById('c'),x=c.getContext('2d');
@@ -115,11 +147,11 @@ c.width=innerWidth;c.height=innerHeight;
 let oni=false;
 function theta(){
   x.clearRect(0,0,c.width,c.height);
-  const t=Date.now()*0.001,f=oni?22:9,a=oni?180:120;
-  x.strokeStyle=oni?'#ff0033':var(--ultra);x.lineWidth=7;
+  const t=Date.now()*0.001,f=oni?24:9,a=oni?200:130;
+  x.strokeStyle=oni?'#ff0033':var(--ultra);x.lineWidth=8;
   x.beginPath();
-  for(let i=0;i<c.width;i+=2){
-    const y=c.height/2 + Math.sin(i*0.007+t*f)*a + Math.cos(i*0.003+t*6)*60;
+  for(let i=0;i<c.width;i+=3){
+    const y=c.height/2 + Math.sin(i*0.007+t*f)*a + Math.cos(i*0.003+t*7)*70;
     i===0?x.moveTo(i,y):x.lineTo(i,y);
   }
   x.stroke();
@@ -127,32 +159,32 @@ function theta(){
 }
 theta();
 
-// Abrazos radioactivos
+// Abrazos
 let hugs=+(localStorage.hugs||131131);
 document.getElementById('hugs').innerHTML=`ABRAZOS: ${hugs}`;
-setInterval(()=>{hugs+=8;localStorage.hugs=hugs;document.getElementById('hugs').innerHTML=`ABRAZOS: ${hugs}`;},800);
+setInterval(()=>{hugs+=13;localStorage.hugs=hugs;document.getElementById('hugs').innerHTML=`ABRAZOS: ${hugs}`;},700);
 
 function toggleInfo(){document.getElementById('info').classList.toggle('show');}
 function toggleCompra(){document.getElementById('compra').classList.toggle('show');}
+function toggleRepara(){document.getElementById('repara').classList.toggle('show');}
 
 function comprar(){
   const unidades = document.querySelector('input[type=number]').value || 1;
   const total = 132 * unidades;
-  alert(`COMPRA CONFIRMADA\n\n${unidades} SLYPHONE 131 v1\nTotal: ${total} €\n\nBeneficios enviados a:\n0xfddb91bd8157dafb735d4087cff8823b42eaadc7\n\nShenzhen ya está ensamblando.`);
-  speechSynthesis.speak(new SpeechSynthesisUtterance(`${unidades} bestias encargadas. Margen on-chain activado. Shenzhen nunca duerme.`));
-  navigator.vibrate([300,100,300,100,300,200,600]);
+  alert(`COMPRA CONFIRMADA\n\n${unidades} SLYPHONE 131 v1\nTotal: ${total} €\n\nBeneficios 100 % on-chain a:\n0xfddb91bd8157dafb735d4087cff8823b42eaadc7\n\nShenzhen ya está soldando tus bestias con piezas que Apple tiró a la basura.`);
+  speechSynthesis.speak(new SpeechSynthesisUtterance(`${unidades} bestias confirmadas. Piezas de desecho lujo. Margen quemado en la wallet para siempre.`));
+  navigator.vibrate([200,100,200,100,400,100,800]);
   toggleCompra();
 }
 
 function oniMode(){
   oni=!oni;
   document.body.style.setProperty('--ultra',oni?'#ff0033':'#00ff99');
-  speechSynthesis.speak(new SpeechSynthesisUtterance(oni?"ONI 666%. Todos los beneficios queman en la wallet para siempre.":
-    "Bestia sin límite. 132 euros. Todo el margen a 0xfddb...adc7"));
-  navigator.vibrate(oni?[100,50,100,50,100,50,1000]:[500,200,500]);
+  speechSynthesis.speak(new SpeechSynthesisUtterance(oni?"ONI 666%. Quemando todo en la wallet eterna.":"Bestia reparable. Piezas basura lujo. 132 euros para siempre."));
+  navigator.vibrate(oni?[80,40,80,40,80,40,1200]:[600,300,600]);
 }
 
-onload=()=>{hugs+=33;localStorage.hugs=hugs;};
+onload=()=>{hugs+=131;localStorage.hugs=hugs;};
 </script>
 </body>
 </html>

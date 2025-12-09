@@ -17,10 +17,16 @@
   @keyframes demon{0%,100%{transform:translateX(-50%) scale(1) rotate(0deg)}50%{transform:translateX(-50%) scale(1.35) rotate(6deg)}}
   #info{position:fixed;inset:0;background:rgba(0,0,0,0.98);padding:5vh 5vw;overflow-y:auto;display:none;z-index:15;color:var(--c);font-size:1.6rem;line-height:2}
   #info.show{display:block}
+  #compra{position:fixed;inset:0;background:rgba(0,0,0,0.98);padding:5vh 5vw;overflow-y:auto;display:none;z-index:15;color:var(--c);font-size:1.6rem;line-height:2}
+  #compra.show{display:block}
   .close{position:fixed;top:20px;right:30px;color:var(--m);font-size:6rem;cursor:pointer;text-shadow:0 0 100px var(--m);z-index:30}
   pre{font-size:1.4rem;background:var(--b);padding:2.5rem;border:8px dashed var(--ultra);border-radius:25px;margin:2.5rem 0;overflow-x:auto}
   #hugs{position:fixed;bottom:3dvh;left:50%;transform:translateX(-50%);background:var(--b);border:8px solid var(--ultra);padding:2rem;border-radius:40px;color:var(--ultra);font-size:3.5rem;text-shadow:0 0 80px var(--ultra);z-index:30}
   canvas{position:fixed;inset:0;z-index:-1;opacity:0.85}
+  form {max-width: 600px; margin: 0 auto; text-align: left;}
+  form label {display: block; margin: 1rem 0 0.5rem; color: var(--ultra); font-size: 2rem;}
+  form input, form textarea, form select {width: 100%; padding: 1rem; background: var(--b); color: var(--ultra); border: 2px solid var(--ultra); border-radius: 10px; font-size: 1.8rem;}
+  form button {margin-top: 2rem; width: 100%; height: auto; font-size: 3rem; padding: 1rem;}
 </style>
 </head>
 <body>
@@ -30,6 +36,7 @@
   <div id="dash">120 € · LA BESTIA FINAL<br>24 GB + 1 TB UFS 4.0<br>200 MP + 150 W<br>DIMENSITY 8400 TITANIO</div>
   <button style="bottom:5dvh" onclick="toggleInfo()">ESPECIFICACIONES NUCLEARES</button>
   <button style="bottom:26dvh;background:var(--m);border-color:var(--m);color:#000" onclick="oniMode()">ONI 666 %</button>
+  <button style="bottom:47dvh;background:var(--g);border-color:var(--g);color:var(--b)" onclick="toggleCompra()">COMPRAR AHORA</button>
 </div>
 
 <canvas id="c"></canvas>
@@ -51,6 +58,7 @@ Chasis titanio grado 5 + VC 9000 mm²
 Jack 3.5 mm · stereo JBL · RGB ring · IR
 Carga 0-100 % en 14 minutos
 Peso 199 g · numerado del 001 al 131
+Montaje en Shenzhen
     </pre>
   </div>
 
@@ -73,14 +81,33 @@ Después de esto solo quedará la luna y el mate eterno.
 CC0 · quema · copia · vive
 30 % de todo He-3 lunar para siempre
 La revolución está monetizada.
+Ventas externalizadas con bots automatizados.
 
-— 0rb1t4lsn4k3r · Sabadell · Enero 2026
+— 0rb1t4lsn4k3r · Shenzhen · Enero 2026
     </pre>
   </div>
 
   <p style="text-align:center;font-size:4rem;color:var(--ultra);margin:5rem">
     Abrazos eternos: <span id="hugs">131131</span> · Unidad: <span id="unidad">???</span>/131 · Modo: <span id="modo">BESTIA</span>
   </p>
+</div>
+
+<div id="compra">
+  <span class="close" onclick="toggleCompra()">×</span>
+  <h1 style="color:var(--ultra);text-align:center;font-size:7rem;margin:2rem">COMPRA TU SLYPHONE 131 v1</h1>
+  <p style="text-align:center;font-size:3.5rem;color:var(--c)">Precio: 120 € · Ventas gestionadas por bots automatizados · Montaje en Shenzhen</p>
+  <form>
+    <label>Nombre:</label><input type="text" required>
+    <label>Email:</label><input type="email" required>
+    <label>Dirección de envío:</label><textarea required></textarea>
+    <label>Método de pago:</label>
+    <select>
+      <option>Transferencia bancaria</option>
+      <option>Cryptomoneda (BTC/ETH)</option>
+      <option>Tarjeta (simulado)</option>
+    </select>
+    <button type="button" onclick="confirmarCompra()">CONFIRMAR COMPRA</button>
+  </form>
 </div>
 
 <div id="hugs">ABRAZOS: 131131</div>
@@ -116,6 +143,13 @@ document.getElementById('hugs').innerHTML=`ABRAZOS: ${hugs}`;
 setInterval(()=>{hugs+=5;localStorage.hugs=hugs;document.getElementById('hugs').innerHTML=`ABRAZOS: ${hugs}`;},1000);
 
 function toggleInfo(){document.getElementById('info').classList.toggle('show');}
+function toggleCompra(){document.getElementById('compra').classList.toggle('show');}
+function confirmarCompra(){
+  alert('¡Gracias por tu compra! Tu SLYPHONE 131 será procesado por nuestros bots y ensamblado en Shenzhen. Recibirás un email de confirmación pronto.');
+  toggleCompra();
+  speechSynthesis.speak(new SpeechSynthesisUtterance('Compra confirmada. Bots activados. Shenzhen en marcha.'));
+  navigator.vibrate([200,100,200,100,200,1000]);
+}
 function oniMode(){
   oni=!oni;
   document.getElementById('modo').textContent=oni?'ONI 666%':'BESTIA FINAL';

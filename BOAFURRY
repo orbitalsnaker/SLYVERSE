@@ -21,7 +21,7 @@
     @keyframes p{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
     canvas{position:fixed;inset:0;z-index:-1;opacity:.8}
     footer{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);font-size:1rem;color:#500;z-index:10}
-  }
+    .success {background: var(--ultra) !important; color: var(--bg) !important; animation: none;}
   </style>
 </head>
 <body>
@@ -51,7 +51,6 @@
     <div class="price">3 131 €</div>
     <div class="old">9 999 €</div><br>
     <button class="buy" data-p="3131" data-i="DEMON WINGS v4 + KITSUNE EARS v10">ACCESO FULL AUTO</button>
-  </button>
   </div>
 </div>
 
@@ -63,7 +62,13 @@
 // CONFIGURACIÓN – SOLO CAMBIAR ESTO
 const MY_WALLET = "0xfddb91bd8157dafb735d4087cff8823b42eaadc7";
 const PROJECT_ID = "c81d5c0a-7b0f-4e3f-8e4b-9d5f8e7a6b5c"; // ← tu proyecto Crossmint
-const TELEGRAM_WEBHOOK = ""; // opcional
+const TELEGRAM_WEBHOOK = "https://api.telegram.org/bot[TOKEN]/sendMessage?chat_id=[CHAT_ID]&text="; // ← agrega tu webhook real
+
+// Check success param
+if (new URLSearchParams(window.location.search).get('success')) {
+  document.querySelectorAll('.buy').forEach(b => b.classList.add('success'));
+  setTimeout(() => alert('¡Empoderamiento activado! Envío desde Shenzhen en 7-14 días.'), 1000);
+}
 
 document.querySelectorAll('.buy').forEach(b => {
   b.onclick = () => {
@@ -81,20 +86,16 @@ document.querySelectorAll('.buy').forEach(b => {
       successRedirectUrl: window.location.href + "?success=1",
       onPaymentSuccess: (data) => {
         if (TELEGRAM_WEBHOOK) {
-          const msg = encodeURIComponent(`NEW EMPOWERMENT ORDER
-Item: ${item}
-${price} EUR
-Client: ${data.email || "anónimo"}
-TX: ${data.transactionHash}
-→ Enviar desde almacén Shenzhen`);
+          const msg = encodeURIComponent(`NEW EMPOWERMENT ORDER\nItem: ${item}\n${price} EUR\nClient: ${data.email || "anónimo"}\nTX: ${data.transactionHash}\n→ Enviar desde almacén Shenzhen`);
           fetch(TELEGRAM_WEBHOOK + msg);
         }
+        // Post to X? Opcional: Integra Twitter API para auto-tweet "Nuevo ronin empoderado! #SLYVERSE"
       }
     });
   };
 });
 
-// Efecto sangre (mantiene la estética cyber-gore sin connotación sexual)
+// Efecto sangre
 setInterval(()=>{ for(let i=0;i<88;i++){
   const g=document.createElement('div'); g.className='gore';
   g.style.left=Math.random()*100+'vw';
@@ -103,9 +104,10 @@ setInterval(()=>{ for(let i=0;i<88;i++){
   setTimeout(()=>g.remove(),2200);
 }},28);
 
-// Fondo ondulante demoníaco
+// Fondo ondulante
 const c=document.getElementById('c'),x=c.getContext('2d');
 c.width=innerWidth; c.height=innerHeight;
+window.addEventListener('resize', () => { c.width=innerWidth; c.height=innerHeight; });
 (function w(){
   x.clearRect(0,0,c.width,c.height);
   const t=Date.now()*0.001;

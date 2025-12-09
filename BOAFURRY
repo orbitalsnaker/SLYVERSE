@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<title>SLYVERSE · 2026 DROPS</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<style>
+  :root{--v:#0f0;--c:#0ff;--m:#f00;--b:#000;--ultra:#00ff99;--blood:#ff0033}
+  body,html{margin:0;height:100dvh;background:#000;color:var(--ultra);font-family:"Courier New",monospace;overflow-x:hidden}
+  #bg{position:fixed;inset:0;background:radial-gradient(circle at 50% 10%,#110011,#000)}
+  .gore{position:fixed;width:8px;height:200px;background:linear-gradient(transparent,var(--blood),#000);opacity:0.9;animation:gore 0.6s linear infinite;box-shadow:0 0 50px var(--blood)}
+  @keyframes gore{0%{transform:translateY(-200px)}100%{transform:translateY(100dvh)}}
+  h1{position:fixed;top:5vh;left:50%;transform:translateX(-50%);font-size:clamp(4rem,16vw,18rem);letter-spacing:20px;color:var(--blood);text-shadow:0 0 140px var(--blood);animation:bleed 1.8s infinite;z-index:10}
+  @keyframes bleed{0%,100%{transform:translateX(-50%)}50%{transform:translateX(calc(-50% + 20px))}}
+  .product{position:relative;margin:22dvh auto;width:90%;max-width:800px;background:rgba(20,0,20,0.95);border:6px double var(--blood);padding:5vh;border-radius:40px;text-align:center;box-shadow:0 0 100px var(--blood)}
+  .price{font-size:4rem;color:#ff0066;text-shadow:0 0 60px #ff0066}
+  .oldprice{text-decoration:line-through;color:#666;font-size:2.5rem}
+  .buybtn{background:var(--blood);color:#000;border:none;padding:2rem 4rem;font-size:3rem;font-weight:900;border-radius:50px;cursor:pointer;animation:pulse 1.5s infinite}
+  @keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+  canvas{position:fixed;inset:0;z-index:-1;opacity:0.7}
+</style>
+</head>
+<body>
+
+<div id="bg">
+  <h1>SLYVERSE 2026</h1>
+
+  <!-- ONI TAIL PRO v9 – PETPLAY EXTREMO -->
+  <div class="product">
+    <h2 style="font-size:4rem;color:#ff0066">ONI TAIL PRO v9</h2>
+    <p style="font-size:2rem">Cola demoníaca 95 cm · 31 motores hápticos · IA que ladra/gime en 7 idiomas · sensor de caricias · olor real · conectada al móvil</p>
+    <div class="price">1 337 €</div>
+    <div class="oldprice">3 999 €</div><br>
+    <button class="buybtn" 
+      onclick="payOni()">COMPRAR AHORA (crypto only)</button>
+  </div>
+
+  <!-- SHARINGAN LENS + NEURAL SHOCK COLLAR – BDSM TECH GAY -->
+  <div class="product">
+    <h2 style="font-size:4rem;color:#00ffcc">SHARINGAN LENS PRO + NEURAL COLLAR</h2>
+    <p style="font-size:2rem">Lentes que graban 8K POV + collar que te electrocuta cuando tu amo dice “good boy” en la app</p>
+    <div class="price">2 131 €</div>
+    <div class="oldprice">5 999 €</div><br>
+    <button class="buybtn" style="background:#00ffcc;color:#000"
+      onclick="paySharingan()">PAGAR CON CRYPTO</button>
+  </div>
+
+  <!-- DEMON WINGS v4 + KITSUNE EARS v10 – FURRIES CUSTOM -->
+  <div class="product">
+    <h2 style="font-size:4rem;color:#ff6600">DEMON WINGS v4 + KITSUNE EARS v10</h2>
+    <p style="font-size:2rem">Alas 2,8 m plegables · orejas con 48 servos · temperatura corporal real · olor a zorro en celo · IA que dice “nyaa” cuando te tocan</p>
+    <div class="price">3 131 €</div>
+    <div class="oldprice">9 999 €</div><br>
+    <button class="buybtn" style="background:#ff6600;color:#000"
+      onclick="payWings()">COMPRAR (solo crypto)</button>
+  </div>
+</div>
+
+<canvas id="c"></canvas>
+
+<!-- CROSSMINT + COINBASE PAY (sin KYC, llega directo a tu wallet) -->
+<script src="https://unpkg.com/@crossmint/client-sdk-vanilla@latest/dist/index.js"></script>
+<script>
+const WALLET = "0xfddb91bd8157dafb735d4087cff8823b42eaadc7";
+
+function payOni() {
+  CrossmintPay.buy({
+    projectId: "c81d5c0a-7b0f-4e3f-8e4b-9d5f8e7a6b5c", // cambia por tu proyecto real en crossmint.com
+    email: false,
+    mintConfig: {"price": "1337", "currency": "EUR"},
+    paymentMethod: "fiat-and-crypto",
+    successRedirectUrl: "https://slyverse.is/thanks-oni",
+    failureRedirectUrl: "https://slyverse.is/fuck",
+    recipient: { wallet: WALLET }
+  });
+}
+function paySharingan() {
+  CrossmintPay.buy({
+    projectId: "c81d5c0a-7b0f-4e3f-8e4b-9d5f8e7a6b5c",
+    email: false,
+    mintConfig: {"price": "2131", "currency": "EUR"},
+    paymentMethod: "fiat-and-crypto",
+    successRedirectUrl: "https://slyverse.is/thanks-sharingan",
+    recipient: { wallet: WALLET }
+  });
+}
+function payWings() {
+  CrossmintPay.buy({
+    projectId: "c81d5c0a-7b0f-4e3f-8e4b-9d5f8e7a6b5c",
+    email: false,
+    mintConfig: {"price": "3131", "currency": "EUR"},
+    paymentMethod: "fiat-and-crypto",
+    successRedirectUrl: "https://slyverse.is/thanks-wings",
+    recipient: { wallet: WALLET }
+  });
+}
+
+// Efectos gore sangrientos
+setInterval(()=>{for(let i=0;i<66;i++){
+  const g=document.createElement('div');g.className='gore';
+  g.style.left=Math.random()*100+'vw';
+  g.style.animationDuration=0.4+Math.random()*0.7+'s';
+  document.getElementById('bg').appendChild(g);
+  setTimeout(()=>g.remove(),2000);
+}},30);
+
+// Onda psicodélica fondo
+const c=document.getElementById('c'),x=c.getContext('2d');
+c.width=innerWidth;c.height=innerHeight;
+function wave(){
+  x.clearRect(0,0,c.width,c.height);
+  const t=Date.now()*0.001;
+  x.strokeStyle='#ff0033';x.lineWidth=12;
+  x.beginPath();
+  for(let i=0;i<c.width;i+=4){
+    const y=c.height/2 + Math.sin(i*0.01+t*20)*180 + Math.cos(i*0.005+t*15)*120;
+    i===0?x.moveTo(i,y):x.lineTo(i,y);
+  }
+  x.stroke();
+  requestAnimationFrame(wave);
+}
+wave();
+</script>
+
+</body>
+</html>

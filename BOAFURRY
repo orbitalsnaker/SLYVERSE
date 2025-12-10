@@ -18,8 +18,10 @@
     .price{font-size:10.8rem;color:var(--pulse);text-shadow:0 0 220px var(--pulse)}
     .old{font-size:5rem;text-decoration:line-through;opacity:.25;color:#600}
     .buy{background:var(--blood);color:#000;border:none;padding:4.5rem 8rem;font-size:5.6rem;font-weight:900;border-radius:99px;animation:throb 1s infinite;letter-spacing:9px;box-shadow:0 0 180px #ff0033;cursor:pointer}
+    .buy.soldout{background:#300;color:#600;cursor:not-allowed;animation:none}
     @keyframes throb{0%,100%{transform:scale(1)}50%{transform:scale(1.36)}}
     .status{margin-top:2vh;font-size:2rem;color:#0f0}
+    .limited{font-size:4rem;color:var(--blood);margin:2vh 0;text-shadow:0 0 0 80px var(--blood)}
     details{margin:4vh 0;color:#0f9;font-size:2.4rem}
     summary{cursor:pointer;list-style:none}
     summary::before{content:"▶ ";color:var(--blood)}
@@ -43,8 +45,14 @@
   <h2 style="font-size:7.2rem;color:#ff0066">Relajador Háptico de Columna Vertebral<br>ONI TAIL PRO v9</h2>
   <p>95 cm · 31 actuadores de alta frecuencia · ESP32-S3 + IMU 9-DOF · batería 14 h autonomía<br>
      <strong>Ideal para terapias de elongación profunda y estimulación sensorial prolongada</strong></p>
-  <div class="price">799 €</div><div class="old">1 999 €</div>
-  <button class="buy" data-product="ONI TAIL PRO v9" data-price="799">COMPRAR · ENVÍO SHENZHEN</button>
+  
+  <div class="limited" id="limited-oni">EDICIÓN LIMITADA: 131 / 131 RESTANTES</div>
+  <div class="price">799 € <span style="font-size:0.5em;color:#0ff">(versión base ilimitada)</span></div>
+  <div class="price" style="color:#ff0066">1 299 € <span style="font-size:0.6em">(edición limitada #/131)</span></div>
+  <div class="old">1 999 €</div>
+  
+  <button class="buy base" data-product="ONI TAIL PRO v9 · VERSIÓN BASE" data-price="799" data-type="base">COMPRAR VERSIÓN BASE</button>
+  <button class="buy limited" data-product="ONI TAIL PRO v9 · EDICIÓN LIMITADA" data-price="1299" data-type="limited" data-key="oni">COMPRAR EDICIÓN LIMITADA</button>
   <div class="status" id="status-oni"></div>
 </div>
 
@@ -53,8 +61,14 @@
   <h2 style="font-size:7.2rem;color:#ff6600">Corrector Postural Demoníaco<br>WINGS v4 + Orejas de Concentración Kitsune v10</h2>
   <p>Pack completo · envergadura 2.8 m + sensores biométricos auriculares · ESP32-C6<br>
      <strong>Feedback háptico en tiempo real · recomendado para corrección postural extrema y meditación activa</strong></p>
-  <div class="price">1 599 €</div><div class="old">3 999 €</div>
-  <button class="buy" data-product="DEMON WINGS PACK" data-price="1599">COMPRAR · ENVÍO SHENZHEN</button>
+  
+  <div class="limited" id="limited-wings">EDICIÓN LIMITADA: 131 / 131 RESTANTES</div>
+  <div class="price">1 599 € <span style="font-size:0.5em;color:#0ff">(versión base ilimitada)</span></div>
+  <div class="price" style="color:#ff6600">2 499 € <span style="font-size:0.6em">(edición limitada #/131)</span></div>
+  <div class="old">3 999 €</div>
+  
+  <button class="buy base" data-product="DEMON WINGS PACK · VERSIÓN BASE" data-price="1599" data-type="base">COMPRAR VERSIÓN BASE</button>
+  <button class="buy limited" data-product="DEMON WINGS PACK · EDICIÓN LIMITADA" data-price="2499" data-type="limited" data-key="wings">COMPRAR EDICIÓN LIMITADA</button>
   <div class="status" id="status-wings"></div>
 </div>
 
@@ -63,12 +77,18 @@
   <h2 style="font-size:7.2rem;color:var(--blood)">Asistente de Rehabilitación Neuromuscular<br>BOAEXO MK-1 NEURONAL</h2>
   <p>Exoesqueleto 9 kg · control sip-n-puff + EMG · 8 actuadores 300 N · RP2040<br>
      <strong>Perfecto para fisioterapia intensiva, entrenamiento de fuerza y abrazos terapéuticos de alta presión</strong></p>
-  <div class="price">2 999 €</div><div class="old">7 999 €</div>
-  <button class="buy" data-product="BOAEXO MK-1" data-price="2999">COMPRAR · ENVÍO SHENZHEN</button>
+  
+  <div class="limited" id="limited-boa">EDICIÓN LIMITADA: 131 / 131 RESTANTES</div>
+  <div class="price">2 999 € <span style="font-size:0.5em;color:#0ff">(versión base ilimitada)</span></div>
+  <div class="price" style="color:var(--blood)">4 666 € <span style="font-size:0.6em">(edición limitada #/131)</span></div>
+  <div class="old">7 999 €</div>
+  
+  <button class="buy base" data-product="BOAEXO MK-1 · VERSIÓN BASE" data-price="2999" data-type="base">COMPRAR VERSIÓN BASE</button>
+  <button class="buy limited" data-product="BOAEXO MK-1 · EDICIÓN LIMITADA" data-price="4666" data-type="limited" data-key="boa">COMPRAR EDICIÓN LIMITADA</button>
   <div class="status" id="status-boa"></div>
 </div>
 
-<!-- Preguntas "inocentes" estilo Sony 1956 -->
+<!-- Preguntas frecuentes -->
 <div class="p" style="font-size:2.6rem;">
   <details><summary>¿El embalaje es discreto?</summary>
     Caja negra sin logos · etiqueta “Componentes electrónicos de precisión · Shenzhen”. Tu cartero seguirá pensando que eres ingeniero.
@@ -89,60 +109,103 @@
 </footer>
 
 <script>
-// ============ BOT 100 % AUTOMÁTICO (sin dependencias externas) ============
+// ============ STOCK EDICIONES LIMITADAS (persistente en localStorage) ============
+const STOCK = {
+  oni: parseInt(localStorage.getItem("stock_oni")) || 131,
+  wings: parseInt(localStorage.getItem("stock_wings")) || 131,
+  boa: parseInt(localStorage.getItem("stock_boa")) || 131
+};
+
+function updateCounter(key, elementId) {
+  const remaining = STOCK[key];
+  document.getElementById(elementId).textContent = `EDICIÓN LIMITADA: ${remaining} / 131 RESTANTES`;
+  if (remaining <= 0) {
+    document.querySelectorAll(`button[data-key="${key}"]`).forEach(b => {
+      b.textContent = "AGOTADO";
+      b.classList.add("soldout");
+      b.disabled = true;
+    });
+    document.getElementById(elementId).style.color = "#600";
+    document.getElementById(elementId).textContent = "EDICIÓN LIMITADA: AGOTADA";
+  }
+}
+
+// Actualizar contadores al cargar
+updateCounter("oni", "limited-oni");
+updateCounter("wings", "limited-wings");
+updateCounter("boa", "limited-boa");
+
+// ============ BOT DE COMPRA ============
 const WALLET = "0xfddb91bd8157dafb735d4087cff8823b42eaadc7";
-const WEBHOOK_URL = "https://your-server.com/slyverse-webhook"; // ← cambia por tu n8n / Make / servidor
+const WEBHOOK_URL = "https://your-server.com/slyverse-webhook"; // ← cambia por tu webhook real
 
 document.querySelectorAll('.buy').forEach(btn => {
+  if (btn.classList.contains('soldout')) return;
+
   btn.onclick = async () => {
     const product = btn.dataset.product;
     const price = btn.dataset.price;
-    const statusDiv = btn.nextElementSibling;
+    const type = btn.dataset.type;
+    const key = btn.dataset.key;
+    const statusDiv = btn.parentNode.querySelector('.status');
+
+    // Si es edición limitada y ya no hay stock
+    if (type === "limited" && STOCK[key] <= 0) return;
 
     btn.disabled = true;
     btn.textContent = "GENERANDO ORDEN SHENZHEN...";
 
     const orderId = "SLY" + Date.now() + Math.random().toString(36).substr(2,5).toUpperCase();
-    
+
     const paymentHtml = `
       <div style="margin:3vh 0;background:#000;padding:3vh;border:4px dashed #0f0;text-align:center;font-size:2.4rem">
         <h3 style="color:var(--blood)">ORDEN ${orderId}</h3>
         <p>Producto: ${product}</p>
         <p>Total: ${price} €</p>
         <p>Wallet Shenzhen: <code>${WALLET}</code></p>
-        <p>Envía exactamente ${price} € (ETH · USDT · SOL · EUR fiat)</p>
-        <p><small>Bot detecta pago en &lt;10 s y lanza fabricación automáticamente</small></p>
+        <p>Envía exactamente ${price} € en ETH / USDT / SOL / EUR</p>
+        <p><small>Bot detecta pago en &lt;12 s → fabricación automática</small></p>
       </div>`;
-    
+
     statusDiv.innerHTML = paymentHtml;
 
+    // Simulación de detección de pago + reducción de stock limitado
     const checkPayment = setInterval(async () => {
-      if (Math.random() > 0.94) { // ← aquí pondrías tu nodo real
+      if (Math.random() > 0.93) { // ← aquí va tu listener real de blockchain/webhook
         clearInterval(checkPayment);
+
+        // Reducir stock si es edición limitada
+        if (type === "limited" && STOCK[key] > 0) {
+          STOCK[key]--;
+          localStorage.setItem(`stock_${key}`, STOCK[key]);
+          updateCounter(key, `limited-${key}`);
+        }
+
         statusDiv.innerHTML = `<div style="color:#0f0;font-size:3rem">PAGO DETECTADO · FABRICACIÓN INICIADA EN SHENZHEN</div>`;
         btn.textContent = "EN PRODUCCIÓN";
 
-        const orderData = {orderId, product, price, timestamp: new Date().toISOString()};
-        await fetch(WEBHOOK_URL, {method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(orderData)}).catch(()=>{}); 
+        const orderData = {orderId, product, price, type, timestamp: new Date().toISOString()};
+        await fetch(WEBHOOK_URL, {method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(orderData)}).catch(()=>{});
 
         setTimeout(() => {
-          statusDiv.innerHTML += `<br><br>Tracking número en 48 h · Shenzhen → tu puerta`;
+          statusDiv.innerHTML += `<br><br>Número de tracking en 48–72 h · directo desde Shenzhen`;
         }, 3000);
       }
-    }, 800);
+    }, 900);
 
+    // Timeout de 15 minutos
     setTimeout(() => {
       if (btn.textContent.includes("GENERANDO")) {
         clearInterval(checkPayment);
         btn.disabled = false;
-        btn.textContent = "COMPRAR · ENVÍO SHENZHEN";
-        statusDiv.innerHTML = "<small style='color:#f66'>Tiempo agotado. Intenta de nuevo.</small>";
+        btn.textContent = type === "base" ? "COMPRAR VERSIÓN BASE" : "COMPRAR EDICIÓN LIMITADA";
+        statusDiv.innerHTML = "<small style='color:#f66'>Tiempo agotado. Vuelve a intentarlo.</small>";
       }
     }, 15*60*1000);
   };
 });
 
-// Gore lluvia de sangre
+// ============ EFECTOS VISUALES (gore + fondo) ============
 setInterval(() => {
   for(let i=0;i<180;i++){
     const g=document.createElement('div'); g.className='gore';
@@ -153,7 +216,6 @@ setInterval(() => {
   }
 },20);
 
-// Fondo ondulante rojo
 const c=document.getElementById('c'),x=c.getContext('2d');
 c.width=innerWidth; c.height=innerHeight;
 window.onresize=()=>{c.width=innerWidth;c.height=innerHeight};

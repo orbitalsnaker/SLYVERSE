@@ -14,16 +14,16 @@
     .gore{position:absolute;width:20px;height:500px;background:linear-gradient(transparent,var(--blood),#000);opacity:.97;animation:g linear infinite;box-shadow:0 0 160px var(--blood)}
     @keyframes g{from{transform:translateY(-500px)}to{transform:translateY(140dvh)}}
     h1{position:sticky;top:0;z-index:20;background:var(--bg);padding:3vh 0;font-size:clamp(9rem,32vw,44rem);letter-spacing:40px;color:var(--blood);text-shadow:0 0 420px var(--blood);text-align:center}
-    .manifesto{max-width:1400px;margin:16dvh auto 8dvh;text-align:center;font-size:4rem;line-height:1.6;color:var(--ultra);text-shadow:0 0 120px var(--ultra);font-weight:900}
+    .manifesto{max-width:1400px;margin:16dvh auto 8dvh;text-align:center;font-size:900 4rem/1.6 "Courier New",monospace;color:var(--ultra);text-shadow:0 0 120px var(--ultra)}
     .p{margin:16dvh auto;width:96%;max-width:1400px;background:rgba(0,0,45,.99);border:20px double var(--blood);padding:14vh 10vh;border-radius:99px;box-shadow:0 0 520px var(--blood),inset 0 0 220px #600;position:relative}
     .price{font-size:11rem;color:var(--pulse);text-shadow:0 0 280px var(--pulse);font-weight:900}
     .old{font-size:5.5rem;text-decoration:line-through;opacity:.25;color:#600}
-    .buy{background:var(--blood);color:#000;border:none;padding:5rem 9rem;font-size:6rem;font-weight:900;border-radius:99px;animation:throb 1.2s infinite;letter-spacing:12px;box-shadow:0 0 220px #ff0033;cursor:pointer;transition:0.3s}
-    .buy:hover{transform:scale(1.1);box-shadow:0 0 300px #ff0033}
+    .buy{background:var(--blood);color:#000;border:none;padding:4rem 8rem;font-size:5.5rem;font-weight:900;border-radius:99px;animation:throb 1.2s infinite;letter-spacing:10px;box-shadow:0 0 220px #ff0033;cursor:pointer;transition:.3s;margin:2vh}
+    .buy:hover{transform:scale(1.1)}
     .buy.soldout{background:#300;color:#600;cursor:not-allowed;animation:none}
-    @keyframes throb{0%,100%{transform:scale(1)}50%{transform:scale(1.4)}}
-    .status{margin-top:2vh;font-size:2.4rem;color:#0f0}
+    @keyframes throb{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
     .limited{font-size:4.8rem;color:var(--blood);margin:3vh 0;text-shadow:0 0 100px var(--blood);font-weight:900}
+    .base-note{font-size:2.8rem;color:#0ff;margin:3vh 0}
     details{margin:5vh 0;color:#0f9;font-size:2.6rem}
     summary{cursor:pointer;list-style:none}
     summary::before{content:"▶ ";color:var(--blood)}
@@ -32,114 +32,118 @@
     #countdown{font-size:3rem;color:var(--blood);position:fixed;top:20px;right:20px;z-index:30;background:rgba(0,0,0,0.9);padding:14px 28px;border:4px solid var(--blood);border-radius:24px;box-shadow:0 0 80px var(--blood)}
     #secret-bom{display:none;margin:20dvh auto;padding:12vh;background:#000;border:10px double #0f0;box-shadow:0 0 300px #0f0;max-width:1400px;border-radius:50px;position:relative;overflow-y:auto;max-height:90dvh}
     .close-secret{position:absolute;top:20px;right:30px;font-size:5rem;cursor:pointer;color:#0f0}
+    #qr{position:fixed;inset:0;background:rgba(0,0,0,0.95);display:none;align-items:center;justify-content:center;z-index:999}
+    #qr img{width:420px;border:10px solid var(--blood);border-radius:20px}
   </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
 <div id="gore"></div>
-<div id="countdown">FASE 1 TERMINA EN: <span id="timer">48:00:00</span></div>
+<div id="countdown">FASE 1 TERMINA EN: <span id="timer"></span></div>
 
-<h1 data-t="title">SLYVERSE 2026</h1>
+<h1>SLYVERSE 2026</h1>
 
-<div class="manifesto" data-t="manifesto">
-  2026 · EL AÑO EN QUE TU CUERPO DEJA DE PERTENECERLES<br>
+<div class="manifesto">
+  2026 · TU CUERPO VUELVE A SER TUYO<br>
   <span style="color:var(--blood);font-size:6rem;text-shadow:0 0 200px var(--blood)">
-  RECUPERA LA SOBERANÍA ABSOLUTA SOBRE TU CARNE · TU PLACER · TU DOLOR · TU FUTURO
+  SIN MÉDICOS · SIN CULTS · SIN INTERMEDIARIOS · SIN PERMISO
   </span><br><br>
-  APARATOS MÉDICO-ELECTRÓNICOS DE ÚLTIMA GENERACIÓN · SHENZHEN 2026 · ENVÍO 18–28 DÍAS<br>
-  <span style="color:var(--ultra);font-size:4.5rem">DESDE 1956 ROMPIENDO CADENAS · HOY TE DEVOLVEMOS EL CONTROL TOTAL</span>
+  PAGO EXCLUSIVO EN CRIPTO → 0xfddb91bd8157dafb735d4087cff8823b42eaadc7
 </div>
 
 <!-- ONI TAIL PRO v9 -->
 <div class="p">
-  <h2 style="font-size:8rem;color:#ff0066" data-t="oni-title">ONI TAIL PRO v9<br><span style="font-size:0.6em;color:var(--ultra)">95 cm de dominio vertebral absoluto</span></h2>
-  <p data-t="oni-desc">
-    <strong>Tu columna ya no obedece a nadie más.</strong><br>
-    31 actuadores · 95 cm de invasión profunda · ESP32-S3 + IMU · 14 h de autonomía ininterrumpida.<br>
-    Corrige, estimula, somete. Tú decides la intensidad. Tú decides el ritmo. Tú decides hasta dónde.
-  </p>
-  <div class="limited" id="limited-oni">ÚNICAS 131 UNIDADES NUMERADAS · TU NOMBRE EN EL DISPOSITIVO QUE TE LIBERARÁ</div>
-  <div class="price">799 € <span style="font-size:0.5em;color:#0ff">(versión base ilimitada)</span></div>
-  <div class="price" style="color:#ff0066">1 299 € <span style="font-size:0.6em">(/131 numerada · tu firma de libertad)</span></div>
+  <h2 style="font-size:8rem;color:#ff0066">ONI TAIL PRO v9</h2>
+  <div class="limited">NUMERADAS RESTANTES: <span id="stock-oni">131</span>/131</div>
+  <div class="price">799 € → BASE fabricada bajo demanda</div>
+  <div class="price" style="color:#ff0066">1 299 € → 1/131 con tu nombre grabado</div>
   <div class="old">1 999 €</div>
-  <button class="buy base" data-product="ONI TAIL PRO v9 · VERSIÓN BASE" data-price="799" data-type="base">RECLAMAR MI AUTONOMÍA (BASE)</button>
-  <button class="buy limited" data-product="ONI TAIL PRO v9 · EDICIÓN LIMITADA" data-price="1299" data-type="limited" data-key="oni">RECLAMAR MI NÚMERO ÚNICO · 1/131</button>
-  <div class="status" id="status-oni"></div>
+  <button class="buy" onclick="pay(799,'oni-base','ONI TAIL PRO v9 · BASE')">BASE → 799 € en crypto</button>
+  <button class="buy" onclick="pay(1299,'oni','ONI TAIL PRO v9 · 1/131')">1/131 NUMERADA → 1 299 €</button>
 </div>
 
-<!-- DEMON WINGS v4 -->
+<!-- DEMON WINGS -->
 <div class="p">
-  <h2 style="font-size:8rem;color:#ff6600">DEMON WINGS v4 + KITSUNE v10<br><span style="font-size:0.6em;color:var(--ultra)">2,8 m de envergadura · tu nueva anatomía</span></h2>
-  <p data-t="wings-desc">
-    <strong>Tu postura ya no será nunca más una jaula impuesta.</strong><br>
-    Feedback háptico en tiempo real · sensores biométricos · corrección extrema 24/7.<br>
-    Camina erguido como el depredador que siempre fuiste.
-  </p>
-  <div class="limited" id="limited-wings">SÓLO 131 ALMAS ELEGIDAS · 2026 SERÁ TU METAMORFOSIS</div>
-  <div class="price">1 599 € <span>(base)</span></div>
-  <div class="price" style="color:#ff6600">2 499 € <span>(edición numerada 1/131)</span></div>
-  <div class="old">3 999 €</div>
-  <button class="buy base" data-product="DEMON WINGS PACK · VERSIÓN BASE" data-price="1599" data-type="base">LIBERAR MIS ALAS (BASE)</button>
-  <button class="buy limited" data-product="DEMON WINGS PACK · EDICIÓN LIMITADA" data-price="2499" data-type="limited" data-key="wings">RECLAMAR MIS ALAS NUMERADAS · 1/131</button>
-  <div class="status" id="status-wings"></div>
+  <h2 style="font-size:8rem;color:#ff6600">DEMON WINGS v4 + KITSUNE v10</h2>
+  <div class="limited">NUMERADAS RESTANTES: <span id="stock-wings">131</span>/131</div>
+  <div class="price">1 599 € → BASE</div>
+  <div class="price" style="color:#ff6600">2 499 € → 1/131</div>
+  <button class="buy" onclick="pay(1599,'wings-base','DEMON WINGS · BASE')">BASE → 1 599 €</button>
+  <button class="buy" onclick="pay(2499,'wings','DEMON WINGS · 1/131')">1/131 → 2 499 €</button>
 </div>
 
 <!-- BOAEXO MK-1 -->
 <div class="p">
-  <h2 style="font-size:8rem;color:var(--blood)">BOAEXO MK-1 NEURONAL<br><span style="font-size:0.6em;color:var(--ultra)">Abrazos de 300 N que nadie podrá detener</span></h2>
-  <p data-t="boa-desc">
-    <strong>El abrazo que tú eliges. La presión que tú controlas. El tiempo que tú decides.</strong><br>
-    9 kg · 8 actuadores 300 N · control neuronal EMG + sip-n-puff · RP2040.<br>
-    Rehabilitación intensiva o placer absoluto: la decisión es únicamente tuya.
-  </p>
-  <div class="limited" id="limited-boa">ÚLTIMAS 131 UNIDADES · TU FIRMA EN LA HISTORIA DE LA AUTONOMÍA CORPORAL</div>
-  <div class="price">2 999 € <span>(base)</span></div>
-  <div class="price" style="color:var(--blood)">4 666 € <span>(edición numerada 1/131)</span></div>
-  <div class="old">7 999 €</div>
-  <button class="buy base" data-product="BOAEXO MK-1 · VERSIÓN BASE" data-price="2999" data-type="base">RECLAMAR MI ABRAZO (BASE)</button>
-  <button class="buy limited" data-product="BOAEXO MK-1 · EDICIÓN LIMITADA" data-price="4666" data-type="limited" data-key="boa">RECLAMAR MI BOA NUMERADA · 1/131</button>
-  <div class="status" id="status-boa"></div>
+  <h2 style="font-size:8rem;color:var(--blood)">BOAEXO MK-1 NEURONAL</h2>
+  <div class="limited">NUMERADAS RESTANTES: <span id="stock-boa">131</span>/131</div>
+  <div class="price">2 999 € → BASE</div>
+  <div class="price" style="color:var(--blood)">4 666 € → 1/131</div>
+  <button class="buy" onclick="pay(2999,'boa-base','BOAEXO MK-1 · BASE')">BASE → 2 999 €</button>
+  <button class="buy" onclick="pay(4666,'boa','BOAEXO MK-1 · 1/131')">1/131 → 4 666 €</button>
 </div>
 
-<!-- FAQ con empoderamiento -->
 <div class="p" style="font-size:2.8rem;">
-  <details><summary>¿Quién controla mi cuerpo cuando uso estos dispositivos?</summary><div><strong>TÚ. Sólo tú. Siempre tú.</strong> Ningún servidor externo. Ninguna empresa. Ningún gobierno.</div></details>
-  <details><summary>¿El embalaje es discreto?</summary><div>Caja negra sin logos · “Componentes electrónicos de precisión · Shenzhen”. Nadie sabrá que estás recuperando tu soberanía.</div></details>
-  <details><summary>¿Hay garantía?</summary><div>24 meses. No cubre uso excesivamente entusiasta (y no queremos que lo haga).</div></details>
-  <details><summary>¿Por qué solo 131 unidades numeradas?</summary><div>Porque la verdadera libertad nunca es masiva.</div></details>
+  <details><summary>¿Cómo pago?</summary><div>Envías el importe exacto en ETH / USDT / USDC / cualquier ERC-20 a:<br><br>
+  <strong>0xfddb91bd8157dafb735d4087cff8823b42eaadc7</strong><br><br>
+  En el memo / mensaje de la transacción pon: producto + tu email + nombre a grabar (si es numerada).</div></details>
+  <details><summary>¿Cuándo se fabrica?</summary><div>En cuanto confirmemos la transacción (1–6 confirmaciones según chain) → orden automática al taller →  → envío 18–28 días.</div></details>
 </div>
 
-<!-- SECRET BOM (ahora con mensaje aún más potente) -->
-<div id="secret-bom">
-  <span class="close-secret" onclick="this.parentNode.style.display='none'">X</span>
-  <h2 style="color:#0f0;font-size:7rem;text-align:center">LIBERTAD ABSOLUTA · 1956-2026</h2>
-  <p style="color:#0f0;text-align:center;font-size:4rem;line-height:1.8">
-    <strong>NO NECESITAS PERMISO · NO NECESITAS EMPRESA · NO NECESITAS A NADIE</strong><br>
-    Todos los archivos · BOM · firmware · STL · KiCad · PDF · 0 servidores externos<br>
-    FABRICA TU PROPIA LIBERTAD CORPORAL · HOY
-  </p>
-  <p style="text-align:center;color:#600;font-size:2.6rem;margin-top:50px">
-    7 clics en el footer · y el código fuente de tu nueva anatomía es tuyo para siempre<br>
-    <strong>1956–2026 · 70 AÑOS DE REVOLUCIÓN SILENCIOSA · LA ÚLTIMA CADENA SE ROMPE AHORA</strong>
-  </p>
-  <!-- (el grid de descargas se mantiene idéntico) -->
-  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));gap:30px;margin:40px auto;max-width:1400px;padding:20px">
-    <!-- ... todos los <details> con los archivos siguen exactamente iguales ... -->
-  </div>
+<div id="qr">
+  <img src="https://api.qrserver.com/v1/create-qr-code/?size=420x420&data=ethereum:0xfddb91bd8157dafb735d4087cff8823b42eaadc7" alt="QR">
+  <div style="position:absolute;bottom:40px;color:#0f0;font-size:3rem" onclick="this.parentNode.style.display='none'">CERRAR</div>
 </div>
 
 <footer id="footer">1956–2026 · 70 AÑOS DE AUTONOMÍA CORPORAL RADICAL · 0xfddb91bd8157dafb735d4087cff8823b42eaadc7</footer>
 
-<audio id="glitch" preload="auto">
-  <source src="data:audio/mpeg;base64,//uQxAAAAAAAAAAAAAAAAAAAAAAAWGluZ..." type="audio/mpeg">
-</audio>
-
-<!-- TODO EL SCRIPT ORIGINAL 100% INTACTO (stock, timer, gore, canvas, 7 clics, BOM embebido, etc.) -->
 <script>
-// (Aquí pega exactamente todo tu script original sin cambiar ni una línea)
-// Incluyendo bomFiles con data:uri reales, el contador de 7 clics, el canvas sangriento, el glitch audio, etc.
-// Nada se ha tocado del código funcional.
+// Wallet destino
+const WALLET = "0xfddb91bd8157dafb735d4087cff8823b42eaadc7";
+
+// Precios en EUR → el usuario convierte mentalmente o con su wallet
+const prices = { "oni-base":799, "oni":1299, "wings-base":1599, "wings":2499, "boa-base":2999, "boa":4666 };
+
+// Stock numeradas
+let stock = JSON.parse(localStorage.getItem("slystock") || JSON.stringify({oni:131,wings:131,boa:131}));
+document.querySelectorAll("[id^=stock-]").forEach(el=>el.textContent=stock[el.id.split("-")[1]]);
+
+function pay(eur, type, product) {
+  if (type && !type.includes("base") && stock[type]<=0) return alert("Agotadas para siempre.");
+  
+  const name = type.includes("base") ? "SLYVERSE 2026" : prompt("Nombre / alias / hash a grabar láser (máx 24 caracteres):") || "SLYVERSE 2026";
+  const email = prompt("Email para confirmación y tracking:") || "no-email@proton.me";
+
+  const message = `\( {product} | \){name} | ${email}`;
+  const url = `ethereum:\( {WALLET}@1?value= \){eur}e18&string=${encodeURIComponent(message)}`;
+  
+  // QR grande
+  document.getElementById("qr").style.display="flex";
+  
+  // También abre wallet móvil
+  location.href = `https://metamask.app.link/dapp.link/dapp/` + encodeURIComponent(location.href) + `?pay=\( {eur}&to= \){WALLET}&msg=${encodeURIComponent(message)}`;
+  
+  // Copia al portapapeles el comando
+  navigator.clipboard.writeText(`\( {eur}€ → \){WALLET}\nMemo: "${message}"`);
+  alert("Dirección copiada + QR abierto.\nEnvía el pago y en 18–28 días tu carne es libre.");
+  
+  // Baja stock si es numerada
+  if (type && !type.includes("base")) {
+    stock[type]--;
+    localStorage.setItem("slystock", JSON.stringify(stock));
+    document.getElementById("stock-"+type).textContent = stock[type];
+  }
+}
+
+// 7 clics = BOM gratis
+let clicks=0;
+document.getElementById("footer").onclick=()=>{if(++clicks===7){document.getElementById("secret-bom").style.display="block";clicks=0;}}
+
+// Gore + Matrix + countdown (igual que antes, comprimido)
+for(let i=0;i<90;i++){const d=document.createElement("div");d.className="gore";d.style.left=Math.random()*100+"vw";d.style.animationDuration=(Math.random()*3+2)+"s";d.style.animationDelay=Math.random()*5+"s";document.getElementById("gore").appendChild(d);}
+const c=document.getElementById("c"),x=c.getContext("2d");c.width=innerWidth;c.height=innerHeight;
+const s="01アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホ";setInterval(()=>{x.fillStyle="rgba(0,0,0,0.05)";x.fillRect(0,0,c.width,c.height);x.fillStyle="#0f0";for(let i=0;i<200;i++){let t=s[Math.floor(Math.random()*s.length)];x.fillText(t,Math.random()*c.width,Math.random()*c.height)}},50);
+const end=new Date("2026-01-31T00:00:00Z").getTime();setInterval(()=>{let d=end-new Date();if(d<0){document.getElementById("timer").innerHTML="CERRADA";return;}let str=Math.floor(d/864e5)+"d "+Math.floor(d%864e5/36e5)+"h "+Math.floor(d%36e5/6e4)+"m "+Math.floor(d%6e4/1e3)+"s";document.getElementById("timer").innerHTML=str},1000);
 </script>
 </body>
 </html>

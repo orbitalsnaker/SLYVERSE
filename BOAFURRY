@@ -8,6 +8,7 @@
     :root{--blood:#ff0033;--ultra:#00ff99;--bg:#000;--pulse:#ff0066}
     *{margin:0;padding:0;box-sizing:border-box}
     body,html{min-height:100dvh;background:var(--bg);color:var(--ultra);font-family:"Courier New",monospace;overflow-y:scroll;cursor:none}
+    @media (pointer: coarse),(hover:none){body{cursor:auto}}
     canvas{position:fixed;inset:0;z-index:-1}
     #gore{position:fixed;inset:0;pointer-events:none;z-index:2}
     .gore{position:absolute;width:20px;height:500px;background:linear-gradient(transparent,var(--blood),#000);opacity:.97;animation:g linear infinite;box-shadow:0 0 160px var(--blood)}
@@ -21,17 +22,21 @@
     .buy.soldout{background:#300;color:#600;cursor:not-allowed;animation:none}
     @keyframes throb{0%,100%{transform:scale(1)}50%{transform:scale(1.36)}}
     .status{margin-top:2vh;font-size:2rem;color:#0f0}
-    .limited{font-size:4rem;color:var(--blood);margin:2vh 0;text-shadow:0 0 0 80px var(--blood)}
+    .limited{font-size:4rem;color:var(--blood);margin:2vh 0;text-shadow:0 0 80px var(--blood)}
     details{margin:4vh 0;color:#0f9;font-size:2.4rem}
     summary{cursor:pointer;list-style:none}
     summary::before{content:"▶ ";color:var(--blood)}
-    footer{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-size:1.4rem;color:#600;letter-spacing:6px;z-index:20;background:var(--bg);padding:12px 24px;border:4px dashed #600;border-radius:16px}
+    footer{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);font-size:1.4rem;color:#600;letter-spacing:6px;z-index:20;background:var(--bg);padding:12px 24px;border:4px dashed #600;border-radius:16px;transition:all .3s}
+    #countdown{font-size:2.8rem;color:var(--blood);position:fixed;top:20px;right:20px;z-index:30;background:rgba(0,0,0,0.8);padding:12px 24px;border:3px solid var(--blood);border-radius:20px;box-shadow:0 0 60px var(--blood)}
+    #secret-bom{display:none;margin:20dvh auto;padding:10vh;background:#000;border:8px double #0f0;box-shadow:0 0 200px #0f0;max-width:1000px;border-radius:40px}
+    .close-secret{position:absolute;top:20px;right:30px;font-size:4rem;cursor:pointer;color:#0f0}
   </style>
 </head>
 <body>
 
 <canvas id="c"></canvas>
 <div id="gore"></div>
+<div id="countdown">FASE 1 TERMINA EN: <span id="timer">48:00:00</span></div>
 
 <h1>SLYVERSE 2026</h1>
 
@@ -43,14 +48,11 @@
 <!-- ONI TAIL PRO v9 -->
 <div class="p">
   <h2 style="font-size:7.2rem;color:#ff0066">Relajador Háptico de Columna Vertebral<br>ONI TAIL PRO v9</h2>
-  <p>95 cm · 31 actuadores de alta frecuencia · ESP32-S3 + IMU 9-DOF · batería 14 h autonomía<br>
-     <strong>Ideal para terapias de elongación profunda y estimulación sensorial prolongada</strong></p>
-  
+  <p>95 cm · 31 actuadores · ESP32-S3 + IMU · 14 h batería<br><strong>Elongación profunda y placer prolongado</strong></p>
   <div class="limited" id="limited-oni">EDICIÓN LIMITADA: 131 / 131 RESTANTES</div>
-  <div class="price">799 € <span style="font-size:0.5em;color:#0ff">(versión base ilimitada)</span></div>
+  <div class="price">799 € <span style="font-size:0.5em;color:#0ff">(base ilimitada)</span></div>
   <div class="price" style="color:#ff0066">1 299 € <span style="font-size:0.6em">(edición limitada #/131)</span></div>
   <div class="old">1 999 €</div>
-  
   <button class="buy base" data-product="ONI TAIL PRO v9 · VERSIÓN BASE" data-price="799" data-type="base">COMPRAR VERSIÓN BASE</button>
   <button class="buy limited" data-product="ONI TAIL PRO v9 · EDICIÓN LIMITADA" data-price="1299" data-type="limited" data-key="oni">COMPRAR EDICIÓN LIMITADA</button>
   <div class="status" id="status-oni"></div>
@@ -58,15 +60,12 @@
 
 <!-- DEMON WINGS + KITSUNE EARS -->
 <div class="p">
-  <h2 style="font-size:7.2rem;color:#ff6600">Corrector Postural Demoníaco<br>WINGS v4 + Orejas de Concentración Kitsune v10</h2>
-  <p>Pack completo · envergadura 2.8 m + sensores biométricos auriculares · ESP32-C6<br>
-     <strong>Feedback háptico en tiempo real · recomendado para corrección postural extrema y meditación activa</strong></p>
-  
+  <h2 style="font-size:7.2rem;color:#ff6600">Corrector Postural Demoníaco<br>WINGS v4 + Orejas Kitsune v10</h2>
+  <p>Pack completo · 2.8 m envergadura + sensores biométricos · ESP32-C6<br><strong>Feedback háptico brutal y meditación activa</strong></p>
   <div class="limited" id="limited-wings">EDICIÓN LIMITADA: 131 / 131 RESTANTES</div>
-  <div class="price">1 599 € <span style="font-size:0.5em;color:#0ff">(versión base ilimitada)</span></div>
-  <div class="price" style="color:#ff6600">2 499 € <span style="font-size:0.6em">(edición limitada #/131)</span></div>
+  <div class="price">1 599 € (base)</div>
+  <div class="price" style="color:#ff6600">2 499 € (edición limitada #/131)</div>
   <div class="old">3 999 €</div>
-  
   <button class="buy base" data-product="DEMON WINGS PACK · VERSIÓN BASE" data-price="1599" data-type="base">COMPRAR VERSIÓN BASE</button>
   <button class="buy limited" data-product="DEMON WINGS PACK · EDICIÓN LIMITADA" data-price="2499" data-type="limited" data-key="wings">COMPRAR EDICIÓN LIMITADA</button>
   <div class="status" id="status-wings"></div>
@@ -74,118 +73,152 @@
 
 <!-- BOAEXO MK-1 NEURONAL -->
 <div class="p">
-  <h2 style="font-size:7.2rem;color:var(--blood)">Asistente de Rehabilitación Neuromuscular<br>BOAEXO MK-1 NEURONAL</h2>
-  <p>Exoesqueleto 9 kg · control sip-n-puff + EMG · 8 actuadores 300 N · RP2040<br>
-     <strong>Perfecto para fisioterapia intensiva, entrenamiento de fuerza y abrazos terapéuticos de alta presión</strong></p>
-  
+  <h2 style="font-size:7.2rem;color:var(--blood)">Asistente Neuromuscular<br>BOAEXO MK-1 NEURONAL</h2>
+  <p>Exoesqueleto 9 kg · sip-n-puff + EMG · 8 actuadores 300 N<br><strong>Abrazos terapéuticos de alta presión</strong></p>
   <div class="limited" id="limited-boa">EDICIÓN LIMITADA: 131 / 131 RESTANTES</div>
-  <div class="price">2 999 € <span style="font-size:0.5em;color:#0ff">(versión base ilimitada)</span></div>
-  <div class="price" style="color:var(--blood)">4 666 € <span style="font-size:0.6em">(edición limitada #/131)</span></div>
+  <div class="price">2 999 € (base)</div>
+  <div class="price" style="color:var(--blood)">4 666 € (edición limitada #/131)</div>
   <div class="old">7 999 €</div>
-  
   <button class="buy base" data-product="BOAEXO MK-1 · VERSIÓN BASE" data-price="2999" data-type="base">COMPRAR VERSIÓN BASE</button>
   <button class="buy limited" data-product="BOAEXO MK-1 · EDICIÓN LIMITADA" data-price="4666" data-type="limited" data-key="boa">COMPRAR EDICIÓN LIMITADA</button>
   <div class="status" id="status-boa"></div>
 </div>
 
-<!-- Preguntas frecuentes -->
+<!-- FAQ -->
 <div class="p" style="font-size:2.6rem;">
   <details><summary>¿El embalaje es discreto?</summary>
-    Caja negra sin logos · etiqueta “Componentes electrónicos de precisión · Shenzhen”. Tu cartero seguirá pensando que eres ingeniero.
+    Caja negra sin logos · etiqueta “Componentes electrónicos de precisión · Shenzhen”.
   </details>
   <details><summary>¿Puedo usarlo en público?</summary>
-    Miles de usuarios lo llevan bajo hoodies XL y trench coats en convenciones. Nadie nota nada… las primeras 4-6 horas.
+    Miles lo llevan bajo trench coats. Nadie nota nada… las primeras 4-6 horas.
   </details>
   <details><summary>¿Es resistente al agua?</summary>
-    Certificación IPX7. Funciona perfectamente en sesiones de hidroterapia intensiva o duchas prolongadas.
+    IPX7. Perfecto para hidroterapia o duchas muy largas.
   </details>
   <details><summary>¿Hay garantía?</summary>
-    24 meses contra defectos de fabricación. No cubre daños por uso excesivamente entusiasta.
+    24 meses. No cubre uso excesivamente entusiasta.
   </details>
 </div>
 
-<footer>
-  1956–2026 · 70 AÑOS INNOVANDO EN BIENESTAR PERSONAL · 0xfddb91bd8157dafb735d4087cff8823b42eaadc7
-</footer>
+<!-- SECCIÓN OCULTA BOM (7 clicks en footer) -->
+<div id="secret-bom">
+  <span class="close-secret" onclick="this.parentNode.style.display='none'">✕</span>
+  <h2 style="color:#0f0;font-size:6rem;text-align:center">DESCARGA Y FABRICA TU PROPIO PECADO</h2>
+  <p style="font-size:3rem;color:#0f0;text-align:center;margin:4vh">
+    STL · KiCad · Firmware ESP32 · BOM completos · Instrucciones de ensamblaje<br><br>
+    <a href="https://tu-dominio.com/slyverse-bom.zip" style="color:#0f0;text-decoration:underline">→ slyverse-full-bom-2026-v13.37.zip ←</a><br><br>
+    <span style="color:#600">No confíes en Shenzhen. Sé tu propio demonio.</span>
+  </p>
+</div>
+
+<footer id="footer">1956–2026 · 70 AÑOS INNOVANDO EN BIENESTAR PERSONAL · 0xfddb91bd8157dafb735d4087cff8823b42eaadc7</footer>
+
+<!-- SONIDO GLITCH -->
+<audio id="glitch" preload="auto">
+  <source src="https://assets.codepen.io/605876/glitch-0.mp3" type="audio/mpeg">
+</audio>
 
 <script>
-// ============ STOCK EDICIONES LIMITADAS (persistente en localStorage) ============
+// ============ STOCK + CONTADOR FASE 1 ============
+let clicks = 0;
 const STOCK = {
   oni: parseInt(localStorage.getItem("stock_oni")) || 131,
   wings: parseInt(localStorage.getItem("stock_wings")) || 131,
   boa: parseInt(localStorage.getItem("stock_boa")) || 131
 };
 
+let phase1End = parseInt(localStorage.getItem("phase1End")) || (Date.now() + 48*60*60*1000);
+
 function updateCounter(key, elementId) {
   const remaining = STOCK[key];
   document.getElementById(elementId).textContent = `EDICIÓN LIMITADA: ${remaining} / 131 RESTANTES`;
   if (remaining <= 0) {
     document.querySelectorAll(`button[data-key="${key}"]`).forEach(b => {
-      b.textContent = "AGOTADO";
-      b.classList.add("soldout");
-      b.disabled = true;
+      b.textContent = "AGOTADO"; b.classList.add("soldout"); b.disabled = true;
     });
-    document.getElementById(elementId).style.color = "#600";
     document.getElementById(elementId).textContent = "EDICIÓN LIMITADA: AGOTADA";
+    document.getElementById(elementId).style.color = "#600";
   }
 }
+updateCounter("oni", "limited-oni"); updateCounter("wings", "limited-wings"); updateCounter("boa", "limited-boa");
 
-// Actualizar contadores al cargar
-updateCounter("oni", "limited-oni");
-updateCounter("wings", "limited-wings");
-updateCounter("boa", "limited-boa");
+// Contador regresivo FASE 1
+function updateTimer() {
+  const diff = phase1End - Date.now();
+  if (diff <= 0) {
+    document.getElementById("timer").textContent = "00:00:00";
+    return;
+  }
+  const h = Math.floor(diff / (1000*60*60)).toString().padStart(2,"0");
+  const m = Math.floor((diff % (1000*60*60)) / (1000*60)).toString().padStart(2,"0");
+  const s = Math.floor((diff % (1000*60)) / 1000).toString().padStart(2,"0");
+  document.getElementById("timer").textContent = `\( {h}: \){m}:${s}`;
+}
+setInterval(updateTimer, 500);
+updateTimer();
 
-// ============ BOT DE COMPRA ============
-const WALLET = "0xfddb91bd8157dafb735d4087cff8823b42eaadc7";
-const WEBHOOK_URL = "https://your-server.com/slyverse-webhook"; // ← cambia por tu webhook real
+// ============ 7 CLICKS EN FOOTER → BOM ============
+document.getElementById("footer").addEventListener("click", () => {
+  clicks++;
+  if (clicks === 7) {
+    document.getElementById("secret-bom").style.display = "block";
+    clicks = 0;
+  }
+});
+
+// ============ BOT DE COMPRA + SONIDO ============
+const GLITCH = document.getElementById("glitch");
+const WALLET = atob("MHhmZGRiOTFiZDgxNTdkYWZiNzM1ZDQwODdjZmY4ODIzYjQyZWFhZGM3"); // 0xfddb91bd8157dafb735d4087cff8823b42eaadc7 ofuscado
+const WEBHOOK_URL = "https://your-server.com/slyverse-webhook";
 
 document.querySelectorAll('.buy').forEach(btn => {
   if (btn.classList.contains('soldout')) return;
 
   btn.onclick = async () => {
+    GLITCH.currentTime = 0; GLITCH.volume = 0.3; GLITCH.play();
+
     const product = btn.dataset.product;
     const price = btn.dataset.price;
     const type = btn.dataset.type;
     const key = btn.dataset.key;
     const statusDiv = btn.parentNode.querySelector('.status');
 
-    // Si es edición limitada y ya no hay stock
     if (type === "limited" && STOCK[key] <= 0) return;
 
     btn.disabled = true;
     btn.textContent = "GENERANDO ORDEN SHENZHEN...";
 
-    const orderId = "SLY" + Date.now() + Math.random().toString(36).substr(2,5).toUpperCase();
+    const orderId = "SLY" + Date.now().toString(36).toUpperCase();
 
     const paymentHtml = `
       <div style="margin:3vh 0;background:#000;padding:3vh;border:4px dashed #0f0;text-align:center;font-size:2.4rem">
         <h3 style="color:var(--blood)">ORDEN ${orderId}</h3>
         <p>Producto: ${product}</p>
         <p>Total: ${price} €</p>
-        <p>Wallet Shenzhen: <code>${WALLET}</code></p>
-        <p>Envía exactamente ${price} € en ETH / USDT / SOL / EUR</p>
-        <p><small>Bot detecta pago en &lt;12 s → fabricación automática</small></p>
+        <p>Wallet: <code>${WALLET}</code></p>
+        <p>Envía exactamente ${price} € (ETH / USDT / SOL)</p>
+        <p><small>Pago detectado en &lt;12 s → fabricación automática</small></p>
       </div>`;
 
     statusDiv.innerHTML = paymentHtml;
 
-    // Simulación de detección de pago + reducción de stock limitado
     const checkPayment = setInterval(async () => {
-      if (Math.random() > 0.93) { // ← aquí va tu listener real de blockchain/webhook
+      if (Math.random() > 0.93) { // ← aquí tu listener real
         clearInterval(checkPayment);
 
-        // Reducir stock si es edición limitada
         if (type === "limited" && STOCK[key] > 0) {
           STOCK[key]--;
           localStorage.setItem(`stock_${key}`, STOCK[key]);
           updateCounter(key, `limited-${key}`);
+          // ¡FOMO! Cada compra de edición limitada reinicia +24h el contador
+          phase1End = Date.now() + 24*60*60*1000;
+          localStorage.setItem("phase1End", phase1End);
         }
 
         statusDiv.innerHTML = `<div style="color:#0f0;font-size:3rem">PAGO DETECTADO · FABRICACIÓN INICIADA EN SHENZHEN</div>`;
         btn.textContent = "EN PRODUCCIÓN";
 
-        const orderData = {orderId, product, price, type, timestamp: new Date().toISOString()};
-        await fetch(WEBHOOK_URL, {method: "POST", headers: {"Content-Type":"application/json"}, body: JSON.stringify(orderData)}).catch(()=>{});
+        await fetch(WEBHOOK_URL, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({orderId,product,price,type,timestamp:new Date().toISOString()})}).catch(()=>{});
 
         setTimeout(() => {
           statusDiv.innerHTML += `<br><br>Número de tracking en 48–72 h · directo desde Shenzhen`;
@@ -193,19 +226,18 @@ document.querySelectorAll('.buy').forEach(btn => {
       }
     }, 900);
 
-    // Timeout de 15 minutos
     setTimeout(() => {
       if (btn.textContent.includes("GENERANDO")) {
         clearInterval(checkPayment);
         btn.disabled = false;
         btn.textContent = type === "base" ? "COMPRAR VERSIÓN BASE" : "COMPRAR EDICIÓN LIMITADA";
-        statusDiv.innerHTML = "<small style='color:#f66'>Tiempo agotado. Vuelve a intentarlo.</small>";
+        statusDiv.innerHTML = "<small style='color:#f66'>Tiempo agotado. Inténtalo de nuevo.</small>";
       }
     }, 15*60*1000);
   };
 });
 
-// ============ EFECTOS VISUALES (gore + fondo) ============
+// ============ EFECTOS VISUALES ============
 setInterval(() => {
   for(let i=0;i<180;i++){
     const g=document.createElement('div'); g.className='gore';

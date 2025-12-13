@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLYVERSE · 2026</title>
+  <meta name="description" content="Hardware neural real. Inclusión total: diversidad funcional, idiomas, epilepsia-safe. Financiado por pervertidos ricos. Gratis para quien lo necesita.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --blood: #ff0033;
+      --ultra: #00ff99;
+      --yellow: #ff0;
+      --bg: #000;
+      --muted: #0a0a0a;
+      --text: #ddd;
+      --glow: 0 0 30px;
+      --high-contrast-bg: #000;
+      --high-contrast-text: #fff;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background: var(--bg); color: var(--text); font-family: 'Roboto Mono', monospace; overflow-x: hidden; position: relative; transition: background 0.3s, color 0.3s; }
+    body.high-contrast { background: var(--high-contrast-bg); color: var(--high-contrast-text); }
+    body.high-contrast * { color: var(--high-contrast-text) !important; }
+    body.high-contrast h1, body.high-contrast h2 { color: #0f0 !important; text-shadow: none !important; }
+    body.high-contrast .product, body.high-contrast .open-hardware, body.high-contrast .transparency, body.high-contrast .harm-reduction { background: #111; border-color: #0f0; }
+    
+    canvas { position:fixed; inset:0; z-index:-1; opacity:0.4; pointer-events:none; transition: opacity 0.5s; }
+    body.no-matrix canvas { opacity: 0; }
+    
+    h1 {
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      padding: 2rem 0;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(3rem, 10vw, 9rem);
+      letter-spacing: 10px;
+      text-align: center;
+      color: var(--blood);
+      text-shadow: var(--glow) var(--blood);
+      z-index: 10;
+      animation: glitch 4s infinite;
+      transition: text-shadow 0.3s;
+    }
+    body.no-glitch h1 { animation: none; text-shadow: none; }
+    @keyframes glitch {
+      0%,100% { text-shadow: var(--glow) var(--blood); }
+      20% { text-shadow: -2px 0 #0ff, 2px 0 var(--blood); }
+      40% { text-shadow: 2px 0 #0ff, -2px 0 var(--blood); }
+    }
+    
+    /* Panel de accesibilidad flotante */
+    #accessibility-panel {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: var(--muted);
+      padding: 1rem 1.5rem;
+      border: 2px solid var(--ultra);
+      border-radius: 20px;
+      z-index: 1000;
+      font-size: 1.2rem;
+      box-shadow: var(--glow) var(--ultra);
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+    }
+    #accessibility-panel button, #accessibility-panel select {
+      background: #000;
+      color: var(--ultra);
+      border: 1px solid var(--ultra);
+      padding: 0.5rem;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    #accessibility-panel label { color: var(--ultra); }
+    
+    /* Selector idioma */
+    #lang-selector {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      background: var(--muted);
+      padding: 1rem;
+      border: 2px solid var(--ultra);
+      border-radius: 20px;
+      z-index: 999;
+    }
+    
+    section { max-width: 1400px; margin: 0 auto; padding: 2rem 5vw; }
+    .product, .open-hardware, .transparency, .harm-reduction {
+      margin: 10rem auto;
+      max-width: 1200px;
+      background: var(--muted);
+      padding: 6rem 5rem;
+      border: 2px solid var(--ultra);
+      border-radius: 28px;
+      text-align: center;
+      box-shadow: 0 0 60px rgba(0,255,153,0.2);
+    }
+    .harm-reduction { border: 4px double var(--yellow); box-shadow: 0 0 80px rgba(255,255,0,0.3); }
+    
+    .gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 20px; margin: 3rem 0; }
+    .gallery img, .gallery video { width: 100%; border-radius: 16px; border: 2px solid #333; box-shadow: 0 0 30px #000; object-fit: cover; aspect-ratio: 4/3; }
+    
+    .cta { text-align: center; margin: 15rem 0; }
+    .cta a { font-size: 2.5rem; padding: 2rem 6rem; background: var(--blood); color: #000; border-radius: 99px; box-shadow: var(--glow) var(--blood); text-decoration: none; }
+    
+    footer { padding: 8rem; text-align: center; color: #555; font-size: 1.4rem; }
+    
+    @media (max-width: 768px) {
+      #accessibility-panel, #lang-selector { position: relative; left: auto; right: auto; margin: 2rem auto; }
+    }
+  </style>
+</head>
+<body aria-label="Slyverse 2026 - Sitio accesible">
+
+<canvas id="c" aria-hidden="true"></canvas>
+
+<!-- Panel de accesibilidad propia (inclusión real) -->
+<div id="accessibility-panel" role="region" aria-label="Panel de accesibilidad">
+  <label for="font-size">Tamaño texto:</label>
+  <select id="font-size" onchange="changeFontSize(this.value)">
+    <option value="1">Normal</option>
+    <option value="1.5">Grande</option>
+    <option value="2">Muy grande</option>
+    <option value="3">Enorme</option>
+  </select>
+  
+  <button onclick="toggleHighContrast()" id="contrast-btn">Alto contraste OFF</button>
+  <button onclick="toggleMatrix()" id="matrix-btn">Matrix background ON</button>
+  <button onclick="toggleGlitch()" id="glitch-btn">Glitch efectos ON</button>
+  
+  <button onclick="readPage()">Leer página en voz alta</button>
+</div>
+
+<!-- Selector idioma -->
+<div id="lang-selector" role="region" aria-label="Selector de idioma">
+  <label for="language">Idioma:</label>
+  <select id="language" onchange="changeLanguage(this.value)">
+    <option value="es">Español</option>
+    <option value="en">English</option>
+    <option value="pt">Português</option>
+    <option value="fr">Français</option>
+    <option value="de">Deutsch</option>
+    <option value="it">Italiano</option>
+    <option value="ru">Русский</option>
+    <option value="zh">中文</option>
+    <option value="ja">日本語</option>
+    <option value="ar">العربية</option>
+    <option value="hi">हिन्दी</option>
+    <option value="tr">Türkçe</option>
+  </select>
+</div>
+
+<h1>Slyverse · 2026</h1>
+
+<section>
+  <p id="tagline" style="text-align:center;font-size:2.2rem;max-width:1000px;margin:5rem auto;">
+    Hardware real para kink, disforia y euphoria extrema · Inclusión total para todas las diversidades funcionales<br>
+    Harm reduction para fiesteros · Financiado por pervertidos ricos · Gratis eterno para quien lo necesita.
+  </p>
+</section>
+
+<!-- Secciones existentes (open-hardware, transparency, harm-reduction, productos...) -->
+
+<!-- Nuevo producto adaptativo -->
+<div class="product">
+  <h2>DANCE EXO-ADAPT MK-1</h2>
+  <p>Exoesqueleto modular ligero adaptable a cualquier diversidad funcional: silla de ruedas, amputaciones, parálisis... Control por EMG, IMU, sip&puff, eye-tracking, voz o pulso. Para bailar, terapia de movimiento o euphoria corporal total.</p>
+  <div class="price">3 999 € · edición personalizada<br><small>(o GRATIS eterno si lo necesitas y lo construyes tú)</small></div>
+  <div class="status">DESARROLLO AVANZADO · 2026</div>
+  
+  <div class="gallery">
+    <!-- Imágenes placeholders accesibles -->
+    <img src="https://example.com/exo1.jpg" alt="Persona en silla de ruedas con exoesqueleto Slyverse bailando en rave cyberpunk" loading="lazy">
+    <img src="https://example.com/exo2.jpg" alt="Detalle de interfaz sip&puff y control ocular en exoesqueleto" loading="lazy">
+    <video autoplay loop muted playsinline aria-label="Demostración de movimiento inclusivo con DANCE EXO-ADAPT">
+      <source src="https://example.com/exo-demo.mp4" type="video/mp4">
+    </video>
+  </div>
+</div>
+
+<section class="cta">
+  <p>Esto está pasando de verdad.</p>
+  <a href="mailto:waitlist@slyverse.org">Apúntame a la lista</a>
+</section>
+
+<footer>
+  Slyverse · Shenzhen & España · 2025-2026<br>
+  Inclusión real · Hardware para todos los cuerpos · Sin barreras<br>
+  <a href="mailto:contacto@slyverse.org">contacto@slyverse.org</a>
+</footer>
+
+<script>
+  // Matrix background
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  function resize() { w = canvas.width = innerWidth; h = canvas.height = innerHeight; }
+  resize();
+  addEventListener('resize', resize);
+  
+  const chars = '01';
+  const size = 16;
+  let cols = Math.floor(w / size);
+  let drops = new Array(cols).fill(1);
+  
+  function draw() {
+    if (document.body.classList.contains('no-matrix')) return;
+    ctx.fillStyle = 'rgba(0,0,0,0.05)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#0f3';
+    ctx.font = `${size}px monospace`;
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(text, i * size, drops[i] * size);
+      if (drops[i] * size > h && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+  
+  // Accesibilidad funciones
+  function toggleHighContrast() {
+    document.body.classList.toggle('high-contrast');
+    document.getElementById('contrast-btn').textContent = document.body.classList.contains('high-contrast') ? 'Alto contraste ON' : 'Alto contraste OFF';
+  }
+  
+  function toggleMatrix() {
+    document.body.classList.toggle('no-matrix');
+    document.getElementById('matrix-btn').textContent = document.body.classList.contains('no-matrix') ? 'Matrix background OFF' : 'Matrix background ON';
+  }
+  
+  function toggleGlitch() {
+    document.body.classList.toggle('no-glitch');
+    document.getElementById('glitch-btn').textContent = document.body.classList.contains('no-glitch') ? 'Glitch efectos OFF' : 'Glitch efectos ON';
+  }
+  
+  function changeFontSize(multiplier) {
+    document.body.style.fontSize = `${multiplier}rem`;
+  }
+  
+  function readPage() {
+    if ('speechSynthesis' in window) {
+      const text = document.body.innerText;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = document.documentElement.lang || 'es';
+      speechSynthesis.speak(utterance);
+    }
+  }
+  
+  // Idioma básico (expandible)
+  function changeLanguage(lang) {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+    localStorage.setItem('slyverse-lang', lang);
+    // Aquí irían las traducciones completas
+  }
+  
+  // Cargar preferencias
+  window.onload = () => {
+    if (localStorage.getItem('high-contrast') === 'true') toggleHighContrast();
+    if (localStorage.getItem('no-matrix') === 'true') toggleMatrix();
+    if (localStorage.getItem('no-glitch') === 'true') toggleGlitch();
+    changeLanguage(localStorage.getItem('slyverse-lang') || 'es');
+  };
+</script>
+
+<script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>
+
+</body>
+</html>

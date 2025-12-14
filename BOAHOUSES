@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SLYVERSE · HOUSEPRINT v1 · 2027</title>
+  <meta name="description" content="Casas impresas 3D open-hardware v1. 120-300m², hasta 2 plantas. Bajo coste real con materiales que la industria ignora. Vivienda libre: compras terreno e imprimes. Gratis eterno para makers. Financiado por postureo rico.">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --blood: #ff0033;
+      --ultra: #00ff99;
+      --yellow: #ff0;
+      --bg: #000;
+      --muted: #0a0a0a;
+      --text: #ddd;
+      --glow: 0 0 60px;
+      --high-contrast-bg: #000;
+      --high-contrast-text: #fff;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { 
+      background: var(--bg); 
+      color: var(--text); 
+      font-family: 'Roboto Mono', monospace; 
+      overflow-x: hidden; 
+      position: relative; 
+      transition: background 0.3s, color 0.3s;
+    }
+    body.high-contrast { background: var(--high-contrast-bg); color: var(--high-contrast-text); }
+    body.high-contrast * { color: var(--high-contrast-text) !important; }
+    body.high-contrast h1, body.high-contrast h2 { color: #0f0 !important; text-shadow: none !important; }
+    body.high-contrast .product, body.high-contrast .cta { background: #111; border-color: #0f0; }
+    
+    canvas { position:fixed; inset:0; z-index:-1; opacity:0.5; pointer-events:none; transition: opacity 0.6s; }
+    body.no-matrix canvas { opacity: 0; }
+    
+    h1 {
+      position: sticky;
+      top: 0;
+      background: var(--bg);
+      padding: 3rem 0;
+      font-family: 'Orbitron', sans-serif;
+      font-size: clamp(4rem, 12vw, 11rem);
+      letter-spacing: 14px;
+      text-align: center;
+      color: var(--blood);
+      text-shadow: var(--glow) var(--blood);
+      z-index: 10;
+      animation: glitch 5s infinite;
+      transition: text-shadow 0.4s;
+    }
+    body.no-glitch h1 { animation: none; text-shadow: none; }
+    @keyframes glitch {
+      0%,100% { text-shadow: var(--glow) var(--blood); }
+      15% { text-shadow: -4px 0 #0ff, 4px 0 var(--blood); }
+      30% { text-shadow: 4px 0 #0ff, -4px 0 var(--blood); }
+      45% { text-shadow: -3px -3px #ff0, 3px 3px var(--blood); }
+    }
+    
+    /* Panel de accesibilidad */
+    #accessibility-panel {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      background: var(--muted);
+      padding: 1.4rem 2rem;
+      border: 3px solid var(--ultra);
+      border-radius: 28px;
+      z-index: 1000;
+      font-size: 1.4rem;
+      box-shadow: var(--glow) var(--ultra), 0 0 100px rgba(0,255,153,0.3);
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+      backdrop-filter: blur(8px);
+    }
+    #accessibility-panel button, #accessibility-panel select {
+      background: #000;
+      color: var(--ultra);
+      border: 2px solid var(--ultra);
+      padding: 0.8rem;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.3s;
+    }
+    #accessibility-panel button:hover { background: var(--ultra); color: #000; transform: scale(1.05); }
+    
+    /* Selector idioma */
+    #lang-selector {
+      position: fixed;
+      top: 100px;
+      right: 20px;
+      background: var(--muted);
+      padding: 1.4rem;
+      border: 3px solid var(--ultra);
+      border-radius: 28px;
+      z-index: 999;
+      backdrop-filter: blur(8px);
+    }
+    
+    section { max-width: 1400px; margin: 0 auto; padding: 2rem 5vw; }
+    .product, .cta, .license {
+      margin: 14rem auto;
+      max-width: 1400px;
+      background: var(--muted);
+      padding: 8rem 7rem;
+      border: 4px solid var(--ultra);
+      border-radius: 40px;
+      text-align: center;
+      box-shadow: 0 0 120px rgba(0,255,153,0.35);
+      backdrop-filter: blur(6px);
+      transition: all 0.5s;
+    }
+    .product:hover, .cta:hover, .license:hover { 
+      box-shadow: 0 0 180px rgba(0,255,153,0.6); 
+      transform: translateY(-12px); 
+    }
+    
+    .gallery { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); 
+      gap: 40px; 
+      margin: 5rem 0; 
+    }
+    .gallery img, .gallery video { 
+      width: 100%; 
+      border-radius: 24px; 
+      border: 4px solid #333; 
+      box-shadow: 0 0 60px #000; 
+      object-fit: cover; 
+      aspect-ratio: 16/9; 
+      transition: all 0.5s;
+    }
+    .gallery img:hover, .gallery video:hover { 
+      transform: scale(1.04); 
+      box-shadow: 0 0 100px var(--ultra); 
+      border-color: var(--ultra);
+    }
+    
+    .price { 
+      font-size: 2.6rem; 
+      margin: 3rem 0; 
+      color: var(--ultra); 
+      text-shadow: 0 0 40px var(--ultra);
+    }
+    .status { font-size: 1.8rem; color: #bbb; margin: 2rem 0; }
+    
+    .cta h2, .license h2 { 
+      font-size: 4rem; 
+      margin-bottom: 3rem; 
+      color: var(--blood); 
+      text-shadow: var(--glow) var(--blood); 
+    }
+    .cta p, .license p { 
+      font-size: 2rem; 
+      line-height: 2.2; 
+      margin: 2.5rem 0;
+    }
+    .cta a, .license a {
+      font-size: 2.6rem; 
+      padding: 2.5rem 6rem; 
+      background: var(--ultra); 
+      color: #000; 
+      border-radius: 99px; 
+      text-decoration: none;
+      display: inline-block;
+      box-shadow: var(--glow) var(--ultra); 
+      transition: all 0.5s;
+    }
+    .cta a:hover, .license a:hover { 
+      transform: scale(1.08); 
+      box-shadow: 0 0 150px var(--ultra); 
+    }
+    
+    footer { 
+      padding: 12rem; 
+      text-align: center; 
+      color: #777; 
+      font-size: 1.6rem; 
+      text-shadow: 0 0 20px #777;
+    }
+    
+    @media (max-width: 768px) {
+      #accessibility-panel, #lang-selector { position: relative; left: auto; right: auto; margin: 3rem auto; width: 90%; }
+      .product, .cta, .license { padding: 5rem 3rem; margin: 10rem auto; }
+      .gallery { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body aria-label="Slyverse Houseprint v1 2027 - Vivienda libre impresa 3D">
+
+<canvas id="c" aria-hidden="true"></canvas>
+
+<!-- Panel de accesibilidad -->
+<div id="accessibility-panel" role="region" aria-label="Panel de accesibilidad">
+  <label for="font-size">Tamaño texto:</label>
+  <select id="font-size" onchange="changeFontSize(this.value)">
+    <option value="1">Normal</option>
+    <option value="1.5">Grande</option>
+    <option value="2">Muy grande</option>
+    <option value="3">Enorme</option>
+  </select>
+  
+  <button onclick="toggleHighContrast()" id="contrast-btn">Alto contraste OFF</button>
+  <button onclick="toggleMatrix()" id="matrix-btn">Matrix background ON</button>
+  <button onclick="toggleGlitch()" id="glitch-btn">Glitch efectos ON</button>
+  
+  <button onclick="readPage()">Leer página en voz alta</button>
+</div>
+
+<!-- Selector idioma -->
+<div id="lang-selector" role="region" aria-label="Selector de idioma">
+  <label for="language">Idioma:</label>
+  <select id="language" onchange="changeLanguage(this.value)">
+    <option value="es">Español</option>
+    <option value="en">English</option>
+    <option value="pt">Português</option>
+    <option value="fr">Français</option>
+    <option value="de">Deutsch</option>
+    <option value="it">Italiano</option>
+    <option value="ru">Русский</option>
+    <option value="zh">中文</option>
+    <option value="ja">日本語</option>
+    <option value="ar">العربية</option>
+    <option value="hi">हिन्दी</option>
+    <option value="tr">Türkçe</option>
+  </select>
+</div>
+
+<h1>Houseprint v1 · 2027</h1>
+
+<section>
+  <p id="tagline" style="text-align:center;font-size:3rem;max-width:1200px;margin:7rem auto;line-height:2;">
+    Vivienda libre impresa en 3D · v1 ya publicada · 120-300m² hasta 2 plantas<br>
+    Aleaciones y recetas que la industria evita para cobrar más · Todo propio, fork radical open-source<br>
+    Compras terreno → imprimes casa completa con muebles integrados · Gratis eterno.
+  </p>
+</section>
+
+<!-- Producto principal -->
+<div class="product">
+  <h2>HOUSEPRINT MK-1 v1</h2>
+  <p style="font-size:2rem;line-height:2.2;max-width:1100px;margin:0 auto 4rem;">
+    Sistema 100% open-hardware propio para imprimir casas reales.<br>
+    BOMs, recetas mortar optimizadas, STLs muebles, planos base y printer gantry YA publicados en repo.<br>
+    Usamos materiales baratos y óptimos que la industria ignora para maximizar su margen.<br>
+    Paredes estructurales curvas, aislamiento integrado, muebles impresos o modulares incluidos.<br><br>
+    <strong>v1 2025:</strong> Modelos 120-300m² (1-2 plantas), printer replicable <15k€, mortar ~30€/m² pared. Todo gratis eterno, iteración pública.
+  </p>
+  <div class="price">Estimado total 400-600 €/m²<br><small>(paredes ~100-150€/m² · GRATIS eterno con archivos open-source v1)</small></div>
+  <div class="status">v1 PUBLICADA · BOMs + STLs + recetas YA en repo · Iteración continua hasta 2027</div>
+  
+  <div class="gallery">
+    <img src="https://via.placeholder.com/1200x675/000000/00ff99?text=Casa+120m2+v1+Curvas+Cyberpunk" alt="Render casa 120m² v1 impresa con diseño curvo orgánico" loading="lazy">
+    <img src="https://via.placeholder.com/1200x675/000000/00ff99?text=Detalle+Pared+Impresion+Mortar+Optimizado" alt="Detalle capas mortar optimizado con fibra y aislamiento" loading="lazy">
+    <img src="https://via.placeholder.com/1200x675/000000/00ff99?text=Casa+2+Plantas+250m2+v1" alt="Casa 2 plantas 250m² completa con muebles integrados" loading="lazy">
+    <img src="https://via.placeholder.com/1200x675/000000/00ff99?text=Printer+Gantry+Modular+v1" alt="Printer gantry modular open-hardware v1" loading="lazy">
+  </div>
+</div>
+
+<!-- Nueva sección de licencia comercial -->
+<section class="license">
+  <h2>Licencia comercial libre</h2>
+  <p style="font-size:2.2rem; margin: 3rem 0; line-height:2;">
+    Todo el contenido de HOUSEPRINT (planos, BOMs, recetas, STLs, firmware, diseños...) es 100% open-hardware eterno.<br><br>
+    <strong>Se permite la venta libre de cualquier producto derivado</strong> (casas impresas, printers, kits, servicios de impresión, unidades terminadas...)<br>
+    con la única condición de <strong>limitar el margen bruto al 30%</strong> sobre costes directos demostrables.
+  </p>
+  <p style="font-size:2rem; margin: 4rem 0; color:var(--ultra); line-height:2;">
+    Esto evita dumping salvaje, protege salarios dignos de makers e ingenieros,<br>
+    y mantiene precios bajos para el usuario final.<br><br>
+    Los archivos fuente siempre gratis. Postureo premium y ediciones numeradas pueden superar el 30% sólo si financian kits gratis globales.
+  </p>
+</section>
+
+<!-- CTA -->
+<section class="cta">
+  <h2>v1 ya está aquí. Todo gratis eterno.</h2>
+  <p style="font-size:2.2rem; margin: 3rem 0; line-height:2;">
+    No hay waitlist ni pre-venta. Los archivos v1 (BOMs, recetas, STLs, planos) están publicados YA.<br><br>
+    Iteramos públicamente hasta perfección estructural total en 2027.
+  </p>
+  <p style="font-size:2rem; margin: 4rem 0; color:var(--ultra); line-height:2;">
+    Todo 100% propio, basado en forks radicales open-source.<br>
+    Materiales que la industria no usa para no bajar precios. Muebles integrados open.<br>
+    Venta comercial libre con margen máximo 30%.
+  </p>
+  <p style="margin-top: 5rem;">
+    <a href="https://github.com/orbitalsnaker/SLYVERSE/tree/main/HOUSEPRINT" style="padding:2.5rem 6rem; box-shadow: var(--glow) var(--ultra);">
+      Ver repo HOUSEPRINT v1 en GitHub
+    </a>
+  </p>
+  <p style="margin-top: 3rem;">
+    <a href="https://x.com/0rb1t4lsn4k3r" style="padding:2.5rem 6rem; box-shadow: var(--glow) var(--ultra);">
+      Contacto solo DM en X: @0rb1t4lsn4k3r
+    </a>
+  </p>
+</section>
+
+<footer>
+  Slyverse Houseprint v1 · Shenzhen & España & Global · 2025-2027<br>
+  Vivienda libre real · Materiales ignorados por industria · Venta libre margen ≤30% · Gratis eterno<br>
+  DM en X: @0rb1t4lsn4k3r
+</footer>
+
+<script>
+  // Matrix background con toque casa
+  const canvas = document.getElementById('c');
+  const ctx = canvas.getContext('2d');
+  let w, h;
+  function resize() { w = canvas.width = innerWidth; h = canvas.height = innerHeight; }
+  resize();
+  addEventListener('resize', resize);
+  
+  const chars = '01家屋印刷スリバース自由家屋🏠';
+  const size = 20;
+  let cols = Math.floor(w / size);
+  let drops = new Array(cols).fill(1);
+  
+  function draw() {
+    if (document.body.classList.contains('no-matrix')) return;
+    ctx.fillStyle = 'rgba(0,0,0,0.07)';
+    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = '#0ff';
+    ctx.font = `${size}px monospace`;
+    for (let i = 0; i < drops.length; i++) {
+      const text = chars[Math.floor(Math.random() * chars.length)];
+      ctx.fillText(text, i * size, drops[i] * size);
+      if (drops[i] * size > h && Math.random() > 0.975) drops[i] = 0;
+      drops[i]++;
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+  
+  // Accesibilidad
+  function toggleHighContrast() {
+    document.body.classList.toggle('high-contrast');
+    document.getElementById('contrast-btn').textContent = document.body.classList.contains('high-contrast') ? 'Alto contraste ON' : 'Alto contraste OFF';
+  }
+  
+  function toggleMatrix() {
+    document.body.classList.toggle('no-matrix');
+    document.getElementById('matrix-btn').textContent = document.body.classList.contains('no-matrix') ? 'Matrix background OFF' : 'Matrix background ON';
+  }
+  
+  function toggleGlitch() {
+    document.body.classList.toggle('no-glitch');
+    document.getElementById('glitch-btn').textContent = document.body.classList.contains('no-glitch') ? 'Glitch efectos OFF' : 'Glitch efectos ON';
+  }
+  
+  function changeFontSize(multiplier) {
+    document.body.style.fontSize = `${multiplier}rem`;
+  }
+  
+  function readPage() {
+    if ('speechSynthesis' in window) {
+      const text = document.body.innerText;
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = document.documentElement.lang || 'es';
+      utterance.rate = 0.9;
+      speechSynthesis.speak(utterance);
+    }
+  }
+  
+  function changeLanguage(lang) {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = (lang === 'ar') ? 'rtl' : 'ltr';
+    localStorage.setItem('slyverse-lang', lang);
+  }
+  
+  window.onload = () => {
+    if (localStorage.getItem('high-contrast') === 'true') toggleHighContrast();
+    if (localStorage.getItem('no-matrix') === 'true') toggleMatrix();
+    if (localStorage.getItem('no-glitch') === 'true') toggleGlitch();
+    changeLanguage(localStorage.getItem('slyverse-lang') || 'es');
+  };
+</script>
+
+</body>
+</html>

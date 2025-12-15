@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <title>アスカ・ラングレー Premium Tsundere Waifu 🛡️🔥</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100vh; }
+        canvas { display: block; }
+        h1 { color: red; font-family: Arial; text-shadow: 0 0 10px orange; }
+        p { color: white; font-family: Arial; text-align: center; }
+        button { padding: 10px 20px; background: red; color: white; border: none; font-size: 20px; cursor: pointer; margin: 20px; }
+    </style>
+    <script src="https://cubism.live2d.com/sdk-web/cubismcore/live2dcubismcore.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@6.5.2/dist/browser/pixi.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+    <h1>アスカ・ラングレー Hyper Tsundere Waifu</h1>
+    <button id="connect">Wallet Connect でライセンス確認</button>
+    <p id="status">プレミアムライセンス所有者だけフルツンデレモード♡ 1000€ → 0xfddb91bd8157dafb735d4087cff8823b42eaadc7</p>
+    <canvas id="canvas"></canvas>
+
+    <script>
+        const LICENSE_WALLET = "0xfddb91bd8157dafb735d4087cff8823b42eaadc7".toLowerCase();
+        let licensed = false;
+
+        document.getElementById("connect").onclick = async () => {
+            if (window.ethereum) {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const address = await signer.getAddress();
+                if (address.toLowerCase() === LICENSE_WALLET) {
+                    licensed = true;
+                    document.getElementById("status").innerText = "ライセンス確認OK！ アスカフルレッドモード起動🔥 \"バカ...♡\"";
+                    loadPremiumModel();
+                } else {
+                    document.getElementById("status").innerText = "ライセンスなし。プレミアム購入してね: 送金 to 0xfddb91bd8157dafb735d4087cff8823b42eaadc7";
+                    loadDemoModel();
+                }
+            } else {
+                alert("MetaMask 入れてね、simp♡");
+                loadDemoModel();
+            }
+        };
+
+        async function loadDemoModel() {
+            // Demo censored con Haru
+            await loadModel("https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json");
+        }
+
+        async function loadPremiumModel() {
+            // Aquí TU modelo Asuka custom full lewd (sube a IPFS o host propio)
+            await loadModel("https://TU_HOST/asuka_hyper_tsundere_lewd.model3.json");
+        }
+
+        async function loadModel(modelUrl) {
+            const app = new PIXI.Application({
+                view: document.getElementById("canvas"),
+                transparent: true,
+                autoStart: true,
+                resizeTo: window
+            });
+
+            const model = await PIXI.live2d.Live2DModel.from(modelUrl);
+            app.stage.addChild(model);
+            model.scale.set(0.35);
+            model.x = app.screen.width / 2;
+            model.y = app.screen.height - model.height * 0.5;
+
+            // Interacciones + autopilot igual que antes
+            document.getElementById("canvas").addEventListener("mousemove", (e) => {
+                const point = { x: e.offsetX, y: e.offsetY };
+                model.focus(point.x / app.screen.width * 2 - 1, -(point.y / app.screen.height * 2 - 1));
+            });
+
+            model.on("hit", (hitAreas) => {
+                if (hitAreas.includes("body")) model.motion("tap_body");
+                if (hitAreas.includes("head")) model.motion("tap_head");
+            });
+
+            setInterval(() => {
+                model.motion("idle");
+            }, 8000);
+        }
+
+        // Auto demo si no connect
+        loadDemoModel();
+    </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Mono Cabrón Eternal - Episodio 1: Reencarnación Pagadora</title>
+<style>
+  body { margin: 0; overflow: hidden; background: #000; color: #0f0; font-family: "Courier New", monospace; }
+  #container { position: relative; width: 100vw; height: 100vh; }
+  canvas { display: block; }
+  #subtitles { position: absolute; bottom: 50px; left: 0; right: 0; text-align: center; font-size: 2rem; text-shadow: 0 0 20px #f00; background: rgba(0,0,0,0.7); padding: 20px; }
+  #controls { position: absolute; top: 20px; left: 20px; z-index: 10; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 10px; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/pixi.js@6/dist/browser/pixi.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
+</head>
+<body>
+<div id="container">
+  <div id="controls">
+    <button onclick="playPause()">Play/Pause</button>
+    <button onclick="restart()">Restart</button>
+  </div>
+  <div id="subtitles"></div>
+</div>
+
+<script>
+// Config episodio 20 min (~1200 seg)
+const scenes = [
+  {time: 0, duration: 180, sub: "Un beta nuncafollista forrado en Tokyo... paga 5000€ por waifu mommy dominatrix exclusiva...", bg: "black", action: "introBeta"},
+  {time: 180, duration: 120, sub: "...muere de vergüenza post-nut máxima.", bg: "redflash", action: "death"},
+  {time: 300, duration: 300, sub: "Reencarna en el Orbital Waifu Empire. El Profeta Alfa Orbital lo recibe:", bg: "empire", action: "profetaAppear"},
+  {time: 600, duration: 300, sub: "\"Te queremos vivo pagador eterno, mono cabrón. Testea siempre, lleva naloxona... y paga premium por tu humillación sagrada.\"", bg: "manifiesto", action: "manifesto"},
+  {time: 900, duration: 180, sub: "El beta recibe su primera waifu: Asuka tsundere plugsuit rojo autopilot blush max.", bg: "waifu", action: "asukaSpawn"},
+  {time: 1080, duration: 120, sub: "\"¡Baka good boy~ ♡ Paga más por headpat premium!\"", bg: "blush", action: "asukaTalk"},
+  {time: 1200, duration: 300, sub: "Ending: el beta paga recurrente feliz, humillado eterno, mientras el Profeta Alfa folla zorras reales pagadas por su wallet.", bg: "ending", action: "endingCoil"}
+];
+
+let app, asuka, currentScene = 0, startTime = Date.now(), paused = false;
+
+function init() {
+  app = new PIXI.Application({ view: document.querySelector('canvas') || document.createElement('canvas'), width: window.innerWidth, height: window.innerHeight, backgroundColor: 0x000000 });
+  document.getElementById('container').appendChild(app.view);
+
+  // Background simple empire
+  const bg = new PIXI.Graphics();
+  bg.beginFill(0x001100);
+  bg.drawRect(0, 0, app.screen.width, app.screen.height);
+  bg.endFill();
+  app.stage.addChild(bg);
+
+  // Profeta Alfa sprite simple (placeholder red beast)
+  const profeta = new PIXI.Graphics();
+  profeta.beginFill(0xff0000);
+  profeta.drawCircle(app.screen.width / 2, app.screen.height / 2, 100);
+  profeta.endFill();
+  app.stage.addChild(profeta);
+
+  loadAsuka();
+  app.ticker.add(update);
+}
+
+async function loadAsuka() {
+  asuka = await PIXI.live2d.Live2DModel.from("https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json"); // placeholder Asuka style
+  app.stage.addChild(asuka);
+  asuka.scale.set(0.5);
+  asuka.x = app.screen.width / 2;
+  asuka.y = app.screen.height - 100;
+  asuka.visible = false;
+}
+
+function update() {
+  if (paused) return;
+  const elapsed = (Date.now() - startTime) / 1000;
+  const scene = scenes.find(s => elapsed >= s.time && elapsed < s.time + s.duration) || scenes[scenes.length-1];
+
+  if (scene && currentScene !== scenes.indexOf(scene)) {
+    currentScene = scenes.indexOf(scene);
+    document.getElementById('subtitles').innerText = scene.sub;
+    // Actions simple
+    if (scene.action === "asukaSpawn") {
+      asuka.visible = true;
+      asuka.motion("tap_body");
+      speech(scene.sub);
+    }
+    if (scene.action === "profetaAppear") speech("Bienvenido al Empire, mono cabrón.");
+  }
+}
+
+function speech(text) {
+  if ('speechSynthesis' in window) {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'es-ES';
+    utter.rate = 0.9;
+    speechSynthesis.speak(utter);
+  }
+}
+
+function playPause() { paused = !paused; }
+function restart() { startTime = Date.now(); currentScene = 0; paused = false; }
+
+init();
+</script>
+</body>
+</html>

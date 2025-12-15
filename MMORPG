@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Orbital Waifu Empire 🦊🤖❤️🔥</title>
+    <style>
+        body { margin: 0; overflow: hidden; background: #000; color: white; font-family: Arial; }
+        #game { width: 100vw; height: 100vh; }
+        #ui { position: absolute; top: 10px; left: 10px; z-index: 10; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 10px; }
+        #connectBtn { padding: 10px; background: red; border: none; color: white; font-size: 18px; cursor: pointer; margin-top: 10px; }
+        #status { margin-top: 10px; }
+        h1 { text-align: center; color: orange; text-shadow: 0 0 10px red; }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/pixi.js@6/dist/browser/pixi.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.7.2/dist/ethers.umd.min.js"></script>
+</head>
+<body>
+    <h1>Orbital Waifu Empire - Waifu MMORPG 🐍🚀</h1>
+    <div id="game"></div>
+    <div id="ui">
+        <p>Usa WASD para moverte. Click en waifus = reacción ♡</p>
+        <button id="connectBtn">Connect Wallet - Unlock Premium Empire</button>
+        <p id="status">Free mode: Recluta waifus demo. Premium: full lewd + mounts beast</p>
+        <p>Soporta el imperio: DM @0rb1t4lsn4k3r para licenses 1000-3000€</p>
+    </div>
+
+    <script>
+        const LICENSE_WALLET = "0xfddb91bd8157dafb735d4087cff8823b42eaadc7".toLowerCase();
+        let premium = false;
+
+        const app = new PIXI.Application({
+            view: document.getElementById("game"),
+            width: window.innerWidth,
+            height: window.innerHeight,
+            backgroundColor: 0x1099bb
+        });
+
+        // Ground simple
+        const ground = new PIXI.Graphics();
+        ground.beginFill(0x228B22);
+        ground.drawRect(0, 0, app.screen.width * 2, app.screen.height * 2);
+        ground.endFill();
+        app.stage.addChild(ground);
+
+        // Player beast (simple sprite red)
+        const player = new PIXI.Graphics();
+        player.beginFill(0xff0000);
+        player.drawCircle(0, 0, 20);
+        player.endFill();
+        player.x = app.screen.width / 2;
+        player.y = app.screen.height / 2;
+        app.stage.addChild(player);
+
+        // Waifus party
+        const waifus = [];
+        const waifuModels = [
+            "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json", // placeholder Zero-Two/Asuka style
+            "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/shizuku/shizuku.model3.json",
+            premium ? "https://tu_host/asuka_premium_lewd.model3.json" : "https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json"
+        ];
+
+        async function spawnWaifu(modelUrl, offsetX, offsetY) {
+            const waifu = await PIXI.live2d.Live2DModel.from(modelUrl);
+            app.stage.addChild(waifu);
+            waifu.scale.set(0.3);
+            waifu.x = player.x + offsetX;
+            waifu.y = player.y + offsetY;
+            waifu.anchor.set(0.5, 1);
+
+            // Interacción lewd light
+            waifu.interactive = true;
+            waifu.buttonMode = true;
+            waifu.on("pointerdown", () => {
+                waifu.motion("tap_body");
+                if (premium) waifu.motion("tap_lewd_special"); // solo premium
+            });
+
+            // Ojos siguen mouse
+            app.stage.on("pointermove", (e) => {
+                const point = e.data.global;
+                waifu.focus((point.x - waifu.x) / 500, (point.y - waifu.y) / 500);
+            });
+
+            waifus.push({model: waifu, offsetX, offsetY});
+        }
+
+        // Spawn demo waifus
+        spawnWaifu(waifuModels[0], -100, 0); // "Zero-Two"
+        spawnWaifu(waifuModels[1], 100, 0);  // "Asuka demo"
+
+        // Movimiento player + waifus follow
+        const keys = {};
+        window.addEventListener("keydown", e => keys[e.key.toLowerCase()] = true);
+        window.addEventListener("keyup", e => keys[e.key.toLowerCase()] = false);
+
+        app.ticker.add(() => {
+            const speed = 5;
+            if (keys['w']) player.y -= speed;
+            if (keys['s']) player.y += speed;
+            if (keys['a']) player.x -= speed;
+            if (keys['d']) player.x += speed;
+
+            waifus.forEach(w => {
+                w.model.x = player.x + w.offsetX;
+                w.model.y = player.y + w.offsetY;
+            });
+        });
+
+        // Premium showcase (C8, rifle, etc.)
+        const showcaseText = new PIXI.Text("Premium Empire:\n- C8 Demonic Mount 3000€\n- Rifle Postureo 1500€\n- Full Lewd Waifus 1000€", {
+            fontFamily: 'Arial', fontSize: 24, fill: 0xffffff, align: 'center'
+        });
+        showcaseText.x = app.screen.width - 300;
+        showcaseText.y = 50;
+        app.stage.addChild(showcaseText);
+
+        // Wallet connect
+        document.getElementById("connectBtn").onclick = async () => {
+            if (window.ethereum) {
+                await window.ethereum.request({ method: 'eth_requestAccounts' });
+                const provider = new ethers.providers.Web3Provider(window.ethereum);
+                const signer = provider.getSigner();
+                const address = await signer.getAddress();
+                if (address.toLowerCase() === LICENSE_WALLET) {
+                    premium = true;
+                    document.getElementById("status").innerText = "PREMIUM UNLOCKED 🔥 Full lewd motions + beast mounts!";
+                    // Aquí cargar waifus premium reales + mount C8 sprite
+                    alert("Empire Premium Activado - Asuka full tsundere lewd incoming ♡");
+                } else {
+                    document.getElementById("status").innerText = "Wallet no autorizada. DM @0rb1t4lsn4k3r para license real.";
+                }
+            } else {
+                alert("Instala MetaMask, simp depravado ♡");
+            }
+        };
+
+        window.onresize = () => app.renderer.resize(window.innerWidth, window.innerHeight);
+    </script>
+</body>
+</html>

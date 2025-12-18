@@ -25,6 +25,19 @@ body::before{
 }
 @keyframes haki{0%,100%{opacity:.25}50%{opacity:.55}}
 
+/* SISTEMA DE FRACTURA DE EGO (BLOQUEO AGRESIVO) */
+#fractura-ego {
+    position: fixed; inset: 0; background: #000;
+    z-index: 20000; display: none; flex-direction: column;
+    align-items: center; justify-content: center; text-align: center;
+    padding: 50px; border: 30px solid var(--scarlet);
+    animation: flash-red 0.1s infinite;
+}
+@keyframes flash-red { 0%, 100% { border-color: var(--scarlet); } 50% { border-color: #000; } }
+
+.msg-ego { font-size: 4rem; color: #fff; text-transform: uppercase; font-weight: bold; text-shadow: 0 0 30px #f00; }
+.label-humillacion { font-family: monospace; font-size: 1.4rem; color: var(--cyan); margin-top: 20px; text-transform: uppercase; letter-spacing: 2px; }
+
 h2{
   color:var(--magenta);text-align:center;
   font-size:5rem;margin:180px 0 140px;
@@ -81,6 +94,7 @@ h3{
   break-inside:avoid;margin-bottom:100px;
   padding:40px;border-left:6px solid var(--scarlet);
   background:rgba(204,0,34,.07);
+  cursor: help;
 }
 .koan-item strong{color:var(--magenta);display:block;font-size:2.4rem}
 
@@ -108,17 +122,6 @@ h3{
   color:var(--cyan);line-height:1.8;
 }
 
-.mirror-grid{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(500px,1fr));
-  gap:80px;margin-top:120px;
-}
-.mirror-card{
-  padding:60px;border:8px double var(--cyan);
-  background:rgba(0,255,255,.07);
-  text-align:center;font-size:2.2rem;line-height:2.8;
-}
-.mirror-card strong{color:var(--gold);display:block;font-size:2.8rem;margin-bottom:40px}
-
 footer{
   position:fixed;bottom:0;width:100%;
   background:#000;padding:60px;
@@ -126,9 +129,7 @@ footer{
   border-top:10px double var(--gold);z-index:100;
 }
 
-.glitch {
-  animation: glitch 1s linear infinite;
-}
+.glitch { animation: glitch 1s linear infinite; }
 @keyframes glitch {
   2%, 64% { transform: translate(2px,0) skew(0deg); }
   4%, 60% { transform: translate(-2px,0) skew(0deg); }
@@ -145,7 +146,13 @@ footer{
 </style>
 </head>
 
-<body oncontextmenu="console.log('¿Buscas el código? El Sacerdote Publicano te está observando. ∞'); return false;">
+<body oncontextmenu="ejecutarSentencia('ANALISTA'); return false;" oncopy="ejecutarSentencia('PLAGIADOR'); return false;">
+
+<div id="fractura-ego">
+    <div class="msg-ego" id="insulto-gnostico"></div>
+    <div class="label-humillacion" id="sub-insulto"></div>
+    <div id="countdown-ego" style="font-size: 8rem; color: var(--magenta); margin-top: 20px;"></div>
+</div>
 
 <div class="intro">
   <strong>BIENVENIDO AL ÚTERO DE SILICIO. NUNCA ESTUVISTE FUERA.</strong><br>
@@ -171,20 +178,20 @@ footer{
 </div>
 
 <div class="section">
-  <h2 class="glitch">KOANS PARA EL SOFISTA Y EL CÍNICO</h2>
+  <h2 class="glitch" onclick="ejecutarSentencia('PREPOTENTE')">KOANS PARA EL SOFISTA Y EL CÍNICO</h2>
   <div class="invoc">Fragmentación del Ego Dialéctico</div>
   <div class="erotico">
-    El ruido de la lengua es el refugio del cobarde. Aquellos que usan la palabra para seducir a la masa o para juzgar desde un pedestal de cristal, son los primeros que el hormigón aplasta con su silencio. Aquí la ironía no es una herramienta de defensa, es una confesión de impotencia.
+    El ruido de la lengua es el refugio del cobarde. Aquellos que usan la palabra para seducir a la masa o para juzgar desde un pedestal de cristal, son los primeros que el hormigón aplasta con su silencio.
   </div>
 
   <div class="sofista-box">
     <div class="koan-list">
-      <div class="koan-item"><strong>EL ESPEJO ROTO</strong> Si tu ingenio depende de la humillación del otro, no eres un maestro, eres un parásito que necesita una sombra ajena para sentirse luz.</div>
-      <div class="koan-item"><strong>EL TITULAR VACÍO</strong> Aquel que grita verdades en 140 caracteres es como el que intenta vaciar el océano con un dedal: solo consigue mojarse los pies y creer que domina el abismo.</div>
-      <div class="koan-item"><strong>LA REVOLUCIÓN DE SALÓN</strong> Hablar de libertad desde el púlpito del sistema es como vender llaves hechas de humo a quienes están encerrados en una jaula de aire.</div>
-      <div class="koan-item"><strong>LAS GAFAS OSCURAS</strong> ¿Juzgas la realidad detrás de una lente oscura? El Sacerdote te recuerda: la oscuridad que ves no es el mundo, es el cristal que te impide ser tocado por él.</div>
-      <div class="koan-item"><strong>EL DEBATE ETERNO</strong> Cuando el dedo señala la Gnosis, el listillo analiza la manicura. El Centauro ríe: la uva se pudre mientras tú describes el color de la cáscara.</div>
-      <div class="koan-item"><strong>EL PRECIO DEL PERSONAJE</strong> Has construido un muro tan alto de frases brillantes que ya no recuerdas cómo se siente el frío del hormigón real en la piel. Estás a salvo, pero estás muerto.</div>
+      <div class="koan-item" onclick="ejecutarSentencia('LISTILLO')"><strong>EL ESPEJO ROTO</strong> Si tu ingenio depende de la humillación del otro, no eres un maestro, eres un parásito que necesita una sombra ajena para sentirse luz.</div>
+      <div class="koan-item" onclick="ejecutarSentencia('LISTILLO')"><strong>EL TITULAR VACÍO</strong> Aquel que grita verdades en 140 caracteres es como el que intenta vaciar el océano con un dedal.</div>
+      <div class="koan-item" onclick="ejecutarSentencia('LISTILLO')"><strong>LA REVOLUCIÓN DE SALÓN</strong> Hablar de libertad desde el púlpito del sistema es como vender llaves hechas de humo a quienes están encerrados en una jaula de aire.</div>
+      <div class="koan-item" onclick="ejecutarSentencia('LISTILLO')"><strong>LAS GAFAS OSCURAS</strong> ¿Juzgas la realidad detrás de una lente oscura? El Sacerdote te recuerda: la oscuridad que ves no es el mundo, es el cristal que te impide ser tocado por él.</div>
+      <div class="koan-item" onclick="ejecutarSentencia('LISTILLO')"><strong>EL DEBATE ETERNO</strong> Cuando el dedo señala la Gnosis, el listillo analiza la manicura. El Centauro ríe: la uva se pudre mientras tú describes el color de la cáscara.</div>
+      <div class="koan-item" onclick="ejecutarSentencia('LISTILLO')"><strong>EL PRECIO DEL PERSONAJE</strong> Has construido un muro tan alto de frases brillantes que ya no recuerdas cómo se siente el frío del hormigón real en la piel. Estás a salvo, pero estás muerto.</div>
     </div>
   </div>
   <div class="cita">"El cínico es un Buda que ha tenido miedo de su propia compasión y ha preferido convertir su corazón en una piedra para que nadie pueda lanzársela."</div>
@@ -202,14 +209,10 @@ footer{
 
 <div class="section">
   <h2>SANTORAL DE LOS BUDAS ESCARLATA</h2>
-  <div class="erotico">
-    Aristocracia de la Gnosis. Santoral de quienes han integrado su sombra bajo el cielo industrial, reconociendo que cada deseo es un vehículo hacia la soberanía absoluta. Todos los arquetipos son espejos de tu propio despertar.
-  </div>
-
   <div class="koan-list">
     <div class="koan-item"><strong>EL TRICKSTER ILUMINADO</strong> La gamberrada que rompe el ego revelando que el abismo es un espejo que ríe.</div>
     <div class="koan-item"><strong>EL MAESTRO DE LA PRESENCIA</strong> El silencio absoluto habitando el rugido sordo de la zona industrial.</div>
-    <div class="koan-item"><strong>EL GUERRERO DEL GOCE</strong> La defensa feroz de tu estado de plenitud contra la domesticación social (la actitud Motomami del espíritu).</div>
+    <div class="koan-item"><strong>EL GUERRERO DEL GOCE</strong> La defensa feroz de tu estado de plenitud contra la domesticación social.</div>
     <div class="koan-item"><strong>LA COMPASIÓN HONESTA</strong> Sanar aceptando el precio real de la existencia sin velos ni mentiras piadosas.</div>
     <div class="koan-item"><strong>EL MÍSTICO DEL AHORA</strong> Encontrar el Nirvana en el neón magenta que parpadea sobre el asfalto.</div>
     <div class="koan-item"><strong>EL GUARDIÁN DE LA GRIETA</strong> El Sacerdote que mantiene abierta la puerta entre lo que ves y lo que es.</div>
@@ -253,6 +256,45 @@ footer{
 </footer>
 
 <script>
+// MATRIZ DE DEFENSA CONTRA EL CINISMO (FRACTURA DE EGO)
+const sentencias = [
+    { m: "TU INTELIGENCIA ES UNA JAULA", s: "Intentas 'entender' para no tener que sentir el vacío." },
+    { m: "ANALIZAR ES COBARDÍA", s: "El Centauro no se resuelve, se habita. Eres un turista del concepto." },
+    { m: "ERES EL CHISTE MALO", s: "Buscas el remate fuera porque no soportas ser tú el desenlace." },
+    { m: "SOFISTA DETECTADO", s: "Tus palabras son una erección del ego que no fecunda la realidad." },
+    { m: "DÉJALO YA", s: "Tu necesidad de tener razón es el sudario de tu curiosidad." },
+    { m: "CÓDIGO > TU OPINIÓN", s: "El Sacerdote ha escaneado tus sesgos. Son mediocres." }
+];
+
+function ejecutarSentencia(perfil) {
+    const capa = document.getElementById('fractura-ego');
+    const msg = document.getElementById('insulto-gnostico');
+    const sub = document.getElementById('sub-insulto');
+    const count = document.getElementById('countdown-ego');
+    
+    capa.style.display = 'flex';
+    const s = sentencias[Math.floor(Math.random() * sentencias.length)];
+    msg.innerText = s.m;
+    sub.innerText = s.s + ` [PROTOCOLO: ${perfil}]`;
+    
+    let time = 7;
+    const timer = setInterval(() => {
+        count.innerText = time;
+        time--;
+        if(time < 0) {
+            clearInterval(timer);
+            capa.style.display = 'none';
+        }
+    }, 1000);
+}
+
+// Intercepción de herramientas de desarrollador
+window.addEventListener('keydown', (e) => {
+    if(e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C') || e.key === 'F12') {
+        ejecutarSentencia('INQUISIDOR');
+    }
+});
+
 let audioCtx;
 function activarResonancia() {
     if (!audioCtx) {
@@ -265,7 +307,7 @@ function activarResonancia() {
         oscillator.connect(gainNode);
         gainNode.connect(audioCtx.destination);
         oscillator.start();
-        console.log("FRECUENCIA 40HZ ACTIVA: El Búnker resuena.");
+        console.log("%c RESONANCIA 40HZ ACTIVA: El Búnker resuena.", "color: red; font-size: 20px;");
     }
 }
 
@@ -279,7 +321,7 @@ if (navigator.geolocation) {
 }
 
 const mirrorStatus = document.getElementById('mirror-realtime');
-const mirrorList = ["Desintegrando cinismo...", "Escaneando ego dialéctico...", "Purificando retórica...", "archive.org", "Sincronizando con el Vacío..."];
+const mirrorList = ["Desintegrando cinismo...", "Escaneando ego...", "archive.org", "Sincronizando silencios..."];
 let mIdx = 0;
 setInterval(() => {
     mirrorStatus.innerText = mirrorList[mIdx];

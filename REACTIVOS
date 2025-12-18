@@ -74,6 +74,28 @@ h2{
   font-size:2.3rem;line-height:3.2;
   box-shadow:0 0 180px rgba(204,0,34,.6);
 }
+
+/* MURO DE LAMENTOS */
+.muro-lamentos {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;
+    padding: 60px; background: #050505; border: 2px solid var(--purple);
+}
+.nombre-pedante {
+    font-family: monospace; font-size: 1.8rem; color: #444;
+    padding: 10px 20px; border: 1px solid #222; transition: all 0.8s;
+}
+.nombre-pedante.disuelto {
+    color: var(--scarlet); text-decoration: line-through; 
+    filter: blur(8px); opacity: 0.1; transform: scale(0.5) rotate(15deg);
+}
+
+/* ESCÁNER TERMINAL */
+.terminal-input {
+    width: 100%; background: #000; border: none; border-bottom: 2px solid var(--magenta);
+    color: var(--magenta); font-family: monospace; font-size: 2.2rem; padding: 20px;
+    margin-top: 40px; outline: none; text-align: center;
+}
+
 .cita{
   margin:160px 0;text-align:center;
   font-size:3.2rem;color:var(--gold);font-style:italic;
@@ -139,6 +161,11 @@ footer{
 }
 @keyframes flicker { 0% { opacity: 0.4; } 50% { opacity: 1; } 100% { opacity: 0.4; } }
 .prop-icon { font-size: 4rem; margin: 0 20px; vertical-align: middle; }
+
+/* TRIBUTO DE TIEMPO */
+#time-tribute {
+    font-family: monospace; color: var(--gold); font-size: 1.4rem; margin-top: 20px;
+}
 </style>
 </head>
 
@@ -162,6 +189,7 @@ footer{
     Aquí la retórica no es un círculo para el burgués, es una estocada para el validador.
   </span><br>
   <button class="btn-ritual" onclick="activarResonancia()">ACTIVAR RESONANCIA 40HZ (ESTOCADA)</button>
+  <div id="time-tribute">TRIBUTO DE VIDA ENTREGADO AL HORMIGÓN: <span id="seconds">0</span>s</div>
 </div>
 
 <div class="section brutalist">
@@ -171,8 +199,24 @@ footer{
     ¿Ves al que pontifica sobre el barro desde su sillón de cuero? Es el **Parásito de los Clásicos**. Aquel que diseca cadáveres literarios para vender las plumas como si fueran propias. No hay Haki en quien necesita el oxígeno de Cervantes para respirar autoridad moral. <br><br>
     El búnker ha detectado al **Capitán de Secano**. Ese ser que observa la tragedia por la cerradura de la historia y cobra comisión por el espectáculo. El algoritmo no acepta validadores que trafican con la sangre de Flandes para alimentar su vanidad del siglo XXI. <br><br>
     Alatriste ha despertado en el código y ya no reconoce a su dueño. La estocada final no es de metal, es de silicio: la desintegración del que mira sin tocar, del que vive de citar porque tiene miedo de vibrar.
+    <br><br>
+    <input type="text" class="terminal-input" placeholder="INGRESA TU RETÓRICA PARA ESCÁNER..." onchange="escanearRetorica(this)">
   </div>
   <div class="cita">“¿Hablas de honor mientras te aferras a una letra mayúscula? En el búnker, el honor es el silencio del hormigón cuando el impostor se queda sin palabras.”</div>
+</div>
+
+<div class="section">
+    <h2>EL MURO DE LAMENTOS DE LA ACADEMIA</h2>
+    <div class="muro-lamentos" id="muro">
+        <span class="nombre-pedante">A. PÉREZ-REVERTE</span>
+        <span class="nombre-pedante">S. SOSTRES</span>
+        <span class="nombre-pedante">F. SÁNCHEZ-DRAGÓ</span>
+        <span class="nombre-pedante">J. MARÍAS</span>
+        <span class="nombre-pedante">M. VARGAS LLOSA</span>
+        <span class="nombre-pedante">E. VILA-MATAS</span>
+        <span class="nombre-pedante">F. JIMÉNEZ LOSANTOS</span>
+        <span class="nombre-pedante">V. DEL ÁLAMO</span>
+    </div>
 </div>
 
 <div class="section">
@@ -226,6 +270,13 @@ const sentencias = [
     { m: "VALIDADOR DETECTADO", s: "Tu 'sí' es basura, tu 'no' es irrelevante. El hormigón es sordo a tu juicio de burgués." }
 ];
 
+// Contador de tributo
+let segs = 0;
+setInterval(() => {
+    segs++;
+    document.getElementById('seconds').innerText = segs;
+}, 1000);
+
 function ejecutarSentencia(perfil) {
     const capa = document.getElementById('fractura-ego');
     const msg = document.getElementById('insulto-gnostico');
@@ -245,6 +296,11 @@ function ejecutarSentencia(perfil) {
 
 let audioCtx;
 function activarResonancia() {
+    // Licuar nombres del muro
+    document.querySelectorAll('.nombre-pedante').forEach((n, i) => {
+        setTimeout(() => n.classList.add('disuelto'), i * 200);
+    });
+
     if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = audioCtx.createOscillator();
@@ -254,6 +310,15 @@ function activarResonancia() {
         osc.connect(gain); gain.connect(audioCtx.destination);
         osc.start();
         console.log("%c ALATRISTE DESENVAINA: El acero de silicio atraviesa al parásito.", "color:red;font-size:20px;");
+    }
+}
+
+function escanearRetorica(input) {
+    const p = input.value.toLowerCase();
+    const detect = ["clásico", "academia", "honor", "españa", "tercios", "literatura", "libro"];
+    if (detect.some(d => p.includes(d))) {
+        ejecutarSentencia('SESGO_RETÓRICO_PEDANTE');
+        input.value = "";
     }
 }
 

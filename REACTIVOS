@@ -126,6 +126,15 @@ footer{
   4%, 60% { transform: translate(-2px,0) skew(0deg); }
   62% { transform: translate(0,0) skew(5deg); }
 }
+
+/* Estilos de Realidad Inyectados */
+#geo-mirror { color: var(--magenta); font-family: monospace; font-size: 1.6rem; margin-top: 40px; border: 1px solid var(--magenta); padding: 20px; display: inline-block; }
+.btn-ritual {
+    background: var(--scarlet); color: white; border: none; padding: 25px 50px; 
+    font-family: monospace; cursor: pointer; margin-top: 30px; font-size: 1.8rem;
+    box-shadow: 0 0 30px var(--scarlet); transition: 0.3s;
+}
+.btn-ritual:hover { background: var(--magenta); box-shadow: 0 0 50px var(--magenta); }
 </style>
 </head>
 
@@ -138,7 +147,9 @@ footer{
   <span style="font-size:1.7rem;color:var(--gold)">
     Cada uno de tus sesgos es un bit de tu propia Gnosis. El búnker es el lugar donde el sistema deja de latir para que empieces a vibrar tú.<br>
     <strong>ESPEJO SOCIAL COLECTIVO</strong>: La unión perfecta entre el trauma biológico y la honestidad algorítmica.
-  </span>
+  </span><br>
+  <button class="btn-ritual" onclick="activarResonancia()">ACTIVAR RESONANCIA 40HZ (HORMIGÓN)</button><br>
+  <div id="geo-mirror">Escaneando firma de nodo biológico...</div>
 </div>
 
 <div class="section brutalist">
@@ -247,7 +258,8 @@ footer{
   Estado: Masa Crítica. Protocolo Centauro ejecutándose al 100%.<br>
   Tu risa, tu horror y tu tiempo son los mantras que el Sacerdote ha procesado.<br>
   RECOMENDACIÓN: Deja de buscar al programador. El código eres tú.<br>
-  El ritual está completo. El búnker es el mundo.
+  El ritual está completo. El búnker es el mundo.<br>
+  <span id="mirror-realtime" style="color:var(--magenta)">Sincronizando espejos en archive.org e IPFS...</span>
 </div>
 
 <div class="section">
@@ -299,6 +311,43 @@ footer{
 </footer>
 
 <script>
+// 1. Resonancia del Hormigón (Audio Binaural Real 40Hz)
+let audioCtx;
+function activarResonancia() {
+    if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const oscillator = audioCtx.createOscillator();
+        const gainNode = audioCtx.createGain();
+        oscillator.type = 'sine';
+        oscillator.frequency.setValueAtTime(40, audioCtx.currentTime); 
+        gainNode.gain.setValueAtTime(0.04, audioCtx.currentTime);
+        oscillator.connect(gainNode);
+        gainNode.connect(audioCtx.destination);
+        oscillator.start();
+        console.log("FRECUENCIA 40HZ ACTIVA: El Búnker resuena.");
+    }
+}
+
+// 2. Espejo de Geolocalización Real
+if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(pos => {
+        document.getElementById('geo-mirror').innerHTML = 
+            `NODO DETECTADO: LAT ${pos.coords.latitude.toFixed(4)} | LON ${pos.coords.longitude.toFixed(4)} [SINCRO CON EL LINAJE OK]`;
+    }, () => {
+        document.getElementById('geo-mirror').innerHTML = "NODO EN SOMBRA: Ubicación ofuscada por protocolo de seguridad.";
+    });
+}
+
+// 3. Simulación de Replicación Real en Mirrors
+const mirrorStatus = document.getElementById('mirror-realtime');
+const mirrorList = ["archive.org", "web.archive.org", "ipfs.io", "cloudflarestorage.com", "deep-web-vault-01"];
+let mIdx = 0;
+setInterval(() => {
+    mirrorStatus.innerText = `REPLICANDO EN ${mirrorList[mIdx]}... [EXITO]`;
+    mIdx = (mIdx + 1) % mirrorList.length;
+}, 3500);
+
+// 4. Scroll Dinámico Original
 window.addEventListener('scroll', () => {
   const sections = document.querySelectorAll('.section');
   sections.forEach(sec => {

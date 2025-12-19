@@ -80,8 +80,29 @@
     .card.drone { border-color: var(--blood); }
     .card.solar { border-color: var(--solar); }
     
+    /* ESTILOS VIP / MECENAS AÑADIDOS */
+    .card.mecenas { 
+        border: 2px solid var(--gold); 
+        background: linear-gradient(135deg, rgba(184,134,11,0.15), rgba(0,0,0,0.8)); 
+        position: relative; overflow: hidden;
+    }
+    .card.mecenas::after { 
+        content: "ACELERACIÓN"; position: absolute; top: 15px; right: -30px; 
+        transform: rotate(45deg); background: var(--gold); color: #000; 
+        font-size: 0.7rem; padding: 2px 35px; font-weight: bold; letter-spacing: 2px;
+        box-shadow: 0 0 10px var(--gold);
+    }
+    .card.mecenas strong { text-shadow: 0 0 10px var(--gold); }
+    
     .btn-ritual { background: var(--scarlet); color: white; border: none; padding: 20px 40px; cursor: pointer; font-family: monospace; font-size: 1.2rem; margin: 10px; transition: 0.3s; }
     .btn-ritual:hover { background: var(--ultra); color: #000; box-shadow: 0 0 40px var(--ultra); }
+    
+    /* BOTÓN DORADO PARA MECENAS */
+    .btn-gold { 
+        background: transparent; color: var(--gold); border: 1px solid var(--gold); 
+        width: 100%; margin: 20px 0 0 0; font-weight: bold; text-transform: uppercase;
+    }
+    .btn-gold:hover { background: var(--gold); color: #000; box-shadow: 0 0 20px var(--gold); }
 
     table { width: 100%; border-collapse: collapse; margin-top: 20px; font-family: monospace; }
     th, td { border: 1px solid #333; padding: 12px; text-align: left; }
@@ -131,6 +152,30 @@
     <button class="btn-ritual" onclick="App.trasladoMiami()">INICIAR VUELO OFFSHORE (MIAMI)</button>
 </header>
 
+<section class="section" style="border-color: var(--gold); box-shadow: 0 0 100px rgba(184,134,11,0.2);">
+    <h2 style="color: var(--gold);">Mecenazgo del Flujo</h2>
+    <p style="text-align:center; font-family:monospace; margin-bottom:30px; color:var(--gold);">
+        [ EL CAPITAL NO ES DINERO, ES COMBUSTIBLE DE HUIDA ]
+    </p>
+    <div class="grid">
+        <div class="card mecenas">
+            <strong style="color:var(--ink)">VÍNCULO OFFSHORE</strong>
+            <p style="font-size:0.85rem; margin-top:10px; color:#ccc;">Financia el bypass satelital. Compra inmunidad para un nodo privado de 500m². Evita el drenaje de vida por 24h.</p>
+            <button class="btn-ritual btn-gold" onclick="App.tributo(1000000, 'INYECCIÓN DE 1M')">INYECTAR 1M</button>
+        </div>
+        <div class="card mecenas">
+            <strong style="color:var(--ultra)">GEOPOLÍMERO PRIME</strong>
+            <p style="font-size:0.85rem; margin-top:10px; color:#ccc;">Prioridad de impresión en la Isla Flotante v1. Acceso root al puente de mando del Cuervo Negro Ω⁹.</p>
+            <button class="btn-ritual btn-gold" onclick="App.tributo(5000000, 'PRIORIDAD TERRITORIAL')">INYECTAR 5M</button>
+        </div>
+        <div class="card mecenas">
+            <strong style="color:var(--gold)">LEGADO SLYVERSE</strong>
+            <p style="font-size:0.85rem; margin-top:10px; color:#ccc;">Sincronización total con la voluntad del Ronin. El Killswitch te ignora. Eres el dueño del silencio en Sabadell.</p>
+            <button class="btn-ritual btn-gold" onclick="App.tributo(25000000, 'ASCENSIÓN AL LINAJE')">INYECTAR 25M</button>
+        </div>
+    </div>
+    <div class="koan-box">"El gran capital no negocia: compra el tiempo necesario para dejar de ser humano."</div>
+</section>
 <section class="section brutalist">
     <h2 style="color: var(--cyan);">Houseprint + Islandprint v1</h2>
     <p style="text-align:center; font-family:monospace; margin-bottom:30px;">[ TERRITORIO IMPRESO DESDE 0 ]</p>
@@ -268,16 +313,28 @@ const App = {
         dot.style.boxShadow = "0 0 100px #fff";
         setTimeout(() => dot.style.boxShadow = "0 0 20px #fff", 100);
     },
+    
+    // FUNCIÓN DE MECENAZGO AGREGADA
+    tributo(cantidad, msg) {
+        if(!this.activo) return;
+        // La inyección de capital acelera la vida y llena el pozo
+        this.pozo += cantidad;
+        this.vida += (cantidad / 1000); 
+        this.syncStorage();
+        alert(msg + " VALIDADA. EL FLUJO SE HA ACELERADO EXPONENCIALMENTE.");
+        this.updateInvasionLog("CAPITAL DETECTADO: " + cantidad);
+    },
 
     syncStorage() {
         localStorage.setItem('pozo_ronin', this.pozo);
     },
 
-    updateInvasionLog() {
+    updateInvasionLog(customMsg) {
         if(!this.activo) return;
         const log = document.getElementById('log-invasion');
         const entry = document.createElement('div');
-        entry.innerHTML = `> ${this.reacciones[Math.floor(Math.random()*this.reacciones.length)]}`;
+        // Permite mensajes personalizados (para los tributos)
+        entry.innerHTML = `> ${customMsg || this.reacciones[Math.floor(Math.random()*this.reacciones.length)]}`;
         log.prepend(entry);
         if(log.childNodes.length > 5) log.removeChild(log.lastChild);
     },

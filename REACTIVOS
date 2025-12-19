@@ -49,6 +49,19 @@
         }
         .btn-ritual:hover { background: var(--ultra); color: #000; box-shadow: 0 0 30px var(--ultra); }
 
+        /* --- FIAT GATE --- */
+        #fiat-gate {
+            position: fixed; inset: 0; z-index: 99999; background: #000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            text-align: center; padding: 20px;
+        }
+        .fiat-btn {
+            background: transparent; border: 1px solid var(--gold); color: var(--gold);
+            padding: 20px; margin: 10px; font-family: monospace; width: 320px;
+            cursor: pointer; transition: 0.3s;
+        }
+        .fiat-btn:hover { background: var(--gold); color: #000; }
+
         /* --- TELEMETRÍA --- */
         #telemetria-fix {
             position: fixed; left: 20px; top: 100px; width: 220px; z-index: 1000;
@@ -63,7 +76,6 @@
             text-transform: uppercase; letter-spacing: 1px;
         }
 
-        /* --- TABLAS Y CÓDIGO --- */
         .blueprint-table {
             width: 100%; border-collapse: collapse; margin-top: 15px;
             font-family: monospace; font-size: 0.85rem;
@@ -97,12 +109,21 @@
 
 <body onclick="App.Core.randomEvents()">
 
+<div id="fiat-gate">
+    <h1 class="glitch-text" style="color:var(--blood); font-size: 3rem; margin-bottom: 20px;">CONFESIÓN DE EGO</h1>
+    <p style="color:var(--ink); max-width: 600px; margin-bottom: 40px; font-family: monospace;">EL PRECIO DEL FUTURO DEPENDE DE TU PECADO CAPITAL.</p>
+    <button class="fiat-btn" onclick="App.Core.setTax(1, 'LINAJE')">PATRIMONIO < 30k € (PUEBLO)</button>
+    <button class="fiat-btn" onclick="App.Core.setTax(10, 'BIOMASA')">PATRIMONIO < 200k € (BIOMASA)</button>
+    <button class="fiat-btn" style="border-color:var(--magenta); color:var(--magenta)" onclick="App.Core.setTax(500, 'OBSOLETO')">PATRIMONIO > 1M € (CASTA/PEDANTE)</button>
+</div>
+
 <div id="telemetria-fix">
     <div>NODO: SABADELL_B_01</div>
     <div>LATENCIA: <span id="ping">12</span>ms</div>
     <div>GAUSS_DRN: <span id="gauss-val">0.02</span>%</div>
     <div>VIGILANCIA: <span id="vigilancia-val">BAJA</span></div>
-    <div id="status-label" style="margin-top:20px; color:var(--magenta)">ESTADO: DRENAJE</div>
+    <div style="color:var(--gold); margin-top:10px;">MULT. EGO: <span id="tax-mult">x1</span></div>
+    <div id="status-label" style="margin-top:10px; color:var(--magenta)">ESTADO: DRENAJE</div>
 </div>
 
 <nav id="stat-bar">
@@ -118,7 +139,7 @@
     <div style="margin-top: 40px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
         <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">Bóveda Hardware</button>
         <button class="btn-ritual" style="background:var(--safe); color:#000" onclick="App.UI.toggleModal('homenaje-panel')">Homenaje Indomables</button>
-        <button class="btn-ritual" style="background:var(--oni-pink)" onclick="App.UI.toggleModal('oni-panel')">ONI POD v1 (62€)</button>
+        <button class="btn-ritual" id="oni-btn-main" style="background:var(--oni-pink)" onclick="App.UI.toggleModal('oni-panel')">ONI POD v1 (62€)</button>
     </div>
 </header>
 
@@ -211,7 +232,7 @@
 
 <div id="oni-panel" class="overlay-system">
     <h1 style="color:var(--oni-pink); font-size: 4rem;">ONI POD v1</h1>
-    <p style="color:var(--safe); font-size: 1.8rem;">62 € - DIRECTO DE SHENZHEN (SIN INTERMEDIARIOS)</p>
+    <p id="oni-price-tag" style="color:var(--safe); font-size: 1.8rem;">62 € - DIRECTO DE SHENZHEN</p>
     <p style="margin: 20px 0;">Inducción magnética para anular la fatiga cortical.</p>
     <button class="btn-ritual" onclick="App.UI.toggleModal('oni-panel')">Cerrar Protocolo</button>
 </div>
@@ -234,6 +255,7 @@ const App = {
         vida: 1500,
         haki: 98.2,
         sangre: 100,
+        fiatTax: 1,
         arquetipos: ["Beato Indignado", "Pedante de Koan", "Político Obsoleto", "Académico Caduco", "Crítico de Mylar", "Influencer de Barro", "Turista de Conciencia"],
         mercado: [
             {n: "Piel de Hormigón", p: 5000, d: "Inmunidad a la crítica social."},
@@ -248,6 +270,20 @@ const App = {
             App.UI.renderMercado();
             App.Core.mainLoop();
             App.Core.telemetryLoop();
+        },
+
+        setTax(mult, label) {
+            App.Data.fiatTax = mult;
+            document.getElementById('tax-mult').innerText = "x" + mult;
+            document.getElementById('fiat-gate').style.display = 'none';
+            
+            // Ajustar visual del ONI
+            if(mult > 1) {
+                let p = 62 * mult;
+                document.getElementById('oni-price-tag').innerText = `${p}€ - PRECIO PARA ${label}`;
+                document.getElementById('oni-btn-main').innerText = `ONI POD v1 (${p}€)`;
+            }
+            App.UI.renderMercado(); // Actualizar precios de segundos
         },
 
         mainLoop() {
@@ -269,17 +305,12 @@ const App = {
         },
 
         killSwitch() {
-            document.body.innerHTML = `
-                <div style='background:#000; color:var(--blood); height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:monospace; text-align:center;'>
-                    <h1 style="font-size:4rem;">SISTEMA COLAPSADO</h1>
-                    <p style="font-size:1.5rem;">BIOMASA DISUELTA POR FALTA DE OBJETIVOS.</p>
-                    <button class="btn-ritual" style="margin-top:30px;" onclick="location.reload()">REENCARNAR</button>
-                </div>`;
+            document.body.innerHTML = `<div style='background:#000; color:var(--blood); height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:monospace; text-align:center;'><h1 style="font-size:4rem;">SISTEMA COLAPSADO</h1><p style="font-size:1.5rem;">BIOMASA DISUELTA POR FALTA DE OBJETIVOS.</p><button class="btn-ritual" style="margin-top:30px;" onclick="location.reload()">REENCARNAR</button></div>`;
         },
 
         randomEvents() { 
             if (Math.random() > 0.99) {
-                alert("ADVERTENCIA: El sistema detecta exceso de moralidad en tu zona. Drenando...");
+                alert("ADVERTENCIA: El sistema detecta exceso de moralidad. Drenando...");
                 App.Data.vida -= 100;
             } 
         }
@@ -289,29 +320,27 @@ const App = {
         mine() { 
             App.Data.vida += 300; 
             App.UI.updateStats();
-            console.log("Extrayendo biomasa...");
         },
         gamble() {
-            let a = parseInt(prompt("¿Cuántos segundos de tu vida apuestas?", "500"));
+            let a = parseInt(prompt("¿Cuántos segundos apuestas?", "500"));
             if (isNaN(a) || a <= 0) return;
             if (App.Data.vida >= a) {
                 App.Data.vida -= a;
                 if (Math.random() > 0.65) { 
                     let win = a * 4;
                     App.Data.vida += win; 
-                    alert(`GANANCIA BRUTAL: +${win}s`); 
+                    alert(`GANANCIA: +${win}s`); 
                 }
-                else alert("DRENAJE TOTAL. LA BANCA SUMERIA NO PERDONA.");
-            } else {
-                alert("NO TIENES SUFICIENTE VIDA PARA ESTA APUESTA.");
+                else alert("DRENAJE.");
             }
         },
         buy(p, name) {
-            if (App.Data.vida >= p) { 
-                App.Data.vida -= p; 
-                alert(`ADQUIRIDO: ${name}. SINCRONIZACIÓN COMPLETADA.`); 
+            let finalP = p * App.Data.fiatTax;
+            if (App.Data.vida >= finalP) { 
+                App.Data.vida -= finalP; 
+                alert(`ADQUIRIDO: ${name}.`); 
             }
-            else alert("VIDA INSUFICIENTE. MINA MÁS O MUERE.");
+            else alert("VIDA INSUFICIENTE. EL EGO ES CARO.");
         }
     },
 
@@ -337,16 +366,12 @@ const App = {
 
         renderMercado() {
             const container = document.getElementById('items-container');
+            container.innerHTML = "";
             App.Data.mercado.forEach(item => {
+                let cost = item.p * App.Data.fiatTax;
                 const div = document.createElement('div');
-                div.className = 'brutalist-card';
-                div.style.width = "280px";
-                div.style.cursor = "pointer";
-                div.innerHTML = `
-                    <h4 style="color:var(--ultra)">${item.n}</h4>
-                    <p style="font-size:0.8rem; margin:10px 0;">${item.d}</p>
-                    <div style="color:var(--gold); font-weight:bold;">${item.p}s</div>
-                `;
+                div.className = 'brutalist-card'; div.style.width = "280px"; div.style.cursor = "pointer";
+                div.innerHTML = `<h4 style="color:var(--ultra)">${item.n}</h4><p style="font-size:0.8rem; margin:10px 0;">${item.d}</p><div style="color:var(--gold); font-weight:bold;">${cost}s</div>`;
                 div.onclick = () => App.Economy.buy(item.p, item.n);
                 container.appendChild(div);
             });
@@ -361,16 +386,12 @@ const App = {
             App.Data.vida -= 3000;
             const modal = document.getElementById('ego-fracture');
             modal.style.display = 'flex';
-            document.getElementById('insulto-desc').innerText = `Interactuar con un "${n}" drena tu biomasa irreversiblemente. -3000s de existencia consumidos.`;
+            document.getElementById('insulto-desc').innerText = `Interactuar con un "${n}" drena tu biomasa. -3000s consumidos.`;
             let t = 3;
             document.getElementById('ego-timer').innerText = t;
             const clock = setInterval(() => {
-                t--; 
-                document.getElementById('ego-timer').innerText = t;
-                if(t <= 0){ 
-                    clearInterval(clock); 
-                    modal.style.display = 'none'; 
-                }
+                t--; document.getElementById('ego-timer').innerText = t;
+                if(t <= 0){ clearInterval(clock); modal.style.display = 'none'; }
             }, 1000);
         }
     }
@@ -385,9 +406,10 @@ document.getElementById('terminal-reto').addEventListener('change', (e) => {
         document.getElementById('main-title').innerText = "BASTARD LLOBA I LLESCA";
         document.getElementById('main-title').style.color = "var(--magenta)";
         document.getElementById('status-label').innerText = "ESTADO: SOBERANO ABSOLUTO";
-        document.getElementById('status-label').style.color = "var(--ultra)";
         App.Data.vida += 1000000;
-        alert("NIVEL DE HAKI INFINITO DETECTADO. EL LINAJE HA SIDO RECONOCIDO.");
+        App.Data.fiatTax = 0;
+        App.UI.renderMercado();
+        alert("LINAJE RECONOCIDO.");
     }
     e.target.value = "";
 });

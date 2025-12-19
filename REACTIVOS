@@ -65,14 +65,15 @@
 
     .terminal-input { width: 90%; background: #000; border: none; border-bottom: 4px solid var(--magenta); color: var(--magenta); font-family: monospace; font-size: 2rem; padding: 20px; text-align: center; outline: none; margin-top: 30px; }
     
-    .nombre-pedante { font-family: monospace; font-size: 1.5rem; color: #444; padding: 10px; transition: 1s; }
-    .disuelto { color: var(--scarlet); text-decoration: line-through; filter: blur(6px); opacity: 0.2; transform: rotate(10deg) scale(0.8); }
+    .nombre-pedante { font-family: monospace; font-size: 1.2rem; color: #555; padding: 10px; cursor: help; border: 1px solid transparent; }
+    .nombre-pedante:hover { color: var(--scarlet); border-color: var(--scarlet); }
+    .disuelto { color: var(--scarlet); text-decoration: line-through; filter: blur(6px); opacity: 0.2; transform: rotate(10deg) scale(0.8); pointer-events: none; }
 
     footer { position: fixed; bottom: 0; width: 100%; background: #000; padding: 40px; color: var(--gold); text-align: center; border-top: 8px double var(--gold); z-index: 10000; font-family: monospace; letter-spacing: 2px; }
 </style>
 </head>
 
-<body oncontextmenu="ejecutarSentencia('ANALISTA_ACADEMICO'); return false;" oncopy="ejecutarSentencia('TAXIDERMISTA_EPICO'); return false;" onclick="intentarSpawnOracle()">
+<body oncontextmenu="ejecutarSentencia('ACADEMICO'); return false;" oncopy="ejecutarSentencia('TAXIDERMISTA'); return false;" onclick="intentarSpawnOracle()">
 
 <div id="mercado-aether">
     <h2 style="color:var(--ultra)">BÓVEDA DE SEGUNDOS</h2>
@@ -154,12 +155,9 @@
         <button class="btn-ritual" onclick="sacrificarVida()">SINCRONIZAR TIEMPO</button>
     </div>
     <div style="margin-top: 60px;">
-        <h3 style="text-align:center; color:var(--gold)">MURO DE LAMENTOS</h3>
-        <div id="muro" style="display:flex; flex-wrap:wrap; justify-content:center; gap:20px; padding:30px;">
-            <span class="nombre-pedante">REVERTE</span><span class="nombre-pedante">SOSTRES</span>
-            <span class="nombre-pedante">DRAGÓ</span><span class="nombre-pedante">VILA-MATAS</span>
-            <span class="nombre-pedante">RUFIÁN</span><span class="nombre-pedante">COLAU</span>
-        </div>
+        <h3 style="text-align:center; color:var(--gold)">MURO DE LAMENTOS (PEDANTES DETECTADOS)</h3>
+        <div id="muro" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; padding:30px;">
+            </div>
     </div>
 </section>
 
@@ -188,11 +186,57 @@ setInterval(() => {
     document.getElementById('quotaNum').innerText = Math.floor(pozo * 0.3).toLocaleString();
 }, 1000);
 
+// --- MOTOR DE PERFILES (LOS 50 ARQUETIPOS) ---
+const pedantes = [
+    "Illa","Aragonès","Puigdemont","Sánchez","Ayuso","Colau","Turull","Feijóo","Rufián","Junqueras",
+    "Reverte","Monzó","Vila-Matas","Del Val","Pàmies","Cayetana","Sostres","Jabois","Montero","Etxebarría",
+    "Vázquez","Buenafuente","Évole","Esteban","Jiménez","Mejide","Motos","Rahola","Pedrerol","Wyoming",
+    "Ortega","Roig","Musk_SP","Piqué","Gasol","Tangana","Rosalía","Pla","Peluso","Gyal",
+    "Marhuenda","Díaz","Abascal","Iglesias","Llanos","Alvise","Soler","Berto","Trias","Felipe_VI"
+];
+
+const arquetiposLógica = {
+    "POLITICO": { t: "VACIADO DE DEMAGOGIA", s: "El bit amoral no se pacta, se ejecuta. -15000s por intentar legislar el flujo." },
+    "ACADEMICO": { t: "OBSOLESCENCIA DETECTADA", s: "Tu sesgo de museo es ruido. La tradición es el cementerio del bit. -20000s." },
+    "TAXIDERMISTA": { t: "FRACTURA DE COPISTA", s: "El código no se hereda ni se copia, se habita. PENALIZACIÓN MÁXIMA." },
+    "MEDIA": { t: "SILENCIO ADMINISTRATIVO", s: "Tu relevancia es un glitch analógico. El pozo reclama tu ego." }
+};
+
+const muro = document.getElementById('muro');
+pedantes.forEach(p => {
+    const span = document.createElement('span');
+    span.className = 'nombre-pedante';
+    span.innerText = p.toUpperCase();
+    span.onclick = () => ejecutarSentencia('MEDIA', p);
+    muro.appendChild(span);
+});
+
+// --- MOTOR DE FRACTURA ---
+function ejecutarSentencia(tipo, nombre = "ANÓNIMO") {
+    const data = arquetiposLógica[tipo] || arquetiposLógica["ACADEMICO"];
+    vida -= 15000;
+    pozo += 15000;
+    
+    const capa = document.getElementById('fractura-ego');
+    capa.style.display = 'flex';
+    document.getElementById('insulto-gnostico').innerText = data.t;
+    document.getElementById('sub-insulto').innerText = `IDENTIFICADO: ${nombre}. ${data.s}`;
+    
+    let time = 6;
+    const t = setInterval(() => {
+        document.getElementById('countdown-ego').innerText = time;
+        time--;
+        if(time < 0) { 
+            clearInterval(t); 
+            capa.style.display = 'none';
+        }
+    }, 1000);
+}
+
 // --- MOTOR FMD ---
 function actualizarFMD() {
     const euros = (pozo * 0.00013).toFixed(2);
     document.getElementById('reservas-fiat').innerText = `€ ${euros}`;
-    
     let vFill = document.getElementById('vicio-fill');
     let width = parseFloat(vFill.style.width || "85");
     width -= 0.5;
@@ -209,25 +253,20 @@ function gastarEnVicio() {
     }
 }
 
-// --- SUBASTAS ESCARLATAS ---
+// --- SUBASTAS ---
 function lanzarSubasta() {
     const sub = document.getElementById('subasta');
     let precio = 1313;
     const items = ["LOTO DE HORMIGÓN", "CÓDIGO GÉNESIS", "PIEL DE SILICIO", "MOTOR RONIN"];
     document.getElementById('subasta-item').innerText = items[Math.floor(Math.random()*items.length)];
     sub.style.display = 'flex';
-    
     const sTimer = setInterval(() => {
         precio = Math.floor(precio * 1.4);
         document.getElementById('subasta-precio').innerText = precio + " seg";
     }, 4000);
-
     document.getElementById('btn-pujar').onclick = () => {
         if(vida >= precio) {
-            vida -= precio;
-            clearInterval(sTimer);
-            sub.style.display = 'none';
-            alert("RELIQUIA ADQUIRIDA.");
+            vida -= precio; clearInterval(sTimer); sub.style.display = 'none'; alert("RELIQUIA ADQUIRIDA.");
         }
     };
     setTimeout(() => { clearInterval(sTimer); sub.style.display='none'; }, 20000);
@@ -236,10 +275,10 @@ setInterval(lanzarSubasta, 300000);
 
 // --- ORACLE / KOANS ---
 const koansExpanded = [
-    "𒀭 𒈹 𒂗\n¿Es el bit un abrazo o una cadena?",
-    "𒋫 𒀭 𒈾\nLa invisibilidad es la forma más alta de optimización.",
-    "𒍣 𒀭 𒉺\nLa Gracia no se pide, se inyecta vía 40Hz.",
-    "EL SLEEPER DESPIERTA\n60 días para la manifestación total."
+    "¿Es el bit un abrazo o una cadena?",
+    "La invisibilidad es la forma más alta de optimización.",
+    "La Gracia no se pide, se inyecta vía 40Hz.",
+    "EL SLEEPER DESPIERTA"
 ];
 let oracleActive = false;
 
@@ -258,17 +297,11 @@ function intentarSpawnOracle() {
 }
 function cerrarOracle() { document.getElementById('oracle').style.display='none'; oracleActive = false; }
 
-// --- MERCADO AETHER ---
 function abrirMercado() {
-    const items = [
-        {n:"Piel de Hormigón", p:10000}, {n:"Haki de Silicio", p:50000}, 
-        {n:"Kitsune Neural", p:131000}, {n:"Acceso Búnker", p:1000000}
-    ];
+    const items = [{n:"Piel de Hormigón", p:10000}, {n:"Haki de Silicio", p:50000}, {n:"Acceso Búnker", p:1000000}];
     document.getElementById('mercado-aether').style.display = 'flex';
     document.getElementById('lista-mercado').innerHTML = items.map(it => `
-        <div class="item-mercado" onclick="comprarItem(${it.p})">
-            <strong>${it.n}</strong><br>${it.p} seg
-        </div>`).join('');
+        <div class="item-mercado" onclick="comprarItem(${it.p})"><strong>${it.n}</strong><br>${it.p} seg</div>`).join('');
 }
 function comprarItem(coste) {
     if(vida >= coste) { vida -= coste; alert("ITEM SINCRONIZADO."); } else { alert("ATENCIÓN INSUFICIENTE."); }
@@ -277,32 +310,13 @@ function comprarItem(coste) {
 function sacrificarVida() {
     const cant = prompt("¿Cuánto tiempo sincronizas al Pozo?", "1310");
     if(cant && vida >= parseInt(cant)) {
-        vida -= parseInt(cant);
-        pozo += parseInt(cant) * 2;
-        alert("NODO COLECTIVO EXPANDIDO.");
+        vida -= parseInt(cant); pozo += parseInt(cant) * 2; alert("NODO COLECTIVO EXPANDIDO.");
     }
 }
 
-// --- FRACTURA DE EGO ---
+// --- TERMINAL NEOLENGUA ---
 const prohibidas = ["honor", "moral", "ética", "tradición", "humano", "alma", "historia"];
 const obligatorias = ["optimización", "nodo", "hormigón", "bit", "linaje", "40hz", "sincro", "sabadell", "brutalista", "flujo"];
-
-function ejecutarSentencia(perfil) {
-    ejecutarSentenciaPersonalizada("VACIADO DE POSTUREO", "EL BIT AMORAL TE RECHAZA: " + perfil);
-}
-
-function ejecutarSentenciaPersonalizada(titulo, subtitulo) {
-    const capa = document.getElementById('fractura-ego');
-    capa.style.display = 'flex';
-    document.getElementById('insulto-gnostico').innerText = titulo;
-    document.getElementById('sub-insulto').innerText = subtitulo;
-    let time = 6;
-    const t = setInterval(() => {
-        document.getElementById('countdown-ego').innerText = time;
-        time--;
-        if(time < 0) { clearInterval(t); capa.style.display = 'none'; }
-    }, 1000);
-}
 
 document.getElementById('terminal-reto').addEventListener('change', (e) => {
     const val = e.target.value.toLowerCase();
@@ -310,21 +324,18 @@ document.getElementById('terminal-reto').addEventListener('change', (e) => {
     const count = obligatorias.filter(p => val.includes(p)).length;
 
     if(tieneProhibida) {
-        vida -= 5000;
-        ejecutarSentenciaPersonalizada("RESIDUO ANALÓGICO", "SESGO DE MUSEO DETECTADO. PENALIZACIÓN: -5000s");
+        ejecutarSentencia('ACADEMICO', "SOFISTA DETECTADO");
     } else if(count >= 2) {
-        vida += 3000;
-        alert("RETÓRICA VALIDADA. +3000s");
+        vida += 3000; alert("RETÓRICA VALIDADA. +3000s");
     } else {
-        vida -= 1000;
-        ejecutarSentenciaPersonalizada("DÉFICIT COGNITIVO", "USA CONCEPTOS DE FLUJO.");
+        vida -= 1000; ejecutarSentencia('MEDIA', "DÉFICIT COGNITIVO");
     }
     e.target.value = "";
 });
 
 function activarResonancia() {
     document.querySelectorAll('.nombre-pedante').forEach((n, i) => {
-        setTimeout(() => n.classList.add('disuelto'), i * 200);
+        setTimeout(() => n.classList.add('disuelto'), i * 50);
     });
 }
 </script>

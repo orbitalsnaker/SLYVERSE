@@ -27,7 +27,6 @@
             cursor: crosshair;
         }
 
-        /* --- UI COMPONENTS --- */
         .glass-panel {
             background: var(--bg-section); border: 2px solid var(--gold);
             box-shadow: 0 0 40px rgba(204,0,34,0.2); position: relative;
@@ -49,7 +48,6 @@
         }
         .btn-ritual:hover { background: var(--ultra); color: #000; box-shadow: 0 0 30px var(--ultra); }
 
-        /* --- FIAT GATE --- */
         #fiat-gate {
             position: fixed; inset: 0; z-index: 99999; background: #000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -62,7 +60,6 @@
         }
         .fiat-btn:hover { background: var(--gold); color: #000; }
 
-        /* --- TELEMETRÍA --- */
         #telemetria-fix {
             position: fixed; left: 20px; top: 100px; width: 220px; z-index: 1000;
             font-family: monospace; font-size: 0.75rem; color: var(--ultra);
@@ -153,9 +150,9 @@
                 <h3 style="color:var(--safe)">HYPERCAR BOM</h3>
                 <p>4.200 € de hardware puro. Sin filtros de emisiones, sin control de tracción estatal.</p>
                 <ul style="margin: 15px 0; font-family: monospace; font-size: 0.8rem; list-style: none;">
-                    <li>> Chasis: Acero Corten/Carbono</li>
-                    <li>> Motor: Inducción Magnética</li>
-                    <li>> Firmware: AmoralOS</li>
+                    <li>> Chasis: Acero Corten/Carbono 5mm</li>
+                    <li>> Motor: Inducción Magnética 800V</li>
+                    <li>> Firmware: AmoralOS (Kernel Zero)</li>
                 </ul>
                 <button class="btn-ritual" style="background:var(--safe); color:#000; width:100%;">Detalles Técnicos</button>
             </div>
@@ -181,13 +178,14 @@
                 <button class="btn-ritual" style="width:100%; margin-top:15px;">Descargar .STL</button>
             </div>
             <div class="brutalist-card">
-                <h3 style="color:var(--cyan)">BOM_V2_2025</h3>
+                <h3 style="color:var(--cyan)">BOM_V2_2025 (DRONE)</h3>
                 <table class="blueprint-table">
                     <tr><th>Componente</th><th>Modelo</th></tr>
                     <tr><td>Controladora</td><td>SpeedyBee F405 V3</td></tr>
                     <tr><td>Motores</td><td>XING2 2207 1850KV</td></tr>
                     <tr><td>Video</td><td>Walksnail Avatar HD Nano</td></tr>
                     <tr><td>TX/RX</td><td>ELRS 2.4G Dual</td></tr>
+                    <tr><td>Hélices</td><td>HQProp Ethix S5</td></tr>
                 </table>
             </div>
         </div>
@@ -239,7 +237,7 @@
 
 <div id="mercado-aether" class="overlay-system">
     <h2 style="color:var(--ultra); font-size:2.5rem; margin-bottom:30px;">BÓVEDA DE HARDWARE AMORAL</h2>
-    <div id="items-container" style="display:flex; gap:20px; margin-bottom:40px; flex-wrap: wrap; justify-content: center;"></div>
+    <div id="items-container" style="display:flex; gap:20px; margin-bottom:40px; flex-wrap: wrap; justify-content: center; overflow-y: auto; max-height: 70vh;"></div>
     <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">Cerrar Bóveda</button>
 </div>
 
@@ -260,6 +258,11 @@ const App = {
         mercado: [
             {n: "Piel de Hormigón", p: 5000, d: "Inmunidad a la crítica social."},
             {n: "Haki de Silicio", p: 20000, d: "Sincronización total con el metal."},
+            {n: "Inyector de Adrenalina", p: 1200, d: "Aumenta vida temporalmente."},
+            {n: "Antena Cherry RHCP", p: 450, d: "Claridad de video en zonas industriales."},
+            {n: "Frame Carbono 5mm", p: 3200, d: "Resistencia estructural extrema."},
+            {n: "ESC 60A BLHeli_32", p: 1800, d: "Potencia bruta sin límites estatales."},
+            {n: "GPS M10 Amoral", p: 900, d: "Posicionamiento sin rastreo gubernamental."},
             {n: "Permiso Miami", p: 100000, d: "Exilio dorado sin extradición."}
         ]
     },
@@ -277,13 +280,12 @@ const App = {
             document.getElementById('tax-mult').innerText = "x" + mult;
             document.getElementById('fiat-gate').style.display = 'none';
             
-            // Ajustar visual del ONI
             if(mult > 1) {
                 let p = 62 * mult;
                 document.getElementById('oni-price-tag').innerText = `${p}€ - PRECIO PARA ${label}`;
                 document.getElementById('oni-btn-main').innerText = `ONI POD v1 (${p}€)`;
             }
-            App.UI.renderMercado(); // Actualizar precios de segundos
+            App.UI.renderMercado();
         },
 
         mainLoop() {

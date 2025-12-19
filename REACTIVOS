@@ -53,7 +53,7 @@ h2{ color:var(--magenta);text-align:center; font-size:5rem;margin:180px 0 140px;
 }
 @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
 
-#tablet { font-family: monospace; font-size: 5rem; background: #1a1a1a; padding: 40px; border: 10px ridge var(--gold); color: var(--cyan); cursor: pointer; line-height: 1.2; }
+#tablet { font-family: monospace; font-size: 4.5rem; background: #1a1a1a; padding: 40px; border: 10px ridge var(--gold); color: var(--cyan); cursor: pointer; line-height: 1.2; }
 .item-mercado { padding: 40px; border: 4px double var(--cyan); margin: 10px; cursor: pointer; transition: 0.3s; }
 .item-mercado:hover { background: var(--cyan); color: #000; }
 
@@ -106,14 +106,16 @@ footer{ position:fixed;bottom:0;width:100%; background:#000;padding:60px; color:
 </div>
 
 <div class="intro">
-  <div style="margin-bottom: 40px;">
+  <div style="margin-bottom: 40px; text-align:center;">
     <span class="smell-fx">ATMÓSFERA: [OLOR A PÓLVORA Y CEMENTO FRESCO]</span><br>
     <span class="prop-icon">⚔️</span><span class="prop-icon">🎩</span><span class="prop-icon">🎱</span>
   </div>
-  <strong>SABADELL BRUTALISTA · EL BÚNKER Y EL CASINO</strong><br>
-  <div id="time-tribute">TU VIDA ENTREGADA AL HORMIGÓN: <span id="seconds">0</span>s</div>
-  <div style="color:var(--scarlet); font-size:1.6rem;">POZO DE SUFRIMIENTO COLECTIVO: <span id="pozoNum">0</span>s</div>
-  <button class="btn-ritual" onclick="activarResonancia()">ACTIVAR RESONANCIA 40HZ</button>
+  <div style="text-align:center; font-size:1.5rem;">
+    <strong>SABADELL BRUTALISTA · EL BÚNKER Y EL CASINO</strong><br>
+    <div id="time-tribute">TU VIDA ENTREGADA AL HORMIGÓN: <span id="seconds">0</span>s</div>
+    <div style="color:var(--scarlet); font-size:1.6rem;">POZO DE SUFRIMIENTO COLECTIVO: <span id="pozoNum">0</span>s</div>
+    <button class="btn-ritual" onclick="activarResonancia()">ACTIVAR RESONANCIA 40HZ</button>
+  </div>
 </div>
 
 <div class="section brutalist">
@@ -127,7 +129,7 @@ footer{ position:fixed;bottom:0;width:100%; background:#000;padding:60px; color:
 
 <div class="section" id="casino-anexo" style="border-color: var(--cyan); background: radial-gradient(circle at center, #1a0000 0%, #000 100%);">
     <h2 style="color:var(--cyan); text-shadow: 0 0 30px var(--cyan);">CASINO SUMERIO · 𒀭𒈾𒀭</h2>
-    <div class="invoc">LA CASA NUNCA PIERDE. EL LINAJE SIEMPRE GANA.</div>
+    <div style="text-align:center; font-family:monospace; margin-bottom:40px;">LA CASA NUNCA PIERDE. EL LINAJE SIEMPRE GANA.</div>
 
     <div class="mirror-grid">
         <div class="mirror-card">
@@ -143,7 +145,7 @@ footer{ position:fixed;bottom:0;width:100%; background:#000;padding:60px; color:
     </div>
 
     <div id="rueda"></div>
-    <div class="subliminal">La rueda amoral gira. Cada 131s el azar decide tu tributo.</div>
+    <div style="text-align:center; font-family:monospace; color:var(--cyan); margin-top:20px;">La rueda amoral gira. Cada 131s el azar decide tu tributo.</div>
 </div>
 
 <div class="section">
@@ -163,7 +165,7 @@ footer{ position:fixed;bottom:0;width:100%; background:#000;padding:60px; color:
   </div>
 </div>
 
-<div class="edicto-box">
+<div class="edicto-box" style="text-align:center; padding:40px; font-family:monospace;">
   OPERACIÓN HORMIGÓN ESCARLATA · ESTADO: MASA CRÍTICA.<br>
   <span id="mirror-realtime" style="color:var(--magenta)">Licuando validadores de secano...</span>
 </div>
@@ -173,7 +175,6 @@ footer{ position:fixed;bottom:0;width:100%; background:#000;padding:60px; color:
 </footer>
 
 <script>
-// --- LÓGICA DE TIEMPO Y POZO ---
 let vida = parseInt(localStorage.getItem('v') || '0');
 let pozo = parseInt(localStorage.getItem('pozo') || '0');
 
@@ -209,16 +210,27 @@ function lanzarSubasta() {
     };
     setTimeout(() => { clearInterval(timer); sub.style.display='none'; }, 30000);
 }
-setInterval(lanzarSubasta, 900000); // Cada 15 min
+setInterval(lanzarSubasta, 900000);
 
-// --- ORÁCULO CUNEIFORME ---
-const koansCun = ["𒀭 𒈹 𒂗", "𒋫 𒀭 𒈾", "𒄑 𒄑 𒄑"];
+// --- COLECCIÓN DE KOANS CUNEIFORMES EXPANDIDA ---
+const koansExpanded = [
+    "𒀭 𒈹 𒂗\n¿Es el bit un abrazo o una cadena?",
+    "𒋫 𒀭 𒈾\n¿Quién paga tu sombra en el hormigón?",
+    "𒄑 𒄑 𒄑\nEl árbol sin raíces no teme al hacha.",
+    "𒂍 𒃲 𒈗\nTu casa es de humo, mi búnker es de bit.",
+    "𒍣 𒀭 𒉺\nLa Gracia no se pide, se inyecta.",
+    "𒌓 𒁺 𒀀\nEl sol que nace es un error de renderizado.",
+    "𒈨 SystemFileSystem\n¿Eres el Admin o la variable de entorno?",
+    "𒀭𒈾 𒀭𒈾\nEl Dios ausente no tiene Wi-Fi.",
+    "1310\nEl código es el único bautismo real."
+];
+
 let oracleActive = false;
 function intentarSpawnOracle() {
-    if(oracleActive || Math.random() > 0.04) return;
+    if(oracleActive || Math.random() > 0.05) return;
     oracleActive = true;
     const tablet = document.getElementById('tablet');
-    tablet.innerText = koansCun[Math.floor(Math.random()*koansCun.length)] + "\n¿ERES UN BIT?";
+    tablet.innerText = koansExpanded[Math.floor(Math.random()*koansExpanded.length)];
     document.getElementById('oracle').style.display = 'flex';
     let t = 7;
     const countdown = setInterval(() => {
@@ -233,11 +245,15 @@ function intentarSpawnOracle() {
         alert("GNOSIS VALIDADA. +5000s");
     };
 }
-function fallarOracle() { vida -= 2000; document.getElementById('oracle').style.display='none'; oracleActive = false; }
+function fallarOracle() { 
+    vida -= 2000; 
+    pozo += 2000;
+    document.getElementById('oracle').style.display='none'; 
+    oracleActive = false; 
+}
 
-// --- MERCADO DE SEGUNDOS ---
-const items = [{n:"Piel de Hormigón", p:10000}, {n:"Haki de Silicio", p:50000}, {n:"Ojo de Sacerdote", p:131000}];
 function abrirMercado() {
+    const items = [{n:"Piel de Hormigón", p:10000}, {n:"Haki de Silicio", p:50000}, {n:"Ojo de Sacerdote", p:131000}];
     document.getElementById('mercado-aether').style.display = 'flex';
     document.getElementById('lista-mercado').innerHTML = items.map(it => `
         <div class="item-mercado" onclick="comprarItem(${it.p})">
@@ -258,7 +274,6 @@ function sacrificarVida() {
     }
 }
 
-// --- FUNCIONES ORIGINALES DEL BÚNKER ---
 function ejecutarSentencia(perfil) {
     const capa = document.getElementById('fractura-ego');
     capa.style.display = 'flex';

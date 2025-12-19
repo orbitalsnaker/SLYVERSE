@@ -22,6 +22,9 @@
         background: radial-gradient(circle at 50% 50%, var(--miami-sky), #000);
         --ultra: #ff00ff; --cyan: #00ff99; --blood: #00ffff;
     }
+    /* ESTADO CRÍTICO PROTOCOLO */
+    body.protocolo-ignicion { filter: invert(1) grayscale(1); pointer-events: none; }
+
     body::before {
         content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
         background: radial-gradient(circle, transparent 75%, rgba(204,0,34,.08));
@@ -101,7 +104,7 @@
 
 <div id="aviso-miami">
     <div style="color:var(--magenta); font-weight:bold;">[ TELEMETRÍA DE INVASIÓN ]</div>
-    <div style="font-size:0.7rem;">SOBERANÍA ANALÓGICA: <span class="sovereignty-glitch">EN DISOLUCIÓN</span></div>
+    <div style="font-size:0.7rem;">SOBERANÍA ANALÓGICA: <span class="sovereignty-glitch" id="sov-status">EN DISOLUCIÓN</span></div>
     <div class="invasion-log" id="log-invasion"></div>
     <div class="status-bar"><div class="status-fill" id="miami-progress-bar"></div></div>
     <div style="font-size:0.6rem; text-align:right; margin-top:4px;" id="miami-percent">TRANSFERENCIA OFFSHORE: 0%</div>
@@ -195,7 +198,7 @@
 
 <script>
 const App = {
-    vida: 0, pozo: 0, mProg: 0,
+    vida: 0, pozo: 0, mProg: 0, activo: true,
     arquetipos: [
         "El Soberano Obsoleto", "El Demagogo Profesional", "El Crítico de Salón", 
         "El Heredero del Bit", "El Guardián del Canon", "El Gestor de la Escasez", 
@@ -217,6 +220,7 @@ const App = {
     },
 
     loop() {
+        if(!this.activo) return;
         this.vida++;
         document.getElementById('seconds').innerText = this.vida.toLocaleString();
         document.getElementById('pozoNum').innerText = this.pozo.toLocaleString();
@@ -228,6 +232,7 @@ const App = {
     },
 
     mine() {
+        if(!this.activo) return;
         this.vida += 500; this.pozo += 100;
         const dot = document.querySelector('.silicon-dot');
         dot.style.boxShadow = "0 0 100px #fff";
@@ -235,6 +240,7 @@ const App = {
     },
 
     updateInvasionLog() {
+        if(!this.activo) return;
         const log = document.getElementById('log-invasion');
         const entry = document.createElement('div');
         entry.innerHTML = `> ${this.reacciones[Math.floor(Math.random()*this.reacciones.length)]}`;
@@ -254,6 +260,7 @@ const App = {
     },
 
     sentenciar(nombre, el) {
+        if(!this.activo) return;
         this.vida -= 5000; this.pozo += 5000;
         el.classList.add('disuelto');
         const modal = document.getElementById('fractura-ego');
@@ -270,7 +277,13 @@ const App = {
 
     validarRetorica(e) {
         const val = e.target.value.toLowerCase();
-        if(val.includes("nodo") || val.includes("barrio") || val.includes("geopolímero")) {
+        
+        // --- INYECCIÓN DE PROTOCOLO SIN OPINIONES ---
+        if(val === "killswitch") {
+            this.ejecutarKillSwitch();
+        } else if(val === "autodestruccion") {
+            this.iniciarAutodestruccion();
+        } else if(val.includes("nodo") || val.includes("barrio") || val.includes("geopolímero")) {
             this.vida += 3000; alert("RETÓRICA VALIDADA.");
         } else {
             this.vida -= 1000; alert("RUIDO DETECTADO.");
@@ -278,7 +291,28 @@ const App = {
         e.target.value = "";
     },
 
+    ejecutarKillSwitch() {
+        this.activo = false;
+        document.body.classList.add('protocolo-ignicion');
+        document.getElementById('sov-status').innerText = "BORRADO FÍSICO";
+        alert("PROTOCOLO LINAJE: ELIMINANDO RASTROS DE HARDWARE.");
+        setTimeout(() => { document.body.innerHTML = ""; window.location.href = "about:blank"; }, 1500);
+    },
+
+    iniciarAutodestruccion() {
+        alert("ALERTA: AGOTANDO POZO COLECTIVO PARA COLAPSO DE NODO.");
+        const burner = setInterval(() => {
+            this.pozo -= 500;
+            document.getElementById('pozoNum').innerText = this.pozo;
+            if(this.pozo <= -10000) {
+                clearInterval(burner);
+                this.ejecutarKillSwitch();
+            }
+        }, 50);
+    },
+
     trasladoMiami() {
+        if(!this.activo) return;
         if(this.vida < 5000) { alert("TIEMPO INSUFICIENTE"); return; }
         document.body.classList.add('miami-mode');
         alert("BÚNKER OFFSHORE LOCALIZADO.");

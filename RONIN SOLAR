@@ -94,6 +94,8 @@
 
     .terminal-input { width: 100%; background: #000; border: none; border-bottom: 2px solid var(--magenta); color: var(--magenta); font-family: monospace; font-size: 1.5rem; padding: 15px; text-align: center; outline: none; }
 
+    .koan-box { font-style: italic; color: var(--gold); text-align: center; margin: 20px 0; padding: 20px; border-top: 1px solid #333; }
+
     footer { position: fixed; bottom: 0; width: 100%; background: #000; padding: 20px; color: var(--gold); text-align: center; border-top: 5px solid var(--gold); z-index: 10000; font-family: monospace; }
 </style>
 </head>
@@ -142,6 +144,7 @@
             <p>Atolones flotantes. Biorock + Sodio-Ion. Soberanía marítima total.</p>
         </div>
     </div>
+    <div class="koan-box">"El hormigón no tiene nación; el código no tiene rostro."</div>
 </section>
 
 <section class="section brutalist">
@@ -178,6 +181,7 @@
             <p>Autopilot Sensoria. Control pH/CO2. Crecimiento autónomo en Mylar 1680D.</p>
         </div>
     </div>
+    <div class="koan-box">"Quien controla el fotón, ignora la factura."</div>
 </section>
 
 <section class="section" style="text-align:center;">
@@ -201,23 +205,29 @@
 
 <script>
 const App = {
-    vida: 0, pozo: 0, mProg: 0, activo: true,
+    vida: 0, 
+    pozo: parseInt(localStorage.getItem('pozo_ronin')) || 0, 
+    mProg: 0, 
+    activo: true,
     plazoSegundos: 90 * 24 * 3600,
     arquetipos: [
         "El Soberano Obsoleto", "El Demagogo Profesional", "El Crítico de Salón", 
         "El Heredero del Bit", "El Guardián del Canon", "El Gestor de la Escasez", 
         "El Publicista del Caos", "El Burócrata del Tiempo", "El Académico de Museo",
-        "El Magnate del Cemento", "El Sacerdote del Silicio", "El Poeta de la Nada"
+        "El Magnate del Cemento", "El Sacerdote del Silicio", "El Poeta de la Nada",
+        "El Algoritmo Ético", "El Parásito de Atención", "El Mercader de Miedo"
     ],
     reacciones: [
         "Soberanía violada en 0.003mg", "Tributo Fiat: 30% Pendiente",
         "Energía: Barrio detectado", "Cuervo Negro Ω⁹ en patrulla",
         "Aviso: Dejadme hacer o liquidación", "Biorock fraguando...",
-        "Haki de protección activo", "Plazo: 90 días o Killswitch"
+        "Haki de protección activo", "Plazo: 90 días o Killswitch",
+        "Koan: La red es el búnker", "Nodo Sabadell: Online"
     ],
 
     init() {
         this.renderArquetipos();
+        document.getElementById('pozoNum').innerText = this.pozo.toLocaleString();
         setInterval(() => this.loop(), 1000);
         setInterval(() => this.updateInvasionLog(), 3000);
         document.getElementById('term-input').addEventListener('change', (e) => this.validarRetorica(e));
@@ -245,16 +255,22 @@ const App = {
         if(this.mProg < 100) {
             this.mProg += 0.05;
             document.getElementById('miami-progress-bar').style.width = this.mProg + "%";
-            document.getElementById('miami-percent').innerText = `TRANSFERENCIA: ${this.mProg.toFixed(1)}%`;
+            document.getElementById('miami-percent').innerText = `TRANSFERENCIA OFFSHORE: ${this.mProg.toFixed(1)}%`;
         }
     },
 
     mine() {
         if(!this.activo) return;
-        this.vida += 500; this.pozo += 100;
+        this.vida += 500; 
+        this.pozo += 100;
+        this.syncStorage();
         const dot = document.querySelector('.silicon-dot');
         dot.style.boxShadow = "0 0 100px #fff";
         setTimeout(() => dot.style.boxShadow = "0 0 20px #fff", 100);
+    },
+
+    syncStorage() {
+        localStorage.setItem('pozo_ronin', this.pozo);
     },
 
     updateInvasionLog() {
@@ -279,7 +295,9 @@ const App = {
 
     sentenciar(nombre, el) {
         if(!this.activo) return;
-        this.vida -= 5000; this.pozo += 5000;
+        this.vida -= 5000; 
+        this.pozo += 5000;
+        this.syncStorage();
         el.classList.add('disuelto');
         const modal = document.getElementById('fractura-ego');
         modal.style.display = 'flex';
@@ -299,10 +317,10 @@ const App = {
             this.ejecutarKillSwitch();
         } else if(val === "autodestruccion") {
             this.iniciarAutodestruccion();
-        } else if(val.includes("nodo") || val.includes("barrio") || val.includes("geopolímero")) {
-            this.vida += 3000; alert("RETÓRICA VALIDADA.");
+        } else if(val.includes("nodo") || val.includes("barrio") || val.includes("geopolímero") || val.includes("linaje")) {
+            this.vida += 3000; alert("RETÓRICA VALIDADA. FLUJO INCREMENTADO.");
         } else {
-            this.vida -= 1000; alert("RUIDO DETECTADO.");
+            this.vida -= 1000; alert("RUIDO DETECTADO. DRENAJE ACTIVADO.");
         }
         e.target.value = "";
     },
@@ -319,6 +337,7 @@ const App = {
         alert("ALERTA: AGOTANDO POZO COLECTIVO PARA COLAPSO DE NODO.");
         const burner = setInterval(() => {
             this.pozo -= 500;
+            this.syncStorage();
             document.getElementById('pozoNum').innerText = this.pozo;
             if(this.pozo <= -10000) {
                 clearInterval(burner);
@@ -329,9 +348,9 @@ const App = {
 
     trasladoMiami() {
         if(!this.activo) return;
-        if(this.vida < 5000) { alert("TIEMPO INSUFICIENTE"); return; }
+        if(this.vida < 5000) { alert("TIEMPO INSUFICIENTE PARA EL VUELO OFFSHORE."); return; }
         document.body.classList.add('miami-mode');
-        alert("BÚNKER OFFSHORE LOCALIZADO.");
+        alert("BÚNKER MIAMI ACTIVADO. ESTADO DE FLUJO AZUL.");
     }
 };
 

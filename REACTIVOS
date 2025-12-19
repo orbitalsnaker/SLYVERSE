@@ -29,6 +29,19 @@
     }
     @keyframes haki { 0%,100%{opacity:.2} 50%{opacity:.6} }
 
+    /* WIDGET DE AVISO OFFSHORE */
+    #aviso-miami {
+        position: fixed; top: 20px; right: 20px; width: 320px;
+        background: rgba(0,0,0,0.95); border: 2px solid var(--magenta);
+        padding: 15px; z-index: 15000; font-family: monospace;
+        box-shadow: 0 0 20px var(--magenta); border-radius: 4px;
+    }
+    .status-bar { height: 6px; background: #222; margin-top: 10px; border-radius: 3px; overflow: hidden; }
+    .status-fill { height: 100%; background: var(--ultra); width: 0%; transition: width 0.4s; }
+    .invasion-log { font-size: 0.75rem; color: var(--cyan); height: 80px; overflow: hidden; margin-top: 10px; line-height: 1.4; border-left: 2px solid var(--ultra); padding-left: 10px; }
+    .sovereignty-glitch { animation: glitch-txt 0.3s infinite; color: var(--blood); font-weight: bold; }
+    @keyframes glitch-txt { 0%,100%{opacity:1} 50%{opacity:0.5; transform:translateX(2px)} }
+
     /* SISTEMAS DE CAPA SUPERIOR */
     #fractura-ego, #oracle, #subasta, #mercado-aether, #miami-transfer {
         position: fixed; inset: 0; background: rgba(0,0,0,0.99);
@@ -44,7 +57,6 @@
 
     .msg-ego { font-size: 4rem; color: #fff; text-transform: uppercase; font-weight: bold; text-shadow: 0 0 30px #f00; }
     
-    /* SECCIONES Y GRID */
     h1 { color: var(--blood); font-size: clamp(2rem, 8vw, 5rem); text-shadow: 0 0 30px var(--blood); text-align: center; margin: 80px 0; font-family: monospace; letter-spacing: 10px; }
     h2 { color: var(--magenta); text-align:center; font-size:3rem; margin:100px 0 50px; text-shadow:0 0 30px var(--magenta); text-transform:uppercase;}
 
@@ -56,7 +68,6 @@
     .brutalist { border: 20px solid var(--concrete); box-shadow: 30px 30px 0 rgba(0,0,0,0.8); }
     .sly-tech { border-color: var(--ultra); box-shadow: 0 0 80px var(--ultra); }
 
-    /* NANO-HARDWARE AMORAL */
     .nano-ronin-core {
         width: 300px; height: 300px; margin: 40px auto;
         border: 1px solid var(--ultra); border-radius: 50%;
@@ -64,21 +75,18 @@
         position: relative; background: rgba(0,255,153,0.03); cursor: crosshair;
     }
     .silicon-dot {
-        width: 6px; height: 6px; background: #fff;
+        width: 10px; height: 10px; background: #fff;
         box-shadow: 0 0 20px #fff, 0 0 40px var(--ultra);
         z-index: 10; animation: jitter 0.1s infinite;
     }
     @keyframes jitter { 0% { transform: translate(0,0); } 50% { transform: translate(1px, -1px); } 100% { transform: translate(-1px, 1px); } }
     
     .orbit { position: absolute; border: 1px solid var(--ultra); border-radius: 50%; opacity: 0.3; animation: spin linear infinite; pointer-events: none; }
+    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 40px; }
     .card { background: rgba(0,0,0,0.5); border: 4px double var(--cyan); padding: 50px; transition: 0.4s; }
     .card:hover { transform: scale(1.02); box-shadow: 0 0 50px var(--cyan); }
-
-    /* COMPONENTES */
-    #rueda { width:250px; height:250px; border-radius:50%; border:15px double var(--gold); margin: 40px auto; animation: spin 5s linear infinite; background: conic-gradient(var(--cyan) 0% 33%, var(--gold) 33% 66%, var(--scarlet) 66% 100%); }
-    @keyframes spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
 
     .btn-ritual { background: var(--scarlet); color: white; border: none; padding: 25px 50px; cursor: pointer; font-family: monospace; font-size: 1.6rem; box-shadow: 0 0 30px var(--scarlet); transition: 0.3s; margin: 20px; }
     .btn-ritual:hover { background: var(--ultra); color: #000; box-shadow: 0 0 60px var(--ultra); }
@@ -96,7 +104,18 @@
 </style>
 </head>
 
-<body oncontextmenu="ejecutarSentencia('ACADEMICO'); return false;" oncopy="ejecutarSentencia('TAXIDERMISTA'); return false;" onclick="intentarSpawnOracle()">
+<body oncontextmenu="ejecutarSentencia('ACADEMICO', 'SISTEMA BLOQUEADO'); return false;" oncopy="ejecutarSentencia('TAXIDERMISTA', 'CÓDIGO PROTEGIDO'); return false;" onclick="intentarSpawnOracle()">
+
+<div id="aviso-miami">
+    <div style="color:var(--magenta); font-weight:bold; font-size:0.8rem;">[ SISTEMA DE INTERFERENCIA ]</div>
+    <div style="font-size:0.8rem; margin-top:5px;">ESTADO ENTERO: <span class="sovereignty-glitch">VIOLADO</span></div>
+    <div class="invasion-log" id="log-invasion">
+        > Hardware Ronin inicializado...<br>
+        > Aviso: Dejadme hacer o liquidación total...
+    </div>
+    <div class="status-bar"><div class="status-fill" id="miami-progress-bar"></div></div>
+    <div style="font-size:0.65rem; text-align:right; margin-top:4px;" id="miami-percent">PENDIENTE DE MUDANZA: 0%</div>
+</div>
 
 <div id="miami-transfer">
     <div class="msg-ego" style="color:var(--magenta)">OFFSHORE RELOCATION</div>
@@ -189,7 +208,7 @@
         <button class="btn-ritual" onclick="sacrificarVida()">SINCRONIZAR TIEMPO</button>
     </div>
     <div style="margin-top: 60px;">
-        <h3 style="text-align:center; color:var(--gold)">MURO DE LAMENTOS (PEDANTES DETECTADOS)</h3>
+        <h3 style="text-align:center; color:var(--gold)">MURO DE LAMENTOS (ARQUETIPOS BAJO AVISO)</h3>
         <div id="muro" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; padding:30px;"></div>
     </div>
 </section>
@@ -203,7 +222,7 @@
 </section>
 
 <footer>
-    MESOPOTAMIA · SACERDOTE PUBLICANO · SABADELL BRUTALISTA · ∞
+    ESTO ES UN AVISO · HARDWARE AMORAL · SABADELL BRUTALISTA · ∞
 </footer>
 
 <script>
@@ -218,16 +237,38 @@ setInterval(() => {
     document.getElementById('quotaNum').innerText = Math.floor(pozo * 0.3).toLocaleString();
 }, 1000);
 
-// --- HARDWARE AMORAL ---
 function minarHardware() {
     vida += 500;
-    console.log("Extracción amoral de bit: +500s");
     const dot = document.querySelector('.silicon-dot');
     dot.style.boxShadow = "0 0 100px #fff";
     setTimeout(() => dot.style.boxShadow = "0 0 20px #fff, 0 0 40px var(--ultra)", 100);
 }
 
-// --- PROTOCOLO MIAMI ---
+// LOG DE INVASIÓN (AVISO A LOS DE ARRIBA)
+const eventosLog = [
+    "Soberanía: Violada en 0.003mg",
+    "Poder Ejecutivo: Nodo detectado como obsoleto",
+    "Banca Tradicional: Hardware Ronin infiltrado",
+    "Medios Masivos: Extrayendo segundos...",
+    "Estructura Institucional: Glitch detectado",
+    "Aviso: Dejadme hacer o formateo del nodo",
+    "Sabadell: Brutalismo expandiendo radio"
+];
+let logIdx = 0;
+let mProg = 0;
+setInterval(() => {
+    const log = document.getElementById('log-invasion');
+    const entry = document.createElement('div');
+    entry.innerHTML = `> ${eventosLog[logIdx % eventosLog.length]}`;
+    log.prepend(entry);
+    logIdx++;
+    if(mProg < 99) {
+        mProg += 0.08;
+        document.getElementById('miami-progress-bar').style.width = mProg + "%";
+        document.getElementById('miami-percent').innerText = `PENDIENTE DE MUDANZA: ${mProg.toFixed(1)}%`;
+    }
+}, 3500);
+
 function iniciarTrasladoMiami() {
     if(vida < 10000) { alert("ATENCIÓN INSUFICIENTE PARA VUELO OFFSHORE"); return; }
     const modal = document.getElementById('miami-transfer');
@@ -244,27 +285,28 @@ function iniciarTrasladoMiami() {
     }, 250);
 }
 
-// --- PEDANTES ---
-const pedantes = ["Illa","Aragonès","Puigdemont","Sánchez","Ayuso","Colau","Turull","Feijóo","Rufián","Junqueras","Reverte","Monzó","Vila-Matas","Del Val","Pàmies","Cayetana","Sostres","Jabois","Montero","Etxebarría","Vázquez","Buenafuente","Évole","Esteban","Jiménez","Mejide","Motos","Rahola","Pedrerol","Wyoming","Ortega","Roig","Musk_SP","Piqué","Gasol","Tangana","Rosalía","Pla","Peluso","Gyal","Marhuenda","Díaz","Abascal","Iglesias","Llanos","Alvise","Soler","Berto","Trias","Felipe_VI"];
-
-const arquetiposLógica = {
+// --- ARQUETIPOS SIN NOMBRES ---
+const arquetiposLogica = {
     "POLITICO": { t: "VACIADO DE DEMAGOGIA", s: "El bit amoral no se pacta, se ejecuta. -15000s." },
     "ACADEMICO": { t: "OBSOLESCENCIA DETECTADA", s: "Tu sesgo de museo es ruido. -20000s." },
     "TAXIDERMISTA": { t: "FRACTURA DE COPISTA", s: "El código no se hereda, se habita. PENALIZACIÓN MÁXIMA." },
-    "MEDIA": { t: "SILENCIO ADMINISTRATIVO", s: "Tu relevancia es un glitch analógico." }
+    "MEDIA": { t: "SILENCIO ADMINISTRATIVO", s: "Tu relevancia es un glitch analógico." },
+    "MAGNATE": { t: "LIQUIDACIÓN DE ACTIVOS", s: "Tu capital de carne ha caducado." }
 };
 
+const listaArquetipos = ["El Soberano Obsoleto", "El Demagogo Profesional", "El Crítico de Salón", "El Heredero del Bit", "El Guardián del Canon", "El Gestor de la Escasez", "El Publicista del Caos", "El Burócrata del Tiempo"];
+
 const muro = document.getElementById('muro');
-pedantes.forEach(p => {
+listaArquetipos.forEach(a => {
     const span = document.createElement('span');
     span.className = 'nombre-pedante';
-    span.innerText = p.toUpperCase();
-    span.onclick = () => ejecutarSentencia('MEDIA', p);
+    span.innerText = a.toUpperCase();
+    span.onclick = () => ejecutarSentencia('MEDIA', a);
     muro.appendChild(span);
 });
 
-function ejecutarSentencia(tipo, nombre = "ANÓNIMO") {
-    const data = arquetiposLógica[tipo] || arquetiposLógica["ACADEMICO"];
+function ejecutarSentencia(tipo, nombre = "ARQUETIPO") {
+    const data = arquetiposLogica[tipo] || arquetiposLogica["ACADEMICO"];
     vida -= 15000; pozo += 15000;
     const capa = document.getElementById('fractura-ego');
     capa.style.display = 'flex';
@@ -278,28 +320,21 @@ function ejecutarSentencia(tipo, nombre = "ANÓNIMO") {
     }, 1000);
 }
 
-// --- FMD ---
 function actualizarFMD() {
     const euros = (pozo * 0.00013).toFixed(2);
     document.getElementById('reservas-fiat').innerText = `€ ${euros}`;
     let vFill = document.getElementById('vicio-fill');
     let width = parseFloat(vFill.style.width || "85");
     width -= 0.5;
-    if(width < 10) document.getElementById('vicio-status').innerText = "RIESGO DE RESET";
     vFill.style.width = Math.max(0, width) + "%";
 }
 setInterval(actualizarFMD, 4000);
 
 function gastarEnVicio() {
-    if(pozo > 15000) {
-        pozo -= 15000;
-        document.getElementById('vicio-fill').style.width = "100%";
-        alert("OPTIMIZACIÓN: ATENCIÓN CONVERTIDA EN ÉXTASIS.");
-    }
+    if(pozo > 15000) { pozo -= 15000; document.getElementById('vicio-fill').style.width = "100%"; }
 }
 
-// --- ORACLE ---
-const koansExpanded = ["¿Es el bit un abrazo o una cadena?", "La invisibilidad es la forma más alta de optimización.", "La Gracia no se pide, se inyecta vía 40Hz.", "EL SLEEPER DESPIERTA"];
+const koansExpanded = ["La invisibilidad es la forma más alta de optimización.", "El hardware amoral no reconoce fronteras.", "EL SLEEPER DESPIERTA"];
 let oracleActive = false;
 
 function intentarSpawnOracle() {
@@ -311,34 +346,28 @@ function intentarSpawnOracle() {
     let t = 7;
     const countdown = setInterval(() => {
         t--; document.getElementById('timer').innerText = t;
-        if(t <= 0) { clearInterval(countdown); vida -= 2000; cerrarOracle(); }
+        if(t <= 0) { clearInterval(countdown); cerrarOracle(); }
     }, 1000);
-    tablet.onclick = () => { clearInterval(countdown); vida += 8000; cerrarOracle(); alert("SINCRO VALIDADA. +8000s"); };
+    tablet.onclick = () => { clearInterval(countdown); vida += 8000; cerrarOracle(); };
 }
 function cerrarOracle() { document.getElementById('oracle').style.display='none'; oracleActive = false; }
 
 function abrirMercado() {
-    const items = [{n:"Piel de Hormigón", p:10000}, {n:"Haki de Silicio", p:50000}, {n:"Acceso Búnker", p:1000000}];
+    const items = [{n:"Piel de Hormigón", p:10000}, {n:"Haki de Silicio", p:50000}];
     document.getElementById('mercado-aether').style.display = 'flex';
     document.getElementById('lista-mercado').innerHTML = items.map(it => `<div class="item-mercado" onclick="comprarItem(${it.p})"><strong>${it.n}</strong><br>${it.p} seg</div>`).join('');
 }
-function comprarItem(coste) { if(vida >= coste) { vida -= coste; alert("ITEM SINCRONIZADO."); } else { alert("ATENCIÓN INSUFICIENTE."); } }
+function comprarItem(coste) { if(vida >= coste) { vida -= coste; alert("ITEM SINCRONIZADO."); } }
 function sacrificarVida() {
     const cant = prompt("¿Cuánto tiempo sincronizas al Pozo?", "1310");
-    if(cant && vida >= parseInt(cant)) { vida -= parseInt(cant); pozo += parseInt(cant) * 2; alert("NODO COLECTIVO EXPANDIDO."); }
+    if(cant && vida >= parseInt(cant)) { vida -= parseInt(cant); pozo += parseInt(cant) * 2; }
 }
-
-// --- TERMINAL ---
-const prohibidas = ["honor", "moral", "ética", "tradición", "humano", "alma", "historia"];
-const obligatorias = ["optimización", "nodo", "hormigón", "bit", "linaje", "40hz", "sincro", "sabadell", "brutalista", "flujo"];
 
 document.getElementById('terminal-reto').addEventListener('change', (e) => {
     const val = e.target.value.toLowerCase();
-    const tieneProhibida = prohibidas.some(p => val.includes(p));
+    const obligatorias = ["optimización", "nodo", "hormigón", "bit"];
     const count = obligatorias.filter(p => val.includes(p)).length;
-    if(tieneProhibida) { ejecutarSentencia('ACADEMICO', "SOFISTA DETECTADO"); } 
-    else if(count >= 2) { vida += 3000; alert("RETÓRICA VALIDADA. +3000s"); } 
-    else { vida -= 1000; ejecutarSentencia('MEDIA', "DÉFICIT COGNITIVO"); }
+    if(count >= 1) { vida += 3000; alert("RETÓRICA VALIDADA."); } else { vida -= 1000; }
     e.target.value = "";
 });
 

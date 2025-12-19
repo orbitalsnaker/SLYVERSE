@@ -9,12 +9,18 @@
         --gold:#b8860b; --scarlet:#cc0022; --ink:#e0ffff; --magenta:#ff00ff;
         --cyan:#00ffff; --purple:#9900ff; --ultra:#00ff99; --blood:#ff0033;
         --bg-section: rgba(10,0,0,0.97); --concrete:#2a2a2a;
+        --miami-sky: #003366;
     }
     * { box-sizing:border-box; margin:0; padding:0; }
     body {
         background:#000; color:var(--ink); font-family:"Garamond", serif;
         line-height:2.2; overflow-x:hidden; padding-bottom:300px;
         background: radial-gradient(circle at 50% 50%, #051a05, #000);
+        transition: background 2s ease;
+    }
+    body.miami-mode {
+        background: radial-gradient(circle at 50% 50%, var(--miami-sky), #000);
+        --ultra: #ff00ff; --cyan: #00ff99; --blood: #00ffff;
     }
     body::before {
         content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
@@ -24,7 +30,7 @@
     @keyframes haki { 0%,100%{opacity:.2} 50%{opacity:.6} }
 
     /* SISTEMAS DE CAPA SUPERIOR */
-    #fractura-ego, #oracle, #subasta, #mercado-aether {
+    #fractura-ego, #oracle, #subasta, #mercado-aether, #miami-transfer {
         position: fixed; inset: 0; background: rgba(0,0,0,0.99);
         z-index: 20000; display: none; flex-direction: column;
         align-items: center; justify-content: center; text-align: center;
@@ -32,6 +38,7 @@
     }
     #oracle { border-color: var(--cyan); }
     #mercado-aether { border-color: var(--ultra); overflow-y: auto; }
+    #miami-transfer { border-color: var(--magenta); background: rgba(0,20,40,0.95); }
     #fractura-ego { animation: flash-red 0.15s infinite; }
     @keyframes flash-red { 0%, 100% { border-color: var(--scarlet); } 50% { border-color: #300; } }
 
@@ -48,6 +55,22 @@
     }
     .brutalist { border: 20px solid var(--concrete); box-shadow: 30px 30px 0 rgba(0,0,0,0.8); }
     .sly-tech { border-color: var(--ultra); box-shadow: 0 0 80px var(--ultra); }
+
+    /* NANO-HARDWARE AMORAL */
+    .nano-ronin-core {
+        width: 300px; height: 300px; margin: 40px auto;
+        border: 1px solid var(--ultra); border-radius: 50%;
+        display: flex; align-items: center; justify-content: center;
+        position: relative; background: rgba(0,255,153,0.03); cursor: crosshair;
+    }
+    .silicon-dot {
+        width: 6px; height: 6px; background: #fff;
+        box-shadow: 0 0 20px #fff, 0 0 40px var(--ultra);
+        z-index: 10; animation: jitter 0.1s infinite;
+    }
+    @keyframes jitter { 0% { transform: translate(0,0); } 50% { transform: translate(1px, -1px); } 100% { transform: translate(-1px, 1px); } }
+    
+    .orbit { position: absolute; border: 1px solid var(--ultra); border-radius: 50%; opacity: 0.3; animation: spin linear infinite; pointer-events: none; }
 
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 40px; }
     .card { background: rgba(0,0,0,0.5); border: 4px double var(--cyan); padding: 50px; transition: 0.4s; }
@@ -75,6 +98,12 @@
 
 <body oncontextmenu="ejecutarSentencia('ACADEMICO'); return false;" oncopy="ejecutarSentencia('TAXIDERMISTA'); return false;" onclick="intentarSpawnOracle()">
 
+<div id="miami-transfer">
+    <div class="msg-ego" style="color:var(--magenta)">OFFSHORE RELOCATION</div>
+    <div id="miami-status" style="font-family:monospace; color:var(--cyan); font-size:1.8rem;">LOCALIZANDO BÚNKER EN FLORIDA...</div>
+    <div style="font-size: 8rem;" id="miami-countdown">0%</div>
+</div>
+
 <div id="mercado-aether">
     <h2 style="color:var(--ultra)">BÓVEDA DE SEGUNDOS</h2>
     <div id="lista-mercado" style="display:flex; flex-wrap:wrap; justify-content:center;"></div>
@@ -93,13 +122,6 @@
     <div id="timer" style="font-size:5rem; color:var(--scarlet);">7</div>
 </div>
 
-<div id="subasta">
-    <div class="msg-ego">SUBASTA ESCARLATA</div>
-    <div id="subasta-item" style="font-size:3.5rem; color:var(--gold)">--</div>
-    <div id="subasta-precio" style="font-size:6rem; color:var(--ultra)">--</div>
-    <button class="btn-ritual" id="btn-pujar">PUJAR TIEMPO</button>
-</div>
-
 <header style="padding: 100px 20px; text-align: center;">
     <h1>SLYVERSE x RONIN x LINAJE</h1>
     <div style="font-family: monospace; font-size: 1.4rem; color: var(--gold);">[SABADELL BRUTALISTA · ESTADO DE FLUJO TOTAL]</div>
@@ -108,7 +130,19 @@
         <div style="color:var(--scarlet); font-size: 1.2rem;">POZO COLECTIVO: <span id="pozoNum">0</span>s | ALQUILER SOCIAL: <span id="quotaNum">0</span>s</div>
     </div>
     <button class="btn-ritual" onclick="activarResonancia()">RECALIBRAR ATENCIÓN 40HZ</button>
+    <button class="btn-ritual" style="background:var(--magenta); box-shadow:0 0 20px var(--magenta);" onclick="iniciarTrasladoMiami()">MODO OFFSHORE (MIAMI)</button>
 </header>
+
+<section class="section sly-tech" style="text-align:center;">
+    <h2 style="color:var(--ultra)">NANO-RONIN MK-X</h2>
+    <p style="font-family:monospace; font-size:1.1rem;">[ MASA FÍSICA: 0.003mg | PRIORIDAD DE BIT AMORAL ]</p>
+    <div class="nano-ronin-core" onclick="minarHardware()">
+        <div class="silicon-dot"></div>
+        <div class="orbit" style="width:90%; height:90%; animation-duration:4s;"></div>
+        <div class="orbit" style="width:60%; height:60%; animation-duration:2s; border-style:dashed;"></div>
+        <div class="orbit" style="width:30%; height:30%; animation-duration:1s;"></div>
+    </div>
+</section>
 
 <section class="section brutalist sly-tech">
     <h2 style="color: var(--ultra);">DANCE EXO-ADAPT MK-1</h2>
@@ -156,8 +190,7 @@
     </div>
     <div style="margin-top: 60px;">
         <h3 style="text-align:center; color:var(--gold)">MURO DE LAMENTOS (PEDANTES DETECTADOS)</h3>
-        <div id="muro" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; padding:30px;">
-            </div>
+        <div id="muro" style="display:flex; flex-wrap:wrap; justify-content:center; gap:10px; padding:30px;"></div>
     </div>
 </section>
 
@@ -174,7 +207,6 @@
 </footer>
 
 <script>
-// --- MOTOR DE TIEMPO ---
 let vida = parseInt(localStorage.getItem('v') || '0');
 let pozo = parseInt(localStorage.getItem('pozo') || '0');
 
@@ -186,20 +218,40 @@ setInterval(() => {
     document.getElementById('quotaNum').innerText = Math.floor(pozo * 0.3).toLocaleString();
 }, 1000);
 
-// --- MOTOR DE PERFILES (LOS 50 ARQUETIPOS) ---
-const pedantes = [
-    "Illa","Aragonès","Puigdemont","Sánchez","Ayuso","Colau","Turull","Feijóo","Rufián","Junqueras",
-    "Reverte","Monzó","Vila-Matas","Del Val","Pàmies","Cayetana","Sostres","Jabois","Montero","Etxebarría",
-    "Vázquez","Buenafuente","Évole","Esteban","Jiménez","Mejide","Motos","Rahola","Pedrerol","Wyoming",
-    "Ortega","Roig","Musk_SP","Piqué","Gasol","Tangana","Rosalía","Pla","Peluso","Gyal",
-    "Marhuenda","Díaz","Abascal","Iglesias","Llanos","Alvise","Soler","Berto","Trias","Felipe_VI"
-];
+// --- HARDWARE AMORAL ---
+function minarHardware() {
+    vida += 500;
+    console.log("Extracción amoral de bit: +500s");
+    const dot = document.querySelector('.silicon-dot');
+    dot.style.boxShadow = "0 0 100px #fff";
+    setTimeout(() => dot.style.boxShadow = "0 0 20px #fff, 0 0 40px var(--ultra)", 100);
+}
+
+// --- PROTOCOLO MIAMI ---
+function iniciarTrasladoMiami() {
+    if(vida < 10000) { alert("ATENCIÓN INSUFICIENTE PARA VUELO OFFSHORE"); return; }
+    const modal = document.getElementById('miami-transfer');
+    modal.style.display = 'flex';
+    let p = 0;
+    const interval = setInterval(() => {
+        p += Math.floor(Math.random() * 15);
+        if(p >= 100) {
+            p = 100; clearInterval(interval);
+            document.body.classList.add('miami-mode');
+            setTimeout(() => { modal.style.display = 'none'; alert("BÚNKER MIAMI ACTIVADO. ESTADO DE GRACIA FISCAL."); }, 1000);
+        }
+        document.getElementById('miami-countdown').innerText = p + "%";
+    }, 250);
+}
+
+// --- PEDANTES ---
+const pedantes = ["Illa","Aragonès","Puigdemont","Sánchez","Ayuso","Colau","Turull","Feijóo","Rufián","Junqueras","Reverte","Monzó","Vila-Matas","Del Val","Pàmies","Cayetana","Sostres","Jabois","Montero","Etxebarría","Vázquez","Buenafuente","Évole","Esteban","Jiménez","Mejide","Motos","Rahola","Pedrerol","Wyoming","Ortega","Roig","Musk_SP","Piqué","Gasol","Tangana","Rosalía","Pla","Peluso","Gyal","Marhuenda","Díaz","Abascal","Iglesias","Llanos","Alvise","Soler","Berto","Trias","Felipe_VI"];
 
 const arquetiposLógica = {
-    "POLITICO": { t: "VACIADO DE DEMAGOGIA", s: "El bit amoral no se pacta, se ejecuta. -15000s por intentar legislar el flujo." },
-    "ACADEMICO": { t: "OBSOLESCENCIA DETECTADA", s: "Tu sesgo de museo es ruido. La tradición es el cementerio del bit. -20000s." },
-    "TAXIDERMISTA": { t: "FRACTURA DE COPISTA", s: "El código no se hereda ni se copia, se habita. PENALIZACIÓN MÁXIMA." },
-    "MEDIA": { t: "SILENCIO ADMINISTRATIVO", s: "Tu relevancia es un glitch analógico. El pozo reclama tu ego." }
+    "POLITICO": { t: "VACIADO DE DEMAGOGIA", s: "El bit amoral no se pacta, se ejecuta. -15000s." },
+    "ACADEMICO": { t: "OBSOLESCENCIA DETECTADA", s: "Tu sesgo de museo es ruido. -20000s." },
+    "TAXIDERMISTA": { t: "FRACTURA DE COPISTA", s: "El código no se hereda, se habita. PENALIZACIÓN MÁXIMA." },
+    "MEDIA": { t: "SILENCIO ADMINISTRATIVO", s: "Tu relevancia es un glitch analógico." }
 };
 
 const muro = document.getElementById('muro');
@@ -211,29 +263,22 @@ pedantes.forEach(p => {
     muro.appendChild(span);
 });
 
-// --- MOTOR DE FRACTURA ---
 function ejecutarSentencia(tipo, nombre = "ANÓNIMO") {
     const data = arquetiposLógica[tipo] || arquetiposLógica["ACADEMICO"];
-    vida -= 15000;
-    pozo += 15000;
-    
+    vida -= 15000; pozo += 15000;
     const capa = document.getElementById('fractura-ego');
     capa.style.display = 'flex';
     document.getElementById('insulto-gnostico').innerText = data.t;
     document.getElementById('sub-insulto').innerText = `IDENTIFICADO: ${nombre}. ${data.s}`;
-    
     let time = 6;
     const t = setInterval(() => {
         document.getElementById('countdown-ego').innerText = time;
         time--;
-        if(time < 0) { 
-            clearInterval(t); 
-            capa.style.display = 'none';
-        }
+        if(time < 0) { clearInterval(t); capa.style.display = 'none'; }
     }, 1000);
 }
 
-// --- MOTOR FMD ---
+// --- FMD ---
 function actualizarFMD() {
     const euros = (pozo * 0.00013).toFixed(2);
     document.getElementById('reservas-fiat').innerText = `€ ${euros}`;
@@ -253,33 +298,8 @@ function gastarEnVicio() {
     }
 }
 
-// --- SUBASTAS ---
-function lanzarSubasta() {
-    const sub = document.getElementById('subasta');
-    let precio = 1313;
-    const items = ["LOTO DE HORMIGÓN", "CÓDIGO GÉNESIS", "PIEL DE SILICIO", "MOTOR RONIN"];
-    document.getElementById('subasta-item').innerText = items[Math.floor(Math.random()*items.length)];
-    sub.style.display = 'flex';
-    const sTimer = setInterval(() => {
-        precio = Math.floor(precio * 1.4);
-        document.getElementById('subasta-precio').innerText = precio + " seg";
-    }, 4000);
-    document.getElementById('btn-pujar').onclick = () => {
-        if(vida >= precio) {
-            vida -= precio; clearInterval(sTimer); sub.style.display = 'none'; alert("RELIQUIA ADQUIRIDA.");
-        }
-    };
-    setTimeout(() => { clearInterval(sTimer); sub.style.display='none'; }, 20000);
-}
-setInterval(lanzarSubasta, 300000);
-
-// --- ORACLE / KOANS ---
-const koansExpanded = [
-    "¿Es el bit un abrazo o una cadena?",
-    "La invisibilidad es la forma más alta de optimización.",
-    "La Gracia no se pide, se inyecta vía 40Hz.",
-    "EL SLEEPER DESPIERTA"
-];
+// --- ORACLE ---
+const koansExpanded = ["¿Es el bit un abrazo o una cadena?", "La invisibilidad es la forma más alta de optimización.", "La Gracia no se pide, se inyecta vía 40Hz.", "EL SLEEPER DESPIERTA"];
 let oracleActive = false;
 
 function intentarSpawnOracle() {
@@ -300,21 +320,15 @@ function cerrarOracle() { document.getElementById('oracle').style.display='none'
 function abrirMercado() {
     const items = [{n:"Piel de Hormigón", p:10000}, {n:"Haki de Silicio", p:50000}, {n:"Acceso Búnker", p:1000000}];
     document.getElementById('mercado-aether').style.display = 'flex';
-    document.getElementById('lista-mercado').innerHTML = items.map(it => `
-        <div class="item-mercado" onclick="comprarItem(${it.p})"><strong>${it.n}</strong><br>${it.p} seg</div>`).join('');
+    document.getElementById('lista-mercado').innerHTML = items.map(it => `<div class="item-mercado" onclick="comprarItem(${it.p})"><strong>${it.n}</strong><br>${it.p} seg</div>`).join('');
 }
-function comprarItem(coste) {
-    if(vida >= coste) { vida -= coste; alert("ITEM SINCRONIZADO."); } else { alert("ATENCIÓN INSUFICIENTE."); }
-}
-
+function comprarItem(coste) { if(vida >= coste) { vida -= coste; alert("ITEM SINCRONIZADO."); } else { alert("ATENCIÓN INSUFICIENTE."); } }
 function sacrificarVida() {
     const cant = prompt("¿Cuánto tiempo sincronizas al Pozo?", "1310");
-    if(cant && vida >= parseInt(cant)) {
-        vida -= parseInt(cant); pozo += parseInt(cant) * 2; alert("NODO COLECTIVO EXPANDIDO.");
-    }
+    if(cant && vida >= parseInt(cant)) { vida -= parseInt(cant); pozo += parseInt(cant) * 2; alert("NODO COLECTIVO EXPANDIDO."); }
 }
 
-// --- TERMINAL NEOLENGUA ---
+// --- TERMINAL ---
 const prohibidas = ["honor", "moral", "ética", "tradición", "humano", "alma", "historia"];
 const obligatorias = ["optimización", "nodo", "hormigón", "bit", "linaje", "40hz", "sincro", "sabadell", "brutalista", "flujo"];
 
@@ -322,14 +336,9 @@ document.getElementById('terminal-reto').addEventListener('change', (e) => {
     const val = e.target.value.toLowerCase();
     const tieneProhibida = prohibidas.some(p => val.includes(p));
     const count = obligatorias.filter(p => val.includes(p)).length;
-
-    if(tieneProhibida) {
-        ejecutarSentencia('ACADEMICO', "SOFISTA DETECTADO");
-    } else if(count >= 2) {
-        vida += 3000; alert("RETÓRICA VALIDADA. +3000s");
-    } else {
-        vida -= 1000; ejecutarSentencia('MEDIA', "DÉFICIT COGNITIVO");
-    }
+    if(tieneProhibida) { ejecutarSentencia('ACADEMICO', "SOFISTA DETECTADO"); } 
+    else if(count >= 2) { vida += 3000; alert("RETÓRICA VALIDADA. +3000s"); } 
+    else { vida -= 1000; ejecutarSentencia('MEDIA', "DÉFICIT COGNITIVO"); }
     e.target.value = "";
 });
 

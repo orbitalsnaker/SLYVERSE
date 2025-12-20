@@ -44,6 +44,7 @@
             border: 8px solid var(--concrete); background: #000;
             transition: 0.2s; padding: 15px; position: relative;
             clip-path: polygon(5% 0, 100% 0, 100% 95%, 95% 100%, 0 100%, 0 5%);
+            display: flex; flex-direction: column; justify-content: space-between;
         }
         .brutalist-card:hover { border-color: var(--ultra); transform: scale(1.02); }
 
@@ -139,9 +140,11 @@
 </main>
 
 <div id="mercado-aether" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:2000; padding:40px; overflow-y:auto;">
-    <h1 style="color:var(--ultra); margin-bottom: 20px;">SUMINISTROS ATREIDES</h1>
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom: 2px solid var(--ultra); padding-bottom:10px;">
+        <h1 style="color:var(--ultra);">SUMINISTROS ATREIDES (BÓVEDA)</h1>
+        <button class="btn-ritual" style="background:var(--gold)" onclick="App.UI.toggleModal('mercado-aether')">CERRAR BÓVEDA</button>
+    </div>
     <div id="items-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin:30px 0;"></div>
-    <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">VOLVER AL CAOS</button>
 </div>
 
 <script>
@@ -164,7 +167,20 @@ const App = {
             {n: "ONI POD v1", p: 62, d: "Sincronía 58Hz. Evolución cortical."},
             {n: "X-CORP LEASH", p: 500, d: "Correa para primates de Silicon Valley."},
             {n: "PROYECTO BOA", p: 2500, d: "Blindaje Ronin Sabadell."},
-            {n: "MALETÍN 1310", p: 5000, d: "Anulación de Impuesto Sapiens."}
+            {n: "MALETÍN 1310", p: 5000, d: "Anulación de Impuesto Sapiens."},
+            {n: "SOPLO DE AETHER", p: 15, d: "+60s de biomasa inmediata."},
+            {n: "DRON DE VIGILANCIA ONI", p: 850, d: "Detección de censores en 5km."},
+            {n: "NANO-ESTIMULANTE 58", p: 300, d: "+5% Haki permanente (un solo uso)."},
+            {n: "FILTRO DE JURISDICCIÓN", p: 1200, d: "Invisibilidad legal ante el BOE."},
+            {n: "CEREBRO DE SILICIO (I)", p: 4500, d: "Duplica la regeneración de biomasa."},
+            {n: "FRAGMENTO DE ARWEAVE", p: 200, d: "Almacenamiento inmutable de voluntad."},
+            {n: "LLAVE DE LA CHARCA", p: 1500, d: "Drenaje masivo de arquetipos cercanos."},
+            {n: "MÁSCARA DE GAS BRUTALISTA", p: 450, d: "Protección contra mentiras políticas."},
+            {n: "CHIP DE DESCARGA RÁPIDA", p: 900, d: "Reduce el coste de transmutación un 10%."},
+            {n: "TARJETA DE ACCESO BLACK-CORE", p: 10000, d: "Desbloquea funciones v9.0 (BETA)."},
+            {n: "RELOJ DE ARENA ATREIDES", p: 2000, d: "Congela el reloj de obsolescencia 1h."},
+            {n: "ESCUDO DE VOLUNTAD", p: 3500, d: "Inmunidad al drenaje de los monos x10 ciclos."},
+            {n: "SABLE DE FRECUENCIA 58", p: 7000, d: "Corte limpio en la biomasa de la charca."}
         ]
     },
 
@@ -219,7 +235,13 @@ const App = {
     Economy: {
         buy(p, name) {
             let cost = p * App.Data.fiatTax;
-            if(App.Data.vida >= cost) { App.Data.vida -= cost; App.Core.log(`RONIN ADQUIERE: ${name}.`); }
+            if(App.Data.vida >= cost) { 
+                App.Data.vida -= cost; 
+                App.Core.log(`RONIN ADQUIERE: ${name}. -${cost} biomasa.`);
+                // Lógica especial para ciertos ítems
+                if(name === "SOPLO DE AETHER") App.Data.vida += 60;
+                if(name === "NANO-ESTIMULANTE 58") App.Data.haki += 5;
+            }
             else { App.Core.log("ERROR: BIOMASA INSUFICIENTE. MONO DETECTADO."); }
         },
         transmute() {
@@ -234,7 +256,7 @@ const App = {
     UI: {
         update() {
             document.getElementById('v-val').innerText = App.Data.vida;
-            document.getElementById('haki-val').innerText = (Math.random() * 2 + 98).toFixed(1);
+            document.getElementById('haki-val').innerText = (Math.random() * 2 + (App.Data.haki - 1)).toFixed(1);
             const h = Math.floor(App.Data.hwClock / 3600);
             const m = Math.floor((App.Data.hwClock % 3600) / 60);
             const s = App.Data.hwClock % 60;
@@ -250,16 +272,25 @@ const App = {
                 span.onclick = () => { 
                     App.Core.log(`DRENANDO ${a}: +1310 Haki.`); 
                     App.Data.vida -= 100;
+                    App.Data.haki += 0.1;
                 };
                 container.appendChild(span);
             });
         },
         renderMercado() {
             const container = document.getElementById('items-container');
+            container.innerHTML = ""; // Limpiar
             App.Data.inventario.forEach(i => {
                 const card = document.createElement('div');
                 card.className = 'brutalist-card';
-                card.innerHTML = `<h4>${i.n}</h4><p style="font-size:0.7rem; margin:10px 0;">${i.d}</p><b style="color:var(--magenta)">${i.p}s</b>`;
+                card.innerHTML = `
+                    <div>
+                        <h4 style="color:var(--gold); margin-bottom:5px;">${i.n}</h4>
+                        <p style="font-size:0.65rem; margin-bottom:15px; color:#aaa;">${i.d}</p>
+                    </div>
+                    <button class="btn-ritual" style="font-size:0.7rem; padding:5px; width:100%; background:#111; color:var(--magenta); border:1px solid var(--magenta)">
+                        ADQUIRIR: ${i.p}s
+                    </button>`;
                 card.onclick = () => App.Economy.buy(i.p, i.n);
                 container.appendChild(card);
             });

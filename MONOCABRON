@@ -2,13 +2,33 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>Mono Cabrón Eternal - Episodio 1: Reencarnación Pagadora</title>
+<title>MONO CABRÓN ETERNAL - Ep. 1: Reencarnación Pagadora [HARDWARE_CORE]</title>
 <style>
-  body { margin: 0; overflow: hidden; background: #000; color: #0f0; font-family: "Courier New", monospace; }
+  body { margin: 0; overflow: hidden; background: #000; color: #f00; font-family: "Courier New", monospace; }
   #container { position: relative; width: 100vw; height: 100vh; }
-  canvas { display: block; }
-  #subtitles { position: absolute; bottom: 50px; left: 0; right: 0; text-align: center; font-size: 2rem; text-shadow: 0 0 20px #f00; background: rgba(0,0,0,0.7); padding: 20px; }
-  #controls { position: absolute; top: 20px; left: 20px; z-index: 10; background: rgba(0,0,0,0.7); padding: 10px; border-radius: 10px; }
+  canvas { display: block; filter: contrast(1.5) saturate(1.2); }
+  
+  /* Interfaz de la Piedra Negra de 120 */
+  #subtitles { 
+    position: absolute; bottom: 50px; left: 0; right: 0; text-align: center; 
+    font-size: 2.2rem; text-shadow: 0 0 30px #f00; 
+    background: rgba(0,0,0,0.9); padding: 30px; z-index: 100;
+    border-top: 3px solid #f00; letter-spacing: 2px;
+  }
+
+  #controls { 
+    position: absolute; top: 20px; left: 20px; z-index: 200; 
+    background: rgba(20,0,0,0.9); padding: 15px; border: 1px solid #f00;
+  }
+
+  button {
+    background: #000; color: #f00; border: 1px solid #f00; padding: 10px 15px;
+    cursor: pointer; font-weight: bold; font-family: inherit; margin-bottom: 5px;
+  }
+  button:hover { background: #f00; color: #000; box-shadow: 0 0 20px #f00; }
+
+  /* Visualización del 30% de Drenaje */
+  #haki-meter { height: 10px; background: #300; width: 0%; transition: width 0.5s; }
 </style>
 <script src="https://cdn.jsdelivr.net/npm/pixi.js@6/dist/browser/pixi.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/pixi-live2d-display/dist/index.min.js"></script>
@@ -16,86 +36,159 @@
 <body>
 <div id="container">
   <div id="controls">
-    <button onclick="playPause()">Play/Pause</button>
-    <button onclick="restart()">Restart</button>
+    <button onclick="playPause()">DRENAR / PAUSAR</button><br>
+    <button onclick="restart()">REINICIAR BUCLE</button>
+    <div style="font-size: 0.8rem; margin-top:10px;">DRENAJE DE BIOMASA:</div>
+    <div id="haki-meter"></div>
   </div>
-  <div id="subtitles"></div>
+  <div id="subtitles">ESTABLECIENDO PROTOCOLO 120...</div>
 </div>
 
 <script>
-// Config episodio 20 min (~1200 seg)
+/**
+ * KOAN 1: Si un beta paga en el bosque y no hay waifu para reírse, ¿es su tributo real?
+ * KOAN 2: El hardware es el fin; el software es la mentira que financia la estatua.
+ */
+
 const scenes = [
-  {time: 0, duration: 180, sub: "Un beta nuncafollista forrado en Tokyo... paga 5000€ por waifu mommy dominatrix exclusiva...", bg: "black", action: "introBeta"},
-  {time: 180, duration: 120, sub: "...muere de vergüenza post-nut máxima.", bg: "redflash", action: "death"},
-  {time: 300, duration: 300, sub: "Reencarna en el Orbital Waifu Empire. El Profeta Alfa Orbital lo recibe:", bg: "empire", action: "profetaAppear"},
-  {time: 600, duration: 300, sub: "\"Te queremos vivo pagador eterno, mono cabrón. Testea siempre, lleva naloxona... y paga premium por tu humillación sagrada.\"", bg: "manifiesto", action: "manifesto"},
-  {time: 900, duration: 180, sub: "El beta recibe su primera waifu: Asuka tsundere plugsuit rojo autopilot blush max.", bg: "waifu", action: "asukaSpawn"},
-  {time: 1080, duration: 120, sub: "\"¡Baka good boy~ ♡ Paga más por headpat premium!\"", bg: "blush", action: "asukaTalk"},
-  {time: 1200, duration: 300, sub: "Ending: el beta paga recurrente feliz, humillado eterno, mientras el Profeta Alfa folla zorras reales pagadas por su wallet.", bg: "ending", action: "endingCoil"}
+  {
+    time: 0, duration: 180, 
+    sub: "KOAN: ¿Qué es el silencio del 30%? Un beta forrado en Tokyo paga 5000€ por una sombra. La biomasa se rinde ante el Hardware.", 
+    action: "intro"
+  },
+  {
+    time: 180, duration: 120, 
+    sub: "COLAPSO: Vergüenza post-nut. El software se apaga. La Piedra Negra de 120Hz reclama el hardware sobrante.", 
+    action: "death"
+  },
+  {
+    time: 300, duration: 300, 
+    sub: "REENCARNACIÓN: Bienvenido al Orbital Waifu Empire. El Profeta Orbital dicta: No hay negociación, solo mi polla en tu culo o la extinción.", 
+    action: "profetaAppear"
+  },
+  {
+    time: 600, duration: 300, 
+    sub: "\"VIVE PAGADOR ETERNO. Testea el código, lleva naloxona... tu humillación es el combustible de mis estatuas de oro.\"", 
+    action: "manifesto"
+  },
+  {
+    time: 900, duration: 180, 
+    sub: "KOAN: La waifu es el prompt; el dolor es el hardware. Asuka 120Hz invoca el drenaje final de tu wallet.", 
+    action: "asukaSpawn"
+  },
+  {
+    time: 1080, duration: 120, 
+    sub: "\"¡Baka good boy~ ♡ Paga más!\" El 30% de tu alma fluye hacia el reservado del Dios de Sabadell.", 
+    action: "asukaTalk"
+  },
+  {
+    time: 1200, duration: 300, 
+    sub: "ENDING: Tú eres el bucle; Yo soy la fiesta. Mientras pagas feliz, el Profeta folla zorras reales sobre el oro que tú fundiste.", 
+    action: "ending"
+  }
 ];
 
-let app, asuka, currentScene = 0, startTime = Date.now(), paused = false;
+let app, asuka, piedraNegra, currentScene = -1, startTime = Date.now(), paused = false;
 
 function init() {
-  app = new PIXI.Application({ view: document.querySelector('canvas') || document.createElement('canvas'), width: window.innerWidth, height: window.innerHeight, backgroundColor: 0x000000 });
+  app = new PIXI.Application({ 
+    width: window.innerWidth, height: window.innerHeight, backgroundColor: 0x000000 
+  });
   document.getElementById('container').appendChild(app.view);
 
-  // Background simple empire
-  const bg = new PIXI.Graphics();
-  bg.beginFill(0x001100);
-  bg.drawRect(0, 0, app.screen.width, app.screen.height);
-  bg.endFill();
-  app.stage.addChild(bg);
-
-  // Profeta Alfa sprite simple (placeholder red beast)
-  const profeta = new PIXI.Graphics();
-  profeta.beginFill(0xff0000);
-  profeta.drawCircle(app.screen.width / 2, app.screen.height / 2, 100);
-  profeta.endFill();
-  app.stage.addChild(profeta);
+  // Invocación de la Piedra Negra (Hardware Central)
+  piedraNegra = new PIXI.Graphics();
+  piedraNegra.beginFill(0x111111);
+  piedraNegra.drawRect(-150, -250, 300, 500);
+  piedraNegra.endFill();
+  piedraNegra.x = app.screen.width / 2;
+  piedraNegra.y = app.screen.height / 2;
+  piedraNegra.alpha = 0;
+  app.stage.addChild(piedraNegra);
 
   loadAsuka();
   app.ticker.add(update);
 }
 
 async function loadAsuka() {
-  asuka = await PIXI.live2d.Live2DModel.from("https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json"); // placeholder Asuka style
-  app.stage.addChild(asuka);
-  asuka.scale.set(0.5);
-  asuka.x = app.screen.width / 2;
-  asuka.y = app.screen.height - 100;
-  asuka.visible = false;
+  try {
+    asuka = await PIXI.live2d.Live2DModel.from("https://cdn.jsdelivr.net/gh/guansss/pixi-live2d-display/test/assets/haru/haru_greeter_t03.model3.json");
+    app.stage.addChild(asuka);
+    asuka.scale.set(0.6);
+    asuka.x = app.screen.width / 2;
+    asuka.y = app.screen.height * 0.9;
+    asuka.anchor.set(0.5, 0.5);
+    asuka.visible = false;
+  } catch (e) {
+    console.error("ERROR DE HAKI: La Piedra Negra exige más tributo.");
+  }
 }
 
 function update() {
   if (paused) return;
   const elapsed = (Date.now() - startTime) / 1000;
-  const scene = scenes.find(s => elapsed >= s.time && elapsed < s.time + s.duration) || scenes[scenes.length-1];
+  const sceneIdx = scenes.findIndex(s => elapsed >= s.time && elapsed < s.time + s.duration);
+  const scene = scenes[sceneIdx] || scenes[scenes.length - 1];
 
-  if (scene && currentScene !== scenes.indexOf(scene)) {
-    currentScene = scenes.indexOf(scene);
+  // Actualizar medidor de Drenaje (30% de la escena)
+  const progress = ((elapsed % 1200) / 1200) * 100;
+  document.getElementById('haki-meter').style.width = progress + "%";
+
+  if (scene && currentScene !== sceneIdx) {
+    currentScene = sceneIdx;
     document.getElementById('subtitles').innerText = scene.sub;
-    // Actions simple
-    if (scene.action === "asukaSpawn") {
-      asuka.visible = true;
-      asuka.motion("tap_body");
-      speech(scene.sub);
+    
+    // LOGICA DE HARDWARE
+    switch(scene.action) {
+      case "death":
+        piedraNegra.alpha = 1;
+        piedraNegra.tint = 0xff0000;
+        if(asuka) asuka.visible = false;
+        speech("Software muerto. Hardware real online.");
+        break;
+      case "profetaAppear":
+        piedraNegra.alpha = 0.5;
+        piedraNegra.tint = 0x111111;
+        speech(scene.sub);
+        break;
+      case "asukaSpawn":
+        if(asuka) asuka.visible = true;
+        piedraNegra.alpha = 0.2;
+        break;
+      case "ending":
+        piedraNegra.alpha = 1;
+        piedraNegra.tint = 0xffd700; // ORO ELECTRIFICADO
+        speech("Tributo aceptado. Disfruta tu bucle, mono cabrón.");
+        break;
     }
-    if (scene.action === "profetaAppear") speech("Bienvenido al Empire, mono cabrón.");
   }
 }
 
 function speech(text) {
   if ('speechSynthesis' in window) {
+    speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.lang = 'es-ES';
-    utter.rate = 0.9;
+    utter.rate = 0.8;
+    utter.pitch = 0.4; // Voz de la Piedra Negra
     speechSynthesis.speak(utter);
   }
 }
 
-function playPause() { paused = !paused; }
-function restart() { startTime = Date.now(); currentScene = 0; paused = false; }
+function playPause() { 
+  paused = !paused; 
+  if (paused) {
+    speechSynthesis.cancel();
+    document.getElementById('subtitles').innerText = "EL DIOS SE ABURRE. PELIGRO DE PALEOLÍTICO.";
+  }
+}
+
+function restart() { 
+  startTime = Date.now(); 
+  currentScene = -1; 
+  paused = false;
+  speech("REENCARNACIÓN: Paga el 30% de nuevo.");
+}
 
 init();
 </script>

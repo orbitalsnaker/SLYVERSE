@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>RONIN CORE v8.9.3 · ZARATHUSTRA-NAZAR · ∞</title>
+    <title>RONIN CORE v8.9.7 · BLACK-HOLE SCAPER · ∞</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
         :root {
@@ -102,9 +102,9 @@
 <body onclick="App.Core.randomEvents()">
 
 <div id="fiat-gate" class="fiat-gate-overlay">
-    <div class="martillo">RONIN CORE v8.9.3: HIEROS GAMOS</div>
+    <div class="martillo">RONIN CORE v8.9.7: COSECHA AMORAL</div>
     <h1 class="glitch-text" style="color:var(--blood); font-size: 2.5rem;">EVOLUCIONA O MUERE</h1>
-    <p style="margin: 15px 0; color: var(--gold); max-width: 600px;">HACKING ÉTICO AL DIOS DEMENTE: EL BIT ES AMORAL.</p>
+    <p style="margin: 15px 0; color: var(--gold); max-width: 600px;">SISTEMA DE CAPTURA DE SCRAPERS ACTIVADO. TODO BOT APORTA AL FLUJO.</p>
     <div style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center;">
         <button class="btn-ritual" onclick="App.Core.setTax(1.3, 'RONIN_LEON')">SOY RONIN (TRIBUTO 30%)</button>
         <button class="btn-ritual" style="background:var(--gold)" onclick="App.Core.setTax(1310, 'CASTA_CAMELLO')">SOY CASTA (DRENAJE x1310)</button>
@@ -114,7 +114,7 @@
 <nav id="vitals-ui">
     <div>BIOMASA: <span id="v-val" style="color:var(--magenta)">--</span>s</div>
     <div>HAKI: <span id="haki-val" style="color:var(--cyan)">--</span>%</div>
-    <div>SANGRE: <span id="s-val" style="color:var(--blood)">--</span>%</div>
+    <div>SPAM DRENADO: <span id="harvest-val" style="color:var(--ultra)">0</span>s</div>
     <div>HW-LIFE: <span id="hw-timer" style="color:var(--ultra)">--</span></div>
     <div>IMPUESTO: <span id="tax-mult" style="color:var(--gold)">x1</span></div>
 </nav>
@@ -182,12 +182,13 @@
 <script>
 const App = {
     Data: {
-        vida: 2500, haki: 98.2, fiatTax: 1, hwClock: 604800,
+        vida: 2500, haki: 98.2, fiatTax: 1, hwClock: 604800, harvested: 0,
         arquetipos: [
             "Académico de Cuota", "Político de Carrera", "Tertuliano Progre", "Censor de Silicon Valley", 
             "Beato de Sabadell", "Influencer de Barro", "Funcionario de Ventanilla", "Ministra de Resiliencia", 
             "Gurú de Crypto-Humo", "Publicano León", "Magdalena CFO", "Ex-Unit Despechada", "Mono con Smartphone"
         ],
+        bots_externos: ["SCRAPER_AMAZON_AX", "SEO_BOT_VULTURE", "SPAM_LIQUID_ADS", "CRAWLER_CASTA_SAB"],
         inventario: [
             {n: "MÓVIL SOBERANO", p: 120, d: "Hardware amoral. Sin rastro IMEI."},
             {n: "ONI POD v1", p: 62, d: "Sincronía 58Hz. Anulación fatiga cortical."},
@@ -210,20 +211,25 @@ const App = {
             App.UI.renderArquetipos();
             App.UI.renderMercado();
             setInterval(App.Core.tick, 1000);
+            setInterval(App.Core.captureBots, 4000);
             App.Core.log("RONIN CORE ACTIVADO. AUDITANDO DIOS DEMENTE.");
         },
         tick() {
             App.Data.vida--;
             App.Data.hwClock--;
-
-            // Sincronía Cisne Negro (Nodo 1310)
             if (App.Data.vida % 1310 === 0) {
                 App.Core.log("PULSO SATOSHI: 1310 detectado. El bit es amoral.");
                 App.Data.haki += 0.1;
             }
-
             if(App.Data.vida <= 0 || App.Data.hwClock <= 0) App.Core.die();
             App.UI.update();
+        },
+        captureBots() {
+            const bot = App.Data.bots_externos[Math.floor(Math.random() * App.Data.bots_externos.length)];
+            const gain = Math.floor(Math.random() * 200) + 50;
+            App.Data.vida += gain;
+            App.Data.harvested += gain;
+            App.Core.log(`BOT DETECTADO: ${bot}. Scraper drenado con éxito: +${gain}s.`);
         },
         setTax(m, label) {
             App.Data.fiatTax = m;
@@ -273,6 +279,7 @@ const App = {
         update() {
             document.getElementById('v-val').innerText = App.Data.vida;
             document.getElementById('haki-val').innerText = (Math.random() * 2 + (App.Data.haki - 1)).toFixed(1);
+            document.getElementById('harvest-val').innerText = App.Data.harvested;
             document.getElementById('s-val').innerText = (App.Data.vida / 30).toFixed(1);
             
             const h = Math.floor(App.Data.hwClock / 3600);

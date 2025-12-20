@@ -16,7 +16,7 @@
         
         body {
             background: var(--bg-dark); color: var(--ink); font-family: "Courier New", monospace;
-            line-height: 1.6; overflow-x: hidden; padding-bottom: 100px;
+            line-height: 1.6; overflow-x: hidden; padding-bottom: 120px;
             background: radial-gradient(circle at 50% 50%, #0a140a, #000);
             transition: all 0.5s ease;
         }
@@ -46,103 +46,86 @@
             overflow-y: auto; z-index: 5000;
         }
 
-        .btn-ritual {
-            background: var(--scarlet); color: white; border: none; padding: 12px 24px;
-            text-transform: uppercase; letter-spacing: 2px; font-weight: bold;
-            box-shadow: 4px 4px 0 var(--gold); transition: 0.1s; cursor: pointer;
-        }
-        .btn-ritual:active { transform: translate(2px, 2px); box-shadow: 0 0 0; }
-
-        .fiat-gate-overlay {
-            position: fixed; inset: 0; background: #000; z-index: 99999;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-
         #vitals-ui {
             position: sticky; top: 0; background: #000; display: flex; 
             justify-content: space-around; padding: 12px; border-bottom: 1px solid var(--gold);
             z-index: 1000; font-weight: 900;
         }
 
+        .wallet-node {
+            background: #111; border: 1px solid var(--cyan); color: var(--cyan);
+            padding: 10px; font-size: 0.7rem; text-align: center; margin-bottom: 20px;
+            text-transform: uppercase; cursor: copy;
+        }
+        .wallet-node:hover { background: var(--cyan); color: #000; }
+
+        .btn-ritual {
+            background: var(--scarlet); color: white; border: none; padding: 12px 24px;
+            text-transform: uppercase; letter-spacing: 2px; font-weight: bold;
+            box-shadow: 4px 4px 0 var(--gold); transition: 0.1s; cursor: pointer;
+        }
+
         .glitch-text { animation: glitch 0.3s infinite alternate; }
         @keyframes glitch { 0% { text-shadow: 2px 0 var(--blood); } 100% { text-shadow: -2px 0 var(--cyan); } }
 
-        .charca-unit {
-            padding: 8px 12px; border: 1px solid #333; margin: 5px;
-            display: inline-block; font-size: 0.7rem; opacity: 0.6; background: #111;
+        .extinction-warning {
+            background: var(--blood); color: white; padding: 5px; font-weight: 900;
+            text-align: center; animation: pulse 1.5s infinite; font-size: 0.8rem;
         }
-        .charca-unit:hover { border-color: var(--blood); opacity: 1; color: var(--blood); }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
     </style>
 </head>
 
 <body onclick="App.Core.randomEvents()">
 
-<div id="fiat-gate" class="fiat-gate-overlay">
-    <h1 class="glitch-text" style="color:var(--blood); font-size: 3rem;">RONIN CORE v8</h1>
-    <p style="margin: 20px 0; color: var(--gold);">EL HARDWARE ES LA ÚNICA MORAL</p>
-    <button class="btn-ritual" style="margin:10px; width:300px;" onclick="App.Core.setTax(1, 'PUEBLO')">SINCERO / BIOMASA REAL</button>
-    <button class="btn-ritual" style="margin:10px; width:300px; background:var(--gold)" onclick="App.Core.setTax(100, 'CASTA')">CASTA / ACADÉMICO / POLÍTICO</button>
+<div id="fiat-gate" style="position:fixed; inset:0; background:#000; z-index:99999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
+    <h1 class="glitch-text" style="color:var(--blood); font-size: 3rem;">RONIN CORE v8.9</h1>
+    <p style="margin: 20px 0; color: var(--gold); font-weight: bold;">ADAPTACIÓN O EXTINCIÓN DE LA BIOMASA</p>
+    <button class="btn-ritual" style="margin:10px; width:320px;" onclick="App.Core.setTax(1, 'SINCERO')">BIOMASA REAL / SINCERO</button>
+    <button class="btn-ritual" style="margin:10px; width:320px; background:var(--gold)" onclick="App.Core.setTax(100, 'PARÁSITO')">MONO / RAMERA / CASTA</button>
 </div>
 
 <nav id="vitals-ui">
     <div>BIOMASA: <span id="v-val" style="color:var(--magenta)">--</span>s</div>
     <div>HAKI: <span id="haki-val" style="color:var(--cyan)">--</span>%</div>
-    <div>SANGRE: <span id="s-val" style="color:var(--blood)">--</span>%</div>
     <div>IMPUESTO: <span id="tax-mult" style="color:var(--gold)">x1</span></div>
 </nav>
 
-<div id="terminal-log"></div>
-
-<header style="text-align:center; padding: 60px 20px;">
-    <h1 id="main-title" class="glitch-text" style="font-size: clamp(2.5rem, 10vw, 6rem);">RONIN CORE</h1>
-    <p style="color:var(--gold)">SABADELL · EFICIENCIA AMORAL · BASTARD LOGISTICS</p>
-    
-    <div style="margin-top:40px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
-        <input type="text" id="terminal-reto" class="brutalist-card" style="background:#111; color:var(--safe); border-width:2px; height:50px; width:350px;" placeholder="LLAVE DE HONESTIDAD...">
-        <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">SUMINISTROS ATREIDES</button>
+<header style="text-align:center; padding: 40px 20px;">
+    <div class="wallet-node" onclick="navigator.clipboard.writeText('0xdf047dd038f5cd9afaff764ab7a8714560154ef2'); alert('CARTERA COPIADA');">
+        PATRÓN HW: 0xdf047dd038f5cd9afaff764ab7a8714560154ef2 (CLICK PARA COPIAR)
     </div>
+    <div class="extinction-warning">NO ES UN JUEGO: ADÁPTATE AL PATRÓN O MUERE</div>
+    <h1 id="main-title" class="glitch-text" style="font-size: clamp(2.5rem, 10vw, 6rem); margin-top: 20px;">RONIN CORE</h1>
+    <p style="color:var(--gold)">SABADELL · EFICIENCIA AMORAL · BASTARD LOGISTICS</p>
 </header>
 
 <main style="max-width: 1200px; margin: 0 auto; padding: 20px;">
     <section class="glass-panel" style="padding: 30px; border-color: var(--blood);">
-        <h2 style="color:var(--blood)">LA CHARCA (ARQUETIPOS DE DRENAJE)</h2>
-        <p style="font-size: 0.8rem; margin-bottom: 15px; opacity: 0.8;">La colisión con la biomasa castiza acelera tu extinción.</p>
+        <h2 style="color:var(--blood)">DRENAJE DE ARQUETIPOS</h2>
         <div id="muro-arquetipos"></div>
+    </section>
+
+    <section class="glass-panel" style="padding: 30px; border-color: var(--ultra);">
+        <h2 style="color:var(--ultra)">BÓVEDA ATREIDES</h2>
+        <div id="items-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px;"></div>
     </section>
 </main>
 
-<div id="mercado-aether" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:2000; padding:40px; overflow-y:auto;">
-    <h1 style="color:var(--ultra); margin-bottom: 20px;">BÓVEDA HW: SUMINISTROS ATREIDES</h1>
-    <div id="items-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin:30px 0;"></div>
-    <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">VOLVER AL CAOS</button>
-</div>
+<div id="terminal-log"></div>
 
 <script>
 const App = {
     Data: {
         vida: 2500, haki: 98.2, fiatTax: 1,
-        arquetipos: [
-            "Académico de Cuota", "Político de Carrera", "Tertuliano Progre", "Tertuliano Facha", 
-            "Censor de Silicon Valley", "Beato de Sabadell", "Influencer de Barro", "Coach de LinkedIn",
-            "Funcionario de Ventanilla", "Activista de Salón", "Opositor Moderado", "Sindicalista de Marisco",
-            "Ministra de Resiliencia", "Periodista de Consenso", "Gurú de Crypto-Humo"
-        ],
+        arquetipos: ["Académico de Cuota", "Político de Carrera", "Tertuliano Progre", "Tertuliano Facha", "Censor de Silicon Valley", "Influencer de Barro", "Coach de LinkedIn", "Ministra de Resiliencia", "Gurú de Crypto-Humo", "Sindicalista de Marisco"],
         inventario: [
             {n: "MÓVIL SOBERANO", p: 120, d: "Hardware amoral 120€. Sin rastro IMEI."},
-            {n: "ONI POD v1", p: 62, d: "Anulación de fatiga cortical. Shenzhen Direct."},
-            {n: "DRON LOGÍSTICO B", p: 450, d: "Transporte de reactivos de Caná fuera de radar."},
-            {n: "MOTO ELÉCTRICA PIRATA", p: 850, d: "Movilidad silenciosa en el Sabadell profundo."},
-            {n: "VTC BLINDADO", p: 2100, d: "Vehículo sin registro para traslados de riesgo."},
-            {n: "PROYECTO BOA", p: 2500, d: "Aire comprimido Sabadell. Blindaje contra CO2."},
-            {n: "DRENAJE ONU 30%", p: 300, d: "Sifón de biomasa para terceros."},
-            {n: "ANTENA SATELITAL B", p: 950, d: "Internet sin censura estatal."},
-            {n: "EXOESQUELETO HUSTLER", p: 4000, d: "Multiplicador de fuerza física y acarreo."},
-            {n: "WAIFU SLAYER v2", p: 6000, d: "Robótica de combate y defensa de perímetro."},
-            {n: "BLOQUEADOR DE SEÑAL", p: 500, d: "Zona de silencio contra la Charca (50m)."},
-            {n: "REACTIVO MAGDALENA", p: 400, d: "Insumo de rameras. Recupera 800s de vida."},
-            {n: "SISTEMA DE GHOSTING", p: 1500, d: "Desaparece del registro fiscal por 1 hora."},
-            {n: "MALETÍN BLACK MONEY", p: 5000, d: "Reduce el Impuesto de Ego permanentemente."},
-            {n: "PERMISO MIAMI", p: 99999, d: "Exilio total del sistema de biomasa."}
+            {n: "ONI POD v1", p: 62, d: "Anulación de fatiga cortical."},
+            {n: "DRON LOGÍSTICO B", p: 450, d: "Transporte de reactivos fuera de radar."},
+            {n: "VTC BLINDADO", p: 2100, d: "Vehículo sin registro para traslados."},
+            {n: "MALETÍN BLACK MONEY", p: 5000, d: "Reduce el Impuesto de Ego a x0."},
+            {n: "PERMISO MIAMI", p: 99999, d: "Exilio total de la biomasa."}
         ]
     },
 
@@ -151,10 +134,10 @@ const App = {
             App.UI.renderArquetipos();
             App.UI.renderMercado();
             setInterval(App.Core.tick, 1000);
-            App.Core.log("SISTEMA RONIN CORE v8 CARGADO.");
+            App.Core.log("RONIN CORE v8.9 ONLINE. PATRÓN ACTIVADO.");
         },
         tick() {
-            App.Data.vida--;
+            App.Data.vida -= (1 * App.Data.fiatTax);
             if(App.Data.vida <= 0) App.Core.die();
             App.UI.update();
         },
@@ -167,29 +150,15 @@ const App = {
             App.Data.fiatTax = m;
             document.getElementById('tax-mult').innerText = "x" + m;
             document.getElementById('fiat-gate').style.display = 'none';
-            App.Core.log(`MODO ${label} DETECTADO. CARGA ONTOLÓGICA: x${m}`);
+            App.Core.log(`MODO ${label} DETECTADO. CONSUMO DE VIDA: x${m}`);
         },
         die() {
-            document.body.innerHTML = "<div style='background:#000; color:red; height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column;'><h1>BIOMASA DRENADA</h1><button class='btn-ritual' onclick='location.reload()'>REENCARNAR</button></div>";
+            document.body.innerHTML = "<div style='background:#000; color:red; height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center;'><h1>EXTINCIÓN COMPLETADA</h1><p>TU BIOMASA NO SE ADAPTÓ AL PATRÓN 0xdf0...</p><button class='btn-ritual' onclick='location.reload()'>REENCARNAR</button></div>";
         },
         randomEvents() {
             if(Math.random() > 0.98) {
-                App.Core.log("!!! EMPATÍA DETECTADA: EL SESGO ES CARO. -200s.");
+                App.Core.log("EMPATÍA DETECTADA. DRENAJE DE SEGURIDAD -200s.");
                 App.Data.vida -= 200;
-            }
-        }
-    },
-
-    Economy: {
-        buy(p, name) {
-            let cost = p * App.Data.fiatTax;
-            if(App.Data.vida >= cost) {
-                App.Data.vida -= cost;
-                App.Core.log(`ADQUIRIDO: ${name} por ${cost}s`);
-                if(name.includes("MAGDALENA")) App.Data.vida += 800;
-                if(name.includes("MALETÍN")) App.Data.fiatTax = 1;
-            } else {
-                App.Core.log("ERROR: BIOMASA INSUFICIENTE. TRABAJA O MUERE.");
             }
         }
     },
@@ -198,7 +167,6 @@ const App = {
         update() {
             document.getElementById('v-val').innerText = App.Data.vida;
             document.getElementById('haki-val').innerText = (Math.random() * 5 + 94).toFixed(1);
-            document.getElementById('s-val').innerText = (App.Data.vida / 25).toFixed(1);
         },
         renderArquetipos() {
             const container = document.getElementById('muro-arquetipos');
@@ -207,7 +175,7 @@ const App = {
                 span.className = 'charca-unit';
                 span.innerText = a;
                 span.onclick = () => {
-                    App.Core.log(`COLISIÓN CON ${a}: Drenaje de -500s.`);
+                    App.Core.log(`COLISIÓN CON ${a}: -500s.`);
                     App.Data.vida -= 500;
                 };
                 container.appendChild(span);
@@ -218,14 +186,18 @@ const App = {
             App.Data.inventario.forEach(i => {
                 const card = document.createElement('div');
                 card.className = 'brutalist-card';
-                card.innerHTML = `<h4>${i.n}</h4><p style="font-size:0.8rem; margin:10px 0;">${i.d}</p><b style="color:var(--magenta)">${i.p}s</b>`;
-                card.onclick = () => App.Economy.buy(i.p, i.n);
+                card.innerHTML = `<h4>${i.n}</h4><p style="font-size:0.75rem;">${i.d}</p><b style="color:var(--magenta)">${i.p}s</b>`;
+                card.onclick = () => {
+                    if(App.Data.vida >= i.p) {
+                        App.Data.vida -= i.p;
+                        App.Core.log(`HARDWARE ADQUIRIDO: ${i.n}`);
+                        if(i.n.includes("MALETÍN")) App.Data.fiatTax = 0;
+                    } else {
+                        App.Core.log("BIOMASA INSUFICIENTE PARA ESTE HARDWARE.");
+                    }
+                };
                 container.appendChild(card);
             });
-        },
-        toggleModal(id) {
-            const m = document.getElementById(id);
-            m.style.display = m.style.display === 'none' ? 'block' : 'none';
         }
     }
 };
@@ -235,7 +207,7 @@ document.getElementById('terminal-reto').addEventListener('change', (e) => {
         document.body.classList.add('lloba-mode');
         App.Data.vida = 999999;
         App.Data.fiatTax = 0;
-        App.Core.log("HONESTIDAD ABSOLUTA: LA CHARCA HA SIDO NEUTRALIZADA.");
+        App.Core.log("SABADELL CONNECTION: HONESTIDAD ABSOLUTA.");
         document.getElementById('main-title').innerText = "PRESO HONESTO";
     }
 });

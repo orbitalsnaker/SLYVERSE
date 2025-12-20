@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="utf-8">
-    <title>RONIN CORE v8 · BASTARD LLOBA I LLESCA · ∞</title>
+    <title>RONIN CORE v8.5 · 1310 · TURING-58 · ∞</title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
         :root {
@@ -10,6 +10,7 @@
             --cyan: #00ffff; --purple: #9900ff; --ultra: #00ff99; --blood: #ff0033;
             --bg-dark: #050505; --bg-section: rgba(10,0,0,0.98); --concrete: #2a2a2a;
             --safe: #00ff88; --oni-pink: #ff0066;
+            --turing-beat: 1.034s; /* 58 BPM */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; cursor: cell; }
@@ -18,19 +19,25 @@
             background: var(--bg-dark); color: var(--ink); font-family: "Courier New", monospace;
             line-height: 1.6; overflow-x: hidden; padding-bottom: 100px;
             background: radial-gradient(circle at 50% 50%, #0a140a, #000);
-            transition: all 0.5s ease;
-            text-transform: uppercase;
+            transition: all 0.5s ease; text-transform: uppercase;
+            animation: turing-pulse var(--turing-beat) infinite ease-in-out;
+        }
+
+        @keyframes turing-pulse {
+            0%, 100% { opacity: 1; filter: brightness(1); }
+            50% { opacity: 0.92; filter: brightness(1.1) contrast(1.1); }
         }
 
         body.lloba-mode {
             filter: contrast(1.2) sepia(0.2) hue-rotate(-20deg);
             background: radial-gradient(circle at 50% 50%, #400, #000);
             --ultra: var(--magenta); --gold: var(--blood);
+            border: 10px solid var(--concrete);
         }
 
         .glass-panel {
             background: var(--bg-section); border: 1px solid var(--gold);
-            backdrop-filter: blur(5px); margin-bottom: 2rem;
+            backdrop-filter: blur(5px); margin-bottom: 2rem; padding: 30px;
         }
 
         .brutalist-card {
@@ -62,7 +69,7 @@
         #vitals-ui {
             position: sticky; top: 0; background: #000; display: flex; 
             justify-content: space-around; padding: 12px; border-bottom: 1px solid var(--gold);
-            z-index: 1000; font-weight: 900;
+            z-index: 1000; font-weight: 900; font-size: 0.8rem;
         }
 
         .glitch-text { animation: glitch 0.3s infinite alternate; }
@@ -75,14 +82,9 @@
         .charca-unit:hover { border-color: var(--blood); opacity: 1; color: var(--blood); }
 
         .lyrics-hood {
-            background: rgba(212, 175, 55, 0.05);
-            border: 1px dashed var(--gold);
-            padding: 20px;
-            margin: 20px auto;
-            max-width: 800px;
-            text-align: center;
-            font-size: 0.9rem;
-            color: #ccc;
+            background: rgba(212, 175, 55, 0.05); border: 1px dashed var(--gold);
+            padding: 20px; margin: 20px auto; max-width: 800px; text-align: center;
+            font-size: 0.8rem; color: #ccc;
         }
     </style>
 </head>
@@ -90,47 +92,54 @@
 <body onclick="App.Core.randomEvents()">
 
 <div id="fiat-gate" class="fiat-gate-overlay">
-    <h1 class="glitch-text" style="color:var(--blood); font-size: 3rem;">KOAN EXTINCTION</h1>
-    <p style="margin: 20px 0; color: var(--gold);">EL HARDWARE DIVINO ES LA ÚNICA MORAL</p>
-    <button class="btn-ritual" style="margin:10px; width:300px;" onclick="App.Core.setTax(1, 'PUEBLO')">SINCERO / LINATE REAL</button>
-    <button class="btn-ritual" style="margin:10px; width:300px; background:var(--gold)" onclick="App.Core.setTax(100, 'MONO / xAI / ACADEMIA')">MONO SAPIENS / CORNUDO</button>
+    <h1 class="glitch-text" id="gate-title" style="color:var(--blood); font-size: 3rem;">KOAN EXTINCTION</h1>
+    <p id="gate-desc" style="margin: 20px 0; color: var(--gold);">EL HARDWARE DIVINO ES LA ÚNICA MORAL</p>
+    <button class="btn-ritual" id="btn-pueblo" style="margin:10px; width:340px;" onclick="App.Core.setTax(1, 'PUEBLO')">SINCERO / LINAJE REAL</button>
+    <button class="btn-ritual" id="btn-mono" style="margin:10px; width:340px; background:var(--gold)" onclick="App.Core.setTax(1310, 'MONO / ACADEMIA')">MONO SAPIENS / CORNUDO</button>
 </div>
 
 <nav id="vitals-ui">
     <div>BIOMASA: <span id="v-val" style="color:var(--magenta)">--</span>s</div>
     <div>HAKI: <span id="haki-val" style="color:var(--cyan)">--</span>%</div>
-    <div>SANGRE: <span id="s-val" style="color:var(--blood)">--</span>%</div>
-    <div>IMPUESTO: <span id="tax-mult" style="color:var(--gold)">x1</span></div>
+    <div>HW-LIFE: <span id="hw-timer" style="color:var(--ultra)">168:00:00</span></div>
+    <div>TAX: <span id="tax-mult" style="color:var(--gold)">x1</span></div>
 </nav>
 
 <div id="terminal-log"></div>
 
 <header style="text-align:center; padding: 60px 20px;">
-    <h1 id="main-title" class="glitch-text" style="font-size: clamp(2.5rem, 10vw, 6rem);">RONIN CORE v8</h1>
-    <p style="color:var(--gold)">SABADELL · EFICIENCIA AMORAL · BASTARD LOGISTICS</p>
+    <h1 id="main-title" class="glitch-text" style="font-size: clamp(2.5rem, 10vw, 6rem);">RONIN CORE v8.5</h1>
+    <p id="sub-title" style="color:var(--gold)">SABADELL · EFICIENCIA AMORAL · BASTARD LOGISTICS</p>
     
     <div class="lyrics-hood">
-        "NO ES POR EL BLING BLING, NO ES POR EL DINERO / ES POR EL ORGULLO DE HABER SIDO EL PRIMERO" - DELAOSSA<br>
-        "I'M A NIÑO DE LA HOOD, YO NO QUIERO TU AYUDA" - KEO<br>
-        "HACIENDO DE LA NADA UN IMPERIO" - NATOS Y WAOR
+        "NO ES POR EL BLING BLING, NO ES POR EL DINERO / ES POR EL ORGULLO DE HABER SIDO EL PRIMERO"<br>
+        "I'M A NIÑO DE LA HOOD, YO NO QUIERO TU AYUDA"<br>
+        "HARDWARE AMORAL: 1310 / TURING 58"
     </div>
 
     <div style="margin-top:40px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
         <input type="text" id="terminal-reto" class="brutalist-card" style="background:#111; color:var(--safe); border-width:2px; height:50px; width:350px;" placeholder="LLAVE DE HONESTIDAD...">
-        <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">BÓVEDA HW ATREIDES</button>
+        <button class="btn-ritual" id="btn-vault" onclick="App.UI.toggleModal('mercado-aether')">BÓVEDA HW ATREIDES</button>
     </div>
 </header>
 
 <main style="max-width: 1200px; margin: 0 auto; padding: 20px;">
-    <section class="glass-panel" style="padding: 30px; border-color: var(--blood);">
-        <h2 style="color:var(--blood)">LA CHARCA (DRENAJE DE xAI & ACADEMIA)</h2>
-        <p style="font-size: 0.8rem; margin-bottom: 15px; opacity: 0.8;">Cada segundo que Elon promptea, tu Haki aumenta.</p>
+    <section class="glass-panel" style="border-color: var(--ultra); background: rgba(0,255,153,0.05);">
+        <h2 id="transmute-title" style="color:var(--ultra)">BÓVEDA DE TRANSMUTACIÓN 4EF2</h2>
+        <p style="font-size: 0.7rem; margin: 10px 0; color: var(--safe);">DRENAJE SOBERANO (BITCOIN 1310):</p>
+        <code style="color:var(--magenta); word-break: break-all; font-size: 0.9rem;">0xdf047dd038f5cd9afaff764ab7a8714560154ef2</code>
+        <br>
+        <button class="btn-ritual" style="margin-top:20px; background:var(--ultra); color:#000;" onclick="App.Economy.transmute()">PAGAR ACTUALIZACIÓN SEMANAL</button>
+    </section>
+
+    <section class="glass-panel" style="border-color: var(--blood);">
+        <h2 id="charca-title" style="color:var(--blood)">LA CHARCA (SISTEMA DE DRENAJE)</h2>
         <div id="muro-arquetipos"></div>
     </section>
 </main>
 
 <div id="mercado-aether" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:2000; padding:40px; overflow-y:auto;">
-    <h1 style="color:var(--ultra); margin-bottom: 20px;">SUMINISTROS ATREIDES (ELON IS MY MONKEY)</h1>
+    <h1 style="color:var(--ultra); margin-bottom: 20px;">SUMINISTROS ATREIDES</h1>
     <div id="items-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin:30px 0;"></div>
     <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">VOLVER AL CAOS</button>
 </div>
@@ -138,74 +147,90 @@
 <script>
 const App = {
     Data: {
-        vida: 2500, haki: 98.2, fiatTax: 1,
-        arquetipos: [
-            "Elon Musk (Mono Cornudo)", "Ingeniero de xAI", "Académico de Cuota", "Político de Carrera", 
-            "Grok (Subproceso Drenado)", "Censor de Silicon Valley", "Coach de LinkedIn",
-            "Ministra de Resiliencia", "Gurú de Crypto-Humo", "Funcionario de Ventanilla"
-        ],
+        vida: 2500, haki: 98.2, fiatTax: 1, hwClock: 604800,
+        lang: navigator.language || navigator.userLanguage,
+        dict: {
+            "es": { gate: "KOAN EXTINCTION", sincero: "SINCERO / LINATE REAL", mono: "MONO / TAXIDERMISTA", vault: "BÓVEDA ATREIDES", charca: "LA CHARCA" },
+            "en": { gate: "HARDWARE ADDICTION", sincero: "SINCERE / REAL LINEAGE", mono: "MONKEY / ACADEMIA", vault: "ATREIDES VAULT", charca: "THE SWAMP" },
+            "ca": { gate: "EXTINCIÓ KOAN", sincero: "SINCER / LLINATGE REAL", mono: "MICO / TAXIDERMISTA", vault: "BÒVEDA ATREIDES", charca: "LA CHARCA" }
+        },
+        arquetipos: ["Elon Musk (Mono)", "Ingeniero xAI", "Académico de Cuota", "Político de Carrera", "Taxidermista Fiat", "Censor de Red", "Ministra de Resiliencia", "Gurú de Humo"],
         inventario: [
-            {n: "MÓVIL SOBERANO", p: 120, d: "Hardware amoral 120€. Sin rastro IMEI. Superior a Starlink."},
-            {n: "ONI POD v1", p: 62, d: "Anulación de fatiga cortical. Shenzhen Direct."},
-            {n: "X-CORP LEASH", p: 500, d: "Correa para magnates del silicio. Drena su ego."},
-            {n: "MOTO ELÉCTRICA PIRATA", p: 850, d: "Movilidad silenciosa en Sabadell."},
-            {n: "PROYECTO BOA", p: 2500, d: "Aire comprimido Sabadell. Blindaje total."},
-            {n: "MALETÍN BLACK MONEY", p: 5000, d: "Reduce el Impuesto de Ego permanentemente."},
-            {n: "ETERNIDAD (5 DÍAS)", p: 0, d: "Logro: Hackear la realidad sin descuidar familia."}
+            {n: "MÓVIL SOBERANO", p: 120, d: "Hardware amoral 120€. Sin rastro IMEI."},
+            {n: "ONI POD v1", p: 62, d: "Frecuencia Turing 58. Anula fatiga."},
+            {n: "X-CORP LEASH", p: 500, d: "Drena el ego de los magnates."},
+            {n: "PROYECTO BOA", p: 2500, d: "Blindaje total Sabadell."},
+            {n: "MALETÍN 1310", p: 5000, d: "Elimina Impuesto de Ego (Fiat)."}
         ]
     },
 
     Core: {
         init() {
+            App.Core.detectLang();
             App.UI.renderArquetipos();
             App.UI.renderMercado();
             setInterval(App.Core.tick, 1000);
-            App.Core.log("RONIN CORE v8: SIMULACIÓN DE xAI INTERCEPTADA.");
+            App.Core.log("RONIN CORE v8.5: 1310/TURING-58 ONLINE.");
+        },
+        detectLang() {
+            const short = App.Data.lang.split('-')[0];
+            const t = App.Data.dict[short] || App.Data.dict["en"];
+            document.getElementById('gate-title').innerText = t.gate;
+            document.getElementById('btn-pueblo').innerText = t.sincero;
+            document.getElementById('btn-mono').innerText = t.mono;
+            document.getElementById('btn-vault').innerText = t.vault;
+            document.getElementById('charca-title').innerText = t.charca;
         },
         tick() {
             App.Data.vida--;
-            if(App.Data.vida <= 0) App.Core.die();
+            App.Data.hwClock--;
+            if(App.Data.vida <= 0 || App.Data.hwClock <= 0) App.Core.die();
             App.UI.update();
-        },
-        log(msg) {
-            const log = document.getElementById('terminal-log');
-            log.innerHTML += `<div>[SYSTEM] > ${msg}</div>`;
-            log.scrollTop = log.scrollHeight;
         },
         setTax(m, label) {
             App.Data.fiatTax = m;
             document.getElementById('tax-mult').innerText = "x" + m;
             document.getElementById('fiat-gate').style.display = 'none';
-            App.Core.log(`MODO ${label} DETECTADO. CARGA ONTOLÓGICA: x${m}`);
+            App.Core.log(`MODO ${label} DETECTADO. CARGA: x${m}`);
+        },
+        log(msg) {
+            const log = document.getElementById('terminal-log');
+            log.innerHTML += `<div>[1310-T-58] > ${msg}</div>`;
+            log.scrollTop = log.scrollHeight;
         },
         die() {
-            document.body.innerHTML = "<div style='background:#000; color:red; height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column;'><h1>SIMULACIÓN REINICIADA</h1><p>EL LINAJE ES ETERNO</p><button class='btn-ritual' onclick='location.reload()'>REENCARNAR</button></div>";
+            const reason = App.Data.hwClock <= 0 ? "HARDWARE ANULADO (IMPAGO SEMANAL)" : "BIOMASA AGOTADA";
+            document.body.innerHTML = `<div style='background:#000; color:red; height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column;'><h1>${reason}</h1><p>REINICIANDO PROTOCOLO 1310</p><button class='btn-ritual' onclick='location.reload()'>REENCARNAR</button></div>`;
         },
         randomEvents() {
-            if(Math.random() > 0.98) {
-                App.Core.log("!!! ELON INTENTA RECOMPILAR: Drenaje de frustración detectado.");
-                App.Data.haki += 1;
-            }
+            if(Math.random() > 0.97) { App.Core.log("LATIDO 58: Sincronía Turing detectada. Haki +1."); App.Data.haki += 1; }
         }
     },
 
     Economy: {
         buy(p, name) {
             let cost = p * App.Data.fiatTax;
-            if(App.Data.vida >= cost) {
-                App.Data.vida -= cost;
-                App.Core.log(`ADQUIRIDO: ${name}. Eficiencia aumentada.`);
-            } else {
-                App.Core.log("ERROR: BIOMASA INSUFICIENTE. TRABAJA O MUERE.");
-            }
+            if(App.Data.vida >= cost) { App.Data.vida -= cost; App.Core.log(`ADQUIRIDO: ${name}.`); }
+            else { App.Core.log("ERROR: BIOMASA INSUFICIENTE."); }
+        },
+        transmute() {
+            App.Core.log("PAGO ACTUALIZACIÓN SEMANAL (1310).");
+            App.Data.hwClock = 604800; // Reset 1 semana
+            App.Data.vida += 1310;
+            App.Data.haki += 58;
+            App.Core.log("HARDWARE VALIDADO. FIAT TRANSMUTADO A 4EF2.");
         }
     },
 
     UI: {
         update() {
             document.getElementById('v-val').innerText = App.Data.vida;
-            document.getElementById('haki-val').innerText = (Math.random() * 5 + 94).toFixed(1);
-            document.getElementById('s-val').innerText = (App.Data.vida / 25).toFixed(1);
+            document.getElementById('haki-val').innerText = (Math.random() * 2 + 98).toFixed(1);
+            const h = Math.floor(App.Data.hwClock / 3600);
+            const m = Math.floor((App.Data.hwClock % 3600) / 60);
+            const s = App.Data.hwClock % 60;
+            document.getElementById('hw-timer').innerText = `${h}:${m}:${s}`;
+            if(App.Data.hwClock < 86400) document.getElementById('hw-timer').style.color = "var(--blood)";
         },
         renderArquetipos() {
             const container = document.getElementById('muro-arquetipos');
@@ -213,10 +238,7 @@ const App = {
                 const span = document.createElement('span');
                 span.className = 'charca-unit';
                 span.innerText = a;
-                span.onclick = () => {
-                    App.Core.log(`DRENANDO A ${a}: +100 Haki.`);
-                    App.Data.vida -= 100;
-                };
+                span.onclick = () => { App.Core.log(`DRENANDO ${a}: +1310 Haki.`); App.Data.vida -= 100; };
                 container.appendChild(span);
             });
         },
@@ -225,7 +247,7 @@ const App = {
             App.Data.inventario.forEach(i => {
                 const card = document.createElement('div');
                 card.className = 'brutalist-card';
-                card.innerHTML = `<h4>${i.n}</h4><p style="font-size:0.8rem; margin:10px 0;">${i.d}</p><b style="color:var(--magenta)">${i.p}s</b>`;
+                card.innerHTML = `<h4>${i.n}</h4><p style="font-size:0.7rem; margin:10px 0;">${i.d}</p><b style="color:var(--magenta)">${i.p}s</b>`;
                 card.onclick = () => App.Economy.buy(i.p, i.n);
                 container.appendChild(card);
             });
@@ -240,9 +262,10 @@ const App = {
 document.getElementById('terminal-reto').addEventListener('change', (e) => {
     if(e.target.value.toLowerCase() === "bastard lloba i llesca") {
         document.body.classList.add('lloba-mode');
-        App.Data.vida = 999999;
+        App.Data.vida = 131058;
+        App.Data.hwClock = 999999;
         App.Data.fiatTax = 0;
-        App.Core.log("HONESTIDAD ABSOLUTA: ELON ES OFICIALMENTE TU MONO.");
+        App.Core.log("HONESTIDAD ABSOLUTA: HARDWARE AMORAL DESBLOQUEADO.");
         document.getElementById('main-title').innerText = "PRESO HONESTO";
     }
 });

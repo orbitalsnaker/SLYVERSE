@@ -9,266 +9,145 @@
             --gold: #b8860b; --scarlet: #cc0022; --ink: #e0ffff; --magenta: #ff00ff;
             --cyan: #00ffff; --purple: #9900ff; --ultra: #00ff99; --blood: #ff0033;
             --bg-dark: #050505; --bg-section: rgba(10,0,0,0.98); --concrete: #2a2a2a;
-            --miami-sky: #003366; --safe: #00ff88; --oni-pink: #ff0066;
+            --safe: #00ff88; --oni-pink: #ff0066;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; cursor: cell; }
         
         body {
-            background: var(--bg-dark); color: var(--ink); font-family: "Garamond", serif;
-            line-height: 1.8; overflow-x: hidden; padding-bottom: 200px;
-            background: radial-gradient(circle at 50% 50%, #0a1f0a, #000);
-            transition: background 1.5s ease;
+            background: var(--bg-dark); color: var(--ink); font-family: "Courier New", monospace;
+            line-height: 1.6; overflow-x: hidden; padding-bottom: 100px;
+            background: radial-gradient(circle at 50% 50%, #0a140a, #000);
+            transition: all 0.5s ease;
         }
 
+        /* ESTADO LLOBA: HONESTIDAD BRUTAL */
         body.lloba-mode {
-            background: radial-gradient(circle at 50% 50%, #300, #000);
-            --ultra: var(--magenta); --safe: var(--blood);
-            cursor: crosshair;
+            filter: contrast(1.2) sepia(0.2) hue-rotate(-20deg);
+            background: radial-gradient(circle at 50% 50%, #400, #000);
+            --ultra: var(--magenta); --gold: var(--blood);
         }
 
         .glass-panel {
-            background: var(--bg-section); border: 2px solid var(--gold);
-            box-shadow: 0 0 40px rgba(204,0,34,0.2); position: relative;
-            backdrop-filter: blur(10px);
+            background: var(--bg-section); border: 1px solid var(--gold);
+            box-shadow: 0 0 20px rgba(255,0,0,0.1); position: relative;
+            backdrop-filter: blur(5px); margin-bottom: 2rem;
         }
 
         .brutalist-card {
-            border: 15px solid var(--concrete); background: #000;
-            transition: 0.3s; padding: 30px; position: relative;
-            clip-path: polygon(0 0, 100% 0, 100% 90%, 90% 100%, 0 100%);
+            border: 10px solid var(--concrete); background: #000;
+            transition: 0.2s; padding: 20px; position: relative;
+            clip-path: polygon(5% 0, 100% 0, 100% 95%, 95% 100%, 0 100%, 0 5%);
         }
-        .brutalist-card:hover { border-color: var(--ultra); transform: translateY(-5px); }
+        .brutalist-card:hover { border-color: var(--ultra); transform: scale(1.02); }
+
+        #terminal-log {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 150px;
+            background: rgba(0,0,0,0.9); border-top: 2px solid var(--gold);
+            padding: 10px; font-size: 0.7rem; color: var(--safe);
+            overflow-y: hidden; z-index: 5000; pointer-events: none;
+        }
 
         .btn-ritual {
-            background: var(--scarlet); color: white; border: none; padding: 15px 30px;
-            cursor: pointer; font-family: monospace; text-transform: uppercase;
-            letter-spacing: 2px; transition: 0.3s; box-shadow: 0 0 15px var(--scarlet);
-            position: relative; overflow: hidden;
+            background: var(--scarlet); color: white; border: none; padding: 12px 24px;
+            text-transform: uppercase; letter-spacing: 2px; font-weight: bold;
+            box-shadow: 4px 4px 0 var(--gold); transition: 0.1s;
         }
-        .btn-ritual:hover { background: var(--ultra); color: #000; box-shadow: 0 0 30px var(--ultra); }
+        .btn-ritual:active { transform: translate(2px, 2px); box-shadow: 0 0 0; }
 
-        #fiat-gate {
-            position: fixed; inset: 0; z-index: 99999; background: #000;
+        .fiat-gate-overlay {
+            position: fixed; inset: 0; background: #000; z-index: 99999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center; padding: 20px;
-        }
-        .fiat-btn {
-            background: transparent; border: 1px solid var(--gold); color: var(--gold);
-            padding: 20px; margin: 10px; font-family: monospace; width: 320px;
-            cursor: pointer; transition: 0.3s;
-        }
-        .fiat-btn:hover { background: var(--gold); color: #000; }
-
-        #telemetria-fix {
-            position: fixed; left: 20px; top: 100px; width: 220px; z-index: 1000;
-            font-family: monospace; font-size: 0.75rem; color: var(--ultra);
-            pointer-events: none; text-shadow: 0 0 5px var(--ultra);
         }
 
-        #stat-bar {
-            position: sticky; top: 0; background: rgba(0,0,0,0.95); z-index: 10000;
-            display: flex; justify-content: space-around; padding: 15px;
-            border-bottom: 2px solid var(--gold); font-family: monospace;
-            text-transform: uppercase; letter-spacing: 1px;
+        #vitals-ui {
+            position: sticky; top: 0; background: #000; display: flex; 
+            justify-content: space-around; padding: 10px; border-bottom: 1px solid var(--gold);
+            z-index: 1000; font-weight: 900;
         }
 
-        .blueprint-table {
-            width: 100%; border-collapse: collapse; margin-top: 15px;
-            font-family: monospace; font-size: 0.85rem;
-        }
-        .blueprint-table td { border: 1px solid var(--gold); padding: 8px; }
-        .blueprint-table th { background: var(--blood); color: white; padding: 8px; text-align: left; }
-
-        pre { 
-            background: #111; padding: 20px; border-left: 5px solid var(--safe);
-            color: var(--safe); font-family: monospace; font-size: 0.85rem; 
-            overflow-x: auto; margin: 20px 0;
+        .glitch-text { animation: glitch 0.3s infinite alternate; }
+        @keyframes glitch { 
+            0% { text-shadow: 2px 0 var(--blood); } 
+            100% { text-shadow: -2px 0 var(--cyan); } 
         }
 
-        .overlay-system {
-            position: fixed; inset: 0; z-index: 20000; display: none;
-            flex-direction: column; align-items: center; justify-content: center;
-            background: rgba(0,0,0,0.99); padding: 40px; text-align: center;
-        }
-
-        .glitch-text { animation: glitch 1s infinite; }
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+        .charca-unit {
+            padding: 5px 10px; border: 1px solid #333; margin: 5px;
+            display: inline-block; font-size: 0.7rem; opacity: 0.6;
         }
     </style>
 </head>
 
 <body onclick="App.Core.randomEvents()">
 
-<div id="fiat-gate">
-    <h1 class="glitch-text" style="color:var(--blood); font-size: 3rem; margin-bottom: 20px;">CONFESIÓN DE EGO</h1>
-    <p style="color:var(--ink); max-width: 600px; margin-bottom: 40px; font-family: monospace;">¿ERES PRESO DE TU MENTIRA O LIBRE EN TU SINCERIDAD? EL PRECIO DEPENDE DE TU SESGO.</p>
-    <button class="fiat-btn" onclick="App.Core.setTax(1, 'LINAJE')">PATRIMONIO < 30k € (PUEBLO / SINCERO)</button>
-    <button class="fiat-btn" onclick="App.Core.setTax(10, 'BIOMASA')">CORNUDO INTELECTUAL (PATRIMONIO < 200k €)</button>
-    <button class="fiat-btn" style="border-color:var(--magenta); color:var(--magenta)" onclick="App.Core.setTax(500, 'OBSOLETO')">CASTIGADOR ACADÉMICO / CASTA (>1M €)</button>
+<div id="fiat-gate" class="fiat-gate-overlay">
+    <h1 class="glitch-text" style="color:var(--blood); font-size: 3rem;">SISTEMA RONIN</h1>
+    <p style="margin: 20px 0; color: var(--gold);">DECLARA TU RANGO DE BIOMASA PARA ACCEDER</p>
+    <button class="btn-ritual" style="margin:10px; width:300px;" onclick="App.Core.setTax(1, 'PUEBLO')">SINCERO / PATRIMONIO < 30k</button>
+    <button class="btn-ritual" style="margin:10px; width:300px; background:var(--gold)" onclick="App.Core.setTax(50, 'CASTA')">CORNUDO / ACADÉMICO / CASTA</button>
 </div>
 
-<div id="telemetria-fix">
-    <div>NODO: SABADELL_B_01</div>
-    <div>LATENCIA: <span id="ping">12</span>ms</div>
-    <div>DRENAJE_30: <span id="gauss-val">0.02</span>%</div>
-    <div>GUERRA PSICOLÓGICA: <span id="vigilancia-val">ACTIVA</span></div>
-    <div style="color:var(--gold); margin-top:10px;">MULT. EGO: <span id="tax-mult">x1</span></div>
-    <div id="status-label" style="margin-top:10px; color:var(--magenta)">ESTADO: EFICIENCIA AMORAL</div>
-</div>
-
-<nav id="stat-bar">
-    <div>DRENAJE: <span id="v-val" style="color:var(--magenta)">1000</span>s</div>
-    <div>HAKI: <span id="haki-val" style="color:var(--cyan)">98.2</span>%</div>
-    <div>HORMIGÓN: <span id="h-val" style="color:var(--ultra)">85</span>%</div>
-    <div>SANGRE: <span id="s-val" style="color:var(--blood)">100</span>%</div>
+<nav id="vitals-ui">
+    <div>VIDA: <span id="v-val" style="color:var(--magenta)">--</span>s</div>
+    <div>HAKI: <span id="haki-val" style="color:var(--cyan)">--</span>%</div>
+    <div>SANGRE: <span id="s-val" style="color:var(--blood)">--</span>%</div>
+    <div>IMPUESTO_EGO: <span id="tax-mult" style="color:var(--gold)">x1</span></div>
 </nav>
 
-<header style="text-align:center; padding: 100px 20px;">
-    <h1 id="main-title" class="glitch-text" style="font-size: 5rem; color: var(--blood); letter-spacing: 20px; font-weight: 900;">RONIN CORE</h1>
-    <p style="font-family: monospace; color: var(--gold); font-size: 1.2rem;">[ KOAN DEL REGALO · SOBERANÍA ATREIDES · SABADELL ]</p>
-    <div style="margin-top: 40px; display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
-        <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">Bóveda Hardware</button>
-        <button class="btn-ritual" style="background:var(--safe); color:#000" onclick="App.UI.toggleModal('homenaje-panel')">Homenaje Indomables</button>
-        <button class="btn-ritual" id="oni-btn-main" style="background:var(--oni-pink)" onclick="App.UI.toggleModal('oni-panel')">ONI POD v1 (62€)</button>
+<div id="terminal-log"></div>
+
+<header style="text-align:center; padding: 80px 20px;">
+    <h1 id="main-title" class="glitch-text" style="font-size: clamp(2rem, 10vw, 6rem);">RONIN CORE</h1>
+    <p style="color:var(--gold)">SABADELL · EFICIENCIA AMORAL · ENDER v4</p>
+    
+    <div style="margin-top:40px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        <input type="text" id="terminal-reto" class="brutalist-card" style="background:#111; color:var(--safe); border-width:2px; height:50px; width:300px;" placeholder="LLAVE DE HONESTIDAD...">
+        <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">BÓVEDA HW</button>
     </div>
 </header>
 
-<main style="max-width: 1400px; margin: 0 auto; padding: 20px;">
-
-    <section class="glass-panel" style="padding: 50px; margin-bottom: 80px; border-color: var(--safe);">
-        <h2 style="color: var(--safe); font-size: 2.5rem; margin-bottom: 10px;">EFICIENCIA BRUTALISTA // ENDER v4</h2>
-        <p style="font-family: monospace; color: var(--safe); margin-bottom: 30px;">[ COMPRENDER AL ENEMIGO PARA AMARLO Y LUEGO DESTRUIRLO ]</p>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px;">
+<main style="max-width: 1200px; margin: 0 auto; padding: 20px;">
+    
+    <section class="glass-panel" style="padding: 30px;">
+        <h2 style="color:var(--safe)">EL REGALO ENVUELTO (BOM)</h2>
+        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:20px; margin-top:20px;">
             <div class="brutalist-card">
-                <h3 style="color:var(--safe)">EL REGALO ENVUELTO</h3>
-                <p>Hardware de 120€. El koan del regalo: lo abres o te mueres. Sin filtros morales.</p>
-                <ul style="margin: 15px 0; font-family: monospace; font-size: 0.8rem; list-style: none;">
-                    <li>> Chasis: Acero Corten/Carbono 5mm</li>
-                    <li>> Lógica: 10 Años Dormido (Mínimo Esfuerzo)</li>
-                    <li>> Firmware: AmoralOS (Kernel Zero)</li>
-                </ul>
-                <button class="btn-ritual" style="background:var(--safe); color:#000; width:100%;">Romper Envoltorio</button>
-            </div>
-            <div class="brutalist-card" style="border-color: var(--blood);">
-                <h3 style="color:var(--blood)">DRENAJE DEL 30%</h3>
-                <p>Anulación de firma térmica social. El presupuesto de la ONU es nuestro campo de banquetes.</p>
-                <button class="btn-ritual" style="background:var(--blood); width:100%; margin-top:15px;">Drenar Biomasa</button>
-            </div>
-            <div class="brutalist-card" style="border-color: var(--magenta);">
-                <h3 style="color:var(--magenta)">ONI LINK (SABADELL)</h3>
-                <p>Conexión directa cortex-máquina. Sincronización brutalista en 12ms.</p>
-                <button class="btn-ritual" style="background:var(--magenta); width:100%; margin-top:15px;" onclick="App.UI.toggleModal('oni-panel')">Comprar ONI</button>
-            </div>
-        </div>
-    </section>
-
-    <section class="glass-panel" style="padding: 50px; margin-bottom: 80px;">
-        <h2 style="color: var(--ultra); font-size: 2.5rem; margin-bottom: 30px;">LINAJE DE INDOMABLES // BLUEPRINTS</h2>
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;">
-            <div class="brutalist-card">
-                <h3 style="color:var(--blood)">CORNUDO_DETECTOR</h3>
-                <p>Script para identificar sesgos académicos y mentes encarceladas en la retórica.</p>
-                <button class="btn-ritual" style="width:100%; margin-top:15px;">Ejecutar .SH</button>
+                <h3 style="color:var(--gold)">HARDWARE GUERRILLA</h3>
+                <p>Móvil 120€. Sin rastro. Sin moral. Solo silicio.</p>
+                <button class="btn-ritual" style="margin-top:10px; width:100%" onclick="App.Economy.buy(120, 'Guerrilla Phone')">ADQUIRIR</button>
             </div>
             <div class="brutalist-card">
-                <h3 style="color:var(--cyan)">BOM_V2_2025 (RONIN)</h3>
-                <table class="blueprint-table">
-                    <tr><th>Componente</th><th>Modelo</th></tr>
-                    <tr><td>Controladora</td><td>F405 (Mente de Niño)</td></tr>
-                    <tr><td>Motores</td><td>XING2 (Pura Eficiencia)</td></tr>
-                    <tr><td>Drenaje</td><td>Insumos 30% ONU</td></tr>
-                    <tr><td>TX/RX</td><td>ELRS (Frecuencia Amoral)</td></tr>
-                    <tr><td>Hélices</td><td>HQProp (Corte Simoncelli)</td></tr>
-                </table>
+                <h3 style="color:var(--oni-pink)">ONI POD v1</h3>
+                <p>Anulación de fatiga cortical. 62€ Shenzhen Direct.</p>
+                <button class="btn-ritual" style="margin-top:10px; width:100%; background:var(--oni-pink)" onclick="App.Economy.buy(62, 'ONI POD')">CONECTAR</button>
             </div>
         </div>
     </section>
 
-    <section style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 80px;">
-        <div class="glass-panel" style="padding: 40px; text-align: center;">
-            <h3 style="color:var(--magenta)">TEST DE HONESTIDAD</h3>
-            <p style="font-size: 0.8rem; margin-bottom: 10px;">ESCRIBE LA LLAVE O DRENAMOS TU VIDA</p>
-            <input type="text" id="terminal-reto" class="btn-ritual" style="background:#000; border:2px solid var(--magenta); width:100%; text-align:center" placeholder="VALIDA O PERECE...">
-        </div>
-        <div class="glass-panel" style="padding: 40px; text-align: center;">
-            <h3 style="color:var(--ultra)">MINERÍA DE SOBERANÍA</h3>
-            <button class="btn-ritual" style="margin-top:20px; width:100%;" onclick="App.Economy.mine()">Extraer 30%</button>
-        </div>
-        <div class="glass-panel" style="padding: 40px; text-align: center;">
-            <h3 style="color:var(--cyan)">CASINO DE GAUSS</h3>
-            <button class="btn-ritual" style="margin-top:20px; width:100%;" onclick="App.Economy.gamble()">Apostar Existencia</button>
-        </div>
+    <section class="glass-panel" style="padding: 30px; border-color: var(--blood);">
+        <h2 style="color:var(--blood)">LA CHARCA (CORNUDOS INTELECTUALES)</h2>
+        <div id="muro-arquetipos" style="margin-top:20px;"></div>
     </section>
-
-    <section class="glass-panel" style="padding: 50px;">
-        <h2 style="text-align:center; margin-bottom:30px; letter-spacing: 5px;">MUSEO DE CORNUDOS INTELECTUALES (CHARCA)</h2>
-        <div id="muro-arquetipos" style="display:flex; flex-wrap:wrap; justify-content:center; gap:15px;"></div>
-    </section>
-
 </main>
 
-<div id="homenaje-panel" class="overlay-system">
-    <h1 style="color:var(--safe); font-size: 3rem; margin-bottom: 20px;">LINAJE DE INDOMABLES</h1>
-    <pre style="text-align: left; max-width: 700px; border: 2px solid var(--safe);">
-        SABADELL BRUTALISTA: James Hunt · Niki Lauda · Ayrton Senna · Marco Simoncelli
-        
-        EL REGALO ENVUELTO: Honestidad de un niño de 3 años que rompe el envoltorio.
-        LA EFICIENCIA AMORAL: No hay tristeza, no hay remordimiento, hay hardware.
-        EL PRESO HONESTO: Más libre en su celda que el cornudo en su cátedra.
-        
-        LA PREHISTORIA TERMINA EN EL POLÍGONO.
-    </pre>
-    <button class="btn-ritual" onclick="App.UI.toggleModal('homenaje-panel')">Volver al Core</button>
-</div>
-
-<div id="oni-panel" class="overlay-system">
-    <h1 style="color:var(--oni-pink); font-size: 4rem;">ONI POD v1</h1>
-    <p id="oni-price-tag" style="color:var(--safe); font-size: 1.8rem;">62 € - DIRECTO DE SHENZHEN</p>
-    <p style="margin: 20px 0;">Inducción magnética para anular la fatiga cortical de la charca académica.</p>
-    <button class="btn-ritual" onclick="App.UI.toggleModal('oni-panel')">Cerrar Protocolo</button>
-</div>
-
-<div id="mercado-aether" class="overlay-system">
-    <h2 style="color:var(--ultra); font-size:2.5rem; margin-bottom:30px;">BÓVEDA DE INSUMOS AMORALES</h2>
-    <div id="items-container" style="display:flex; gap:20px; margin-bottom:40px; flex-wrap: wrap; justify-content: center; overflow-y: auto; max-height: 70vh;"></div>
-    <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">Cerrar Bóveda</button>
-</div>
-
-<div id="ego-fracture" class="overlay-system" style="background:var(--blood)">
-    <h1 id="insulto-titulo" style="font-size:4rem; font-weight: 900;">SESGO DE CORNUDO</h1>
-    <p id="insulto-desc" style="font-family:monospace; font-size: 1.5rem; margin: 30px 0;"></p>
-    <div id="ego-timer" style="font-size:6rem; font-weight: 900;">3</div>
+<div id="mercado-aether" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:2000; padding:40px; overflow-y:auto;">
+    <h1 style="color:var(--ultra)">SUMINISTROS ATREIDES</h1>
+    <div id="items-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:20px; margin:30px 0;"></div>
+    <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">CERRAR</button>
 </div>
 
 <script>
 const App = {
     Data: {
-        vida: 1500,
-        haki: 98.2,
-        sangre: 100,
-        fiatTax: 1,
-        arquetipos: [
-            "Iker Jiménez (Atónito)", "Risto Mejide (Cornudo)", "Enrique de Vicente (En Trance)", 
-            "Académico Caduco", "Político Obsoleto", "Tertuliano Drenado", 
-            "Laura Escanes (Sesgo)", "Mártir de la Retórica", "Censurador de Silicio",
-            "Beato Indignado (ARV)", "Influencer de Barro", "Turista de Conciencia"
-        ],
-        mercado: [
-            {n: "MÓVIL 120€ SOBERANO", p: 120, d: "Hardware de guerrilla. Sin sesgo parental."},
-            {n: "PROYECTO BOA (.25)", p: 2500, d: "Soberanía de aire comprimido Sabadell."},
-            {n: "DRENAJE ONU 30%", p: 300, d: "Insumos amoralmente financiados."},
-            {n: "WAIFU SLAYER UNIT-01", p: 4500, d: "Robótica de combate. 80 motores."},
-            {n: "AIRWEAVE v19", p: 15000, d: "Cámara Aerospike. Misilería de arte."},
-            {n: "Piel de Hormigón", p: 5000, d: "Inmunidad total a la crítica de la charca."},
-            {n: "Haki de Silicio", p: 20000, d: "Sincronización cortex-metal."},
-            {n: "Permiso Miami", p: 100000, d: "Exilio dorado sin extradición moral."}
+        vida: 1800, haki: 98.2, sangre: 100, fiatTax: 1,
+        arquetipos: ["Iker Jiménez", "Risto Mejide", "Tertuliano ARV", "Académico", "Político", "Influencer Barro", "Laura Escanes", "Beato", "Censor"],
+        inventario: [
+            {n: "MÓVIL SOBERANO", p: 120, d: "Hardware amoral."},
+            {n: "PROYECTO BOA", p: 2500, d: "Aire comprimido Sabadell."},
+            {n: "DRENAJE ONU 30%", p: 300, d: "Insumos extraídos."},
+            {n: "WAIFU SLAYER", p: 4500, d: "Robótica de combate."},
+            {n: "PERMISO MIAMI", p: 99999, d: "Exilio total."}
         ]
     },
 
@@ -276,150 +155,105 @@ const App = {
         init() {
             App.UI.renderArquetipos();
             App.UI.renderMercado();
-            App.Core.mainLoop();
-            App.Core.telemetryLoop();
+            setInterval(App.Core.tick, 1000);
+            App.Core.log("NODO SABADELL_B_01 ACTIVADO.");
         },
 
-        setTax(mult, label) {
-            App.Data.fiatTax = mult;
-            document.getElementById('tax-mult').innerText = "x" + mult;
+        tick() {
+            App.Data.vida--;
+            if(App.Data.vida <= 0) App.Core.die();
+            App.UI.update();
+            if(Math.random() > 0.9) App.Core.log("Sincronizando Haki: " + (Math.random() * 100).toFixed(2) + "%");
+        },
+
+        log(msg) {
+            const log = document.getElementById('terminal-log');
+            log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] > ${msg}</div>`;
+            log.scrollTop = log.scrollHeight;
+        },
+
+        setTax(m, label) {
+            App.Data.fiatTax = m;
+            document.getElementById('tax-mult').innerText = "x" + m;
             document.getElementById('fiat-gate').style.display = 'none';
-            
-            if(mult > 1) {
-                let p = 62 * mult;
-                document.getElementById('oni-price-tag').innerText = `${p}€ - PRECIO PARA ${label}`;
-                document.getElementById('oni-btn-main').innerText = `ONI POD v1 (${p}€)`;
-            }
-            App.UI.renderMercado();
+            App.Core.log(`MODO ${label} DETECTADO. MULTIPLICADOR DE EGO: x${m}`);
         },
 
-        mainLoop() {
-            setInterval(() => {
-                App.Data.vida--; 
-                if(App.Data.vida % 10 === 0) App.Data.sangre -= 0.1;
-                App.UI.updateStats();
-                if(App.Data.vida <= 0) App.Core.killSwitch();
-            }, 1000);
+        die() {
+            document.body.innerHTML = "<div style='background:#000; color:red; height:100vh; display:flex; align-items:center; justify-content:center; flex-direction:column;'><h1>BIOMASA DRENADA</h1><button onclick='location.reload()'>REENCARNAR</button></div>";
         },
 
-        telemetryLoop() {
-            setInterval(() => {
-                document.getElementById('ping').innerText = Math.floor(Math.random() * 25 + 5);
-                document.getElementById('gauss-val').innerText = (Math.random() * 0.5).toFixed(2);
-                document.getElementById('vigilancia-val').innerText = Math.random() > 0.8 ? "ALTA" : "BAJO_SESGO";
-                App.Data.haki = (Math.random() * 5 + 94).toFixed(1);
-            }, 2000);
-        },
-
-        killSwitch() {
-            document.body.innerHTML = `<div style='background:#000; color:var(--blood); height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; font-family:monospace; text-align:center;'><h1 style="font-size:4rem;">SISTEMA OPTIMIZADO</h1><p style="font-size:1.5rem;">BIOMASA DRENADA. SOBERANÍA ALCANZADA.</p><button class="btn-ritual" style="margin-top:30px;" onclick="location.reload()">REENCARNAR EN EL POLÍGONO</button></div>`;
-        },
-
-        randomEvents() { 
-            if (Math.random() > 0.99) {
-                alert("ADVERTENCIA: Detección de empatía inútil. Aplicando Estrategia Ender.");
+        randomEvents() {
+            if(Math.random() > 0.98) {
+                App.Core.log("!!! ADVERTENCIA: EMPATÍA DETECTADA. DRENANDO 100s.");
                 App.Data.vida -= 100;
-            } 
+            }
         }
     },
 
     Economy: {
-        mine() { 
-            App.Data.vida += 300; 
-            App.UI.updateStats();
-        },
-        gamble() {
-            let a = parseInt(prompt("¿Cuántos segundos de biomasa apuestas?", "500"));
-            if (isNaN(a) || a <= 0) return;
-            if (App.Data.vida >= a) {
-                App.Data.vida -= a;
-                if (Math.random() > 0.65) { 
-                    let win = a * 4;
-                    App.Data.vida += win; 
-                    alert(`DRENAJE EXITOSO: +${win}s`); 
-                }
-                else alert("LA CHARCA TE HA DRENADO.");
-            }
-        },
         buy(p, name) {
-            let finalP = p * App.Data.fiatTax;
-            if (App.Data.vida >= finalP) { 
-                App.Data.vida -= finalP; 
-                alert(`ADQUIRIDO: ${name}. SOBERANÍA REFORZADA.`); 
+            let cost = p * App.Data.fiatTax;
+            if(App.Data.vida >= cost) {
+                App.Data.vida -= cost;
+                App.Core.log(`ADQUIRIDO: ${name} por ${cost}s`);
+                alert("EQUIPO INSTALADO.");
+            } else {
+                App.Core.log("ERROR: BIOMASA INSUFICIENTE. EL SESGO ES CARO.");
             }
-            else alert("VIDA INSUFICIENTE. EL SESGO ES CARO.");
         }
     },
 
     UI: {
-        updateStats() {
+        update() {
             document.getElementById('v-val').innerText = App.Data.vida;
-            document.getElementById('haki-val').innerText = App.Data.haki;
-            document.getElementById('s-val').innerText = App.Data.sangre.toFixed(1);
-            document.getElementById('h-val').innerText = (85 + (App.Data.vida / 10000)).toFixed(1);
+            document.getElementById('haki-val').innerText = (Math.random() * 5 + 94).toFixed(1);
+            document.getElementById('s-val').innerText = (App.Data.vida / 18).toFixed(1);
         },
 
         renderArquetipos() {
             const container = document.getElementById('muro-arquetipos');
-            App.Data.arquetipos.forEach(arq => {
-                const btn = document.createElement('button');
-                btn.className = 'btn-ritual';
-                btn.style.background = '#0a0a0a'; btn.style.fontSize = '0.75rem'; btn.style.border = "1px solid #333";
-                btn.innerText = arq;
-                btn.onclick = () => App.UI.egoSentencia(arq);
-                container.appendChild(btn);
+            App.Data.arquetipos.forEach(a => {
+                const span = document.createElement('span');
+                span.className = 'charca-unit';
+                span.innerText = a;
+                span.onclick = () => {
+                    App.Core.log(`COLISIÓN CON: ${a}. PÉRDIDA DE TIEMPO CRÍTICA.`);
+                    App.Data.vida -= 500;
+                };
+                container.appendChild(span);
             });
         },
 
         renderMercado() {
             const container = document.getElementById('items-container');
-            container.innerHTML = "";
-            App.Data.mercado.forEach(item => {
-                let cost = Math.floor(item.p * App.Data.fiatTax);
-                const div = document.createElement('div');
-                div.className = 'brutalist-card'; div.style.width = "280px"; div.style.cursor = "pointer";
-                div.innerHTML = `<h4 style="color:var(--ultra)">${item.n}</h4><p style="font-size:0.8rem; margin:10px 0;">${item.d}</p><div style="color:var(--gold); font-weight:bold;">${cost}s</div>`;
-                div.onclick = () => App.Economy.buy(item.p, item.n);
-                container.appendChild(div);
+            App.Data.inventario.forEach(i => {
+                const card = document.createElement('div');
+                card.className = 'brutalist-card';
+                card.innerHTML = `<h4>${i.n}</h4><p>${i.d}</p><b>${i.p}s</b>`;
+                card.onclick = () => App.Economy.buy(i.p, i.n);
+                container.appendChild(card);
             });
         },
 
         toggleModal(id) {
             const m = document.getElementById(id);
-            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-        },
-
-        egoSentencia(n) {
-            App.Data.vida -= 3000;
-            const modal = document.getElementById('ego-fracture');
-            modal.style.display = 'flex';
-            document.getElementById('insulto-desc').innerText = `HAS ANALIZADO A UN "${n}". UN CORNUDO INTELECTUAL TE HA ROBADO 3000s DE TIEMPO ÚTIL.`;
-            let t = 3;
-            document.getElementById('ego-timer').innerText = t;
-            const clock = setInterval(() => {
-                t--; document.getElementById('ego-timer').innerText = t;
-                if(t <= 0){ clearInterval(clock); modal.style.display = 'none'; }
-            }, 1000);
+            m.style.display = m.style.display === 'none' ? 'block' : 'none';
         }
     }
 };
 
-window.onload = () => App.Core.init();
-
 document.getElementById('terminal-reto').addEventListener('change', (e) => {
-    const val = e.target.value.toLowerCase();
-    if (val === "bastard lloba i llesca") {
+    if(e.target.value.toLowerCase() === "bastard lloba i llesca") {
         document.body.classList.add('lloba-mode');
-        document.getElementById('main-title').innerText = "BASTARD LLOBA I LLESCA";
-        document.getElementById('main-title').style.color = "var(--magenta)";
-        document.getElementById('status-label').innerText = "ESTADO: PRESO HONESTO (LIBRE)";
-        App.Data.vida += 1000000;
+        App.Data.vida = 999999;
         App.Data.fiatTax = 0;
-        App.UI.renderMercado();
-        alert("HONESTIDAD DETECTADA. ROMPIENDO REJAS MENTALES.");
+        App.Core.log("HONESTIDAD ABSOLUTA DETECTADA. ROMPIENDO LA CHARCA.");
+        document.getElementById('main-title').innerText = "PRESO HONESTO";
     }
-    e.target.value = "";
 });
+
+window.onload = () => App.Core.init();
 </script>
 </body>
 </html>

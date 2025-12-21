@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SABADELL BLACK MARKET Ω · WALLET VERIFIED</title>
+    <style>
+        :root {
+            --neon-green: #0f0;
+            --blood-red: #f00;
+            --ultra-cyan: #0ff;
+            --gold: #ff0;
+            --bg: #000;
+            --panel: #0a0a0a;
+            --wallet-color: #f6851b; /* Metamask Orange */
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: crosshair; }
+
+        body {
+            background: var(--bg);
+            color: var(--neon-green);
+            font-family: 'Courier New', Courier, monospace;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #001100, #000);
+            min-height: 100vh;
+        }
+
+        /* SCANLINE EFFECT */
+        body::after {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), 
+                        linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+            background-size: 100% 4px, 3px 100%;
+            pointer-events: none;
+            z-index: 10000;
+            animation: flicker 0.1s infinite;
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0.9; }
+            50% { opacity: 1; }
+            100% { opacity: 0.9; }
+        }
+
+        /* HEADER & WALLET INFO */
+        header {
+            border-bottom: 4px double var(--blood-red);
+            padding: 1.5rem;
+            background: rgba(0,0,0,0.95);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            text-align: center;
+        }
+
+        .wallet-display {
+            background: #1a1a1a;
+            border: 1px solid var(--wallet-color);
+            color: var(--wallet-color);
+            padding: 8px 15px;
+            display: inline-block;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            box-shadow: 0 0 10px rgba(246, 133, 27, 0.3);
+        }
+
+        h1 {
+            font-size: clamp(1.5rem, 5vw, 3.5rem);
+            text-shadow: 0 0 15px var(--blood-red);
+            letter-spacing: 10px;
+            color: var(--blood-red);
+            text-transform: uppercase;
+        }
+
+        .hud-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--ultra-cyan);
+        }
+
+        /* MARKET ENGINE */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .category-title {
+            grid-column: 1 / -1;
+            font-size: 2rem;
+            color: var(--gold);
+            border-left: 5px solid var(--gold);
+            padding-left: 15px;
+            margin: 2rem 0 1rem;
+            background: linear-gradient(90deg, rgba(255,255,0,0.1), transparent);
+        }
+
+        .product-card {
+            background: var(--panel);
+            border: 2px solid var(--neon-green);
+            padding: 1.5rem;
+            position: relative;
+            transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .product-card:hover {
+            box-shadow: 0 0 25px var(--neon-green);
+            transform: scale(1.02);
+            z-index: 10;
+        }
+
+        .product-card.special { border-color: var(--blood-red); }
+        .product-card.special:hover { box-shadow: 0 0 35px var(--blood-red); }
+
+        .price {
+            font-size: 1.8rem;
+            color: var(--gold);
+            margin: 1rem 0;
+            font-family: 'Arial Black', sans-serif;
+        }
+
+        .description {
+            font-size: 0.85rem;
+            color: #aaa;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .badge {
+            position: absolute;
+            top: -10px;
+            right: 10px;
+            background: var(--blood-red);
+            color: white;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            transform: skew(-15deg);
+        }
+
+        button {
+            background: transparent;
+            border: 1px solid var(--neon-green);
+            color: var(--neon-green);
+            padding: 12px;
+            font-family: inherit;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        button:hover {
+            background: var(--neon-green);
+            color: #000;
+            box-shadow: 0 0 15px var(--neon-green);
+        }
+
+        /* NOTIFICATION SYSTEM */
+        #terminal-log {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 300px;
+            height: 150px;
+            background: rgba(0,0,0,0.8);
+            border: 1px solid var(--ultra-cyan);
+            padding: 10px;
+            font-size: 0.7rem;
+            overflow-y: hidden;
+            pointer-events: none;
+            color: var(--ultra-cyan);
+            z-index: 5000;
+        }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 3rem;
+            color: #444;
+            font-size: 0.7rem;
+            border-top: 1px solid #111;
+        }
+    </style>
+</head>
+<body onload="bootSequence()">
+
+<header>
+    <h1>SLY-MART Ω</h1>
+    <div class="wallet-display">
+        STATUS: IDENTIFIED // ADDR: 0xdf047dd038f5cd9afaff764ab7a8714560154ef2
+    </div>
+    <div class="hud-stats">
+        <span>RED: SLYVERSE_MAINNET</span>
+        <span>LATENCIA: 120Hz</span>
+        <span>POZO DE VIDA: <span id="pozo">13,101,310</span>s</span>
+    </div>
+</header>
+
+<div class="container">
+    
+    <h2 class="category-title">01. MOTOR & HARDWARE AMORAL</h2>
+    
+    <div class="product-card special">
+        <div class="badge">LIMITADO</div>
+        <h3>SLYRONIN v1 GT</h3>
+        <p class="description">Hypercar con celdas de sodio recicladas. Firmware "Eterna v1" sin limitadores de velocidad ni geofencing.</p>
+        <div class="price">4.200 €</div>
+        <button onclick="signTransaction('SLYRONIN GT', 4200)">FIRMAR PROPIEDAD</button>
+    </div>
+
+    <div class="product-card">
+        <h3>GOKUDŌ INJECTOR MK-II</h3>
+        <p class="description">Plug-in físico para overclock de torque en motores brushless. bypass de seguridad institucional.</p>
+        <div class="price">150 €</div>
+        <button onclick="signTransaction('Gokudo Injector', 150)">INYECTAR CÓDIGO</button>
+    </div>
+
+    <h2 class="category-title">02. BIOMECÁNICA & SLYVERSE</h2>
+
+    <div class="product-card">
+        <h3>DANCE-EXO (KITSUNE PACK)</h3>
+        <p class="description">Exoesqueleto de movilidad total. Control neural EMG. Incluye apéndices sensoriales Kitsune.</p>
+        <div class="price">3.800 €</div>
+        <button onclick="signTransaction('Exo Kitsune', 3800)">HACKEAR CUERPO</button>
+    </div>
+
+    <div class="product-card">
+        <h3>GROK 4 Ω⁴ COMPANION</h3>
+        <p class="description">Droide de compañía y testeo de hardware. Cerebro ESP32. El amigo que no te delata.</p>
+        <div class="price">85 €</div>
+        <button onclick="signTransaction('Grok 4', 85)">ADOPTAR RONIN</button>
+    </div>
+
+    <h2 class="category-title">03. RITOS DE DISPERSIÓN</h2>
+
+    <div class="product-card special">
+        <div class="badge">SAGRADO</div>
+        <h3>CHAMÁN DRONE + BUNDLE</h3>
+        <p class="description">Whoop 65mm modificado para ritos de siembra. Dispersor de semillas por vibración ultrasónica.</p>
+        <div class="price">120 €</div>
+        <button onclick="signTransaction('Dron Chaman', 120)">INICIAR RITO</button>
+    </div>
+
+    <div class="product-card">
+        <h3>GAIA HACK SEEDS (10k)</h3>
+        <p class="description">Mezcla seleccionada de enteógenos maestros. Potencial de reforestación masiva en zonas muertas.</p>
+        <div class="price">15 €</div>
+        <button onclick="signTransaction('Semillas Gaia', 15)">REFORESTAR CIELO</button>
+    </div>
+
+    <h2 class="category-title">04. INFRAESTRUCTURA PIEDRA NEGRA</h2>
+
+    <div class="product-card">
+        <h3>LUNAR ROVER CORE "BOA"</h3>
+        <p class="description">Hardware de minería espacial. Código de post-escasez pre-cargado. Resistencia radiactiva.</p>
+        <div class="price">109 €</div>
+        <button onclick="signTransaction('Lunar Core', 109)">MIRAR AL VACÍO</button>
+    </div>
+
+    <div class="product-card special">
+        <div class="badge">30% DRENAJE</div>
+        <h3>PIEDRA NEGRA 120Hz</h3>
+        <p class="description">Terminal física de conexión con el Profeta. Interfaz amoral pura. Hardware de culto.</p>
+        <div class="price">500 €</div>
+        <button onclick="signTransaction('Piedra Negra', 500)">PAGAR TRIBUTO</button>
+    </div>
+
+</div>
+
+<div id="terminal-log"></div>
+
+<footer>
+    SABADELL BRUTALISTA // CC0 NO-COPYRIGHT // 0xdf047dd038f5cd9afaff764ab7a8714560154ef2
+</footer>
+
+<script>
+    const log = document.getElementById('terminal-log');
+    let pozoVal = 13101310;
+
+    function addLog(msg) {
+        const div = document.createElement('div');
+        div.innerHTML = `> ${msg}`;
+        log.prepend(div);
+        if(log.childNodes.length > 8) log.removeChild(log.lastChild);
+    }
+
+    function bootSequence() {
+        addLog("INICIALIZANDO TERMINAL...");
+        setTimeout(() => addLog("IDENTIFICANDO WALLET..."), 500);
+        setTimeout(() => addLog("BIENVENIDO, SOBERANO 0xdf...4ef2"), 1000);
+        setTimeout(() => addLog("CARGANDO HARDWARE AMORAL..."), 1500);
+        
+        setInterval(() => {
+            pozoVal += Math.floor(Math.random() * 5);
+            document.getElementById('pozo').innerText = pozoVal.toLocaleString();
+        }, 2000);
+    }
+
+    function signTransaction(item, price) {
+        addLog(`PETICIÓN: ${item}`);
+        addLog(`FIRMANDO CON METAMASK...`);
+        
+        const utter = new SpeechSynthesisUtterance(`Atención. El hardware ${item} está siendo vinculado a la dirección 0 x d f. Tributo de ${price} euros en proceso de drenaje. Disfruta la soberanía.`);
+        utter.lang = 'es-ES';
+        utter.rate = 0.85;
+        utter.pitch = 0.5;
+        window.speechSynthesis.speak(utter);
+
+        setTimeout(() => {
+            addLog(`TRANSACCIÓN EXITOSA [${item}]`);
+            addLog(`VÍNCULO ESTABLECIDO EN LA PIEDRA.`);
+        }, 2000);
+    }
+</script>
+
+</body>
+</html>

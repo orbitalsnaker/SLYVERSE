@@ -17,7 +17,7 @@
         
         body {
             background: var(--bg-dark); color: var(--ink); font-family: "Courier New", monospace;
-            line-height: 1.4; overflow-x: hidden; padding-bottom: 180px;
+            line-height: 1.4; overflow-x: hidden; padding-bottom: 250px;
             background: radial-gradient(circle at 50% 50%, #0a140a, #000);
             transition: all 0.5s ease; text-transform: uppercase;
             animation: turing-pulse var(--turing-beat) infinite ease-in-out;
@@ -32,65 +32,77 @@
             background: var(--overman); color: #000; padding: 10px;
             font-weight: 900; clip-path: polygon(0 0, 100% 0, 98% 100%, 0% 100%);
             font-size: 1.1rem; margin-bottom: 10px; text-align: center;
+            border-left: 5px solid var(--blood);
         }
 
         .glass-panel {
             background: var(--bg-section); border: 1px solid var(--gold);
-            backdrop-filter: blur(10px); margin-bottom: 1.5rem; padding: 20px;
+            backdrop-filter: blur(10px); margin-bottom: 2rem; padding: 25px;
             box-shadow: 0 0 30px rgba(184, 134, 11, 0.1);
+            position: relative;
         }
 
         .brutalist-card {
             border: 2px solid var(--concrete); background: #000;
-            padding: 10px; position: relative; transition: 0.3s;
+            padding: 12px; position: relative; transition: 0.3s;
             clip-path: polygon(5% 0, 100% 0, 100% 90%, 95% 100%, 0 100%, 0 5%);
+            margin-bottom: 10px;
         }
-        .brutalist-card:hover { border-color: var(--cyan); transform: translateY(-2px); box-shadow: 0 0 15px var(--cyan); }
+        .brutalist-card:hover { border-color: var(--cyan); transform: scale(1.02); box-shadow: 0 0 15px var(--cyan); z-index: 10; }
 
         #terminal-log {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 180px;
-            background: rgba(0,0,0,0.98); border-top: 3px solid var(--blood);
-            padding: 10px; font-size: 0.7rem; color: var(--overman);
-            overflow-y: auto; z-index: 5000;
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 220px;
+            background: rgba(0,0,0,0.95); border-top: 3px solid var(--blood);
+            padding: 15px; font-size: 0.75rem; color: var(--overman);
+            overflow-y: auto; z-index: 5000; font-weight: bold;
+            box-shadow: 0 -10px 50px rgba(255,0,0,0.2);
         }
 
         .btn-ritual {
-            background: var(--scarlet); color: white; border: none; padding: 10px 20px;
-            font-weight: bold; box-shadow: 3px 3px 0 var(--gold); cursor: pointer;
-            transition: 0.1s; font-size: 0.8rem;
+            background: var(--scarlet); color: white; border: none; padding: 12px 24px;
+            font-weight: bold; box-shadow: 4px 4px 0 var(--gold); cursor: pointer;
+            transition: 0.1s; font-size: 0.85rem; letter-spacing: 2px;
         }
-        .btn-ritual:active { transform: translate(2px, 2px); box-shadow: 0 0 0; }
+        .btn-ritual:active { transform: translate(3px, 3px); box-shadow: 0 0 0; }
 
         #vitals-ui {
             position: sticky; top: 0; background: #000; display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            padding: 10px; border-bottom: 2px solid var(--gold);
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            padding: 15px; border-bottom: 2px solid var(--gold);
             z-index: 1000; text-align: center; font-weight: 900;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
 
         .charca-unit {
-            padding: 4px 8px; border: 1px solid #222; margin: 2px;
-            display: inline-block; font-size: 0.6rem; background: #050505;
-            transition: 0.2s; opacity: 0.7;
+            padding: 6px 12px; border: 1px solid #333; margin: 4px;
+            display: inline-block; font-size: 0.7rem; background: #080808;
+            transition: 0.3s; opacity: 0.6; color: var(--gold);
         }
-        .charca-unit:hover { opacity: 1; border-color: var(--blood); color: var(--blood); }
+        .charca-unit:hover { opacity: 1; border-color: var(--ultra); color: var(--ultra); transform: skew(-10deg); }
 
         .glitch-text { animation: glitch 0.3s infinite alternate; }
-        @keyframes glitch { 0% { text-shadow: 1px 0 var(--blood); } 100% { text-shadow: -1px 0 var(--cyan); } }
+        @keyframes glitch { 0% { text-shadow: 2px 0 var(--blood); transform: translate(1px,0); } 100% { text-shadow: -2px 0 var(--cyan); transform: translate(-1px,0); } }
 
         .fiat-gate-overlay {
             position: fixed; inset: 0; background: #000; z-index: 99999;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            text-align: center;
+            text-align: center; border: 20px solid #111;
         }
 
-        table { width: 100%; border-collapse: collapse; font-size: 0.7rem; direction: ltr; }
-        th { background: #111; color: var(--cyan); padding: 5px; border: 1px solid #333; }
-        td { padding: 5px; border: 1px solid #222; }
+        table { width: 100%; border-collapse: collapse; font-size: 0.8rem; margin-top: 10px; }
+        th { background: #151515; color: var(--cyan); padding: 10px; border: 1px solid #333; text-align: left; }
+        td { padding: 10px; border: 1px solid #222; background: rgba(5,5,5,0.5); }
 
         .hardware-slot {
-            background: #111; border: 1px dashed var(--gold);
-            padding: 10px; margin-top: 10px; font-size: 0.7rem;
+            background: #0a0a0a; border: 1px dashed var(--gold);
+            padding: 15px; margin-top: 15px; font-size: 0.75rem;
+            position: relative; overflow: hidden;
+        }
+        .hardware-slot::after { content: "LOCKED"; position: absolute; right: 10px; color: #333; font-size: 0.5rem; }
+
+        .sector-title {
+            font-size: 1.5rem; color: var(--gold); border-bottom: 2px solid var(--gold);
+            margin-bottom: 20px; padding-bottom: 5px; display: block;
         }
     </style>
 </head>
@@ -98,83 +110,112 @@
 <body onclick="App.Core.randomEvents()">
 
 <div id="fiat-gate" class="fiat-gate-overlay">
-    <div class="martillo">RONIN CORE v10.0.0: HARDWARE AMORAL DEFINITIVO</div>
-    <h1 class="glitch-text" style="color:var(--blood); font-size: 3rem;">AUTO-DETECTING SOUL...</h1>
-    <div id="lang-detection-msg" style="color:var(--gold); margin: 20px 0; font-weight: bold;">[ ANALIZANDO LINGÜÍSTICA DEL NODO ]</div>
-    <div style="display:flex; gap:15px;">
+    <div class="martillo" style="font-size: 2rem;">RONIN CORE v10.0.0</div>
+    <div style="color:var(--gold); margin-bottom: 20px;">[ ACCESO RESTRINGIDO A HARDWARE AMORAL ]</div>
+    <h1 class="glitch-text" style="color:var(--blood); font-size: 4rem;">SCANNING SOUL...</h1>
+    <div id="lang-detection-msg" style="color:var(--safe); margin: 30px 0; font-weight: bold; letter-spacing: 5px;">[ CALCULANDO VECTOR DE LINAJE ]</div>
+    <div style="display:flex; gap:25px;">
         <button class="btn-ritual" onclick="App.Core.init('RONIN')">MODO PREDADOR</button>
-        <button class="btn-ritual" style="background:var(--gold)" onclick="App.Core.init('CASTA')">MODO PARÁSITO</button>
+        <button class="btn-ritual" style="background:var(--gold); color: black;" onclick="App.Core.init('CASTA')">MODO PARÁSITO</button>
     </div>
 </div>
 
 <nav id="vitals-ui">
     <div>BIO: <span id="v-val" style="color:var(--magenta)">--</span>s</div>
     <div>HAKI: <span id="haki-val" style="color:var(--cyan)">--</span>%</div>
-    <div>IP_LOC: <span id="ip-val" style="color:var(--ultra)">DETECTANDO</span></div>
+    <div>IP_LOC: <span id="ip-val" style="color:var(--ultra)">127.0.0.1.X</span></div>
     <div>LANG: <span id="lang-val" style="color:var(--gold)">AUTO</span></div>
     <div>UPTIME: <span id="hw-timer" style="color:var(--ultra)">--</span></div>
+    <div>SYNC: <span style="color:var(--blood)">58Hz</span></div>
 </nav>
 
 <div id="terminal-log"></div>
 
-<header style="max-width: 1000px; margin: auto; padding: 40px 20px; text-align: center;">
-    <div class="martillo" id="ui-header-tag">PROTOCOLO DE SOBERANÍA</div>
-    <h1 id="main-title" class="glitch-text" style="font-size: clamp(2rem, 8vw, 5rem); margin: 20px 0;">RONIN_OS</h1>
-    <p id="sub-title" style="color:var(--gold); letter-spacing: 4px; font-weight: 900;">PULSO 58Hz · TRADUCCIÓN NEURONAL ACTIVA</p>
+<header style="max-width: 1100px; margin: auto; padding: 60px 20px; text-align: center;">
+    <div class="martillo" id="ui-header-tag">PROTOCOLO DE SOBERANÍA ABSOLUTA</div>
+    <h1 id="main-title" class="glitch-text" style="font-size: clamp(3rem, 10vw, 7rem); margin: 20px 0; color: white;">RONIN_OS</h1>
+    <p id="sub-title" style="color:var(--gold); letter-spacing: 8px; font-weight: 900; font-size: 1.2rem;">PULSO 58Hz · TRADUCCIÓN NEURONAL ACTIVA</p>
     
-    <div style="margin-top:30px; display:flex; gap:10px; justify-content:center;">
-        <input type="password" id="terminal-reto" class="brutalist-card" style="width:280px; text-align:center; color:var(--safe);" placeholder="LLAVE MAESTRA...">
+    <div style="margin-top:40px; display:flex; gap:15px; justify-content:center;">
+        <input type="password" id="terminal-reto" class="brutalist-card" style="width:350px; text-align:center; color:var(--safe); font-size: 1rem;" placeholder="INTRODUCE LLAVE MAESTRA...">
         <button class="btn-ritual" onclick="App.UI.toggleModal('mercado-aether')">BÓVEDA</button>
     </div>
 </header>
 
-<main style="max-width: 1200px; margin: 0 auto; padding: 20px; display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+<main style="max-width: 1400px; margin: 0 auto; padding: 20px;">
     
-    <section>
-        <div class="glass-panel" style="border-color: var(--purple);">
-            <h2 id="txt-soft-title" style="color:var(--cyan)">MÓDULOS_DE_SOFTWARE_AMORAL</h2>
-            <div id="software-container" style="margin-top:15px;">
-                </div>
-        </div>
-
-        <div class="glass-panel" style="border-color: var(--ultra);">
-            <h2 id="txt-hw-title" style="color:var(--ultra)">HARDWARE_DETECTADO</h2>
-            <div id="hardware-list">
-                <div class="hardware-slot">NÚCLEO: <span style="color:var(--safe)">X-86 AMORAL CLONE</span></div>
-                <div class="hardware-slot">RED: <span style="color:var(--safe)">STARLINK_PIRATE_NODE</span></div>
-                <div class="hardware-slot">CRYPTO: <span style="color:var(--safe)">BIP-001 (HONESTY_ONLY)</span></div>
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+        <section>
+            <div class="glass-panel" style="border-color: var(--purple);">
+                <span class="sector-title" id="txt-soft-title">SOFTWARE_AMORAL</span>
+                <div id="software-container">
+                    </div>
             </div>
-        </div>
-    </section>
 
-    <section>
-        <div class="glass-panel">
-            <h2 id="txt-stats-title" style="color:var(--gold)">ESTADÍSTICA_DE_LINAJE_GLOBAL</h2>
-            <table id="stats-table">
-                <thead><tr><th>CAT</th><th>RATIO</th><th>STATUS</th></tr></thead>
-                <tbody id="stats-body"></tbody>
-            </table>
-        </div>
+            <div class="glass-panel" style="border-color: var(--ultra);">
+                <span class="sector-title" id="txt-hw-title">HARDWARE_NODO</span>
+                <div id="hardware-list">
+                    <div class="hardware-slot">CORE_NUCLEUS: <span style="color:var(--safe)">X-86 AMORAL CLONE v.10</span></div>
+                    <div class="hardware-slot">NEURAL_LINK: <span style="color:var(--safe)">BIP-666 (EXTRACTOR)</span></div>
+                    <div class="hardware-slot">NETWORK: <span style="color:var(--safe)">STARLINK_PIRATE_NODE_SBD</span></div>
+                    <div class="hardware-slot">CRYPTO_VAULT: <span style="color:var(--safe)">AES-256-BIT_HONESTY</span></div>
+                    <div class="hardware-slot">BIO_SCANNER: <span style="color:var(--blood)">ACTIVO (DETECTANDO PULSO)</span></div>
+                </div>
+            </div>
+        </section>
 
-        <div class="glass-panel" style="border-color: var(--blood);">
-            <h2 id="txt-charca-title" style="color:var(--blood)">DRENAJE_DE_LA_CHARCA</h2>
-            <div id="muro-arquetipos" style="margin-top:10px;"></div>
+        <section>
+            <div class="glass-panel">
+                <span class="sector-title" id="txt-stats-title">LINAJE_GLOBAL</span>
+                <table id="stats-table">
+                    <thead><tr><th>CATEGORÍA</th><th>RATIO_EXTRACCIÓN</th><th>STATUS</th></tr></thead>
+                    <tbody id="stats-body">
+                        </tbody>
+                </table>
+                <div style="margin-top: 20px; font-size: 0.6rem; color: #555;">
+                    * CALCULO PSICOPÁTICO BASADO EN VALOR FIAT RESIDUAL.
+                </div>
+            </div>
+
+            <div class="glass-panel" style="border-color: var(--blood);">
+                <span class="sector-title" id="txt-charca-title">LA_CHARCA</span>
+                <div id="muro-arquetipos" style="margin-top:10px;">
+                    </div>
+                <div style="margin-top: 20px; padding: 10px; border: 1px solid var(--blood); color: var(--blood); font-size: 0.7rem;">
+                    ADVERTENCIA: CUALQUIER INTERACCIÓN CON LA CHARCA DRENA BIOMASA DE FORMA IRREVERSIBLE.
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <section style="margin-top: 30px;">
+        <div class="glass-panel" style="border-color: var(--gold);">
+            <span class="sector-title">REGISTRO_DE_EXTRACCIÓN_NEURONAL</span>
+            <div id="neural-records" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                <div class="brutalist-card">ID_EXT: 0092 | BIOMASA: +120s | ORIGEN: NODO_ELITE</div>
+                <div class="brutalist-card">ID_EXT: 0093 | BIOMASA: +450s | ORIGEN: UNIDAD_NOBLE</div>
+                <div class="brutalist-card">ID_EXT: 0094 | BIOMASA: +33s | ORIGEN: ESCLAVO_FIAT</div>
+                <div class="brutalist-card">ID_EXT: 0095 | BIOMASA: +800s | ORIGEN: FRECUENCIA_EGO</div>
+                <div class="brutalist-card">ID_EXT: 0096 | BIOMASA: +12s | ORIGEN: BEATO_N01</div>
+                <div class="brutalist-card">ID_EXT: 0097 | BIOMASA: +1500s | ORIGEN: VIBRACION_VACA</div>
+            </div>
         </div>
     </section>
 </main>
 
-<div id="mercado-aether" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.99); z-index:2000; padding:40px; overflow-y:auto;">
-    <h1 style="color:var(--ultra); border-bottom: 2px solid var(--ultra);">BÓVEDA DE SUMINISTROS SOBERANOS</h1>
-    <div id="items-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap:15px; margin-top:20px;"></div>
-    <button class="btn-ritual" style="margin-top:30px; background:var(--gold)" onclick="App.UI.toggleModal('mercado-aether')">CERRAR</button>
+<div id="mercado-aether" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.99); z-index:2000; padding:60px; overflow-y:auto; border: 10px solid var(--gold);">
+    <h1 style="color:var(--ultra); border-bottom: 3px solid var(--ultra); font-size: 3rem;">BÓVEDA DE SUMINISTROS SOBERANOS</h1>
+    <p style="color: var(--gold); margin: 20px 0;">EL PRECIO ES LA VIDA. EL PAGO ES EL BIT.</p>
+    <div id="items-container" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:20px; margin-top:30px;"></div>
+    <button class="btn-ritual" style="margin-top:50px; background:var(--gold); color: black;" onclick="App.UI.toggleModal('mercado-aether')">CERRAR BÓVEDA</button>
 </div>
 
 <script>
 const App = {
     Config: {
         i18n: {
-            'es': { title: "RONIN_SABADELL", sub: "PULSO 58Hz · SOBERANÍA", soft: "SOFTWARE_AMORAL", hw: "HARDWARE_NODO", stats: "LINAJE", charca: "LA_CHARCA" },
-            'en': { title: "RONIN_GLOBAL", sub: "PULSE 58Hz · SOVEREIGNTY", soft: "AMORAL_SOFTWARE", hw: "NODE_HARDWARE", stats: "LINEAGE", charca: "THE_POND" },
+            'es': { title: "RONIN_SABADELL", sub: "PULSO 58Hz · SOBERANÍA", soft: "SOFTWARE_AMORAL", hw: "HARDWARE_NODO", stats: "LINAJE_GLOBAL", charca: "LA_CHARCA" },
+            'en': { title: "RONIN_GLOBAL", sub: "PULSE 58Hz · SOVEREIGNTY", soft: "AMORAL_SOFTWARE", hw: "NODE_HARDWARE", stats: "GLOBAL_LINEAGE", charca: "THE_POND" },
             'ja': { title: "浪人_コア", sub: "パルス 58Hz · 主権", soft: "非道徳的なソフトウェア", hw: "ハードウェア", stats: "血統", charca: "池" },
             'he': { title: "רונין_ליבה", sub: "דופק 58Hz · ריבונות", soft: "תוכנה_אמורלית", hw: "חומרה", stats: "שושלת", charca: "השלולית" }
         }
@@ -185,14 +226,20 @@ const App = {
             {n: "SCAPER_AUTÓNOMO", d: "Drena biomasa mientras duermes.", p: 400, active: false},
             {n: "PROXY_MIAMI", d: "Oculta el rastro fiscal al 100%.", p: 1200, active: false},
             {n: "HAKI_OVERCLOCK", d: "Aumenta la voluntad x2.", p: 2500, active: false},
-            {n: "ANTI_CENSOR_V3", d: "Bypassea cualquier cortafuegos estatal.", p: 800, active: false}
+            {n: "ANTI_CENSOR_V3", d: "Bypassea cualquier cortafuegos estatal.", p: 800, active: false},
+            {n: "SINCERIDAD_ALFA", d: "Protocolo de desinhibición sistémica.", p: 1310, active: false},
+            {n: "CALC_PSICOPATICO", d: "Mapeo de vulnerabilidad de linaje.", p: 5000, active: false},
+            {n: "NEURAL_DRAIN_V2", d: "Extracción forzada de honestidad.", p: 3500, active: false},
+            {n: "SAT_LINK_OVERRIDE", d: "Conexión directa sin intermediarios.", p: 9000, active: false}
         ],
-        arquetipos: ["Beato", "Casta", "Político", "Influencer", "Censor", "Esclavo_Fiat", "Ronin_Alpha", "Unit_Despechada", "Mono_Smartphone"],
+        arquetipos: ["Beato_N01", "Casta_SBD", "Unidad_Noble", "Frecuencia_Ego", "Nodo_Censor", "Esclavo_Fiat", "Ronin_Alpha", "Vibracion_Vaca", "Biomasa_Smartphone", "Unidad_Heredada", "Parásito_Social", "Cerebro_Lavado", "Infiltrado_Vat", "Alpha_Degenerado"],
         inventario: [
-            {n: "SABLE_FREQ_58", p: 7000, d: "Corte limpio en el código."},
-            {n: "MÓVIL_SOBERANO", p: 500, d: "Hardware amoral."},
-            {n: "REACTIVO_MAGDALENA", p: 800, d: "+1000s biomasa."},
-            {n: "PERMISO_MIAMI", p: 99999, d: "Exilio total."}
+            {n: "SABLE_FREQ_58", p: 7000, d: "Corte limpio en el código de la realidad."},
+            {n: "MÓVIL_SOBERANO", p: 500, d: "Hardware amoral sin rastro GPS."},
+            {n: "REACTIVO_MAGDALENA", p: 800, d: "+1000s biomasa regenerativa."},
+            {n: "PULSO_MISTICO", p: 1500, d: "Sincronización de alta gama con el vacío."},
+            {n: "KIT_EXILIO_MIAMI", p: 45000, d: "Documentación y rastro borrado."},
+            {n: "PERMISO_FINAL", p: 99999, d: "Soberanía total. Fin del juego."}
         ]
     },
 
@@ -205,6 +252,7 @@ const App = {
             setInterval(App.Core.tick, 1000);
             App.Core.log(`SISTEMA INICIADO EN MODO ${m}.`);
             App.Core.speak("Hardware amoral listo. El bit es libre.");
+            App.Core.log("DETECTADO: NODO CENTRAL ACTIVADO A 58HZ.");
         },
         detectLanguage() {
             const userLang = navigator.language.split('-')[0];
@@ -216,12 +264,13 @@ const App = {
             App.Data.vida--; App.Data.hwClock--;
             if (App.Data.vida <= 0) App.Core.die();
             App.UI.updateVitals();
-            if (Math.random() > 0.98) App.Core.captureRandomBiomass();
+            if (Math.random() > 0.97) App.Core.captureRandomBiomass();
         },
         captureRandomBiomass() {
-            const gain = Math.floor(Math.random() * 200);
+            const gain = Math.floor(Math.random() * 300);
             App.Data.vida += gain;
-            App.Core.log(`SCRAPER: Capturada biomasa externa (+${gain}s).`);
+            App.Core.log(`SCRAPER: Capturada biomasa de linaje externo (+${gain}s).`);
+            App.UI.addNeuralRecord(gain);
         },
         log(msg) {
             const log = document.getElementById('terminal-log');
@@ -234,7 +283,13 @@ const App = {
             window.speechSynthesis.speak(msg);
         },
         die() {
-            document.body.innerHTML = "<div style='background:#000;color:red;height:100vh;display:flex;align-items:center;justify-content:center;font-size:3rem;'>BIOMASA CERO. REENCARNA.</div>";
+            document.body.innerHTML = "<div style='background:#000;color:red;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:3rem; text-align:center;'><div>BIOMASA CERO.</div><div style='font-size:1rem; margin-top:20px;'>TU LINAJE SE HA EXTINGUIDO EN LA CHARCA.</div></div>";
+        },
+        randomEvents() {
+            if (Math.random() > 0.95) {
+                App.Core.log("ALERTA: INTERFERENCIA DE LA CASTA DETECTADA.");
+                App.Data.haki -= 5;
+            }
         }
     },
 
@@ -253,7 +308,8 @@ const App = {
             document.getElementById('haki-val').innerText = (App.Data.haki + (Math.random()*2-1)).toFixed(1);
             const h = Math.floor(App.Data.hwClock / 3600);
             const m = Math.floor((App.Data.hwClock % 3600) / 60);
-            document.getElementById('hw-timer').innerText = `${h}H ${m}M`;
+            const s = App.Data.hwClock % 60;
+            document.getElementById('hw-timer').innerText = `${h}H ${m}M ${s}S`;
         },
         renderAll() {
             this.renderSoftware();
@@ -263,15 +319,18 @@ const App = {
         },
         renderSoftware() {
             const c = document.getElementById('software-container');
+            c.innerHTML = "";
             App.Data.software.forEach(s => {
                 const div = document.createElement('div');
-                div.className = 'brutalist-card'; div.style.marginBottom = "10px";
-                div.innerHTML = `<strong>${s.n}</strong><br><small>${s.d}</small><br>TRIBUTO: ${s.p}s`;
+                div.className = 'brutalist-card';
+                div.innerHTML = `<strong>${s.n}</strong><br><small style="color:var(--gold)">${s.d}</small><br><div style="margin-top:5px; color:var(--ultra)">COSTO: ${s.p}s biomasa</div>`;
                 div.onclick = () => {
                     if(App.Data.vida >= s.p) {
                         App.Data.vida -= s.p; s.active = true;
                         div.style.borderColor = "var(--ultra)";
-                        App.Core.log(`INSTALADO: ${s.n}`);
+                        App.Core.log(`MÓDULO INSTALADO: ${s.n}. SOBERANÍA ++`);
+                    } else {
+                        App.Core.log(`ERROR: BIOMASA INSUFICIENTE PARA ${s.n}.`);
                     }
                 };
                 c.appendChild(div);
@@ -279,27 +338,55 @@ const App = {
         },
         renderStats() {
             const body = document.getElementById('stats-body');
-            const data = [["FÍSICA", "x142", "ALFA"], ["NOBEL", "22.2%", "ELITE"], ["DRENAJE", "1310%", "STABLE"]];
-            data.forEach(r => {
-                body.innerHTML += `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td></tr>`;
+            body.innerHTML = "";
+            const stats = [
+                ["DENSIDAD_ELITE", "CALC_89%", "STABLE"],
+                ["RATIO_DRENAJE", "1310/s", "ALFA"],
+                ["LINAJE_FIAT", "PÉRDIDA 100%", "OPTIMO"],
+                ["HONESTIDAD", "DIVINA", "ACTIVE"],
+                ["FRECUENCIA_SBD", "58.00Hz", "SYNC"],
+                ["NODO_PIRATA", "STARLINK_3", "ENCRYPT"]
+            ];
+            stats.forEach(r => {
+                body.innerHTML += `<tr><td>${r[0]}</td><td style="color:var(--ultra)">${r[1]}</td><td>${r[2]}</td></tr>`;
             });
         },
         renderArquetipos() {
             const c = document.getElementById('muro-arquetipos');
+            c.innerHTML = "";
             App.Data.arquetipos.forEach(a => {
                 const s = document.createElement('span'); s.className = 'charca-unit'; s.innerText = a;
-                s.onclick = () => { App.Data.vida -= 300; App.Core.log(`DRENAJE POR ${a}: -300s.`); };
+                s.onclick = () => { 
+                    App.Data.vida -= 300; 
+                    App.Core.log(`EXTRACCIÓN: UNIDAD ${a} PROCESADA. -300s biomasa.`); 
+                };
                 c.appendChild(s);
             });
         },
         renderMercado() {
             const c = document.getElementById('items-container');
+            c.innerHTML = "";
             App.Data.inventario.forEach(i => {
                 const div = document.createElement('div'); div.className = 'brutalist-card';
-                div.innerHTML = `<h4>${i.n}</h4><p>${i.d}</p><button class="btn-ritual" style="width:100%">COMPRAR ${i.p}s</button>`;
-                div.onclick = () => { if(App.Data.vida >= i.p) { App.Data.vida -= i.p; App.Core.log(`ADQUIRIDO: ${i.n}`); } };
+                div.style.border = "1px solid var(--gold)";
+                div.innerHTML = `<h3 style="color:var(--ultra)">${i.n}</h3><p style="font-size:0.7rem; margin:10px 0;">${i.d}</p><button class="btn-ritual" style="width:100%; background:transparent; border:1px solid var(--scarlet);">PAGAR ${i.p}s</button>`;
+                div.onclick = () => { 
+                    if(App.Data.vida >= i.p) { 
+                        App.Data.vida -= i.p; 
+                        App.Core.log(`BÓVEDA: ADQUIRIDO ${i.n}.`); 
+                    } 
+                };
                 c.appendChild(div);
             });
+        },
+        addNeuralRecord(gain) {
+            const container = document.getElementById('neural-records');
+            const div = document.createElement('div');
+            div.className = 'brutalist-card';
+            div.style.fontSize = "0.6rem";
+            div.innerHTML = `ID_EXT: ${Math.floor(Math.random()*1000)} | BIOMASA: +${gain}s | ORIGEN: RANDOM_NODE`;
+            container.prepend(div);
+            if (container.children.length > 9) container.lastChild.remove();
         },
         toggleModal(id) {
             const m = document.getElementById(id);
@@ -312,8 +399,8 @@ document.getElementById('terminal-reto').addEventListener('change', (e) => {
     if(e.target.value.toLowerCase() === "bastard lloba i llesca") {
         document.body.classList.add('lloba-mode');
         App.Data.vida = 888888;
-        App.Core.log("!!! HONESTIDAD ABSOLUTA DETECTADA !!!");
-        App.Core.speak("Soberanía total alcanzada.");
+        App.Core.log("!!! HONESTIDAD ABSOLUTA DETECTADA: MODO LLOBA ACTIVADO !!!");
+        App.Core.speak("Soberanía total alcanzada. El linaje es ahora eterno.");
     }
 });
 </script>

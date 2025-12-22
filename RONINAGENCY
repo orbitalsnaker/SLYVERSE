@@ -1,340 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="all">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CONDUIT DEL SILENCIO // AGENCIA RONIN</title>
+    <title>RONIN_AGENCY // OVERLORD_INTERFACE_v4.2</title>
     <style>
-        body {
-            background-color: #050505; /* Un negro muy profundo */
-            color: #00FF00; /* Verde Ronin */
-            font-family: 'Consolas', 'Monaco', monospace;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            margin: 0;
-            overflow: hidden;
-            position: relative;
-            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="%2300FF00" stroke-width="2" d="M3 12h18M12 3v18"/></svg>') 12 12, auto; /* Cursor en cruz verde */
-        }
-        .header {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 15px 20px;
-            border-bottom: 2px solid #00AA00;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 0 15px rgba(0,255,0,0.3);
-        }
-        .header h1 {
-            margin: 0;
-            font-size: 1.8em;
-            color: #00FFFF; /* Cian para el título */
-            text-shadow: 0 0 8px #00FFFF;
-        }
-        .status-light {
-            width: 12px;
-            height: 12px;
-            background-color: #FF0000; /* Rojo: desconectado */
-            border-radius: 50%;
-            display: inline-block;
-            margin-right: 10px;
-            animation: pulse-red 1s infinite alternate;
-        }
-        .status-light.online {
-            background-color: #00FF00; /* Verde: conectado */
-            animation: pulse-green 1s infinite alternate;
-        }
-        @keyframes pulse-red { from {box-shadow: 0 0 5px #FF0000;} to {box-shadow: 0 0 20px #FF0000;} }
-        @keyframes pulse-green { from {box-shadow: 0 0 5px #00FF00;} to {box-shadow: 0 0 20px #00FF00;} }
+        :root { --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #050505; --ronin-void: #000; }
+        body { background: var(--ronin-void); color: var(--ronin-neon); font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
+        
+        /* Layout Principal */
+        .app-container { display: grid; grid-template-columns: 350px 1fr 300px; height: 100vh; gap: 5px; background: #111; }
+        .panel { background: var(--ronin-dark); border: 1px solid #222; overflow-y: auto; padding: 15px; position: relative; }
+        
+        /* Headers */
+        h2 { font-size: 0.9em; border-bottom: 1px solid var(--ronin-neon); padding-bottom: 5px; color: #fff; text-transform: uppercase; letter-spacing: 2px; }
+        
+        /* BOM & Hardware */
+        .hw-card { border: 1px solid #333; padding: 10px; margin-bottom: 10px; font-size: 0.8em; transition: 0.3s; }
+        .hw-card:hover { border-color: var(--ronin-neon); background: rgba(0, 255, 204, 0.05); }
+        .download-btn { background: var(--ronin-neon); color: #000; border: none; padding: 5px 10px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 5px; }
+        
+        /* Volcado de Datos */
+        #data-stream { height: 300px; background: #000; border: 1px solid #1a1a1a; padding: 10px; font-size: 0.7em; overflow: hidden; line-height: 1.2; }
+        .stream-line { color: #00ffcc; white-space: nowrap; }
+        
+        /* Monkey Trap Overlay */
+        #monkey-jail { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--ronin-danger); color: #fff; z-index: 10000; text-align: center; padding-top: 10%; }
+        
+        /* White Hacker UI Elements */
+        .status-tag { display: inline-block; padding: 2px 5px; background: #333; font-size: 0.7em; margin-bottom: 10px; }
+        .pulse { animation: pulse-anim 2s infinite; }
+        @keyframes pulse-anim { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-        .main-grid {
-            flex-grow: 1;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            padding: 20px;
-        }
-        .panel {
-            background: rgba(10, 10, 10, 0.9);
-            border: 1px solid #00AA00;
-            box-shadow: 0 0 10px rgba(0,255,0,0.2);
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-        }
-        .panel h2 {
-            color: #00FFFF;
-            border-bottom: 1px dashed #00AA00;
-            padding-bottom: 10px;
-            margin-top: 0;
-            margin-bottom: 20px;
-            text-shadow: 0 0 5px #00FFFF;
-        }
-        .controls, .leak-area {
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .button {
-            background: #008800;
-            color: #0A0A0A;
-            border: none;
-            padding: 12px 20px;
-            font-size: 1.1em;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            text-transform: uppercase;
-            font-weight: bold;
-            box-shadow: 0 0 5px rgba(0,255,0,0.5);
-        }
-        .button:hover {
-            background: #00FF00;
-            color: #000;
-            box-shadow: 0 0 15px #00FF00;
-        }
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #00FFFF;
-            font-size: 0.9em;
-        }
-        .input-group input[type="text"],
-        .input-group textarea {
-            width: calc(100% - 22px); /* Padding y borde */
-            background: #000;
-            border: 1px solid #00AA00;
-            color: #00FF00;
-            padding: 10px;
-            font-size: 0.9em;
-            resize: vertical;
-        }
-        .input-group textarea {
-            min-height: 120px;
-        }
-        .log-console {
-            background: #000;
-            border: 1px solid #00AA00;
-            padding: 10px;
-            font-size: 0.8em;
-            height: 150px;
-            overflow-y: scroll;
-            margin-top: 20px;
-            color: #00FF00;
-        }
-        .log-console span.error { color: #FF0000; }
-        .log-console span.info { color: #00FFFF; }
-        .log-console span.success { color: #00FF00; }
-
-        .footer {
-            background: rgba(0, 0, 0, 0.8);
-            padding: 10px 20px;
-            border-top: 2px solid #00AA00;
-            text-align: right;
-            font-size: 0.8em;
-            color: #00FFFF;
-            box-shadow: 0 0 15px rgba(0,255,0,0.3);
-        }
-        .progress-bar-container {
-            width: 100%;
-            background-color: #333;
-            border: 1px solid #00FF00;
-            height: 20px;
-            margin-top: 10px;
-            overflow: hidden;
-        }
-        .progress-bar {
-            height: 100%;
-            width: 0%;
-            background-color: #00FF00;
-            text-align: center;
-            line-height: 20px;
-            color: #0A0A0A;
-            font-weight: bold;
-            transition: width 0.3s ease-in-out;
-        }
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-thumb { background: var(--ronin-neon); }
     </style>
 </head>
-<body>
-    <div class="header">
-        <h1>// CONDUIT DEL SILENCIO // <span style="color:#00FF00;">AGENCIA RONIN</span></h1>
-        <div>
-            <span class="status-light" id="connectionStatus"></span>
-            <span id="statusText">DESCONECTADO</span>
+<body onload="initSystem()">
+
+<div id="monkey-jail">
+    <h1 style="font-size: 8vw;">🐒 MONO DETECTADO 🐒</h1>
+    <h2 id="polyglot-alert">IHR SEID AFFEN</h2>
+    <p>CPU CLAMPED AT 4%. ENJOY THE LAG, BUREAUCRAT.</p>
+</div>
+
+<div class="app-container" id="main-ui">
+    
+    <div class="panel">
+        <h2>[BOM] HARDWARE AMORAL</h2>
+        <div class="status-tag pulse">READY FOR DEPLOYMENT</div>
+        
+        <div class="hw-card">
+            <strong>NODO_R-01: TRANSMISOR CUÁNTICO</strong>
+            <p>BOM: FPGA Spartan-7, RF Transceiver AD9361, TCXO 0.1ppm.</p>
+            <button class="download-btn" onclick="simDownload('R-01')">DESCUIDAR ESQUEMÁTICOS</button>
+        </div>
+
+        <div class="hw-card">
+            <strong>NODO_S-09: ESTRANGULADOR DE SEÑAL</strong>
+            <p>BOM: SDR HackRF One Mod, LNA de 40dB, Antena Direccional 5GHz.</p>
+            <button class="download-btn" onclick="simDownload('S-09')">BAJAR FIRMWARE AMORAL</button>
+        </div>
+
+        <div class="hw-card">
+            <strong>CORE_Ω: SERVIDOR SIN ESTADO</strong>
+            <p>BOM: CPU RISC-V Custom, 64GB RAM ECC, SSD Cifrado por Hardware.</p>
+            <button class="download-btn" onclick="simDownload('CORE-Ω')">DESCARGAR KERNEL RONIN</button>
+        </div>
+        
+        <div id="download-status" style="font-size: 0.7em; color: #777; margin-top: 20px;"></div>
+    </div>
+
+    <div class="panel">
+        <h2>[VOLCADO_DE_DATOS_A_SACO] - AGENCIA RONIN</h2>
+        <div id="data-stream"></div>
+        
+        <div style="margin-top: 20px;">
+            <textarea id="leak-input" placeholder="PEGA AQUÍ LOS LEAKS DE LA CHARCA..." style="width: 100%; height: 150px; background: #000; color: var(--ronin-neon); border: 1px solid #333; padding: 10px;"></textarea>
+            <button class="download-btn" style="height: 50px; font-size: 1.2em;" onclick="dumpData()">VOLCAR DATOS AL NODO CENTRAL</button>
+        </div>
+        
+        <div id="progress-container" style="display:none; margin-top: 10px;">
+            <div style="width: 100%; border: 1px solid var(--ronin-neon); height: 10px;">
+                <div id="progress-bar" style="width: 0%; height: 100%; background: var(--ronin-neon);"></div>
+            </div>
+            <p id="progress-text" style="font-size: 0.7em;"></p>
         </div>
     </div>
 
-    <div class="main-grid">
-        <div class="panel">
-            <h2><span style="color:#00FF00;">[</span> DESCARGA DE HARDWARE AMORAL <span style="color:#00FF00;">]</span></h2>
-            <div class="controls">
-                <div class="input-group">
-                    <label for="hardwareID">Identificador de Componente (HEX):</label>
-                    <input type="text" id="hardwareID" placeholder="Ej: 0x7E3A0C..." maxlength="10">
-                </div>
-                <div class="input-group">
-                    <label for="encryptionKey">Clave de Decodificación (SHA-256):</label>
-                    <input type="text" id="encryptionKey" placeholder="Ej: A1B2C3D4..." maxlength="64">
-                </div>
-                <button class="button" onclick="downloadHardware()">DESCARGAR NÚCLEO</button>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="downloadProgressBar">0%</div>
-                </div>
-            </div>
-            <div class="log-console" id="downloadLog">
-                <span class="info">[INFO] Esperando comandos del operador...</span><br>
-            </div>
+    <div class="panel">
+        <h2>[METADATA_ANALYSIS]</h2>
+        <div id="scanner-logs" style="font-size: 0.7em;">
+            > INICIANDO SCANNER...<br>
         </div>
-
-        <div class="panel">
-            <h2><span style="color:#00FF00;">[</span> INYECCIÓN DE LEAKS <span style="color:#00FF00;">]</span></h2>
-            <div class="leak-area">
-                <div class="input-group">
-                    <label for="leakTarget">Vector de Inyección (IP/DNS/Nodo):</label>
-                    <input type="text" id="leakTarget" placeholder="Ej: 192.168.1.1, cni.gob, nodo_delta_01">
-                </div>
-                <div class="input-group">
-                    <label for="leakContent">Contenido del Leak (Máx 2048 caracteres):</label>
-                    <textarea id="leakContent" placeholder="Introduce aquí los datos crudos del leak..."></textarea>
-                </div>
-                <div class="input-group">
-                    <label for="anonLevel">Nivel de Anonimato (0-5):</label>
-                    <input type="range" id="anonLevel" min="0" max="5" value="3" style="width:100%;">
-                    <span id="anonLevelDisplay" style="color:#00FFFF; font-size:0.9em;">Nivel: 3 (Estándar)</span>
-                </div>
-                <button class="button" onclick="injectLeak()">INJECTAR LEAK</button>
-            </div>
-            <div class="log-console" id="leakLog">
-                <span class="info">[INFO] Sistema de inyección en espera...</span><br>
-            </div>
+        <div style="margin-top: 20px; border-top: 1px solid #222; padding-top: 10px;">
+            <div style="font-size: 0.8em; color: #555;">IDENTIDAD DETECTADA:</div>
+            <div id="identity-box" style="color: #fff; font-weight: bold;">ESPERANDO...</div>
         </div>
     </div>
+</div>
 
-    <div class="footer">
-        _RONIN_ &lt;::&gt; _AGENCY_ // OPERACIÓN: CONDUIT DEL SILENCIO // VER 1.0.1 ALPHA
-    </div>
+<script>
+    const stream = document.getElementById('data-stream');
+    const logs = document.getElementById('scanner-logs');
+    const polyAlert = document.getElementById('polyglot-alert');
+    const insults = ["VOUS ÊTES DES SINGES", "IHR SEID AFFEN", "ВЫ ОБЕЗЬЯНЫ", "S01S UN0S M0N0S", "MONKEYS IN SUITS"];
 
-    <script>
-        // Simulación de estado de conexión
-        let isOnline = false;
-        function toggleConnection() {
-            const statusLight = document.getElementById('connectionStatus');
-            const statusText = document.getElementById('statusText');
-            isOnline = !isOnline;
-            if (isOnline) {
-                statusLight.classList.add('online');
-                statusText.textContent = 'CONECTADO';
-                appendToLog('downloadLog', '<span class="success">[OK] Conexión establecida con el nodo central.</span>');
-                appendToLog('leakLog', '<span class="success">[OK] Módulos de inyección activados.</span>');
-            } else {
-                statusLight.classList.remove('online');
-                statusText.textContent = 'DESCONECTADO';
-                appendToLog('downloadLog', '<span class="error">[ERROR] Conexión perdida con el nodo.</span>');
-                appendToLog('leakLog', '<span class="error">[ERROR] Módulos de inyección desactivados.</span>');
-            }
+    function initSystem() {
+        // Vibe Check automático
+        const isMonkey = /gov|gob|cni|policia/i.test(navigator.userAgent) || Math.random() < 0.2;
+        
+        if (isMonkey) {
+            startMonkeyJail();
+        } else {
+            startWhiteHackerSession();
         }
-        setInterval(toggleConnection, 5000); // Cambia el estado cada 5 segundos
+    }
 
-        function appendToLog(logId, message) {
-            const logConsole = document.getElementById(logId);
-            const entry = document.createElement('div');
-            entry.innerHTML = `<span style="color:#777;">[${new Date().toLocaleTimeString()}]</span> ${message}`;
-            logConsole.appendChild(entry);
-            logConsole.scrollTop = logConsole.scrollHeight; // Auto-scroll
+    function startWhiteHackerSession() {
+        document.getElementById('identity-box').innerText = "WHITE_HACKER_GEN_7";
+        logs.innerHTML += "> [OK] INTEGRIDAD VERIFICADA.<br>> [INFO] DATOS INDEXADOS.<br>";
+        generateStream();
+    }
+
+    function startMonkeyJail() {
+        // El estrangulador de CPU (Trabajando al 96% de carga inútil)
+        for(let i=0; i<navigator.hardwareConcurrency; i++) {
+            new Worker(URL.createObjectURL(new Blob(['while(true){Math.atan2(Math.random(), Math.random());}'])));
         }
+        document.getElementById('main-ui').style.filter = "blur(10px)";
+        document.getElementById('monkey-jail').style.display = "block";
+        
+        setInterval(() => {
+            polyAlert.innerText = insults[Math.floor(Math.random() * insults.length)];
+            const m = new SpeechSynthesisUtterance("Atención mono. Vuelve a la charca.");
+            m.lang = 'es-ES'; m.rate = 0.7;
+            window.speechSynthesis.speak(m);
+        }, 2000);
+    }
 
-        // --- Lógica de Descarga de Hardware ---
-        function downloadHardware() {
-            if (!isOnline) {
-                appendToLog('downloadLog', '<span class="error">[ERROR] Imposible iniciar descarga: Sin conexión al nodo.</span>');
-                return;
+    function generateStream() {
+        const hex = "0123456789ABCDEF";
+        setInterval(() => {
+            let line = "";
+            for(let i=0; i<80; i++) line += hex[Math.floor(Math.random()*16)];
+            const div = document.createElement('div');
+            div.className = "stream-line";
+            div.innerText = `> ${line}`;
+            stream.prepend(div);
+            if(stream.childNodes.length > 30) stream.removeChild(stream.lastChild);
+        }, 50);
+    }
+
+    function dumpData() {
+        const content = document.getElementById('leak-input').value;
+        if(!content) return;
+        
+        document.getElementById('progress-container').style.display = "block";
+        let p = 0;
+        const bar = document.getElementById('progress-bar');
+        const txt = document.getElementById('progress-text');
+        
+        const interval = setInterval(() => {
+            p += 2;
+            bar.style.width = p + "%";
+            txt.innerText = `VOLCANDO PAQUETE EN NODO_CRIPTO_${p}...`;
+            if(p >= 100) {
+                clearInterval(interval);
+                alert("VOLCADO COMPLETADO. LA VERDAD HA SIDO LIBERADA.");
+                document.getElementById('leak-input').value = "";
             }
-            const hardwareID = document.getElementById('hardwareID').value.trim();
-            const encryptionKey = document.getElementById('encryptionKey').value.trim();
+        }, 50);
+    }
 
-            if (!hardwareID || !encryptionKey) {
-                appendToLog('downloadLog', '<span class="error">[ERROR] ID de Hardware y Clave de Decodificación son obligatorios.</span>');
-                return;
-            }
+    function simDownload(id) {
+        const status = document.getElementById('download-status');
+        status.innerHTML = `> INICIANDO TRANSFERENCIA DE ${id}...<br>> CIFRANDO PAQUETES EN AES-256...<br>> [OK] ARCHIVO DISPONIBLE EN EL CACHÉ DEL NODO.`;
+    }
 
-            appendToLog('downloadLog', `<span class="info">[INFO] Iniciando secuencia de descarga para ID: ${hardwareID}...</span>`);
-            appendToLog('downloadLog', `<span class="info">[INFO] Verificando clave de decodificación...</span>`);
+    // Bloqueo total
+    document.oncontextmenu = () => false;
+    document.onkeydown = (e) => { if(e.ctrlKey || e.key === 'F12') return false; };
+</script>
 
-            let progress = 0;
-            const progressBar = document.getElementById('downloadProgressBar');
-            const downloadInterval = setInterval(() => {
-                progress += Math.floor(Math.random() * 15) + 5; // Simula progreso variable
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(downloadInterval);
-                    progressBar.style.width = '100%';
-                    progressBar.textContent = '100%';
-                    appendToLog('downloadLog', `<span class="success">[OK] Hardware Amoral ${hardwareID} descargado y decodificado. Preparado para el flujo.</span>`);
-                    // Aquí podrías generar un blob para descarga real o mostrar un hash de verificación
-                    alert(`Hardware ${hardwareID} listo. Hash de verificación: ${Math.random().toString(36).substring(2, 15).toUpperCase()}`);
-                } else {
-                    progressBar.style.width = progress + '%';
-                    progressBar.textContent = progress + '%';
-                    appendToLog('downloadLog', `<span class="info">[DEBUG] Descargando bloque ${progress}%...</span>`);
-                }
-            }, 300);
-        }
-
-        // --- Lógica de Inyección de Leaks ---
-        document.getElementById('anonLevel').addEventListener('input', function() {
-            document.getElementById('anonLevelDisplay').textContent = `Nivel: ${this.value} (${getAnonLevelText(this.value)})`;
-        });
-
-        function getAnonLevelText(level) {
-            const texts = ["Nulo (Rastreo garantizado)", "Básico", "Estándar", "Avanzado", "Élite", "Fantasma (Indetectable)"];
-            return texts[level];
-        }
-
-        function injectLeak() {
-            if (!isOnline) {
-                appendToLog('leakLog', '<span class="error">[ERROR] Imposible inyectar leak: Sin conexión a la red Ronin.</span>');
-                return;
-            }
-            const target = document.getElementById('leakTarget').value.trim();
-            const content = document.getElementById('leakContent').value.trim();
-            const anonLevel = document.getElementById('anonLevel').value;
-
-            if (!target || !content) {
-                appendToLog('leakLog', '<span class="error">[ERROR] Objetivo y Contenido del Leak son obligatorios.</span>');
-                return;
-            }
-            if (content.length > 2048) {
-                appendToLog('leakLog', '<span class="error">[ERROR] Contenido del Leak excede el límite (2048 caracteres).</span>');
-                return;
-            }
-
-            appendToLog('leakLog', `<span class="info">[INFO] Iniciando inyección de leak. Objetivo: ${target} | Anonimato: ${getAnonLevelText(anonLevel)}...</span>`);
-            appendToLog('leakLog', `<span class="info">[INFO] Generando vector de salto cuántico...</span>`);
-
-            let progress = 0;
-            const leakInterval = setInterval(() => {
-                progress += Math.floor(Math.random() * 10) + 5;
-                if (progress >= 100) {
-                    progress = 100;
-                    clearInterval(leakInterval);
-                    appendToLog('leakLog', `<span class="success">[OK] Leak inyectado con éxito en ${target}. La verdad encontrará su camino.</span>`);
-                    document.getElementById('leakContent').value = ''; // Limpiar el contenido
-                    alert(`Leak enviado a ${target}. Anonimato: ${getAnonLevelText(anonLevel)}. Verificación de integridad: OK.`);
-                } else {
-                    appendToLog('leakLog', `<span class="info">[DEBUG] Fragmento ${progress}% en tránsito...</span>`);
-                }
-            }, 200);
-        }
-
-        // Bloqueo de curiosos (anti-Coronel)
-        document.oncontextmenu = () => false;
-        document.onkeydown = (e) => {
-            if (e.ctrlKey || e.altKey || e.key === 'F12') return false;
-        };
-
-        // Estado inicial de la conexión (simulación)
-        toggleConnection();
-    </script>
 </body>
 </html>

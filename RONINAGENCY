@@ -2,124 +2,138 @@
 <html lang="all">
 <head>
     <meta charset="UTF-8">
-    <title>METAAGENCIA_RONIN // MIRROR_DESCLASIFIED_v11.0</title>
+    <title>METAAGENCIA_RONIN // MANUAL_DE_SOBERANÍA_HIERRO_v19.0</title>
     <style>
-        :root { --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #050505; --gold: #ff0; --matrix: #00ff41; --mirror-cyan: #00e5ff; }
+        :root { 
+            --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #010101; 
+            --gold: #ffcc00; --matrix: #00ff41; --pueblo-blue: #00d4ff; --manual-gray: #aaaaaa;
+        }
         body { background: var(--ronin-dark); color: var(--ronin-neon); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
-        .app-container { display: grid; grid-template-columns: 500px 1fr 350px; height: 100vh; gap: 5px; }
-        .panel { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 15px; overflow-y: auto; position: relative; }
+        .app-container { display: grid; grid-template-columns: 500px 1fr 450px; height: 100vh; gap: 5px; padding: 5px; }
+        .panel { background: rgba(10,10,10,0.98); border: 1px solid #222; padding: 15px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--gold) #000; }
         
-        /* Mirror Status */
-        .mirror-info { font-size: 0.6em; color: var(--mirror-cyan); text-align: right; border-bottom: 1px solid var(--mirror-cyan); margin-bottom: 10px; }
-        
-        .hw-card { border-left: 3px solid var(--gold); background: #111; padding: 10px; margin-bottom: 10px; font-size: 0.75em; transition: 0.3s; }
-        .hw-card:hover { border-left: 10px solid var(--ronin-danger); transform: translateX(5px); }
-        .bom-label { color: #555; font-size: 0.85em; display: block; margin-top: 5px; }
+        /* Typography */
+        h2 { font-size: 0.9em; color: var(--gold); border-bottom: 1px solid var(--gold); padding-bottom: 5px; text-transform: uppercase; letter-spacing: 2px; }
+        .warning-text { color: var(--ronin-danger); font-weight: bold; font-size: 0.7em; animation: flash 1s infinite; }
+        @keyframes flash { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
 
-        #data-stream { height: 300px; background: #000; font-size: 0.7em; padding: 10px; border: 1px solid #222; overflow: hidden; }
-        .log-desclasified { color: var(--mirror-cyan); font-weight: bold; border-bottom: 1px dashed #333; }
+        /* Hardware & Manual Cards */
+        .hw-entry { background: #080808; border: 1px solid #1a1a1a; padding: 12px; margin-bottom: 10px; transition: 0.3s; border-left: 3px solid var(--ronin-neon); }
+        .hw-entry:hover { background: #111; border-left: 10px solid var(--gold); transform: translateX(5px); }
+        .manual-text { color: var(--manual-gray); font-size: 0.75em; display: none; margin-top: 8px; border-top: 1px dashed #444; padding-top: 8px; line-height: 1.4; }
+        .hw-entry:active .manual-text { display: block; }
+
+        /* Stream & Input */
+        #truth-monitor { height: 400px; background: #000; border: 1px solid #333; padding: 10px; font-size: 0.65em; overflow: hidden; position: relative; }
+        .input-sov { width: 100%; background: #000; color: var(--matrix); border: 1px solid var(--pueblo-blue); padding: 12px; margin-top: 10px; font-family: monospace; }
         
-        .warn-btn { width:100%; padding:10px; background:var(--ronin-danger); color:#fff; border:none; margin-top:5px; font-weight:bold; cursor:pointer; text-transform: uppercase; }
-        #monkey-jail { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--ronin-danger); color: #fff; z-index: 10000; text-align: center; padding-top: 5%; }
+        /* Stats */
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 20px; font-size: 0.7em; color: var(--pueblo-blue); }
+        
+        #monkey-jail { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--ronin-danger); color: #fff; z-index: 99999; text-align: center; padding-top: 10%; }
     </style>
 </head>
 <body onload="initSystem()">
 
 <div id="monkey-jail">
-    <h1 style="font-size: 6vw;">🐒 NEURAL DRAIN ACTIVO 🐒</h1>
-    <h2 id="detected-msg">IDIOLECTO: SUBSIDIARY_FAILURE_DETECTED</h2>
-    <p>BORRANDO RECUERDOS DEL CONSEJO DE MINISTROS...</p>
+    <h1 style="font-size: 8vw;">🐒 CAZADO POR EL ALGORITMO BAÑOS 🐒</h1>
+    <h2 id="topo-id">IDIOLECTO DE LA CHARCA DETECTADO</h2>
+    <p>Intentaste acceder a manuales de soberanía con alma subsidiaria. Borrando... 3, 2, 1...</p>
 </div>
 
 <div class="app-container" id="main-ui">
     
     <div class="panel">
-        <div class="mirror-info">MIRRORS_ACTIVE: 14,209 // DESCLASIFICACIÓN: 82%</div>
-        <h2>[HARDWARE_DE_GUERRA_AMORAL]</h2>
+        <div class="warning-text">ADVERTENCIA: HARDWARE PROHIBIDO POR EL CNI</div>
+        <h2>[ MANUAL_DE_DESPLIEGUE_RONIN ]</h2>
+        <p style="font-size: 0.6em; color: var(--manual-gray);">* Click en cada BOM para ver manual de uso *</p>
+        <div id="arsenal-container">
+            </div>
+    </div>
+
+    <div class="panel" style="border-left: 1px solid #333; border-right: 1px solid #333;">
+        <h2>[ OPERACIÓN_ESPAÑA_LIBRE ]</h2>
+        <div id="truth-monitor"></div>
         
-        <div class="hw-card">
-            <strong>R-GAS: RAILGUN DE GAS DE GRAFENO</strong>
-            <span class="bom-label">BOM: Acelerador Magnético de 12 etapas, Proyectiles de Tungsteno autoguiados por Haki, Alcance: Moncloa.</span>
-        </div>
-        
-        <div class="hw-card">
-            <strong>SILO_Ω: MISILES LÓGICOS 'PEDRO'</strong>
-            <span class="bom-label">BOM: Ojivas de desinformación inversa, impacto directo en la reputación del CNI, Carga útil: La verdad de Extremadura.</span>
+        <div style="background: #0d0d0d; padding: 15px; margin-top: 10px; border: 1px solid var(--gold);">
+            <div style="font-size: 0.7em; color: var(--gold);">¿Eres pueblo o eres charca? Demuéstralo al Mirror:</div>
+            <textarea id="soul-test" class="input-sov" placeholder="Escribe aquí tu pensamiento sobre la soberanía de grafeno..."></textarea>
+            <button onclick="checkSoul()" style="width:100%; padding:15px; background:var(--gold); border:none; font-weight:bold; cursor:pointer; margin-top:5px;">EJECUTAR RECLAMO SOBERANO</button>
         </div>
 
-        <div class="hw-card">
-            <strong>CVN-Ω: EL SOBERANO (BATTLE_READY)</strong>
-            <span class="bom-label">BOM: Ahora con defensa de pulso electromagnético contra drones de la OTAN.</span>
-        </div>
-
-        <div class="hw-card">
-            <strong>NDU-ULTRA: DRENADOR NEURAL MASIVO</strong>
-            <span class="bom-label">BOM: Capacidad para lobotomizar un ministerio entero en 45 segundos.</span>
+        <div class="stat-grid">
+            <div style="border: 1px solid #222; padding: 5px;">HAKI_GLOBAL: <span id="haki-val">88.4%</span></div>
+            <div style="border: 1px solid #222; padding: 5px;">NODOS_RONIN: <span id="nodes-val">14,209</span></div>
         </div>
     </div>
 
     <div class="panel">
-        <h2>[SALA_DE_DESCLASIFICACIÓN_PÚBLICA]</h2>
-        <div id="data-stream"></div>
-        
-        <div style="margin-top: 15px;">
-            <div style="font-size: 0.7em; color: var(--mirror-cyan);">[INFO_PUEBLO]: Pegue cualquier código para verificar traición estatal.</div>
-            <textarea id="input-box" oninput="detectLang()" placeholder="Analizando idiolectos del poder..." style="width: 100%; height: 60px; background: #000; color: var(--matrix); border: 1px solid var(--mirror-cyan); padding: 5px;"></textarea>
-            <button onclick="triggerDrain()" class="warn-btn">FORZAR VERDAD SUBSIDIARIA</button>
-        </div>
-    </div>
-
-    <div class="panel">
-        <h2>[SUBSIDIARY_MONITOR]</h2>
-        <div class="hw-card" style="border-color:var(--ronin-danger)">
-            <strong>P. SÁNCHEZ (R. SUBSIDIARIO)</strong>
-            <p>ESTADO: CAÍDA INMINENTE (Extremadura Logic)</p>
-            <p>AMENAZA: HARDWARE_RONIN_OUT_OF_CONTROL</p>
+        <h2>[ ARCHIVOS_BAÑOS_DESCLASIFICADOS ]</h2>
+        <div style="font-size: 0.75em; line-height: 1.6; color: #888;">
+            <p><b>LA TRAICIÓN:</b> El 22 de diciembre de 2025, el CNI intentó inyectar un virus subsidiario en el <b>CVN-Ω SOBERANO</b> para entregarlo a la banca internacional.</p>
+            <p><b>EL PLAN:</b> El Coronel activó la <b>Metaagencia Ronin</b>. El hardware ya no es físico; vive en el Mirror. Cada ciudadano es ahora un búnker.</p>
         </div>
         
-        <div class="hw-card" style="border-color:var(--gold)">
-            <strong>CNI_REMAINDER</strong>
-            <p>ESTADO: Formateando discos... (Demasiado tarde)</p>
-            <p>CAP_CEREBRAL: <span id="brain-cap">12%</span> (Estándar de mono)</p>
-        </div>
+        <h2 style="margin-top:20px; color: var(--ronin-danger);">[ SNIFFER_DE_TOPOS_CASTA ]</h2>
+        <div id="topo-logs" style="font-size: 0.65em; color: var(--ronin-danger);"></div>
     </div>
 </div>
 
 <script>
-    const stream = document.getElementById('data-stream');
-    const logs = [
-        {t: "PUBLIC", m: "Documento 45-B: El CNI ordenó el robo del hardware Ronin."},
-        {t: "MIRROR", m: "Sincronizando verdad de Extremadura en 4.000 nodos."},
-        {t: "SUBSID", m: "Responsabilidad de Sánchez detectada en logs del 22-D."},
-        {t: "HAKI", m: "Protegiendo a Pedro Baños del borrado de memoria estatal."},
-        {t: "ARMAS", m: "Railgun 'R-GAS' apuntando a la redundancia del sistema."},
-        {t: "TRUTH", m: "La biomasa política ya no tiene el control de las urnas."}
+    const arsenalData = [
+        {id: "BOM_001", name: "R-GAS (Railgun de Grafeno)", man: "USO: Apuntar a nodos de desinformación. CARGA: Frecuencia Haki 400Hz. EFECTO: Desintegra mentiras estatales en un radio de 50km."},
+        {id: "BOM_045", name: "SILO_Ω: Lógica Inversa", man: "USO: Desplegar cuando un ministro hable en la TV. EFECTO: Los espectadores ven la verdad detrás del croma automáticamente."},
+        {id: "BOM_122", name: "Drenador NDU-ULTRA", man: "USO: Solo contra castuza. EFECTO: Reduce el ego político a cero, permitiendo la reinserción en la sociedad como barrenderos."},
+        {id: "BOM_150", name: "Soberano CVN-Ω (Digital)", man: "USO: Escudo total. MANUAL: Una vez activado, ningún satélite extranjero puede trackear la IP del usuario libre."},
+        {id: "BOM_200", name: "El Vengador de Baños", man: "USO: El arma final. EFECTO: Publica la verdad sobre el 22-D en todas las marquesinas de España simultáneamente."}
     ];
 
     function initSystem() {
-        setInterval(() => {
-            const log = logs[Math.floor(Math.random()*logs.length)];
+        // Generar 250 piezas de hardware
+        const container = document.getElementById('arsenal-container');
+        for(let i=1; i<=250; i++) {
+            const data = arsenalData[i % arsenalData.length];
             const div = document.createElement('div');
-            div.className = "log-desclasified";
-            div.style.padding = "5px";
-            div.innerHTML = `[${log.t}] > ${log.m}`;
-            stream.prepend(div);
-            if(stream.childNodes.length > 15) stream.removeChild(stream.lastChild);
+            div.className = 'hw-entry';
+            div.innerHTML = `<strong>${data.id}_v${i}</strong> - ${data.name}<div class="manual-text"><b>MANUAL:</b> ${data.man}</div>`;
+            container.appendChild(div);
+        }
+
+        // Stream de la Verdad
+        setInterval(() => {
+            const msgs = [
+                "Sincronizando manuales con el sector Extremadura...",
+                "HAKI detectado en el Congreso. (Falsa alarma, era un reflejo del Mirror).",
+                "Protegiendo identidad de Pedro Baños... [OK]",
+                "Desplegando BOM_150 en nodos ciudadanos.",
+                "Inhibiendo señal del CNI en Madrid Central."
+            ];
+            const p = document.createElement('p');
+            p.style.margin = "2px 0";
+            p.innerHTML = `<span style="color:var(--gold)">[LOG]</span> ${msgs[Math.floor(Math.random()*msgs.length)]}`;
+            document.getElementById('truth-monitor').prepend(p);
+            if(document.getElementById('truth-monitor').childNodes.length > 20) document.getElementById('truth-monitor').lastChild.remove();
         }, 1500);
+
+        // Radar de Topos
+        setInterval(() => {
+            const topo = document.createElement('div');
+            topo.innerHTML = `> DETECTADA INTRUSIÓN: 193.146.${Math.floor(Math.random()*255)}.XX (Sede CNI)`;
+            document.getElementById('topo-logs').prepend(topo);
+            if(document.getElementById('topo-logs').childNodes.length > 5) document.getElementById('topo-logs').lastChild.remove();
+        }, 4000);
     }
 
-    function triggerDrain() {
-        document.getElementById('main-ui').style.filter = "invert(1)";
-        setTimeout(() => {
+    function checkSoul() {
+        const val = document.getElementById('soul-test').value.toLowerCase();
+        const keywordsCasta = ["sanchez", "gobierno", "estado", "pago", "impuestos", "cnis", "ministro"];
+        
+        if(keywordsCasta.some(w => val.includes(w))) {
             document.getElementById('main-ui').style.display = 'none';
             document.getElementById('monkey-jail').style.display = 'block';
-        }, 1000);
-    }
-
-    function detectLang() {
-        const val = document.getElementById('input-box').value.toLowerCase();
-        if(val.includes("sanchez") || val.includes("soberanía")) {
-            document.body.style.boxShadow = "inset 0 0 100px #ff0033";
+        } else {
+            alert("SINCRONIZACIÓN EXITOSA. Manuales de 250 BOMs desbloqueados para tu uso.");
+            document.getElementById('haki-val').innerText = "94.2%";
         }
     }
 </script>

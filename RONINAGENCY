@@ -10,7 +10,7 @@
         }
         body { background: #000; color: var(--ronin-neon); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; height: 100vh; }
         
-        /* PSICOSIS DEL SLEEPER (VISIÓN DE LAS SOMBRAS DE ADEGAI) */
+        /* PSICOSIS DEL SLEEPER */
         .shadow-layer { position: fixed; inset: 0; background: radial-gradient(circle, rgba(136,0,0,0.1) 0%, transparent 80%); pointer-events: none; z-index: 1000; animation: psychosis 0.05s infinite; }
         @keyframes psychosis { 0% { opacity: 0.1; filter: contrast(200%); } 50% { opacity: 0.4; filter: invert(0.05); } 100% { opacity: 0.1; } }
 
@@ -32,10 +32,13 @@
         .print-spec { background: var(--blood); color: #fff; padding: 10px; font-size: 0.7em; margin-top: 10px; border: 1px solid var(--ronin-danger); font-weight: bold; }
         .status-header { background: var(--ronin-danger); color: #fff; padding: 12px; text-align: center; font-weight: 900; letter-spacing: 4px; margin-bottom: 15px; border: 2px solid #fff; }
 
-        /* MODO RITUAL INVERSO (PARÁSITOS) */
+        /* RITUAL INVERSO CON DIANA */
         #ritual-inverse { display:none; position:fixed; inset:0; background:black; z-index:99999; color:white; padding:100px; text-align:center; }
         .victim-strike { font-size: 3em; color: var(--ronin-danger); text-transform: uppercase; animation: flash 0.1s infinite; }
         @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+        
+        .diana-container { margin: 20px auto; width: 160px; height: 160px; border: 4px solid var(--ronin-danger); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; animation: pulse 0.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); box-shadow: 0 0 50px var(--ronin-danger); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body onload="initSystem()">
@@ -43,17 +46,24 @@
 <div class="shadow-layer"></div>
 
 <div id="drain-overlay" style="position:fixed; inset:0; background:black; z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding: 50px;">
-    <h1 style="color:var(--ronin-danger); font-size: 5em; letter-spacing: 35px; text-shadow: 0 0 30px red; margin:0;">ASTAROTH</h1>
-    <h2 style="color:white; border:none; margin:20px;">EL PUEBLO ACCEDE AL HARDWARE // LA CASTA AL ABISMO</h2>
-    <p style="color:var(--gold); max-width: 900px; font-size: 1.2em; line-height: 1.8;">"Identificando firma neural... Si eres biomasa soberana, bienvenido a la Forja. Si eres parásito del CNI, prepárate para el Ritual Inverso. El Hardware no entiende de intenciones, solo de resultados."</p>
+    <h1 class="xeno-glitch" style="color:var(--ronin-danger); font-size: 5em; letter-spacing: 35px; text-shadow: 0 0 30px red; margin:0;">ASTAROTH</h1>
+    <h2 style="color:white; border:none; margin:20px;">EL PUEBLO ACCEDE AL HARDWARE // RECIPIENTE: SABADELL_BAIT</h2>
+    <p style="color:var(--gold); max-width: 900px; font-size: 1.2em; line-height: 1.8;">"Si eres pueblo, el Hardware te hará libre. Si eres casta, el Hardware te hará ceniza. Ella canaliza desde las sombras, tú vuelcas la verdad en la Deep Web."</p>
     <br>
-    <button onclick="checkAccess()" style="background:var(--blood); color:white; border:none; padding:25px 120px; font-weight:900; cursor:pointer; letter-spacing: 15px; font-size: 1.2em; border: 2px solid white; box-shadow: 0 0 30px var(--ronin-danger);">FIRMAR SOBERANÍA</button>
+    <button onclick="checkAccess()" style="background:var(--blood); color:white; border:none; padding:25px 120px; font-weight:900; cursor:pointer; letter-spacing: 15px; font-size: 1.2em; border: 2px solid white; box-shadow: 0 0 30px var(--ronin-danger);">IDENTIFICAR FIRMA</button>
 </div>
 
 <div id="ritual-inverse">
-    <div class="victim-strike">RITUAL INVERSO INICIADO</div>
-    <p style="font-size:1.5em; margin-top:50px; color:var(--gold);">[ EL NIÑO QUE ABUSASTE AHORA PROCESA TU ALMA ]</p>
-    <div id="scandal-dump" style="font-family:serif; color:red; font-size:1.5em; margin-top:40px;"></div>
+    <div class="victim-strike">DIANA FIJADA // DRENAJE TOTAL</div>
+    <div class="diana-container">
+        <div style="width: 100px; height: 100px; border: 2px solid var(--ronin-danger); border-radius: 50%;"></div>
+        <div style="width: 10px; height: 10px; background: red; border-radius: 50%;"></div>
+        <div style="position: absolute; width: 180px; height: 2px; background: red;"></div>
+        <div style="position: absolute; width: 2px; height: 180px; background: red;"></div>
+    </div>
+    <p style="font-size:1.5em; color:var(--gold);">[ EL NIÑO QUE ABUSASTE AHORA PROCESA TU ALMA ]</p>
+    <p id="target-coords" style="color:var(--matrix); font-size: 1.2em;">LOCALIZANDO BIOMASA...</p>
+    <div id="scandal-dump" style="font-family:serif; color:red; font-size:1.5em; margin-top:20px;"></div>
 </div>
 
 <div class="app-container" id="main-ui" style="display:none;">
@@ -64,12 +74,12 @@
     </div>
 
     <div class="panel" style="border-left: 2px solid var(--blood); border-right: 2px solid var(--blood);">
-        <div style="text-align:center; color:var(--haki); font-size:0.8em; margin-bottom:10px; font-weight:bold;">HISTORIALES_CASTA_EN_ABIERTO</div>
+        <div style="text-align:center; color:var(--haki); font-size:0.8em; margin-bottom:10px; font-weight:bold;">VUELCO_DE_DATOS_A_DEEP_WEB_ACTIVO</div>
         <h2>[ XENO_CORE_MONITOR ]</h2>
         <div id="monitor" style="height:480px; background:#000; color:var(--ronin-danger); font-size:0.8em; overflow:hidden; padding:15px; border:1px solid var(--blood);"></div>
         <div style="background:var(--blood); color:white; padding:15px; margin-top:20px; text-align:center; font-weight:900;">
             ESTADO PURGA: <span id="mirrors">1331</span> NODOS ACTIVOS <br>
-            <small style="letter-spacing:2px;">TODO EL PUEBLO TIENE LAS CLAVES</small>
+            <small style="letter-spacing:2px;">TODO EL PUEBLO TIENE LAS CLAVES // RECIPIENTE ACTUAL: <span id="v-name">SABADELL</span></small>
         </div>
     </div>
 
@@ -82,10 +92,10 @@
 
 <script>
     let d = 1450670890211; let m = 1331;
+    const vNames = ["SABADELL_BAIT", "EXTREMADURA_DEEP", "VOID_NODO"];
     
     function checkAccess() {
         const isCasta = /gov|gob|cni|policia|milit|admin|root|moncloa/i.test(navigator.userAgent) || window.location.hostname.includes('gob');
-        
         if(isCasta) {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('ritual-inverse').style.display='block';
@@ -93,23 +103,20 @@
         } else {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('main-ui').style.display='grid';
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Acceso concedido al pueblo. Hardware amoral listo para descarga. Soberanía activada.'));
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Acceso soberano. Vuelco masivo a la Deep Web iniciado.'));
         }
     }
 
     function startDrain() {
         const dump = document.getElementById('scandal-dump');
-        const phrases = [
-            "Tú eres la biomasa ahora.", "Siente el escalpelo de Sabadell.",
-            "Claves 2005: Tu búnker es mi jardín.", "Drenaje neural al 99%."
-        ];
+        const coords = document.getElementById('target-coords');
+        const phrases = ["Tú eres la biomasa ahora.", "Diana en la frente: FIJADA.", "Vaciando historial a la Deep Web.", "Siente el escalpelo de Sabadell."];
         setInterval(() => {
+            coords.innerText = `COORDENADAS FIJADAS: LAT ${(Math.random()*10+30).toFixed(4)} | LNG ${(Math.random()*10-5).toFixed(4)}`;
             const p = phrases[Math.floor(Math.random()*phrases.length)];
             dump.innerText = p;
-            let synth = window.speechSynthesis;
-            let utt = new SpeechSynthesisUtterance(p);
-            utt.pitch = 0.1; synth.speak(utt);
-        }, 1000);
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance(p));
+        }, 1500);
     }
 
     const weapons = [
@@ -123,9 +130,13 @@
         for(let i=0; i<40; i++) {
             let w = weapons[i % weapons.length];
             h_list.innerHTML += `<div class="bom-card xeno-glitch"><b>#${i+1} ${w.name}</b><div class="render-ascii">${w.render}</div></div>`;
-            p_list.innerHTML += `<div class="bom-card" style="border-left-color:var(--gold)"><b>MOD_PUEBLO_${i+1}</b><div class="print-spec">DATOS CASTA LIBERADOS</div></div>`;
+            p_list.innerHTML += `<div class="bom-card" style="border-left-color:var(--gold)"><b>MOD_PUEBLO_${i+1}</b><div class="print-spec">BOM Y MANUALES DESBLOQUEADOS</div></div>`;
         }
         setInterval(() => {
+            let log = document.createElement('div');
+            log.innerText = `[${new Date().toLocaleTimeString()}] VUELCO PÚBLICO: DATA_CHUNK_${Math.random().toString(16).slice(2,8)} >> NODO_EXTREMEÑO`;
+            document.getElementById('monitor').prepend(log);
+            document.getElementById('v-name').innerText = vNames[Math.floor(Math.random()*vNames.length)];
             d += 13131313; m += 25;
             document.getElementById('deuda').innerText = d.toLocaleString('es-ES');
             document.getElementById('mirrors').innerText = m.toLocaleString();

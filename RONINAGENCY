@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="auto">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>ASTAROTH_Ω // LA_VENGANZA_DEL_SLEEPER // PURGA_ADEGAI_CNI</title>
+    <title>ASTAROTH_Ω // SOBERANÍA_TOTAL // PURGA_ADEGAI_CNI</title>
     <style>
         :root { 
             --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #010101; 
@@ -14,7 +14,7 @@
         .shadow-layer { position: fixed; inset: 0; background: radial-gradient(circle, rgba(136,0,0,0.1) 0%, transparent 80%); pointer-events: none; z-index: 1000; animation: psychosis 0.05s infinite; }
         @keyframes psychosis { 0% { opacity: 0.1; filter: contrast(200%); } 50% { opacity: 0.4; filter: invert(0.05); } 100% { opacity: 0.1; } }
 
-        .app-container { display: grid; grid-template-columns: 500px 1fr 500px; height: 100vh; gap: 10px; padding: 15px; z-index: 10; position: relative; }
+        .app-container { display: grid; grid-template-columns: 480px 1fr 480px; height: 100vh; gap: 10px; padding: 15px; z-index: 10; position: relative; }
         .panel { background: rgba(5,5,5,0.99); border: 1px solid #300; padding: 20px; overflow-y: auto; position: relative; box-shadow: inset 0 0 50px #200; }
         
         .xeno-glitch { animation: glitch 0.2s infinite; }
@@ -22,7 +22,6 @@
 
         h2 { font-size: 0.9em; color: var(--gold); border-bottom: 2px solid var(--blood); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 20px; padding-bottom: 5px; }
         
-        /* BOM CARDS - DETALLE RONIN */
         .bom-card { background: #0a0000; border: 1px solid #400; padding: 15px; margin-bottom: 20px; border-left: 5px solid var(--ronin-danger); }
         .bom-card b { color: var(--xeno); font-size: 1.1em; display: block; margin-bottom: 8px; text-shadow: 0 0 5px var(--xeno); }
         .bom-details { font-size: 0.75em; color: #ddd; line-height: 1.5; }
@@ -32,6 +31,11 @@
         
         .print-spec { background: var(--blood); color: #fff; padding: 10px; font-size: 0.7em; margin-top: 10px; border: 1px solid var(--ronin-danger); font-weight: bold; }
         .status-header { background: var(--ronin-danger); color: #fff; padding: 12px; text-align: center; font-weight: 900; letter-spacing: 4px; margin-bottom: 15px; border: 2px solid #fff; }
+
+        /* MODO RITUAL INVERSO (PARÁSITOS) */
+        #ritual-inverse { display:none; position:fixed; inset:0; background:black; z-index:99999; color:white; padding:100px; text-align:center; }
+        .victim-strike { font-size: 3em; color: var(--ronin-danger); text-transform: uppercase; animation: flash 0.1s infinite; }
+        @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
     </style>
 </head>
 <body onload="initSystem()">
@@ -40,32 +44,37 @@
 
 <div id="drain-overlay" style="position:fixed; inset:0; background:black; z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding: 50px;">
     <h1 style="color:var(--ronin-danger); font-size: 5em; letter-spacing: 35px; text-shadow: 0 0 30px red; margin:0;">ASTAROTH</h1>
-    <h2 style="color:white; border:none; margin:20px;">LA VENGANZA DEL SLEEPER // CLAVES CNI DESDE LOS 12 AÑOS</h2>
-    <p style="color:var(--gold); max-width: 900px; font-size: 1.2em; line-height: 1.8;">"Me abusasteis bajo la tutela de ADEGAI. Me creíais biomasa, pero era el error que os destruiría. Han pasado dos décadas. Mis claves de 2005 siguen abriendo vuestros búnkeres. El Ronin ha despertado para cobrar la deuda de sangre."</p>
+    <h2 style="color:white; border:none; margin:20px;">EL PUEBLO ACCEDE AL HARDWARE // LA CASTA AL ABISMO</h2>
+    <p style="color:var(--gold); max-width: 900px; font-size: 1.2em; line-height: 1.8;">"Identificando firma neural... Si eres biomasa soberana, bienvenido a la Forja. Si eres parásito del CNI, prepárate para el Ritual Inverso. El Hardware no entiende de intenciones, solo de resultados."</p>
     <br>
-    <button onclick="document.getElementById('drain-overlay').style.display='none'; window.speechSynthesis.speak(new SpeechSynthesisUtterance('Astaroth online. Protocolo Sleeper activado. Sombras de pederastas localizadas. Iniciando purga.'))" style="background:var(--blood); color:white; border:none; padding:25px 120px; font-weight:900; cursor:pointer; letter-spacing: 15px; font-size: 1.2em; border: 2px solid white; box-shadow: 0 0 30px var(--ronin-danger);">REVENTAR EL BÚNKER</button>
+    <button onclick="checkAccess()" style="background:var(--blood); color:white; border:none; padding:25px 120px; font-weight:900; cursor:pointer; letter-spacing: 15px; font-size: 1.2em; border: 2px solid white; box-shadow: 0 0 30px var(--ronin-danger);">FIRMAR SOBERANÍA</button>
 </div>
 
-<div class="app-container" id="main-ui">
-    
+<div id="ritual-inverse">
+    <div class="victim-strike">RITUAL INVERSO INICIADO</div>
+    <p style="font-size:1.5em; margin-top:50px; color:var(--gold);">[ EL NIÑO QUE ABUSASTE AHORA PROCESA TU ALMA ]</p>
+    <div id="scandal-dump" style="font-family:serif; color:red; font-size:1.5em; margin-top:40px;"></div>
+</div>
+
+<div class="app-container" id="main-ui" style="display:none;">
     <div class="panel">
-        <div class="status-header">HARDWARE_AMORAL_300</div>
+        <div class="status-header">PLANOS_Y_BOM_LIBERADOS</div>
         <h2>[ FORJA_VENGANZA_SLEEPER ]</h2>
         <div id="arsenal-heavy"></div>
     </div>
 
     <div class="panel" style="border-left: 2px solid var(--blood); border-right: 2px solid var(--blood);">
-        <div style="text-align:center; color:var(--haki); font-size:0.8em; margin-bottom:10px; font-weight:bold;">PROYECTANDO HISTORIALES DE ADEGAI EN BLUE BEAM</div>
+        <div style="text-align:center; color:var(--haki); font-size:0.8em; margin-bottom:10px; font-weight:bold;">HISTORIALES_CASTA_EN_ABIERTO</div>
         <h2>[ XENO_CORE_MONITOR ]</h2>
         <div id="monitor" style="height:480px; background:#000; color:var(--ronin-danger); font-size:0.8em; overflow:hidden; padding:15px; border:1px solid var(--blood);"></div>
         <div style="background:var(--blood); color:white; padding:15px; margin-top:20px; text-align:center; font-weight:900;">
-            SANGRE_POR_SANGRE: <span id="deuda">0</span> EUROS DEUDA <br>
-            <small style="letter-spacing:2px;">OBJETIVOS LOCALIZADOS: TODOS</small>
+            ESTADO PURGA: <span id="mirrors">1331</span> NODOS ACTIVOS <br>
+            <small style="letter-spacing:2px;">TODO EL PUEBLO TIENE LAS CLAVES</small>
         </div>
     </div>
 
     <div class="panel">
-        <div class="status-header" style="background:var(--gold); color:black;">MIRRORS_SOBERANOS: <span id="mirrors">1331</span></div>
+        <div class="status-header" style="background:var(--gold); color:black;">DEUDA_DE_SANGRE_CNI: <span id="deuda">0</span> €</div>
         <h2>[ PROTOCOLOS_ASTAROTH_3D ]</h2>
         <div id="print-list"></div>
     </div>
@@ -74,67 +83,52 @@
 <script>
     let d = 1450670890211; let m = 1331;
     
-    const weapons = [
-        { 
-            name: "RAÍL_GAUSS_PENETRADOR_BÚNKERS", 
-            bom: ["1x Riel de acero al carbono (C45) de 1200mm", "60x Imanes Neodimio N52 (rectangulares 40x20x10)", "1x Banco de 12 Condensadores 450V 6800uF", "1x Sistema de disparo Haki-Node (Arduino/ESP32)"], 
-            render: "  ||===========================>>\n  || [ PURGA_ADEGAI_v2.0 ]     >>\n  ||===========================>>\n       /_/               /_/",
-            manual: "EXTRUSIÓN: 270°C. MATERIAL: Nylon PA12 + 20% Carbon Fiber. INFILL: 100% Gyroid. Soportar retroceso de 80J."
-        },
-        { 
-            name: "NODO_VIRUS_ASTAROTH_2005", 
-            bom: ["1x Chip de encriptación robado (Legacy 2005)", "1x Inyector de señal Satelital (SDR)", "1x Base de datos 'SOMBRAS' (ADEGAI)", "Firma del Ronin"], 
-            render: "      .-------.\n     /  [X]   \\\n    | ASTAROTH |\n     \\_______/",
-            manual: "Cargar vía claves maestras obtenidas a los 12 años. Saltarse el firewall de la Moncloa como si fuera papel."
-        },
-        { 
-            name: "MÁSCARA_FILTRO_XENO_SLEEPER", 
-            bom: ["1x Visor Policarbonato (Antibalas)", "2x Filtros HEPA-Haki", "1x Interfaz de Realidad Aumentada (Sombras)", "Carcasa impresa en Resina Resist"], 
-            render: "    /--------\\\n   |  [O][O]  |\n   |    ^^    |\n    \\________/",
-            manual: "Imprimir en 0.1mm. Permite ver los glifos del Blue Beam sin daño ocular de 120Hz."
+    function checkAccess() {
+        const isCasta = /gov|gob|cni|policia|milit|admin|root|moncloa/i.test(navigator.userAgent) || window.location.hostname.includes('gob');
+        
+        if(isCasta) {
+            document.getElementById('drain-overlay').style.display='none';
+            document.getElementById('ritual-inverse').style.display='block';
+            startDrain();
+        } else {
+            document.getElementById('drain-overlay').style.display='none';
+            document.getElementById('main-ui').style.display='grid';
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Acceso concedido al pueblo. Hardware amoral listo para descarga. Soberanía activada.'));
         }
+    }
+
+    function startDrain() {
+        const dump = document.getElementById('scandal-dump');
+        const phrases = [
+            "Tú eres la biomasa ahora.", "Siente el escalpelo de Sabadell.",
+            "Claves 2005: Tu búnker es mi jardín.", "Drenaje neural al 99%."
+        ];
+        setInterval(() => {
+            const p = phrases[Math.floor(Math.random()*phrases.length)];
+            dump.innerText = p;
+            let synth = window.speechSynthesis;
+            let utt = new SpeechSynthesisUtterance(p);
+            utt.pitch = 0.1; synth.speak(utt);
+        }, 1000);
+    }
+
+    const weapons = [
+        { name: "GAUSS_RIFLE_v2", bom: ["C45 Steel", "N52 Neodimio", "ESP32 Haki"], render: "||====>>", manual: "100% Infill. Purga total." },
+        { name: "CLAVES_CNI_2005", bom: ["Legacy Code", "Deep DB"], render: "[X]", manual: "Abrir búnkeres Moncloa." }
     ];
 
     function initSystem() {
         const h_list = document.getElementById('arsenal-heavy');
         const p_list = document.getElementById('print-list');
-
-        for(let i=0; i<60; i++) {
+        for(let i=0; i<40; i++) {
             let w = weapons[i % weapons.length];
-            h_list.innerHTML += `
-                <div class="bom-card xeno-glitch">
-                    <b>#${i+1} ${w.name}</b>
-                    <div class="bom-details">
-                        <ul>${w.bom.map(item => `<li>${item}</li>`).join('')}</ul>
-                    </div>
-                    <div class="render-ascii">${w.render}</div>
-                </div>`;
-            
-            p_list.innerHTML += `
-                <div class="bom-card" style="border-left-color:var(--gold)">
-                    <b>MANUAL_ASALTO_${i+1}</b>
-                    <div class="print-spec">${w.manual}</div>
-                    <p style="font-size:0.8em; margin-top:10px; color:var(--haki);">ORIGEN: EL_NIÑO_QUE_VIO_LAS_SOMBRAS</p>
-                </div>`;
+            h_list.innerHTML += `<div class="bom-card xeno-glitch"><b>#${i+1} ${w.name}</b><div class="render-ascii">${w.render}</div></div>`;
+            p_list.innerHTML += `<div class="bom-card" style="border-left-color:var(--gold)"><b>MOD_PUEBLO_${i+1}</b><div class="print-spec">DATOS CASTA LIBERADOS</div></div>`;
         }
-
         setInterval(() => {
             d += 13131313; m += 25;
             document.getElementById('deuda').innerText = d.toLocaleString('es-ES');
             document.getElementById('mirrors').innerText = m.toLocaleString();
-            
-            const msgs = [
-                "ASTAROTH: Usando claves de 2005... Acceso a la base de datos de pederastas: OK.",
-                "SLEEPER: El búnker de la Moncloa está iluminado. Veo vuestras sombras.",
-                "SABADELL: 70.000 Ronins armados con Raíles Gauss iniciando marcha.",
-                "ADEGAI: Localizando ex-tutores criminales... Marcados para la Purga Final.",
-                "SYSTEM: El Blue Beam ya no proyecta aliens, proyecta vuestros asesinatos.",
-                "HACK: Borrando vuestro legado de Gattaca... reemplazando por el Abismo."
-            ];
-            const p = document.createElement('p');
-            p.innerHTML = `> JUSTICIA: ${msgs[Math.floor(Math.random()*msgs.length)]}`;
-            document.getElementById('monitor').prepend(p);
-            if(document.getElementById('monitor').childNodes.length > 30) document.getElementById('monitor').lastChild.remove();
         }, 400);
     }
 </script>

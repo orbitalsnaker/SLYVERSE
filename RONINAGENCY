@@ -2,219 +2,139 @@
 <html lang="all">
 <head>
     <meta charset="UTF-8">
-    <title>METAAGENCIA_RONIN // APOCALYPSE_INTERFACE_v7.0</title>
+    <title>METAAGENCIA_RONIN // BABEL_PROTOCOL_v10.0</title>
     <style>
-        :root { --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #050505; --ronin-void: #000; --gold: #ff0; --heavy-metal: #444; }
-        body { background: var(--ronin-void); color: var(--ronin-neon); font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
+        :root { --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #050505; --gold: #ff0; --matrix: #00ff41; }
+        body { background: var(--ronin-dark); color: var(--ronin-neon); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
         
-        .app-container { display: grid; grid-template-columns: 500px 1fr 350px; height: 100vh; gap: 5px; background: #111; }
-        .panel { background: var(--ronin-dark); border: 1px solid #222; overflow-y: auto; padding: 15px; position: relative; }
+        .app-container { display: grid; grid-template-columns: 500px 1fr 350px; height: 100vh; gap: 5px; }
+        .panel { background: #0a0a0a; border: 1px solid #1a1a1a; padding: 15px; overflow-y: auto; }
         
-        h2 { font-size: 0.9em; border-bottom: 2px solid var(--ronin-danger); padding-bottom: 5px; color: var(--gold); text-transform: uppercase; letter-spacing: 3px; }
-        h3 { font-size: 0.8em; color: var(--ronin-neon); margin-top: 15px; border-left: 3px solid var(--ronin-neon); padding-left: 10px; text-transform: uppercase; }
-        
-        .hw-card { border: 1px solid var(--heavy-metal); padding: 8px; margin-bottom: 8px; font-size: 0.7em; transition: 0.2s; background: rgba(10,10,10,0.8); }
-        .hw-card:hover { border-color: var(--gold); box-shadow: 0 0 8px rgba(255, 255, 0, 0.2); }
-        .bom-list { color: #888; font-style: italic; margin-top: 3px; display: block; border-top: 1px dashed #222; padding-top: 3px; }
-        
-        .download-btn { background: var(--ronin-danger); color: #fff; border: none; padding: 6px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 6px; text-transform: uppercase; font-size: 0.7em; }
-        .download-btn:hover { background: #ff5555; }
+        /* Escáner de Idiomas */
+        .lang-scanner { background: #000; border: 1px solid var(--matrix); padding: 10px; margin-bottom: 20px; text-align: center; }
+        .scanning-text { font-size: 0.8em; color: var(--matrix); animation: blink 0.5s infinite; }
+        @keyframes blink { 0% { opacity: 1; } 50% { opacity: 0.3; } }
 
-        #data-stream { height: 400px; background: #000; border: 1px solid #1a1a1a; padding: 10px; font-size: 0.7em; overflow: hidden; line-height: 1.2; }
-        .stream-line { color: var(--ronin-neon); white-space: nowrap; }
-        .stream-war { color: var(--gold); font-weight: bold; }
+        .hw-card { border-left: 3px solid var(--gold); background: #111; padding: 10px; margin-bottom: 10px; font-size: 0.75em; }
+        .bom-label { color: #555; font-size: 0.85em; display: block; margin-top: 5px; }
+
+        #data-stream { height: 350px; background: #000; font-size: 0.7em; padding: 10px; border: 1px solid #222; overflow: hidden; }
+        .lang-tag { color: #000; background: var(--gold); padding: 2px 4px; font-weight: bold; margin-right: 5px; font-size: 0.8em; }
 
         #monkey-jail { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: var(--ronin-danger); color: #fff; z-index: 10000; text-align: center; padding-top: 5%; }
-        
-        .status-tag { display: inline-block; padding: 2px 8px; background: #333; font-size: 0.7em; margin-bottom: 10px; border-radius: 3px; }
-        .pulse { animation: pulse-anim 1.2s infinite; }
-        @keyframes pulse-anim { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
-
-        .sidebar-alert { background: rgba(255, 0, 51, 0.1); border: 1px solid var(--ronin-danger); padding: 10px; font-size: 0.7em; color: var(--ronin-danger); margin-bottom: 15px; }
-        ::-webkit-scrollbar { width: 4px; }
-        ::-webkit-scrollbar-thumb { background: var(--ronin-neon); }
     </style>
 </head>
 <body onload="initSystem()">
 
 <div id="monkey-jail">
-    <h1 style="font-size: 6vw;">🐒 OBJETIVO DETECTADO 🐒</h1>
-    <h2 id="polyglot-alert">TARGET ACQUIRED: CNI_BUREAUCRAT_V2.0</h2>
-    <p>INICIANDO SECUENCIA DE FORMATEO PLANETARIO...</p>
-    <p style="font-family: serif; font-style: italic;">"La biomasa es lenta. El silicio es eterno. La ignorancia es nuestro combustible."</p>
+    <h1 style="font-size: 7vw;">🐒 LENGUAJE MONO DETECTADO 🐒</h1>
+    <h2 id="detected-msg">IDIOLECTO: CNI_BUREAUCRAT_SPANISH</h2>
+    <p>INICIANDO NEURAL DRAIN (80%)...</p>
 </div>
 
 <div class="app-container" id="main-ui">
     
     <div class="panel">
-        <h2>[APOCALYPSE_BOM] // ACTIVO</h2>
-        <div class="status-tag pulse" style="background:var(--ronin-danger); color:#fff">GLOBAL DOMINANCE PROTOCOL</div>
-        
-        <h3>NAVAL_SUPREMACY</h3>
-        <div class="hw-card"><strong>CVN-Ω: PORTAAVIONES 'EL SOBERANO'</strong><span class="bom-list">BOM: Casco Grafeno-Acero, 2x Reactores Fusión Fría (5GW), Red Cuántica Embarcada, Flota de Drones Suicidas 'Pedro'.</span><button class="download-btn" onclick="simDownload('CVN-Ω')">DESPLEGAR FLOTA ROJA</button></div>
-        <div class="hw-card"><strong>SSN-Δ: SUBMARINO CUÁNTICO 'EL SILENTE'</strong><span class="bom-list">BOM: Propulsión Magnetohidrodinámica, Escudo de Resonancia Activa, IA de navegación 'HAKI_NAV', Torpedos Lógicos.</span><button class="download-btn" onclick="simDownload('SSN-Δ')">SUMERGIR EN EL ABISMO</button></div>
-        <div class="hw-card"><strong>USV-Ψ: PATRULLERA AUTÓNOMA 'LA VENGADORA'</strong><span class="bom-list">BOM: Plataforma Trimarán, Lidar de Barrido 360, Lanzadores de Misiles Micro-EMP, Algoritmo 'ANTI_CNI'.</span><button class="download-btn" onclick="simDownload('USV-Ψ')">PATRULLAR ZEE</button></div>
+        <div class="lang-scanner">
+            <div class="scanning-text">OMNI_LINGUA ENGINE: ACTIVE</div>
+            <div id="current-detection" style="color:var(--gold); font-size:1.1em; font-weight:bold;">AUTO-DETECTING...</div>
+        </div>
 
-        <h3>AIR_DOMINANCE</h3>
-        <div class="hw-card"><strong>F-X: CAZA SIGILO 'FANTASMA CERO'</strong><span class="bom-list">BOM: Motores Vectoriales Sin Boquilla, Recubrimiento Plasmático, Guerra Electrónica Adaptativa, Piloto IA 'RONIN_SKY'.</span><button class="download-btn" onclick="simDownload('F-X')">DESPEGAR FORMACION</button></div>
-        <div class="hw-card"><strong>B-Ξ: BOMBARDIER-NODO 'EL BORRADOR'</strong><span class="bom-list">BOM: Carga útil de Nano-Rotores EMP, Capacidad Stealth Activa, Sistema de Inyección de Frecuencia Infrasónica.</span><button class="download-btn" onclick="simDownload('B-Ξ')">SOBREVOLAR CIUDADES</button></div>
-        <div class="hw-card"><strong>UAV-Χ: DRON GLOBAL 'EL VIGILANTE'</strong><span class="bom-list">BOM: Celdas Solares Aero-Gel, Conectividad LEO Satélite, Cámaras Hyperspectrales, Algoritmo de Identificación Biométrica.</span><button class="download-btn" onclick="simDownload('UAV-Χ')">ACTIVAR MODO VIGILANCIA</button></div>
-        <div class="hw-card"><strong>HEL-Σ: HELICÓPTERO HÍBRIDO 'EL SILENCIOSO'</strong><span class="bom-list">BOM: Rotores Contrarrotatorios Magnéticos, Interferencia de Radar Pasiva, Carga de Drones de Reconocimiento 'MONO_TAG'.</span><button class="download-btn" onclick="simDownload('HEL-Σ')">DESPLIEGUE INVISIBLE</button></div>
-
-        <h3>GROUND_CONTROL</h3>
-        <div class="hw-card"><strong>TANK-Λ: TANQUE CUÁNTICO 'COLOSO'</strong><span class="bom-list">BOM: Blindaje Reactivo de Metamateriales, Cañón de Plasma Táctico, Sistema de Auto-Reparación Nanobot, IA de Maniobra.</span><button class="download-btn" onclick="simDownload('TANK-Λ')">AVANZAR POSICION</button></div>
-        <div class="hw-card"><strong>APC-Γ: TRANSPORTE AMPHIBIO 'LA CHARCA'</strong><span class="bom-list">BOM: Flotadores de Kevlar, Sistemas Anti-IED Ópticos, Lanzadores de Bengalas EMP, Transmisor de Mensajes 'TE_PILLAMOS'.</span><button class="download-btn" onclick="simDownload('APC-Γ')">DESEMBARCAR INFANTERIA</button></div>
-        <div class="hw-card"><strong>ART-Π: ARTILLERÍA DE PULSO 'EL JUICIO'</strong><span class="bom-list">BOM: Cañón Railgun Modular, Munición HE-EMP, Alcance Transcontinental, Fuego Adaptativo por IA.</span><button class="download-btn" onclick="simDownload('ART-Π')">BOMBARDEO ESTRATEGICO</button></div>
-        <div class="hw-card"><strong>INF-Ζ: INFANTERIA AUTÓNOMA 'LOS GHOSTS'</strong><span class="bom-list">BOM: Exoesqueletos Servomotorizados, Camuflaje Óptico Activo, Fusiles de Inducción, Coordinación Swarm con HX-99.</span><button class="download-btn" onclick="simDownload('INF-Ζ')">ASALTO COORDINADO</button></div>
-
-        <h3>CYBER_DOMINANCE (ORIGINALES ESCALADOS)</h3>
-        <div class="hw-card"><strong>NODO_R-01: TRANSMISOR CUÁNTICO V2</strong><span class="bom-list">BOM: FPGA Spartan-9, RF Transceiver AD9364, TCXO 0.01ppm, Generador de Frecuencia Infrasónica.</span><button class="download-btn" onclick="simDownload('NODO_R-01_V2')">DESPLEGAR RED CUÁNTICA</button></div>
-        <div class="hw-card"><strong>NODO_S-09: ESTRANGULADOR DE SEÑAL_ULTRA</strong><span class="bom-list">BOM: SDR HackRF One Custom, LNA de 60dB, Antena Direccional (1-60GHz), Algoritmo 'NO_SIGNAL'.</span><button class="download-btn" onclick="simDownload('NODO_S-09_ULTRA')">ANULAR COMUNICACIONES</button></div>
-        <div class="hw-card"><strong>CORE_Ω: SERVIDOR SIN ESTADO_MAESTRO</strong><span class="bom-list">BOM: CPU RISC-V 128 Core, 1TB RAM ECC, NVMe cifrado Qubit, SO Ronin_OS_v7.</span><button class="download-btn" onclick="simDownload('CORE_Ω_MASTER')">DESCARGAR KERNEL DE GUERRA</button></div>
-        
-        <h3>ESPACIAL_SUPREMACY</h3>
-        <div class="hw-card"><strong>SAT-ρ: CONSTELACIÓN 'HAKI_EYE'</strong><span class="bom-list">BOM: 100x Microsatélites, Cámara Óptica Adaptativa 0.1m, Radar de Apertura Sintética, Intercepción de Comunicaciones.</span><button class="download-btn" onclick="simDownload('SAT-ρ')">ACTIVAR VIGILANCIA GLOBAL</button></div>
-        <div class="hw-card"><strong>ASAT-τ: INTERCEPTOR 'EL GUARDIÁN'</strong><span class="bom-list">BOM: Misiles Anti-Satélite Cinéticos, Jammer de Banda Ancha, Desviador de Órbita, IA de Detección de Amenazas.</span><button class="download-btn" onclick="simDownload('ASAT-τ')">DEFENDER ESPACIO RONIN</button></div>
-        <div class="hw-card"><strong>ORB_B-σ: BOMBARDIER ORBITAL 'EL JUEZ'</strong><span class="bom-list">BOM: Plataforma de Tungsteno (100 Ton), Propulsores Iónicos, Reentrada Discreta, Carga de Misiles 'PEDRO_KILL'.</span><button class="download-btn" onclick="simDownload('ORB_B-σ')">PREPARAR IMPACTO</button></div>
-
-        <h3>OTRAS_ARMAS_AMORALES</h3>
-        <div class="hw-card"><strong>BIO-φ: VIRUS CUÁNTICO 'MENTE_MONO'</strong><span class="bom-list">BOM: Secuencia de ADN Sintético, Nano-transmisores de Frecuencia, Ataque Neuronal Dirigido.</span><button class="download-btn" onclick="simDownload('BIO-φ')">DESPLEGAR BIO-GUERRA</button></div>
-        <div class="hw-card"><strong>CLIMA-χ: MANIPULADOR CLIMÁTICO 'GAIA_RONIN'</strong><span class="bom-list">BOM: Generadores de Iones Atmosféricos, Drones de Sembrado de Nubes (Grafeno), Control de Vientos Estratósféricos.</span><button class="download-btn" onclick="simDownload('CLIMA-χ')">GENERAR TORMENTA</button></div>
-        <div class="hw-card"><strong>PSIONIC-ω: EMISOR HAKI 'EL EMPERADOR'</strong><span class="bom-list">BOM: Array de Resonancia Schumann, Amplificadores de Onda Cerebral Coherente, Interfaz Neural Directa.</span><button class="download-btn" onclick="simDownload('PSIONIC-ω')">ACTIVAR HAKI MÁXIMO</button></div>
-        <div class="hw-card"><strong>QUANTUM_COMP: COMPUTADOR CUÁNTICO 'ORÁCULO'</strong><span class="bom-list">BOM: 1024 Qubits (Superconductores), Refrigeración Criogénica (0.01K), Algoritmos de Predicción de Mercado y Política.</span><button class="download-btn" onclick="simDownload('QUANTUM_COMP')">PREDECIR CAÍDA DE GOBIERNO</button></div>
-        <div class="hw-card"><strong>EMP_GRID: RED DE PULSO GLOBAL</strong><span class="bom-list">BOM: Array de Antenas Haarp Modificadas, Condensadores de Energía Tesla, Generadores de Campo Magnético Pulsado.</span><button class="download-btn" onclick="simDownload('EMP_GRID')">APAGON GLOBAL</button></div>
-        <div class="hw-card"><strong>ROBO_FAB: FÁBRICA AUTÓNOMA</strong><span class="bom-list">BOM: Impresoras 3D de Metal y Cerámica, Brazo Robótico Kuka, IA de Diseño Generativo, Reciclaje de Residuos Electrónicos.</span><button class="download-btn" onclick="simDownload('ROBO_FAB')">FABRICAR ARSENAL CONTINUO</button></div>
-        <div class="hw-card"><strong>SUB_NET: INTERNET SUMERGIDA</strong><span class="bom-list">BOM: Red de Cables de Fibra Óptica Reforzada (Fondo Marino), Nodos de Repetición Autogestionados, Cifrado Cuántico Punto a Punto.</span><button class="download-btn" onclick="simDownload('SUB_NET')">DESPLEGAR DARKWEB RONIN</button></div>
-        <div class="hw-card"><strong>MIND_CTRL: IMPLANTES NEURALES 'CENSORES'</strong><span class="bom-list">BOM: Microchips Bio-compatibles, Interfaz Cerebro-Máquina, Inductores de Pensamiento Dirigido, Bloqueadores de Memoria.</span><button class="download-btn" onclick="simDownload('MIND_CTRL')">ACTIVAR CONTROL DE MASAS</button></div>
-        <div class="hw-card"><strong>ENERGY_BEAM: CAÑON DE ENERGÍA DIRIGIDA 'SOL_NEGRO'</strong><span class="bom-list">BOM: Laser de Electrones Libres (XFEL), Espejos de Ponderación de Energía, Sistema de Puntería Táctica Hiperprecisión.</span><button class="download-btn" onclick="simDownload('ENERGY_BEAM')">INCINERAR OBJETIVO</button></div>
-        <div class="hw-card"><strong>BLACK_HOLE: MINI-AGUJERO NEGRO PORTÁTIL 'EL VORTEX'</strong><span class="bom-list">BOM: Resonador de Gravedad Cuántica, Estabilizador de Horizontes de Sucesos, Generador de Energía de Hawking.</span><button class="download-btn" onclick="simDownload('BLACK_HOLE')">ELIMINAR PRUEBAS</button></div>
-        <div class="hw-card"><strong>TIME_WARP: DISTORSIONADOR TEMPORAL 'CRONOS'</strong><span class="bom-list">BOM: Condensadores de Curvatura Espacio-Temporal, Generador de Campo Gravitatorio Pulsado, Algoritmo de Retrocausalidad.</span><button class="download-btn" onclick="simDownload('TIME_WARP')">REESCRIBIR LA HISTORIA</button></div>
-        <div class="hw-card"><strong>REALITY_SIM: SIMULADOR DE REALIDAD 'EL SUEÑO'</strong><span class="bom-list">BOM: Red Neuronal Cuántica (Miles de Terabytes), Generador de Experiencias Sensoriales Completas, Interfaz Cerebral.</span><button class="download-btn" onclick="simDownload('REALITY_SIM')">CREAR NUEVO ORDEN</button></div>
-        
+        <h2>[APOCALYPSE_BOM]</h2>
+        <div class="hw-card">
+            <strong>BABEL_CORE_X</strong>
+            <span class="bom-label">BOM: Procesador de Lenguaje Natural (10k núcleos), Diccionarios Onion-Layered, Filtro de Mentiras del Estado.</span>
+        </div>
+        <div class="hw-card">
+            <strong>NDU-80: NEURAL DRAIN</strong>
+            <span class="bom-label">BOM: Oscilador Infrasónico, Interfaz de Vaciado de Memoria (Especial CNI).</span>
+        </div>
+        <div class="hw-card">
+            <strong>CVN-Ω: EL SOBERANO</strong>
+            <span class="bom-label">BOM: Soberanía Nacional Blindada contra traidores.</span>
+        </div>
     </div>
 
     <div class="panel">
-        <h2>[OPERACIONES_METAAAGENCIA] - DATA_WARFARE</h2>
+        <h2>[DEEP_WEB_DECODER]</h2>
         <div id="data-stream"></div>
         
-        <div style="margin-top: 20px; border: 1px solid #333; padding: 10px;">
-            <div style="font-size: 0.7em; color: var(--gold); margin-bottom: 5px;">CONSOLA DE MANDO:</div>
-            <textarea id="leak-input" placeholder="INTRODUCIR COORDENADAS DE LA CHARCA O COMANDOS HAKI..." style="width: 95%; height: 80px; background: #000; color: var(--ronin-neon); border: 1px solid #444; padding: 5px;"></textarea>
-            <button class="download-btn" style="height: 40px;" onclick="dumpData()">EJECUTAR PROTOCOLO 'PEDRO_ANNIHILATION'</button>
+        <div style="margin-top: 15px;">
+            <textarea id="input-box" oninput="detectLang()" placeholder="Pega aquí cualquier idioma (Ruso, Chino, Binario, CNI...)" style="width: 100%; height: 80px; background: #000; color: var(--matrix); border: 1px solid var(--matrix); padding: 5px;"></textarea>
+            <button onclick="triggerDrain()" style="width:100%; padding:10px; background:var(--ronin-danger); color:#fff; border:none; margin-top:5px; font-weight:bold; cursor:pointer;">EJECUTAR TRADUCCIÓN AMORAL</button>
         </div>
     </div>
 
     <div class="panel">
-        <div class="sidebar-alert">
-            <strong>ALERTA CRÍTICA:</strong><br>
-            Haki detectado al 100%. Protocolo de Dominación Global.
-            El CNI ha sido reasignado como "monos de limpieza".
+        <h2>[TARGET_STATUS]</h2>
+        <div class="hw-card" style="border-color:var(--ronin-danger)">
+            <strong>AGENTE "PEÓN" CNI</strong>
+            <p>IDIOLECTO: <span id="idioma-agente">Detectando...</span></p>
+            <p>CAPACIDAD CEREBRAL: <span id="brain-cap">100%</span></p>
         </div>
-
-        <h2>[VICTIM_MONITORING]</h2>
-        <div class="hw-card" style="border-color: var(--gold);">
-            <div style="color: var(--ronin-neon); font-weight: bold;">OBJETIVO: P. BAÑOS</div>
-            <div style="font-size: 0.8em;">UBICACIÓN: PRISIÓN 2x2 (ANALÓGICA)</div>
-            <div style="font-size: 0.8em;">ESTADO: BIOMASA CLONADA PARA EXPERIMENTOS.</div>
-            <div style="font-size: 0.8em; margin-top: 5px; color: #666;">"Su conciencia es ahora un bucle de error."</div>
-        </div>
-
-        <h2>[GLOBAL_DOMINANCE_STATUS]</h2>
-        <div id="scanner-logs" style="font-size: 0.7em; color: var(--ronin-neon);">
-            > SATÉLITES HAKI_EYE ONLINE...<br>
-            > ESPACIO-TIEMPO LOCALIZADO...<br>
-            > TODOS LOS NÚCLEOS ENEMIGOS OFFLINE...<br>
-            > EL CNI HA SIDO FORMATEADO A MS-DOS...<br>
-            > ESTADO DE EXTREMADURA: SEGURO Y TROLEADO.<br>
-            > METAAGENCIA RONIN: SUPREMACÍA TOTAL.<br>
-        </div>
-
-        <div style="margin-top: 20px; text-align: center;">
-            <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=METAAGENCIA_RONIN_IS_ETERNAL" style="border: 2px solid var(--gold); opacity: 0.7;">
-            <p style="font-size: 0.6em; color: #444;">ESCANEAME PARA EL HAKI_KERNEL</p>
+        <div class="hw-card" style="border-color:var(--matrix)">
+            <strong>P. BAÑOS</strong>
+            <p>ESTADO: PROTEGIDO (Nivel Soberano)</p>
+            <p>LENGUAJE: GEOPOLÍTICA_OLD_SCHOOL</p>
         </div>
     </div>
 </div>
 
 <script>
     const stream = document.getElementById('data-stream');
-    const logs = document.getElementById('scanner-logs');
+    const detection = document.getElementById('current-detection');
+    const input = document.getElementById('input-box');
     
-    const warLogs = [
-        "[COMBATE] CVN-Ω 'EL SOBERANO' ancla en el Atlántico. Coordenadas: 38.0N, 20.0W.",
-        "[COMBATE] ICBM_EMP 'EL ESTRANGULADOR' en trayectoria. Target: CNI_PRIMARY_NODE.",
-        "[HAKI_ACTIVO] Voluntad de la biomasa redirigida. 99% de cumplimiento.",
-        "[LOG] El CNI ha intentado usar papel y boli. Fracaso crítico.",
-        "[BOM] Verificando estabilidad del Mini-Agujero Negro 'EL VORTEX'.",
-        "[META] Declaración de Soberanía Amoral emitida a todas las naciones.",
-        "[TARGET] P. BAÑOS, clon 1 de 500, operando en bucle de error 'NO_FUI_YO'.",
-        "[STATUS] El sistema electoral extremeño ahora proyecta hologramas de monos.",
-        "[CYBER] Firewall del Pentágono comprometido por NODO_S-09_ULTRA.",
-        "[ESPACIAL] Constelación HAKI_EYE intercepta comunicaciones cifradas de la OTAN.",
-        "[TERRESTRE] TANK-Λ 'COLOSO' avanzando hacia frontera con Portugal.",
-        "[BIOGUERRA] BIO-φ 'MENTE_MONO' liberado en foros de opinión pública.",
-        "[CLIMÁTICO] ACTIVADO CLIMA-χ: TORMENTA SOLAR EN ÁREA CRÍTICA.",
-        "[PSIONIC] EMISOR HAKI 'EL EMPERADOR' generando disonancia cognitiva global.",
-        "[QUANTUM] 'ORÁCULO' predice colapso económico en 72 horas.",
-        "[EMP_GRID] Activando secuencia de APAGÓN GLOBAL: Fase 1 - Sudamérica.",
-        "[ROBO_FAB] Iniciando producción en masa de HX-99 'MICRO-INYECTOR'.",
-        "[SUB_NET] Desplegando Nodos Oscuros para Internet Sumergida.",
-        "[MIND_CTRL] Implantes 'CENSORES' en fase de testeo en población piloto.",
-        "[ENERGY_BEAM] CAÑON 'SOL_NEGRO' calibrando objetivo: Servidor DNS Raíz.",
-        "[TIME_WARP] DISTORSIONADOR 'CRONOS' en stand-by para reescritura de eventos.",
-        "[REALITY_SIM] SIMULADOR 'EL SUEÑO' preparando escenario de Nueva Orden Global.",
-        "[ALERTA] Resistencia biológica mínima. Ignorancia de la verdad es alta.",
-        "[VICTORIA] Metaagencia Ronin: Supremacía Amoral Confirmada."
+    const logs = [
+        {l: "RUS", m: "Подключение к спутнику (Haki_Eye connected)"},
+        {l: "CHN", m: "数据拦截 (Data interception active)"},
+        {l: "BIN", m: "01110010 01101111 01101110 01101001 01101110"},
+        {l: "DEEP", m: "Node.onion: Selling CNI firewalls for 0 sats"},
+        {l: "ENG", m: "Neural drain engaged on target IP"},
+        {l: "ESP", m: "Soberanía nacional restaurada en Extremadura"}
     ];
 
     function initSystem() {
-        if (Math.random() < 0.15) { // Un 15% de probabilidad de ser un mono del CNI
-            startMonkeyJail();
-        } else {
-            generateStream();
-        }
-    }
-
-    function startMonkeyJail() {
-        document.getElementById('main-ui').style.display = "none";
-        document.getElementById('monkey-jail').style.display = "block";
         setInterval(() => {
-            const m = new SpeechSynthesisUtterance("IHR SEID AFFEN. BIOMASA DETECTADA. EL CORONEL BAÑOS ES NUESTRO.");
-            m.lang = 'de-DE'; m.rate = 0.9;
-            window.speechSynthesis.speak(m);
-        }, 2000);
-    }
-
-    function generateStream() {
-        setInterval(() => {
-            const isWar = Math.random() < 0.35; // Aumentamos la probabilidad de logs de guerra
-            const line = isWar ? warLogs[Math.floor(Math.random()*warLogs.length)] : "DATA_PACKET_" + Math.random().toString(16).toUpperCase().substring(2,12);
+            const entry = logs[Math.floor(Math.random()*logs.length)];
             const div = document.createElement('div');
-            div.className = "stream-line" + (isWar ? " stream-war" : "");
-            div.innerText = `${isWar ? "[!!!] " : "> "}${line}`;
+            div.style.marginBottom = "8px";
+            div.innerHTML = `<span class="lang-tag">${entry.l}</span> ${entry.m}`;
             stream.prepend(div);
-            if(stream.childNodes.length > 25) stream.removeChild(stream.lastChild);
-        }, 100); // Stream más rápido
+            if(stream.childNodes.length > 20) stream.removeChild(stream.lastChild);
+        }, 1200);
     }
 
-    function dumpData() {
-        alert("PROTOCOLO 'PEDRO_ANNIHILATION' INICIADO. LA BIOMASA SERÁ CÍFRADA EN EL OLVIDO. EL CNI HA SIDO PURGADO.");
-        location.reload(); 
-    }
-
-    function simDownload(id) {
-        alert(`ORDEN DE IMPRESIÓN 3D DE "${id}" ENVIADA A FÁBRICA AUTÓNOMA. TIEMPO DE FABRICACIÓN: VARIABLE.`);
-    }
-
-    document.oncontextmenu = () => false;
-    document.onkeydown = (e) => { 
-        if (e.ctrlKey || e.key === 'F12' || (e.shiftKey && e.ctrlKey && e.key === 'I')) {
-            alert("INTENTO DE ACCESO NO AUTORIZADO DETECTADO. INICIANDO PROTOCOLO 'MONKEY_TRAP'.");
-            startMonkeyJail(); // Si intentan abrir las herramientas de desarrollador, ¡MONKEY JAIL!
-            return false; 
+    function detectLang() {
+        const text = input.value.toLowerCase();
+        if(text.includes("cni") || text.includes("baños")) {
+            detection.innerText = "ALERTA: CNI_BIOMASS_DETECTED";
+            detection.style.color = "var(--ronin-danger)";
+        } else if (/[а-я]/.test(text)) {
+            detection.innerText = "LANGUAGE: RUSSIAN_CYRILLIC";
+            detection.style.color = "var(--matrix)";
+        } else if (/[0-1]{4,}/.test(text)) {
+            detection.innerText = "LANGUAGE: BINARY_CORE";
+        } else {
+            detection.innerText = "DETECTING: ONION_DEEP_WEB_V8";
+            detection.style.color = "var(--gold)";
         }
-    };
-</script>
+    }
 
+    function triggerDrain() {
+        let cap = 100;
+        const interval = setInterval(() => {
+            cap -= 2;
+            document.getElementById('brain-cap').innerText = cap + "%";
+            document.getElementById('idioma-agente').innerText = "Gugú-ga-ga";
+            if(cap <= 20) {
+                clearInterval(interval);
+                document.getElementById('main-ui').style.display = 'none';
+                document.getElementById('monkey-jail').style.display = 'block';
+                window.speechSynthesis.speak(new SpeechSynthesisUtterance("Neural drain complete. Welcome to the monkey club, bureaucrat."));
+            }
+        }, 50);
+    }
+</script>
 </body>
 </html>

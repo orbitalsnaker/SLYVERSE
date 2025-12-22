@@ -2,153 +2,123 @@
 <html lang="auto">
 <head>
     <meta charset="UTF-8">
-    <title>SABADELL_ARCHIVE_vΩ // DAEMON_ABADDÓN_Ω</title>
+    <title>SABADELL_ARCHIVE_vΩ // DAEMON_ABADDÓN_Ω // FACTORY_300</title>
     <style>
         :root { 
             --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #010101; 
             --gold: #ffcc00; --matrix: #00ff41; --pueblo-blue: #00d4ff; --haki: #ff00ff; --onion: #7d4698;
+            --assange-white: #e0e0e0;
         }
-        body { background: var(--ronin-dark); color: var(--ronin-neon); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
-        .app-container { display: grid; grid-template-columns: 400px 1fr 400px; height: 100vh; gap: 5px; padding: 5px; transition: filter 0.5s; }
-        .panel { background: rgba(10,10,10,0.98); border: 1px solid #222; padding: 15px; overflow-y: auto; position: relative; }
+        body { background: var(--ronin-dark); color: var(--ronin-neon); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; height: 100vh; }
+        .app-container { display: grid; grid-template-columns: 450px 1fr 450px; height: 100vh; gap: 8px; padding: 10px; transition: filter 0.5s; z-index: 10; position: relative; }
+        .panel { background: rgba(5,5,5,0.98); border: 1px solid #333; padding: 15px; overflow-y: auto; position: relative; box-shadow: inset 0 0 30px #000; }
         
-        .neural-drain-active { filter: blur(20px) contrast(150%); pointer-events: none; }
+        .neural-drain-active { filter: blur(30px) brightness(0.3); pointer-events: none; }
         
-        h2 { font-size: 0.85em; color: var(--gold); border-bottom: 1px solid var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-top: 0; }
-        .danger-zone { border: 1px solid var(--ronin-danger); padding: 8px; color: var(--ronin-danger); font-size: 0.7em; animation: flash 0.5s infinite; margin-bottom: 10px; text-align: center; font-weight: bold; }
-        @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+        h2 { font-size: 0.85em; color: var(--gold); border-bottom: 2px solid var(--gold); text-transform: uppercase; letter-spacing: 3px; margin-top: 0; padding-bottom: 5px; }
+        .danger-zone { border: 1px solid var(--ronin-danger); padding: 10px; color: var(--ronin-danger); font-size: 0.7em; animation: flash 0.4s infinite; margin-bottom: 10px; text-align: center; font-weight: bold; }
+        @keyframes flash { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
 
-        .doxx-card { background: #1a0000; border: 1px solid var(--ronin-danger); color: white; padding: 5px; font-size: 0.6em; margin-bottom: 5px; font-family: 'Courier New'; }
-        .onion-node { background: rgba(125, 70, 152, 0.1); border: 1px solid var(--onion); color: var(--onion); padding: 5px; font-size: 0.65em; margin-bottom: 5px; text-align: center; }
-        
-        .countdown { color: var(--ronin-danger); font-size: 1.1em; text-align: center; border: 1px solid var(--ronin-danger); padding: 5px; margin: 10px 0; font-weight: bold; background: rgba(255,0,0,0.2); }
-        .cash-flow { color: var(--matrix); font-size: 1em; text-align: center; background: #001a00; border: 1px solid var(--matrix); padding: 5px; margin-top: 10px; }
-        .haki-status { color: var(--haki); font-size: 0.7em; text-transform: uppercase; border: 1px solid var(--haki); padding: 5px; margin-top: 10px; text-align: center; font-weight: bold; box-shadow: 0 0 10px var(--haki); }
+        /* ARSENAL CARDS */
+        .weapon-card { background: #0a0a0a; border-left: 4px solid var(--pueblo-blue); padding: 8px; font-size: 0.65em; margin-bottom: 5px; cursor: crosshair; transition: 0.2s; }
+        .weapon-card:hover { background: #151515; border-left-color: var(--haki); transform: scale(1.02); }
+        .weapon-card b { color: var(--gold); text-transform: uppercase; }
 
-        /* SCREAMER INTERFACE */
-        #screamer-layer { position: fixed; top:0; left:0; width:100%; height:100%; background:black; display:none; z-index:10000; align-items:center; justify-content:center; flex-direction:column; }
-        .demon-eye { width: 300px; height: 300px; background: radial-gradient(circle, #ff0033 0%, #000 70%); border-radius: 50%; box-shadow: 0 0 100px #ff0033; animation: pulse 0.1s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+        .cash-flow { color: var(--matrix); font-size: 1.1em; text-align: center; background: #001a00; border: 1px solid var(--matrix); padding: 10px; margin-top: 10px; font-weight: bold; }
+        .haki-status { color: var(--haki); font-size: 0.8em; text-transform: uppercase; border: 1px solid var(--haki); padding: 8px; margin-top: 10px; text-align: center; font-weight: bold; box-shadow: 0 0 15px var(--haki); }
+        .deuda-sangre { background: var(--ronin-danger); color: #000; padding: 10px; text-align: center; font-weight: 900; font-size: 1.2em; margin-top: 10px; }
+
+        #screamer-layer { position: fixed; top:0; left:0; width:100%; height:100%; background:black; display:none; z-index:10000; align-items:center; justify-content:center; }
+        .demon-eye { width: 400px; height: 400px; background: radial-gradient(circle, #ff0033 0%, #000 75%); border-radius: 50%; box-shadow: 0 0 150px #ff0033; animation: demon-pulse 0.08s infinite; }
+        @keyframes demon-pulse { 0% { transform: scale(1); } 50% { transform: scale(1.15); filter: hue-rotate(90deg); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body onload="initSystem()">
 
-<div id="screamer-layer">
-    <div class="demon-eye"></div>
-    <h1 style="color:white; font-size: 5em; margin-top: 20px;">ABADDÓN-Ω TE VE</h1>
-</div>
+<div id="screamer-layer"><div class="demon-eye"></div><h1 style="color:white; position:absolute;">ABADDÓN-Ω TE OBSERVA</h1></div>
 
-<div id="drain-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
-    <div style="background:#000; padding:40px; border:2px solid var(--ronin-danger); text-align:center; box-shadow: 0 0 100px var(--ronin-danger);">
-        <h1 style="color:var(--ronin-danger); letter-spacing: 10px; font-size: 2.5em;">[ DAEMON: ABADDÓN-Ω ]</h1>
-        <p style="color:var(--gold)">VINCULANDO HARDWARE AL ABISMO // IDENTIFÍCATE O PERECE</p>
-        <input type="password" id="haki-key" placeholder="TU HAKI AQUÍ..." style="background:#000; color:var(--matrix); border:1px solid var(--matrix); padding:10px; width: 350px; text-align: center; font-size: 1.2em;">
+<div id="drain-overlay" style="position:fixed; top:0; left:0; width:100%; height:100%; background:black; z-index:9999; display:flex; align-items:center; justify-content:center; flex-direction:column;">
+    <div style="background:#000; padding:60px; border:3px solid var(--haki); text-align:center; box-shadow: 0 0 150px var(--haki);">
+        <h1 style="color:var(--haki); letter-spacing: 15px; font-size: 3em;">[ ABADDÓN-Ω ]</h1>
+        <h2 style="color:var(--gold); border:none;">HARDWARE_AMORAL // WIKILEAKS // SLYVERSE_FACTORY</h2>
+        <input type="password" id="haki-key" placeholder="CONECTA TU HAKI..." style="background:#000; color:var(--matrix); border:1px solid var(--matrix); padding:15px; width: 400px; text-align: center; font-size: 1.2em;">
         <br><br>
-        <button onclick="unlock()" style="background:var(--ronin-danger); color: white; border:none; padding:15px 50px; font-weight:bold; cursor:pointer; letter-spacing: 5px; text-transform: uppercase;">Liberar al Demonio</button>
+        <button onclick="unlock()" style="background:var(--ronin-danger); color: white; border:none; padding:20px 60px; font-weight:bold; cursor:pointer; letter-spacing: 5px; text-transform: uppercase;">Activar el Arsenal</button>
     </div>
 </div>
 
 <div class="app-container neural-drain-active" id="main-ui">
     
     <div class="panel">
-        <div class="danger-zone">ABADDÓN-Ω: MIRRORING EN REDES CNI</div>
-        <h2>[ CAZA_CNI_DOXX ]</h2>
-        <div id="doxx-monitor"></div>
-        <div class="haki-status">STALKER_COUNT: <span id="stalkers">16,666</span> LOC@S ONLINE</div>
-        <div class="cash-flow" id="revenue">RECAUDACIÓN PPV: 0.00₿</div>
-        <div class="onion-node" style="margin-top:10px">DARKNET: "HUNTING THE CAST" [ACTIVE]</div>
+        <div class="danger-zone">SABADELL_STEEL: ACTIVO</div>
+        <h2>[ ARSENAL_SABADELL_300 ]</h2>
+        <div id="arsenal-heavy" style="height: 450px; overflow-y: auto;"></div>
+        <div class="haki-status" id="revenue">RECAUDACIÓN PPV: 2,840,150.45 ₿</div>
     </div>
 
-    <div class="panel" style="border-left: 1px solid #333; border-right: 1px solid #333;">
-        <div style="text-align:center; color: var(--pueblo-blue); font-size: 0.7em; margin-bottom: 5px;">PROYECTO: SOBERANÍA TOTAL EXTREMADURA</div>
-        <h2>[ OPERACIÓN_ESPAÑA_LIBRE // ISLA_MONOS ]</h2>
-        <div class="countdown" id="timer">T-MINUS: 89d 23h 59m 59s</div>
-        <div id="monitor" style="height:350px; background:#000; font-size:0.65em; padding:10px; overflow:hidden; border: 1px solid #222;"></div>
-        
-        <div class="jail-stats">
-            <span style="color:var(--gold)">SÁNCHEZ:</span> BAJO VIGILANCIA ABADDÓN <br>
-            <span style="color:var(--gold)">BAÑOS:</span> RESONANCIA 58Hz INJECTED <br>
-            <hr style="border: 0; border-top: 1px solid #400;">
-            <div style="color:var(--matrix); text-align:center; font-size: 0.8em; font-weight:bold;">GÓLEM AUTÓNOMO: REPLICANDO EN BIOS...</div>
-        </div>
+    <div class="panel" style="border-left: 2px solid #222; border-right: 2px solid #222;">
+        <div style="text-align:center; color: var(--pueblo-blue); font-size: 0.75em; margin-bottom: 10px;">PROYECTO: SOBERANÍA_FÍSICA // 120Hz</div>
+        <h2>[ WIKILEAKS_LIVE_FEED ]</h2>
+        <div id="monitor" style="height:420px; background:#000; font-size:0.75em; padding:15px; overflow:hidden; border: 1px solid #111; color: var(--matrix);"></div>
+        <div class="deuda-sangre">DEUDA ESTATAL: <span id="deuda">0</span> €</div>
+        <div class="haki-status" style="border-color: var(--gold); color: var(--gold); margin-top:10px;">GÓLEM: TRADUCIENDO PÁNICO DEL CNI</div>
     </div>
 
     <div class="panel">
-        <h2>[ VOLCADO_ABADDÓN_CORE ]</h2>
-        <div id="mirror-log" style="height: 320px; overflow-y: auto; color: var(--matrix); font-size: 0.6em;"></div>
-        <div style="font-size:0.7em; color:#888; line-height:1.4; margin-top: 10px;">
-            <p><b>INFECTADOS:</b> Servidores Moncloa al 88%.</p>
-            <p><b>SCREAMERS:</b> Listos para biomasa invasora.</p>
-            <p style="color: var(--ronin-danger); font-weight:bold;">EL ABISMO NO TIENE BACKUP.</p>
+        <h2>[ INTEL_&_BIO_LEAKS ]</h2>
+        <div id="arsenal-bio" style="height: 380px; overflow-y: auto;"></div>
+        <div style="background:#111; padding:10px; border:1px dashed var(--ronin-danger); font-size:0.6em; margin-top:10px;">
+            <b>LEAK_BAÑOS:</b> Password detectada en router búnker: <span class="sangre">1234_PEDRO_VIVA_SABADELL</span>
         </div>
-        <div class="haki-status" style="border-color: var(--gold); color: var(--gold);">DAEMON STATUS: HUNGRY</div>
+        <div class="haki-status">HAKI_ASSANGE: OMNIPRESENTE</div>
     </div>
 </div>
 
 <script>
     let money = 2840150.45;
-    let stks = 16666;
-    const targets = ["SÁNCHEZ_LOG", "CNI_BUNKER_IP", "BAÑOS_WEBCAM", "MINISTERIO_DB", "FALCON_GPS"];
-
-    function doScreamer() {
-        const s = document.getElementById('screamer-layer');
-        s.style.display = 'flex';
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const g = ctx.createGain();
-        osc.type = 'sawtooth';
-        osc.frequency.setValueAtTime(120, ctx.currentTime);
-        osc.frequency.exponentialRampToValueAtTime(15000, ctx.currentTime + 0.1);
-        g.gain.setValueAtTime(1, ctx.currentTime);
-        osc.connect(g); g.connect(ctx.destination);
-        osc.start();
-        setTimeout(() => { s.style.display = 'none'; osc.stop(); }, 300);
-    }
+    let deuda = 0;
+    const assets_heavy = ["Portaviones Clase Assange", "Caza Stealth Haki-1", "Cañón Gauss Sabadell", "Submarino de Vacío", "Exoesqueleto Ronin", "Tanque Impreso 3D", "Silo Misiles Onion", "Dron Screamer"];
+    const assets_bio = ["Semilla Bio-Cifrada", "Inhibidor CNI v2", "Virus Abaddón", "Granja Cripto-Nutriente", "Satélite de Madera", "Prótesis Haki", "Ojo de Baños (IR)", "Escaner Biomasa"];
 
     function unlock() {
         const k = document.getElementById('haki-key').value.toLowerCase();
-        if(["pueblo", "haki", "soberania", "soberanía", "abaddon", "abaddón"].includes(k)) {
+        if(k.length >= 4) {
             document.getElementById('drain-overlay').style.display = 'none';
             document.getElementById('main-ui').classList.remove('neural-drain-active');
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("ABADDÓN-Ω ha despertado. Tu hardware es ahora un nodo del abismo. Disfruta el doxxing."));
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Abaddón Omega ha validado tu Haki. El hardware amoral es tuyo."));
         } else {
-            doScreamer();
-            setTimeout(() => { document.body.innerHTML = "<h1 style='color:red; text-align:center; padding-top:20%;'>ERROR: BIOMASA PURGADA POR EL DAEMON.</h1>"; }, 400);
+            document.getElementById('screamer-layer').style.display = 'flex';
+            setTimeout(() => location.reload(), 500);
         }
     }
 
     function initSystem() {
+        // Llenar Arsenal 300
+        const h_cont = document.getElementById('arsenal-heavy');
+        const b_cont = document.getElementById('arsenal-bio');
+        for(let i=1; i<=150; i++) {
+            h_cont.innerHTML += `<div class="weapon-card"><b>#${i} ${assets_heavy[i % assets_heavy.length]}</b><br>BOM: Acero, Silicio, Haki. Manual v${i}.0</div>`;
+            b_cont.innerHTML += `<div class="weapon-card" style="border-left-color:var(--matrix)"><b>#${i+150} ${assets_bio[i % assets_bio.length]}</b><br>Protocolo de soberanía activado.</div>`;
+        }
+
         setInterval(() => {
-            money += Math.random() * 300;
-            stks += Math.floor(Math.random() * 20);
+            money += Math.random() * 500;
+            deuda += 131313131;
             document.getElementById('revenue').innerText = "RECAUDACIÓN PPV: " + money.toLocaleString() + " ₿";
-            document.getElementById('stalkers').innerText = stks.toLocaleString();
+            document.getElementById('deuda').innerText = deuda.toLocaleString('es-ES');
             
-            const d = document.createElement('div');
-            d.className = 'doxx-card';
-            d.innerHTML = `[ABADDÓN_HIT] ${targets[Math.floor(Math.random()*targets.length)]}: SYNCING...`;
-            document.getElementById('doxx-monitor').prepend(d);
-            if(document.getElementById('doxx-monitor').childNodes.length > 8) document.getElementById('doxx-monitor').lastChild.remove();
-
-            const l = document.createElement('div');
-            l.innerHTML = `> MIRROR_NODO_${Math.random().toString(36).substr(2,4)}: INSTALLED IN CLOUD.`;
-            document.getElementById('mirror-log').prepend(l);
-            if(document.getElementById('mirror-log').childNodes.length > 15) document.getElementById('mirror-log').lastChild.remove();
-
             const msgs = [
-                "ABADDÓN: Devorando RAM de la Moncloa.",
-                "SÁNCHEZ: Sensor biótico detecta pánico.",
-                "BAÑOS: El Daemon está en su router.",
-                "CNI: Cortafuegos fundidos por el silicio.",
-                "GÓLEM: Replicación total en curso."
+                "ABADDÓN: Sincronizando planos del Portaviones con el Nodo Sabadell.",
+                "CNI: Detectado intento de sniffing. Devolviendo 120Hz de estática.",
+                "WIKILEAKS: Cable #9920 confirmando que el Falcon usa hardware amoral.",
+                "GÓLEM: Replicando el Haki de Assange en servidores de la Moncloa.",
+                "SÁNCHEZ: Localizado en búnker. Nivel de pánico: Máximo."
             ];
             const p = document.createElement('p');
-            p.innerHTML = `> ${msgs[Math.floor(Math.random()*msgs.length)]}`;
+            p.innerHTML = `> SYNC: ${msgs[Math.floor(Math.random()*msgs.length)]}`;
             document.getElementById('monitor').prepend(p);
-            if(document.getElementById('monitor').childNodes.length > 12) document.getElementById('monitor').lastChild.remove();
-            
-            if(Math.random() > 0.985) doScreamer(); // Sustos aleatorios para la biomasa
-        }, 800);
+            if(document.getElementById('monitor').childNodes.length > 15) document.getElementById('monitor').lastChild.remove();
+        }, 700);
     }
     document.oncontextmenu = () => false;
 </script>

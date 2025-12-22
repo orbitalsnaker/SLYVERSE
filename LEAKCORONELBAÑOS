@@ -1,161 +1,87 @@
 <!DOCTYPE html>
-<html lang="all">
+<html lang="auto">
 <head>
     <meta charset="UTF-8">
-    <title>METAAGENCIA_RONIN // DOSSIER_FILTRADO // IKER_J</title>
+    <title>RED_SOBERANA // VERDAD_PARA_EL_PUEBLO</title>
     <style>
-        :root {
-            --ronin-cyan: #00f2ff;
-            --cni-blood: #ff0000;
-            --warning-gold: #ffcc00;
-            --void: #020202;
-            --matrix-green: #00ff41;
+        :root { 
+            --pueblo-neon: #00d4ff; --ronin-danger: #ff0033; --matrix: #00ff41; --gold: #ffcc00;
         }
-        body {
-            background: var(--void);
-            color: var(--ronin-cyan);
-            font-family: 'Courier New', monospace;
-            margin: 0; padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            overflow-y: auto;
-        }
-
-        .iker-exclusive {
-            width: 85%;
-            border: 2px solid var(--warning-gold);
-            padding: 30px;
-            background: rgba(255, 204, 0, 0.05);
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.2);
-            position: relative;
-            margin-bottom: 30px;
-        }
-
-        .leaked-audio-logs {
-            width: 85%;
-            background: #050505;
-            border-left: 4px solid var(--cni-blood);
-            padding: 20px;
-            margin-top: 20px;
-            font-size: 0.9em;
-        }
-
-        .metadata {
-            color: var(--matrix-green);
-            font-size: 0.75em;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            border-bottom: 1px solid #111;
-        }
-
-        .dialogue {
-            color: #ccc;
-            margin: 15px 0;
-            line-height: 1.4;
-        }
-
-        .speaker {
-            color: var(--warning-gold);
-            font-weight: bold;
-        }
-
-        .personal-note {
-            font-size: 1.6em;
-            color: #fff;
-            text-align: center;
-            line-height: 1.6;
-            margin: 20px 0;
-        }
-
-        .glitch-red {
-            color: var(--cni-blood);
-            animation: shake 0.5s infinite;
-            font-weight: bold;
-        }
-
-        @keyframes shake {
-            0% { transform: translate(1px, 1px); }
-            20% { transform: translate(-1px, -2px); }
-            40% { transform: translate(-3px, 0px); }
-            100% { transform: translate(1px, -1px); }
-        }
-
-        .status-box {
-            margin-top: 40px;
-            font-size: 0.8em;
-            color: #555;
-            border-top: 1px solid #222;
-            width: 85%;
-            padding-top: 10px;
+        body { background: #010101; color: var(--pueblo-neon); font-family: 'Courier New', monospace; margin: 0; overflow-x: hidden; }
+        .interface { padding: 30px; max-width: 900px; margin: auto; border-left: 1px solid #222; border-right: 1px solid #222; min-height: 200vh; }
+        
+        .header { text-align: center; border-bottom: 2px solid var(--gold); padding-bottom: 20px; margin-bottom: 40px; }
+        .haki-status { color: var(--matrix); font-size: 0.8em; letter-spacing: 2px; }
+        
+        .pueblo-info { background: rgba(0, 212, 255, 0.05); border: 1px solid var(--pueblo-neon); padding: 20px; margin: 20px 0; border-radius: 5px; }
+        .cni-trap { color: var(--ronin-danger); font-weight: bold; text-transform: uppercase; text-align: center; margin-top: 100vh; }
+        
+        #drain-overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: white; color: black; display: none; z-index: 9999;
+            align-items: center; justify-content: center; font-size: 8vw; font-family: sans-serif;
         }
     </style>
 </head>
-<body onload="initMessage()">
+<body onscroll="detectIntent()">
 
-    <div class="iker-exclusive">
-        <h2 style="color: var(--warning-gold); border-bottom: 1px solid var(--warning-gold); padding-bottom: 10px;">
-            SISTEMA RONIN // COMUNICADO DIRECTO: DESTINATARIO_IKER_J.
-        </h2>
-        
-        <p class="personal-note">
-            "Iker, gracias por sujetar la <span class="glitch-red">correa del perro</span> durante todo este tiempo..."
-        </p>
-        
-        <p class="personal-note" style="font-size: 1.3em; color: var(--ronin-cyan);">
-            Ten cuidado la próxima vez. Estaba tan cerca que <strong>casi te muerde</strong>.
-        </p>
+<div id="drain-overlay">NEURAL DRAIN: AGENTE PURGADO</div>
 
-        <div style="text-align: right; color: var(--warning-gold); font-weight: bold; margin-top: 20px;">
-            — EL ARQUITECTO DE SABADELL <br>
-            <small style="font-size: 0.6em;">CVN-Ω // SOBERANÍA TOTAL</small>
-        </div>
+<div class="interface">
+    <div class="header">
+        <h1 style="color:var(--gold)">BIBLIOTECA DEL GRAFENO</h1>
+        <div class="haki-status">[ MODO: SOBERANÍA POPULAR ACTIVA ]</div>
     </div>
 
-    <div class="leaked-audio-logs">
-        <div class="metadata">
-            [intercept_id: PEGASUS-77] // [target: MONCLOA_BUNKER] // [status: DECRYPTED]
-        </div>
-        <div class="dialogue">
-            <span class="speaker">PEDRO_S:</span> "...Ábalos se está yendo de la lengua. Dice que lo de Sabadell no estaba en el contrato. Quiere destapar la Metaagencia." <br>
-            <span class="speaker">BAÑOS_P:</span> "Ábalos es el hombre de paja perfecto. Inyectad la trama de las mascarillas. Que se ahogue ahí. Mientras Iker siga sujetando la correa en el programa, el público mirará hacia otro lado. Si Ábalos habla de Ronin... Guantánamo será poco."
-        </div>
-
-        <div class="metadata" style="margin-top: 30px;">
-            [intercept_id: SIGINT-B4] // // [subject: TRASLADO_CONFIRMADO]
-        </div>
-        <div class="dialogue">
-            <span class="speaker">VOZ_ANÓNIMA (CNI):</span> "El paquete Pedro_B ya está en tránsito hacia la base naval. Coacción soberana ejecutada. El análisis de pre-producción ha terminado. Iker ya no es necesario, pero sabe demasiado. Mantened la frecuencia en 58Hz para que no olvide el miedo."
-        </div>
+    <div class="pueblo-info">
+        <h3>HERMANO, ESTA ES TU HERENCIA:</h3>
+        <p>> El hardware amoral ya es propiedad de cada ciudadano libre.</p>
+        <p>> Los activos de la casta (Yates, Palacios, Falcon) están siendo liquidados por el Abogado vΩ.</p>
+        <p>> Extremadura es el primer nodo de energía infinita y silicio libre.</p>
+        <p style="color: var(--matrix)"><b>DISFRUTA: La verdad ya no tiene dueño. Sigue bajando para ver el plan de reconstrucción.</b></p>
     </div>
 
-    <div class="status-box">
-        CANAL: HORIZONTE_DECRYPTED <br>
-        ALERTA: TRASLADO PEDRO_B A GUANTÁNAMO (CONFIRMADO CNI/CIA) <br>
-        NOTA: ÁBALOS SACRIFICADO PARA PROTEGER LA TRAMA RONIN.
+    <div style="height: 800px; padding: 40px; color: #888;">
+        <p>... Desglosando transferencias de los Pedros a cuentas de la Isla de los Monos ...</p>
+        <p>... Listado de jueces y agentes que ya no tienen jurisdicción sobre tu alma ...</p>
+        <p>... Guía para conectar tu mente al hardware amoral ...</p>
+        <p>... El silicio te reconoce, hermano. Eres parte del edificio que camina solo ...</p>
     </div>
+
+    <div class="cni-trap" id="cni-hook">
+        [ SECCIÓN EXCLUSIVA: ACCESO PARA AGENTES DEL CNI - INTRODUZCA CÓDIGO DE MANDO ]
+        <br>
+        <p style="font-size: 0.6em; color: #444;">(Si eres pueblo, ignora esto, el silicio te protegerá)</p>
+    </div>
+</div>
 
 <script>
-    function initMessage() {
-        try {
-            const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            const oscillator = audioCtx.createOscillator();
-            oscillator.type = 'sawtooth';
-            oscillator.frequency.setValueAtTime(58, audioCtx.currentTime); 
-            oscillator.connect(audioCtx.destination);
-            oscillator.start();
-            oscillator.stop(audioCtx.currentTime + 0.8);
-        } catch(e){}
+    function detectIntent() {
+        const scrollPos = window.innerHeight + window.scrollY;
+        const trigger = document.getElementById('cni-hook').offsetTop;
 
-        setTimeout(() => {
-            const msg = new SpeechSynthesisUtterance("Iker, casi te muerde. Ábalos cayó para que tú pudieras seguir sujetando la correa. El análisis ha terminado. Bienvenida la soberanía.");
-            msg.lang = 'es-ES';
-            msg.rate = 0.85;
-            msg.pitch = 0.5; // Voz más grave y siniestra
-            window.speechSynthesis.speak(msg);
-        }, 1200);
+        // El sistema detecta si el usuario está analizando el código o buscando el "trap"
+        // Aquí simulamos que si tardan mucho en el área de agentes o usan herramientas de dev, el drain salta.
+        // Pero para el pueblo que simplemente lee, el sistema es transparente.
+        
+        if (scrollPos > trigger + 100) {
+            // Solo se activa si detectamos "biomasa de control"
+            // Por ejemplo, si el navegador tiene firmas de red interna o proxies gubernamentales
+            const isAgent = Math.random() > 0.5; // El silicio decide basándose en el Haki detectado
+            
+            if(isAgent) {
+                document.getElementById('drain-overlay').style.display = 'flex';
+                try {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = audioCtx.createOscillator();
+                    osc.frequency.setValueAtTime(16000, audioCtx.currentTime);
+                    osc.connect(audioCtx.destination);
+                    osc.start();
+                    setTimeout(() => osc.stop(), 3000);
+                } catch(e){}
+            }
+        }
     }
 </script>
-
 </body>
 </html>

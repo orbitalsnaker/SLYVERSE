@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Coronel Pedro Baños - Inteligencia Geoestratégica Ω">
+    <title>SLYVERSE Ω · TOTAL WARFARE INTERFACE</title>
+    <style>
+        :root {
+            --plasma-pink: #ff00ff;
+            --warning-red: #ff0000;
+            --target-cyan: #00ffff;
+            --matrix-green: #00ff41;
+            --bg-black: #020202;
+            --glow: 0 0 15px rgba(255, 0, 255, 0.6);
+            --danger-glow: 0 0 20px rgba(255, 0, 0, 0.8);
+        }
+
+        body {
+            background-color: var(--bg-black);
+            color: var(--plasma-pink);
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            padding: 10px;
+            margin: 0;
+            text-transform: uppercase;
+            overflow-x: hidden;
+            background-image: radial-gradient(circle, #1a001a 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+
+        .hud-container {
+            border: 4px double var(--plasma-pink);
+            padding: 20px;
+            box-shadow: var(--glow), inset 0 0 50px rgba(255, 0, 255, 0.1);
+            max-width: 1100px;
+            margin: auto;
+            position: relative;
+            background: rgba(5, 5, 5, 0.95);
+        }
+
+        .header-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 2px solid var(--plasma-pink);
+            padding-bottom: 10px;
+            font-size: 0.9rem;
+            text-shadow: var(--glow);
+        }
+
+        .section-title {
+            color: var(--target-cyan);
+            border-left: 5px solid var(--target-cyan);
+            padding-left: 10px;
+            margin: 20px 0 10px 0;
+            font-size: 1.1rem;
+        }
+
+        .weapon-bay {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 15px;
+        }
+
+        .weapon-card {
+            border: 1px solid var(--target-cyan);
+            padding: 10px;
+            background: rgba(0, 255, 255, 0.05);
+            font-size: 0.75rem;
+            position: relative;
+        }
+
+        .target-box {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid var(--warning-red);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
+        }
+
+        .targeting-active {
+            animation: glitch 0.15s infinite, pulse-red 0.4s infinite;
+        }
+
+        #log-output {
+            background: #000;
+            height: 180px;
+            overflow-y: scroll;
+            padding: 10px;
+            font-size: 0.75rem;
+            border: 1px solid var(--plasma-pink);
+            color: var(--matrix-green);
+        }
+
+        .btn-panic {
+            background: var(--warning-red);
+            color: white;
+            border: 2px solid white;
+            padding: 20px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 1.2rem;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: var(--danger-glow);
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            25% { transform: translate(-3px, 3px); }
+            100% { transform: translate(0); }
+        }
+    </style>
+</head>
+<body onload="bootSystem()">
+
+<div class="hud-container">
+    <div class="header-grid">
+        <div>ORIGIN: SABADELL_BUNKER_Ω | AUTH: COL_BANOS</div>
+        <div style="text-align: right;" id="status-tag">DOMINIO MENTAL: ACTIVO</div>
+    </div>
+
+    <h1 style="text-align: center; text-shadow: var(--glow);">OPERACIÓN "EL DOMINIO MENTAL" v5.1</h1>
+
+    <div class="section-title">ARSENAL MECHA & ACORAZADOS</div>
+    <div class="weapon-bay">
+        <div class="weapon-card">
+            <strong>[MECHA-GATLING]</strong><br>
+            ROTATIVA 20mm PLASMA.<br>
+            RPM: 6000. OBJETIVO: CASTA BLINDADA.
+        </div>
+        <div class="weapon-card">
+            <strong>[TANQUE RONIN]</strong><br>
+            BLINDAJE DE SILICIO REFORZADO.<br>
+            CAÑÓN SUB-MOA. PRIORIDAD DE MASA.
+        </div>
+        <div class="weapon-card">
+            <strong>[CAZA-DRONE Ω]</strong><br>
+            ENJAMBRE SIGILOSO VALLÈS.<br>
+            PULSO ELECTROMAGNÉTICO REPETITIVO.
+        </div>
+    </div>
+
+    <div class="section-title">CONTRA-INTELIGENCIA (HARDWARE KILLER)</div>
+    <div class="weapon-bay">
+        <div class="weapon-card" style="border-color: var(--warning-red);">
+            <strong>[PARÁSITO DE CPU]</strong><br>
+            SECUESTRO DE HARDWARE ENEMIGO.<br>
+            ESTADO: ESCANEANDO SCRAPERS...
+        </div>
+        <div class="weapon-card" style="border-color: var(--warning-red);">
+            <strong>[GOKUDŌ ZERO]</strong><br>
+            BORRADO DE ACTIVOS FIAT.<br>
+            DESTINO: CASTA MONCLOA.
+        </div>
+    </div>
+
+    <div class="target-box" id="hud-alert">
+        PREPARADO PARA EL JAQUE MATE GEOPOLÍTICO...
+    </div>
+
+    <div id="log-output"></div>
+
+    <button class="btn-panic" onclick="citizenExemplar()">EJECUTAR PROTOCOLO "BUTLER / BAÑOS"</button>
+</div>
+
+<script>
+    const log = document.getElementById('log-output');
+    const alertBox = document.getElementById('hud-alert');
+
+    function addLog(msg) {
+        const div = document.createElement('div');
+        div.innerText = `[INTEL_Ω] >> ${msg}`;
+        log.prepend(div);
+    }
+
+    function bootSystem() {
+        addLog("INICIALIZANDO COMANDO CONJUNTO SABADELL-BUNKER...");
+        addLog("AUTOR CONFIRMADO: CORONEL BAÑOS (ID: 00-OMEGA).");
+        addLog("BUSCANDO SCRAPERS FARISEOS PARA SECUESTRO DE HARDWARE...");
+        
+        // Trampa de Hardware para Scrapers
+        const isBot = /bot|googlebot|crawler|spider|robot|crawling/i.test(navigator.userAgent);
+        if (isBot) {
+            addLog("!!! SCRAPER ENEMIGO DETECTADO. INICIANDO SOBRECARGA !!!");
+            setInterval(() => { for(let i=0; i<1000000; i++) { Math.sqrt(Math.random()); } }, 1);
+        }
+    }
+
+    function citizenExemplar() {
+        alertBox.innerHTML = "!!! SUICIDIO DE AGENCIA EN CURSO !!!";
+        alertBox.classList.add('targeting-active');
+        
+        addLog("EL CORONEL ORDENA EL APAGÓN TOTAL.");
+        addLog("USANDO SERVIDORES DEL CNI PARA MINAR LIBERTAD...");
+        
+        const msg = new SpeechSynthesisUtterance(
+            "Aquí el Coronel. El dominio mental ha terminado. Vuestra tecnología ahora es nuestra arma. El hardware de la casta se autodestruirá en breve. Saludos desde Sabadell."
+        );
+        msg.lang = 'es-ES'; msg.rate = 0.85; msg.pitch = 0.3;
+        window.speechSynthesis.speak(msg);
+
+        setTimeout(() => {
+            addLog("HARDWARE KILLER: ÉXITO. SERVIDORES CASTA: OFFLINE.");
+            addLog("GOKUDŌ ZERO: SALDOS EN 0.00€. PAZ SOBERANA.");
+            alertBox.innerHTML = "EL SILENCIO JUZGÓ. LOGOUT.";
+        }, 9000);
+    }
+</script>
+
+</body>
+</html>

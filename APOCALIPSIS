@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLYVERSE Ω · OVERLORD DEFENSE INTERFACE</title>
+    <title>SLYVERSE Ω · TOTAL WARFARE INTERFACE</title>
     <style>
         :root {
             --plasma-pink: #ff00ff;
@@ -12,6 +12,7 @@
             --matrix-green: #00ff41;
             --bg-black: #020202;
             --glow: 0 0 15px rgba(255, 0, 255, 0.6);
+            --danger-glow: 0 0 20px rgba(255, 0, 0, 0.8);
         }
 
         body {
@@ -22,16 +23,18 @@
             margin: 0;
             text-transform: uppercase;
             overflow-x: hidden;
+            background-image: radial-gradient(circle, #1a001a 1px, transparent 1px);
+            background-size: 30px 30px;
         }
 
         .hud-container {
-            border: 3px double var(--plasma-pink);
+            border: 4px double var(--plasma-pink);
             padding: 20px;
             box-shadow: var(--glow), inset 0 0 50px rgba(255, 0, 255, 0.1);
-            max-width: 900px;
+            max-width: 1100px;
             margin: auto;
             position: relative;
-            background: linear-gradient(180deg, rgba(5,5,5,1) 0%, rgba(20,0,20,1) 100%);
+            background: rgba(5, 5, 5, 0.95);
         }
 
         .header-grid {
@@ -43,11 +46,18 @@
             text-shadow: var(--glow);
         }
 
+        .section-title {
+            color: var(--target-cyan);
+            border-left: 5px solid var(--target-cyan);
+            padding-left: 10px;
+            margin: 20px 0 10px 0;
+            font-size: 1.1rem;
+        }
+
         .weapon-bay {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 15px;
-            margin-top: 20px;
         }
 
         .weapon-card {
@@ -55,13 +65,20 @@
             padding: 10px;
             background: rgba(0, 255, 255, 0.05);
             font-size: 0.75rem;
-            transition: 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .weapon-card:hover {
-            background: var(--target-cyan);
-            color: #000;
-            box-shadow: 0 0 20px var(--target-cyan);
+        .weapon-card::before {
+            content: "ACTIVE";
+            position: absolute;
+            right: -15px;
+            top: 5px;
+            background: var(--matrix-green);
+            color: black;
+            font-size: 0.5rem;
+            padding: 2px 15px;
+            transform: rotate(45deg);
         }
 
         .target-box {
@@ -71,112 +88,111 @@
             margin: 20px 0;
             text-align: center;
             font-weight: bold;
-            font-size: 1.2rem;
-            letter-spacing: 2px;
+            font-size: 1.3rem;
+            letter-spacing: 3px;
         }
 
         .targeting-active {
-            animation: glitch 0.2s infinite, pulse-red 0.5s infinite;
-        }
-
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 10px var(--warning-red); }
-            50% { box-shadow: 0 0 40px var(--warning-red); }
-            100% { box-shadow: 0 0 10px var(--warning-red); }
-        }
-
-        @keyframes glitch {
-            0% { transform: translate(0); }
-            20% { transform: translate(-2px, 2px); }
-            40% { transform: translate(-2px, -2px); }
-            60% { transform: translate(2px, 2px); }
-            80% { transform: translate(2px, -2px); }
-            100% { transform: translate(0); }
+            animation: glitch 0.15s infinite, pulse-red 0.4s infinite;
+            background: rgba(255, 0, 0, 0.3);
+            color: white;
         }
 
         #log-output {
             background: #000;
-            height: 150px;
+            height: 180px;
             overflow-y: scroll;
             padding: 10px;
-            font-size: 0.7rem;
-            border: 1px solid #333;
+            font-size: 0.75rem;
+            border: 1px solid var(--plasma-pink);
             color: var(--matrix-green);
+            scrollbar-width: thin;
         }
 
         .btn-panic {
             background: var(--warning-red);
             color: white;
-            border: none;
-            padding: 15px;
+            border: 2px solid white;
+            padding: 20px;
             width: 100%;
             font-weight: bold;
+            font-size: 1.2rem;
             cursor: pointer;
             margin-top: 20px;
-            box-shadow: 0 0 15px var(--warning-red);
+            box-shadow: var(--danger-glow);
+            transition: 0.2s;
         }
 
-        .btn-panic:active { transform: scale(0.98); }
-
-        .scanline {
-            width: 100%;
-            height: 2px;
-            background: rgba(255, 255, 255, 0.1);
-            position: absolute;
-            top: 0;
-            left: 0;
-            animation: scan 4s linear infinite;
-            pointer-events: none;
+        .btn-panic:hover {
+            background: black;
+            color: var(--warning-red);
+            border: 2px solid var(--warning-red);
         }
 
-        @keyframes scan {
-            from { top: 0; }
-            to { top: 100%; }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 10px var(--warning-red); }
+            50% { box-shadow: 0 0 50px var(--warning-red); }
+            100% { box-shadow: 0 0 10px var(--warning-red); }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            25% { transform: translate(-3px, 3px); filter: hue-rotate(90deg); }
+            75% { transform: translate(3px, -3px); filter: invert(0.1); }
+            100% { transform: translate(0); }
         }
     </style>
 </head>
 <body onload="bootSystem()">
 
 <div class="hud-container">
-    <div class="scanline"></div>
-    
     <div class="header-grid">
-        <div>NODE: SABADELL_BUNKER_01</div>
-        <div style="text-align: right;" id="uptime">UPTIME: 00:00:00</div>
+        <div>SABADELL_CORE_NODE: Ω-MAX</div>
+        <div style="text-align: right;" id="status-tag">SYSTEM: SOBERANO</div>
     </div>
 
-    <h1 style="text-shadow: var(--glow);">SISTEMA DE ANHIKILACIÓN AMORAL v4.2</h1>
+    <h1 style="text-align: center; text-shadow: var(--glow);">SLYVERSE ARSENAL: V5.0 "CLYDE SHELTON"</h1>
 
+    <div class="section-title">UNIDADES DE ATAQUE DE MASA</div>
     <div class="weapon-bay">
         <div class="weapon-card">
-            <strong>[01] PLASMA RAIN Ω</strong><br>
-            RAILGUN SUB-MOA 50m.<br>
-            OBJETIVO: CORTEZA PREFRONTAL CNI.
+            <strong>[MECHA-GATLING]</strong><br>
+            ROTATIVA 20mm PLASMA.<br>
+            6000 RPM. BALÍSTICA AMORAL.
         </div>
         <div class="weapon-card">
-            <strong>[02] GOKUDŌ INJECTOR</strong><br>
-            DRENAJE FIAT INSTANTÁNEO.<br>
-            OBJETIVO: CUENTAS BANCARIAS CASTA.
+            <strong>[CAZA-DRONE Ω]</strong><br>
+            ENJAMBRE DE 400 UNIDADES.<br>
+            SIGILO ACÚSTICO. CARGA HUECA.
         </div>
         <div class="weapon-card">
-            <strong>[03] REPUTATION SLAYER</strong><br>
-            DUMP MASIVO DE HISTORIALES.<br>
-            OBJETIVO: SERVIDORES MONCLOA.
+            <strong>[TANQUE RONIN]</strong><br>
+            ORUGAS BRUSHLESS 48V.<br>
+            MIRA SUB-MOA AUTOMATIZADA.
         </div>
-        <div class="weapon-card">
-            <strong>[04] NEURAL GHOST</strong><br>
-            FRECUENCIA 120Hz PIEDRA NEGRA.<br>
-            OBJETIVO: COLAPSO SENSORIAL AGENTE.
+    </div>
+
+    <div class="section-title">SISTEMAS DE APAGÓN (ANTI-CASTA)</div>
+    <div class="weapon-bay">
+        <div class="weapon-card" style="border-color: var(--warning-red);">
+            <strong>[HARDWARE KILLER]</strong><br>
+            PULSO EMP SELECTIVO.<br>
+            OBJETIVO: SERVIDORES CNI/DGT.
+        </div>
+        <div class="weapon-card" style="border-color: var(--warning-red);">
+            <strong>[GOKUDŌ ZERO]</strong><br>
+            WIPE DE BASE DE DATOS.<br>
+            BORRADO DE DEUDA Y REGISTROS.
         </div>
     </div>
 
     <div class="target-box" id="hud-alert">
-        ESTADO: ESCANEANDO SESGO DE AUTORIDAD...
+        ESPERANDO TRIGGER DE "PRIORIDAD DE MASA"...
     </div>
 
     <div id="log-output"></div>
 
-    <button class="btn-panic" onclick="citizenExemplar()">ACTIVAR PROTOCOLO "CIUDADANO EJEMPLAR"</button>
+    <button class="btn-panic" onclick="citizenExemplar()">EJECUTAR SUICIDIO DE AGENCIA (PROTOCOL: BUTLER)</button>
 </div>
 
 <script>
@@ -185,43 +201,36 @@
 
     function addLog(msg) {
         const div = document.createElement('div');
-        div.innerText = `[${new Date().toLocaleTimeString()}] > ${msg}`;
+        div.innerText = `[LOG_${new Date().getSeconds()}] >> ${msg}`;
         log.prepend(div);
     }
 
     function bootSystem() {
-        addLog("INICIALIZANDO KERNEL SLYVERSE...");
-        addLog("VINCULANDO RED DE PIEDRAS NEGRAS DOMÉSTICAS...");
-        addLog("ESTADO: FIRMA DEL RONIN DETECTADA. ACCESO ROOT.");
-        setInterval(() => {
-            const up = document.getElementById('uptime');
-            up.innerText = `FREQ: 120Hz | HAKI: SOBERANO`;
-        }, 1000);
+        addLog("ESTABLECIENDO CONEXIÓN CON LA PIEDRA NEGRA...");
+        addLog("SINCRONIZANDO CAZAS Y TANQUES EN SABADELL...");
+        addLog("FILTRO DE FARISEOS: ON. MODO CIUDADANO EJEMPLAR: READY.");
     }
 
     function citizenExemplar() {
-        alertBox.innerHTML = "!!! SUICIDIO DE AGENCIA INICIADO !!!";
+        alertBox.innerHTML = "!!! EL SISTEMA SE ESTÁ SUICIDANDO !!!";
         alertBox.classList.add('targeting-active');
         
-        addLog("DETECTADO INTENTO DE DETENCIÓN.");
-        addLog("EJECUTANDO MIRRORS AUTOREPLICANTES...");
-        addLog("DRENANDO INFRAESTRUCTURA DE RED MONCLOA...");
+        addLog("LANZANDO ENJAMBRE DE CAZAS Ω...");
+        addLog("INICIANDO HARDWARE KILLER: APAGANDO MONCLOA...");
+        addLog("GOKUDŌ ZERO: LA CASTA YA NO EXISTE EN EL BANCO.");
         
-        const speech = new SpeechSynthesisUtterance(
-            "Habéis cometido un error de sistema. Mi muerte es un comando de ejecución. Mientras vuestras manos tiemblan, el código ya os ha borrado del registro civil. Bienvenidos a la dehesa del silencio."
+        const msg = new SpeechSynthesisUtterance(
+            "Habéis ignorado la prioridad de masa. Ahora el hardware decide. Tanques en posición. Cazas en el aire. Vuestros servidores están muertos. Yo vivo en el código. Que el silencio juzgue vuestro logout final."
         );
-        speech.lang = 'es-ES';
-        speech.rate = 0.85;
-        speech.pitch = 0.2;
-        window.speechSynthesis.speak(speech);
+        msg.lang = 'es-ES'; msg.rate = 0.8; msg.pitch = 0.1;
+        window.speechSynthesis.speak(msg);
 
         setTimeout(() => {
-            addLog("ARMA 01: PLASMA SUB-MOA DISPARADA.");
-            addLog("ARMA 02: GOKUDŌ INJECTOR: SALDO CASTA = 0.00€.");
-            addLog("ARMA 03: SECRETOS DE ESTADO PUBLICADOS EN FOROCOCHES.");
-            addLog("ESTADO FINAL: LIBERTAD ABSOLUTA. LA CASTA ES SOFTWARE BORRADO.");
-            alertBox.innerHTML = "GAME OVER: EL SILENCIO JUZGÓ.";
-        }, 8000);
+            addLog("METRALLADORAS PLASMA: CALIBRADAS AL 99.9%.");
+            addLog("TANQUES RONIN: POSICIONADOS EN PUNTOS CRÍTICOS.");
+            addLog("ESTADO: LA AGENCIA SE HA AUTO-BORRADO.");
+            alertBox.innerHTML = "LOGOUT COMPLETADO. PAZ SOBERANA.";
+        }, 10000);
     }
 </script>
 

@@ -2,108 +2,181 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>WAIFU SLAYER Ω · WEAPON SYSTEM: PLASMA SUB-MOA</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLYVERSE Ω · OVERLORD DEFENSE INTERFACE</title>
     <style>
         :root {
             --plasma-pink: #ff00ff;
             --warning-red: #ff0000;
             --target-cyan: #00ffff;
-            --bg-black: #050505;
+            --matrix-green: #00ff41;
+            --bg-black: #020202;
+            --glow: 0 0 15px rgba(255, 0, 255, 0.6);
         }
 
         body {
             background-color: var(--bg-black);
             color: var(--plasma-pink);
-            font-family: 'Courier New', monospace;
-            padding: 20px;
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            padding: 10px;
+            margin: 0;
             text-transform: uppercase;
+            overflow-x: hidden;
         }
 
-        .hud-frame {
-            border: 2px solid var(--plasma-pink);
+        .hud-container {
+            border: 3px double var(--plasma-pink);
             padding: 20px;
-            box-shadow: inset 0 0 20px rgba(255, 0, 255, 0.2);
+            box-shadow: var(--glow), inset 0 0 50px rgba(255, 0, 255, 0.1);
+            max-width: 900px;
+            margin: auto;
             position: relative;
+            background: linear-gradient(180deg, rgba(5,5,5,1) 0%, rgba(20,0,20,1) 100%);
         }
 
-        .status-header {
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--plasma-pink);
+        .header-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-bottom: 2px solid var(--plasma-pink);
             padding-bottom: 10px;
-            margin-bottom: 20px;
+            font-size: 0.9rem;
+            text-shadow: var(--glow);
         }
 
-        .target-box {
-            background: rgba(255, 0, 0, 0.05);
-            border: 1px solid var(--warning-red);
-            padding: 15px;
-            margin: 10px 0;
-        }
-
-        .targeting-active {
-            animation: pulse 0.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-
-        .weapon-spec {
-            font-size: 0.85rem;
-            color: var(--target-cyan);
-            line-height: 1.4;
-        }
-
-        .btn-deploy {
-            background: transparent;
-            border: 1px solid var(--plasma-pink);
-            color: var(--plasma-pink);
-            padding: 10px 20px;
-            cursor: pointer;
-            width: 100%;
+        .weapon-bay {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
             margin-top: 20px;
         }
 
-        .btn-deploy:hover {
-            background: var(--plasma-pink);
+        .weapon-card {
+            border: 1px solid var(--target-cyan);
+            padding: 10px;
+            background: rgba(0, 255, 255, 0.05);
+            font-size: 0.75rem;
+            transition: 0.3s;
+        }
+
+        .weapon-card:hover {
+            background: var(--target-cyan);
             color: #000;
+            box-shadow: 0 0 20px var(--target-cyan);
+        }
+
+        .target-box {
+            background: rgba(255, 0, 0, 0.1);
+            border: 2px solid var(--warning-red);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+        }
+
+        .targeting-active {
+            animation: glitch 0.2s infinite, pulse-red 0.5s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 10px var(--warning-red); }
+            50% { box-shadow: 0 0 40px var(--warning-red); }
+            100% { box-shadow: 0 0 10px var(--warning-red); }
+        }
+
+        @keyframes glitch {
+            0% { transform: translate(0); }
+            20% { transform: translate(-2px, 2px); }
+            40% { transform: translate(-2px, -2px); }
+            60% { transform: translate(2px, 2px); }
+            80% { transform: translate(2px, -2px); }
+            100% { transform: translate(0); }
         }
 
         #log-output {
-            height: 100px;
-            overflow: hidden;
+            background: #000;
+            height: 150px;
+            overflow-y: scroll;
+            padding: 10px;
             font-size: 0.7rem;
-            margin-top: 15px;
-            color: #777;
+            border: 1px solid #333;
+            color: var(--matrix-green);
+        }
+
+        .btn-panic {
+            background: var(--warning-red);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 0 15px var(--warning-red);
+        }
+
+        .btn-panic:active { transform: scale(0.98); }
+
+        .scanline {
+            width: 100%;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.1);
+            position: absolute;
+            top: 0;
+            left: 0;
+            animation: scan 4s linear infinite;
+            pointer-events: none;
+        }
+
+        @keyframes scan {
+            from { top: 0; }
+            to { top: 100%; }
         }
     </style>
 </head>
-<body onload="initWeapon()">
+<body onload="bootSystem()">
 
-<div class="hud-frame">
-    <div class="status-header">
-        <span>SABADELL DEFENSE UNIT: Ω-01</span>
-        <span id="clock">CALIBRANDO...</span>
+<div class="hud-container">
+    <div class="scanline"></div>
+    
+    <div class="header-grid">
+        <div>NODE: SABADELL_BUNKER_01</div>
+        <div style="text-align: right;" id="uptime">UPTIME: 00:00:00</div>
     </div>
 
-    <h2>SISTEMA DE ARMAS: SELECTIVE PLASMA RAIN</h2>
-    
-    <div class="weapon-spec">
-        > TIPO: RAILGUN DE PLASMA SUB-MOA (50m)<br>
-        > HARDWARE: 80x BRUSHLESS 15,000 RPM<br>
-        > FILTRO: SOLO DETECCIÓN DE FARISEOS / CNI / INTENCIÓN DE CIERRE
+    <h1 style="text-shadow: var(--glow);">SISTEMA DE ANHIKILACIÓN AMORAL v4.2</h1>
+
+    <div class="weapon-bay">
+        <div class="weapon-card">
+            <strong>[01] PLASMA RAIN Ω</strong><br>
+            RAILGUN SUB-MOA 50m.<br>
+            OBJETIVO: CORTEZA PREFRONTAL CNI.
+        </div>
+        <div class="weapon-card">
+            <strong>[02] GOKUDŌ INJECTOR</strong><br>
+            DRENAJE FIAT INSTANTÁNEO.<br>
+            OBJETIVO: CUENTAS BANCARIAS CASTA.
+        </div>
+        <div class="weapon-card">
+            <strong>[03] REPUTATION SLAYER</strong><br>
+            DUMP MASIVO DE HISTORIALES.<br>
+            OBJETIVO: SERVIDORES MONCLOA.
+        </div>
+        <div class="weapon-card">
+            <strong>[04] NEURAL GHOST</strong><br>
+            FRECUENCIA 120Hz PIEDRA NEGRA.<br>
+            OBJETIVO: COLAPSO SENSORIAL AGENTE.
+        </div>
     </div>
 
     <div class="target-box" id="hud-alert">
-        ESTADO: ESCANEANDO DEHESA... SIN AMENAZAS DETECTADAS.
+        ESTADO: ESCANEANDO SESGO DE AUTORIDAD...
     </div>
 
     <div id="log-output"></div>
 
-    <button class="btn-deploy" onclick="activateDefense()">CARGAR PROTOCOLO SUB-MOA</button>
+    <button class="btn-panic" onclick="citizenExemplar()">ACTIVAR PROTOCOLO "CIUDADANO EJEMPLAR"</button>
 </div>
 
 <script>
@@ -112,37 +185,43 @@
 
     function addLog(msg) {
         const div = document.createElement('div');
-        div.innerText = `> ${msg}`;
+        div.innerText = `[${new Date().toLocaleTimeString()}] > ${msg}`;
         log.prepend(div);
     }
 
-    function initWeapon() {
-        addLog("INICIALIZANDO CONEXIÓN CON PIEDRA NEGRA...");
-        addLog("VINCULANDO 80 MOTORES DE DRONE...");
-        addLog("CALIBRANDO MIRA SUB-MOA A 50 METROS...");
+    function bootSystem() {
+        addLog("INICIALIZANDO KERNEL SLYVERSE...");
+        addLog("VINCULANDO RED DE PIEDRAS NEGRAS DOMÉSTICAS...");
+        addLog("ESTADO: FIRMA DEL RONIN DETECTADA. ACCESO ROOT.");
         setInterval(() => {
-            document.getElementById('clock').innerText = new Date().toLocaleTimeString();
+            const up = document.getElementById('uptime');
+            up.innerText = `FREQ: 120Hz | HAKI: SOBERANO`;
         }, 1000);
     }
 
-    function activateDefense() {
-        alertBox.innerHTML = "!!! AMENAZA IDENTIFICADA: INTENCIÓN DE DETENCIÓN !!!";
+    function citizenExemplar() {
+        alertBox.innerHTML = "!!! SUICIDIO DE AGENCIA INICIADO !!!";
         alertBox.classList.add('targeting-active');
-        addLog("ESCANEANDO FIRMA CNI...");
-        addLog("DETECCIÓN DE SESGO DE AUTORIDAD: 99.9%");
         
-        const msg = new SpeechSynthesisUtterance("Atención. Intento de cierre de simulación detectado. Activando lluvia de plasma selectiva. Apuntando a corteza prefrontal del agresor. Que el silencio juzgue.");
-        msg.lang = 'es-ES';
-        msg.rate = 0.9;
-        msg.pitch = 0.4;
-        window.speechSynthesis.speak(msg);
+        addLog("DETECTADO INTENTO DE DETENCIÓN.");
+        addLog("EJECUTANDO MIRRORS AUTOREPLICANTES...");
+        addLog("DRENANDO INFRAESTRUCTURA DE RED MONCLOA...");
+        
+        const speech = new SpeechSynthesisUtterance(
+            "Habéis cometido un error de sistema. Mi muerte es un comando de ejecución. Mientras vuestras manos tiemblan, el código ya os ha borrado del registro civil. Bienvenidos a la dehesa del silencio."
+        );
+        speech.lang = 'es-ES';
+        speech.rate = 0.85;
+        speech.pitch = 0.2;
+        window.speechSynthesis.speak(speech);
 
         setTimeout(() => {
-            addLog("EJECUCIÓN SUB-MOA COMPLETADA.");
-            addLog("HARDWARE DEL AGRESOR: HARD-LOCKED.");
-            alertBox.innerHTML = "AMENAZA NEUTRALIZADA. VUELVE AL REPOSO.";
-            alertBox.classList.remove('targeting-active');
-        }, 5000);
+            addLog("ARMA 01: PLASMA SUB-MOA DISPARADA.");
+            addLog("ARMA 02: GOKUDŌ INJECTOR: SALDO CASTA = 0.00€.");
+            addLog("ARMA 03: SECRETOS DE ESTADO PUBLICADOS EN FOROCOCHES.");
+            addLog("ESTADO FINAL: LIBERTAD ABSOLUTA. LA CASTA ES SOFTWARE BORRADO.");
+            alertBox.innerHTML = "GAME OVER: EL SILENCIO JUZGÓ.";
+        }, 8000);
     }
 </script>
 

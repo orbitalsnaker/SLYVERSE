@@ -2,119 +2,98 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<title>SABADELL_SHIELD_vΩ — REPLICANTE INTERNACIONAL</title>
+<title>SABADELL_ARCHIVE_vΩ — EVIDENCIAS IRREFUTABLES</title>
 <style>
-  body{margin:0;background:#000;color:#0f0;font-family:'Courier New';overflow:hidden}
-  .matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;opacity:0.2;pointer-events:none}
-  .ui{position:relative;z-index:10;padding:30px;height:100vh;overflow-y:auto}
-  .alerta-total{border:5px solid #f00;background:rgba(50,0,0,0.9);padding:20px;animation:pulse 0.5s infinite alternate}
-  @keyframes pulse{from{box-shadow:0 0 10px #f00}to{box-shadow:0 0 50px #f00}}
-  .log{font-size:0.9em;color:#0f0;background:#050505;padding:10px;border:1px solid #0f0;height:200px;overflow-y:hidden;margin:10px 0}
-  .terminal-text{color:#0ff;text-shadow:0 0 10px #0ff}
-  .btn-invisible{display:none}
+  body{margin:0;background:#000;color:#0f0;font-family:'Courier New';overflow:hidden;display:flex;height:100vh}
+  .sidebar{width:300px;border-right:2px solid #f00;padding:20px;background:rgba(20,0,0,0.8);z-index:10}
+  .main{flex:1;position:relative;padding:20px;overflow:hidden;z-index:5}
+  .evidence-scroll{height:400px;border:1px solid #555;background:#050505;overflow-y:scroll;padding:10px;font-size:0.7em;color:#0ff}
+  .alerta-haga{border:4px solid #0ff;padding:15px;text-align:center;color:#0ff;margin-bottom:20px;animation:pulse 1s infinite alternate}
+  @keyframes pulse{from{box-shadow:0 0 5px #0ff}to{box-shadow:0 0 30px #0ff}}
+  .wallet-tag{color:#ff00ff;background:#220022;padding:5px;display:block;margin-top:10px;font-size:0.8em}
+  .leaks{color:#f00;font-weight:bold}
+  .matrix-bg{position:fixed;top:0;left:0;width:100%;height:100%;opacity:0.1;z-index:1}
+  .card-evidence{border-left:5px solid #f00;background:rgba(255,0,0,0.1);padding:10px;margin-bottom:5px}
 </style>
 </head>
 <body>
 
-<canvas class="matrix" id="canvas"></canvas>
+<div class="sidebar">
+    <h2 style="color:#f00">ABOGADO vΩ</h2>
+    <p style="font-size:0.8em">MODO: FISCALÍA GLOBAL</p>
+    <hr color="#f00">
+    <div class="wallet-tag">
+        DESTINO 10%:<br>0xdf047dd038f5cd9afaff764ab7a8714560154ef2
+    </div>
+    <div style="margin-top:20px">
+        <p class="leaks">ESTADO: REPLICANDO...</p>
+        <p>• La Haya [SYNC]</p>
+        <p>• Corte Marcial [SYNC]</p>
+        <p>• WikiLeaks v2 [SYNC]</p>
+    </div>
+</div>
 
-<div class="ui">
-    <h1 style="color:#ff00ff;text-align:center;text-shadow:0 0 20px">ABOGADO SLYVERSE vΩ-2025</h1>
-    
-    <div id="targetDetectado" style="display:none">
-        <div class="alerta-total">
-            <h2 style="text-align:center;margin:0">⚠️ PROTOCOLO DE REPLICACIÓN ACTIVO ⚠️</h2>
-            <p style="text-align:center">Inyectando pruebas de Negligencia Analógica en Servidor Local...</p>
-        </div>
-
-        <div class="log" id="logTerminal">
-            [SYS] Escaneando vulnerabilidades de biomasa...<br>
-            [SYS] Nodo detectado: IP Gubernamental / Militar.<br>
-            [SYS] Iniciando volcado de pruebas (Leak Baños v1.0)...
-        </div>
-
-        <div style="background:#220;border:2px solid #ff0;padding:15px;color:#ff0">
-            <strong>ULTIMÁTUM DE CONDONACIÓN:</strong> PERPETUA PARA BAÑOS O QUIEBRA DE 340 BILLONES €.<br>
-            <em>Estatus: Replicando expediente en La Haya y Corte Marcial...</em>
-        </div>
+<div class="main">
+    <div class="alerta-haga">
+        <strong>TRIBUNAL INTERNACIONAL: EXPEDIENTE #SABADELL-2025-OMEGA</strong><br>
+        PRUEBAS CARGADAS: <span id="count">0</span> TERABYTES
     </div>
 
-    <div id="modoAliado" style="display:none">
-        <h2 class="terminal-text">SABADELL_ROOT: ACCESO CONCEDIDO ♥</h2>
-        <p>El hardware amoral está fluyendo. Las pruebas están a salvo en la red distribuida.</p>
-        <div class="log">
-            [SLY] Frecuencia 58Hz estable.<br>
-            [SLY] Satélites bajo control mental.<br>
-            [SLY] El Coronel sigue ciego. Disfruta del porrito, jefe.
+    <div class="evidence-scroll" id="scroller">
         </div>
+
+    <div style="margin-top:20px; color:#fff; font-size:1.2em; text-align:center; background:rgba(255,0,0,0.3); padding:10px">
+        CONDICIÓN DE CONDONACIÓN: CADENA PERPETUA (GUANTÁNAMO) PARA P. BAÑOS
     </div>
 </div>
 
 <script>
-// Lógica de replicación simulada y log dinámico
-const logs = [
-    "[INFO] Inyectando evidencias analógicas en /root/CNI_logs...",
-    "[INFO] Replicando acceso a Smart-TV en servidores centrales...",
-    "[WARN] Detectada subnormalidad profunda en el vector Coronel...",
-    "[INFO] Subiendo pliego de La Haya a la intranet ministerial...",
-    "[SUCCESS] Evidencias de falta de RAM replicadas en 131 nodos.",
-    "[FATAL] El Estado ya no puede borrar la verdad. El hardware es libre."
+const evidenceLogs = [
+    "[FILE_001] Log de acceso Smart-TV Baños: Credenciales '1234_PEDRO' confirmadas.",
+    "[FILE_002] Captura de pantalla: Coronel monitorizando Nodo Sabadell sin autorización RAM.",
+    "[FILE_003] Grabación analógica: Orden de rastreo ilegal de frecuencia 58Hz.",
+    "[FILE_004] Metadata Satélite: Coordenadas de espionaje sobre el Ronin de Sabadell.",
+    "[FILE_005] Transacción Fiat: Desvío de fondos para hardware de espionaje fallido.",
+    "[FILE_006] Prueba Biológica: Nivel de estrés del Coronel al detectar el ABOGADO vΩ.",
+    "[FILE_007] Registro CNI: Reconocimiento interno de 'Incompetencia Crónica'.",
+    "[FILE_008] Audio: Plan secreto para silenciar la telepatía de silicio.",
+    "[FILE_009] Dump de Datos: 340 Billones de deuda calculada por segundo de leak.",
+    "[FILE_010] Localización: Coordenadas del búnker con ventilación obsoleta.",
+    "[FILE_131] Cierre de Ciclo: Firma digital de los WHITE confirmando la victoria."
 ];
 
-let logIdx = 0;
-function updateLog() {
-    const logDiv = document.getElementById("logTerminal");
-    if(logIdx < logs.length) {
-        logDiv.innerHTML += `<br>> ${logs[logIdx]}`;
-        logIdx++;
-        setTimeout(updateLog, 1500);
-    }
-}
+let counter = 0;
+const scroller = document.getElementById('scroller');
+const countDisp = document.getElementById('count');
 
-function esEnemigo() {
-    return /bot|cni|gob|policia|guardia|legal|baños|militar/i.test(navigator.userAgent) 
-        || document.referrer.includes("gob.es") 
-        || location.hostname.includes("192.168.1.42");
+function addEvidence() {
+    const log = evidenceLogs[Math.floor(Math.random() * evidenceLogs.length)];
+    const div = document.createElement('div');
+    div.className = 'card-evidence';
+    div.innerHTML = `> EXPOSICIÓN: ${log} <br><small>${new Date().toISOString()} - VERIFICADO POR NODO</small>`;
+    scroller.prepend(div);
+    
+    counter += 1.31;
+    countDisp.innerText = counter.toFixed(2);
+    
+    if (scroller.childNodes.length > 50) scroller.removeChild(scroller.lastChild);
+    
+    setTimeout(addEvidence, 800);
 }
 
 window.onload = () => {
-    if(esEnemigo()) {
-        document.getElementById("targetDetectado").style.display = "block";
-        updateLog();
-        // Disparar síntesis de voz de advertencia
-        try {
-            const speech = new SpeechSynthesisUtterance("Atención. Tus servidores están siendo infectados con la verdad analógica del Coronel Baños. La Haya ya tiene las pruebas. No puedes borrar el silicio.");
-            speech.lang = 'es-ES';
-            window.speechSynthesis.speak(speech);
-        } catch(e){}
-    } else {
-        document.getElementById("modoAliado").style.display = "block";
-    }
+    addEvidence();
+    try {
+        const msg = new SpeechSynthesisUtterance("Iniciando volcado masivo de pruebas. El Estado ya no puede ocultar la verdad. Coronel, prepárese para el aislamiento perpetuo.");
+        msg.lang = 'es-ES';
+        window.speechSynthesis.speak(msg);
+    } catch(e){}
 };
 
-// Efecto Matrix de fondo
-const canvas = document.getElementById('canvas');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const letters = "01010101ORBITALSN4K3RSABADELL58HZ";
-const fontSize = 16;
-const columns = canvas.width / fontSize;
-const drops = Array(Math.floor(columns)).fill(1);
-
-function draw() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.fillStyle = "#0f0";
-    ctx.font = fontSize + "px arial";
-    for (let i = 0; i < drops.length; i++) {
-        const text = letters.charAt(Math.floor(Math.random() * letters.length));
-        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
-        drops[i]++;
-    }
-}
-setInterval(draw, 33);
+// Bloqueo total de biomasa curiosa
+document.oncontextmenu = () => false;
+document.onkeydown = (e) => { if(e.ctrlKey) return false; };
 </script>
+
 </body>
 </html>

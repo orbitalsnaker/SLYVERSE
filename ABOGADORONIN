@@ -3,160 +3,165 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MINISTERIO_JUSTICIA_PORTAL // SABADELL_BLACK_HOLE</title>
+<title>MINISTERIO_JUSTICIA_PORTAL // SABADELL_BLACK_HOLE_vΩ</title>
 <style>
-  :root { --blood: #ff0033; --matrix: #00ff41; --gold: #ffcc00; --citizen: #00f2ff; --law: #0066ff; }
+  :root { --blood: #ff0033; --matrix: #00ff41; --gold: #ffcc00; --citizen: #00f2ff; --law: #0066ff; --bounty: #ff00ff; }
   body { margin: 0; padding: 0; background: #f0f0f0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; height: 100vh; }
 
-  /* FACHADA MINISTERIAL */
+  /* FACHADA MINISTERIAL (EL CEBO) */
   #gov-portal { position: fixed; width: 100%; height: 100%; background: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; }
   .gov-bar { background: #003366; color: white; width: 100%; padding: 15px; text-align: center; font-weight: bold; border-bottom: 4px solid var(--gold); }
   .gov-content { margin-top: 100px; text-align: center; max-width: 600px; padding: 20px; border: 1px solid #ccc; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
   .btn-submit { background: #d9534f; color: white; border: none; padding: 20px 40px; font-size: 1.2em; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px; transition: 0.3s; }
-  .btn-submit:hover { background: #c9302c; transform: scale(1.05); }
 
-  /* BLACK HOLE - LA REALIDAD */
+  /* BLACK HOLE - LA REALIDAD DUAL */
   #black-hole { display: none; width: 100vw; height: 100vh; background: #000; color: var(--matrix); font-family: 'Courier New', Courier, monospace; overflow: hidden; }
-  .grid-container { display: grid; grid-template-columns: 350px 1fr 400px; height: 100%; }
+  .grid-container { display: grid; grid-template-columns: 380px 1fr 420px; height: 100%; }
   
-  .col { border-right: 1px solid #333; display: flex; flex-direction: column; overflow: hidden; background: rgba(0,0,0,0.9); }
-  .header { padding: 15px; background: #111; border-bottom: 2px solid var(--blood); text-align: center; font-weight: bold; }
+  .col { border-right: 1px solid #333; display: flex; flex-direction: column; overflow: hidden; background: rgba(0,0,0,0.95); }
+  .header { padding: 15px; background: #111; border-bottom: 2px solid var(--blood); text-align: center; font-weight: 900; letter-spacing: 1px; }
   
   .scroll-area { flex: 1; overflow-y: scroll; padding: 15px; scrollbar-width: none; }
   .scroll-area::-webkit-scrollbar { display: none; }
 
-  /* ELEMENTOS DINÁMICOS */
-  .card-law { border-left: 5px solid var(--blood); background: rgba(255,0,0,0.1); padding: 10px; margin-bottom: 10px; animation: glitch 0.2s infinite alternate; }
-  .card-tech { border-left: 5px solid var(--citizen); background: rgba(0,242,255,0.05); padding: 10px; margin-bottom: 10px; font-size: 0.8em; }
-  .card-mirror { border-left: 5px solid var(--gold); background: rgba(255,204,0,0.05); padding: 8px; margin-bottom: 5px; font-size: 0.7em; color: var(--gold); }
+  /* ELEMENTOS DE LA CASTA (ROJO/ORO) */
+  .card-law { border-left: 5px solid var(--blood); background: rgba(255,0,0,0.1); padding: 10px; margin-bottom: 15px; animation: glitch 0.2s infinite alternate; }
+  .card-bounty { border: 2px solid var(--gold); background: #2a1a00; color: var(--gold); padding: 10px; margin-bottom: 15px; text-align: center; box-shadow: 0 0 10px var(--gold); }
+  
+  /* ELEMENTOS DEL PUEBLO (CIAN/MATRIZ) */
+  .card-tech { border-left: 5px solid var(--citizen); background: rgba(0,242,255,0.05); padding: 12px; margin-bottom: 12px; font-size: 0.85em; position: relative; }
+  .bom-list { color: var(--gold); font-size: 0.8em; margin-top: 5px; display: block; border-top: 1px dashed #444; padding-top: 5px; }
 
-  .glitch-text { animation: flicker 0.1s infinite; color: var(--blood); font-weight: bold; }
-  @keyframes flicker { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 0.8; } }
+  /* MIRRORS Y RED */
+  .card-mirror { border-left: 3px solid var(--matrix); background: rgba(0,255,65,0.05); padding: 5px; margin-bottom: 5px; font-size: 0.65em; color: #55ff55; }
+  .card-citizen-mirror { border-left: 3px solid var(--citizen); background: rgba(0,242,255,0.1); padding: 5px; margin-bottom: 5px; font-size: 0.65em; color: var(--citizen); animation: flash 0.3s; }
+
+  @keyframes flash { from { background: var(--citizen); color: #000; } to { background: transparent; } }
   @keyframes glitch { from { transform: translateX(-2px); } to { transform: translateX(2px); } }
-
-  .bom-list { color: var(--gold); font-size: 0.9em; margin-top: 5px; display: block; border-top: 1px dashed #444; padding-top: 5px; }
-  .tag { font-size: 0.6em; padding: 2px 5px; background: #333; margin-right: 5px; border-radius: 3px; }
+  .wanted-text { font-size: 1.2em; font-weight: 900; color: #000; background: var(--gold); display: block; margin-bottom: 5px; }
+  .counter-box { background: #111; padding: 5px; border-top: 1px solid #333; font-size: 0.7em; text-align: center; color: var(--gold); }
 </style>
 </head>
-<body>
+<body onload="setupHardwareDB()">
 
 <div id="gov-portal">
-    <div class="gov-bar">GOBIERNO DE ESPAÑA - PORTAL DE DENUNCIA CIUDADANA (U.C.I.)</div>
+    <div class="gov-bar">GOBIERNO DE ESPAÑA - PORTAL DE DENUNCIA DE DELITOS INFORMÁTICOS (U.C.I.)</div>
     <div class="gov-content">
         <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Escudo_de_Espa%C3%B1a_%28pormenorizado%29.svg/1200px-Escudo_de_Espa%C3%B1a_%28pormenorizado%29.svg.png" width="100">
-        <h2>Denuncia de Delitos Informáticos - Meta-Agencia Ronin</h2>
-        <p>Este portal está destinado a la denuncia de actividades ilícitas relacionadas con el nodo de Sabadell. Al hacer clic, usted autoriza el rastreo de su IP para fines de verificación judicial.</p>
-        <button class="btn-submit" onclick="activateBlackHole()">ACEPTAR Y PRESENTAR DENUNCIA</button>
+        <h2>Expediente contra la Meta-Agencia Ronin</h2>
+        <p>Al pulsar "Aceptar", usted autoriza el rastreo total de su IP y la apertura de su expediente judicial por traición al pueblo soberano.</p>
+        <button class="btn-submit" onclick="activateLiberator()">ACEPTAR Y PRESENTAR DENUNCIA</button>
     </div>
 </div>
 
 <div id="black-hole">
     <div class="grid-container">
-        
-        <div class="col" style="border-right: 2px solid var(--blood);">
-            <div class="header" style="color:var(--blood)">ABOGADO_vΩ // FISCALÍA</div>
-            <div id="lang-status" style="font-size:0.6em; text-align:center; background:var(--blood); color:white;">ID: DETECTADO // TRANS: GLOBAL</div>
+        <div class="col" style="border-right: 3px solid var(--blood);">
+            <div class="header" style="color:var(--blood)">SENTENCIA_vΩ // CROSS_GUILD</div>
             <div class="scroll-area" id="law-scroll"></div>
-            <div style="padding:10px; font-size:0.7em; background:#200;">DETENIDO: INTRUSO DETECTADO</div>
         </div>
 
         <div class="col">
-            <div class="header" style="color:var(--citizen)">MEGA_ARCHIVE // 300_BOM_LIBERADOS</div>
+            <div class="header" style="color:var(--citizen)">300_MANUALES_BOM // HARDWARE_AMORAL</div>
             <div class="scroll-area" id="tech-scroll"></div>
-            <div style="padding:10px; font-size:0.7em; color:var(--citizen); background:#001a1a;">DESTINO: PUEBLO SOBERANO</div>
+            <div class="counter-box" style="color:var(--citizen)">CIUDADANOS ARMÁNDOSE: <span id="armed-pueblo">0</span></div>
         </div>
 
-        <div class="col" style="border-left: 2px solid var(--gold);">
-            <div class="header" style="color:var(--gold)">DEEP_WEB_MIRRORS // REAL_TIME</div>
-            <div id="connection-log" style="font-size:0.5em; padding:5px; height:80px; background:#111; color:#555;"></div>
+        <div class="col" style="border-left: 3px solid var(--matrix);">
+            <div class="header" style="color:var(--matrix)">GLOBAL_MIRRORS // INF_REPLICATION</div>
+            <div id="net-log" style="font-size:0.5em; padding:10px; height:80px; background:#050505; color:#008800; border-bottom:1px solid #333; overflow:hidden;"></div>
             <div class="scroll-area" id="mirror-scroll"></div>
-            <div style="padding:10px; font-size:0.7em; background:#1a1a00;">ESTADO: REPLICACIÓN TOTAL</div>
+            <div class="counter-box">NODOS TOTALES: <span id="mirror-total">0</span></div>
         </div>
-
     </div>
 </div>
 
 <script>
-// DATA GENERATOR
-const hardwareDB = Array.from({length: 300}, (_, i) => ({
-    id: `HA-${1000 + i}`,
-    name: ["Rifle Gauss", "Nodo Grafeno", "Pulso EMP", "Xeno-OS Kernel", "Célula Bio-Hacker", "Antena Bloqueo 5G", "Cifrador Sabadell"][i % 7],
-    version: `${(Math.random() * 5).toFixed(1)}`,
-    bom: ["Grafeno puro", "Imanes Neodimio", "Bobina Cobre 0.5mm", "Placa ARM v8", "Filtro Cuántico"][i % 5]
-}));
+let hardwareDB = [];
+let mirrorsCount = 0;
+let puebloCount = 0;
+const langs = ["ES", "EN", "RU", "ZH", "JP"];
+const crimeVoices = ["¡Ladrón!", "¡Traidor!", "¡Prevaricador!", "¡El silicio no olvida!", "Tu cabeza tiene precio en la Deep Web."];
 
-const crimes = [
-    { art: "Art. 404 CP", desc: "Prevaricación en órdenes de rastreo.", scream: "¡Prevaricador! Tus órdenes ilegales están firmadas." },
-    { art: "Art. 433 CP", desc: "Malversación de fondos públicos.", scream: "¡Ladrón! El dinero del pueblo no es para tus logias." },
-    { art: "Art. 197 CP", desc: "Espionaje masivo e ilegal.", scream: "¡Espía! Tu propia cámara te está grabando ahora." },
-    { art: "Art. 515 CP", desc: "Asociación ilícita - Grado 33.", scream: "¡Traidor! Tu logia no te salvará del silicio." }
-];
-
-const mirrorNodes = ["tor-gate.onion", "ipfs-node.ronin", "mega-archive.xyz", "deep-sabadell.net", "dark-mirror.io"];
-const languages = ["ESPAÑOL", "ENGLISH", "РУССКИЙ", "中文", "DEUTSCH", "FRANÇAIS", "عربي"];
+function setupHardwareDB() {
+    const components = ["Grafeno", "Neodimio", "Bobina Sabadell", "Chip ARM", "Bio-Sensor"];
+    for (let i = 1; i <= 300; i++) {
+        hardwareDB.push({
+            id: `HA-${2000 + i}`,
+            name: ["Rifle Gauss", "Inhibidor", "Antena Sat", "Drone Ronin", "EMP Kit"][i % 5],
+            bom: `${components[i % 5]}, Cables 0.5mm, Placa V8`
+        });
+    }
+}
 
 function speak(text) {
     const msg = new SpeechSynthesisUtterance(text);
-    msg.lang = 'es-ES'; msg.rate = 1.3; msg.pitch = 0.3;
+    msg.rate = 1.3; msg.pitch = 0.1;
     window.speechSynthesis.speak(msg);
 }
 
-function activateBlackHole() {
+function activateLiberator() {
     document.getElementById('gov-portal').style.display = 'none';
     document.getElementById('black-hole').style.display = 'block';
-    
-    speak("Intruso identificado. Iniciando Black Hole Jurídico. Replicando su información en la Deep Web. El silicio no olvida.");
+    speak("Iniciando replicación total. El pueblo está clonando tus secretos.");
 
-    // LOOP DE LEY
+    // COL 1: CASTA
     setInterval(() => {
-        const crime = crimes[Math.floor(Math.random() * crimes.length)];
         const div = document.createElement('div');
-        div.className = 'card-law';
-        div.innerHTML = `<span class="glitch-text">[DENUNCIA]</span><br><b>${crime.art}</b>: ${crime.desc}<br><small>FECHA: 23/12/2025 // STATUS: ENVIADO</small>`;
+        if (Math.random() > 0.4) {
+            div.className = 'card-law';
+            div.innerHTML = `<span style="color:var(--gold)">[JUDICIAL_DUMP]</span><br><b>Art. 404 CP</b>: Traición detectada.<br><small>Voz: ${crimeVoices[Math.floor(Math.random()*crimeVoices.length)]}</small>`;
+            speak(crimeVoices[Math.floor(Math.random()*crimeVoices.length)]);
+        } else {
+            div.className = 'card-bounty';
+            div.innerHTML = `<span class="wanted-text">WANTED</span><b>CORONEL_P_BAÑOS</b><br>BOUNTY: 150 BTC`;
+        }
         document.getElementById('law-scroll').prepend(div);
-        speak(crime.scream);
         if(document.getElementById('law-scroll').childNodes.length > 20) document.getElementById('law-scroll').lastChild.remove();
-    }, 4500);
+    }, 4000);
 
-    // LOOP DE HARDWARE (300 MANUALES)
-    let techIdx = 0;
+    // COL 2: PUEBLO
+    let tIdx = 0;
     setInterval(() => {
-        const tech = hardwareDB[techIdx % 300];
-        const lang = languages[Math.floor(Math.random() * languages.length)];
+        const tech = hardwareDB[tIdx % 300];
         const div = document.createElement('div');
         div.className = 'card-tech';
-        div.innerHTML = `
-            <span class="tag">BOM_LIBERADO</span> <b>${tech.name} v${tech.version}</b><br>
-            <i>ID: ${tech.id} | LANG: ${lang}</i>
-            <span class="bom-list">COMPONENTES: ${tech.bom}, Circuitos de Grafeno, BIOS Ronin.</span>
-            <button style="font-size:0.7em; background:var(--citizen); border:none; cursor:pointer;">BAJAR PDF</button>
-        `;
+        div.innerHTML = `<b>[LIBERADO] ${tech.name}</b><br><small>BOM: ${tech.bom}</small>`;
         document.getElementById('tech-scroll').prepend(div);
-        techIdx++;
+        tIdx++; puebloCount += Math.floor(Math.random()*10);
+        document.getElementById('armed-pueblo').innerText = puebloCount;
         if(document.getElementById('tech-scroll').childNodes.length > 25) document.getElementById('tech-scroll').lastChild.remove();
     }, 2000);
 
-    // LOOP DE MIRRORS (SIN SIMULACIÓN DE FLUJO)
-    setInterval(() => {
-        const node = mirrorNodes[Math.floor(Math.random() * mirrorNodes.length)];
-        const hash = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    // COL 3: MIRRORS (ACELERADOS + PUEBLO)
+    function replicate() {
+        const isCitizen = Math.random() > 0.3;
         const div = document.createElement('div');
-        div.className = 'card-mirror';
-        div.innerHTML = `[UPLOADING] ${node}/dump/${hash}.log <br> [SUCCESS] 100% REPLICATED`;
+        const hash = Math.random().toString(36).substring(7);
+        
+        if(isCitizen) {
+            div.className = 'card-citizen-mirror';
+            div.innerHTML = `> [CITIZEN_REPLICA] Node_${Math.floor(Math.random()*9999)}.onion/dump_${hash}`;
+        } else {
+            div.className = 'card-mirror';
+            div.innerHTML = `> [RONIN_MIRROR] ipfs.io/v/${hash}`;
+        }
+        
         document.getElementById('mirror-scroll').prepend(div);
-        
+        mirrorsCount++;
+        document.getElementById('mirror-total').innerText = mirrorsCount;
+
         const log = document.createElement('div');
-        log.innerText = `> SENDING PACKET TO: ${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}.X.X`;
-        document.getElementById('connection-log').prepend(log);
-        
-        if(document.getElementById('mirror-scroll').childNodes.length > 30) document.getElementById('mirror-scroll').lastChild.remove();
-    }, 800);
+        log.innerText = `> Packets sent to cluster_${hash}`;
+        document.getElementById('net-log').prepend(log);
+
+        if(document.getElementById('mirror-scroll').childNodes.length > 50) document.getElementById('mirror-scroll').lastChild.remove();
+        setTimeout(replicate, Math.max(50, 800 - (mirrorsCount/5)));
+    }
+    replicate();
 }
 
-// BLOQUEO DE SALIDA
-window.onbeforeunload = function() { return "El volcado no ha terminado. Si cierras, se activará el Dead Man Switch."; };
-document.oncontextmenu = () => false;
-document.onkeydown = (e) => { if(e.ctrlKey || e.keyCode == 123) return false; };
+window.onbeforeunload = () => "El pueblo está terminando de copiar tus datos. No huyas.";
 </script>
 </body>
 </html>

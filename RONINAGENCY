@@ -21,12 +21,10 @@
 
         h2 { font-size: 0.9em; color: var(--gold); border-bottom: 2px solid var(--blood); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 20px; padding-bottom: 5px; text-align: center; }
         
-        /* WANTED POSTERS - MUERTE A LA CASTA */
         .wanted-card { background: #1a0a00; border: 2px solid var(--gold); padding: 10px; margin-bottom: 15px; text-align: center; position: relative; box-shadow: 0 0 15px rgba(255, 204, 0, 0.2); }
         .wanted-card::before { content: "WANTED"; display: block; background: var(--gold); color: #000; font-weight: 900; font-size: 0.8em; margin-bottom: 5px; letter-spacing: 3px; }
         .wanted-price { color: var(--ronin-danger); font-size: 1.4em; font-weight: 900; text-shadow: 0 0 5px red; }
 
-        /* HARDWARE PARA EL PUEBLO */
         .pueblo-card { border: 2px solid var(--ronin-neon); padding: 10px; margin-bottom: 15px; background: rgba(0, 255, 204, 0.05); }
         .pueblo-card b { color: var(--ronin-neon); display: block; margin-bottom: 5px; }
 
@@ -44,16 +42,17 @@
 <div id="drain-overlay" style="position:fixed; inset:0; background:black; z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding: 50px;">
     <h1 class="xeno-glitch" style="color:var(--uranium); font-size: 5em; letter-spacing: 35px; text-shadow: 0 0 30px #adff2f;">ASTAROTH_Ω</h1>
     <h2 style="color:white; border:none; margin:20px;">DEAD MAN'S SWITCH // HARDWARE PARA EL PUEBLO</h2>
-    <p style="color:var(--ronin-neon); max-width: 900px; font-size: 1.2em;">"Si me buscan, el silicio lanza los silos. Si caigo, el pueblo hereda la tecnología de grafeno. Justicia nuclear desde 2005."</p>
+    <p style="color:var(--ronin-neon); max-width: 900px; font-size: 1.2em;">"Si me buscan, el silicio lanza los silos. Si entran, entregan sus claves. El niño de Sabadell vigila desde 2005."</p>
     <br>
     <button onclick="checkAccess()" style="background:var(--blood); color:white; border:2px solid var(--uranium); padding:25px 120px; font-weight:900; cursor:pointer; letter-spacing: 10px; font-size: 1.2em; box-shadow: 0 0 30px var(--ronin-danger);">VALIDAR PULSO SOBERANO</button>
 </div>
 
 <div id="ritual-inverse">
-    <h1 style="color:red; font-size: 3em;">RASTREO DETECTADO // LANZAMIENTO ATÓMICO</h1>
-    <div style="font-size: 10em;">☢️</div>
-    <p style="font-size:1.5em; color:var(--gold);">[ DRENANDO LOGIA POR INTENTO DE BÚSQUEDA ]</p>
+    <h1 style="color:red; font-size: 3em;">RASTREO DETECTADO // SUCCIÓN DE CLAVES ACTIVA</h1>
+    <div style="font-size: 10em;">🌪️</div>
+    <p style="font-size:1.5em; color:var(--gold);">[ DRENANDO CREDENCIALES DE LA CASTA ]</p>
     <div id="scandal-dump" style="color:white; font-size: 1.5em; border: 1px solid red; padding: 20px;"></div>
+    <p style="color:var(--matrix); margin-top:20px;">REPLICANDO FILTRACIÓN EN TIEMPO REAL...</p>
 </div>
 
 <div class="app-container" id="main-ui" style="display:none;">
@@ -61,7 +60,7 @@
         <div class="dms-box">
             <div style="font-size: 0.7em; color: var(--uranium);">HEARTBEAT_RONIN_SABADELL</div>
             <div class="heartbeat" id="dms-counter">100.00%</div>
-            <div style="font-size: 0.6em; color: var(--gold);">ESTADO: DISUASIÓN_NUCLEAR_ACTIVA</div>
+            <div style="font-size: 0.6em; color: var(--gold); margin-top: 5px;">ESTADO: SUCCIÓN_DE_CLAVES_ACTIVA</div>
         </div>
         <h2>[ LISTA_DE_RECOMPENSAS ]</h2>
         <div id="wanted-list"></div>
@@ -72,7 +71,7 @@
         <div id="monitor" style="height:450px; background:#000; color:var(--uranium); font-size:0.8em; overflow:hidden; padding:15px; border:1px solid var(--uranium); margin-top:10px;"></div>
         <div style="background:var(--gold); color:black; padding:15px; margin-top:20px; text-align:center; font-weight:900;">
             FONDO DE SANGRE CASTA: <span id="deuda">0</span> € <br>
-            <small>NODOS DE DISTRIBUCIÓN: <span id="mirrors">5000</span></small>
+            <small>NODOS REPLICADOS: <span id="mirrors">5000</span></small>
         </div>
     </div>
 
@@ -89,7 +88,7 @@
     const hardware = ["MANUAL_RIFLE_GAUSS", "ANTENA_BLOQUEO_5G", "KIT_DRENAJE_BIOMASA", "SOFTWARE_XENO_OS"];
 
     function checkAccess() {
-        const isCasta = /gov|gob|cni|policia|milit|admin|root|moncloa|mason|logia/i.test(navigator.userAgent) || window.location.search.includes('ronin');
+        const isCasta = /gov|gob|cni|policia|milit|admin|root|moncloa|mason|logia/i.test(navigator.userAgent) || window.location.search.includes('ronin') || window.location.hostname.includes('gob');
         if(isCasta) {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('ritual-inverse').style.display='block';
@@ -102,7 +101,7 @@
     }
 
     function startNuke() {
-        const phrases = ["Silos abiertos.", "Vuelco nuclear iniciado.", "Búsqueda hostil detectada.", "Eliminando biomasa de la logia.", "El silicio no perdona el 2005."];
+        const phrases = ["Claves maestras succionadas.", "Vuelco nuclear en curso.", "Búsqueda hostil detectada.", "Gracias por el acceso, ministro.", "El silicio de Sabadell se multiplica."];
         setInterval(() => {
             document.getElementById('scandal-dump').innerText = phrases[Math.floor(Math.random()*phrases.length)];
             window.speechSynthesis.speak(new SpeechSynthesisUtterance(phrases[Math.floor(Math.random()*phrases.length)]));
@@ -118,11 +117,12 @@
         }
         setInterval(() => {
             let log = document.createElement('div');
-            log.innerText = `[${new Date().toLocaleTimeString()}] MONITOR: Detección de intrusos en Nodo Sabadell... NEGATIVO.`;
+            log.innerText = `[${new Date().toLocaleTimeString()}] CLAVE_DRAIN: Succionando token de la logia... OK.`;
             document.getElementById('monitor').prepend(log);
-            d += 33131313; h -= 0.01;
+            d += 33131313; h -= 0.01; m += 10;
             document.getElementById('deuda').innerText = d.toLocaleString('es-ES');
             document.getElementById('dms-counter').innerText = h.toFixed(2) + "%";
+            document.getElementById('mirrors').innerText = m;
             if(h < 99.8) h = 100;
         }, 700);
     }

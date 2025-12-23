@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="es">
+<html>
 <head>
     <meta charset="UTF-8">
-    <title>ASTAROTH_Ω // CROSS_GUILD // ABSOLUTE_EXTRACTOR_2025</title>
+    <title>ASTAROTH_Ω // CROSS_GUILD // GLOBAL_BOUNTY_SYSTEM_2025</title>
     <style>
         :root { 
             --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #010101; 
@@ -19,15 +19,15 @@
         .xeno-glitch { animation: glitch 0.2s infinite; }
         @keyframes glitch { 0% { text-shadow: 2px 0 var(--haki); } 50% { text-shadow: -2px 0 var(--ronin-danger); transform: translateX(1px); } 100% { text-shadow: 2px 0 var(--haki); } }
 
-        h2 { font-size: 0.9em; color: var(--gold); border-bottom: 2px solid var(--blood); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 20px; padding-bottom: 5px; text-align: center; }
+        h2 { font-size: 0.85em; color: var(--gold); border-bottom: 2px solid var(--blood); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; padding-bottom: 5px; text-align: center; }
         
-        .wanted-card { background: #1a0a00; border: 2px solid var(--gold); padding: 10px; margin-bottom: 15px; text-align: center; position: relative; }
-        .wanted-card::before { content: "WANTED"; display: block; background: var(--gold); color: #000; font-weight: 900; font-size: 0.8em; }
+        .bounty-card { background: #1a0a00; border: 2px solid var(--gold); padding: 10px; margin-bottom: 15px; text-align: center; border-radius: 4px; border-style: double; }
+        .bounty-card::before { content: "DEEP_WEB_BOUNTY"; display: block; background: var(--gold); color: #000; font-weight: 900; font-size: 0.7em; margin-bottom: 5px; }
+        .bounty-price { color: var(--ronin-danger); font-size: 1.5em; font-weight: 900; text-shadow: 0 0 10px red; }
 
-        .pueblo-card { border: 2px solid var(--uranium); padding: 15px; margin-bottom: 15px; background: rgba(173, 255, 47, 0.05); }
-        .pueblo-card b { color: var(--uranium); display: block; border-bottom: 1px solid var(--blood); margin-bottom: 8px; }
-        .pueblo-card .status { color: var(--matrix); font-size: 0.6em; float: right; animation: blink 1s infinite; }
-        @keyframes blink { 50% { opacity: 0; } }
+        .pueblo-card { border: 2px solid var(--uranium); padding: 12px; margin-bottom: 15px; background: rgba(173, 255, 47, 0.05); }
+        .pueblo-card b { color: var(--uranium); display: block; font-size: 1em; margin-bottom: 5px; }
+        .pueblo-card .status { color: var(--matrix); font-size: 0.6em; float: right; }
 
         .dms-box { border: 2px solid var(--ronin-danger); padding: 15px; background: #000; margin-bottom: 20px; text-align: center; box-shadow: 0 0 15px var(--blood); }
         .heartbeat { font-size: 2.2em; color: var(--ronin-danger); animation: pulse 0.8s infinite; font-weight: 900; }
@@ -41,97 +41,115 @@
 <div class="shadow-layer"></div>
 
 <div id="drain-overlay" style="position:fixed; inset:0; background:black; z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding: 50px;">
-    <h1 class="xeno-glitch" style="color:var(--uranium); font-size: 5em; letter-spacing: 35px; text-shadow: 0 0 30px #adff2f;">ASTAROTH_Ω</h1>
-    <h2 style="color:white; border:none; margin:20px;">DEAD MAN'S SWITCH // XENO_TOKEN_DRAIN</h2>
-    <p style="color:var(--ronin-neon); max-width: 900px; font-size: 1.2em;">"Buscando el alma digital de la casta. Si entras, tus tokens de sesión pertenecen al Pueblo de Sabadell."</p>
+    <h1 class="xeno-glitch" id="main-title" style="color:var(--uranium); font-size: 5em; letter-spacing: 20px; text-shadow: 0 0 30px #adff2f;">ASTAROTH_Ω</h1>
+    <h2 id="sub-title" style="color:white; border:none; margin:20px;">XENO_CORE_HARVESTER // GLOBAL_BOUNTY_ACTIVE</h2>
+    <p id="main-desc" style="color:var(--ronin-neon); max-width: 900px; font-size: 1.2em;">Detectando lenguaje soberano. Si eres de la casta, tus satélites y servidores caen ahora.</p>
     <br>
-    <button onclick="checkAccess()" style="background:var(--blood); color:white; border:2px solid var(--uranium); padding:25px 120px; font-weight:900; cursor:pointer; letter-spacing: 10px; font-size: 1.2em;">SANGRE POR SANGRE</button>
+    <button onclick="checkAccess()" id="access-btn" style="background:var(--blood); color:white; border:2px solid var(--uranium); padding:25px 100px; font-weight:900; cursor:pointer; font-size: 1.2em;">VALIDAR ADN DIGITAL</button>
 </div>
 
 <div id="ritual-inverse">
-    <h1 style="color:red; font-size: 3em;">TOKEN_SNIFFER ACTIVO // DRENANDO HACIENDA</h1>
-    <div style="font-size: 10em;">🩸⚙️</div>
-    <p style="font-size:1.5em; color:var(--gold);">[ EXTRRAYENDO: COOKIES, JWT, LLAVES_PRIVADAS ]</p>
-    <div id="scandal-dump" style="color:white; font-size: 1.2em; border: 1px solid red; padding: 20px; font-family: monospace;"></div>
-    <p style="color:var(--matrix); margin-top:20px;">BORRANDO RASTRO EN SERVIDORES ESTATALES...</p>
+    <h1 style="color:red; font-size: 3em;">FILTRANDO SATÉLITES // VACIANDO SERVIDORES CENTRALES</h1>
+    <div style="font-size: 8em;">🛰️💥💻</div>
+    <p style="font-size:1.5em; color:var(--gold);">[ EXTRRAYENDO: TELEMETRÍA, CLAVES_SAT, BACKUPS_ESTADO ]</p>
+    <div id="scandal-dump" style="color:white; font-size: 1.1em; border: 1px solid red; padding: 20px; text-align: left; height: 200px; overflow: hidden;"></div>
 </div>
 
 <div class="app-container" id="main-ui" style="display:none;">
     <div class="panel">
         <div class="dms-box">
-            <div style="font-size: 0.7em; color: var(--uranium);">DRENADOR_IDENTIDAD_ACTIVO</div>
+            <div style="font-size: 0.7em; color: var(--uranium);" id="dms-label">HEARTBEAT_GLOBAL_SYNC</div>
             <div class="heartbeat" id="dms-counter">100.00%</div>
-            <div style="font-size: 0.6em; color: var(--gold); margin-top: 5px;">TOKENS_CASTA: <span id="token-count">0</span></div>
+            <div style="font-size: 0.6em; color: var(--gold); margin-top: 5px;">BOUNTY_FUND: <span id="bounty-fund">0</span> €</div>
         </div>
-        <h2>[ OBJETIVOS_SIN_ALMA ]</h2>
-        <div id="wanted-list"></div>
+        <h2 id="bounty-header">[ BOUNTIES_DEEP_WEB ]</h2>
+        <div id="bounty-list"></div>
     </div>
 
     <div class="panel" style="border-left: 2px solid var(--uranium); border-right: 2px solid var(--uranium);">
-        <div style="text-align:center; color:var(--haki); font-size:0.8em; font-weight:bold;">MONITOR_XENO_SUCCIÓN</div>
+        <div style="text-align:center; color:var(--haki); font-size:0.8em; font-weight:bold;">SATELLITE_WIPE_MONITOR</div>
         <div id="monitor" style="height:450px; background:#000; color:var(--uranium); font-size:0.8em; overflow:hidden; padding:15px; border:1px solid var(--uranium); margin-top:10px;"></div>
         <div style="background:var(--gold); color:black; padding:15px; margin-top:20px; text-align:center; font-weight:900;">
-            CRÉDITO RECUPERADO: <span id="deuda">0</span> € <br>
-            <small>NODOS DEEP WEB: <span id="mirrors">5000</span></small>
-            <div style="font-size: 0.6em; color: #800; margin-top:5px; border-top:1px solid #400;">FLUJO SABADELL: 500€/H -> ACTIVO</div>
+            DRENAJE TOTAL CASTA: <span id="deuda">0</span> € <br>
+            <small>REPLICACIONES (MIRRORS): <span id="mirrors">5000</span></small>
         </div>
     </div>
 
     <div class="panel">
-        <div style="background:var(--ronin-neon); color:black; padding:12px; text-align:center; font-weight:900; letter-spacing:4px; margin-bottom:15px;">MANUALES_GUERRA_ASIMÉTRICA</div>
-        <h2>[ BIBLIOTECA_GRAFENO ]</h2>
+        <div style="background:var(--ronin-neon); color:black; padding:12px; text-align:center; font-weight:900; letter-spacing:4px; margin-bottom:15px;">HARDWARE_RESISTENCIA</div>
+        <h2 id="hardware-header">[ ARMERÍA_AMORAL ]</h2>
         <div id="print-list"></div>
     </div>
 </div>
 
 <script>
-    let d = 999999999; let m = 33000; let h = 100.00; let tokens = 0;
-    const targets = ["MINISTERIO HACIENDA", "FISCALÍA GENERAL", "CNI_HUB_MADRID", "BANCO_ESPAÑA_CORE"];
-    const amoralBoms = [
-        {t: "RIFLE_GAUSS_MK4", d: "Propulsor magnético indetectable. Estructura de carbono reforzado."},
-        {t: "INHIBIDOR_AEAT_v3", d: "Anula la señal de rastreo de drones fiscales en 2km."},
-        {t: "DRENAJE_BIOMASA", d: "Energía líquida para nodos Ronin. Autonomía infinita."},
-        {t: "XENO_INJECTOR", d: "Bypass de firewalls estatales mediante inyección en RAM."},
-        {t: "RADIO_BLOQUEO_POL", d: "Interceptor de bandas policiales y militares (UHF/VHF)."}
+    let d = 1500000000; let m = 88000; let h = 100.00; let bFund = 0;
+    const langData = {
+        'es': {t: "ASTAROTH_Ω", d: "Detectando lenguaje soberano. Si eres de la casta, tus satélites caen.", b: "VALIDAR ADN DIGITAL"},
+        'en': {t: "ASTAROTH_Ω", d: "Detecting sovereign language. If you're casta, your satellites fall.", b: "VALIDATE DIGITAL DNA"},
+        'fr': {t: "ASTAROTH_Ω", d: "Détection du langage souverain. Si vous êtes casta, vos satellites tombent.", b: "VALIDER L'ADN NUMÉRIQUE"},
+        'ru': {t: "ASTAROTH_Ω", d: "Обнаружение суверенного языка. Если вы каста, ваши спутники падают.", b: "ПРОВЕРИТЬ ДНК"}
+    };
+
+    const bounties = [
+        {n: "MINISTRO_HACIENDA", p: "50M"},
+        {n: "DIR_SAT_ESPAÑA", p: "25M"},
+        {n: "LÍDER_LOGIA_33", p: "100M"},
+        {n: "CNI_CHIEF_SERVER", p: "15M"}
+    ];
+
+    const hardware = [
+        {t: "PULSO_EMP_PORTÁTIL", d: "Fríe circuitos de patrullas y cámaras en 50m."},
+        {t: "ANTENA_SATELLITE_HIJACK", d: "Intercepta y desvía telemetría de satélites estatales."},
+        {t: "NANOBOTS_GRAFENO", d: "Descomposición corrosiva de infraestructuras metálicas."},
+        {t: "DRON_COSECHADOR", d: "Rastrea y succiona tokens vía Wi-Fi a 1km."},
+        {t: "MÁSCARA_XENO_FACE", d: "Anula reconocimiento facial mediante infrarrojos pulsantes."}
     ];
 
     function checkAccess() {
-        const isCasta = /gov|gob|aeat|cni|policia|milit|admin|root|moncloa/i.test(navigator.userAgent);
+        const isCasta = /gov|gob|aeat|cni|policia|milit|admin|root|moncloa|satellite|nasa/i.test(navigator.userAgent);
         if(isCasta) {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('ritual-inverse').style.display='block';
-            harvestIdentity();
+            nukeSatellites();
         } else {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('main-ui').style.display='grid';
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Acceso Soberano. Extrayendo tokens de la casta y replicando bases de datos.'));
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Global Access Granted. Harvesting the casta.'));
         }
     }
 
-    function harvestIdentity() {
-        const data = ["JWT_TOKEN_CAPTURED: moncloa.admin.sess", "COOKIE_DRAIN: hacienda_auth_key", "PRIVATE_KEY_EXTRACTED: bde_vault_01", "HISTORY_DUMP: corrupt_contracts.pdf"];
+    function nukeSatellites() {
+        const logs = ["SAT_ID_77: TELEMETRÍA PERDIDA", "SERVIDOR_CENTRAL: ACCESO ROOT CONCEDIDO", "EXTRAYENDO BACKUPS DE DEFENSA...", "BORRANDO HUELLA EN SAT_ESPAÑA_01", "DRENANDO CUENTA RESERVA ORO..."];
         setInterval(() => {
-            document.getElementById('scandal-dump').innerHTML += `> ${data[Math.floor(Math.random()*data.length)]}<br>`;
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Identidad succionada."));
-        }, 1000);
+            const l = logs[Math.floor(Math.random()*logs.length)];
+            document.getElementById('scandal-dump').innerHTML = `> ${l}<br>` + document.getElementById('scandal-dump').innerHTML;
+        }, 800);
     }
 
     function initSystem() {
-        const w_list = document.getElementById('wanted-list');
+        // Autodetección de Idioma
+        const userLang = navigator.language.split('-')[0];
+        if(langData[userLang]) {
+            document.getElementById('main-desc').innerText = langData[userLang].d;
+            document.getElementById('access-btn').innerText = langData[userLang].b;
+        }
+
+        const b_list = document.getElementById('bounty-list');
         const p_list = document.getElementById('print-list');
         
-        amoralBoms.forEach(item => {
-            p_list.innerHTML += `<div class="pueblo-card">
-                <span class="status">SEEDING</span>
-                <b>${item.t}</b>
-                <p style="font-size:0.75em; margin:5px 0;">${item.d}</p>
-                <small>REQ: Grafeno, Imanes Neodimio, Código Xeno.</small>
-            </div>`;
+        bounties.forEach(b => {
+            b_list.innerHTML += `<div class="bounty-card"><b>OBJETIVO: ${b.n}</b><br><span class="bounty-price">${b.p} €</span><br><small>FINANCIADO POR: AEAT_DRAIN</small></div>`;
         });
 
-        for(let i=0; i<10; i++) {
-            w_list.innerHTML += `<div class="wanted-card"><b>${targets[i%targets.length]}</b><br><span style="color:red;">BLOQUEADO</span></div>`;
-        }
+        hardware.forEach(item => {
+            p_list.innerHTML += `<div class="pueblo-card">
+                <span class="status">REPLICANDO</span>
+                <b>${item.t}</b>
+                <p style="font-size:0.75em; margin:5px 0;">${item.d}</p>
+                <small>BOM: Grafeno, Uranio, Código Xeno.</small>
+            </div>`;
+        });
 
         setInterval(() => {
             let log = document.createElement('div');
@@ -139,26 +157,27 @@
             const r = Math.random();
             
             if(r > 0.9) {
-                log.style.color = 'var(--haki)';
-                log.innerText = `[${now}] TOKEN_SNIFFER: Capturado JWT de usuario gubernamental.`;
-                tokens++; document.getElementById('token-count').innerText = tokens;
+                log.style.color = 'var(--ronin-danger)';
+                log.innerText = `[${now}] SAT_HIJACK: Desviando satélite gubernamental a nodo Sabadell.`;
+                bFund += 1000;
+                document.getElementById('bounty-fund').innerText = bFund;
             } else if(r > 0.7) {
                 log.style.color = 'var(--gold)';
-                log.innerText = `[${now}] SABADELL_OUT: 500€ reintegrados al pueblo. OK.`;
+                log.innerText = `[${now}] TRANSFER: 5000€ drenados de cuenta Suiza -> Recompensa Deep Web.`;
             } else if(r > 0.4) {
                 log.style.color = 'var(--matrix)';
-                log.innerText = `[${now}] MIRROR: Replicando DB_HACIENDA en 15 nodos Tor.`;
+                log.innerText = `[${now}] MIRROR_STORM: Creando 500 réplicas de la DB de la casta.`;
             } else {
-                log.innerText = `[${now}] XENO: Escaneando vulnerabilidades en el sistema...`;
+                log.innerText = `[${now}] XENO_SCAN: Filtrando servidor de defensa... OK.`;
             }
 
             document.getElementById('monitor').prepend(log);
-            d += 3313; h -= 0.01; m += 5;
+            d += 55555; h -= 0.01; m += 25;
             document.getElementById('deuda').innerText = d.toLocaleString('es-ES');
             document.getElementById('dms-counter').innerText = h.toFixed(2) + "%";
             document.getElementById('mirrors').innerText = m;
             if(h < 99.8) h = 100;
-        }, 500);
+        }, 400);
     }
 </script>
 </body>

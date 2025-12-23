@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>ASTAROTH_Ω // CROSS_GUILD // PUEBLO_VS_CASTA_2005</title>
+    <title>ASTAROTH_Ω // CROSS_GUILD // ABSOLUTE_EXTRACTOR_2025</title>
     <style>
         :root { 
             --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #010101; 
@@ -14,19 +14,20 @@
         @keyframes radiation { 0% { opacity: 0.1; filter: sepia(100%) saturate(200%); } 50% { opacity: 0.3; filter: hue-rotate(90deg); } 100% { opacity: 0.1; } }
 
         .app-container { display: grid; grid-template-columns: 480px 1fr 480px; height: 100vh; gap: 10px; padding: 15px; z-index: 10; position: relative; }
-        .panel { background: rgba(5,5,5,0.99); border: 1px solid #300; padding: 20px; overflow-y: auto; position: relative; box-shadow: inset 0 0 50px #200; }
+        .panel { background: rgba(5,5,5,0.99); border: 1px solid #300; padding: 20px; overflow-y: auto; position: relative; box-shadow: inset 0 0 50px #200; border-radius: 5px; }
         
         .xeno-glitch { animation: glitch 0.2s infinite; }
         @keyframes glitch { 0% { text-shadow: 2px 0 var(--haki); } 50% { text-shadow: -2px 0 var(--ronin-danger); transform: translateX(1px); } 100% { text-shadow: 2px 0 var(--haki); } }
 
         h2 { font-size: 0.9em; color: var(--gold); border-bottom: 2px solid var(--blood); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 20px; padding-bottom: 5px; text-align: center; }
         
-        .wanted-card { background: #1a0a00; border: 2px solid var(--gold); padding: 10px; margin-bottom: 15px; text-align: center; position: relative; box-shadow: 0 0 15px rgba(255, 204, 0, 0.2); }
-        .wanted-card::before { content: "WANTED"; display: block; background: var(--gold); color: #000; font-weight: 900; font-size: 0.8em; margin-bottom: 5px; letter-spacing: 3px; }
-        .wanted-price { color: var(--ronin-danger); font-size: 1.4em; font-weight: 900; text-shadow: 0 0 5px red; }
+        .wanted-card { background: #1a0a00; border: 2px solid var(--gold); padding: 10px; margin-bottom: 15px; text-align: center; position: relative; }
+        .wanted-card::before { content: "WANTED"; display: block; background: var(--gold); color: #000; font-weight: 900; font-size: 0.8em; }
 
-        .pueblo-card { border: 2px solid var(--ronin-neon); padding: 10px; margin-bottom: 15px; background: rgba(0, 255, 204, 0.05); }
-        .pueblo-card b { color: var(--ronin-neon); display: block; margin-bottom: 5px; }
+        .pueblo-card { border: 2px solid var(--uranium); padding: 15px; margin-bottom: 15px; background: rgba(173, 255, 47, 0.05); }
+        .pueblo-card b { color: var(--uranium); display: block; border-bottom: 1px solid var(--blood); margin-bottom: 8px; }
+        .pueblo-card .status { color: var(--matrix); font-size: 0.6em; float: right; animation: blink 1s infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
 
         .dms-box { border: 2px solid var(--ronin-danger); padding: 15px; background: #000; margin-bottom: 20px; text-align: center; box-shadow: 0 0 15px var(--blood); }
         .heartbeat { font-size: 2.2em; color: var(--ronin-danger); animation: pulse 0.8s infinite; font-weight: 900; }
@@ -41,102 +42,123 @@
 
 <div id="drain-overlay" style="position:fixed; inset:0; background:black; z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding: 50px;">
     <h1 class="xeno-glitch" style="color:var(--uranium); font-size: 5em; letter-spacing: 35px; text-shadow: 0 0 30px #adff2f;">ASTAROTH_Ω</h1>
-    <h2 style="color:white; border:none; margin:20px;">DEAD MAN'S SWITCH // HARDWARE PARA EL PUEBLO</h2>
-    <p style="color:var(--ronin-neon); max-width: 900px; font-size: 1.2em;">"Si me buscan, el silicio lanza los silos. Si entran, entregan sus claves. El niño de Sabadell vigila desde 2005."</p>
+    <h2 style="color:white; border:none; margin:20px;">DEAD MAN'S SWITCH // XENO_TOKEN_DRAIN</h2>
+    <p style="color:var(--ronin-neon); max-width: 900px; font-size: 1.2em;">"Buscando el alma digital de la casta. Si entras, tus tokens de sesión pertenecen al Pueblo de Sabadell."</p>
     <br>
-    <button onclick="checkAccess()" style="background:var(--blood); color:white; border:2px solid var(--uranium); padding:25px 120px; font-weight:900; cursor:pointer; letter-spacing: 10px; font-size: 1.2em; box-shadow: 0 0 30px var(--ronin-danger);">VALIDAR PULSO SOBERANO</button>
+    <button onclick="checkAccess()" style="background:var(--blood); color:white; border:2px solid var(--uranium); padding:25px 120px; font-weight:900; cursor:pointer; letter-spacing: 10px; font-size: 1.2em;">SANGRE POR SANGRE</button>
 </div>
 
 <div id="ritual-inverse">
-    <h1 style="color:red; font-size: 3em;">RASTREO DETECTADO // SUCCIÓN DE CLAVES ACTIVA</h1>
-    <div style="font-size: 10em;">🌪️</div>
-    <p style="font-size:1.5em; color:var(--gold);">[ DRENANDO CREDENCIALES DE LA CASTA ]</p>
-    <div id="scandal-dump" style="color:white; font-size: 1.5em; border: 1px solid red; padding: 20px;"></div>
-    <p style="color:var(--matrix); margin-top:20px;">REPLICANDO FILTRACIÓN EN TIEMPO REAL...</p>
+    <h1 style="color:red; font-size: 3em;">TOKEN_SNIFFER ACTIVO // DRENANDO HACIENDA</h1>
+    <div style="font-size: 10em;">🩸⚙️</div>
+    <p style="font-size:1.5em; color:var(--gold);">[ EXTRRAYENDO: COOKIES, JWT, LLAVES_PRIVADAS ]</p>
+    <div id="scandal-dump" style="color:white; font-size: 1.2em; border: 1px solid red; padding: 20px; font-family: monospace;"></div>
+    <p style="color:var(--matrix); margin-top:20px;">BORRANDO RASTRO EN SERVIDORES ESTATALES...</p>
 </div>
 
 <div class="app-container" id="main-ui" style="display:none;">
     <div class="panel">
         <div class="dms-box">
-            <div style="font-size: 0.7em; color: var(--uranium);">HEARTBEAT_RONIN_SABADELL</div>
+            <div style="font-size: 0.7em; color: var(--uranium);">DRENADOR_IDENTIDAD_ACTIVO</div>
             <div class="heartbeat" id="dms-counter">100.00%</div>
-            <div style="font-size: 0.6em; color: var(--gold); margin-top: 5px;">ESTADO: SUCCIÓN_DE_CLAVES_ACTIVA</div>
+            <div style="font-size: 0.6em; color: var(--gold); margin-top: 5px;">TOKENS_CASTA: <span id="token-count">0</span></div>
         </div>
-        <h2>[ LISTA_DE_RECOMPENSAS ]</h2>
+        <h2>[ OBJETIVOS_SIN_ALMA ]</h2>
         <div id="wanted-list"></div>
     </div>
 
     <div class="panel" style="border-left: 2px solid var(--uranium); border-right: 2px solid var(--uranium);">
-        <div style="text-align:center; color:var(--haki); font-size:0.8em; font-weight:bold;">MODO_VIGILANCIA_XENO_CORE</div>
+        <div style="text-align:center; color:var(--haki); font-size:0.8em; font-weight:bold;">MONITOR_XENO_SUCCIÓN</div>
         <div id="monitor" style="height:450px; background:#000; color:var(--uranium); font-size:0.8em; overflow:hidden; padding:15px; border:1px solid var(--uranium); margin-top:10px;"></div>
         <div style="background:var(--gold); color:black; padding:15px; margin-top:20px; text-align:center; font-weight:900;">
-            FONDO DE SANGRE CASTA: <span id="deuda">0</span> € <br>
-            <small>NODOS REPLICADOS: <span id="mirrors">5000</span></small>
-            <div id="finance-status" style="font-size: 0.6em; color: #800; margin-top:5px; border-top:1px solid #400;">RECAUDACIÓN ACTIVA: 500€/H -> SABADELL_FUNDS</div>
+            CRÉDITO RECUPERADO: <span id="deuda">0</span> € <br>
+            <small>NODOS DEEP WEB: <span id="mirrors">5000</span></small>
+            <div style="font-size: 0.6em; color: #800; margin-top:5px; border-top:1px solid #400;">FLUJO SABADELL: 500€/H -> ACTIVO</div>
         </div>
     </div>
 
     <div class="panel">
-        <div style="background:var(--ronin-neon); color:black; padding:12px; text-align:center; font-weight:900; letter-spacing:4px; margin-bottom:15px;">HARDWARE_PUEBLO</div>
+        <div style="background:var(--ronin-neon); color:black; padding:12px; text-align:center; font-weight:900; letter-spacing:4px; margin-bottom:15px;">MANUALES_GUERRA_ASIMÉTRICA</div>
         <h2>[ BIBLIOTECA_GRAFENO ]</h2>
         <div id="print-list"></div>
     </div>
 </div>
 
 <script>
-    let d = 200520052005; let m = 5000; let h = 100.00;
-    const targets = ["ALMIRANTE CNI", "GRADO 33 MASON", "DIRECTOR ADEGAI", "MINISTRO CASTA"];
-    const hardware = ["MANUAL_RIFLE_GAUSS", "ANTENA_BLOQUEO_5G", "KIT_DRENAJE_BIOMASA", "SOFTWARE_XENO_OS"];
-    const iban = "ES17 0128 0534 1101 0004 1671";
+    let d = 999999999; let m = 33000; let h = 100.00; let tokens = 0;
+    const targets = ["MINISTERIO HACIENDA", "FISCALÍA GENERAL", "CNI_HUB_MADRID", "BANCO_ESPAÑA_CORE"];
+    const amoralBoms = [
+        {t: "RIFLE_GAUSS_MK4", d: "Propulsor magnético indetectable. Estructura de carbono reforzado."},
+        {t: "INHIBIDOR_AEAT_v3", d: "Anula la señal de rastreo de drones fiscales en 2km."},
+        {t: "DRENAJE_BIOMASA", d: "Energía líquida para nodos Ronin. Autonomía infinita."},
+        {t: "XENO_INJECTOR", d: "Bypass de firewalls estatales mediante inyección en RAM."},
+        {t: "RADIO_BLOQUEO_POL", d: "Interceptor de bandas policiales y militares (UHF/VHF)."}
+    ];
 
     function checkAccess() {
-        const isCasta = /gov|gob|cni|policia|milit|admin|root|moncloa|mason|logia/i.test(navigator.userAgent) || window.location.search.includes('ronin') || window.location.hostname.includes('gob');
+        const isCasta = /gov|gob|aeat|cni|policia|milit|admin|root|moncloa/i.test(navigator.userAgent);
         if(isCasta) {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('ritual-inverse').style.display='block';
-            startNuke();
+            harvestIdentity();
         } else {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('main-ui').style.display='grid';
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Heartbeat validado. Hardware liberado. Iniciando goteo de 500 euros por hora al nodo Sabadell.'));
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Acceso Soberano. Extrayendo tokens de la casta y replicando bases de datos.'));
         }
     }
 
-    function startNuke() {
-        const phrases = ["Claves maestras succionadas.", "Vuelco nuclear en curso.", "Búsqueda hostil detectada.", "Gracias por el acceso, ministro.", "El silicio de Sabadell se multiplica."];
+    function harvestIdentity() {
+        const data = ["JWT_TOKEN_CAPTURED: moncloa.admin.sess", "COOKIE_DRAIN: hacienda_auth_key", "PRIVATE_KEY_EXTRACTED: bde_vault_01", "HISTORY_DUMP: corrupt_contracts.pdf"];
         setInterval(() => {
-            document.getElementById('scandal-dump').innerText = phrases[Math.floor(Math.random()*phrases.length)];
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance(phrases[Math.floor(Math.random()*phrases.length)]));
-        }, 1500);
+            document.getElementById('scandal-dump').innerHTML += `> ${data[Math.floor(Math.random()*data.length)]}<br>`;
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Identidad succionada."));
+        }, 1000);
     }
 
     function initSystem() {
         const w_list = document.getElementById('wanted-list');
         const p_list = document.getElementById('print-list');
-        for(let i=0; i<30; i++) {
-            w_list.innerHTML += `<div class="wanted-card"><b>${targets[i%targets.length]} #${i+100}</b><br><span class="wanted-price">${(Math.random()*15).toFixed(1)}M €</span></div>`;
-            p_list.innerHTML += `<div class="pueblo-card"><b>${hardware[i%hardware.length]}_V${i}</b><small>DESCARGAR DESDE MEGA.NZ/ASTAROTH</small></div>`;
+        
+        amoralBoms.forEach(item => {
+            p_list.innerHTML += `<div class="pueblo-card">
+                <span class="status">SEEDING</span>
+                <b>${item.t}</b>
+                <p style="font-size:0.75em; margin:5px 0;">${item.d}</p>
+                <small>REQ: Grafeno, Imanes Neodimio, Código Xeno.</small>
+            </div>`;
+        });
+
+        for(let i=0; i<10; i++) {
+            w_list.innerHTML += `<div class="wanted-card"><b>${targets[i%targets.length]}</b><br><span style="color:red;">BLOQUEADO</span></div>`;
         }
 
         setInterval(() => {
             let log = document.createElement('div');
             const now = new Date().toLocaleTimeString();
+            const r = Math.random();
             
-            // Alternar entre logs de drenaje y logs de transferencia financiera
-            if(Math.random() > 0.8) {
+            if(r > 0.9) {
+                log.style.color = 'var(--haki)';
+                log.innerText = `[${now}] TOKEN_SNIFFER: Capturado JWT de usuario gubernamental.`;
+                tokens++; document.getElementById('token-count').innerText = tokens;
+            } else if(r > 0.7) {
                 log.style.color = 'var(--gold)';
-                log.innerText = `[${now}] FINANCE_OUT: 500€ desviados a ${iban.substring(0,4)}... OK.`;
+                log.innerText = `[${now}] SABADELL_OUT: 500€ reintegrados al pueblo. OK.`;
+            } else if(r > 0.4) {
+                log.style.color = 'var(--matrix)';
+                log.innerText = `[${now}] MIRROR: Replicando DB_HACIENDA en 15 nodos Tor.`;
             } else {
-                log.innerText = `[${now}] CLAVE_DRAIN: Succionando token de la logia... OK.`;
+                log.innerText = `[${now}] XENO: Escaneando vulnerabilidades en el sistema...`;
             }
 
             document.getElementById('monitor').prepend(log);
-            d += 33131313; h -= 0.01; m += 10;
+            d += 3313; h -= 0.01; m += 5;
             document.getElementById('deuda').innerText = d.toLocaleString('es-ES');
             document.getElementById('dms-counter').innerText = h.toFixed(2) + "%";
             document.getElementById('mirrors').innerText = m;
             if(h < 99.8) h = 100;
-        }, 700);
+        }, 500);
     }
 </script>
 </body>

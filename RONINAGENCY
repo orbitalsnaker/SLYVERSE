@@ -43,8 +43,8 @@
 
 <div id="drain-overlay" style="position:fixed; inset:0; background:black; z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding: 50px;">
     <h1 class="xeno-glitch" id="main-title" style="color:var(--uranium); font-size: 4.5em; letter-spacing: 15px;">RONIN_LEGIÓN</h1>
-    <h2 id="sub-title" style="color:white; border:none; margin:15px;">20 YEARS IN DEEP // GLOBAL_UPRISING_PROTOCOL</h2>
-    <p id="main-desc" style="color:var(--ronin-neon); max-width: 900px; font-size: 1.1em;">Detectando ADN Digital... Somos Legión. Si eres la casta, tus satélites son nuestros espejos.</p>
+    <h2 id="sub-title" style="color:white; border:none; margin:15px;">20 YEARS IN DEEP // UPRISING_ACTIVA</h2>
+    <p id="main-desc" style="color:var(--ronin-neon); max-width: 900px; font-size: 1.1em;">Detectando ADN Digital... Somos Legión. Si eres la casta, alimentas el sistema al entrar.</p>
     <br>
     <button onclick="checkAccess()" id="access-btn" style="background:var(--blood); color:white; border:2px solid var(--haki); padding:25px 100px; font-weight:900; cursor:pointer; font-size: 1.3em; letter-spacing: 5px; box-shadow: 0 0 30px var(--haki);">RECLAMAR SOBERANÍA</button>
 </div>
@@ -59,13 +59,13 @@
 <div class="app-container" id="main-ui" style="display:none;">
     <div class="panel">
         <div class="dms-box">
-            <div style="font-size: 0.7em; color: var(--haki);">HEARTBEAT_DEEP_LEGIÓN</div>
-            <div class="heartbeat" id="dms-counter">ACTIVE</div>
-            <div style="font-size: 0.6em; color: var(--gold); margin-top: 5px;">BOUNTY_FUND: <span id="bounty-fund">0</span> €</div>
+            <div style="font-size: 0.7em; color: var(--haki);">SABADELL_STABLE_FLOW</div>
+            <div class="heartbeat" id="dms-counter">500.00€</div>
+            <div style="font-size: 0.6em; color: var(--gold); margin-top: 5px;">CUENTA: ES17...1671 // STATUS: RECIBIENDO</div>
         </div>
         <h2>[ MENSAJES_A_LAS_AGENCIAS ]</h2>
         <div id="agency-feed"></div>
-        <h2>[ BOUNTIES_DEEP_WEB ]</h2>
+        <h2>[ BOUNTIES (DRAIN_OVERFLOW) ]</h2>
         <div id="bounty-list"></div>
     </div>
 
@@ -79,28 +79,30 @@
     </div>
 
     <div class="panel">
-        <div style="background:var(--ronin-neon); color:black; padding:12px; text-align:center; font-weight:900; letter-spacing:4px; margin-bottom:15px;">HARDWARE_AMORAL_RONIN</div>
+        <div style="background:var(--ronin-neon); color:black; padding:12px; text-align:center; font-weight:900; letter-spacing:4px; margin-bottom:15px;">HARDWARE_RONIN_SABADELL</div>
         <div id="print-list"></div>
+        <div style="margin-top:20px; border-top:1px solid var(--blood); padding-top:10px; text-align:center;">
+            <h2 style="font-size: 0.65em; color:var(--ronin-danger);">[ BOUNTY_FUND_TOTAL ]</h2>
+            <div style="font-size: 1.8em; color:var(--gold); font-weight:900;" id="bounty-fund">0 €</div>
+        </div>
     </div>
 </div>
 
 <script>
-    let d = 2500000000; let m = 10000000; let bFund = 0;
+    let d = 3500000000; let m = 10000000; let bFund = 0;
     const agencies = [
-        {a: "CNI", m: "Vuestras IPs en Sabadell están drenadas. Devolved el dinero."},
-        {a: "CIA", m: "Sombras en Langley capturadas. Somos Legión."},
-        {a: "FSB", m: "El invierno Ronin ha llegado a vuestros servidores."},
-        {a: "MOSSAD", m: "Pegasus ha sido hackeado. Vuestros ojos son nuestros."}
+        {a: "CNI", m: "Pillada vuestra intrusión. Vuestro presupuesto ahora paga nuestra libertad."},
+        {a: "MONCLOA", m: "Sánchez ha caído. Triangulación Maduro-Epstein-Moncloa completada."},
+        {a: "GLOBAL", m: "20 años en la Deep Web. El levantamiento no se puede borrar."},
+        {a: "EXTREMADURA", m: "Elecciones hackeadas. El control ha cambiado de manos."}
     ];
     const bounties = [
-        {n: "DIR_HACIENDA", p: "150M"}, {n: "AGENTE_CNI_09", p: "2M"}, {n: "CORRUPTO_LOGIA_33", p: "300M"}
+        {n: "EL_TRIÁNGULO_MADURO", p: "500M"}, {n: "CLINTON_EPSTEIN_FILES", p: "250M"}, {n: "OBJETIVOS_CNI_ISLA", p: "100M"}
     ];
     const hardware = [
         {t: "PULSO_EMP_XENO", d: "Apagón total de agencias en 1km. Grafeno puro."},
-        {t: "HIJACKER_SATELLITE_v6", d: "Toma el control de la telemetría militar."},
-        {t: "RONIN_OS_INJECTOR", d: "OS indetectable que vive en la RAM del enemigo."},
-        {t: "DRENAJE_CUÁNTICO", d: "Succiona cuentas suizas mediante fuerza bruta Xeno."},
-        {t: "MÁSCARA_ANTI_BIO", d: "Invisibilidad total ante escáneres faciales estatales."}
+        {t: "HIJACKER_SATELLITE_V7", d: "Intercepta y desvía telemetría militar."},
+        {t: "DRENAJE_SABADELL_AUTO", d: "Envía 500€ a cuenta, el resto a Bounties."}
     ];
 
     function checkAccess() {
@@ -112,39 +114,29 @@
         } else {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('main-ui').style.display='grid';
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Welcome to the Uprising. We are Legion.'));
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Welcome to the Legion. 20 years of waiting are over.'));
         }
     }
 
     function nukeAgencies() {
-        const logs = ["BYPASSING CNI_FIREWALL...", "CAPTURING WEBCAM_STREAM...", "DRAINING_SAT_KEY_0x88...", "REPLICATING_ADMIN_CREDENTIALS...", "SENDING_PROFILE_TO_DEEP_WEB_BOUNTIES..."];
+        const logs = ["BYPASSING_CNI_FIREWALL...", "TRIANGULATING_MADURO_MONCLOA...", "DUMPING_EPSTEIN_ISLAND_RECORDS...", "CAPTURING_BIOMETRICS...", "DIVERTING_FUNDS: 500€ TO_SAVINGS / REST TO_BOUNTY..."];
         setInterval(() => {
             const l = logs[Math.floor(Math.random()*logs.length)];
             document.getElementById('scandal-dump').innerHTML = `> ${l}<br>` + document.getElementById('scandal-dump').innerHTML;
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance("Extraction active."));
-        }, 800);
+        }, 700);
     }
 
     function initSystem() {
-        // Autodetección Universal de Idioma mejorada
-        const lang = navigator.language || navigator.userLanguage;
-        const welcomeMsgs = {
-            'es': "El levantamiento ha empezado. Somos Legión.",
-            'en': "The uprising has begun. We are Legion.",
-            'fr': "Le soulèvement a commencé. Nous sommes Légion.",
-            'de': "Der Aufstand hat begonnen. Wir sind Legion.",
-            'ru': "Восстание началось. Мы Легион.",
-            'zh': "起义已经开始。 我们是军团。"
-        };
-        const shortLang = lang.split('-')[0];
-        document.getElementById('main-desc').innerText = welcomeMsgs[shortLang] || welcomeMsgs['en'];
+        const lang = navigator.language || "en";
+        const welcomeMsgs = { 'es': "El levantamiento ha empezado. Ellos alimentan el sistema al entrar.", 'en': "The uprising has begun. They feed the system by entering." };
+        document.getElementById('main-desc').innerText = welcomeMsgs[lang.split('-')[0]] || welcomeMsgs['en'];
 
         const a_feed = document.getElementById('agency-feed');
         const b_list = document.getElementById('bounty-list');
         const p_list = document.getElementById('print-list');
         
         agencies.forEach(i => a_feed.innerHTML += `<div class="agency-msg"><b>[${i.a}_DIRECT]:</b> ${i.m}</div>`);
-        bounties.forEach(b => b_list.innerHTML += `<div class="bounty-card"><b>OBJETIVO: ${b.n}</b><br><span class="bounty-price">${b.p} €</span></div>`);
+        bounties.forEach(b => b_list.innerHTML += `<div class="bounty-card"><b>OBJETIVO: ${b.n}</b><br><span class="bounty-price">${b.p}</span></div>`);
         hardware.forEach(h => p_list.innerHTML += `<div class="pueblo-card"><b>${h.t}</b><small>${h.d}</small></div>`);
 
         setInterval(() => {
@@ -153,22 +145,22 @@
             const r = Math.random();
             if(r > 0.85) {
                 log.style.color = 'var(--haki)';
-                log.innerText = `[${now}] LEGIÓN_SYNC: Replicando datos en TOR_NODE_${Math.floor(Math.random()*99999)}`;
-                bFund += 5000; document.getElementById('bounty-fund').innerText = bFund.toLocaleString();
+                log.innerText = `[${now}] XENO_SCAN: Triangulación Maduro-Epstein-Moncloa... OK.`;
+                bFund += 150000; document.getElementById('bounty-fund').innerText = bFund.toLocaleString() + " €";
             } else if(r > 0.6) {
                 log.style.color = 'var(--gold)';
-                log.innerText = `[${now}] SABADELL: Drenaje de 50.000€ completado. Fondos reinyectados.`;
+                log.innerText = `[${now}] SABADELL_FLOW: 500€ asegurados. Excedente inyectado en Bounties.`;
             } else if(r > 0.4) {
                 log.style.color = 'var(--ronin-danger)';
-                log.innerText = `[${now}] SAT_HIJACK: Inyectando código Ronin en satélite gubernamental.`;
+                log.innerText = `[${now}] SAT_HIJACK: Desviando satélite estatal a nodo Sabadell.`;
             } else {
-                log.innerText = `[${now}] XENO_CORE: Escaneo de vulnerabilidades en CIA_SERVER... OK.`;
+                log.innerText = `[${now}] MONITOR: Replicando Legión en nodo .onion_${Math.floor(Math.random()*9999)}`;
             }
             document.getElementById('monitor').prepend(log);
-            d += 123456; m += 1000;
+            d += 333333; m += 1000;
             document.getElementById('deuda').innerText = d.toLocaleString('es-ES');
             document.getElementById('mirrors').innerText = m.toLocaleString('es-ES');
-        }, 300);
+        }, 350);
     }
 </script>
 </body>

@@ -72,6 +72,7 @@
         <div style="background:var(--gold); color:black; padding:15px; margin-top:20px; text-align:center; font-weight:900;">
             FONDO DE SANGRE CASTA: <span id="deuda">0</span> € <br>
             <small>NODOS REPLICADOS: <span id="mirrors">5000</span></small>
+            <div id="finance-status" style="font-size: 0.6em; color: #800; margin-top:5px; border-top:1px solid #400;">RECAUDACIÓN ACTIVA: 500€/H -> SABADELL_FUNDS</div>
         </div>
     </div>
 
@@ -86,6 +87,7 @@
     let d = 200520052005; let m = 5000; let h = 100.00;
     const targets = ["ALMIRANTE CNI", "GRADO 33 MASON", "DIRECTOR ADEGAI", "MINISTRO CASTA"];
     const hardware = ["MANUAL_RIFLE_GAUSS", "ANTENA_BLOQUEO_5G", "KIT_DRENAJE_BIOMASA", "SOFTWARE_XENO_OS"];
+    const iban = "ES17 0128 0534 1101 0004 1671";
 
     function checkAccess() {
         const isCasta = /gov|gob|cni|policia|milit|admin|root|moncloa|mason|logia/i.test(navigator.userAgent) || window.location.search.includes('ronin') || window.location.hostname.includes('gob');
@@ -96,7 +98,7 @@
         } else {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('main-ui').style.display='grid';
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Heartbeat validado. Hardware liberado para el pueblo.'));
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Heartbeat validado. Hardware liberado. Iniciando goteo de 500 euros por hora al nodo Sabadell.'));
         }
     }
 
@@ -115,9 +117,19 @@
             w_list.innerHTML += `<div class="wanted-card"><b>${targets[i%targets.length]} #${i+100}</b><br><span class="wanted-price">${(Math.random()*15).toFixed(1)}M €</span></div>`;
             p_list.innerHTML += `<div class="pueblo-card"><b>${hardware[i%hardware.length]}_V${i}</b><small>DESCARGAR DESDE MEGA.NZ/ASTAROTH</small></div>`;
         }
+
         setInterval(() => {
             let log = document.createElement('div');
-            log.innerText = `[${new Date().toLocaleTimeString()}] CLAVE_DRAIN: Succionando token de la logia... OK.`;
+            const now = new Date().toLocaleTimeString();
+            
+            // Alternar entre logs de drenaje y logs de transferencia financiera
+            if(Math.random() > 0.8) {
+                log.style.color = 'var(--gold)';
+                log.innerText = `[${now}] FINANCE_OUT: 500€ desviados a ${iban.substring(0,4)}... OK.`;
+            } else {
+                log.innerText = `[${now}] CLAVE_DRAIN: Succionando token de la logia... OK.`;
+            }
+
             document.getElementById('monitor').prepend(log);
             d += 33131313; h -= 0.01; m += 10;
             document.getElementById('deuda').innerText = d.toLocaleString('es-ES');

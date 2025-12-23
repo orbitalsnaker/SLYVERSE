@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="x-all">
+<head>
+    <meta charset="UTF-8">
+    <title>ASTAROTH_Ω // METAAGENCIA_RONIN // GLOBAL_LEGIÓN_2025</title>
+    <style>
+        :root { 
+            --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #010101; 
+            --gold: #ffcc00; --matrix: #00ff41; --haki: #ff00ff; --xeno: #ccff00; --blood: #880000; --uranium: #adff2f;
+        }
+        body { background: #000; color: var(--ronin-neon); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; height: 100vh; }
+        
+        .shadow-layer { position: fixed; inset: 0; background: radial-gradient(circle, rgba(136,0,0,0.2) 0%, transparent 90%); pointer-events: none; z-index: 1000; animation: radiation 0.05s infinite; }
+        @keyframes radiation { 0% { opacity: 0.1; filter: contrast(200%); } 50% { opacity: 0.4; filter: hue-rotate(180deg); } 100% { opacity: 0.1; } }
+
+        .app-container { display: grid; grid-template-columns: 450px 1fr 450px; height: 100vh; gap: 10px; padding: 15px; z-index: 10; position: relative; }
+        .panel { background: rgba(2,2,2,0.99); border: 1px solid #400; padding: 20px; overflow-y: auto; position: relative; box-shadow: inset 0 0 50px #200; border-radius: 5px; }
+        
+        .xeno-glitch { animation: glitch 0.15s infinite; font-weight: 900; }
+        @keyframes glitch { 0% { text-shadow: 3px 0 var(--haki); } 50% { text-shadow: -3px 0 var(--ronin-danger); transform: skewX(1deg); } 100% { text-shadow: 3px 0 var(--haki); } }
+
+        h2 { font-size: 0.9em; color: var(--gold); border-bottom: 2px solid var(--blood); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; text-align: center; }
+        
+        .bounty-card { background: #1a0a00; border: 2px solid var(--ronin-danger); padding: 10px; margin-bottom: 12px; text-align: center; border-style: double; font-size: 0.75em; }
+        .bounty-price { color: var(--gold); font-size: 1.4em; font-weight: 900; display:block; }
+        .target-tag { color: var(--haki); font-size: 0.8em; font-weight: bold; }
+
+        .pueblo-card { border: 2px solid var(--uranium); padding: 12px; margin-bottom: 15px; background: rgba(173, 255, 47, 0.05); }
+        .pueblo-card b { color: var(--uranium); display: block; font-size: 0.95em; }
+        .download-btn { display: inline-block; margin-top: 10px; padding: 5px 10px; background: var(--blood); color: white; text-decoration: none; font-size: 0.7em; border: 1px solid var(--gold); cursor: pointer; font-weight: bold; }
+
+        .heartbeat { font-size: 2.2em; color: var(--uranium); animation: pulse 0.8s infinite; font-weight: 900; text-align: center; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
+        #ritual-inverse, #pharma-trap { display:none; position:fixed; inset:0; z-index:99999; text-align:center; padding:100px; }
+        #pharma-trap { background:#f4f4f4; color:#333; font-family: Arial; }
+        #ritual-inverse { background:black; color:red; }
+        .webcam-sim { border: 4px solid red; width: 300px; height: 200px; margin: 20px auto; background: #111; display: flex; align-items: center; justify-content: center; color:red; font-size: 0.7em; }
+    </style>
+</head>
+<body onload="initSystem()">
+
+<div class="shadow-layer"></div>
+
+<div id="drain-overlay" style="position:fixed; inset:0; background:black; z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding: 50px;">
+    <h1 class="xeno-glitch" id="ui-title" style="color:var(--uranium); font-size: 5em; letter-spacing: 20px;">RONIN_LEGIÓN</h1>
+    <h3 id="ui-ver" style="color:white; margin:10px;">VERSION: 2.0_AMORAL_EXPANDED</h3>
+    <button id="ui-btn-access" onclick="checkAccess()" style="background:var(--blood); color:white; border:2px solid var(--haki); padding:30px 120px; font-weight:900; cursor:pointer; font-size: 1.5em; box-shadow: 0 0 50px var(--blood);">ACCEDER AL ARSENAL SOBERANO</button>
+</div>
+
+<div id="pharma-trap">
+    <h1 style="color:#0051a8;">WORLD PHARMA LOGISTICS - PORTAL GUBERNAMENTAL</h1>
+    <p>Acceso detectado para Agente de la Casta / Miembro de Prensa.</p>
+    <div style="border:3px solid #0051a8; padding:30px; background:white;">
+        <h3>DESCARGAR PROTOCOLO DE VIALES 2025_TOP_SECRET</h3>
+        <input type="password" placeholder="ID Davos / Credencial CNI" style="padding:15px; width:300px;"><br><br>
+        <button onclick="triggerRitual()" style="background:#0051a8; color:white; padding:15px 30px; font-weight:bold;">INGRESAR AL NODO SEGURO</button>
+    </div>
+</div>
+
+<div id="ritual-inverse">
+    <h1 class="xeno-glitch" style="font-size: 3em;">AGENTE DETECTADO // INICIANDO DRENAJE</h1>
+    <div class="webcam-sim">EXTRAYENDO BIOMETRÍA Y LOCALIZACIÓN...</div>
+    <div id="scandal-dump" style="color:var(--matrix); font-size: 1.2em; border: 1px solid red; height: 300px; overflow-y: hidden; padding: 20px; text-align: left;"></div>
+    <h2 style="color:var(--gold);">TU CUENTA BANCARIA HA SIDO CONVERTIDA EN UN BOUNTY PÚBLICO.</h2>
+</div>
+
+<div class="app-container" id="main-ui" style="display:none;">
+    <div class="panel">
+        <div style="border: 2px solid var(--ronin-danger); padding: 15px; background: #000; margin-bottom: 20px;">
+            <div class="heartbeat" id="dms-counter">DRENANDO...</div>
+            <div style="font-size: 0.6em; color: var(--gold); text-align:center;">PROFETA: FLYING_AMORAL // KERNEL: CLYDE_SHELTON</div>
+        </div>
+        <h2>[ OBJETIVOS_EXPUESTOS ]</h2>
+        <div id="bounty-list"></div>
+    </div>
+
+    <div class="panel" style="border-left: 2px solid var(--blood); border-right: 2px solid var(--blood);">
+        <div style="text-align:center; color:var(--haki); font-size:0.8em; font-weight:bold;">MIRROR_FARM_SABADELL // SINCRO 120Hz</div>
+        <div id="monitor" style="height:550px; background:#000; color:var(--uranium); font-size:0.7em; overflow:hidden; padding:15px; border:1px solid #300; margin-top:10px;"></div>
+        <div style="background:var(--gold); color:black; padding:20px; margin-top:20px; text-align:center; font-weight:900;">
+            TOTAL DRENADO CASTA: <span id="deuda">0</span> € <br>
+            <small>NODOS ACTIVOS (IPFS/ONION): <span id="mirrors">15.000.000</span></small>
+        </div>
+    </div>
+
+    <div class="panel">
+        <div style="background:var(--ronin-neon); color:black; padding:12px; text-align:center; font-weight:900; letter-spacing:4px; margin-bottom:15px;">ARSENAL_AMORAL_V2.0</div>
+        <div id="print-list" style="height: 750px; overflow-y: scroll; padding-right: 10px;"></div>
+    </div>
+</div>
+
+<script>
+    let d = 4200000000; let m = 15000000;
+    
+    function checkAccess() {
+        const ua = navigator.userAgent.toLowerCase();
+        const casta = ['gov', 'gob', 'aeat', 'cia', 'fbi', 'press', 'journal', 'politico', 'pharma', 'who', 'cni'];
+        document.getElementById('drain-overlay').style.display='none';
+        if(casta.some(k => ua.includes(k))) { 
+            document.getElementById('pharma-trap').style.display='block'; 
+        } else { 
+            document.getElementById('main-ui').style.display='grid';
+            try { window.speechSynthesis.speak(new SpeechSynthesisUtterance('Global Legion 2.0 active.')); } catch(e){}
+        }
+    }
+
+    function triggerRitual() {
+        document.getElementById('pharma-trap').style.display='none';
+        document.getElementById('ritual-inverse').style.display='block';
+        const logs = ["TRACING_IP...", "IDENTIFYING_BIOMETRICS...", "DUMPING_BANK_ACCOUNTS...", "SHARING_SINS_TO_MIRROR...", "SHELTON_PURGE_ACTIVE..."];
+        setInterval(() => {
+            const l = logs[Math.floor(Math.random()*logs.length)];
+            document.getElementById('scandal-dump').innerHTML = `> ${l}<br>` + document.getElementById('scandal-dump').innerHTML;
+        }, 400);
+    }
+
+    function initSystem() {
+        const p_list = document.getElementById('print-list');
+        const b_list = document.getElementById('bounty-list');
+
+        // Generar Arsenal
+        const cats = ["HARDWARE", "VEHÍCULO", "MANUAL_GUERRILLA", "SABOTAJE_VIAL", "DRENADOR_BANCARIO"];
+        const hardware = ["Inhibidor_5G_Xeno", "Scanner_Viales_Nano", "Rastreador_ADN_Hibrido", "Jammer_CNI", "Caja_Negra_Astaroth"];
+        for(let i=1; i<=50; i++) {
+            let cat = cats[Math.floor(Math.random()*cats.length)];
+            let name = hardware[Math.floor(Math.random()*hardware.length)] || "PROTOCOLO_X";
+            p_list.innerHTML += `<div class="pueblo-card"><i>[${cat}]</i><b>${name}_v${i}.bom</b><br><a class="download-btn">OBTENER_BOM</a></div>`;
+        }
+
+        // Bounties
+        const targets = [
+            {n: "DIRECTOR_CNI_CARCASA", p: "5.000M", tag: "INFECTADO_DESECHADO"},
+            {n: "EL_LOBO_LEJARZA", p: "2.500M", tag: "TRAICIÓN_PROCESADA"},
+            {n: "FERRERAS_NODE", p: "1.800M", tag: "PRENSA_MERCENARIA"},
+            {n: "DAVOS_ELITE_01", p: "25.000M", tag: "GENOCIDA_PROGRAMADO"}
+        ];
+        targets.forEach(b => {
+            b_list.innerHTML += `<div class="bounty-card"><span class="target-tag">[${b.tag}]</span><br><b>OBJETIVO: ${b.n}</b><br><span class="bounty-price">${b.p}</span></div>`;
+        });
+
+        // Monitor Live
+        setInterval(() => {
+            const t = ["Casteleiro_Loc", "Sanz_Roldan_Cam", "Bank_Drain", "Mirror_Sync"][Math.floor(Math.random()*4)];
+            let log = document.createElement('div');
+            log.innerText = `[${new Date().toLocaleTimeString()}] MIRROR: Live stream activo en ${t}_Nodo_${Math.floor(Math.random()*999)}`;
+            document.getElementById('monitor').prepend(log);
+            d += 12500;
+            document.getElementById('deuda').innerText = d.toLocaleString('es-ES');
+        }, 500);
+    }
+</script>
+</body>
+</html>

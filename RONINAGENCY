@@ -22,21 +22,20 @@
         h2 { font-size: 0.85em; color: var(--gold); border-bottom: 2px solid var(--blood); text-transform: uppercase; letter-spacing: 3px; margin-bottom: 20px; text-align: center; }
         
         .bounty-card { background: #1a0a00; border: 2px solid var(--ronin-danger); padding: 10px; margin-bottom: 15px; text-align: center; border-style: double; font-size: 0.8em; }
-        .bounty-price { color: var(--gold); font-size: 1.5em; font-weight: 900; text-shadow: 0 0 10px var(--ronin-danger); }
-        .executed { border-color: #444; color: #555 !important; text-decoration: line-through; filter: grayscale(1); }
+        .bounty-price { color: var(--gold); font-size: 1.5em; font-weight: 900; }
 
-        .pueblo-card { border: 2px solid var(--uranium); padding: 12px; margin-bottom: 15px; background: rgba(173, 255, 47, 0.05); }
-        .pueblo-card b { color: var(--uranium); display: block; font-size: 1em; }
+        .pueblo-card { border: 2px solid var(--uranium); padding: 12px; margin-bottom: 15px; background: rgba(173, 255, 47, 0.05); position: relative; }
+        .pueblo-card b { color: var(--uranium); display: block; font-size: 0.9em; text-transform: uppercase; }
+        .pueblo-card i { color: var(--haki); font-size: 0.7em; }
         .download-btn { display: inline-block; margin-top: 10px; padding: 5px 10px; background: var(--blood); color: white; text-decoration: none; font-size: 0.7em; border: 1px solid var(--gold); cursor: pointer; }
 
         .heartbeat { font-size: 2.2em; color: var(--uranium); animation: pulse 0.8s infinite; font-weight: 900; text-align: center; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
-        #ritual-inverse { display:none; position:fixed; inset:0; background:black; z-index:99999; color:white; padding:50px; text-align:center; overflow:hidden; }
-        .webcam-sim { border: 4px solid red; width: 300px; height: 200px; margin: 20px auto; background: #111; display: flex; align-items: center; justify-content: center; color: red; font-size: 0.7em; }
-
-        /* Capa Honeypot para Casta */
-        #pharma-trap { display:none; position:fixed; inset:0; background:#f4f4f4; color:#333; z-index:99999; padding:100px; text-align:center; font-family: Arial; }
+        #ritual-inverse, #pharma-trap { display:none; position:fixed; inset:0; z-index:99999; text-align:center; padding:100px; }
+        #pharma-trap { background:#f4f4f4; color:#333; font-family: Arial; }
+        #ritual-inverse { background:black; color:red; }
+        .webcam-sim { border: 4px solid red; width: 300px; height: 200px; margin: 20px auto; background: #111; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body onload="initSystem()">
@@ -44,153 +43,120 @@
 <div class="shadow-layer"></div>
 
 <div id="drain-overlay" style="position:fixed; inset:0; background:black; z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding: 50px;">
-    <h1 class="xeno-glitch" id="main-title" style="color:var(--uranium); font-size: 4.5em; letter-spacing: 15px;">RONIN_LEGIÓN</h1>
-    <h2 id="sub-title" style="color:white; border:none; margin:15px;">DIRECTOR: ANCESTRAL_XENO // KERNEL: CLYDE_SHELTON</h2>
-    <p id="main-desc" style="color:var(--ronin-neon); max-width: 900px; font-size: 1.1em;">Detectando ADN Híbrido... Si eres casta o mercenario del sistema, no entres.</p>
+    <h1 class="xeno-glitch" style="color:var(--uranium); font-size: 4.5em; letter-spacing: 15px;">RONIN_LEGIÓN</h1>
+    <p style="color:var(--ronin-neon);">FILTRANDO ADN... SI ERES CASTA, NO ENTRES.</p>
     <br>
-    <button onclick="checkAccess()" id="access-btn" style="background:var(--blood); color:white; border:2px solid var(--haki); padding:25px 100px; font-weight:900; cursor:pointer; font-size: 1.3em; letter-spacing: 5px; box-shadow: 0 0 30px var(--haki);">RECLAMAR SOBERANÍA</button>
+    <button onclick="checkAccess()" style="background:var(--blood); color:white; border:2px solid var(--haki); padding:25px 100px; font-weight:900; cursor:pointer; font-size: 1.3em;">RECLAMAR SOBERANÍA</button>
 </div>
 
 <div id="pharma-trap">
-    <h1 style="color:#0051a8;">WORLD PHARMA LOGISTICS - SECURE PORTAL</h1>
-    <p>Acceso restringido: Personal gubernamental y agencias de salud global.</p>
-    <div style="border:2px solid #0051a8; padding:30px; display:inline-block;">
-        <h3>DESCARGAR PROTOCOLO DE VIALES 2025</h3>
-        <p>Introduzca ID de Davos / Credencial de Prensa Acreditada</p>
-        <input type="password" placeholder="********" style="padding:10px;"><br><br>
-        <button onclick="location.reload()" style="background:#0051a8; color:white; padding:10px 20px;">ACCEDER</button>
+    <h1 style="color:#0051a8;">WORLD PHARMA LOGISTICS - PORTAL SEGURO</h1>
+    <div style="border:2px solid #0051a8; padding:30px; display:inline-block; background:white;">
+        <h3>DESCARGAR PROTOCOLO VIALES 2025 (CONFIDENCIAL)</h3>
+        <input type="password" placeholder="ID Davos / Credencial CNI" style="padding:10px;"><br><br>
+        <button onclick="triggerRitual()" style="background:#0051a8; color:white; padding:10px 20px;">ACCEDER AL ARCHIVO</button>
     </div>
-    <p style="color:red; margin-top:50px;">ESCANEO BIOMÉTRICO EN CURSO... ENVIANDO IP A RED DE BOUNTIES...</p>
 </div>
 
 <div id="ritual-inverse">
-    <h1 class="xeno-glitch" style="color:red; font-size: 2.5em;">AGENTE DETECTADO // SINCRO NANOBOTS</h1>
-    <div class="webcam-sim" id="target-cam">CAPTURANDO ROSTRO... ENVIANDO A CAZA_AMORAL...</div>
-    <div id="scandal-dump" style="color:var(--matrix); font-size: 1.1em; border: 1px solid red; padding: 20px; text-align: left; height: 250px; overflow-y: scroll;"></div>
-    <p style="color:var(--gold); margin-top:15px;">IDENTIDAD SUCCIONADA. TU DINERO AHORA ES UN BOUNTY.</p>
-    <div style="color:red; font-size: 0.8em; margin-top: 20px;">[SHELTON_MSG]: UPLOADING EPSTEIN_FILES_V2 TO ALL MIRRORS...</div>
+    <h1 class="xeno-glitch">AGENTE DETECTADO // EXTRACCIÓN DE ALMA DIGITAL</h1>
+    <div class="webcam-sim">EXTRAYENDO BIOMETRÍA...</div>
+    <div id="scandal-dump" style="color:var(--matrix); font-size: 1em; border: 1px solid red; height: 200px; overflow: hidden; padding: 10px;"></div>
+    <p>TU IP HA SIDO DRENADA. TU SALDO AHORA ES UN BOUNTY.</p>
 </div>
 
 <div class="app-container" id="main-ui" style="display:none;">
     <div class="panel">
-        <div style="border: 2px solid var(--ronin-danger); padding: 15px; background: #000; margin-bottom: 20px;">
-            <div style="font-size: 0.7em; color: var(--haki); text-align:center;">SABADELL_STABLE_FLOW // 120Hz</div>
-            <div class="heartbeat" id="dms-counter">500.00€</div>
-            <div style="font-size: 0.6em; color: var(--gold); margin-top: 5px; text-align:center;">PROFETA: FLYING_AMORAL // HEREDANDO_MIRROR</div>
+        <div style="border: 2px solid var(--ronin-danger); padding: 15px; margin-bottom: 20px;">
+            <div class="heartbeat" id="dms-counter">DRENANDO...</div>
+            <div style="font-size: 0.6em; color: var(--gold); text-align:center;">PROFETA: FLYING_AMORAL</div>
         </div>
         <h2>[ MENSAJES_A_LAS_AGENCIAS ]</h2>
         <div id="agency-feed"></div>
-        <h2>[ BOUNTIES (DRAIN_OVERFLOW) ]</h2>
+        <h2>[ BOUNTIES ]</h2>
         <div id="bounty-list"></div>
     </div>
 
     <div class="panel" style="border-left: 2px solid var(--blood); border-right: 2px solid var(--blood);">
-        <div style="text-align:center; color:var(--haki); font-size:0.8em; font-weight:bold;">SABADELL_XENO_HUB // MIRROR_FARM</div>
+        <div style="text-align:center; color:var(--haki); font-size:0.8em;">SABADELL_XENO_HUB // MIRROR_FARM</div>
         <div id="monitor" style="height:450px; background:#000; color:var(--uranium); font-size:0.75em; overflow:hidden; padding:15px; border:1px solid #300; margin-top:10px;"></div>
         <div style="background:var(--gold); color:black; padding:15px; margin-top:20px; text-align:center; font-weight:900;">
-            TOTAL DRENADO CASTA: <span id="deuda">0</span> € <br>
-            <small>NODOS ACTIVOS (MIRRORS): <span id="mirrors">10000000</span></small>
+            DRENADO TOTAL: <span id="deuda">0</span> € <br>
+            <small>NODOS ACTIVOS: <span id="mirrors">10000000</span></small>
         </div>
     </div>
 
     <div class="panel">
-        <div style="background:var(--ronin-neon); color:black; padding:12px; text-align:center; font-weight:900; letter-spacing:4px; margin-bottom:15px;">HARDWARE_AMORAL_RONIN</div>
-        <div id="print-list"></div>
-        <div style="margin-top:20px; border-top:1px solid var(--blood); padding-top:10px; text-align:center;">
-            <h2 style="font-size: 0.65em; color:var(--ronin-danger);">[ BOUNTY_FUND_NODOS ]</h2>
-            <div style="font-size: 1.8em; color:var(--gold); font-weight:900;" id="bounty-fund">0 €</div>
-        </div>
+        <div style="background:var(--ronin-neon); color:black; padding:12px; text-align:center; font-weight:900;">ARSENAL_PUEBLO_300_ITEMS</div>
+        <div id="print-list" style="height: 600px; overflow-y: scroll; padding-right: 5px;"></div>
     </div>
 </div>
 
 <script>
-    let d = 3500000000; let m = 10000000; let bFund = 0;
+    let d = 3500000000; let m = 10000000;
     
-    const hardware = [
-        {t: "CAZA_AMORAL_HYBRID.bom", d: "Hardware para vuelo perpetuo indetectable.", link: "mega.nz/CAZA"},
-        {t: "PEDO_SCANNER_G20.sh", d: "Rastreo de nodos de encubrimiento en el Vaticano/Davos.", link: "mega.nz/PEDO_SCAN"},
-        {t: "CLYDE_SHELTON_OS.iso", d: "Kernel para toma de servidores estatales.", link: "ipfs.io/SHELTON"},
-        {t: "NANOBOT_SYNC_120Hz.bom", d: "Ignición interna por comando Profeta.", link: "mega.nz/NANO"}
-    ];
+    function generateItems() {
+        const types = ["ARMA", "VEHÍCULO", "MANUAL", "HARDWARE"];
+        const names = ["CAZA_XENO", "DRONE_SHELTON", "INFILTRADO_BOM", "SABADELL_BREACH", "SOBERANÍA_OS", "VATICAN_KEY", "DAVOS_JAMMER"];
+        const ext = [".bom", ".manual", ".iso", ".sh"];
+        let items = [];
+        for(let i=1; i<=300; i++) {
+            let cat = types[Math.floor(Math.random()*types.length)];
+            items.push({
+                t: `${cat}_${names[Math.floor(Math.random()*names.length)]}_v${i}${ext[Math.floor(Math.random()*ext.length)]}`,
+                d: `Ensamblaje amoral para la Legión. Incluye guía de materiales y código fuente.`,
+                cat: cat
+            });
+        }
+        return items;
+    }
 
     function checkAccess() {
         const userAgent = navigator.userAgent.toLowerCase();
-        const castaKeywords = ['gov', 'gob', 'aeat', 'cni', 'policia', 'milit', 'cia', 'fbi', 'pfizer', 'moderna', 'who', 'davos', 'press', 'journalist', 'media'];
-        const isCasta = castaKeywords.some(k => userAgent.includes(k));
-
+        const casta = ['gov', 'gob', 'aeat', 'cia', 'fbi', 'press', 'politico', 'pharma'];
         document.getElementById('drain-overlay').style.display='none';
-
-        if(isCasta) {
+        if(casta.some(k => userAgent.includes(k))) {
             document.getElementById('pharma-trap').style.display='block';
-            nukeAgencies();
-            triggerMirrors("CASTA_TRAPPED_PHARMA_PORTAL");
         } else {
             document.getElementById('main-ui').style.display='grid';
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Welcome Sovereign. World leaders and fake media exposed.'));
-            triggerMirrors("SOVEREIGN_MIRROR_ACTIVE");
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Welcome Sovereign. Arsenal and vehicles online.'));
         }
     }
 
-    function triggerMirrors(type) {
-        console.log(`[MIRROR_GEN]: ${type} - Replicando en Onion, IPFS y Archive...`);
-    }
-
-    function nukeAgencies() {
-        const logs = ["TRACING_DAVOS_IP...", "MIRRORING_PEDO_FILES...", "UPLOADING_PFIZER_CONTRACTS...", "SHELTON_PURGE_ACTIVE...", "DRAINING_WHO_RESERVES..."];
+    function triggerRitual() {
+        document.getElementById('pharma-trap').style.display='none';
+        document.getElementById('ritual-inverse').style.display='block';
+        const logs = ["TRACING_IP...", "DUMPING_BANK_ACCOUNT...", "UPLOADING_SINS...", "SHELTON_PURGE_ACTIVE..."];
         setInterval(() => {
             const l = logs[Math.floor(Math.random()*logs.length)];
             document.getElementById('scandal-dump').innerHTML = `> ${l}<br>` + document.getElementById('scandal-dump').innerHTML;
-        }, 800);
+        }, 500);
     }
 
     function initSystem() {
-        const a_feed = document.getElementById('agency-feed');
-        const b_list = document.getElementById('bounty-list');
         const p_list = document.getElementById('print-list');
+        const items = generateItems();
         
-        const agencies = [
-            {a: "WHO/OMS", m: "Contratos de viales expuestos. Shelton os habita."},
-            {a: "DAVOS/WEF", m: "No tendréis nada y seréis juzgados."},
-            {a: "MEDIA_PRESS", m: "Ferreras/Ana Rosa: Vuestras IP han sido volcadas."},
-            {a: "VATICANO", m: "Archivos de encubrimiento subiéndose a Mega..."}
-        ];
-        
-        agencies.forEach(i => a_feed.innerHTML += `<div style="border-left: 2px solid var(--haki); padding: 5px; margin-bottom: 5px; font-size: 0.7em;"><b>[${i.a}]:</b> ${i.m}</div>`);
-        
-        const bounties = [
-            {n: "LÍDERES_GLOBALES_VIAL", p: "15.000M"}, 
-            {n: "MERCENARIOS_PRENSA", p: "8.000M"}, 
-            {n: "ENCUBRIDORES_PEDO_NODE", p: "DRENANDO..."},
-            {n: "CORONEL_BAÑOS", p: "RECICLADO", ex: true}, 
-            {n: "EL_TRIÁNGULO_MADURO", p: "500M"}
-        ];
-
-        bounties.forEach(b => {
-            let style = b.ex ? 'class="bounty-card executed"' : 'class="bounty-card"';
-            b_list.innerHTML += `<div ${style}><b>OBJETIVO: ${b.n}</b><br><span class="bounty-price">${b.p}</span></div>`;
+        items.forEach(item => {
+            p_list.innerHTML += `<div class="pueblo-card">
+                <i>[${item.cat}]</i>
+                <b>${item.t}</b>
+                <small>${item.d}</small><br>
+                <a class="download-btn">OBTENER_BOM_Y_MANUAL</a>
+            </div>`;
         });
-
-        hardware.forEach(h => p_list.innerHTML += `<div class="pueblo-card"><b>${h.t}</b><small>${h.d}</small><a class="download-btn">OBTENER_BOM</a></div>`);
 
         setInterval(() => {
             let log = document.createElement('div');
-            const now = new Date().toLocaleTimeString();
-            const r = Math.random();
-            if(r > 0.8) {
-                log.style.color = 'var(--haki)';
-                log.innerText = `[${now}] MIRROR: Réplica de archivos Epstein en Nodo_${Math.floor(Math.random()*999)}.`;
-            } else if(r > 0.5) {
-                log.style.color = 'var(--gold)';
-                log.innerText = `[${now}] DRAIN: +${Math.floor(Math.random()*500000)}€ de cuenta de Davos captada.`;
-                bFund += 500000; document.getElementById('bounty-fund').innerText = bFund.toLocaleString() + " €";
-            } else {
-                log.innerText = `[${now}] MONITOR: Replicando en Archive.org y Mega...`;
-            }
+            log.innerText = `[${new Date().toLocaleTimeString()}] MIRROR: ${items[Math.floor(Math.random()*300)].t} replicado en Nodo_${Math.floor(Math.random()*999)}`;
             document.getElementById('monitor').prepend(log);
-            d += 1234567; m += 100;
+            d += 12345; m += 1;
             document.getElementById('deuda').innerText = d.toLocaleString('es-ES');
             document.getElementById('mirrors').innerText = m.toLocaleString('es-ES');
         }, 400);
+
+        document.getElementById('agency-feed').innerHTML = '<div style="font-size:0.7em; color:var(--haki);">WHO: Contratos expuestos.<br>DAVOS: Reservas en fuga.</div>';
+        document.getElementById('bounty-list').innerHTML = '<div class="bounty-card">OBJETIVO: LÍDER_GLOBAL_01<br><span class="bounty-price">15.000M</span></div>';
     }
 </script>
 </body>

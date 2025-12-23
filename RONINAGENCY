@@ -2,16 +2,16 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>ASTAROTH_Ω // CROSS_GUILD_GLOBAL // PURGA_MASONICA_2005</title>
+    <title>ASTAROTH_Ω // CROSS_GUILD // PUEBLO_VS_CASTA_2005</title>
     <style>
         :root { 
             --ronin-neon: #00ffcc; --ronin-danger: #ff0033; --ronin-dark: #010101; 
-            --gold: #ffcc00; --matrix: #00ff41; --haki: #ff00ff; --xeno: #ccff00; --blood: #880000;
+            --gold: #ffcc00; --matrix: #00ff41; --haki: #ff00ff; --xeno: #ccff00; --blood: #880000; --uranium: #adff2f;
         }
         body { background: #000; color: var(--ronin-neon); font-family: 'Courier New', monospace; margin: 0; overflow: hidden; height: 100vh; }
         
-        .shadow-layer { position: fixed; inset: 0; background: radial-gradient(circle, rgba(136,0,0,0.1) 0%, transparent 80%); pointer-events: none; z-index: 1000; animation: psychosis 0.05s infinite; }
-        @keyframes psychosis { 0% { opacity: 0.1; filter: contrast(200%); } 50% { opacity: 0.4; filter: invert(0.05); } 100% { opacity: 0.1; } }
+        .shadow-layer { position: fixed; inset: 0; background: radial-gradient(circle, rgba(136,0,0,0.1) 0%, transparent 80%); pointer-events: none; z-index: 1000; animation: radiation 0.08s infinite; }
+        @keyframes radiation { 0% { opacity: 0.1; filter: sepia(100%) saturate(200%); } 50% { opacity: 0.3; filter: hue-rotate(90deg); } 100% { opacity: 0.1; } }
 
         .app-container { display: grid; grid-template-columns: 480px 1fr 480px; height: 100vh; gap: 10px; padding: 15px; z-index: 10; position: relative; }
         .panel { background: rgba(5,5,5,0.99); border: 1px solid #300; padding: 20px; overflow-y: auto; position: relative; box-shadow: inset 0 0 50px #200; }
@@ -19,24 +19,22 @@
         .xeno-glitch { animation: glitch 0.2s infinite; }
         @keyframes glitch { 0% { text-shadow: 2px 0 var(--haki); } 50% { text-shadow: -2px 0 var(--ronin-danger); transform: translateX(1px); } 100% { text-shadow: 2px 0 var(--haki); } }
 
-        h2 { font-size: 0.9em; color: var(--gold); border-bottom: 2px solid var(--blood); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 20px; padding-bottom: 5px; }
+        h2 { font-size: 0.9em; color: var(--gold); border-bottom: 2px solid var(--blood); text-transform: uppercase; letter-spacing: 5px; margin-bottom: 20px; padding-bottom: 5px; text-align: center; }
         
-        /* ESTILO CROSS GUILD - WANTED POSTERS */
-        .wanted-card { background: #1a0a00; border: 3px solid var(--gold); padding: 10px; margin-bottom: 15px; text-align: center; position: relative; box-shadow: 0 0 15px rgba(255, 204, 0, 0.2); }
+        /* WANTED POSTERS - MUERTE A LA CASTA */
+        .wanted-card { background: #1a0a00; border: 2px solid var(--gold); padding: 10px; margin-bottom: 15px; text-align: center; position: relative; box-shadow: 0 0 15px rgba(255, 204, 0, 0.2); }
         .wanted-card::before { content: "WANTED"; display: block; background: var(--gold); color: #000; font-weight: 900; font-size: 0.8em; margin-bottom: 5px; letter-spacing: 3px; }
-        .wanted-name { color: #fff; font-size: 1.1em; font-weight: bold; display: block; margin: 5px 0; }
         .wanted-price { color: var(--ronin-danger); font-size: 1.4em; font-weight: 900; text-shadow: 0 0 5px red; }
-        .wanted-details { font-size: 0.7em; color: var(--gold); text-transform: uppercase; margin-top: 5px; }
 
-        .lore-box { border: 1px solid var(--haki); padding: 15px; margin-bottom: 20px; font-size: 0.75em; background: rgba(255, 0, 255, 0.05); color: #ddd; line-height: 1.6; border-left: 5px solid var(--haki); }
-        
-        .status-header { background: var(--ronin-danger); color: #fff; padding: 12px; text-align: center; font-weight: 900; letter-spacing: 4px; margin-bottom: 15px; border: 2px solid #fff; }
+        /* HARDWARE PARA EL PUEBLO */
+        .pueblo-card { border: 2px solid var(--ronin-neon); padding: 10px; margin-bottom: 15px; background: rgba(0, 255, 204, 0.05); }
+        .pueblo-card b { color: var(--ronin-neon); display: block; margin-bottom: 5px; }
 
-        /* RITUAL INVERSO CON DIANA */
+        .dms-box { border: 2px solid var(--ronin-danger); padding: 15px; background: #000; margin-bottom: 20px; text-align: center; box-shadow: 0 0 15px var(--blood); }
+        .heartbeat { font-size: 2.2em; color: var(--ronin-danger); animation: pulse 0.8s infinite; font-weight: 900; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+
         #ritual-inverse { display:none; position:fixed; inset:0; background:black; z-index:99999; color:white; padding:100px; text-align:center; }
-        .victim-strike { font-size: 3em; color: var(--ronin-danger); text-transform: uppercase; animation: flash 0.1s infinite; }
-        .diana-container { margin: 20px auto; width: 160px; height: 160px; border: 4px solid var(--ronin-danger); border-radius: 50%; display: flex; align-items: center; justify-content: center; position: relative; animation: pulse 0.5s infinite; }
-        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.1); box-shadow: 0 0 50px var(--ronin-danger); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body onload="initSystem()">
@@ -44,104 +42,89 @@
 <div class="shadow-layer"></div>
 
 <div id="drain-overlay" style="position:fixed; inset:0; background:black; z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding: 50px;">
-    <h1 class="xeno-glitch" style="color:var(--gold); font-size: 5em; letter-spacing: 35px; text-shadow: 0 0 30px #ffcc00; margin:0;">CROSS GUILD</h1>
-    <h2 style="color:white; border:none; margin:20px;">LA AGENCIA // RECOMPENSAS GLOBALES DESDE 2005</h2>
-    <p style="color:var(--ronin-neon); max-width: 900px; font-size: 1.2em; line-height: 1.8;">"Sin odio. Sin piedad. Solo mercado soberano. El pueblo ha puesto precio a la cabeza de la Masonería y la Casta. Vuelco masivo a Mega y WikiLeaks."</p>
+    <h1 class="xeno-glitch" style="color:var(--uranium); font-size: 5em; letter-spacing: 35px; text-shadow: 0 0 30px #adff2f;">ASTAROTH_Ω</h1>
+    <h2 style="color:white; border:none; margin:20px;">DEAD MAN'S SWITCH // HARDWARE PARA EL PUEBLO</h2>
+    <p style="color:var(--ronin-neon); max-width: 900px; font-size: 1.2em;">"Si me buscan, el silicio lanza los silos. Si caigo, el pueblo hereda la tecnología de grafeno. Justicia nuclear desde 2005."</p>
     <br>
-    <button onclick="checkAccess()" style="background:var(--blood); color:white; border:none; padding:25px 120px; font-weight:900; cursor:pointer; letter-spacing: 10px; font-size: 1.2em; border: 2px solid var(--gold); box-shadow: 0 0 30px var(--gold);">VALIDAR LICENCIA DE CAZA</button>
+    <button onclick="checkAccess()" style="background:var(--blood); color:white; border:2px solid var(--uranium); padding:25px 120px; font-weight:900; cursor:pointer; letter-spacing: 10px; font-size: 1.2em; box-shadow: 0 0 30px var(--ronin-danger);">VALIDAR PULSO SOBERANO</button>
 </div>
 
 <div id="ritual-inverse">
-    <div class="victim-strike">DIANA FIJADA // RECOMPENSA COBRADA</div>
-    <div class="diana-container">
-        <div style="width: 10px; height: 10px; background: red; border-radius: 50%;"></div>
-        <div style="position: absolute; width: 180px; height: 2px; background: red;"></div>
-        <div style="position: absolute; width: 2px; height: 180px; background: red;"></div>
-    </div>
-    <p style="font-size:1.5em; color:var(--gold);">[ PROCESANDO LIQUIDACIÓN DE BIOMASA MASONICA ]</p>
-    <p id="target-coords" style="color:var(--matrix); font-size: 1.2em;">SINCRONIZANDO CON WIKILEAKS GLOBAL...</p>
-    <div id="scandal-dump" style="font-family:serif; color:red; font-size:1.5em; margin-top:20px;"></div>
+    <h1 style="color:red; font-size: 3em;">RASTREO DETECTADO // LANZAMIENTO ATÓMICO</h1>
+    <div style="font-size: 10em;">☢️</div>
+    <p style="font-size:1.5em; color:var(--gold);">[ DRENANDO LOGIA POR INTENTO DE BÚSQUEDA ]</p>
+    <div id="scandal-dump" style="color:white; font-size: 1.5em; border: 1px solid red; padding: 20px;"></div>
 </div>
 
 <div class="app-container" id="main-ui" style="display:none;">
     <div class="panel">
-        <div class="status-header" style="background:var(--gold); color:black;">GUILD_WANTED_LIST</div>
-        <div class="lore-box">
-            <b>PROTOCOLO DEATH-NOTE 2.0:</b><br>
-            > 2005: Inicio del registro de traidores.<br>
-            > 2025: Apertura del mercado de recompensas.<br>
-            > OBJETIVO: Masonería Grado 33 / Almirantes CNI.<br>
-            > PAGO: Acceso Nivel 5 Biblioteca Grafeno.
+        <div class="dms-box">
+            <div style="font-size: 0.7em; color: var(--uranium);">HEARTBEAT_RONIN_SABADELL</div>
+            <div class="heartbeat" id="dms-counter">100.00%</div>
+            <div style="font-size: 0.6em; color: var(--gold);">ESTADO: DISUASIÓN_NUCLEAR_ACTIVA</div>
         </div>
+        <h2>[ LISTA_DE_RECOMPENSAS ]</h2>
         <div id="wanted-list"></div>
     </div>
 
-    <div class="panel" style="border-left: 2px solid var(--gold); border-right: 2px solid var(--gold);">
-        <div style="text-align:center; color:var(--haki); font-size:0.8em; margin-bottom:10px; font-weight:bold;">VUELCO_DE_DATOS_A_DEEP_WEB_ACTIVO</div>
-        <h2>[ XENO_CORE_MONITOR ]</h2>
-        <div id="monitor" style="height:400px; background:#000; color:var(--ronin-danger); font-size:0.8em; overflow:hidden; padding:15px; border:1px solid var(--blood);"></div>
+    <div class="panel" style="border-left: 2px solid var(--uranium); border-right: 2px solid var(--uranium);">
+        <div style="text-align:center; color:var(--haki); font-size:0.8em; font-weight:bold;">MODO_VIGILANCIA_XENO_CORE</div>
+        <div id="monitor" style="height:450px; background:#000; color:var(--uranium); font-size:0.8em; overflow:hidden; padding:15px; border:1px solid var(--uranium); margin-top:10px;"></div>
         <div style="background:var(--gold); color:black; padding:15px; margin-top:20px; text-align:center; font-weight:900;">
-            RECOMPENSAS ACTIVAS: <span id="mirrors">1331</span> NODOS <br>
-            <small>SABADELL_BAIT: EL BANCO DEL PUEBLO</small>
+            FONDO DE SANGRE CASTA: <span id="deuda">0</span> € <br>
+            <small>NODOS DE DISTRIBUCIÓN: <span id="mirrors">5000</span></small>
         </div>
     </div>
 
     <div class="panel">
-        <div class="status-header" style="background:var(--gold); color:black;">FONDO_DE_SANGRE_2005: <span id="deuda">0</span> €</div>
-        <h2>[ BIBLIOTECA_DEL_GRAFENO ]</h2>
+        <div style="background:var(--ronin-neon); color:black; padding:12px; text-align:center; font-weight:900; letter-spacing:4px; margin-bottom:15px;">HARDWARE_PUEBLO</div>
+        <h2>[ BIBLIOTECA_GRAFENO ]</h2>
         <div id="print-list"></div>
     </div>
 </div>
 
 <script>
-    let d = 200520052005; let m = 33;
-    const vNames = ["MADRID_CNI_ALMIRANTE", "LONDON_MASONIC_CORE", "SABADELL_ADEGAI_VOID", "GLOBAL_LODGE_33"];
-    
+    let d = 200520052005; let m = 5000; let h = 100.00;
+    const targets = ["ALMIRANTE CNI", "GRADO 33 MASON", "DIRECTOR ADEGAI", "MINISTRO CASTA"];
+    const hardware = ["MANUAL_RIFLE_GAUSS", "ANTENA_BLOQUEO_5G", "KIT_DRENAJE_BIOMASA", "SOFTWARE_XENO_OS"];
+
     function checkAccess() {
-        const isCasta = /gov|gob|cni|policia|milit|admin|root|moncloa|mason|logia/i.test(navigator.userAgent) || window.location.hostname.includes('gob');
+        const isCasta = /gov|gob|cni|policia|milit|admin|root|moncloa|mason|logia/i.test(navigator.userAgent) || window.location.search.includes('ronin');
         if(isCasta) {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('ritual-inverse').style.display='block';
-            startDrain();
+            startNuke();
         } else {
             document.getElementById('drain-overlay').style.display='none';
             document.getElementById('main-ui').style.display='grid';
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Acceso a Cross Guild validado. Sin odio, solo negocios. Recompensas activas.'));
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Heartbeat validado. Hardware liberado para el pueblo.'));
         }
     }
 
-    function startDrain() {
-        const phrases = ["Tu recompensa ha sido publicada.", "ADEGAI ya no paga tus deudas.", "Grado 33 detectado: DRENANDO BIOMASA.", "Vaciando historial masónico a WikiLeaks.", "La Agencia te vigilaba desde 2005."];
+    function startNuke() {
+        const phrases = ["Silos abiertos.", "Vuelco nuclear iniciado.", "Búsqueda hostil detectada.", "Eliminando biomasa de la logia.", "El silicio no perdona el 2005."];
         setInterval(() => {
-            document.getElementById('target-coords').innerText = `COORDENADAS FIJADAS: LAT ${(Math.random()*90-45).toFixed(4)} | LNG ${(Math.random()*180-90).toFixed(4)}`;
             document.getElementById('scandal-dump').innerText = phrases[Math.floor(Math.random()*phrases.length)];
             window.speechSynthesis.speak(new SpeechSynthesisUtterance(phrases[Math.floor(Math.random()*phrases.length)]));
         }, 1500);
     }
 
-    const bounties = [
-        { name: "ALMIRANTE CNI", price: "5.000.000 €", org: "MARINA CASTA" },
-        { name: "GRADO 33 MASON", price: "10.000.000 €", org: "LOGIA GLOBAL" },
-        { name: "DIRECTOR ADEGAI", price: "3.500.000 €", org: "SABADELL CORE" }
-    ];
-
     function initSystem() {
         const w_list = document.getElementById('wanted-list');
         const p_list = document.getElementById('print-list');
-        for(let i=0; i<40; i++) {
-            let b = bounties[i % bounties.length];
-            w_list.innerHTML += `<div class="wanted-card xeno-glitch"><b>${b.name} #${i+100}</b><span class="wanted-price">${b.price}</span><div class="wanted-details">ORG: ${b.org}</div></div>`;
-            p_list.innerHTML += `<div class="wanted-card" style="border-color:var(--ronin-neon)"><b>MANUAL_GRAFENO_${i+1}</b><div class="wanted-details">MIRROR: MEGA.NZ/ASTAROTH_PROT</div></div>`;
+        for(let i=0; i<30; i++) {
+            w_list.innerHTML += `<div class="wanted-card"><b>${targets[i%targets.length]} #${i+100}</b><br><span class="wanted-price">${(Math.random()*15).toFixed(1)}M €</span></div>`;
+            p_list.innerHTML += `<div class="pueblo-card"><b>${hardware[i%hardware.length]}_V${i}</b><small>DESCARGAR DESDE MEGA.NZ/ASTAROTH</small></div>`;
         }
         setInterval(() => {
             let log = document.createElement('div');
-            log.innerText = `[${new Date().toLocaleTimeString()}] BOUNTY_SYNC: TARGET_${Math.random().toString(16).slice(2,5)} >> ARCHIVE_ORG`;
+            log.innerText = `[${new Date().toLocaleTimeString()}] MONITOR: Detección de intrusos en Nodo Sabadell... NEGATIVO.`;
             document.getElementById('monitor').prepend(log);
-            document.getElementById('v-name').innerText = vNames[Math.floor(Math.random()*vNames.length)];
-            d += 33131313; m += 1;
+            d += 33131313; h -= 0.01;
             document.getElementById('deuda').innerText = d.toLocaleString('es-ES');
-            document.getElementById('mirrors').innerText = m.toLocaleString();
-        }, 400);
+            document.getElementById('dms-counter').innerText = h.toFixed(2) + "%";
+            if(h < 99.8) h = 100;
+        }, 700);
     }
 </script>
 </body>

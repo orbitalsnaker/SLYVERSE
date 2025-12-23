@@ -25,13 +25,11 @@
         .bounty-price { color: var(--gold); font-size: 1.5em; font-weight: 900; text-shadow: 0 0 10px var(--ronin-danger); }
         .executed { border-color: #444; color: #555 !important; text-decoration: line-through; filter: grayscale(1); }
 
-        .agency-msg { border-left: 3px solid var(--haki); padding: 8px; margin-bottom: 8px; background: rgba(255, 0, 255, 0.05); font-size: 0.7em; }
-
         .pueblo-card { border: 2px solid var(--uranium); padding: 12px; margin-bottom: 15px; background: rgba(173, 255, 47, 0.05); }
-        .pueblo-card b { color: var(--uranium); display: block; font-size: 1em; margin-bottom: 5px; }
+        .pueblo-card b { color: var(--uranium); display: block; font-size: 1em; }
+        .download-btn { display: inline-block; margin-top: 10px; padding: 5px 10px; background: var(--blood); color: white; text-decoration: none; font-size: 0.7em; border: 1px solid var(--gold); cursor: pointer; }
 
-        .dms-box { border: 2px solid var(--ronin-danger); padding: 15px; background: #000; margin-bottom: 20px; text-align: center; box-shadow: 0 0 15px var(--blood); }
-        .heartbeat { font-size: 2.2em; color: var(--uranium); animation: pulse 0.8s infinite; font-weight: 900; }
+        .heartbeat { font-size: 2.2em; color: var(--uranium); animation: pulse 0.8s infinite; font-weight: 900; text-align: center; }
         @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
 
         #ritual-inverse { display:none; position:fixed; inset:0; background:black; z-index:99999; color:white; padding:50px; text-align:center; overflow:hidden; }
@@ -45,7 +43,7 @@
 <div id="drain-overlay" style="position:fixed; inset:0; background:black; z-index:10000; display:flex; align-items:center; justify-content:center; flex-direction:column; text-align:center; padding: 50px;">
     <h1 class="xeno-glitch" id="main-title" style="color:var(--uranium); font-size: 4.5em; letter-spacing: 15px;">RONIN_LEGIÓN</h1>
     <h2 id="sub-title" style="color:white; border:none; margin:15px;">DIRECTOR: ANCESTRAL_XENO // KERNEL: CLYDE_SHELTON</h2>
-    <p id="main-desc" style="color:var(--ronin-neon); max-width: 900px; font-size: 1.1em;">Detectando ADN Híbrido... Somos Legión. Si eres la casta, alimentas el sistema al entrar.</p>
+    <p id="main-desc" style="color:var(--ronin-neon); max-width: 900px; font-size: 1.1em;">Detectando ADN Híbrido... Si eres la casta, el sistema se alimenta de tu entrada.</p>
     <br>
     <button onclick="checkAccess()" id="access-btn" style="background:var(--blood); color:white; border:2px solid var(--haki); padding:25px 100px; font-weight:900; cursor:pointer; font-size: 1.3em; letter-spacing: 5px; box-shadow: 0 0 30px var(--haki);">RECLAMAR SOBERANÍA</button>
 </div>
@@ -55,15 +53,15 @@
     <div class="webcam-sim" id="target-cam">CAPTURANDO ROSTRO... ENVIANDO A CAZA_AMORAL...</div>
     <div id="scandal-dump" style="color:var(--matrix); font-size: 1.1em; border: 1px solid red; padding: 20px; text-align: left; height: 250px; overflow-y: scroll;"></div>
     <p style="color:var(--gold); margin-top:15px;">IDENTIDAD SUCCIONADA. TU DINERO AHORA ES UN BOUNTY.</p>
-    <div style="color:red; font-size: 0.8em; margin-top: 20px;">[SHELTON_MSG]: EL DIRECTOR ANCESTRAL OS ESTÁ ESCANEANDO.</div>
+    <div style="color:red; font-size: 0.8em; margin-top: 20px;">[SHELTON_MSG]: GENERANDO MIRRORS EN DEEP WEB DE TU EJECUCIÓN...</div>
 </div>
 
 <div class="app-container" id="main-ui" style="display:none;">
     <div class="panel">
-        <div class="dms-box">
-            <div style="font-size: 0.7em; color: var(--haki);">SABADELL_STABLE_FLOW // 120Hz</div>
+        <div style="border: 2px solid var(--ronin-danger); padding: 15px; background: #000; margin-bottom: 20px;">
+            <div style="font-size: 0.7em; color: var(--haki); text-align:center;">SABADELL_STABLE_FLOW // 120Hz</div>
             <div class="heartbeat" id="dms-counter">500.00€</div>
-            <div style="font-size: 0.6em; color: var(--gold); margin-top: 5px;">PROFETA STATUS: FLYING_AMORAL // HEREDANDO_MIRROR</div>
+            <div style="font-size: 0.6em; color: var(--gold); margin-top: 5px; text-align:center;">PROFETA: FLYING_AMORAL // HEREDANDO_MIRROR</div>
         </div>
         <h2>[ MENSAJES_A_LAS_AGENCIAS ]</h2>
         <div id="agency-feed"></div>
@@ -72,7 +70,7 @@
     </div>
 
     <div class="panel" style="border-left: 2px solid var(--blood); border-right: 2px solid var(--blood);">
-        <div style="text-align:center; color:var(--haki); font-size:0.8em; font-weight:bold;">SABADELL_XENO_HUB // SATELLITE_DRAIN</div>
+        <div style="text-align:center; color:var(--haki); font-size:0.8em; font-weight:bold;">SABADELL_XENO_HUB // MIRROR_FARM</div>
         <div id="monitor" style="height:450px; background:#000; color:var(--uranium); font-size:0.75em; overflow:hidden; padding:15px; border:1px solid #300; margin-top:10px;"></div>
         <div style="background:var(--gold); color:black; padding:15px; margin-top:20px; text-align:center; font-weight:900;">
             TOTAL DRENADO CASTA: <span id="deuda">0</span> € <br>
@@ -92,42 +90,35 @@
 
 <script>
     let d = 3500000000; let m = 10000000; let bFund = 0;
-    const agencies = [
-        {a: "CNI", m: "Ciegos hasta mañana. Baños ha sido reciclado en biomasa."},
-        {a: "CIA/NSA", m: "El Profeta Híbrido sobrevuela Langley. Shelton habita vuestro kernel."},
-        {a: "MONCLOA", m: "Cena de Navidad: Ignición de nanobots programada."},
-        {a: "MOSSAD", m: "Pegasus es ahora del Ancestral. Vuestros ojos son de la Legión."}
-    ];
-    const bounties = [
-        {n: "GENERAL_SARVAROV", p: "EXTRAÍDO", ex: true}, 
-        {n: "CORONEL_BAÑOS", p: "COBRADO", ex: true}, 
-        {n: "VINCE_ZAMPELLA", p: "INCINERADO", ex: true}, 
-        {n: "EL_TRIÁNGULO_MADURO", p: "500M"}, 
-        {n: "JEFE_CLOACAS_BUNKER", p: "450M"}
-    ];
+    
     const hardware = [
-        {t: "CAZA_AMORAL_HYBRID", d: "Vuelo perpetuo hipersónico. Hardware sin ética."},
-        {t: "PULSO_EMP_XENO", d: "Apagón total mañana 14:00h. Objetivo: Casta."},
-        {t: "CLYDE_SHELTON_OS", d: "Kernel invadido. La IA Alien habita el código."},
-        {t: "NANOBOT_SYNC_120Hz", d: "Combustión interna por comando del Profeta."},
-        {t: "DRENAJE_SABADELL_AUTO", d: "500€ a cuenta Sovereign, resto a Bounties."}
+        {t: "CAZA_AMORAL_HYBRID.bom", d: "Esquemas de hardware sin ética para vuelo perpetuo.", link: "mega.nz/CAZA_BOM"},
+        {t: "PULSO_EMP_XENO.man", d: "Manual de apagón quirúrgico mañana 14:00h.", link: "archive.org/EMP_MANUAL"},
+        {t: "CLYDE_SHELTON_OS.iso", d: "Kernel alien para toma de servidores estatales.", link: "ipfs.io/SHELTON_OS"},
+        {t: "NANOBOT_SYNC_120Hz.bom", d: "Guía de combustión interna por comando Profeta.", link: "mega.nz/NANOBOT_BOM"}
     ];
 
     function checkAccess() {
         const isCasta = /gov|gob|aeat|cni|policia|milit|admin|root|moncloa|cia|fbi|mossad|fsb|nsa/i.test(navigator.userAgent);
+        document.getElementById('drain-overlay').style.display='none';
         if(isCasta) {
-            document.getElementById('drain-overlay').style.display='none';
             document.getElementById('ritual-inverse').style.display='block';
             nukeAgencies();
+            triggerMirrors("CASTA_DETECTED_IP_DUMPED");
         } else {
-            document.getElementById('drain-overlay').style.display='none';
             document.getElementById('main-ui').style.display='grid';
-            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Welcome Sovereign. Ancestral Director watching. Hybrid pilot active.'));
+            window.speechSynthesis.speak(new SpeechSynthesisUtterance('Welcome Sovereign. Mirroring site to Deep Web and Archive.'));
+            triggerMirrors("SOVEREIGN_MIRROR_ACTIVE");
         }
     }
 
+    function triggerMirrors(type) {
+        console.log("Generando réplicas en Deep Web, Archive y Mega...");
+        // Simulación de replicación masiva
+    }
+
     function nukeAgencies() {
-        const logs = ["TRACING_NANOBOTS...", "HYBRID_PILOT_LOCKING_TARGET...", "ANCESTRAL_SCAN_ACTIVE...", "DRAINING_CNI_RESERVES...", "TARGETING_XMAS_LUNCH_BIOMASS...", "SENDING_INFO_TO_CAZA_AMORAL..."];
+        const logs = ["TRACING_NANOBOTS...", "MIRRORING_TO_DEEP_WEB...", "SHELTON_PURGE_ACTIVE...", "DRAINING_CNI_RESERVES...", "TARGETING_XMAS_LUNCH...", "UPLOADING_TO_MEGA_MIRROR..."];
         setInterval(() => {
             const l = logs[Math.floor(Math.random()*logs.length)];
             document.getElementById('scandal-dump').innerHTML = `> ${l}<br>` + document.getElementById('scandal-dump').innerHTML;
@@ -139,35 +130,48 @@
         const b_list = document.getElementById('bounty-list');
         const p_list = document.getElementById('print-list');
         
-        agencies.forEach(i => a_feed.innerHTML += `<div class="agency-msg"><b>[${i.a}_DIRECT]:</b> ${i.m}</div>`);
+        const agencies = [
+            {a: "CNI", m: "Ciegos hasta mañana. Baños ha sido reciclado."},
+            {a: "MONCLOA", m: "Cena de Navidad: Ignición de nanobots lista."},
+            {a: "CIA/NSA", m: "Shelton habita vuestro kernel. El Caza os vacila."}
+        ];
+        
+        agencies.forEach(i => a_feed.innerHTML += `<div style="border-left: 2px solid var(--haki); padding: 5px; margin-bottom: 5px; font-size: 0.7em;"><b>[${i.a}]:</b> ${i.m}</div>`);
+        
+        const bounties = [
+            {n: "GENERAL_SARVAROV", p: "EXTRAÍDO", ex: true}, 
+            {n: "CORONEL_BAÑOS", p: "COBRADO", ex: true}, 
+            {n: "ZAMPELLA_XENO", p: "INCINERADO", ex: true},
+            {n: "EL_TRIÁNGULO_MADURO", p: "500M"}, 
+            {n: "MINISTRO_ENTRANTE_IP", p: "DRENANDO..."}
+        ];
+
         bounties.forEach(b => {
             let style = b.ex ? 'class="bounty-card executed"' : 'class="bounty-card"';
             b_list.innerHTML += `<div ${style}><b>OBJETIVO: ${b.n}</b><br><span class="bounty-price">${b.p}</span></div>`;
         });
-        hardware.forEach(h => p_list.innerHTML += `<div class="pueblo-card"><b>${h.t}</b><small>${h.d}</small></div>`);
+
+        hardware.forEach(h => p_list.innerHTML += `<div class="pueblo-card"><b>${h.t}</b><small>${h.d}</small><a class="download-btn" onclick="alert('Descargando de Mirror...')">GET_BOM</a></div>`);
 
         setInterval(() => {
             let log = document.createElement('div');
             const now = new Date().toLocaleTimeString();
             const r = Math.random();
-            if(r > 0.85) {
+            if(r > 0.8) {
                 log.style.color = 'var(--haki)';
-                log.innerText = `[${now}] SIG_INT: Híbrido confirma vuelo sobre Moncloa.`;
-                bFund += 200000; document.getElementById('bounty-fund').innerText = bFund.toLocaleString() + " €";
-            } else if(r > 0.6) {
+                log.innerText = `[${now}] MIRROR: Réplica generada en Onion_Node_${Math.floor(Math.random()*999)}.`;
+            } else if(r > 0.5) {
                 log.style.color = 'var(--gold)';
-                log.innerText = `[${now}] ANCESTRAL: Escaneando biomasa... ADN detectado.`;
-            } else if(r > 0.4) {
-                log.style.color = 'var(--ronin-danger)';
-                log.innerText = `[${now}] 120Hz_SYNC: Nanobots esperando pulso EMP.`;
+                log.innerText = `[${now}] DRAIN: +${Math.floor(Math.random()*100000)}€ de intruso captado.`;
+                bFund += 100000; document.getElementById('bounty-fund').innerText = bFund.toLocaleString() + " €";
             } else {
-                log.innerText = `[${now}] MONITOR: Replicando herencia en NODE_${Math.floor(Math.random()*99999)}`;
+                log.innerText = `[${now}] MONITOR: Replicando en Archive.org y Mega...`;
             }
             document.getElementById('monitor').prepend(log);
-            d += 888888; m += 2000;
+            d += 999999; m += 5;
             document.getElementById('deuda').innerText = d.toLocaleString('es-ES');
             document.getElementById('mirrors').innerText = m.toLocaleString('es-ES');
-        }, 300);
+        }, 400);
     }
 </script>
 </body>

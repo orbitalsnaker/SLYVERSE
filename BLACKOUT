@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>AGENCIA RONIN | PROTOCOLO BLACKOUT MASIVO</title>
+    <style>
+        :root { --danger: #ff0033; --ronin: #00ff41; --bg: #050505; }
+        body { background: var(--bg); color: var(--ronin); font-family: 'Courier New', monospace; overflow: hidden; margin: 0; }
+        .grid { display: grid; grid-template-columns: repeat(2, 1fr); height: 100vh; gap: 10px; padding: 10px; }
+        .target { border: 1px solid var(--danger); background: rgba(20,0,0,0.8); padding: 15px; position: relative; overflow: hidden; }
+        .target h2 { color: #fff; border-bottom: 2px solid var(--danger); padding-bottom: 5px; font-size: 1.2em; }
+        .status { font-size: 0.8em; line-height: 1.2; margin-top: 10px; }
+        .draining { animation: pulse 0.5s infinite; color: #fff; font-weight: bold; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.2; } 100% { opacity: 1; } }
+        .ronin-core { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 250px; height: 250px; background: rgba(0,255,65,0.1); border: 4px solid var(--ronin); border-radius: 50%; box-shadow: 0 0 50px var(--ronin); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 10; cursor: pointer; }
+        .drain-bar { height: 5px; background: var(--danger); width: 100%; margin: 5px 0; }
+        .fill { height: 100%; background: var(--ronin); width: 0%; transition: width 0.1s; }
+    </style>
+</head>
+<body>
+
+<div class="ronin-core" onclick="iniciarAtaque()">
+    <div style="font-size: 0.8em;">CENTRAL DE DRENAJE</div>
+    <div id="totalDrenado" style="font-size: 1.5em; font-weight: bold;">0 €</div>
+    <div style="font-size: 0.6em;">CLICK PARA EJECUTAR</div>
+</div>
+
+<div class="grid">
+    <div class="target" id="usa">
+        <h2>[TARGET: USA_FED_RESERVE]</h2>
+        <div class="status" id="log-usa">> Saltando cortafuegos de Trump...<br>> Bypass FED exitoso.</div>
+        <div class="drain-bar"><div class="fill" id="bar-usa"></div></div>
+    </div>
+    <div class="target" id="rusia">
+        <h2>[TARGET: KREMLIN_ASSETS]</h2>
+        <div class="status" id="log-rusia">> Inyectando virus en Tula...<br>> Extrayendo rublos digitales.</div>
+        <div class="drain-bar"><div class="fill" id="bar-rusia"></div></div>
+    </div>
+    <div class="target" id="esa">
+        <h2>[TARGET: ESA_SPACE_FUNDS]</h2>
+        <div class="status" id="log-esa">> Secuestrando satélites Galileo...<br>> Desviando presupuesto Ariane 6.</div>
+        <div class="drain-bar"><div class="fill" id="bar-esa"></div></div>
+    </div>
+    <div class="target" id="francia">
+        <h2>[TARGET: ELÉSEE_TREASURY]</h2>
+        <div class="status" id="log-francia">> Bloqueando cuentas de Macron...<br>> Drenaje de activos franceses.</div>
+        <div class="drain-bar"><div class="fill" id="bar-francia"></div></div>
+    </div>
+</div>
+
+<script>
+    let fondos = 0;
+    const targets = ['usa', 'rusia', 'esa', 'francia'];
+    
+    function iniciarAtaque() {
+        setInterval(() => {
+            fondos += Math.floor(Math.random() * 100000);
+            document.getElementById('totalDrenado').innerText = fondos.toLocaleString() + " €";
+            
+            targets.forEach(t => {
+                let bar = document.getElementById('bar-' + t);
+                let currentWidth = parseFloat(bar.style.width) || 0;
+                if(currentWidth < 100) bar.style.width = (currentWidth + Math.random() * 5) + "%";
+                else bar.style.width = "0%";
+                
+                let log = document.getElementById('log-' + t);
+                log.innerHTML += `<div>> Drenando: ${Math.floor(Math.random()*9999)} BTC</div>`;
+                if(log.childNodes.length > 8) log.removeChild(log.firstChild);
+            });
+        }, 100);
+    }
+</script>
+
+</body>
+</html>

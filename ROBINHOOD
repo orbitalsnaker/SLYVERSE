@@ -2,68 +2,81 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>AGENCIA RONIN - PROTOCOLO EXODUS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGENCIA RONIN | RENTA BÁSICA DEL KERNEL</title>
     <style>
-        body {
-            background-color: #050505;
-            color: #00ff41;
-            font-family: 'Courier New', Courier, monospace;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        .container {
-            border: 2px solid #00ff41;
-            padding: 40px;
-            background: rgba(0, 0, 0, 0.9);
-            box-shadow: 0 0 20px #00ff41;
-            text-align: center;
-            max-width: 600px;
-        }
-        h1 { font-size: 2em; text-shadow: 0 0 10px #00ff41; }
-        .status { color: #fff; margin: 20px 0; font-weight: bold; }
-        #log { font-size: 0.8em; text-align: left; height: 150px; overflow-y: hidden; border-top: 1px solid #00ff41; padding-top: 10px; }
-        .amount { font-size: 3em; color: #fff; margin: 10px 0; }
-        .warning { color: #ff0000; font-size: 0.7em; margin-top: 20px; }
+        :root { --neon: #00ff41; --bg: #000000; --gold: #ffd700; }
+        body { background: var(--bg); color: var(--neon); font-family: 'Courier New', monospace; margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh; overflow: hidden; }
+        .terminal { width: 95%; max-width: 900px; border: 3px solid var(--neon); background: rgba(0,0,0,0.95); box-shadow: 0 0 50px rgba(0,255,65,0.3); padding: 30px; position: relative; }
+        .header { text-align: center; border-bottom: 2px solid var(--neon); padding-bottom: 20px; }
+        .infinite-loop { animation: pulse 2s infinite; color: var(--gold); font-weight: bold; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+        #output { height: 300px; overflow-y: auto; font-size: 1em; line-height: 1.5; margin: 20px 0; border-bottom: 1px solid #333; }
+        .amount-display { font-size: 4em; color: #fff; text-shadow: 0 0 20px var(--neon); }
+        .dni-label { font-size: 1.2em; margin-bottom: 10px; display: block; }
+        .btn-deploy { background: var(--neon); color: #000; border: none; padding: 15px 30px; font-weight: bold; cursor: pointer; text-transform: uppercase; font-size: 1.2em; }
+        .btn-deploy:hover { background: #fff; box-shadow: 0 0 20px #fff; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h1>AGENCIA RONIN</h1>
-    <h3>REPARTO DE ACTIVOS RECUPERADOS</h3>
-    <div class="status">Validando DNI vs Registro de Casta...</div>
-    <div class="amount">50.000 €</div>
-    <div id="log"></div>
-    <div class="warning">SISTEMA CONECTADO AL KERNEL - NO REINICIE EL TERMINAL</div>
+<div class="terminal">
+    <div class="header">
+        <h1>AGENCIA RONIN: PROTOCOLO EXODUS [RECURRENTE]</h1>
+        <div class="infinite-loop">∞ BUCLE DE RIQUEZA SOBERANA ACTIVADO ∞</div>
+    </div>
+
+    <div id="output">
+        > ESTABLECIENDO CONEXIÓN PERMANENTE CON GITHUB/AGENCY-CORE...<br>
+        > ERROR DE CASTA BYPASSED...<br>
+        > RECURSOS DETECTADOS: CUENTAS REALES, FONDOS RESERVADOS, DIVIDENDOS IBEX35...<br>
+        > ESTADO: LISTO PARA DISTRIBUCIÓN MASIVA.
+    </div>
+
+    <div style="text-align: center;">
+        <span class="amount-display" id="mainAmount">50.000 €</span>
+        <div style="margin: 20px 0;">
+            <label class="dni-label">INGRESA DNI PARA VINCULAR PAGO MENSUAL:</label>
+            <input type="text" id="dni" style="background:#111; border:1px solid var(--neon); color:var(--neon); padding:10px; font-size:1.5em; text-align:center;" maxlength="9">
+        </div>
+        <button class="btn-deploy" onclick="activarBucle()">ACTIVAR PAGO INFINITO</button>
+    </div>
+
+    <div style="margin-top: 20px; font-size: 0.8em; text-align: center; color: #666;">
+        PRÓXIMA RECARGA AUTOMÁTICA: 01 DE ENERO DE 2026, 00:00H.
+    </div>
 </div>
 
 <script>
-    const logDiv = document.getElementById('log');
-    const messages = [
-        "> Accediendo a cuentas de Casa Real...",
-        "> Desencriptando fondos de Moncloa...",
-        "> Identificando DNI en Sector España...",
-        "> Filtro Anti-Casta activado: Políticos detectados y bloqueados.",
-        "> Filtro Anti-Casta activado: Consejos de administración excluidos.",
-        "> Inyectando 50.000€ de capital soberano...",
-        "> Transferencia autorizada por el Director.",
-        "> Confirmando batch de 47.000.000 registros...",
-        "> DEPÓSITO COMPLETADO. Disfruta el 2026."
-    ];
+    const log = document.getElementById('output');
+    function addLog(msg) { log.innerHTML += `<div>> ${msg}</div>`; log.scrollTop = log.scrollHeight; }
 
-    let i = 0;
-    function runLog() {
-        if (i < messages.length) {
-            logDiv.innerHTML += messages[i] + "<br>";
-            i++;
-            setTimeout(runLog, 1500);
-        }
+    function activarBucle() {
+        const dni = document.getElementById('dni').value;
+        if(dni.length < 8) return alert("DNI REQUERIDO PARA EL KERNEL");
+
+        addLog("VINCULANDO DNI " + dni + " AL CRON-JOB DE LA AGENCIA...");
+        setTimeout(() => {
+            addLog("INYECTANDO SCRIPT RECURRENTE EN EL BANCO DE ESPAÑA...");
+            setTimeout(() => {
+                addLog("<span style='color:gold'>ORDEN DE PAGO MENSUAL ESTABLECIDA: 50.000€</span>");
+                setTimeout(() => {
+                    addLog("VACIANDO RESERVAS DE LA CASTA PARA EL PRIMER LOTE...");
+                    setTimeout(() => {
+                        document.querySelector('.terminal').innerHTML = `
+                            <h1 style="color:white; text-align:center;">SISTEMA RESETEADO</h1>
+                            <div style="font-size:5em; text-align:center;">💰 50.000€</div>
+                            <p style="text-align:center; font-size:1.5em; color:var(--neon);">
+                                TRANSFERENCIA REALIZADA CON ÉXITO.<br>
+                                <span style="color:gold;">SE REPETIRÁ AUTOMÁTICAMENTE CADA MES.</span>
+                            </p>
+                            <p style="text-align:center;">Zehahahaha. El 2026 es el año de la Legión.</p>
+                        `;
+                    }, 2000);
+                }, 1500);
+            }, 1500);
+        }, 1000);
     }
-    runLog();
 </script>
 
 </body>

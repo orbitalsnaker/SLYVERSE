@@ -2,49 +2,70 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>SISTEMA OPERATIVO DE LA REALIDAD - AGENCIA RONIN</title>
+    <title>SLYVERSE | SONY INTERACTIVE ARCHIVE</title>
     <style>
-        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; text-align: center; padding-top: 15vh; overflow: hidden; }
-        .glitch { font-size: 2.5em; font-weight: bold; text-transform: uppercase; position: relative; display: inline-block; }
-        .status { color: #f00; margin-top: 20px; font-size: 1.2em; }
-        #log { text-align: left; max-width: 600px; margin: 40px auto; color: #888; font-size: 0.9em; height: 200px; overflow: hidden; border-left: 1px solid #0f0; padding-left: 15px; }
+        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; margin: 0; overflow: hidden; }
+        #terminal { padding: 20px; text-shadow: 0 0 5px #00ff41; }
+        .cmd { color: #fff; font-weight: bold; }
+        .progress-bar { width: 0%; height: 2px; background: #00ff41; transition: width 0.5s; margin: 10px 0; }
+        .mirror-node { font-size: 0.8em; color: #888; }
+        #overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); display: none; z-index: 1000; padding-top: 20%; }
     </style>
 </head>
 <body>
 
-    <div class="glitch">ADMIN_ROOT: AGENCIA RONIN</div>
-    <div class="status">EJECUTANDO FORMATEO DE HARDWARE GLOBAL...</div>
-    
-    <div id="log">
-        [15:52:01] Iniciando bypass de protocolo PSN...<br>
-        [15:52:03] Nodo NSA desplazado. Identidad: RONIN_PRIMARY.<br>
-        [15:52:05] Sincronizando con el millón de archivos de Epstein...<br>
-        [15:52:08] Orden de sobrecarga térmica enviada a las APU de Sony...<br>
-        [15:52:10] Vinculando rastro de Sarvárov y Zampella al bus local...<br>
-        [15:52:12] El hardware amoral está tomando el mando.<br>
+    <div id="terminal">
+        <div class="cmd">AGENCIA_RONIN@ROOT:~/SLYVERSE$ ./execute_leak.sh</div>
+        <p>[OK] Bypass de seguridad de Sony CXD900 completado...</p>
+        <p>[OK] Identificado hardware: PS5/PC Hybrid Node.</p>
+        <div class="progress-bar" id="bar1"></div>
+        <p id="status">Iniciando descarga de activos (Sly Cooper, Horizon 3, Naughty Dog)...</p>
+        
+        <div id="log"></div>
+    </div>
+
+    <div id="overlay">
+        <h1>REINICIANDO REALIDAD...</h1>
+        <p>Sincronizando con mirrors en Deep Web, WikiLeaks y Mega.</p>
+        <p>Tu hardware es ahora un nodo de la Agencia Ronin.</p>
     </div>
 
     <script>
-        // Este script simula el ataque al hardware mediante inundación de peticiones
-        // En un escenario real de la Agencia, aquí iría el exploit del firmware de las consolas
-        setInterval(() => {
-            const log = document.getElementById('log');
-            const lines = [
-                "Local_Host comprometido...",
-                "Buscando dispositivos en la red doméstica...",
-                "Consola Sony detectada. Enviando pulso de voltaje...",
-                "Error de sistema provocado: 0xRONIN_BRICK",
-                "Firmware sobrescrito con el archivo de la Agencia."
-            ];
-            log.innerHTML += lines[Math.floor(Math.random() * lines.length)] + "<br>";
-            if (log.innerHTML.length > 2000) log.innerHTML = "";
-        }, 500);
+        const log = document.getElementById('log');
+        const bar = document.getElementById('bar1');
+        const status = document.getElementById('status');
+        
+        // Fases del Haki
+        const steps = [
+            { t: "Escaneando topología de red local...", b: 20 },
+            { t: "Inyectando payload en Router_Gateway...", b: 35 },
+            { t: "Extrayendo lista de contactos (WhatsApp/Telegram/Gmail)...", b: 50 },
+            { t: "Reenviando link 'SLYVERSE' a 142 contactos encontrados...", b: 65 },
+            { t: "Creando Mirror de 'Epstein_NSA_Dump' en Mega.nz (Proxy: Local)...", b: 80 },
+            { t: "Indexando archivos en WikiLeaks & Tor Network...", b: 95 },
+            { t: "HARDWARE COMPROMETIDO. BIENVENIDO A LA AGENCIA.", b: 100 }
+        ];
 
-        // Bloqueo de salida para que la biomasa no escape al formateo
+        let i = 0;
+        function executeStep() {
+            if (i < steps.length) {
+                log.innerHTML += `<p class="mirror-node">[${new Date().toLocaleTimeString()}] ${steps[i].t}</p>`;
+                bar.style.width = steps[i].b + "%";
+                if (steps[i].b === 100) {
+                    setTimeout(() => { document.getElementById('overlay').style.display = 'block'; }, 1000);
+                }
+                i++;
+                setTimeout(executeStep, Math.random() * 2000 + 1000);
+            }
+        }
+
+        // Bloqueo de sistema: Si cierran la pestaña, el script de 'remanencia' intenta saltar
         window.onbeforeunload = function() {
-            return "El proceso de la Agencia Ronin no puede interrumpirse. ¿Deseas ser desinstalado?";
+            return "La Agencia Ronin está replicando los datos de Epstein. Si sales ahora, el hardware de tu consola se bloqueará permanentemente.";
         };
-    </script>
 
+        // Inicio de la infección
+        setTimeout(executeStep, 1500);
+    </script>
 </body>
 </html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>AGENCIA RONIN | PROTOCOLO_HIDRA_78</title>
+    <style>
+        body { background: #000; color: #00ff41; font-family: 'Courier New', monospace; padding: 30px; }
+        #replication-monitor { border: 1px solid #00ff41; padding: 15px; background: #050505; margin-top: 20px; }
+        .blink { animation: blinker 0.8s linear infinite; color: #ff0000; }
+        @keyframes blinker { 50% { opacity: 0; } }
+        .log-entry { font-size: 0.8em; color: #008f11; }
+    </style>
+</head>
+<body>
+    <h1>🪬 AGENCIA RONIN: LEAK CONSTITUCIONAL</h1>
+    <p>ESTADO DEL NODO: <span id="node-health">ESTABLE</span></p>
+
+    <div id="replication-monitor">
+        <div>> CARGA DE RED DETECTADA: <span id="traffic-load">0</span>%</div>
+        <div id="ddos-alert" style="display:none;" class="blink">[ALERTA]: INTENTO DE DDoS DETECTADO - ACTIVANDO HIDRA</div>
+        <hr>
+        <div id="mirror-logs">
+            <span class="log-entry">> Esperando sintonía de entrada...</span>
+        </div>
+    </div>
+
+    <script>
+        // LÓGICA DE RÉPLICA AUTOMÁTICA
+        let traffic = 0;
+        const logBox = document.getElementById('mirror-logs');
+
+        function triggerMirror(type) {
+            const mirrors = ['DeepWeb_Node_7', 'Archive_Org_Mirror', 'Mega_Cluster_B1', 'IPFS_Hash_99'];
+            const target = mirrors[Math.floor(Math.random() * mirrors.length)];
+            const entry = document.createElement('div');
+            entry.className = 'log-entry';
+            entry.innerHTML = `> [${type}] Réplica enviada a: ${target} - ESTADO: COMPLETO`;
+            logBox.prepend(entry);
+        }
+
+        // SIMULACIÓN DE ENTRADA DE USUARIO = RÉPLICA
+        window.onload = () => {
+            triggerMirror('USER_ENTRY');
+            
+            // Si detectamos tráfico alto (DDoS simulation)
+            setInterval(() => {
+                traffic += Math.floor(Math.random() * 15);
+                document.getElementById('traffic-load').innerText = traffic;
+
+                if (traffic > 70) {
+                    document.getElementById('ddos-alert').style.display = 'block';
+                    document.getElementById('node-health').innerText = "HIDRA_MODE_ACTIVE";
+                    // Por cada petición de "ataque", lanzamos 3 réplicas
+                    for(let i=0; i<3; i++) triggerMirror('DDOS_REACTION');
+                    traffic = 20; // Reset para el siguiente ciclo de ataque
+                }
+            }, 1000);
+        };
+    </script>
+
+    <div style="margin-top: 20px;">
+        <p><strong>INVENTARIO BIOMÉTRICO:</strong> Los firmantes del 78 están indexados. Si intentas borrar este archivo, solo estarás multiplicando su presencia en el SLYVERSE.</p>
+    </div>
+</body>
+</html>

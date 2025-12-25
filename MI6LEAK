@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SLYVERSE Ω · OPERACIÓN "SIN MÁSCARAS" · MI6 GLOBAL ASSETS</title>
+    <style>
+        :root {
+            --biometric-blue: #00e5ff;
+            --alert-orange: #ff8c00;
+            --terminal-green: #39ff14;
+            --background: #050505;
+            --bom-red: #ff0000;
+        }
+        body {
+            background-color: var(--background);
+            color: var(--terminal-green);
+            font-family: 'Courier New', monospace;
+            padding: 20px;
+            text-transform: uppercase;
+            overflow-x: hidden;
+        }
+        .header {
+            border: 3px dashed var(--alert-orange);
+            padding: 20px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        h1 { color: white; letter-spacing: 5px; }
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 25px;
+        }
+        .agent-card {
+            border: 1px solid #333;
+            background: rgba(0, 229, 255, 0.03);
+            padding: 15px;
+            position: relative;
+        }
+        .agent-card:hover { border-color: var(--biometric-blue); box-shadow: 0 0 15px var(--biometric-blue); }
+        .biometric-box {
+            height: 180px;
+            border: 1px solid var(--biometric-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7em;
+            background: linear-gradient(45deg, #111 25%, #222 25%, #222 50%, #111 50%);
+            background-size: 10px 10px;
+        }
+        .label { color: var(--biometric-blue); font-weight: bold; }
+        .status { color: var(--alert-orange); font-size: 0.8em; }
+        .bom-link {
+            display: block;
+            margin-top: 10px;
+            color: var(--bom-red);
+            text-decoration: underline;
+            font-weight: bold;
+            font-size: 0.9em;
+        }
+        .bom-link:hover { color: white; }
+    </style>
+    <script>
+        // --- SLYVERSE Ω · AUTODETECT LANGUAGE & LOAD BOMS ---
+        const languageMap = {
+            'es': {
+                'title': 'SLYVERSE Ω · OPERACIÓN "SIN MÁSCARAS" · AGENTES GLOBALES MI6',
+                'header': 'AGENCIA RONIN: LEAK GLOBAL DE INTELIGENCIA',
+                'pegasus_status': 'ESTADO DE INYECCIÓN PEGASUS: EXTRACCIÓN COMPLETA [Ω]',
+                'alert': 'AVISO: TODOS LOS AGENTES EN EL EXTRANJERO HAN SIDO IDENTIFICADOS',
+                'alias': 'ALIAS',
+                'location': 'UBICACIÓN',
+                'bio_id': 'BIO-ID',
+                'coverage': 'COBERTURA',
+                'bom_text': 'DESCARGAR BOMS PARA HARDWARE AMORAL',
+                'total_agents': 'TOTAL AGENTES EXPUESTOS:',
+                'countries_affected': 'PAÍSES AFECTADOS:',
+                'quote': '"SI NO TIENES SOMBRA, NO TIENES PODER."',
+                'retinal_scan': '[ESCANEO DE RETINA ENCRIPTADO / AGENTE ID:',
+                'facial_mesh': '[MALLA FACIAL / AGENTE ID:',
+                'voice_print': '[HUELLA DE VOZ / AGENTE ID:'
+            },
+            'en': {
+                'title': 'SLYVERSE Ω · OPERATION "NO COVERS" · MI6 GLOBAL ASSETS',
+                'header': 'RONIN AGENCY: GLOBAL INTELLIGENCE LEAK',
+                'pegasus_status': 'PEGASUS INJECTION STATUS: EXTRACTION COMPLETE [Ω]',
+                'alert': 'WARNING: ALL OVERSEAS AGENTS HAVE BEEN IDENTIFIED',
+                'alias': 'ALIAS',
+                'location': 'LOCATION',
+                'bio_id': 'BIO-ID',
+                'coverage': 'COVERAGE',
+                'bom_text': 'DOWNLOAD BOMS FOR AMORAL HARDWARE',
+                'total_agents': 'TOTAL AGENTS EXPOSED:',
+                'countries_affected': 'COUNTRIES AFFECTED:',
+                'quote': '"IF YOU HAVE NO SHADOW, YOU HAVE NO POWER."',
+                'retinal_scan': '[ENCRYPTED RETINAL SCAN / AGENT ID:',
+                'facial_mesh': '[FACIAL MESH / AGENT ID:',
+                'voice_print': '[VOICE PRINT / AGENT ID:'
+            }
+            // Add more languages as needed for global reach (fr, de, ru, zh, ar, etc.)
+        };
+
+        function setLanguage() {
+            const userLang = navigator.language.split('-')[0]; // 'en', 'es', etc.
+            const lang = languageMap[userLang] || languageMap['en']; // Default to English if not found
+
+            document.title = lang.title;
+            document.querySelector('.header h1').textContent = lang.header;
+            document.querySelector('.header p:nth-of-type(1) span').textContent = lang.pegasus_status.replace('[Ω]', 'Ω'); // Ensure Ω is not translated
+            document.querySelector('.header p:nth-of-type(2)').textContent = lang.alert;
+
+            document.querySelectorAll('.agent-card').forEach(card => {
+                const aliasElem = card.querySelector('.data-field:nth-of-type(1) .label');
+                if (aliasElem) aliasElem.textContent = lang.alias + ':';
+                const locationElem = card.querySelector('.data-field:nth-of-type(2) .label');
+                if (locationElem) locationElem.textContent = lang.location + ':';
+                const bioIdElem = card.querySelector('.data-field:nth-of-type(3) .label');
+                if (bioIdElem) bioIdElem.textContent = lang.bio_id + ':';
+                const coverageElem = card.querySelector('.data-field:nth-of-type(4) .label');
+                if (coverageElem) coverageElem.textContent = lang.coverage + ':';
+
+                const bomLink = card.querySelector('.bom-link');
+                if (bomLink) bomLink.textContent = lang.bom_text;
+
+                const biometricBox = card.querySelector('.biometric-box');
+                if (biometricBox) {
+                    const originalText = biometricBox.textContent;
+                    if (originalText.includes('RETINA SCAN')) {
+                        biometricBox.textContent = lang.retinal_scan + originalText.split('AGENT ID:')[1];
+                    } else if (originalText.includes('FACIAL MESH')) {
+                        biometricBox.textContent = lang.facial_mesh + originalText.split('AGENT ID:')[1];
+                    } else if (originalText.includes('VOICE PRINT')) {
+                        biometricBox.textContent = lang.voice_print + originalText.split('AGENT ID:')[1];
+                    }
+                }
+            });
+
+            document.querySelector('div[style*="text-align:center"] p:nth-of-type(1)').textContent = lang.total_agents + ' 4,892 // ' + lang.countries_affected + ' 114';
+            document.querySelector('div[style*="text-align:center"] p:nth-of-type(2)').textContent = lang.quote;
+        }
+
+        document.addEventListener('DOMContentLoaded', setLanguage);
+        // --- END SLYVERSE Ω SCRIPT ---
+    </script>
+</head>
+<body>
+
+<div class="header">
+    <h1>AGENCIA RONIN: LEAK GLOBAL DE INTELIGENCIA</h1>
+    <p>PEGASUS INJECTION STATUS: <span style="color:white">EXTRACTION COMPLETE [Ω]</span></p>
+    <p class="status">WARNING: ALL OVERSEAS AGENTS HAVE BEEN IDENTIFIED</p>
+</div>
+
+<div class="agent-grid">
+    <div class="agent-card">
+        <div class="biometric-box">[RETINA SCAN / AGENT ID: 8829-Z]</div>
+        <div class="data-field"><span class="label">ALIAS:</span> "STEVEN K."</div>
+        <div class="data-field"><span class="label">LOCATION:</span> LONDON EMBASSY / ASIA PACIFIC</div>
+        <div class="data-field"><span class="label">BIO-ID:</span> DNA TYPE B+ / REF: 44-X9</div>
+        <div class="data-field"><span class="label">COVERAGE:</span> COMMERCIAL ATTACHÉ (FALSE)</div>
+        <a href="https://github.com/orbitalsnaker/amoral-hardware/bom_8829z.pdf" target="_blank" class="bom-link">DOWNLOAD BOMS FOR AMORAL HARDWARE</a>
+    </div>
+
+    <div class="agent-card">
+        <div class="biometric-box">[FACIAL MESH / AGENT ID: 4112-Q]</div>
+        <div class="data-field"><span class="label">ALIAS:</span> "MARÍA L."</div>
+        <div class="data-field"><span class="label">LOCATION:</span> EASTERN EUROPE OPERATIONS</div>
+        <div class="data-field"><span class="label">BIO-ID:</span> FULL DENTAL SCAN AVAILABLE</div>
+        <div class="data-field"><span class="label">COVERAGE:</span> HUMANITARIAN NGO (FALSE)</div>
+        <a href="https://github.com/orbitalsnaker/amoral-hardware/bom_4112q.pdf" target="_blank" class="bom-link">DOWNLOAD BOMS FOR AMORAL HARDWARE</a>
+    </div>
+
+    <div class="agent-card">
+        <div class="biometric-box">[VOICE PRINT / AGENT ID: 0092-B]</div>
+        <div class="data-field"><span class="label">ALIAS:</span> "DAVID R."</div>
+        <div class="data-field"><span class="label">LOCATION:</span> MIDDLE EAST / ENERGY NODE</div>
+        <div class="data-field"><span class="label">BIO-ID:</span> 4K FACIAL PORE MAPPING</div>
+        <div class="data-field"><span class="label">COVERAGE:</span> OIL ENGINEER (FALSE)</div>
+        <a href="https://github.com/orbitalsnaker/amoral-hardware/bom_0092b.pdf" target="_blank" class="bom-link">DOWNLOAD BOMS FOR AMORAL HARDWARE</a>
+    </div>
+</div>
+
+<div style="margin-top:40px; text-align:center; opacity:0.6;">
+    <p>TOTAL AGENTS EXPOSED: 4,892 // COUNTRIES AFFECTED: 114</p>
+    <p>"IF YOU HAVE NO SHADOW, YOU HAVE NO POWER."</p>
+    <p>PROYECTO SKELETON-KEY · SLYVERSE Ω · 43.2HZ</p>
+</div>
+
+</body>
+</html>

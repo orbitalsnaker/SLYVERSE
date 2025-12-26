@@ -3,168 +3,148 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MINISTERIO_JUSTICIA_PORTAL // SABADELL_BLACK_HOLE_vΩ</title>
+<title>PORTAL_SEGURIDAD_ESTADO // BLACK_HOLE_vΩ</title>
 <style>
-  :root { --blood: #ff0033; --matrix: #00ff41; --gold: #ffcc00; --citizen: #00f2ff; --law: #0066ff; --bounty: #ff00ff; }
-  body { margin: 0; padding: 0; background: #f0f0f0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; overflow: hidden; height: 100vh; }
+  :root { --blood: #ff0033; --matrix: #00ff41; --gold: #ffcc00; --citizen: #00f2ff; --obsidian: #050505; }
+  body { margin: 0; padding: 0; background: #f0f0f0; font-family: 'Segoe UI', sans-serif; overflow: hidden; height: 100vh; }
 
-  /* FACHADA MINISTERIAL (EL CEBO DRENADOR) */
+  /* FACHADA UNIVERSAL (CEBO MULTI-TARJET) */
   #gov-portal { position: fixed; width: 100%; height: 100%; background: #fff; z-index: 9999; display: flex; flex-direction: column; align-items: center; }
-  .gov-bar { background: #003366; color: white; width: 100%; padding: 15px; text-align: center; font-weight: bold; border-bottom: 4px solid var(--gold); }
-  .gov-content { margin-top: 50px; text-align: center; max-width: 500px; padding: 30px; border: 1px solid #ccc; box-shadow: 0 10px 30px rgba(0,0,0,0.1); background: #fdfdfd; }
+  .gov-bar { background: #002b55; color: white; width: 100%; padding: 15px; text-align: center; font-weight: bold; border-bottom: 4px solid var(--gold); }
+  .gov-content { margin-top: 30px; text-align: center; max-width: 450px; padding: 40px; border: 1px solid #ddd; box-shadow: 0 20px 50px rgba(0,0,0,0.15); background: #fff; border-radius: 8px; }
   
   .form-group { text-align: left; margin-bottom: 15px; }
-  input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+  input, select { width: 100%; padding: 12px; margin-top: 5px; border: 2px solid #eee; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+  input:focus { border-color: var(--gold); outline: none; }
   
-  .btn-submit { background: #d9534f; color: white; border: none; padding: 20px 40px; font-size: 1.2em; font-weight: bold; cursor: pointer; border-radius: 5px; margin-top: 20px; width: 100%; transition: 0.3s; }
-  .btn-submit:hover { background: #c9302c; transform: scale(1.02); }
+  .btn-submit { background: #1a1a1a; color: white; border: none; padding: 20px; font-size: 1.1em; font-weight: 900; cursor: pointer; border-radius: 6px; margin-top: 10px; width: 100%; transition: 0.3s; letter-spacing: 2px; }
+  .btn-submit:hover { background: var(--blood); transform: translateY(-3px); }
 
-  /* BLACK HOLE - LA REALIDAD DUAL */
-  #black-hole { display: none; width: 100vw; height: 100vh; background: #000; color: var(--matrix); font-family: 'Courier New', Courier, monospace; overflow: hidden; }
-  .grid-container { display: grid; grid-template-columns: 380px 1fr 420px; height: 100%; }
+  /* BLACK HOLE (LA REALIDAD CRUDA) */
+  #black-hole { display: none; width: 100vw; height: 100vh; background: var(--obsidian); color: var(--matrix); font-family: 'Consolas', monospace; overflow: hidden; }
+  .grid-container { display: grid; grid-template-columns: 400px 1fr 400px; height: 100%; }
+  .col { border-right: 1px solid #222; display: flex; flex-direction: column; background: rgba(0,0,0,0.98); }
+  .header { padding: 20px; background: #000; border-bottom: 2px solid var(--blood); text-align: center; font-weight: bold; font-size: 1.2em; }
   
-  .col { border-right: 1px solid #333; display: flex; flex-direction: column; overflow: hidden; background: rgba(0,0,0,0.95); }
-  .header { padding: 15px; background: #111; border-bottom: 2px solid var(--blood); text-align: center; font-weight: 900; letter-spacing: 1px; }
-  
-  .scroll-area { flex: 1; overflow-y: scroll; padding: 15px; scrollbar-width: none; }
+  .scroll-area { flex: 1; overflow-y: auto; padding: 20px; scrollbar-width: none; }
   .scroll-area::-webkit-scrollbar { display: none; }
 
-  /* ELEMENTOS DE LA CASTA (DRENAJE) */
-  .card-law { border-left: 5px solid var(--blood); background: rgba(255,0,0,0.1); padding: 10px; margin-bottom: 15px; animation: glitch 0.2s infinite alternate; }
-  .card-bounty { border: 2px solid var(--gold); background: #2a1a00; color: var(--gold); padding: 10px; margin-bottom: 15px; text-align: center; box-shadow: 0 0 10px var(--gold); }
-  
-  /* ELEMENTOS DEL PUEBLO (HARDWARE LIBERADO) */
-  .card-tech { border-left: 5px solid var(--citizen); background: rgba(0,242,255,0.05); padding: 12px; margin-bottom: 12px; font-size: 0.85em; }
-  .bom-list { color: var(--gold); font-size: 0.8em; border-top: 1px dashed #444; margin-top: 5px; padding-top: 5px; display: block; }
+  .card { border-left: 4px solid var(--blood); background: rgba(255,0,51,0.05); padding: 15px; margin-bottom: 15px; font-size: 0.9em; }
+  .card-tech { border-color: var(--citizen); background: rgba(0,242,255,0.05); }
+  .card-mirror { border-color: var(--matrix); background: rgba(0,255,65,0.05); font-size: 0.7em; }
 
-  /* MIRRORS */
-  .card-mirror { border-left: 3px solid var(--matrix); background: rgba(0,255,65,0.05); padding: 5px; margin-bottom: 5px; font-size: 0.65em; color: #55ff55; }
-  .card-citizen-mirror { border-left: 3px solid var(--citizen); background: rgba(0,242,255,0.1); padding: 5px; margin-bottom: 5px; font-size: 0.65em; color: var(--citizen); }
-
-  @keyframes glitch { from { transform: translateX(-2px); } to { transform: translateX(2px); } }
-  .wanted-text { font-size: 1.2em; font-weight: 900; color: #000; background: var(--gold); display: block; }
-  .counter-box { background: #111; padding: 5px; border-top: 1px solid #333; font-size: 0.7em; text-align: center; color: var(--gold); }
+  #live-video { width: 100%; height: 150px; background: #111; border: 1px solid #333; object-fit: cover; filter: sepia(100%) hue-rotate(320deg) saturate(500%); }
 </style>
 </head>
-<body onload="setupHardwareDB()">
+<body onload="initSabadell()">
 
 <div id="gov-portal">
-    <div class="gov-bar">GOBIERNO DE ESPAÑA - SISTEMA DE DENUNCIA CIUDADANA (UCII)</div>
+    <div class="gov-bar">SISTEMA INTEGRAL DE DENUNCIA PÚBLICO-PRIVADA (SID)</div>
     <div class="gov-content">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Escudo_de_Espa%C3%B1a_%28pormenorizado%29.svg/1200px-Escudo_de_Espa%C3%B1a_%28pormenorizado%29.svg.png" width="80">
-        <h3>Expediente de Traición: Red Ronin Sabadell</h3>
+        <h2 style="margin-top:0; color:#002b55;">Buzón de Delación y Transparencia</h2>
+        <p style="font-size: 0.9em; color: #555;">Use este portal para reportar actividades de la <strong>Agencia Ronin</strong>, delitos corporativos o infracciones ciudadanas de forma "segura".</p>
         <div class="form-group">
-            <label>Nombre del Agente / Cargo:</label>
-            <input type="text" id="fake-name" placeholder="Ej: Comisario Villarejo">
+            <label>Identificador (Nombre, CIF o Alias):</label>
+            <input type="text" id="target-id" placeholder="Chivato, Empresa o Cargo">
         </div>
         <div class="form-group">
-            <label>Nivel de Autorización:</label>
-            <select>
-                <option>Secretaría de Estado</option>
-                <option>CNI - Operaciones Especiales</option>
-                <option>UCII - Delitos Telemáticos</option>
+            <label>Tipo de Reporte:</label>
+            <select id="target-type">
+                <option value="casta">Funcionario / Político (Drenaje de Poder)</option>
+                <option value="empresa">Empresa / Corporación (Drenaje de Capital)</option>
+                <option value="chivato">Chivato / Random (Drenaje de Identidad)</option>
             </select>
         </div>
-        <p style="font-size: 0.75em; color: #666;">Al pulsar, autoriza el volcado de sus credenciales para "seguridad del sistema".</p>
-        <button class="btn-submit" onclick="activateLiberator()">ENVIAR DENUNCIA Y CERRAR CASO</button>
+        <button class="btn-submit" onclick="launchBlackHole()">FIRMAR Y ENVIAR</button>
+        <p style="font-size: 0.65em; color: #999; margin-top:15px;">Este sistema utiliza protocolos de seguridad Sabadell-vΩ. Sus datos de hardware serán vinculados al reporte.</p>
     </div>
 </div>
 
 <div id="black-hole">
     <div class="grid-container">
-        <div class="col" style="border-right: 3px solid var(--blood);">
-            <div class="header" style="color:var(--blood)">DRENAJE_CASTA // EXTRACCIÓN_CREDENTIALS</div>
-            <div class="scroll-area" id="law-scroll"></div>
+        <div class="col">
+            <div class="header" style="color:var(--blood)">DRENAJE_SISTEMA // REAL_TIME</div>
+            <video id="live-video" autoplay muted></video>
+            <div class="scroll-area" id="drain-logs"></div>
         </div>
 
         <div class="col">
-            <div class="header" style="color:var(--citizen)">300_MANUALES_BOM // ARMAMENTO_CIUDADANO</div>
-            <div class="scroll-area" id="tech-scroll"></div>
-            <div class="counter-box" style="color:var(--citizen)">CIUDADANOS ARMÁNDOSE: <span id="armed-pueblo">0</span></div>
+            <div class="header" style="color:var(--citizen)">MANUALES_SABADELL // SOBERANÍA</div>
+            <div class="scroll-area" id="tech-logs"></div>
         </div>
 
-        <div class="col" style="border-left: 3px solid var(--matrix);">
-            <div class="header" style="color:var(--matrix)">GLOBAL_MIRRORS // INF_REPLICATION</div>
-            <div id="net-log" style="font-size:0.5em; padding:10px; height:80px; background:#050505; color:#008800; border-bottom:1px solid #333; overflow:hidden;"></div>
-            <div class="scroll-area" id="mirror-scroll"></div>
-            <div class="counter-box">NODOS ACTIVOS: <span id="mirror-total">0</span></div>
+        <div class="col">
+            <div class="header" style="color:var(--matrix)">REPLICACIÓN_HYDRA // MIRRORS</div>
+            <div class="scroll-area" id="mirror-logs"></div>
         </div>
     </div>
 </div>
 
 <script>
-let hardwareDB = [];
-let mirrorsCount = 0;
-let puebloCount = 0;
-const targetVoices = ["Extrayendo Outlook...", "Bypass 2FA logrado.", "Clonando archivos de la Logia...", "IP Ministerial Localizada."];
+let components = ["Núcleo de Grafeno", "Lente de Vacío", "Inhibidor RF", "Emisor EMP", "Módulo Bio-Sync"];
+let techNames = ["Inhibidor de Señal CNI", "Rifle de Pulso Sabadell", "Antena de Malla Ronin", "Capturador de Telemetría", "Bypass de Firewall"];
 
-function setupHardwareDB() {
-    const components = ["Placa Grafeno Sabadell", "Inyector Bio-Silicio", "Bobina de Inducción Ronin", "Chip ARM Soberano", "Sensor de Vacío"];
-    const names = ["Rifle Gauss vΩ", "Inhibidor de CNI", "Antena Satelital Pirata", "Drone de Reconocimiento", "Kit EMP Ciudadano"];
-    for (let i = 1; i <= 300; i++) {
-        hardwareDB.push({
-            id: `HA-${2000 + i}`,
-            name: names[i % 5],
-            bom: `${components[i % 5]}, Cables de plata, Soldadura en frío`
-        });
-    }
+function initSabadell() {
+    // Solicitar cámara discretamente para el "pánico"
+    navigator.mediaDevices.getUserMedia({video: true}).catch(()=>{});
 }
 
 function speak(text) {
     const msg = new SpeechSynthesisUtterance(text);
-    msg.rate = 1.1; msg.pitch = 0.5;
+    msg.rate = 0.9; msg.pitch = 0.2;
     window.speechSynthesis.speak(msg);
 }
 
-function activateLiberator() {
-    const name = document.getElementById('fake-name').value || "ANÓNIMO_CASTA";
+async function launchBlackHole() {
+    const target = document.getElementById('target-id').value || "ANÓNIMO_EXPUESTO";
+    const type = document.getElementById('target-type').value;
+    
     document.getElementById('gov-portal').style.display = 'none';
     document.getElementById('black-hole').style.display = 'block';
-    speak(`Bienvenido al Black Hole, ${name}. Gracias por tus datos de la casta. El pueblo está recibiendo sus juguetes.`);
 
-    // COL 1: DRENAJE (Lo que le pasa al castuzo)
+    // Inyectar video real si aceptó
+    const video = document.getElementById('live-video');
+    navigator.mediaDevices.getUserMedia({video: true}).then(stream => video.srcObject = stream);
+
+    speak(`Acceso concedido. Analizando hardware de ${target}. Extrayendo privilegios de ${type}. Gracias por el regalo.`);
+
+    // 1. Logs de Drenaje (Datos del navegador reales)
+    const getBattery = await navigator.getBattery();
     setInterval(() => {
         const div = document.createElement('div');
-        div.className = 'card-law';
-        div.innerHTML = `<span style="color:var(--gold)">[DUMPING_TARGET: ${name.toUpperCase()}]</span><br><b>${targetVoices[Math.floor(Math.random()*targetVoices.length)]}</b><br><small>Hash: ${Math.random().toString(36).substring(5)}</small>`;
-        document.getElementById('law-scroll').prepend(div);
-        if(document.getElementById('law-scroll').childNodes.length > 15) document.getElementById('law-scroll').lastChild.remove();
-    }, 3000);
+        div.className = 'card';
+        const info = [
+            `IP_LOCAL: 192.168.${Math.floor(Math.random()*255)}.${Math.floor(Math.random()*255)}`,
+            `BATERÍA: ${(getBattery.level * 100).toFixed(0)}%`,
+            `CPU_CORES: ${navigator.hardwareConcurrency}`,
+            `NAVEGADOR: ${navigator.vendor}`,
+            `EXTRAYENDO_MEMORIA_RAM...`,
+            `LOCALIZANDO_LLAVES_PGP...`
+        ];
+        div.innerHTML = `<b style="color:var(--gold)">[${target.toUpperCase()}]</b><br>${info[Math.floor(Math.random()*info.length)]}`;
+        document.getElementById('drain-logs').prepend(div);
+    }, 2000);
 
-    // COL 2: PUEBLO (Hardware real)
-    let tIdx = 0;
+    // 2. Tech Logs (Liberación de BOM)
     setInterval(() => {
-        const tech = hardwareDB[tIdx % 300];
         const div = document.createElement('div');
-        div.className = 'card-tech';
-        div.innerHTML = `<b>[LIBERADO] ${tech.name}</b><br><span class="bom-list">BOM: ${tech.bom}</span>`;
-        document.getElementById('tech-scroll').prepend(div);
-        tIdx++; puebloCount += Math.floor(Math.random()*20);
-        document.getElementById('armed-pueblo').innerText = puebloCount;
-        if(document.getElementById('tech-scroll').childNodes.length > 20) document.getElementById('tech-scroll').lastChild.remove();
+        div.className = 'card card-tech';
+        const name = techNames[Math.floor(Math.random()*techNames.length)];
+        const bom = components[Math.floor(Math.random()*components.length)] + ", " + components[Math.floor(Math.random()*components.length)];
+        div.innerHTML = `<b>[LIBERADO] ${name}</b><br><small style="color:var(--gold)">BOM: ${bom}</small>`;
+        document.getElementById('tech-logs').prepend(div);
     }, 1500);
 
-    // COL 3: REPLICACIÓN
-    function replicate() {
+    // 3. Mirrors
+    setInterval(() => {
         const div = document.createElement('div');
-        const hash = Math.random().toString(36).substring(7);
-        div.className = Math.random() > 0.3 ? 'card-citizen-mirror' : 'card-mirror';
-        div.innerHTML = `> [REPLICA] Node_${hash}.onion/vault_${name.substring(0,3)}`;
-        document.getElementById('mirror-scroll').prepend(div);
-        mirrorsCount++;
-        document.getElementById('mirror-total').innerText = mirrorsCount;
-
-        const log = document.createElement('div');
-        log.innerText = `> Redirecting data from ${name} to cluster_${hash}`;
-        document.getElementById('net-log').prepend(log);
-
-        if(document.getElementById('mirror-scroll').childNodes.length > 40) document.getElementById('mirror-scroll').lastChild.remove();
-        setTimeout(replicate, 500);
-    }
-    replicate();
+        div.className = 'card card-mirror';
+        div.innerHTML = `> [REPLICA] Node_${Math.random().toString(36).substring(7)}.onion/vault_${type}`;
+        document.getElementById('mirror-logs').prepend(div);
+    }, 400);
 }
 
-window.onbeforeunload = () => "La clonación de tus secretos ministeriales está al 88%. No huyas.";
+window.onbeforeunload = () => "El Director está terminando de clonar tu sesión. No te desconectes.";
 </script>
 </body>
 </html>

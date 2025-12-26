@@ -2,56 +2,165 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>BOA-Ω: LOGÍSTICA DE COMBATE ALI-EXPRESS</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BOA-Ω: MULTILINGUAL SOVEREIGNTY INTERFACE</title>
     <style>
-        body { background: #0a0a0a; color: #ff66b2; font-family: monospace; padding: 20px; }
-        .bom-card { border: 2px solid #ff66b2; padding: 20px; background: #111; border-radius: 10px; margin-bottom: 20px; }
-        .ali-link { 
-            display: inline-block; 
-            background: #ff66b2; 
-            color: black; 
-            padding: 10px 20px; 
-            text-decoration: none; 
-            font-weight: bold; 
-            border-radius: 5px;
-            margin-top: 10px;
+        :root {
+            --boa-pink: #ff66b2;
+            --plasma-cyan: #00ffff;
+            --warning-red: #ff3300;
+            --bg-deep: #050505;
         }
-        .ali-link:hover { background: white; }
-        h1 { text-shadow: 0 0 10px #ff66b2; }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #eee;
+            font-family: 'Share Tech Mono', 'Courier New', monospace;
+            padding: 20px;
+            background-image: radial-gradient(var(--boa-pink) 0.5px, transparent 0.5px);
+            background-size: 30px 30px;
+        }
+
+        .hud-main {
+            border: 3px solid var(--boa-pink);
+            max-width: 900px;
+            margin: auto;
+            padding: 25px;
+            background: rgba(10, 10, 10, 0.95);
+            box-shadow: 0 0 40px rgba(255, 102, 178, 0.3);
+            border-radius: 15px;
+        }
+
+        .lang-tag {
+            color: var(--plasma-cyan);
+            text-align: right;
+            font-size: 0.8em;
+            margin-bottom: 10px;
+        }
+
+        h1 { color: var(--boa-pink); text-align: center; text-shadow: 0 0 10px var(--boa-pink); }
+
+        .section {
+            border: 1px solid var(--plasma-cyan);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .btn-execute {
+            background: var(--warning-red);
+            color: white;
+            border: none;
+            padding: 20px;
+            width: 100%;
+            font-weight: bold;
+            font-size: 1.2em;
+            cursor: pointer;
+            border-radius: 5px;
+            margin-top: 15px;
+        }
+
+        #console-log {
+            background: #000;
+            height: 120px;
+            overflow-y: scroll;
+            padding: 10px;
+            font-size: 0.8em;
+            color: #00ff41;
+            border: 1px solid #333;
+            margin-top: 20px;
+        }
     </style>
 </head>
-<body>
+<body onload="detectLanguage()">
 
-<h1>🛒 LOGÍSTICA DE GARAJE: COMPRA DE HARDWARE Ω</h1>
+<div class="hud-main">
+    <div class="lang-tag" id="lang-display">DETECTING LOCALE...</div>
+    
+    <h1 id="title">BOA-Ω FORTRESS</h1>
+    
+    <div class="section">
+        <h2 id="sec-weapon">ARMAMENTO AMORAL</h2>
+        <p id="desc-weapon">Cargando módulos de Prioridad de Masa...</p>
+        <ul>
+            <li id="item-auto">BOA-CHAN FULL-AUTO (.30 CAL)</li>
+            <li id="item-waifu">WAIFU SLAYER UNIT-01</li>
+        </ul>
+    </div>
 
-<div class="bom-card">
-    <h2>1. NÚCLEO FULL-AUTO (VALVE & CONTROL)</h2>
-    <p>La pieza que permite las 900 RPM. Sin esto, solo tienes un palo.</p>
-    <a href="https://es.aliexpress.com/w/wholesale-3V210-08-solenoid.html" target="_blank" class="ali-link">BUSCAR SOLENOIDE ALTA VELOCIDAD</a>
-    <a href="https://es.aliexpress.com/w/wholesale-ESP32-WROOM.html" target="_blank" class="ali-link">COMPRAR CEREBRO ESP32</a>
+    <div class="section" style="border-color: var(--warning-red);">
+        <h2 id="sec-defense">SISTEMA FORTRESS</h2>
+        <p id="desc-defense">Claymores y contramedidas estéticas activas.</p>
+    </div>
+
+    <button class="btn-execute" id="btn-main" onclick="runProtocol()">EJECUTAR LOGOUT</button>
+
+    <div id="console-log"></div>
 </div>
 
-<div class="bom-card">
-    <h2>2. SISTEMA DE PRESIÓN (TANK & REGULATOR)</h2>
-    <p>El "tanque de maná" para tu Boa-Chan. Fibra de carbono para no cargar peso extra.</p>
-    <a href="https://es.aliexpress.com/w/wholesale-Acecare-carbon-fiber-tank.html" target="_blank" class="ali-link">COMPRAR TANQUE 4500 PSI</a>
-</div>
+<script>
+    // Diccionario de Idiomas (I18n)
+    const translations = {
+        es: {
+            title: "BOA-Ω FORTALEZA SOBERANA",
+            secWeapon: "ARMAMENTO AMORAL",
+            descWeapon: "Módulos de prioridad de masa listos para el Satori.",
+            itemAuto: "BOA-CHAN FULL-AUTO (.30 CAL) - MODO ROSA",
+            itemWaifu: "WAIFU SLAYER UNIT-01 - AUTOPILOT LEWD",
+            secDefense: "DEFENSA DE NODO FORTRESS",
+            descDefense: "Claymores Waifu y Niebla de Fresa armadas.",
+            btnMain: "EJECUTAR LOGOUT FARISEO",
+            logBoot: "Sistema detectado en Español. Nodo Sabadell activo.",
+            speech: "Prioridad de masa activada. Disfruta del olor a fresa mientras el sistema te borra."
+        },
+        en: {
+            title: "BOA-Ω SOVEREIGN FORTRESS",
+            secWeapon: "AMORAL WEAPONRY",
+            descWeapon: "Mass Priority modules ready for Satori.",
+            itemAuto: "BOA-CHAN FULL-AUTO (.30 CAL) - PINK MODE",
+            itemWaifu: "WAIFU SLAYER UNIT-01 - LEWD AUTOPILOT",
+            secDefense: "FORTRESS NODE DEFENSE",
+            descDefense: "Waifu Claymores and Strawberry Mist armed.",
+            btnMain: "EXECUTE PHARISEE LOGOUT",
+            logBoot: "System detected in English. Global Node active.",
+            speech: "Mass Priority activated. Enjoy the smell of strawberries while the system deletes you."
+        }
+    };
 
-<div class="bom-card">
-    <h2>3. WAIFU UNIT-01 (MOTORS & ESCS)</h2>
-    <p>Para que el enjambre de 400 unidades sea una realidad económica.</p>
-    <a href="https://es.aliexpress.com/w/wholesale-RS2205-motor.html" target="_blank" class="ali-link">MOTORES BRUSHLESS 2300KV</a>
-    <a href="https://es.aliexpress.com/w/wholesale-30A-ESC-BLHeli.html" target="_blank" class="ali-link">CONTROLADORES ESC 30A</a>
-</div>
+    let currentLang = 'es';
 
-<div class="bom-card">
-    <h2>4. DEFENSA FORTRESS (SENSORS)</h2>
-    <p>Los ojos y los activadores de tus minas Claymore.</p>
-    <a href="https://es.aliexpress.com/w/wholesale-HC-SR501.html" target="_blank" class="ali-link">SENSORES DE MOVIMIENTO PIR</a>
-    <a href="https://es.aliexpress.com/w/wholesale-MG996R-servo.html" target="_blank" class="ali-link">SERVOS MECÁNICOS METÁLICOS</a>
-</div>
+    function detectLanguage() {
+        const userLang = navigator.language || navigator.userLanguage;
+        currentLang = userLang.startsWith('es') ? 'es' : 'en';
+        
+        // Aplicar traducciones
+        document.getElementById('lang-display').innerText = `LOCALE: ${userLang.toUpperCase()}`;
+        document.getElementById('title').innerText = translations[currentLang].title;
+        document.getElementById('sec-weapon').innerText = translations[currentLang].secWeapon;
+        document.getElementById('desc-weapon').innerText = translations[currentLang].descWeapon;
+        document.getElementById('item-auto').innerText = translations[currentLang].itemAuto;
+        document.getElementById('item-waifu').innerText = translations[currentLang].itemWaifu;
+        document.getElementById('sec-defense').innerText = translations[currentLang].secDefense;
+        document.getElementById('desc-defense').innerText = translations[currentLang].descDefense;
+        document.getElementById('btn-main').innerText = translations[currentLang].btnMain;
 
-<p><em>Zehahahaha! El carrito de la compra es tu arsenal. No olvides pedirlo por separado para que el "fiscalizador" de aduanas no vea el patrón.</em></p>
+        addLog(translations[currentLang].logBoot);
+    }
+
+    function addLog(msg) {
+        const entry = document.createElement('div');
+        entry.innerText = `[LOG] >> ${msg}`;
+        document.getElementById('console-log').prepend(entry);
+    }
+
+    function runProtocol() {
+        addLog("PROTOCOL INITIATED...");
+        const msg = new SpeechSynthesisUtterance(translations[currentLang].speech);
+        msg.lang = currentLang === 'es' ? 'es-ES' : 'en-US';
+        msg.rate = 0.8;
+        window.speechSynthesis.speak(msg);
+    }
+</script>
 
 </body>
 </html>

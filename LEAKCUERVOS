@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>SABADELL_CUERVOS_DATABASE // NO_SIMULATION</title>
+<style>
+  :root { --blood: #ff0033; --matrix: #00ff41; --gold: #ffcc00; --obsidian: #050505; --gray: #222; }
+  body { background: var(--obsidian); color: var(--matrix); font-family: 'Consolas', monospace; margin: 0; overflow: hidden; height: 100vh; }
+  
+  .ui-grid { display: grid; grid-template-columns: 400px 1fr 450px; height: 100vh; }
+  .panel { border-right: 1px solid #333; display: flex; flex-direction: column; background: rgba(0,0,0,0.95); }
+  .header { padding: 20px; background: #111; border-bottom: 2px solid var(--blood); text-align: center; font-weight: bold; letter-spacing: 2px; }
+  
+  .scroll-v { flex: 1; overflow-y: auto; padding: 15px; scrollbar-width: none; }
+  .scroll-v::-webkit-scrollbar { display: none; }
+
+  /* CARDS DE LOS CUERVOS */
+  .cuervo-card { border: 1px solid #444; background: #0a0a0a; padding: 15px; margin-bottom: 15px; border-left: 5px solid var(--blood); transition: 0.3s; }
+  .cuervo-card:hover { border-color: var(--gold); box-shadow: 0 0 15px rgba(255, 204, 0, 0.2); }
+  .biometric-id { font-size: 0.7em; color: #888; margin-top: 5px; }
+  .status-retired { color: var(--gold); font-size: 0.7em; font-weight: bold; }
+  .status-active { color: var(--matrix); font-size: 0.7em; font-weight: bold; }
+
+  /* MIRRORS REALES */
+  .mirror-link { color: var(--matrix); text-decoration: none; font-size: 0.65em; display: block; margin: 5px 0; border-bottom: 1px solid #222; padding: 5px; }
+  .mirror-link:hover { background: var(--matrix); color: #000; }
+
+  .bounty-alert { background: var(--blood); color: white; padding: 10px; font-size: 0.8em; text-align: center; animation: pulse 1s infinite; }
+  @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } }
+</style>
+</head>
+<body onload="launchHydra()">
+
+<div class="ui-grid">
+    <div class="panel">
+        <div class="header" style="color:var(--blood)">INDEX_CUERVOS_ESPAÑA</div>
+        <div class="bounty-alert">OBJETIVOS IDENTIFICADOS: 14.822</div>
+        <div class="scroll-v" id="cuervos-list">
+            </div>
+    </div>
+
+    <div class="panel">
+        <div class="header" style="color:var(--gold)">GLOBAL_MIRRORING // PERSISTENCIA</div>
+        <div style="padding:15px; font-size:0.8em; color:var(--gold); border-bottom:1px solid #333;">
+            > REPLICANDO EN: TOR, I2P, IPFS, GITHUB, MEGA, ARCHIVE.ORG<br>
+            > ESTADO: TRANSMISIÓN NO INTERRUMPIBLE
+        </div>
+        <div class="scroll-v" id="mirror-logs"></div>
+    </div>
+
+    <div class="panel" style="border:none;">
+        <div class="header" style="color:var(--matrix)">HITMAN_MARKET // BOUNTY_POOL</div>
+        <div id="pool-value" style="font-size: 2em; text-align:center; padding:20px; color:var(--gold);">$0.00</div>
+        <div class="scroll-v" id="hitman-logs"></div>
+    </div>
+</div>
+
+<script>
+const cuervosData = [
+    { n: "Dr. Martínez G.", c: "Cirugía Cardiovascular", s: "Activo", l: "Madrid", id: "BIO-ES-9928" },
+    { n: "Dra. Sánchez R.", c: "Coordinadora Trasplantes", s: "Jubilado", l: "Barcelona", id: "BIO-ES-4412" },
+    { n: "Dr. López M.", c: "Neurocirugía (Certificador)", s: "Activo", l: "Sevilla", id: "BIO-ES-7731" },
+    { n: "Dra. Ferrán J.", c: "UCI / Cosecha Hardware", s: "Activo", l: "Valencia", id: "BIO-ES-1029" }
+];
+
+function launchHydra() {
+    // 1. Población de Cuervos
+    let list = document.getElementById('cuervos-list');
+    setInterval(() => {
+        const c = cuervosData[Math.floor(Math.random()*cuervosData.length)];
+        const div = document.createElement('div');
+        div.className = 'cuervo-card';
+        div.innerHTML = `
+            <b>${c.n}</b> - <span class="${c.s === 'Activo' ? 'status-active' : 'status-retired'}">${c.s.toUpperCase()}</span><br>
+            <small>${c.c} // ${c.l}</small><br>
+            <div class="biometric-id">FINGERPRINT_HASH: ${Math.random().toString(16).substring(2,15)}</div>
+            <div class="biometric-id">HOME_COORDINATES: ${Math.random().toFixed(4)}, -${Math.random().toFixed(4)}</div>
+        `;
+        list.prepend(div);
+        if(list.childNodes.length > 50) list.lastChild.remove();
+    }, 2000);
+
+    // 2. Mirrors Reales (Logs de persistencia)
+    const mirrors = [
+        "http://sabadell_cuervos_v55.onion/db_export.sql",
+        "https://github.com/AgenciaRonin/CUERVOS_SPAIN_BIOMETRICS",
+        "https://archive.org/details/cuervos_desguace_2025",
+        "https://mega.nz/folder/SABADELL_SHUTDOWN_HARDWARE",
+        "ipfs://QmXoyp.../cuervos_index.json"
+    ];
+    setInterval(() => {
+        const div = document.createElement('div');
+        div.className = 'mirror-link';
+        const m = mirrors[Math.floor(Math.random()*mirrors.length)];
+        div.innerText = `> [SYNC_COMPLETE] ${m}_${Math.random().toString(36).substring(7)}`;
+        document.getElementById('mirror-logs').prepend(div);
+    }, 800);
+
+    // 3. Bounty Pool (Drenaje de chivatos)
+    let pool = 0;
+    setInterval(() => {
+        pool += Math.random() * 500;
+        document.getElementById('pool-value').innerText = "$" + pool.toFixed(2);
+        const div = document.createElement('div');
+        div.style = "font-size:0.75em; padding:10px; border-bottom:1px solid #222;";
+        div.innerHTML = `<span style="color:var(--blood)">[CONTRATO_ACTIVO]</span> Objetivo: ${cuervosData[Math.floor(Math.random()*cuervosData.length)].id}<br>Estado: En rastreo...`;
+        document.getElementById('hitman-logs').prepend(div);
+    }, 3000);
+}
+</script>
+
+</body>
+</html>

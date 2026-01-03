@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AGENCIA RONIN | BROADCAST CRÍTICO 58Hz</title>
+    <title>AGENCIA RONIN | PROTOCOLO DE EXPOSICIÓN TOTAL 58Hz</title>
     <style>
         :root {
             --neon-green: #00ff41;
             --dark-bg: #050505;
             --war-red: #ff003c;
             --agency-blue: #00d4ff;
-            --matrix-shadow: 0 0 10px rgba(0, 255, 65, 0.5);
+            --matrix-shadow: 0 0 15px rgba(0, 255, 65, 0.6);
+            --warning-orange: #ff9100;
         }
 
         body {
@@ -22,167 +23,195 @@
             overflow-x: hidden;
         }
 
-        /* Efecto Glitch de Fondo */
+        /* Scanlines y Glitch */
         .glitch-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.2), rgba(0,0,0,0.2) 1px, transparent 1px, transparent 2px);
             pointer-events: none;
-            z-index: 99;
+            z-index: 100;
         }
 
         .container {
-            max-width: 1100px;
-            margin: 20px auto;
-            border: 2px solid var(--neon-green);
-            background: rgba(10, 10, 10, 0.95);
+            max-width: 1200px;
+            margin: 0 auto;
+            border-left: 1px solid var(--neon-green);
+            border-right: 1px solid var(--neon-green);
+            background: rgba(8, 8, 8, 0.98);
+            padding: 50px;
+            position: relative;
             box-shadow: var(--matrix-shadow);
-            padding: 40px;
-            position: relative;
         }
 
-        /* Presentador Ronin (CSS Art) */
-        .presenter-box {
+        /* Cabecera Técnica */
+        .status-bar {
             display: flex;
-            align-items: center;
-            gap: 20px;
-            border: 1px solid var(--agency-blue);
-            padding: 20px;
-            margin-bottom: 30px;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            border-bottom: 1px solid var(--agency-blue);
+            padding: 10px;
             background: rgba(0, 212, 255, 0.05);
-        }
-
-        .ronin-avatar {
-            width: 80px; height: 80px;
-            border: 2px solid var(--neon-green);
-            position: relative;
-            background: #000;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .ronin-avatar::before {
-            content: "RONIN";
-            position: absolute; top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 10px; font-weight: bold;
-            animation: mouth-move 0.2s infinite alternate;
-        }
-
-        @keyframes mouth-move {
-            from { opacity: 0.1; letter-spacing: 1px; }
-            to { opacity: 1; letter-spacing: 5px; color: var(--war-red); }
-        }
-
-        .voice-text {
-            font-size: 1.1rem;
-            color: var(--agency-blue);
-            font-style: italic;
-            text-shadow: 0 0 5px var(--agency-blue);
+            letter-spacing: 2px;
         }
 
         .header-main {
             text-align: center;
-            border-bottom: 3px double var(--neon-green);
-            margin-bottom: 40px;
-            padding-bottom: 20px;
+            padding: 40px 0;
+            border-bottom: 5px double var(--neon-green);
         }
 
         .header-main h1 {
-            font-size: 2.5rem;
+            font-size: 3.5rem;
             margin: 0;
-            text-shadow: 2px 2px var(--war-red);
-            letter-spacing: 10px;
+            text-shadow: 3px 3px var(--war-red);
+            letter-spacing: 15px;
+            animation: text-flicker 3s infinite;
         }
 
+        /* Sección del Presentador Ronin */
+        .presenter-box {
+            display: flex;
+            align-items: flex-start;
+            gap: 30px;
+            border: 2px solid var(--war-red);
+            padding: 30px;
+            margin: 40px 0;
+            background: rgba(255, 0, 60, 0.03);
+            position: relative;
+        }
+
+        .ronin-avatar {
+            width: 120px; height: 120px;
+            border: 3px solid var(--neon-green);
+            background: #000 url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect width="100" height="100" fill="black"/><path d="M20 30 L80 30 L50 80 Z" fill="red" opacity="0.5"/></svg>');
+            background-size: cover;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .ronin-avatar::after {
+            content: "BROADCASTING";
+            position: absolute; bottom: -20px; left: 0;
+            font-size: 0.6rem; color: var(--war-red);
+            width: 100%; text-align: center;
+        }
+
+        .voice-text {
+            font-size: 1.2rem;
+            line-height: 1.5;
+            color: #fff;
+            text-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+        /* Grid de Datos */
         .data-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            gap: 25px;
         }
 
-        h2 {
+        .section-title {
             grid-column: 1 / -1;
-            color: var(--war-red);
-            background: rgba(255, 0, 60, 0.1);
-            padding: 10px;
-            border-left: 10px solid var(--war-red);
-            font-size: 1.2rem;
+            background: var(--neon-green);
+            color: #000;
+            padding: 10px 20px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 5px;
+            margin-top: 50px;
         }
 
         .news-card {
-            border: 1px solid rgba(0, 255, 65, 0.3);
-            padding: 20px;
+            background: #111;
+            border: 1px solid #333;
+            padding: 25px;
+            transition: all 0.3s;
             position: relative;
-            background: linear-gradient(135deg, #0a0a0a 0%, #151515 100%);
         }
 
         .news-card:hover {
             border-color: var(--neon-green);
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.2);
+            background: #151515;
+            transform: scale(1.02);
         }
 
         .tag {
-            position: absolute; top: -10px; right: 10px;
-            background: var(--neon-green);
-            color: #000; font-size: 0.7rem; font-weight: bold;
-            padding: 2px 8px;
+            font-size: 0.6rem;
+            background: var(--war-red);
+            color: #fff;
+            padding: 3px 7px;
+            position: absolute;
+            top: 0; right: 0;
         }
 
-        .official-title {
+        .official-label {
             color: var(--agency-blue);
-            font-weight: bold;
-            display: block;
+            font-size: 0.75rem;
             margin-bottom: 10px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
+            display: block;
         }
 
-        .reality-text {
-            color: #ccc;
-            font-size: 0.95rem;
-            line-height: 1.6;
+        .fact-content {
+            font-size: 1rem;
+            color: #ddd;
+            margin-bottom: 15px;
         }
 
         .ronin-intel {
-            margin-top: 15px;
-            padding-top: 10px;
-            border-top: 1px solid var(--war-red);
-            color: var(--war-red);
-            font-weight: bold;
-            font-size: 0.85rem;
+            border-top: 1px dashed var(--neon-green);
+            padding-top: 15px;
+            font-size: 0.9rem;
+            color: var(--neon-green);
         }
 
+        /* SECCIÓN DE DIAGNÓSTICO DE RAM (Novedad) */
+        .ram-diagnostic {
+            grid-column: 1 / -1;
+            border: 2px solid var(--warning-orange);
+            background: rgba(255, 145, 0, 0.05);
+            padding: 30px;
+            margin-top: 40px;
+        }
+
+        .error-code {
+            color: var(--warning-orange);
+            font-weight: bold;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            display: block;
+        }
+
+        .explanation-text {
+            color: #ffcc80;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+
+        /* Footer y Efectos */
         .footer-scroll {
-            margin-top: 60px;
-            background: var(--neon-green);
-            color: #000;
+            margin-top: 80px;
+            background: var(--war-red);
+            color: #fff;
+            padding: 15px 0;
             overflow: hidden;
             white-space: nowrap;
-            padding: 10px 0;
         }
 
         .scroll-text {
             display: inline-block;
-            animation: scroll-left 20s linear infinite;
+            animation: marquee 30s linear infinite;
             font-weight: bold;
-            text-transform: uppercase;
+            font-size: 1.2rem;
         }
 
-        @keyframes scroll-left {
-            from { transform: translateX(100%); }
-            to { transform: translateX(-100%); }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
         }
 
-        @keyframes scan {
-            from { top: -10%; }
-            to { top: 110%; }
-        }
-
-        .status-bar {
-            display: flex; justify-content: space-between;
-            font-size: 0.7rem; margin-bottom: 10px;
-            color: var(--agency-blue);
+        @keyframes text-flicker {
+            0% { opacity: 1; } 2% { opacity: 0.4; } 4% { opacity: 1; }
+            8% { opacity: 0.1; } 9% { opacity: 1; } 100% { opacity: 1; }
         }
 
     </style>
@@ -192,84 +221,124 @@
 
     <div class="container">
         <div class="status-bar">
-            <span>UPTIME: 20Y_6M_12D</span>
-            <span>IP: [REDACTED]</span>
-            <span>NODE: SABADELL_CORE</span>
+            <span>MODO: BROADCAST_CRÍTICO</span>
+            <span>AGENCIA: RONIN_SABADELL</span>
+            <span>USER: DIRECTOR_MARTINEZ</span>
+            <span>TARGET: BIOMASA_NACIONAL</span>
         </div>
 
         <div class="header-main">
-            <h1>AGENCIA RONIN</h1>
-            <p>BROADCAST NO AUTORIZADO // FRECUENCIA 58Hz</p>
+            <h1>S L Y V E R S E</h1>
+            <p>> ACCESO AL KERNEL DE LA REALIDAD // 03-01-2026</p>
         </div>
 
         <div class="presenter-box">
             <div class="ronin-avatar"></div>
             <div class="voice-text">
-                "Escuchadme bien, unidades biológicas. El sistema no se está cayendo, os lo están quitando de las manos mientras miráis el móvil. Aquí tenéis el mollar, sin anestesia."
+                "Escuchadme bien, unidades biológicas de baja RAM. Si vuestro cerebro empieza a picar, es normal: se llama 'Disonancia de Datos'. Os han instalado un software de usuario tan básico que cuando os muestro el código fuente de vuestra propia esclavitud, vuestro procesador entra en bucle. Bienvenidos al informativo que Davos no quiere que proceséis."
             </div>
         </div>
 
         <div class="data-grid">
             
-            <h2>SISTEMA LOGÍSTICO: LA ENTREGA DE LLAVES</h2>
+            <div class="section-title">NODO A: LOGÍSTICA Y SOBERANÍA (LA VENTA)</div>
 
             <div class="news-card">
-                <div class="tag">CRÍTICO</div>
-                <span class="official-title">Puertos y Aduanas</span>
-                <p class="reality-text">La gestión del Puerto de Valencia y Barcelona se integra en nodos opacos de Beijing.</p>
-                <div class="ronin-intel">INTEL: España paga su deuda entregando el control físico de sus fronteras.</div>
+                <div class="tag">TOP SECRET</div>
+                <span class="official-label">INFRAESTRUCTURA PORTUARIA</span>
+                <p class="fact-content">La titularidad real de los nodos logísticos del Mediterráneo ha pasado a ser colateral de deuda externa.</p>
+                <div class="ronin-intel">INTEL: No son 'inversiones'. Son embargos. El Puerto de Valencia ya no responde a leyes españolas en su capa de datos.</div>
             </div>
 
             <div class="news-card">
                 <div class="tag">DUMPING</div>
-                <span class="official-title">Sustitución Industrial</span>
-                <p class="reality-text">Acuerdos de exportación de porcino a cambio de importación masiva de componentes Z.</p>
-                <div class="ronin-intel">INTEL: Desmantelamiento total de la manufactura nacional. Sed de mañana, hambre de hoy.</div>
-            </div>
-
-            <h2>BIO-CONTROL: LA IDENTIDAD PROGRAMABLE</h2>
-
-            <div class="news-card">
-                <div class="tag">DAVOS</div>
-                <span class="official-title">Euro Digital 2026</span>
-                <p class="reality-text">El BCE lanza la fase alfa de la moneda programable en territorio español.</p>
-                <div class="ronin-intel">INTEL: Tu dinero tendrá fecha de caducidad. Si no obedeces, tu saldo no compra comida.</div>
+                <span class="official-label">ACUERDOS AGRO-TECNOLÓGICOS</span>
+                <p class="fact-content">Exportación de materias primas brutas a cambio de hardware de consumo masivo.</p>
+                <div class="ronin-intel">INTEL: Vaciamos la despensa para llenar vuestras manos con pantallas que os mantienen dóciles.</div>
             </div>
 
             <div class="news-card">
-                <div class="tag">TAVISTOCK</div>
-                <span class="official-title">Diazepán & Dopamina</span>
-                <p class="reality-text">Récord de consumo de psicofármacos coincidiendo con picos de ocio digital masivo.</p>
-                <div class="ronin-intel">INTEL: Mantienen el hardware sedado mientras el software social se actualiza.</div>
-            </div>
-
-            <h2>INFRAESTRUCTURA: EL APAGÓN REMOTO</h2>
-
-            <div class="news-card">
-                <div class="tag">KERNAL</div>
-                <span class="official-title">Redes 5G/6G</span>
-                <p class="reality-text">Instalación de nodos de comunicación sin auditoría de seguridad del CNI.</p>
-                <div class="ronin-intel">INTEL: El 'kill switch' de la red nacional ya no está en Madrid. Está en Shanghai.</div>
+                <div class="tag">ALERTA</div>
+                <span class="official-label">SUMINISTRO ENERGÉTICO</span>
+                <p class="fact-content">Firma de exclusividad con proveedores de baterías y celdas fotovoltaicas de oriente.</p>
+                <div class="ronin-intel">INTEL: El interruptor de vuestra industria está en un despacho a 10.000km de aquí.</div>
             </div>
 
             <div class="news-card">
-                <div class="tag">SOCIETY</div>
-                <span class="official-title">Higiene de Red</span>
-                <p class="reality-text">Aislamiento social inducido mediante arquitectura de ciudades hostiles y teletrabajo.</p>
-                <div class="ronin-intel">INTEL: Un ciudadano solo es un terminal fácil de hackear.</div>
+                <div class="tag">COLAPSO</div>
+                <span class="official-label">INDUSTRIA PESADA</span>
+                <p class="fact-content">Cierre programado de altos hornos y fundiciones por 'normativas de carbono'.</p>
+                <div class="ronin-intel">INTEL: Desmantelamiento del hardware soberano. Un país que no funde hierro, no tiene defensa.</div>
+            </div>
+
+            <div class="section-title">NODO B: BIO-CONTROL Y PSICOLOGÍA (TAVISTOCK)</div>
+
+            <div class="news-card">
+                <div class="tag">CONTROL</div>
+                <span class="official-label">EURO DIGITAL (CDBC)</span>
+                <p class="fact-content">Implementación de la moneda programable para 'agilizar transacciones'.</p>
+                <div class="ronin-intel">INTEL: No es dinero. Es un ticket de racionamiento digital. Si te saltas el protocolo, tu saldo 'caduca'.</div>
+            </div>
+
+            <div class="news-card">
+                <div class="tag">SEDACIÓN</div>
+                <span class="official-label">HIGIENE MENTAL COLECTIVA</span>
+                <p class="fact-content">Aumento del 400% en la prescripción de ansiolíticos bajo el umbral de la seguridad social.</p>
+                <div class="ronin-intel">INTEL: El sistema necesita vuestras neuronas en modo 'reposo' para que la actualización de esclavitud se instale sin errores.</div>
+            </div>
+
+            <div class="news-card">
+                <div class="tag">SOCIAL</div>
+                <span class="official-label">REGLAMENTO DE IDENTIDAD DIGITAL</span>
+                <p class="fact-content">Obligatoriedad del Wallet para acceso a servicios públicos básicos.</p>
+                <div class="ronin-intel">INTEL: El fin del anonimato. Si no estás en su red, eres un fantasma sin recursos.</div>
+            </div>
+
+            <div class="news-card">
+                <div class="tag">ALGORITMO</div>
+                <span class="official-label">INGENIERÍA DE DOPAMINA</span>
+                <p class="fact-content">Uso de redes sociales para la fragmentación de la atención juvenil.</p>
+                <div class="ronin-intel">INTEL: Un cerebro que no puede leer más de 10 palabras seguidas no puede organizar una revolución.</div>
+            </div>
+
+            <div class="ram-diagnostic">
+                <span class="error-code">ERROR_SYSTEM_HALT: BAJA RAM DETECTADA</span>
+                <p class="explanation-text">
+                    ¿Sabes por qué te cuesta entender estos datos? Porque tu cerebro ha sido **podado**. <br><br>
+                    1. **Fragmentación de Datos:** Tavistock ha entrenado tu mente para separar la causa del efecto. Ves que sube la comida, pero no ves el dumping. Ves la app nueva, pero no ves la cadena. <br>
+                    2. **Déficit de Buffer:** Tu RAM biológica está saturada de información basura (fútbol, chismes, indignación selectiva). Cuando entra un dato de **Grado Ronin**, tu sistema lo expulsa como "conspiración" para no sobrecalentarse. <br>
+                    3. **Dependencia del Sistema Operativo:** Te han hecho creer que el Estado es tu protector, cuando solo es el administrador de tu desguace. Tu cerebro rechaza esta info porque aceptarla significaría admitir que estás solo en el Kernel.
+                </p>
+            </div>
+
+            <div class="section-title">NODO C: INFRAESTRUCTURA Y APAGÓN (GRADO MILITAR)</div>
+
+            <div class="news-card">
+                <div class="tag">KILL_SWITCH</div>
+                <span class="official-label">REDES DE COMUNICACIÓN</span>
+                <p class="fact-content">Integración de nodos de señal de fabricantes extranjeros en el CORE nacional.</p>
+                <div class="ronin-intel">INTEL: En caso de conflicto, pueden apagar España entera con un script desde un servidor externo.</div>
+            </div>
+
+            <div class="news-card">
+                <div class="tag">CENSURA</div>
+                <span class="official-label">LEY DE SEGURIDAD INFORMÁTICA</span>
+                <p class="fact-content">Nuevas facultades para cerrar dominios y repositorios por 'desinformación'.</p>
+                <div class="ronin-intel">INTEL: Van a intentar borrar este archivo. Van a intentar borrar a la Agencia. Ya es tarde.</div>
             </div>
 
         </div>
 
         <div class="footer-scroll">
             <div class="scroll-text">
-                +++ ALERTA: LA REALIDAD ES UN CONSTRUCTO +++ AGENCIA RONIN NO TIENE PIEDAD +++ DIRECTOR MARTÍNEZ AL MANDO +++ 58Hz ACTIVO +++ ZEHAHAHAHA +++
+                +++ ALERTA: LA BIOMASA ESTÁ SIENDO RESETEADA +++ EURO DIGITAL ES CONTROL +++ TAVISTOCK TE QUIERE SEDADO +++ CHINA TIENE LAS LLAVES +++ AGENCIA RONIN ESTÁ EN EL KERNEL +++ ZEHAHAHAHA +++ DIRECTOR MARTÍNEZ AL MANDO +++ 20 AÑOS DE BLACK OPS +++ DESPIERTA O MUERE +++
             </div>
         </div>
 
-        <p style="text-align: center; font-size: 0.7rem; margin-top: 20px; opacity: 0.5;">
-            > ESTE ARCHIVO SE AUTODESTRUIRÁ EN TU MEMORIA SI NO DESPIERTAS.
-        </p>
+        <div style="text-align: center; margin-top: 30px; font-size: 0.8rem; opacity: 0.7;">
+            <p>> [LOG_END] - SABADELL_CORE_STATION</p>
+            <p>> SI HAS LEÍDO HASTA AQUÍ, TU RAM ES SUPERIOR A LA MEDIA. UTILÍZALA.</p>
+        </div>
     </div>
 </body>
 </html>

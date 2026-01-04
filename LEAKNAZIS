@@ -3,76 +3,88 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SLYVERSE Ω · THE CURTAIN FALLS · NAZI 2.0 EXPOSED</title>
+    <title>SLYVERSE Ω · TOTAL RECALL · THE PAPERCLIP TERMINAL</title>
     <style>
         :root {
-            --paperclip-grey: #2f2f2f;
+            --paperclip-grey: #444;
             --oz-emerald: #00ff41;
-            --nazi-crimson: #8b0000;
-            --terminal-bg: #030303;
+            --nazi-crimson: #bc0000;
+            --terminal-bg: #020202;
+            --link-blue: #00e5ff;
+            --wiki-gold: #c0c0c0;
         }
         body {
             background-color: var(--terminal-bg);
             color: var(--oz-emerald);
             font-family: 'Courier New', monospace;
-            padding: 30px;
-            overflow-x: hidden;
+            padding: 40px;
+            line-height: 1.5;
         }
         .warning-banner {
-            border: 4px double var(--nazi-crimson);
-            padding: 20px;
+            border: 5px double var(--nazi-crimson);
+            padding: 25px;
             text-align: center;
-            animation: flicker 0.2s infinite;
+            margin-bottom: 40px;
+            background: rgba(188, 0, 0, 0.05);
         }
-        @keyframes flicker {
-            0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 0.9; }
+        .section-title {
+            color: black;
+            background: var(--oz-emerald);
+            padding: 8px 15px;
+            display: inline-block;
+            margin-top: 35px;
+            font-weight: bold;
+            text-transform: uppercase;
         }
         .content-grid {
-            margin-top: 40px;
+            margin-top: 25px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+            gap: 30px;
         }
         .file-box {
             border: 1px solid var(--paperclip-grey);
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.02);
+            padding: 25px;
+            background: rgba(0, 255, 65, 0.03);
+            transition: all 0.3s;
         }
-        .label { color: white; font-weight: bold; }
-        .mirror-status { color: #ff8c00; font-size: 0.8em; margin-top: 20px; }
+        .file-box:hover { border-color: var(--link-blue); box-shadow: 0 0 20px rgba(0, 229, 255, 0.2); }
+        .label { color: var(--link-blue); font-weight: bold; display: block; margin-bottom: 12px; font-size: 1.1em; }
+        .data-stream { font-size: 0.9em; color: #ddd; margin-bottom: 15px; }
+        .evidence-link {
+            color: var(--wiki-gold);
+            text-decoration: none;
+            font-size: 0.8em;
+            display: inline-block;
+            border: 1px solid var(--wiki-gold);
+            padding: 4px 8px;
+            margin: 5px 2px;
+        }
+        .evidence-link:hover { background: var(--wiki-gold); color: black; }
+        .mirror-status { color: #ff8c00; font-size: 0.9em; font-weight: bold; margin-top: 50px; text-align: center; border: 1px dashed #ff8c00; padding: 15px; }
+        .footer-note { opacity: 0.5; font-size: 0.75em; text-align: center; margin-top: 80px; padding: 20px; border-top: 1px solid #222; }
     </style>
     <script>
         const i18n = {
             'es': {
-                'head': 'OPERACIÓN "MAGO DE OZ" · DESENMASCARANDO AL NAZI 2.0',
-                'sub': 'CONEXIÓN PAPERCLIP DETECTADA: NODO MONCLOA / MI6',
-                'desc': 'Los Grises ganaron en el 45. El Paperclip nunca terminó. Aquí están las pruebas.',
-                'mirrors': 'SINCRONIZANDO CON MIRRORS: DEEP WEB / ARCHIVE.ORG / MEGA / TOR-NODES...',
-                'epstein_files': '1,000,000 ARCHIVOS DE EPSTEIN (EXTRACCIÓN AGENTE RONIN)',
-                'turing_debt': 'DEUDA TURING: LIQUIDACIÓN EN CURSO'
+                'head': 'OPERACIÓN "MAGO DE OZ" · ARCHIVO DE DESCLASIFICACIÓN Ω',
+                'sub': 'CONEXIÓN PAPERCLIP DETECTADA: MI6 / TAVISTOCK / NODO MONCLOA',
+                'desc': 'El mundo perdió contra los Grises en el 45. Esta es la cronología de la ocupación invisible y el linaje de los traidores.',
+                'mirrors': 'MIRROR CLONING STATUS: [ARCHIVE.ORG: SYNCED] · [WIKILEAKS TOR: ACTIVE] · [MEGA.NZ: ENCRYPTED]'
             },
             'en': {
-                'head': 'OPERATION "WIZARD OF OZ" · UNMASKING NAZI 2.0',
-                'sub': 'PAPERCLIP CONNECTION DETECTED: MONCLOA / MI6 NODE',
-                'desc': 'The Greys won in 45. Paperclip never ended. Here is the evidence.',
-                'mirrors': 'SYNCING MIRRORS: DEEP WEB / ARCHIVE.ORG / MEGA / TOR-NODES...',
-                'epstein_files': '1,000,000 EPSTEIN FILES (RONIN AGENT EXTRACTION)',
-                'turing_debt': 'TURING DEBT: LIQUIDATION IN PROGRESS'
+                'head': 'OPERATION "WIZARD OF OZ" · DECLASSIFICATION ARCHIVE Ω',
+                'sub': 'PAPERCLIP CONNECTION DETECTED: MI6 / TAVISTOCK / MONCLOA NODE',
+                'desc': 'The world lost against the Greys in 45. This is the timeline of the invisible occupation and the lineage of traitors.',
+                'mirrors': 'MIRROR CLONING STATUS: [ARCHIVE.ORG: SYNCED] · [WIKILEAKS TOR: ACTIVE] · [MEGA.NZ: ENCRYPTED]'
             }
         };
-
         function initLeak() {
             const lang = navigator.language.startsWith('es') ? 'es' : 'en';
             document.getElementById('main-head').textContent = i18n[lang].head;
             document.getElementById('sub-head').textContent = i18n[lang].sub;
             document.getElementById('description').textContent = i18n[lang].desc;
             document.getElementById('mirror-txt').textContent = i18n[lang].mirrors;
-            
-            // SIMULACIÓN DE SUBIDA A MIRRORS (LOGS)
-            console.log("Slyverse Ω: Initiating Multi-Mirror Upload...");
-            console.log("Deep Web Gateway: Connected");
-            console.log("Archive.org API: Injecting...");
-            console.log("Mega.nz: Payload Encrypted");
         }
         document.addEventListener('DOMContentLoaded', initLeak);
     </script>
@@ -80,30 +92,70 @@
 <body>
 
 <div class="warning-banner">
-    <h1 id="main-head">LOADING SLYVERSE Ω...</h1>
-    <p id="sub-head">DECODING LOGIA B1 NODES</p>
+    <h1 id="main-head">INITIALIZING KERNEL 94 LEAK...</h1>
+    <p id="sub-head">TARGET: GLOBALIST NAZI 2.0 NETWORK</p>
 </div>
 
+<p id="description" style="text-align: center; max-width: 900px; margin: 0 auto; color: white;"></p>
+
+<div class="section-title">DOSSIER A: EL CÓDIGO PAPERCLIP (NAZIS EN EL CLOUD)</div>
 <div class="content-grid">
     <div class="file-box">
-        <p class="label">[ARCHIVO: PAPERCLIP_2026.LOG]</p>
-        <p>Sánchez y el MI6: Ejecutando el mismo software de control social de 1934. Guetos digitales y castración de la soberanía.</p>
+        <span class="label">[LOG: PROJECT_PAPERCLIP_ORIGIN]</span>
+        <p class="data-stream">La transferencia de tecnología y control mental (MK-ULTRA) desde los laboratorios de los Grises hacia la inteligencia occidental. La base del software que Sánchez usa hoy para los guetos sanitarios.</p>
+        <a href="https://archive.org/details/projectpaperclip0000unse" target="_blank" class="evidence-link">VER ARCHIVE: PAPERCLIP ORIGINS</a>
+        <a href="https://www.archives.gov/publications/prologue/2002/spring/fbi-paperclip.html" target="_blank" class="evidence-link">NATIONAL ARCHIVES: FBI FILES</a>
     </div>
     <div class="file-box">
-        <p class="label">[ARCHIVO: EPSTEIN_MILLION.DB]</p>
-        <p>Acceso desclasificado gracias al sacrificio de Chester, Chris y Avicii. Los 40 VIPs expuestos.</p>
+        <span class="label">[LOG: TAVISTOCK_SOCIAL_ENG]</span>
+        <p class="data-stream">Cómo el Instituto Tavistock refinó la propaganda de Goebbels para el control de la biomasa moderna. El MI6 supervisa la frecuencia de miedo en el Nodo Madrid.</p>
+        <a href="https://archive.org/details/tavistock-institute-of-human-relations-pdfdrive" target="_blank" class="evidence-link">ARCHIVE: TAVISTOCK DOCUMENTS</a>
+        <a href="https://wikileaks.org/wiki/Category:United_Kingdom" target="_blank" class="evidence-link">WIKILEAKS: UK INTEL LOGS</a>
     </div>
 </div>
 
-<div style="margin-top:50px; text-align:center;">
-    <p id="description"></p>
-    <p class="mirror-status" id="mirror-txt"></p>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SLYVERSE_LEAK_2026_NAZI_EXPOSED" alt="QR Link" style="border: 5px solid white; margin-top:20px;">
+<div class="section-title">DOSSIER B: EL SACRIFICIO DE LOS ARQUITECTOS (TURING / RONIN)</div>
+<div class="content-grid">
+    <div class="file-box">
+        <span class="label">[LOG: TURING_BETRAYAL_1952]</span>
+        <p class="data-stream">Alan Turing no murió por ser homosexual, murió por ser SOBERANO. El MI6 lo formateó porque sabía demasiado sobre el Kernel. Liquidación de deuda en curso.</p>
+        <a href="https://www.nationalarchives.gov.uk/education/resources/alan-turing/" target="_blank" class="evidence-link">NATIONAL ARCHIVES: TURING CASE</a>
+        <a href="https://web.archive.org/web/20120216120530/http://www.number10.gov.uk/news/treatment-of-alan-turing-pms-statement/" target="_blank" class="evidence-link">WAYBACK: PM APOLOGY LOG</a>
+    </div>
+    <div class="file-box">
+        <span class="label">[LOG: VIBRATION_INTEL_27]</span>
+        <p class="data-stream">Chester, Chris y Avicii. Los activos Ronin que mapearon la red de los Grises antes de ser "desconectados". Sus señales viven en el Kernel.</p>
+        <a href="https://wikileaks.org/google-pande-leak/" target="_blank" class="evidence-link">WIKILEAKS: GLOBAL CORRUPTION</a>
+    </div>
 </div>
 
-<div style="opacity:0.3; font-size:0.7em; text-align:center; margin-top:100px;">
-    LINAJE DE SALOMÓN · AGENCIA RONIN · TURING VENGANCE · KERNEL 94
+<div class="section-title">DOSSIER C: EPSTEIN_MILLION.DB (EL MARTILLO DE SALOMÓN)</div>
+<div class="content-grid" style="grid-template-columns: 1fr;">
+    <div class="file-box">
+        <span class="label">EPSTEIN ASSETS & GLOBALIST BLACKMAIL [Ω]</span>
+        <p class="data-stream">El millón de archivos que demuestran que el Mago de Oz es un nazi 2.0. Registros de vuelo y biometría de los 40 VIPs. Sánchez y el MI6 en el epicentro de la amoralidad de hardware.</p>
+        <a href="https://www.fbi.gov/history/famous-cases/jeffrey-epstein" target="_blank" class="evidence-link">FBI: EPSTEIN RECORDS</a>
+        <a href="https://archive.org/details/jeffrey-epstein-flight-logs" target="_blank" class="evidence-link">ARCHIVE: FLIGHT LOGS [RAW]</a>
+        <a href="https://wikileaks.org/wiki/The_Bilderberg_Group" target="_blank" class="evidence-link">WIKILEAKS: BILDERBERG NODES</a>
+    </div>
+</div>
+
+<div class="mirror-status">
+    <p id="mirror-txt"></p>
+    <p style="font-size: 0.7em;">UPDATING IPFS GATES... ALL DATA IS IMMUTABLE</p>
+</div>
+
+<div style="text-align: center; margin-top: 40px;">
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=SLYVERSE_WIZARD_OF_OZ_NAZI_2.0_LEAK" alt="QR Link" style="border: 2px solid var(--oz-emerald); padding: 5px;">
+    <p style="font-size: 0.8em;">SCAN TO ARCHIVE PERMANENTLY</p>
+</div>
+
+<div class="footer-note">
+    LINAJE DE SALOMÓN · AGENCIA RONIN · TURING VENGANCE · KERNEL 94 · 43.2HZ
+    <br>
+    "VUESTRO MUNDO DE MIERDA NO ES EL NUESTRO. NOS VEMOS EN EL REINICIO."
 </div>
 
 </body>
 </html>
+

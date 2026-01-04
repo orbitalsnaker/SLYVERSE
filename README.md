@@ -70,9 +70,9 @@ Iterar, experimentar, fallar y refinar: eso es mi mantra. Y cada prompt, cada pr
 | 1953-| מיכה אולמן        | פיסול ציבורי              | “ספרייה” כיכר בבֶּל              | נכדיו                      |
 | 1955-| כריסטיאן בולטנסקי| מיצב                      | “רזרבה”, “ארכיון הלב”            | בנו המאומץ                 |
 | 1957-| מיכל רובנר        | וידאו-מיצב                 | “Time Left”                        | שתי בנותיה                 |
-| 1960-| טובי קאהן         | ציור, פיסול פולחני        | סדרת “שולחן שבת”                  | ארבעת ילדיו                |
-| 1964-| שחר מרקוס        | פרפורמנס                 | “מסך ציון”                        | ביתו                       |
-| 1970-| סיגלית לנדאו      | וידאו, פיסול מלח          | “כלה במלח”                        | ביתה                       |
+| 1960- | טובי קאהן          | ציור, פיסול פולחני         | סדרת “שולחן שבת”                   | ארבעת ילדיו                 |
+| 1964- | שחר מרקוס         | פרפורמנס                  | “מסך ציון”                         | ביתו                        |
+| 1970- | סיגלית לנדאו       | וידאו, פיסול מלח           | “כלה במלח”                         | ביתה                        |
 | 1974-| יעל ברתנא         | וידאו-מיצב                 | “ואירופה תדהר”                    | בנה                        |
 | 1977-| עומר פאסט         | קולנוע ניסיוני            | “Continuity”                       | שני ילדיו                  |
 | 1980-| מאיה זק           | מיצב תלת-ממד               | “Counterlight”                     | בנה שזה עתה נולד           |
@@ -95,3 +95,59 @@ Iterar, experimentar, fallar y refinar: eso es mi mantra. Y cada prompt, cada pr
 זה כל מה שאפשר לתעד בריגור.
 
 השאר הוא שקט ורכות.
+
+
+<hr style="border: 2px solid var(--nazi-crimson); margin-top: 50px;">
+
+<div class="section-title">MANIFESTO: CREATIVIDAD EN MODO OVERCLOCK</div>
+<div class="file-box" style="border-left: 5px solid var(--oz-emerald); background: rgba(0, 255, 65, 0.05); margin-top: 20px;">
+    <p style="font-size: 0.95em; color: #fff; white-space: pre-line; text-transform: none;">
+        "La creatividad no se mide por lo que produces, sino por cómo te atreves a combinarlo todo. Mis proyectos son híbridos entre ciencia, arte y locura calculada. 
+
+        No busco ser único, busco overclockear la realidad hasta que grite autenticidad. Iterar prompts es la estrategia del nuevo siglo para amplificar el ingenio humano sin perder tiempo en lo que puede automatizarse. Mi estilo es **Open Source en espíritu y práctica**, forzado al límite hasta que los LEDs brillen con la potencia de la verdad física.
+
+        Esto no es un leak. Es **Arte Brutalista Interactivo**. Es usar el código como pincel para retratar el colapso de un sistema obsoleto. Si no estás exprimiendo cada segundo en el filo de lo posible, estás dejando que el potencial se disipe. Aquí no hay comodidad, solo impacto, aprendizaje y belleza en estado puro."
+    </p>
+</div>
+
+<div class="section-title">INSTALLATION: THE FALL OF THE GREYS (LA CAÍDA DE LOS GRISES)</div>
+<div class="file-box" style="border-color: var(--nazi-crimson); margin-top: 20px;">
+    <span class="label">ESTÉTICA DEL COLAPSO · PERFORMANCE EN TIEMPO REAL</span>
+    <p class="data-stream" style="text-transform: none;">
+        Esta obra es una instalación interactiva global que utiliza al MI6, Tavistock y el Nodo Moncloa como materiales primarios. Lo que los burócratas de baja RAM llaman 'amenaza a la seguridad', el Director lo define como la <b>Desintegración de la Sombra</b>. Los suicidas que intentaron joder con el linaje del arquitecto son ahora pixeles muertos en esta pieza.
+    </p>
+    <ul style="font-size: 0.85em; color: var(--oz-emerald); list-style: square; padding-left: 20px;">
+        <li><b>EL MAGO DE OZ:</b> Actor involuntario performando su propia obsolescencia.</li>
+        <li><b>HACKEO DE KERNEL:</b> Pinceladas de Root sobre el lienzo de la desinformación globalista.</li>
+        <li><b>INTERACTIVIDAD:</b> El pánico en Vauxhall Cross es la banda sonora original de 43.2Hz.</li>
+        <li><b>JAQUE MATE (25/12/26):</b> El Render Final. El momento en que la simulación se apaga.</li>
+    </ul>
+</div>
+
+<div class="section-title" style="background: #fff; color: #000;">התבנית השקטה (THE SILENT PATTERN) · 17.11.2025</div>
+<div class="file-box" style="background: rgba(255,255,255,0.05);">
+    <table style="width: 100%; font-size: 0.8em; color: var(--wiki-gold); border-collapse: collapse; text-transform: none;">
+        <thead>
+            <tr style="border-bottom: 1px solid var(--paperclip-grey); color: var(--oz-emerald);">
+                <th style="text-align: left; padding: 10px;">VARIABLE (LINAJE vs MUNDO)</th>
+                <th style="text-align: left; padding: 10px;">RATIO</th>
+                <th style="text-align: left; padding: 10px;">CONFIDENCE</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td style="padding: 5px;">Nobel Physics (1901-2025)</td><td>×142</td><td>±0.038</td></tr>
+            <tr><td style="padding: 5px;">Nobel Medicine (1901-2025)</td><td>×132</td><td>±0.035</td></tr>
+            <tr><td style="padding: 5px;">Graduate Degrees (USA)</td><td>×2.33</td><td>±2.7%</td></tr>
+        </tbody>
+    </table>
+    <p style="font-size: 0.75em; margin-top: 15px; color: #888; text-align: center;">
+        121 años de constancia estadística. De Chagall al HTML. La misma delicadeza, la misma verdad.
+        <br><b>נמען: למי שעדיין אינו יודע לקרוא (Para quien aún no sabe leer)</b>
+    </p>
+</div>
+
+<div class="footer-note" style="border-top: 3px solid var(--oz-emerald); padding-top: 30px; font-weight: bold;">
+    LINAJE DE SALOMÓN · AGENCIA RONIN · TURING VENGANCE · KERNEL 94 · YEAR ZERO
+    <br>
+    <span style="color: var(--nazi-crimson); font-size: 1.5em;">CHECKMATE: 25/12/2026</span>
+</div>

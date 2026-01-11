@@ -3,227 +3,230 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BOA QUETZAL EXO-S | KINETIC INFANTRY</title>
+    <title>BOA QUETZAL Σ | ABYSS KINETICS</title>
     <style>
         :root {
-            --deep-black: #020202;
+            --void-black: #050505;
+            --demon-red: #990000;
             --plasma-cyan: #00f2ff;
-            --sodium-gold: #ffaa00;
-            --maraging-steel: #78828a;
-            --alert-red: #ff3300;
-            --shenzhen-green: #00ff41;
             --exo-orange: #ff6600;
+            --maraging-scrap: #4a4a4a;
+            --warning-purple: #4b0082;
         }
 
         body {
-            font-family: 'JetBrains Mono', 'Consolas', monospace;
-            background-color: var(--deep-black);
-            color: #e0e0e0;
-            margin: 0;
-            padding: 20px;
+            font-family: 'Courier New', monospace;
+            background-color: var(--void-black);
+            color: #ccc;
+            margin: 0; padding: 20px;
+            overflow-x: hidden;
         }
 
         .main-frame {
             max-width: 1400px;
             margin: 0 auto;
-            border: 2px solid #444;
-            background: linear-gradient(180deg, #080808 0%, #000 100%);
-            padding: 30px;
+            border: 3px solid var(--demon-red);
+            background: linear-gradient(135deg, #0a0a0a 0%, #000 100%);
+            padding: 40px;
             position: relative;
-            box-shadow: 0 0 80px rgba(255, 102, 0, 0.05);
+            box-shadow: inset 0 0 50px rgba(153, 0, 0, 0.2), 0 0 100px rgba(0,0,0,1);
         }
 
-        .art-tag {
+        .status-badge {
             position: absolute;
-            top: 20px;
-            right: 20px;
-            color: var(--exo-orange);
-            border: 1px solid var(--exo-orange);
-            padding: 5px 15px;
-            font-size: 0.7em;
-            letter-spacing: 2px;
+            top: 20px; right: 20px;
+            background: var(--demon-red);
+            color: white;
+            padding: 5px 20px;
+            font-weight: bold;
+            transform: skewX(-20deg);
+            border: 1px solid #fff;
         }
 
         header {
-            border-left: 6px solid var(--exo-orange);
-            padding-left: 25px;
+            border-bottom: 2px solid var(--demon-red);
+            padding-bottom: 20px;
             margin-bottom: 40px;
         }
 
-        h1 { font-size: 4em; margin: 0; letter-spacing: -3px; color: #fff; }
-        .sub-title { color: var(--exo-orange); text-transform: uppercase; letter-spacing: 6px; font-size: 0.9em; }
+        h1 { font-size: 5em; margin: 0; letter-spacing: -5px; color: var(--demon-red); text-shadow: 4px 4px #000; }
+        .sub-header { color: var(--plasma-cyan); letter-spacing: 8px; font-size: 0.8em; text-transform: uppercase; }
 
-        .dash-grid {
+        .stat-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
+            gap: 20px;
+            margin-bottom: 40px;
         }
 
-        .dash-box {
-            background: #0a0a0a;
+        .stat-card {
+            background: #0d0d0d;
             border: 1px solid #222;
             padding: 20px;
-            text-align: center;
+            text-align: left;
+            border-left: 4px solid var(--exo-orange);
         }
 
-        .dash-box.high-v { border-bottom: 3px solid var(--exo-orange); }
-        .dash-box span { display: block; font-size: 0.6em; color: var(--maraging-steel); margin-bottom: 5px; }
-        .dash-box strong { font-size: 1.6em; color: #fff; }
+        .stat-card span { font-size: 0.7em; color: var(--plasma-cyan); display: block; }
+        .stat-card strong { font-size: 1.8em; color: #fff; }
 
-        .blueprint-container {
-            background: #030303;
+        .blueprint-area {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 40px;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 30px;
             border: 1px solid #1a1a1a;
-            padding: 40px;
+        }
+
+        .svg-container {
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 30px;
+            filter: drop-shadow(0 0 20px var(--demon-red));
         }
 
-        .svg-exo { width: 100%; max-width: 500px; height: auto; filter: drop-shadow(0 0 15px rgba(255,102,0,0.2)); }
+        .info-panel h3 { color: var(--exo-orange); border-bottom: 1px solid var(--exo-orange); padding-bottom: 10px; }
+        .info-panel p { font-size: 0.9em; line-height: 1.6; color: #999; }
 
-        .specs-section {
+        .tech-specs {
+            margin-top: 30px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-bottom: 30px;
+            gap: 20px;
         }
 
-        .spec-card {
-            background: #080808;
-            border-left: 4px solid var(--plasma-cyan);
-            padding: 25px;
+        .tech-item {
+            background: #111;
+            padding: 15px;
+            border-radius: 4px;
+            border-bottom: 2px solid var(--warning-purple);
         }
 
-        .spec-card h3 { color: var(--plasma-cyan); margin-top: 0; font-size: 1.1em; }
-        .spec-card p { font-size: 0.85em; color: #aaa; line-height: 1.6; }
-
-        .materials-table {
+        .bom-table {
             width: 100%;
+            margin-top: 40px;
             border-collapse: collapse;
-            font-size: 0.8em;
-            margin-top: 20px;
         }
 
-        th { background: #111; color: var(--exo-orange); padding: 15px; text-align: left; }
-        td { padding: 15px; border-bottom: 1px solid #111; }
+        th { background: var(--demon-red); color: white; padding: 15px; text-align: left; font-size: 0.8em; }
+        td { padding: 15px; border-bottom: 1px solid #222; font-size: 0.85em; }
+        .price-tag { color: #00ff66; font-weight: bold; }
 
-        .tag-recuperado { color: #00ff88; font-weight: bold; }
-
-        .warning-mode {
-            background: linear-gradient(90deg, #1a0a00 0%, #000 100%);
+        .footer-note {
+            margin-top: 50px;
+            background: var(--demon-red);
+            color: white;
             padding: 20px;
-            border: 1px solid var(--exo-orange);
-            margin-top: 20px;
+            text-align: center;
+            font-weight: bold;
+            clip-path: polygon(5% 0%, 100% 0%, 95% 100%, 0% 100%);
         }
     </style>
 </head>
 <body>
 
 <div class="main-frame">
-    <div class="art-tag">BOA TACTICAL v2.0 | RECLAIMED SOVEREIGNTY</div>
+    <div class="status-badge">SOVEREIGN MODE: ACTIVE</div>
 
     <header>
-        <div class="sub-title">Wearable Kinetic Multiplier</div>
-        <h1>BOA QUETZAL EXO-S</h1>
-        <p style="color: var(--maraging-steel);">Estructura Maraging | Feedback Háptico LEGEND-CORE | Sourcing: Desguace Industrial</p>
+        <div class="sub-header">Bionic Terror Multiplier</div>
+        <h1>QUETZAL Σ [ABYSS]</h1>
+        <p>Exoesqueleto de Interdicción | Aleación de Conflicto | Sincronización Enoquiana</p>
     </header>
 
-    <div class="dash-grid">
-        <div class="dash-box high-v">
-            <span>MULTIPLICADOR PAR</span>
-            <strong>x15 HUMAN</strong>
+    <div class="stat-grid">
+        <div class="stat-card">
+            <span>FUERZA BRUTA</span>
+            <strong>x22 HUMAN</strong>
         </div>
-        <div class="dash-box">
-            <span>PESO ESTRUCTURA</span>
-            <strong>22 KG</strong>
+        <div class="stat-card">
+            <span>ESTRUCTURA</span>
+            <strong>MARAGING-HSS</strong>
         </div>
-        <div class="dash-box high-v">
-            <span>AUTONOMÍA (Na-Cell)</span>
-            <strong>12 HORAS</strong>
+        <div class="stat-card">
+            <span>RESISTENCIA</span>
+            <strong>B-GRADE CERAMIC</strong>
         </div>
-        <div class="dash-box">
-            <span>TIEMPO REACCIÓN</span>
-            <strong>4ms (RTOS)</strong>
+        <div class="stat-card">
+            <span>COSTO SOCIAL</span>
+            <strong>NEGATIVO</strong>
         </div>
     </div>
 
-    <div class="blueprint-container">
-        <svg class="svg-exo" viewBox="0 0 400 600">
-            <rect x="190" y="100" width="20" height="350" fill="var(--maraging-steel)" />
-            <path d="M120 130 L280 130 M120 130 L100 280 L80 380 M280 130 L300 280 L320 380" fill="none" stroke="var(--exo-orange)" stroke-width="6" />
-            <path d="M150 350 L250 350 M150 350 L160 550 M250 350 L240 550" fill="none" stroke="var(--plasma-cyan)" stroke-width="8" />
-            <circle cx="100" cy="280" r="12" fill="var(--sodium-gold)" />
-            <circle cx="300" cy="280" r="12" fill="var(--sodium-gold)" />
-            <circle cx="160" cy="450" r="15" fill="var(--sodium-gold)" />
-            <circle cx="240" cy="450" r="15" fill="var(--sodium-gold)" />
+    <div class="blueprint-area">
+        <div class="svg-container">
+            <svg viewBox="0 0 200 400" width="300">
+                <path d="M60 40 L140 40 L150 100 L100 80 L50 100 Z" fill="none" stroke="var(--demon-red)" stroke-width="3"/>
+                <path d="M50 100 L40 250 L60 380 M150 100 L160 250 L140 380" fill="none" stroke="var(--maraging-scrap)" stroke-width="6"/>
+                <path d="M70 150 L70 350 M130 150 L130 350" fill="none" stroke="var(--plasma-cyan)" stroke-width="4" stroke-dasharray="10 5"/>
+                <path d="M80 40 L70 10 M120 40 L130 10" stroke="var(--demon-red)" stroke-width="2" fill="none"/>
+                <circle cx="100" cy="150" r="10" fill="var(--exo-orange)">
+                    <animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite" />
+                </circle>
+            </svg>
+        </div>
+        <div class="info-panel">
+            <h3>NÚCLEO HÁPTICO "NECROMANTE"</h3>
+            <p>A diferencia de la v2.0, la serie **Σ** utiliza un kernel de baja RAM que inyecta ruido blanco en el sistema nervioso del operador. Esto elimina la fatiga y el miedo. El traje no solo multiplica tu fuerza; multiplica tu **voluntad de conflicto**.</p>
             
-            <text x="215" y="120" fill="white" font-size="10">CORE: LEGEND KERNEL v6.2</text>
-            <text x="325" y="380" fill="var(--exo-orange)" font-size="10">SOPORTE CARGA: HIDRÁULICA B-GRADE</text>
-            <text x="50" y="580" fill="var(--plasma-cyan)" font-size="10">ASISTENCIA EN CARRERA: MOTORES SODIO SHENZHEN</text>
-        </svg>
-    </div>
-
-    <div class="specs-section">
-        <div class="spec-card">
-            <h3>SINCRO-HÁPTICA "GHOST"</h3>
-            <p>El sistema no espera a que te muevas; lee los impulsos eléctricos de la piel mediante parches reciclados de máquinas de gimnasia chinas. El Kernel LEGEND predice el vector de fuerza. No hay lag. Tú no llevas el traje, el traje es tu nueva piel.</p>
-        </div>
-        <div class="spec-card">
-            <h3>ESTRUCTURA INQUEBRANTABLE</h3>
-            <p>Largueros fabricados con acero de herramientas (HSS) recuperado y brazos de suspensión de coches de alta gama (accidentados). Blindaje opcional mediante placas de cerámica de hornos industriales. Un "mercenario" pijo de 500k € no puede perforarlo con munición estándar.</p>
+            <div class="tech-specs">
+                <div class="tech-item">
+                    <strong style="color:var(--plasma-cyan);">MOTO-TENSORES</strong>
+                    <p style="font-size:0.7em;">Motores de lavadora industrial rebobinados para torque instantáneo.</p>
+                </div>
+                <div class="tech-item">
+                    <strong style="color:var(--exo-orange);">BLINDAJE "PARIA"</strong>
+                    <p style="font-size:0.7em;">Placas de acero de alta resistencia recuperadas de bancos y cajas fuertes.</p>
+                </div>
+            </div>
         </div>
     </div>
 
-    <h3>BILL OF MATERIALS (Personal Kinetic Systems)</h3>
-    <table class="materials-table">
+    <table class="bom-table">
         <thead>
             <tr>
-                <th>SUBSISTEMA</th>
-                <th>PROCEDENCIA RE-PURPOSED</th>
-                <th>UPGRADE BOA</th>
-                <th>COSTE EST.</th>
+                <th>COMPONENTE</th>
+                <th>SPLICING / ORIGEN</th>
+                <th>UPGRADE SOBERANO</th>
+                <th>VALOR AGENCIA</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><strong>Servomotores (x8)</strong></td>
-                <td>Robótica de almacén / Basura Shenzhen</td>
-                <td>Re-bobinado en cobre puro + Controlador Na</td>
-                <td class="tag-recuperado">1.100 €</td>
+                <td><strong>Músculos Sintéticos</strong></td>
+                <td>Gatos hidráulicos de camión + Bridas</td>
+                <td>Fluido de Mercurio Resonante</td>
+                <td class="price-tag">650€ (Desguace)</td>
             </tr>
             <tr>
-                <td><strong>Frame Óseo</strong></td>
-                <td>Tubos de bicicleta de competición (Scrap)</td>
-                <td>Refuerzo Maraging T-400</td>
-                <td class="tag-recuperado">450 €</td>
+                <td><strong>Chasis Óseo</strong></td>
+                <td>Andamios de obra + Vigas H</td>
+                <td>Tratamiento Térmico de Barrio</td>
+                <td class="price-tag">0€ (Recuperado)</td>
             </tr>
             <tr>
-                <td><strong>Unidad Central</strong></td>
-                <td>Tablets de control industrial defectuosas</td>
-                <td>Kernel LEGEND RTOS (Sin telemetría)</td>
-                <td class="tag-recuperado">280 €</td>
+                <td><strong>Cerebro Táctico</strong></td>
+                <td>Unidades de control de Ascensor</td>
+                <td>Kernel LEGEND v6.2 (Custom)</td>
+                <td class="price-tag">120€ (Wallapop)</td>
             </tr>
             <tr>
-                <td><strong>Batería Na-Co</strong></td>
-                <td>Células de patinete eléctrico (Carcasa Na)</td>
-                <td>Circuito de descarga rápida BOA</td>
-                <td class="tag-recuperado">320 €</td>
+                <td><strong>Sistemas de Pánico</strong></td>
+                <td>Altavoces de Megafonía (x4)</td>
+                <td>Sintetizador de Enoquiano Real</td>
+                <td class="price-tag">45€</td>
             </tr>
         </tbody>
     </table>
 
-    <div class="warning-mode">
-        <h3 style="margin:0; color:var(--exo-orange);">ASYMMETRIC INFANTRY DOMINANCE</h3>
-        <p style="font-size: 0.85em; margin-bottom:0;">
-            El QUETZAL EXO-S convierte a un civil en una unidad de ruptura. Mientras los ejércitos pijos gastan 2 millones por soldado en programas "Future Soldier" que fallan en el barro, tú produces estos por poco más de 2.000 €. Es la democratización de la fuerza bruta.
-        </p>
+    <div class="footer-note">
+        ESTE TRAJE NO TIENE INTERRUPTOR DE APAGADO. UNA VEZ TE CALZAS EL QUETZAL Σ, LA CASTA DEJA DE EXISTIR.
     </div>
 
-    <footer>
-        BOA KINETICS | QUETZAL EXO-S | THE GHOST IN THE SCRAP | 2026
-    </footer>
+    <p style="text-align:center; font-size:0.6em; color:#444; margin-top:20px;">
+        AGENCIA RONIN | DIVISION DE INFANTERÍA CINÉTICA | SABADELL SECTOR | 13101310
+    </p>
 </div>
 
 </body>
